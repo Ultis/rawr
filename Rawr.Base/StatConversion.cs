@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -37,7 +37,7 @@ namespace Rawr
     {   // Class only works for Level 80 Characters
         // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
 
-        #region Constants
+        #region Character Constants
 
         public const float LEVEL_80_COMBATRATING_MODIFIER = 3.2789987789987789987789987789988f; // 82/52 * Math.Pow(131/63, ((80 - 70) / 10));
         public const float RATING_PER_ARMORPENETRATION = 1231.6239f; // 4.69512177f / 1.25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
@@ -56,7 +56,7 @@ namespace Rawr
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 166.66667f;
-        public const float REGEN_CONSTANT = 0.003345f;	// 0.005575f * 0.6f (OO5SR regen nerf)
+        public const float REGEN_CONSTANT = 0.003345f;
 
         // Sigh, depends on class.
         public static float[] AGI_PER_PHYSICALCRIT = { 0.0f, // CharacterClass starts at 1
@@ -89,8 +89,14 @@ namespace Rawr
 
         #endregion
 
+        #region NPC Constants
 
-        #region Functions that return something.
+        // NPC Constants
+        public const float BOSS_ARMOR = 10645f;
+
+        #endregion
+
+        #region Functions for Player Characters
 
         public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
         /// <summary>
@@ -292,6 +298,121 @@ namespace Rawr
         {
             return 0.001f + Spirit * REGEN_CONSTANT * (float)Math.Sqrt(Intellect);
         }
+        #endregion
+
+        #region Functions for NPCs
+
+        //Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
+        /// <summary>
+        /// Returns a Percent of Physical Damage reduction (0.095 = 9.5% reduction)
+        /// </summary>
+        /// <param name="AttackerLevel">Level of Attacker</param>
+        /// <param name="TargetArmor">Level of Defender</param>
+        /// <param name="AttackerArmorPenetration">Attacker Armor Penetration Bonuses</param>
+        /// <param name="AttackerArmorPenetrationRating">Attacker Armor Penetration Rating</param>
+        /// <returns>A Percent of Physical Damage reduction (0.095 = 9.5% reduction)</returns>
+        public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
+            float AttackerArmorPenetration, float AttackerArmorPenetrationRating)
+        {
+            float ArmorReductionPercent = (1f - AttackerArmorPenetration) * (1f - GetArmorPenetrationFromRating(AttackerArmorPenetrationRating));
+            float ReducedArmor = (float)TargetArmor * ArmorReductionPercent;
+            float DamageReduction = (ReducedArmor / ((467.5f * AttackerLevel) + ReducedArmor - 22167.5f));
+            return DamageReduction;
+        }
+
+        private static int ResistanceModifier(int DeltaLevel)
+        {
+            if (DeltaLevel == 1)
+                return 5;
+            else if (DeltaLevel == 2)
+                return 10;
+            else if (DeltaLevel == 3)
+                return 20;
+            return 0;
+        }
+
+        private static int ResistanceAttackerModifier(int DeltaLevel)
+        {
+            if (DeltaLevel == -3)
+                return 105;  // Meaning you need 520 Resilience to resist 50% damage.
+            else if (DeltaLevel == -2)
+                return 0;
+            else if (DeltaLevel == -1)
+                return 0;
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns a Percent giving Average Magical Damage Resisted (0.16 = 16% Resisted)
+        /// </summary>
+        /// <param name="AttackerLevel">Level of the Attacker</param>
+        /// <param name="TargetLevel">Level of the Target</param>
+        /// <param name="TargetResistance">Targets Resistance</param>
+        /// <param name="AttackerSpellPenetration">Attackers Spell Penetration</param>
+        /// <returns>A Percent giving Average Magical Damage Resisted (0.16 = 16% Resisted)</returns>
+        public static float GetAverageResistance(int AttackerLevel, int TargetLevel,
+            float TargetResistance, float AttackerSpellPenetration)
+        {
+            float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
+            ActualResistance += ResistanceModifier(TargetLevel - AttackerLevel);
+            return ActualResistance / (AttackerLevel * 5f + ResistanceAttackerModifier(TargetLevel - AttackerLevel) + ActualResistance);
+        }
+
+        /// <summary>
+        /// Returns a Table giving the chance to fall within a resistance slice cutoff.
+        /// The table is float[11] Table, where Table[0] is 0% resisted, and Table[1] is 100% resisted.
+        /// Each Table entry gives how much chance to roll into that slice.
+        /// So if Table[1] contains 0.165, that means you have a 16.5% chance to resist 10% damage.
+        /// </summary>
+        /// <param name="AttackerLevel">Level of the Attacker</param>
+        /// <param name="TargetLevel">Level of the Target</param>
+        /// <param name="TargetResistance">Targets Resistance</param>
+        /// <param name="AttackerSpellPenetration">Attackers Spell Penetration</param>
+        /// <returns>A Table giving the chance to fall within a resistance slice cutoff.</returns>
+        public static float[] GetResistanceTable(int AttackerLevel, int TargetLevel,
+            float TargetResistance, float AttackerSpellPenetration)
+        {
+            float[] ResistTable = new float[11];
+            float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
+            ActualResistance += ResistanceModifier(TargetLevel - AttackerLevel);
+
+            float Cumulator = 0f;
+            for (int x = 0; x < 11; x++)
+            {   // Build Table
+                float ResistSlice = (float)Math.Max(0f, 0.5f + 2.5f * (0.1f * x - ActualResistance / (AttackerLevel * 5f + ResistanceAttackerModifier(TargetLevel - AttackerLevel) + ActualResistance)));
+                if (Cumulator > 1f)
+                    ResistTable[x] = 0f;
+                else if (Cumulator + ResistSlice > 1f)
+                    ResistTable[x] = 1f - Cumulator;
+                else
+                    ResistTable[x] = ResistSlice;
+                Cumulator += ResistSlice;
+            }
+
+            return ResistTable;
+        }
+
+        /// <summary>
+        /// Returns the Minimum amount of Spell Damage will be resisted. (0.2 = Anything below 20% is always resisted)
+        /// If this returns 0.0, that means you will always have a chance to take full damage from spells.
+        /// If this returns 0.1, that means you will never take full damage from spells, and minumum you will take is 10% reduction.
+        /// </summary>
+        /// <param name="AttackerLevel">Level of Attacker</param>
+        /// <param name="TargetLevel">Level of Target</param>
+        /// <param name="TargetResistance">Target Resistance</param>
+        /// <param name="AttackerSpellPenetration">Attacker Spell Penetration</param>
+        /// <returns>The Minimum amount of Spell Damage will be resisted. (0.2 = Anything below 20% is always resisted)</returns>
+        public static float GetMinimumResistance(int AttackerLevel, int TargetLevel,
+            float TargetResistance, float AttackerSpellPenetration)
+        {
+            float[] ResistTable = GetResistanceTable(AttackerLevel, TargetLevel, TargetResistance, AttackerSpellPenetration);
+
+            for (int x = 0; x < 11; x++)
+                if (ResistTable[x] > 0f)
+                    return 0.1f * x;
+            return 0f;
+        }
+
         #endregion
     }
 

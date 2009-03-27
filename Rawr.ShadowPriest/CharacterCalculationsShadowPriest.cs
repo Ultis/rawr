@@ -178,10 +178,20 @@ namespace Rawr.ShadowPriest
 
             if (AvgResist == 0)
                 ResistanceString = "None" + ResistanceString;
-            else if (MaxResist == AvgResist)
-                ResistanceString = string.Format("All : {0}", AvgResist.ToString("0")) + ResistanceString;
             else
-                ResistanceString = string.Format("{0} : {1}", ResistanceNames[MaxResistIndex], MaxResist.ToString("0")) + ResistanceString;
+            {
+                string ResistanceName = (MaxResist == AvgResist) ? "All" : ResistanceNames[MaxResistIndex];
+                ResistanceString = string.Format("{0} : {1}", ResistanceName, MaxResist.ToString("0")) + ResistanceString;
+                ResistanceString += string.Format("\r\n\r\nResist ({0}):", ResistanceName);
+                ResistanceString += string.Format("\r\nAvg. : {0}%", (StatConversion.GetAverageResistance(character.Level + 3, character.Level, MaxResist, 0) * 100f).ToString("0.00"));
+                float[] ResistTable = StatConversion.GetResistanceTable(character.Level + 3, character.Level, MaxResist, 0);
+                for (int x = 0; x < 11; x++)
+                {
+                    if (ResistTable[x] <= 0f)
+                        continue;
+                    ResistanceString += string.Format("\r\n{0}% : {1}%", (x * 10).ToString("00"), (ResistTable[x] * 100f).ToString("0.00"));
+                }
+            }
 
             dictValues.Add("Resistance", ResistanceString);
 
