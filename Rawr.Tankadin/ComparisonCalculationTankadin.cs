@@ -20,7 +20,7 @@ namespace Rawr.Tankadin
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
