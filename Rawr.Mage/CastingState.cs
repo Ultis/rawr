@@ -38,10 +38,89 @@ namespace Rawr.Mage
         public Stats BaseStats { get; private set; }
 
         public float SpellCrit { get; set; }
-        public float SpellHit { get; set; }
+
+        public const float MaxHitRate = 1.0f;
+
+        public float SpellHit
+        {
+            get
+            {
+                return BaseStats.HitRating * CalculationOptions.LevelScalingFactor / 800f + BaseStats.SpellHit + 0.01f * MageTalents.ElementalPrecision;
+            }
+        }
+
+        public float ArcaneHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * MageTalents.ArcaneFocus);
+            }
+        }
+
+        public float FireHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            }
+        }
+
+        public float FrostHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            }
+        }
+
+        public float NatureHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            }
+        }
+
+        public float ShadowHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            }
+        }
+
+        public float FrostFireHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            }
+        }
+
+        public float HolyHitRate
+        {
+            get
+            {
+                int targetLevel = CalculationOptions.TargetLevel;
+                int playerLevel = CalculationOptions.PlayerLevel;
+                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            }
+        }
+
         public float CastingSpeed { get; set; }
         public float GlobalCooldown { get; set; }
-        public float GlobalCooldownLimit { get; set; }
 
         public float ArcaneDamage { get; set; }
         public float FireDamage { get; set; }
@@ -89,14 +168,6 @@ namespace Rawr.Mage
         public float FrostFireCritRate { get; set; }
         public float HolyCritRate { get; set; }
 
-        public float ArcaneHitRate { get; set; }
-        public float FireHitRate { get; set; }
-        public float FrostHitRate { get; set; }
-        public float NatureHitRate { get; set; }
-        public float ShadowHitRate { get; set; }
-        public float FrostFireHitRate { get; set; }
-        public float HolyHitRate { get; set; }
-
         public float ArcaneThreatMultiplier { get; set; }
         public float FireThreatMultiplier { get; set; }
         public float FrostThreatMultiplier { get; set; }
@@ -107,7 +178,14 @@ namespace Rawr.Mage
 
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
-        public float Latency { get; set; }
+        public float Latency
+        {
+            get
+            {
+                return CalculationOptions.Latency;
+            }
+        }
+
         public float ClearcastingChance { get; set; }
 
         public float SnaredTime { get; set; }
@@ -247,8 +325,7 @@ namespace Rawr.Mage
             CalculationOptions = calculations.CalculationOptions;
             this.calculations = calculations;
 
-            float levelScalingFactor;
-            levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
+            float levelScalingFactor = CalculationOptions.LevelScalingFactor;
 
             SnaredTime = CalculationOptions.SnaredTime;
             if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
@@ -425,19 +502,8 @@ namespace Rawr.Mage
             }
             SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.15f * 0.02f * character.MageTalents.ArcaneConcentration * character.MageTalents.ArcanePotency + SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * character.MageTalents.Pyromaniac;
             if (frozen) SpellCrit += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
-            SpellHit = characterStats.HitRating * levelScalingFactor / 800f + characterStats.SpellHit + 0.01f * character.MageTalents.ElementalPrecision;
 
-            int targetLevel = calculationOptions.TargetLevel;
-            int playerLevel = calculationOptions.PlayerLevel;
-            // if (targetLevel >= playerLevel + 3) SpellCrit -= 0.021f; boss crit depression, disproved
-            float maxHitRate = 1.00f;
-            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ArcaneFocus);
-            FireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            FrostFireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            HolyHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            int playerLevel = CalculationOptions.PlayerLevel;
 
             SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
             ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
@@ -518,11 +584,9 @@ namespace Rawr.Mage
             CastingSpeed *= (1f + characterStats.SpellHaste);
             CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);
 
-            Latency = calculationOptions.Latency;
             ClearcastingChance = 0.02f * character.MageTalents.ArcaneConcentration;
 
-            GlobalCooldownLimit = 1f;
-            GlobalCooldown = Math.Max(GlobalCooldownLimit, 1.5f / CastingSpeed);
+            GlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / CastingSpeed);
 
             ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusDamageMultiplier);
             if (arcanePower)

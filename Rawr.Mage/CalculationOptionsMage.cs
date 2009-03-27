@@ -23,7 +23,30 @@ namespace Rawr.Mage
     [Serializable]
     public sealed class CalculationOptionsMage : ICalculationOptionBase
     {
-        public int PlayerLevel { get; set; }
+        private int playerLevel;
+        private float levelScalingFactor;
+
+        public int PlayerLevel
+        {
+            get
+            {
+                return playerLevel;
+            }
+            set
+            {
+                playerLevel = value;
+                levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (playerLevel - 70) / 10f));
+            }
+        }
+
+        public float LevelScalingFactor
+        {
+            get
+            {
+                return levelScalingFactor;
+            }
+        }
+
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
         public float Latency { get; set; }
