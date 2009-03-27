@@ -48,9 +48,33 @@ namespace Rawr.UserControls.Options
 
 		public void Save()
 		{
+            string message = string.Empty;
+            string title = string.Empty;
 			Rawr.Properties.GeneralSettings.Default.UseMultithreading = checkBoxUseMultithreading.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
 			Rawr.Properties.GeneralSettings.Default.Save();
+            switch(_locale)
+            {
+                case "de":
+                    title = "Profil Aktualisieren";
+                    message = "Sie müssen 'Update Item Cache from Wowhead' to reload Artikel für die Deutsche Lokalisierung.";
+                    break;
+                case "fr":
+                    title = "Mise à jour du Profil";
+                    message = "Vous devez utiliser 'Update Item Cache from Wowhead' pour recharger articles locale pour le Français.";
+                    break;
+                case "es":
+                    title = "Actualiza tu Perfil";
+                    message = "Debe utilizar 'Update Item Cache from Wowhead' para volver a cargar los elementos de localización para el Español.";
+                    break;
+                case "ru":
+                    title = "Обновить профиль";
+                    message = "Вы должны использовать 'Update Item Cache from Wowhead' чтобы перезагрузить пунктов для Российских локаль.";
+                    break;
+            }
+            if (!_locale.Equals("en"))
+                System.Windows.Forms.MessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.OK); 
+            ItemCache.OnItemsChanged();
 		}
 
 		public void Cancel()

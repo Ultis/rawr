@@ -106,10 +106,22 @@ namespace Rawr
 		[XmlIgnore]
 		public string Name
 		{
-			get { return _name; }
+			get {
+                if (!Rawr.Properties.GeneralSettings.Default.Locale.Equals("en") && _localizedName != null)
+                    return _localizedName;
+                else
+                    return _name;
+            }
 			set { _name = value; }
 		}
-		[XmlIgnore]
+        [XmlIgnore]
+        public string EnglishName
+        {
+            get
+            { return _name; }
+            set { _name = value; }
+        }
+        [XmlIgnore]
 		public int Id
 		{
 			get { return _id; }
@@ -584,7 +596,8 @@ namespace Rawr
 				DamageType = this.DamageType,
 				Speed = this.Speed,
 				RequiredClasses = this.RequiredClasses,
-				Unique = this.Unique
+				Unique = this.Unique,
+                LocalizedName = this.LocalizedName
 			};
 		}
 
