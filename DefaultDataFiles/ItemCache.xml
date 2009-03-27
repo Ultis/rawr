@@ -19118,7 +19118,9 @@
     <ItemLevel>213</ItemLevel>
     <IconPath>Spell_Shadow_RainOfFire</IconPath>
     <Slot>Trinket</Slot>
-    <Stats />
+    <Stats>
+      <AttackPower>320</AttackPower>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Unique>true</Unique>
