@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -56,7 +56,7 @@ namespace Rawr
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 166.66667f;
-        public const float REGEN_CONSTANT = 0.005575f;
+        public const float REGEN_CONSTANT = 0.003345f;	// 0.005575f * 0.6f (OO5SR regen nerf)
 
         // Sigh, depends on class.
         public static float[] AGI_PER_PHYSICALCRIT = { 0.0f, // CharacterClass starts at 1

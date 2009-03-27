@@ -990,11 +990,13 @@ namespace Rawr.Moonkin
                 {
                     Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                     {
-                        sHa += c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
+						sHa += StatConversion.GetSpellHasteFromRating(c.BasicStats.SpellHasteFor10SecOnCast_10_45);
+                        //sHa += c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
                     },
                     Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                     {
-                        sHa -= c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
+						sHa -= StatConversion.GetSpellHasteFromRating(c.BasicStats.SpellHasteFor10SecOnCast_10_45);
+                        //sHa -= c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
                     },
                     UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
                     {
@@ -1173,7 +1175,7 @@ namespace Rawr.Moonkin
                 // Add in calculations for an innervate weapon
                 if (calcOpts.InnervateWeapon)
                 {
-                    float baseRegenConstant = CalculationsMoonkin.ManaRegenConstant;
+                    //float baseRegenConstant = CalculationsMoonkin.ManaRegenConstant;
                     // Calculate the intellect from a weapon swap
                     float userIntellect = calcs.BasicStats.Intellect - (character.MainHand == null ? 0 : character.MainHand.Item.Stats.Intellect) - (character.OffHand == null ? 0 : character.OffHand.Item.Stats.Intellect)
                         + calcOpts.InnervateWeaponInt;
@@ -1181,7 +1183,8 @@ namespace Rawr.Moonkin
                     float userSpirit = calcs.BasicStats.Spirit - (character.MainHand == null ? 0 : character.MainHand.Item.Stats.Spirit) - (character.OffHand == null ? 0 : character.OffHand.Item.Stats.Spirit)
                         + calcOpts.InnervateWeaponSpi;
                     // The new spirit regen for innervate periods uses the new weapon stats
-                    spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;
+					spiritRegen = StatConversion.GetSpiritRegenSec(userSpirit, userIntellect);
+                    //spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;
                 }
                 float innervateManaRate = spiritRegen * 4 + calcs.BasicStats.Mp5 / 5f;
                 float innervateTime = numInnervates * 20.0f;
@@ -1244,7 +1247,8 @@ namespace Rawr.Moonkin
             // Haste trinkets
             if (calcs.BasicStats.HasteRatingFor20SecOnUse2Min > 0)
             {
-                effectiveSpellHaste += calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f / CalculationsMoonkin.hasteRatingConversionFactor;
+				effectiveSpellHaste += StatConversion.GetSpellHasteFromRating(calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f);
+                //effectiveSpellHaste += calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f / CalculationsMoonkin.hasteRatingConversionFactor;
             }
             // Spell damage trinkets
             if (calcs.BasicStats.SpellPowerFor15SecOnUse90Sec > 0)

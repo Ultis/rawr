@@ -153,12 +153,12 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot);
         }
 
-        public static float hitRatingConversionFactor = 100 * (8.0f * (82 / 52.0f) * (131 / 63.0f));
-        public static float critRatingConversionFactor = 100 * (14.0f * (82 / 52.0f) * (131 / 63.0f));
-        public static float hasteRatingConversionFactor = 100 * (10 * (82 / 52.0f) * (131 / 63.0f));
-        public static float intPerCritPercent = 166.0f + (2 / 3.0f);
+        //public static float hitRatingConversionFactor = 100 * (8.0f * (82 / 52.0f) * (131 / 63.0f));
+        //public static float critRatingConversionFactor = 100 * (14.0f * (82 / 52.0f) * (131 / 63.0f));
+        //public static float hasteRatingConversionFactor = 100 * (10 * (82 / 52.0f) * (131 / 63.0f));
+        //public static float intPerCritPercent = 166.0f + (2 / 3.0f);
         public static float BaseMana = 3496.0f;
-        public static float ManaRegenConstant = 0.005575f * 0.6f;
+        //public static float ManaRegenConstant = 0.005575f * 0.6f;
         private Dictionary<string, System.Drawing.Color> subColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -320,14 +320,17 @@ namespace Rawr.Moonkin
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
-            float hitRatingMultiplier = 1.0f / CalculationsMoonkin.hitRatingConversionFactor;
-            float critRatingMultiplier = 1.0f / CalculationsMoonkin.critRatingConversionFactor;
-            float hasteRatingMultiplier = 1.0f / CalculationsMoonkin.hasteRatingConversionFactor;
+            //float hitRatingMultiplier = 1.0f / CalculationsMoonkin.hitRatingConversionFactor;
+            //float critRatingMultiplier = 1.0f / CalculationsMoonkin.critRatingConversionFactor;
+            //float hasteRatingMultiplier = 1.0f / CalculationsMoonkin.hasteRatingConversionFactor;
 
-            calcs.SpellCrit = stats.CritRating * critRatingMultiplier + stats.SpellCrit;
-            calcs.SpellHit = stats.HitRating * hitRatingMultiplier + stats.SpellHit;
-            calcs.SpellHaste = (1 + (stats.HasteRating + stats.DrumsOfBattle) * hasteRatingMultiplier) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
+            //calcs.SpellCrit = stats.CritRating * critRatingMultiplier + stats.SpellCrit;
+            //calcs.SpellHit = stats.HitRating * hitRatingMultiplier + stats.SpellHit;
+            //calcs.SpellHaste = (1 + (stats.HasteRating + stats.DrumsOfBattle) * hasteRatingMultiplier) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
 
+			calcs.SpellCrit = StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
+			calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
+			calcs.SpellHaste = StatConversion.GetSpellHasteFromRating(stats.HasteRating) + stats.SpellHaste;
             stats.SpellPower += stats.DrumsOfWar / 2.0f;
 
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
@@ -344,7 +347,8 @@ namespace Rawr.Moonkin
             calcs.Scryer = calcOpts.AldorScryer == "Scryer";
 
             // 2.4 spirit regen
-            float spiritRegen = 0.001f + ManaRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
+            //float spiritRegen = 0.001f + ManaRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
+			float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
             calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
             calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
 
@@ -444,9 +448,10 @@ namespace Rawr.Moonkin
             // Crit rating
             // Application order: Stats, Talents, Gear
             // Add druid base crit
-            statsTotal.SpellCrit += 0.0185f;
+            //statsTotal.SpellCrit += 0.0185f;
             // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
-            statsTotal.SpellCrit += statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent);
+            //statsTotal.SpellCrit += statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent);
+			statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             // All spells: Crit% + (0.01 * Natural Perfection)
             statsTotal.SpellCrit += 0.01f * character.DruidTalents.NaturalPerfection;
             // All spells: Haste% + (0.01 * Celestial Focus)
