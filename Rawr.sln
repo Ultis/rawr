@@ -66,13 +66,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental", "Rawr.Elem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\Rawr.TankDK.csproj", "{55A0C445-3E1A-4BB4-A0ED-9056366C8333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue.Tests", "Rawr.Rogue.Tests\Rawr.Rogue.Tests.csproj", "{DD3236D1-48EE-4194-AB89-6FE822C6880F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtPaladin", "Rawr.ProtPaladin\Rawr.ProtPaladin.csproj", "{08032A2F-C280-4316-8B1D-4044C07F54E9}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 23
+		SccNumberOfProjects = 24
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -141,6 +139,9 @@ Global
 		SccProjectUniqueName22 = Rawr.TankDK\\Rawr.TankDK.csproj
 		SccProjectName22 = Rawr.TankDK
 		SccLocalPath22 = Rawr.TankDK
+		SccProjectUniqueName23 = Rawr.ProtPaladin\\Rawr.ProtPaladin.csproj
+		SccProjectName23 = Rawr.ProtPaladin
+		SccLocalPath23 = Rawr.ProtPaladin
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -322,12 +323,6 @@ Global
 		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Release|x86.ActiveCfg = Release|x86
 		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Release|x86.Build.0 = Release|x86
-		{DD3236D1-48EE-4194-AB89-6FE822C6880F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD3236D1-48EE-4194-AB89-6FE822C6880F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD3236D1-48EE-4194-AB89-6FE822C6880F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DD3236D1-48EE-4194-AB89-6FE822C6880F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD3236D1-48EE-4194-AB89-6FE822C6880F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD3236D1-48EE-4194-AB89-6FE822C6880F}.Release|x86.ActiveCfg = Release|Any CPU
 		{08032A2F-C280-4316-8B1D-4044C07F54E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08032A2F-C280-4316-8B1D-4044C07F54E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08032A2F-C280-4316-8B1D-4044C07F54E9}.Debug|x86.ActiveCfg = Debug|Any CPU
