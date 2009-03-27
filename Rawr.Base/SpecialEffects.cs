@@ -237,14 +237,14 @@ namespace Rawr
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
 				stats.AttackPower += ((float)int.Parse(line)) / 6f;
 			}
-            else if (line.StartsWith("Chance on melee critical strike to increase your attack power by 1000 for 10 secs."))
+            else if (line.StartsWith("Chance on melee and ranged critical strike to increase your attack power by "))
 			{
-                // Mirror of Truth
-				//line = line.Substring("Chance on hit to increase your attack power by ".Length);
-				//if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				//if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                // Mirror of Truth & Pyrite Infuser
+                line = line.Substring("Chance on melee and ranged critical strike to increase your attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 // TODO: for now just average, convert this to an actual proc effect
-				stats.AttackPower += 1000f / 7f;
+                stats.AttackPower += (float)int.Parse(line) / 6f;
 			}
             else if (line.StartsWith("Chance on melee or ranged hit to increase your attack power by 1000 for 10 secs."))
             {
@@ -921,7 +921,15 @@ namespace Rawr
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
 				stats.AttackPower += ((float)int.Parse(line)) / 6f;
 			}
-			else if (line.StartsWith("Increases your melee and ranged attack power by "))
+//            else if (line.StartsWith("Increases dodge rating by "))
+//            {
+//                line = line.Substring("Increases dodge rating by ".Length);
+//                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+//                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+//                if (line.Contains("nbsp")) line = line.Substring(0, line.IndexOf("&nbsp"));
+//                stats.DodgeRating += ((float)int.Parse(line)) / 6f;
+//            }
+            else if (line.StartsWith("Increases your melee and ranged attack power by "))
 			{
 				line = line.Substring("Increases your melee and ranged attack power by ".Length);
 				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
