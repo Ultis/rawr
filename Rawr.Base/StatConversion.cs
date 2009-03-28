@@ -372,7 +372,7 @@ namespace Rawr
                     ResistTable[1] -= 1f * ResistSlice;
                 }
                 else
-                    ResistTable[x] = ResistSlice;
+                    ResistTable[x] += ResistSlice;
             }
             return ResistTable;
         }
