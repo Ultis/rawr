@@ -320,26 +320,15 @@ namespace Rawr
             return DamageReduction;
         }
 
-        private static int ResistanceModifier(int DeltaLevel)
+        private static float AttackerPenalty(int LevelDelta)
         {
-            if (DeltaLevel == 1)
-                return 5;
-            else if (DeltaLevel == 2)
-                return 10;
-            else if (DeltaLevel == 3)
-                return 20;
-            return 0;
-        }
-
-        private static int ResistanceAttackerModifier(int DeltaLevel)
-        {
-            if (DeltaLevel == -3)
-                return 105;  // Meaning you need 520 Resilience to resist 50% damage.
-            else if (DeltaLevel == -2)
-                return 0;
-            else if (DeltaLevel == -1)
-                return 0;
-            return 0;
+            if (LevelDelta == 1)
+                return 0f;
+            else if (LevelDelta == 2)
+                return 0f;
+            else if (LevelDelta == 3)
+                return 95f;
+            return 0f;
         }
 
         /// <summary>
@@ -354,8 +343,7 @@ namespace Rawr
             float TargetResistance, float AttackerSpellPenetration)
         {
             float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
-            ActualResistance += ResistanceModifier(TargetLevel - AttackerLevel);
-            return ActualResistance / (AttackerLevel * 5f + ResistanceAttackerModifier(TargetLevel - AttackerLevel) + ActualResistance);
+            return ActualResistance / (AttackerLevel * 5f + AttackerPenalty(AttackerLevel - TargetLevel) + ActualResistance) + 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel);
         }
 
         /// <summary>
@@ -371,24 +359,21 @@ namespace Rawr
         /// <returns>A Table giving the chance to fall within a resistance slice cutoff.</returns>
         public static float[] GetResistanceTable(int AttackerLevel, int TargetLevel,
             float TargetResistance, float AttackerSpellPenetration)
-        {
-            float[] ResistTable = new float[11];
-            float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
-            ActualResistance += ResistanceModifier(TargetLevel - AttackerLevel);
+        {                      //   00% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+            float[] ResistTable = { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+            float AverageResistance = GetAverageResistance(AttackerLevel, TargetLevel, TargetResistance, AttackerSpellPenetration);
 
-            float Cumulator = 0f;
-            for (int x = 0; x < 11; x++)
+            for (int x = -1; x < 11; x++)
             {   // Build Table
-                float ResistSlice = (float)Math.Max(0f, 0.5f + 2.5f * (0.1f * x - ActualResistance / (AttackerLevel * 5f + ResistanceAttackerModifier(TargetLevel - AttackerLevel) + ActualResistance)));
-                if (Cumulator > 1f)
-                    ResistTable[x] = 0f;
-                else if (Cumulator + ResistSlice > 1f)
-                    ResistTable[x] = 1f - Cumulator;
+                float ResistSlice = (float)Math.Max(0f, 0.5f - 2.5f * (float)Math.Abs(0.1f * x - AverageResistance));
+                if (x == -1)
+                {   // Adjust 0% and 10% for "negative" resists.
+                    ResistTable[0] += 2f * ResistSlice;
+                    ResistTable[1] -= 1f * ResistSlice;
+                }
                 else
                     ResistTable[x] = ResistSlice;
-                Cumulator += ResistSlice;
             }
-
             return ResistTable;
         }
 
