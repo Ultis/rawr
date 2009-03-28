@@ -840,7 +840,7 @@ namespace Rawr
             }
             else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec.")
             {
-                stats.APCrusaderStrike_6 = 120f;
+                stats.APCrusaderStrike_10 = 120f;
             }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
@@ -866,6 +866,10 @@ namespace Rawr
             {
                 stats.CritJudgement_5 = 61f;
             }
+            else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
+            {
+                stats.CrusaderStrikeMultiplier = .05f;
+            }
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
             {
@@ -890,7 +894,7 @@ namespace Rawr
                     stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
                 }
             }
-                else if (line.StartsWith("Your Shock spells grant "))
+            else if (line.StartsWith("Your Shock spells grant "))
             {
                 Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
                 Match m = r.Match(line);

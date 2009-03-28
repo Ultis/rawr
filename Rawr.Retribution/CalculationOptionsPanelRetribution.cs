@@ -37,19 +37,9 @@ namespace Rawr.Retribution
             chkGlyphJudgement.Checked = calcOpts.GlyphJudgement;
             chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
             chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
-            chkGlyphCS.Checked = calcOpts.GlyphCrusaderStrike;
-            chkGlyphDivinity.Checked = calcOpts.GlyphDivinity;
             chkGlyphExorcism.Checked = calcOpts.GlyphExorcism;
-            chkGlyphHoW.Checked = calcOpts.GlyphHammerOfWrath;
 
-            chkSimulateMana.Checked = calcOpts.SimulateMana;
-            listLimitedPriority.Enabled = chkSimulateMana.Checked;
-            butLimitedDown.Enabled = chkSimulateMana.Checked;
-            butLimitedUp.Enabled = chkSimulateMana.Checked;
-            lblLimitedMana.Enabled = chkSimulateMana.Checked;
-
-            UpdateUnlimitedPriority(calcOpts);
-            UpdateLimitedPriority(calcOpts);
+            UpdatePriority(calcOpts);
 
             loading = false;
         }
@@ -125,17 +115,17 @@ namespace Rawr.Retribution
             }
         }
 
-        private void UpdateUnlimitedPriority(CalculationOptionsRetribution calcOpts)
+        private void UpdatePriority(CalculationOptionsRetribution calcOpts)
         {
             bool wasLoading = loading;
             loading = true;
 
             listUnlimitedPriority.Items.Clear();
-            listUnlimitedPriority.Items.AddRange(new string[] { Rotation.AbilityString(calcOpts.UnlimitedOrder[0]), Rotation.AbilityString(calcOpts.UnlimitedOrder[1]),
-                 Rotation.AbilityString(calcOpts.UnlimitedOrder[2]), Rotation.AbilityString(calcOpts.UnlimitedOrder[3]),
-                  Rotation.AbilityString(calcOpts.UnlimitedOrder[4]), Rotation.AbilityString(calcOpts.UnlimitedOrder[5])});
+            listUnlimitedPriority.Items.AddRange(new string[] { Rotation.AbilityString(calcOpts.Order[0]), Rotation.AbilityString(calcOpts.Order[1]),
+                 Rotation.AbilityString(calcOpts.Order[2]), Rotation.AbilityString(calcOpts.Order[3]),
+                  Rotation.AbilityString(calcOpts.Order[4]), Rotation.AbilityString(calcOpts.Order[5])});
 
-            for (int i = 0; i < 6; i++) listUnlimitedPriority.SetItemChecked(i, calcOpts.UnlimitedSelected[i]);
+            for (int i = 0; i < 6; i++) listUnlimitedPriority.SetItemChecked(i, calcOpts.Selected[i]);
 
             loading = wasLoading;
         }
@@ -148,15 +138,15 @@ namespace Rawr.Retribution
                 int sel = listUnlimitedPriority.SelectedIndex;
                 if (sel > 0 && sel <= 5)
                 {
-                    Rotation.Ability temp1 = calcOpts.UnlimitedOrder[sel - 1];
-                    calcOpts.UnlimitedOrder[sel - 1] = calcOpts.UnlimitedOrder[sel];
-                    calcOpts.UnlimitedOrder[sel] = temp1;
+                    Rotation.Ability temp1 = calcOpts.Order[sel - 1];
+                    calcOpts.Order[sel - 1] = calcOpts.Order[sel];
+                    calcOpts.Order[sel] = temp1;
 
-                    bool temp2 = calcOpts.UnlimitedSelected[sel - 1];
-                    calcOpts.UnlimitedSelected[sel - 1] = calcOpts.UnlimitedSelected[sel];
-                    calcOpts.UnlimitedSelected[sel] = temp2;
+                    bool temp2 = calcOpts.Selected[sel - 1];
+                    calcOpts.Selected[sel - 1] = calcOpts.Selected[sel];
+                    calcOpts.Selected[sel] = temp2;
 
-                    UpdateUnlimitedPriority(calcOpts);
+                    UpdatePriority(calcOpts);
                     listUnlimitedPriority.SelectedIndex = sel - 1;
                     Character.OnCalculationsInvalidated();
                 }
@@ -171,15 +161,15 @@ namespace Rawr.Retribution
                 int sel = listUnlimitedPriority.SelectedIndex;
                 if (sel >= 0 && sel < 5)
                 {
-                    Rotation.Ability temp1 = calcOpts.UnlimitedOrder[sel + 1];
-                    calcOpts.UnlimitedOrder[sel + 1] = calcOpts.UnlimitedOrder[sel];
-                    calcOpts.UnlimitedOrder[sel] = temp1;
+                    Rotation.Ability temp1 = calcOpts.Order[sel + 1];
+                    calcOpts.Order[sel + 1] = calcOpts.Order[sel];
+                    calcOpts.Order[sel] = temp1;
 
-                    bool temp2 = calcOpts.UnlimitedSelected[sel + 1];
-                    calcOpts.UnlimitedSelected[sel + 1] = calcOpts.UnlimitedSelected[sel];
-                    calcOpts.UnlimitedSelected[sel] = temp2;
+                    bool temp2 = calcOpts.Selected[sel + 1];
+                    calcOpts.Selected[sel + 1] = calcOpts.Selected[sel];
+                    calcOpts.Selected[sel] = temp2;
 
-                    UpdateUnlimitedPriority(calcOpts);
+                    UpdatePriority(calcOpts);
                     listUnlimitedPriority.SelectedIndex = sel + 1;
                     Character.OnCalculationsInvalidated();
                 }
@@ -192,98 +182,10 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 
-                if (e.NewValue == CheckState.Unchecked) calcOpts.UnlimitedSelected[e.Index] = false;
-                else calcOpts.UnlimitedSelected[e.Index] = true;
+                if (e.NewValue == CheckState.Unchecked) calcOpts.Selected[e.Index] = false;
+                else calcOpts.Selected[e.Index] = true;
 
                 Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void UpdateLimitedPriority(CalculationOptionsRetribution calcOpts)
-        {
-            bool wasLoading = loading;
-            loading = true;
-
-            listLimitedPriority.Items.Clear();
-            listLimitedPriority.Items.AddRange(new string[] { Rotation.AbilityString(calcOpts.LimitedOrder[0]), Rotation.AbilityString(calcOpts.LimitedOrder[1]),
-                 Rotation.AbilityString(calcOpts.LimitedOrder[2]), Rotation.AbilityString(calcOpts.LimitedOrder[3]),
-                  Rotation.AbilityString(calcOpts.LimitedOrder[4]), Rotation.AbilityString(calcOpts.LimitedOrder[5])});
-
-            for (int i = 0; i < 6; i++) listLimitedPriority.SetItemChecked(i, calcOpts.LimitedSelected[i]);
-
-            loading = wasLoading;
-        }
-
-        private void butLimitedUp_Click(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                int sel = listLimitedPriority.SelectedIndex;
-                if (sel > 0 && sel <= 5)
-                {
-                    Rotation.Ability temp1 = calcOpts.LimitedOrder[sel - 1];
-                    calcOpts.LimitedOrder[sel - 1] = calcOpts.LimitedOrder[sel];
-                    calcOpts.LimitedOrder[sel] = temp1;
-
-                    bool temp2 = calcOpts.LimitedSelected[sel - 1];
-                    calcOpts.LimitedSelected[sel - 1] = calcOpts.LimitedSelected[sel];
-                    calcOpts.LimitedSelected[sel] = temp2;
-
-                    UpdateLimitedPriority(calcOpts);
-                    listLimitedPriority.SelectedIndex = sel - 1;
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-
-        private void butLimitedDown_Click(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                int sel = listLimitedPriority.SelectedIndex;
-                if (sel >= 0 && sel < 5)
-                {
-                    Rotation.Ability temp1 = calcOpts.LimitedOrder[sel + 1];
-                    calcOpts.LimitedOrder[sel + 1] = calcOpts.LimitedOrder[sel];
-                    calcOpts.LimitedOrder[sel] = temp1;
-
-                    bool temp2 = calcOpts.LimitedSelected[sel + 1];
-                    calcOpts.LimitedSelected[sel + 1] = calcOpts.LimitedSelected[sel];
-                    calcOpts.LimitedSelected[sel] = temp2;
-
-                    UpdateLimitedPriority(calcOpts);
-                    listLimitedPriority.SelectedIndex = sel + 1;
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-
-        private void listLimitedPriority_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                
-                if (e.NewValue == CheckState.Unchecked) calcOpts.LimitedSelected[e.Index] = false;
-                else calcOpts.LimitedSelected[e.Index] = true;
-
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkSimulateMana_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.SimulateMana = chkSimulateMana.Checked;
-                listLimitedPriority.Enabled = chkSimulateMana.Checked;
-                butLimitedDown.Enabled = chkSimulateMana.Checked;
-                butLimitedUp.Enabled = chkSimulateMana.Checked;
-                lblLimitedMana.Enabled = chkSimulateMana.Checked;
-                Character.OnCalculationsInvalidated();               
             }
         }
 
@@ -296,37 +198,6 @@ namespace Rawr.Retribution
                 Character.OnCalculationsInvalidated();
             }
         }
-
-        private void chkGlyphCS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphCrusaderStrike = chkGlyphCS.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphHoW_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphHammerOfWrath = chkGlyphHoW.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphDivinity_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphDivinity = chkGlyphDivinity.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
 
     }
 
@@ -350,97 +221,51 @@ namespace Rawr.Retribution
 
         public bool SimulateMana = false;
 
-        private Rotation.Ability[] _unlimitedOrder = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
+        private Rotation.Ability[] _order = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
                                                    Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
-        public Rotation.Ability[] UnlimitedOrder {
-            get { _unlimitedCache = null; return _unlimitedOrder; }
-            set { _unlimitedCache = null; _unlimitedOrder = value; }
+        public Rotation.Ability[] Order {
+            get { _cache = null; return _order; }
+            set { _cache = null; _order = value; }
         }
 
-        private Rotation.Ability[] _limitedOrder = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
-                                                   Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
-        public Rotation.Ability[] LimitedOrder
+        private bool[] _selected = { true, true, true, true, true, true };
+        public bool[] Selected
         {
-            get { _limitedCache = null; return _limitedOrder; }
-            set { _limitedCache = null; _limitedOrder = value; }
+            get { _cache = null; return _selected; }
+            set { _cache = null; _selected = value; }
         }
 
-        private bool[] _unlimitedSelected = { true, true, true, true, true, true };
-        public bool[] UnlimitedSelected
-        {
-            get { _unlimitedCache = null; return _unlimitedSelected; }
-            set { _unlimitedCache = null; _unlimitedSelected = value; }
-        }
-
-        private bool[] _limitedSelected = { true, true, true, true, false, false };
-        public bool[] LimitedSelected
-        {
-            get { _limitedCache = null; return _limitedSelected; }
-            set { _limitedCache = null; _limitedSelected = value; }
-        }
-
-        private Rotation.Ability[] _unlimitedCache = null;
+        private Rotation.Ability[] _cache = null;
 
         [XmlIgnore]        
-        public Rotation.Ability[] UnlimitedPriorities
+        public Rotation.Ability[] Priorities
         {
             get
             {
-                if (_unlimitedCache == null)
+                if (_cache == null)
                 {
                     int count = 0;
-                    foreach (bool b in _unlimitedSelected) { if (b) count++; }
-                    _unlimitedCache = new Rotation.Ability[count];
+                    foreach (bool b in _selected) { if (b) count++; }
+                    _cache = new Rotation.Ability[count];
 
                     int sel = 0;
-                    for (int i = 0; i < _unlimitedOrder.Length; i++)
+                    for (int i = 0; i < _order.Length; i++)
                     {
-                        if (_unlimitedSelected[i])
+                        if (_selected[i])
                         {
-                            _unlimitedCache[sel] = _unlimitedOrder[i];
+                            _cache[sel] = _order[i];
                             sel++;
                         }
                     }
                 }
-                return _unlimitedCache;
+                return _cache;
             }
-        }
-
-        private Rotation.Ability[] _limitedCache;
-
-        [XmlIgnore]
-        public Rotation.Ability[] LimitedPriorities
-        {
-            get
-            {
-                if (_limitedCache == null)
-                {
-                    int count = 0;
-                    foreach (bool b in _limitedSelected) { if (b) count++; }
-                    _limitedCache = new Rotation.Ability[count];
-
-                    int sel = 0;
-                    for (int i = 0; i < _limitedOrder.Length; i++)
-                    {
-                        if (_limitedSelected[i])
-                        {
-                            _limitedCache[sel] = _limitedOrder[i];
-                            sel++;
-                        }
-                    }
-                }
-                return _limitedCache;
-            }
-        }
-        
+        }        
 
         public bool GlyphJudgement = true;
         public bool GlyphConsecration = true;
         public bool GlyphSenseUndead = true;
         public bool GlyphExorcism = true;
-        public bool GlyphCrusaderStrike = false;
-        public bool GlyphHammerOfWrath = false;
-        public bool GlyphDivinity = false;
 
         public CalculationOptionsRetribution Clone()
         {
@@ -452,18 +277,13 @@ namespace Rawr.Retribution
             clone.TimeUnder20 = TimeUnder20;
             clone.SimulateMana = SimulateMana;
 
-            clone._limitedOrder = (Rotation.Ability[])_limitedOrder.Clone();
-            clone._limitedSelected = (bool[])_limitedSelected.Clone();
-            clone._unlimitedOrder = (Rotation.Ability[])_unlimitedOrder.Clone();
-            clone._unlimitedSelected = (bool[])_unlimitedSelected.Clone();
+            clone._order = (Rotation.Ability[])_order.Clone();
+            clone._selected = (bool[])_selected.Clone();
 
             clone.GlyphJudgement = GlyphJudgement;
             clone.GlyphConsecration = GlyphConsecration;
             clone.GlyphSenseUndead = GlyphSenseUndead;
             clone.GlyphExorcism = GlyphExorcism;
-            clone.GlyphCrusaderStrike = GlyphCrusaderStrike;
-            clone.GlyphHammerOfWrath = GlyphHammerOfWrath;
-            clone.GlyphDivinity = GlyphDivinity;
 
             return clone;
         }

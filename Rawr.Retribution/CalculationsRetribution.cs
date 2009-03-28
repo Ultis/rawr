@@ -74,8 +74,7 @@ namespace Rawr.Retribution
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Unlimited DPS", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Limited DPS", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
                 }
                 return _subPointNameColors;
             }
@@ -224,16 +223,13 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            Rotation unlimitedRot = new Rotation(calcOpts.UnlimitedPriorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
+            Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
                 calcOpts.GlyphConsecration);
-            Rotation limitedRot = new Rotation(calcOpts.LimitedPriorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
-                 calcOpts.GlyphConsecration);
-            RotationSolution unlimited = RotationSimulator.SimulateRotation(unlimitedRot);
-            RotationSolution limited = RotationSimulator.SimulateRotation(limitedRot);
+            RotationSolution sol = RotationSimulator.SimulateRotation(rotation);
 
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             calc.BasicStats = stats;
-            calc.Rotation = unlimited;
+            calc.Rotation = sol;
 
             //damage multipliers
             float twoHandedSpec = 1f + 0.02f * talents.TwoHandedWeaponSpecialization;
@@ -284,7 +280,7 @@ namespace Rawr.Retribution
             #region Crusader Strike
             float csCrit = stats.PhysicalCrit + stats.CrusaderStrikeCrit;
             float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) *
-                talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle;
+                talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle * (1f + stats.CrusaderStrikeMultiplier);
             float csAvgHit = csDamage * (1f + csCrit * critBonus - csCrit - calc.ToMiss - calc.ToDodge);
             float csRightVen = csDamage * critBonus * rightVen * csCrit;
             calc.CrusaderStrikeDPS = (csAvgHit + csRightVen) / 6f;
@@ -331,70 +327,19 @@ namespace Rawr.Retribution
             #region Seal
             float sealDamage = calc.WeaponDamage * .48f * spellPowerMulti * talentMulti * partialResist * aw;
             float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
-            float sealProcs = (unlimited.FightLength / calc.AttackSpeed + unlimited.CrusaderStrike + unlimited.DivineStorm) * (1f - calc.ToMiss - calc.ToDodge);
-            calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge) / unlimited.FightLength;
+            float sealProcs = (sol.FightLength / calc.AttackSpeed + sol.CrusaderStrike + sol.DivineStorm) * (1f - calc.ToMiss - calc.ToDodge);
+            calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge) / sol.FightLength;
             #endregion
 
-            float unlimitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * unlimited.Judgement +
-                (csAvgHit + csRightVen) * unlimited.CrusaderStrike + (dsAvgHit + dsRightVen) * unlimited.DivineStorm + exoAvgHit * unlimited.Exorcism +
-                consAvgHit * unlimited.Consecration + howAvgHit * unlimited.HammerOfWrath) / unlimited.FightLength;
-
-            if (calcOpts.SimulateMana)
-            {
-                const float baseMana = 4394f;
-                float benediction = 1f - .02f * talents.Benediction;
-                float csMana = baseMana * -.08f * benediction * (calcOpts.GlyphCrusaderStrike ? .8f : 1f);
-                float judgeMana = baseMana * -.05f * benediction +
-                    (1f - calc.ToMiss) * 25f / 3f * baseMana * talents.JudgementsOfTheWise;
-                float dsMana = baseMana * -.12f * benediction;
-                float howMana = baseMana * -.12f * benediction * (calcOpts.GlyphHammerOfWrath ? .5f : 1f);
-                float exoMana = baseMana * -.08f * benediction;
-                float consMana = baseMana * -.22f * benediction;
-
-                float unlimitedUsage = (judgeMana * unlimited.Judgement + csMana * unlimited.CrusaderStrike + dsMana * unlimited.DivineStorm +
-                    exoMana * unlimited.Exorcism + consMana * unlimited.Consecration + howMana * unlimited.HammerOfWrath) / unlimited.FightLength;
-
-                float limitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * limited.Judgement +
-                    (csAvgHit + csRightVen) * limited.CrusaderStrike + (dsAvgHit + dsRightVen) * limited.DivineStorm + exoAvgHit * limited.Exorcism +
-                    consAvgHit * limited.Consecration + howAvgHit * limited.HammerOfWrath) / limited.FightLength;
-                float limitedUsage = (judgeMana * limited.Judgement + csMana * limited.CrusaderStrike + dsMana * limited.DivineStorm +
-                    exoMana * limited.Exorcism + consMana * limited.Consecration + howMana * limited.HammerOfWrath) / limited.FightLength;
-
-                float divinePleas = (float)Math.Ceiling((fightLength - 30) / 60);
-                float jowProcs = fightLength * (1 / calc.AttackSpeed + 1 / unlimited.CrusaderStrikeCD + 1 / unlimited.DivineStormCD +
-                    1 / unlimited.JudgementCD) * (1f - calc.ToMiss - calc.ToDodge);
-                float totalMana = stats.Mana + stats.Mana * .25f * divinePleas + jowProcs * stats.ManaRestoreFromBaseManaPerHit * baseMana +
-                    stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fightLength + stats.Mp5 * fightLength / 5f +
-                    (calcOpts.GlyphDivinity ? (float)Math.Min(stats.Mana, 7800) : 1950f);
-
-                float unlimitedTime = (totalMana + fightLength * limitedUsage) / (limitedUsage - unlimitedUsage);
-                float limitedTime;
-                if (unlimitedTime > fightLength)
-                {
-                    unlimitedTime = fightLength;
-                    limitedTime = 0;
-                }
-                else if (unlimitedTime < 0)
-                {
-                    unlimitedTime = 0;
-                    limitedTime = totalMana / -limitedUsage;
-                }
-                else
-                {
-                    limitedTime = fightLength - unlimitedTime;
-                }
-
-                float mixedDps = (unlimitedDps * unlimitedTime + limitedDps * limitedTime) / fightLength;
-
-                calc.LimitedPoints = mixedDps - unlimitedDps;
-                calc.UnlimitedPoints = unlimitedDps;
-                calc.OverallPoints = calc.LimitedPoints + calc.UnlimitedPoints;
-            }
-            else
-            {
-                calc.LimitedPoints = 0;
-                calc.OverallPoints = calc.UnlimitedPoints = unlimitedDps;
-            }
+            calc.OverallPoints = calc.DPSPoints = 
+                calc.WhiteDPS + 
+                calc.SealDPS + 
+                ((judgeAvgHit + judgeRightVen) * sol.Judgement +
+                (csAvgHit + csRightVen) * sol.CrusaderStrike +
+                (dsAvgHit + dsRightVen) * sol.DivineStorm +
+                exoAvgHit * sol.Exorcism +
+                consAvgHit * sol.Consecration + 
+                howAvgHit * sol.HammerOfWrath) / sol.FightLength;
 
             return calc;
         }
@@ -452,7 +397,7 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
-            Rotation rot = new Rotation(calcOpts.UnlimitedPriorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
+            Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
                 calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rot);
 
@@ -461,7 +406,7 @@ namespace Rawr.Retribution
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
             stats.Strength = (stats.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             stats.Intellect = stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
-            float libramAP = stats.APCrusaderStrike_6 * (float)Math.Min(1f, 6f * sol.CrusaderStrike / sol.FightLength);
+            float libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
             stats.AttackPower = (stats.AttackPower + berserkingAP + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
             stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
             stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
@@ -528,14 +473,6 @@ namespace Rawr.Retribution
                 deltaOpts.GlyphSenseUndead = baseOpts.GlyphSenseUndead = initOpts.GlyphSenseUndead;
                 SenseUndead.Item = null;
 
-                ComparisonCalculationBase CrusaderStrike;
-                baseOpts.GlyphCrusaderStrike = false;
-                deltaOpts.GlyphCrusaderStrike = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                CrusaderStrike = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Crusader Strike", initOpts.GlyphCrusaderStrike);
-                deltaOpts.GlyphCrusaderStrike = baseOpts.GlyphCrusaderStrike = initOpts.GlyphCrusaderStrike;
-                CrusaderStrike.Item = null;
-
                 ComparisonCalculationBase Exorcism;
                 baseOpts.GlyphExorcism = false;
                 deltaOpts.GlyphExorcism = true;
@@ -544,24 +481,7 @@ namespace Rawr.Retribution
                 deltaOpts.GlyphExorcism = baseOpts.GlyphExorcism = initOpts.GlyphExorcism;
                 Exorcism.Item = null;
 
-                ComparisonCalculationBase HammerOfWrath;
-                baseOpts.GlyphHammerOfWrath = false;
-                deltaOpts.GlyphHammerOfWrath = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                HammerOfWrath = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Hammer of Wrath", initOpts.GlyphHammerOfWrath);
-                deltaOpts.GlyphHammerOfWrath = baseOpts.GlyphHammerOfWrath = initOpts.GlyphHammerOfWrath;
-                HammerOfWrath.Item = null;
-
-                ComparisonCalculationBase Divinity;
-                baseOpts.GlyphDivinity = false;
-                deltaOpts.GlyphDivinity = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                Divinity = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Divinity", initOpts.GlyphDivinity);
-                deltaOpts.GlyphDivinity = baseOpts.GlyphDivinity = initOpts.GlyphDivinity;
-                Divinity.Item = null;
-
-                return new ComparisonCalculationBase[] { Judgement, Consecration, SenseUndead, Exorcism, 
-                    CrusaderStrike, HammerOfWrath, Divinity };
+                return new ComparisonCalculationBase[] { Judgement, Consecration, SenseUndead, Exorcism };
             }
             else
             {
@@ -586,11 +506,6 @@ namespace Rawr.Retribution
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
-                Intellect = stats.Intellect,
-                Spirit = stats.Spirit,
-                Mp5 = stats.Mp5,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
@@ -621,7 +536,7 @@ namespace Rawr.Retribution
                 CritDivineStorm_8 = stats.CritDivineStorm_8,
                 CritJudgement_5 = stats.CritJudgement_5,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
-                APCrusaderStrike_6 = stats.APCrusaderStrike_6,
+                APCrusaderStrike_10 = stats.APCrusaderStrike_10,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
                 JudgementCDReduction = stats.JudgementCDReduction,
                 DivineStormDamage = stats.DivineStormDamage,
@@ -629,21 +544,25 @@ namespace Rawr.Retribution
                 CrusaderStrikeCrit = stats.CrusaderStrikeCrit,
                 ExorcismMultiplier = stats.ExorcismMultiplier,
                 HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
+                CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower + stats.SpellCrit + stats.DivineStormMultiplier +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating +
-                stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower+
-                stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.GreatnessProc + stats.CritDivineStorm_8 + stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_6 + stats.ConsecrationSpellPower +
-                stats.JudgementCDReduction + stats.BerserkingProc + stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPerHit + stats.Mana +
-                stats.BonusIntellectMultiplier + stats.DivineStormDamage + stats.DivineStormCrit + stats.CrusaderStrikeCrit + stats.ExorcismMultiplier +
-                stats.HammerOfWrathMultiplier
-                ) != 0;
+            bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
+                stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
+                stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + stats.CritDivineStorm_8 +
+                stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
+                stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
+                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier +
+                stats.HammerOfWrathMultiplier) > 0;
+            bool maybeStats = (stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
+                stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
+                stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
+            bool ignoreStats = (stats.Spirit + stats.Intellect + stats.Mp5) > 0;
+            return wantedStats || (maybeStats && ! ignoreStats);
         }
     }
 }

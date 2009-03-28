@@ -277,12 +277,13 @@ namespace Rawr
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
+        CrusaderStrikeMultiplier,
         ExorcismMultiplier,
         HammerOfWrathMultiplier,
         DivineStormCrit,
         CrusaderStrikeCrit,
         DivineStormDamage,
-        APCrusaderStrike_6,
+        APCrusaderStrike_10,
         CrusaderStrikeDamage,
         ConsecrationSpellPower,
         CritDivineStorm_8,
@@ -2066,12 +2067,12 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("AP on Crusader Strike (6 sec)")]
+        [DisplayName("AP on Crusader Strike (10 sec)")]
         [Category("Equipment Procs")]
-        public float APCrusaderStrike_6
+        public float APCrusaderStrike_10
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_6]; }
-            set { _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_6] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_10] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2127,6 +2128,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Crusader Strike Damage")]
+        [Category("Equipment Procs")]
+        public float CrusaderStrikeMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
