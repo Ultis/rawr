@@ -92,7 +92,9 @@ namespace Rawr
         #region NPC Constants
 
         // NPC Constants
-        public const float BOSS_ARMOR = 10645f;
+        public const float BOSS_ARMOR = 10643f;
+        public const float ARMOR_PER_LEVEL = 467.5f;
+        public const float ARMOR_DEDUCTION = 22167.5f;
 
         #endregion
 
@@ -302,22 +304,26 @@ namespace Rawr
 
         #region Functions for NPCs
 
-        //Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
+        // Found by Rallik, http://elitistjerks.com/f31/t29453-combat_ratings_level_80_a/p16/#post1170842
         /// <summary>
-        /// Returns a Percent of Physical Damage reduction (0.095 = 9.5% reduction)
+        /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
         /// </summary>
         /// <param name="AttackerLevel">Level of Attacker</param>
-        /// <param name="TargetArmor">Level of Defender</param>
-        /// <param name="AttackerArmorPenetration">Attacker Armor Penetration Bonuses</param>
-        /// <param name="AttackerArmorPenetrationRating">Attacker Armor Penetration Rating</param>
-        /// <returns>A Percent of Physical Damage reduction (0.095 = 9.5% reduction)</returns>
+        /// <param name="TargetArmor">Armor of Target</param>
+        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire)</param>
+        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc)</param>
+        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be rolled into ArmorIgnoreBuffs and then set this to 0)</param>
+        /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
         public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
-            float AttackerArmorPenetration, float AttackerArmorPenetrationRating)
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
         {
-            float ArmorReductionPercent = (1f - AttackerArmorPenetration) * (1f - GetArmorPenetrationFromRating(AttackerArmorPenetrationRating));
-            float ReducedArmor = (float)TargetArmor * ArmorReductionPercent;
-            float DamageReduction = (ReducedArmor / ((467.5f * AttackerLevel) + ReducedArmor - 22167.5f));
-            return DamageReduction;
+            ArmorIgnoreBuffs = 1f - (1f - ArmorIgnoreBuffs) * (1f - GetArmorPenetrationFromRating(ArmorPenetrationRating));
+            float HalfArmorValue = AttackerLevel * ARMOR_PER_LEVEL - ARMOR_DEDUCTION;
+            float InnerReduction = TargetArmor / (HalfArmorValue + TargetArmor) * ArmorIgnoreBuffs * ArmorIgnoreDebuffs;
+            float DamageTaken = HalfArmorValue /
+                (HalfArmorValue + TargetArmor * (1f - (ArmorIgnoreBuffs + ArmorIgnoreDebuffs) + InnerReduction));
+
+            return 1f - DamageTaken;
         }
 
         private static float AttackerPenalty(int LevelDelta)

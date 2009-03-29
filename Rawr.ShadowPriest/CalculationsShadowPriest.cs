@@ -184,6 +184,7 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Crit",
 					"Basic Stats:Hit",
 					"Basic Stats:Haste",
+                    "Basic Stats:Armor",
                     "Basic Stats:Resistance",
                     "Simulation:Rotation",
                     "Simulation:DPS",
@@ -220,6 +221,7 @@ namespace Rawr.ShadowPriest
                     "MB Crit %",
                     "Hit Rating",
                     "MF cast time (ms)",
+                    "Armor",
                     "Arcane Resistance",
                     "Fire Resistance",
                     "Frost Resistance",
@@ -471,6 +473,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 66f;
                         stats.Intellect = 174f;
                         stats.Spirit = 181f;
+                        stats.Agility = 56f;
                     }
                     else
                     {
@@ -485,6 +488,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 70f;
                         stats.Intellect = 173f;
                         stats.Spirit = 180f;
+                        stats.Agility = 47f;
                     }
                     else
                     {
@@ -499,6 +503,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 66f;
                         stats.Intellect = 175f;
                         stats.Spirit = 183f;
+                        stats.Agility = 48f;
                     }
                     else
                     {
@@ -513,6 +518,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 67f;
                         stats.Intellect = 174f;
                         stats.Spirit = 181f;
+                        stats.Agility = 51f;
                     }
                     else
                     {
@@ -528,6 +534,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 65f;
                         stats.Intellect = 178f;
                         stats.Spirit = 180f;
+                        stats.Agility = 53f;
                     }
                     else
                     {
@@ -542,6 +549,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 68f;
                         stats.Intellect = 170f;
                         stats.Spirit = 182f;
+                        stats.Agility = 53f;
                     }
                     else
                     {
@@ -556,6 +564,7 @@ namespace Rawr.ShadowPriest
                         stats.Stamina = 68f;
                         stats.Intellect = 172f;
                         stats.Spirit = 186f;
+                        stats.Agility = 49f;
                     }
                     else
                     {
@@ -599,6 +608,7 @@ namespace Rawr.ShadowPriest
                 + 0.0124f;
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+            statsTotal.BonusArmor += statsTotal.Agility * 2f + GetInnerFireArmorBonus(character);    
 
             return statsTotal;
         }
@@ -611,6 +621,13 @@ namespace Rawr.ShadowPriest
             else if (character.Level >= 71)
                 InnerFireSpellPowerBonus = 95;
             return InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+        }
+
+        public static float GetInnerFireArmorBonus(Character character)
+        {
+            float ArmorBonus = 2440;
+
+            return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -668,6 +685,9 @@ namespace Rawr.ShadowPriest
                 GLYPH_ShadowWordDeath = stats.GLYPH_ShadowWordDeath,
                 GLYPH_ShadowWordPain = stats.GLYPH_ShadowWordPain,
 
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                Agility = stats.Agility,
                 ArcaneResistance = stats.ArcaneResistance,
                 ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
                 FireResistance = stats.FireResistance,
@@ -711,6 +731,7 @@ namespace Rawr.ShadowPriest
 
             bool Maybe = (
                 stats.Stamina + stats.Health + stats.Resilience
+                + stats.Armor + stats.BonusArmor + stats.Agility
                 + stats.ArcaneResistance + stats.ArcaneResistanceBuff
                 + stats.FireResistance + stats.FireResistanceBuff
                 + stats.FrostResistance + stats.FrostResistanceBuff
@@ -719,7 +740,7 @@ namespace Rawr.ShadowPriest
             ) > 0;
 
             bool No = (
-                stats.Strength + stats.Agility + stats.AttackPower
+                stats.Strength + stats.AttackPower
                 + stats.ArmorPenetration + stats.ArmorPenetrationRating
                 + stats.Expertise + stats.ExpertiseRating
                 + stats.Dodge + stats.DodgeRating

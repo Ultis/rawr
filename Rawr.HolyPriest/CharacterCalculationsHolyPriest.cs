@@ -97,6 +97,9 @@ namespace Rawr.HolyPriest
                 character.PriestTalents.HolySpecialization, character.PriestTalents.RenewedHope, character.PriestTalents.RenewedHope * 2));
             dictValues.Add("Spell Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown", 
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+            dictValues.Add("Armor", string.Format("{0}*{1}% Damage Reduction.",
+                (BasicStats.Armor + BasicStats.BonusArmor).ToString("0"),
+                (StatConversion.GetArmorDamageReduction(80, (BasicStats.Armor + BasicStats.BonusArmor), 0f, 0f, 0f) * 100f).ToString("0.00")));
 
             float[] Resistances = {
                 0,
@@ -225,6 +228,8 @@ namespace Rawr.HolyPriest
                     return new FlashHeal(basicStats, character).AvgHeal;
                 case "CoH Avg":
                     return new CircleOfHealing(basicStats, character).AvgHeal;
+                case "Armor":
+                    return basicStats.Armor + basicStats.BonusArmor;
 			    case "Arcane Resistance":
                     return basicStats.ArcaneResistance + basicStats.ArcaneResistanceBuff;
                 case "Fire Resistance":

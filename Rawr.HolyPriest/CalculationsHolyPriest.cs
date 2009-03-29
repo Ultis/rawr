@@ -213,6 +213,7 @@ namespace Rawr.HolyPriest
                     "Basic Stats:Spell Crit",
 					"Basic Stats:Healing Crit",
 					"Basic Stats:Spell Haste",
+                    "Basic Stats:Armor",
                     "Basic Stats:Resistance",
                     "Simulation:Role",
                     "Simulation:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
@@ -254,6 +255,7 @@ namespace Rawr.HolyPriest
                     "GHeal Avg",
                     "FHeal Avg",
                     "CoH Avg",
+                    "Armor",
                     "Arcane Resistance",
                     "Fire Resistance",
                     "Frost Resistance",
@@ -370,6 +372,13 @@ namespace Rawr.HolyPriest
             return InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
+        public static float GetInnerFireArmorBonus(Character character)
+        {
+            float ArmorBonus = 2440;
+
+            return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+        }
+
         public static Stats GetRaceStats(Character character)
         {
             Stats stats = new Stats();
@@ -392,6 +401,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 66f;
                         stats.Intellect = 174f;
                         stats.Spirit = 181f;
+                        stats.Agility = 56f;
                     }
                     else
                     {
@@ -406,6 +416,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 70f;
                         stats.Intellect = 173f;
                         stats.Spirit = 180f;
+                        stats.Agility = 47f;
                     }
                     else
                     {
@@ -420,6 +431,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 66f;
                         stats.Intellect = 175f;
                         stats.Spirit = 183f;
+                        stats.Agility = 48f;
                     }
                     else
                     {
@@ -434,6 +446,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 67f;
                         stats.Intellect = 174f;
                         stats.Spirit = 181f;
+                        stats.Agility = 51f;
                     }
                     else
                     {
@@ -449,6 +462,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 65f;
                         stats.Intellect = 178f;
                         stats.Spirit = 180f;
+                        stats.Agility = 53f;
                     }
                     else
                     {
@@ -463,6 +477,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 68f;
                         stats.Intellect = 170f;
                         stats.Spirit = 182f;
+                        stats.Agility = 53f;
                     }
                     else
                     {
@@ -477,6 +492,7 @@ namespace Rawr.HolyPriest
                         stats.Stamina = 68f;
                         stats.Intellect = 172f;
                         stats.Spirit = 186f;
+                        stats.Agility = 49f;
                     }
                     else
                     {
@@ -520,7 +536,7 @@ namespace Rawr.HolyPriest
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                 + 0.0124f;
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
-                 
+            statsTotal.BonusArmor += statsTotal.Agility * 2f + GetInnerFireArmorBonus(character);    
             return statsTotal;
         }
 
@@ -799,6 +815,9 @@ namespace Rawr.HolyPriest
                 GLYPH_Lightwell = stats.GLYPH_Lightwell,
                 GLYPH_MassDispel = stats.GLYPH_MassDispel,
 
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                Agility = stats.Agility,
                 ArcaneResistance = stats.ArcaneResistance,
                 ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
                 FireResistance = stats.FireResistance,
@@ -855,6 +874,8 @@ namespace Rawr.HolyPriest
 
             bool Maybe = (
                 stats.Stamina + stats.Health + stats.Resilience
+                + stats.Armor + stats.BonusArmor + stats.Agility +
+                + stats.SpellHit + stats.HitRating
                 + stats.ArcaneResistance + stats.ArcaneResistanceBuff
                 + stats.FireResistance + stats.FireResistanceBuff
                 + stats.FrostResistance + stats.FrostResistanceBuff
@@ -863,13 +884,13 @@ namespace Rawr.HolyPriest
             ) > 0;
 
             bool No = (
-                stats.Strength + stats.Agility + stats.AttackPower
+                stats.Strength + stats.AttackPower
                 + stats.ArmorPenetration + stats.ArmorPenetrationRating
                 + stats.Expertise + stats.ExpertiseRating
                 + stats.Dodge + stats.DodgeRating
                 + stats.Parry + stats.ParryRating
                 + stats.Defense + stats.DefenseRating
-                + stats.SpellHit + stats.HitRating + stats.PhysicalHit
+                + stats.PhysicalHit
             ) > 0;
 
             return Yes || (Maybe && !No);
