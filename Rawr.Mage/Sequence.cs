@@ -1451,7 +1451,7 @@ namespace Rawr.Mage.SequenceReconstruction
         int compactGroupSplits;
         //double compactLastDestro;
 
-        public bool SortGroups()
+        public bool SortGroups(Solver solver)
         {
             const double eps = 0.000001;
             List<SequenceItem> groupedItems = new List<SequenceItem>();
@@ -1467,7 +1467,7 @@ namespace Rawr.Mage.SequenceReconstruction
             //compactLastDestro = double.NegativeInfinity;
             //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
             groupedItems.Sort((x, y) => x.Segment.CompareTo(y.Segment));
-            SortGroups_Compute(groupedItems);
+            SortGroups_Compute(groupedItems, solver);
             if (compactItems == null)
             {
                 return false;
@@ -1550,7 +1550,7 @@ namespace Rawr.Mage.SequenceReconstruction
             return count;
         }
 
-        private void SortGroups_Compute(List<SequenceItem> itemList)
+        private void SortGroups_Compute(List<SequenceItem> itemList, Solver solver)
         {
             const double eps = 0.000001;
             int N = itemList.Count;
@@ -2027,7 +2027,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-            } while (i >= 0);
+            } while (i >= 0 && (solver == null || !solver.CancellationPending));
         }
 
         private void SortGroups_AddRemainingItems(List<SequenceItem> constructionList, List<double> constructionTime, List<SequenceItem> remainingList)

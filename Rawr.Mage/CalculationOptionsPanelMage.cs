@@ -96,7 +96,8 @@ namespace Rawr.Mage
             string armor = "Molten Armor";
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Stats rawStats = calculations.GetRawStats(Character, null, calculationOptions, new List<Buff>(), armor);
+            List<Buff> ignore;
+            Stats rawStats = calculations.GetRawStats(Character, null, calculationOptions, new List<Buff>(), armor, out ignore);
             Stats characterStats = calculations.GetCharacterStats(Character, null, rawStats, calculationOptions);
             CharacterCalculationsMage calculationResult = new CharacterCalculationsMage();
             calculationResult.Calculations = calculations;

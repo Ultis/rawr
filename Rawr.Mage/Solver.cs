@@ -172,6 +172,14 @@ namespace Rawr.Mage
         private bool useGlobalOptimizations;
         private bool cancellationPending;
 
+        internal bool CancellationPending
+        {
+            get
+            {
+                return cancellationPending;
+            }
+        }
+
         public void CancelAsync()
         {
             cancellationPending = true;
@@ -307,7 +315,8 @@ namespace Rawr.Mage
         public CharacterCalculationsMage GetCharacterCalculations(Item additionalItem, CalculationsMage calculations)
         {
             List<Buff> autoActivatedBuffs = new List<Buff>();
-            Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
+            List<Buff> activeBuffs;
+            Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor, out activeBuffs);
             Stats baseStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
             //if (useSMP) calculationOptions.SmartOptimization = true;
@@ -318,6 +327,7 @@ namespace Rawr.Mage
             calculationResult.Character = character;
             calculationResult.CalculationOptions = calculationOptions;
             calculationResult.MageTalents = talents;
+            calculationResult.ActiveBuffs = activeBuffs;
 
             restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
             powerInfusionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PowerInfusionAvailable;
@@ -2863,11 +2873,9 @@ namespace Rawr.Mage
                             if (talents.BrainFreeze > 0)
                             {
                                 list.Add(CycleId.FrBFB);
+                                list.Add(CycleId.FrBFBIL);
                             }
-                            else
-                            {
-                                list.Add(CycleId.FrostboltFOF);
-                            }
+                            list.Add(CycleId.FrostboltFOF);
                         }
                         else if (talents.ArcaneBarrage > 0)
                         {

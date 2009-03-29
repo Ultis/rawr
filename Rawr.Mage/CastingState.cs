@@ -180,6 +180,11 @@ namespace Rawr.Mage
             }
         }
 
+        public override string ToString()
+        {
+            return BuffLabel;
+        }
+
         private static float ComputeCombustion(float critRate)
         {
             float c0 = 1, c1 = 0, c2 = 0, c3 = 0;

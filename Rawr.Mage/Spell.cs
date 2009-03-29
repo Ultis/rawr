@@ -244,22 +244,24 @@ namespace Rawr.Mage
         private bool calculated;
 
         internal float damagePerSecond;
+        internal float effectDamagePerSecond;
         public float DamagePerSecond
         {
             get
             {
                 Calculate();
-                return damagePerSecond;
+                return damagePerSecond + effectDamagePerSecond;
             }
         }
 
         internal float threatPerSecond;
+        internal float effectThreatPerSecond;
         public float ThreatPerSecond
         {
             get
             {
                 Calculate();
-                return threatPerSecond;
+                return threatPerSecond + effectThreatPerSecond;
             }
         }
 
@@ -347,7 +349,7 @@ namespace Rawr.Mage
                 if (baseStats.SpellPowerFor10SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / CritProcs / 0.2f);
                 if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
                 waterbolt = CastingState.Calculations.WaterboltTemplate.GetSpell(CastingState, spellPower);
-                damagePerSecond += waterbolt.DamagePerSecond;
+                effectDamagePerSecond += waterbolt.DamagePerSecond;
             }
             if (baseStats.LightningCapacitorProc > 0)
             {
@@ -358,8 +360,8 @@ namespace Rawr.Mage
                 float avgHitsToDischarge = 3f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
                 float boltDps = LightningBolt.AverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                damagePerSecond += boltDps;
-                threatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
+                effectDamagePerSecond += boltDps;
+                effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
@@ -372,8 +374,8 @@ namespace Rawr.Mage
                 float avgHitsToDischarge = 4f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
                 float boltDps = ThunderBolt.AverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                damagePerSecond += boltDps;
-                threatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
+                effectDamagePerSecond += boltDps;
+                effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
             }
@@ -381,22 +383,22 @@ namespace Rawr.Mage
             {
                 Spell ArcaneBolt = CastingState.ArcaneBolt;
                 float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
-                damagePerSecond += boltDps;
-                threatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
+                effectDamagePerSecond += boltDps;
+                effectThreatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
             }
             if (baseStats.PendulumOfTelluricCurrentsProc > 0)
             {
                 Spell PendulumOfTelluricCurrents = CastingState.PendulumOfTelluricCurrents;
                 float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
-                damagePerSecond += boltDps;
-                threatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
+                effectDamagePerSecond += boltDps;
+                effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
             }
             if (baseStats.LightweaveEmbroideryProc > 0)
             {
                 Spell LightweaveBolt = CastingState.LightweaveBolt;
                 float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
-                damagePerSecond += boltDps;
-                threatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
+                effectDamagePerSecond += boltDps;
+                effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
             }
         }
 
@@ -426,7 +428,7 @@ namespace Rawr.Mage
             }
         }
 
-        protected void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration)
         {
             SpellContribution contrib;
             if (waterbolt != null)
@@ -641,7 +643,6 @@ namespace Rawr.Mage
             public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
             {
                 spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime);
-                AddEffectContribution(dict, duration);
             }
 
             public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
@@ -1234,9 +1235,20 @@ namespace Rawr.Mage
     #region Base Spells
     public class WaterboltTemplate : SpellTemplate
     {
-        public WaterboltTemplate()
+        Stats waterElementalBuffs;
+        string[] validBuffs = new string[] { "Ferocious Inspiration", "Sanctified Retribution", "Improved Moonkin Form", "Swift Retribution", "Elemental Oath", "Moonkin Form", "Wrath of Air Totem", "Demonic Pact", "Flametongue Totem", "Enhancing Totems", "Totem of Wrath (Spell Power)", "Heart of the Crusader", "Master Poisoner", "Totem of Wrath", "Winter's Chill", "Improved Scorch", "Improved Shadow Bolt", "Curse of the Elements", "Earth and Moon", "Ebon Plaguebringer", "Improved Faerie Fire", "Misery" };
+
+        public WaterboltTemplate(CharacterCalculationsMage calculations)
         {
             Name = "Waterbolt";
+            waterElementalBuffs = new Stats();
+            foreach (Buff buff in calculations.ActiveBuffs)
+            {
+                if (Array.IndexOf(validBuffs, buff.Name) >= 0)
+                {
+                    waterElementalBuffs.Accumulate(buff.Stats);
+                }
+            }
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -1255,15 +1267,11 @@ namespace Rawr.Mage
             // 45 sec, 3 min cooldown + cold snap
             // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
             // TODO recheck all buffs that apply
-            float spellCrit = 0.05f;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath"))) spellCrit += 0.03f;
+            float spellCrit = 0.05f + waterElementalBuffs.SpellCrit;
             float hitRate = castingState.FrostHitRate;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Winter's Chill")) || character.MageTalents.WintersChill > 0 || character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Scorch")) || character.MageTalents.ImprovedScorch > 0) spellCrit += 0.1f;
             float multiplier = hitRate;
-            float haste = 1.0f;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Curse of the Elements"))) multiplier *= 1.1f;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Curse of the Elements"))) multiplier *= 1.13f / 1.1f;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Misery"))) haste *= 1.05f;
+            float haste = (1f + waterElementalBuffs.SpellHaste);
+            multiplier *= (1 + waterElementalBuffs.BonusDamageMultiplier) * (1 + waterElementalBuffs.BonusFrostDamageMultiplier);
             if (castingState.Heroism) haste *= 1.3f;
             float realResistance = calculationOptions.FrostResist;
             float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
@@ -1271,7 +1279,7 @@ namespace Rawr.Mage
 
             spell.CastTime = 2.5f / haste;
             spell.CostPerSecond = 0.0f;
-            spell.DamagePerSecond = (521.5f + (0.4f * spellPower + (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath of Air")) ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f * haste;
+            spell.DamagePerSecond = (521.5f + (0.4f * spellPower + waterElementalBuffs.SpellPower + waterElementalBuffs.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f * haste;
             spell.ThreatPerSecond = 0.0f;
 
             return spell;
@@ -2508,7 +2516,6 @@ namespace Rawr.Mage
                     spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime);
                 }
             }
-            AddEffectContribution(dict, duration);
         }
 
         public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
@@ -2570,7 +2577,6 @@ namespace Rawr.Mage
             {
                 if (Cycle[i] != null) Cycle[i].AddSpellContribution(dict, Weight[i] * Cycle[i].CastTime / CastTime * duration);
             }
-            AddEffectContribution(dict, duration);
         }
 
         public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)

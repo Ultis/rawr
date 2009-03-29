@@ -395,14 +395,12 @@ namespace Rawr.Mage
                     CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
-                calculationOptions.IncrementalSetArmor = ((CharacterCalculationsMage)calc).MageArmor;
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
                 ret = calc;
             }
             else
             {
                 CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations);
-                if (!character.DisableBuffAutoActivation) calculationOptions.IncrementalSetArmor = ((CharacterCalculationsMage)calc).MageArmor;
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
                 ret = calc;
             }
@@ -454,12 +452,12 @@ namespace Rawr.Mage
             return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations);
         }
 
-        public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor)
+        public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)
         {
             Stats stats = new Stats();
             AccumulateItemStats(stats, character, additionalItem);
             //AccumulateEnchantsStats(stats, character);
-            List<Buff> activeBuffs = new List<Buff>();
+            activeBuffs = new List<Buff>();
             activeBuffs.AddRange(character.ActiveBuffs);
 
             if (!character.DisableBuffAutoActivation)
@@ -475,6 +473,7 @@ namespace Rawr.Mage
                         {
                             activeBuffs.Add(improvedScorch);
                             autoActivatedBuffs.Add(improvedScorch);
+                            RemoveConflictingBuffs(activeBuffs, improvedScorch);
                         }
                     }
                 }
@@ -484,6 +483,7 @@ namespace Rawr.Mage
                     {
                         activeBuffs.Add(wintersChill);
                         autoActivatedBuffs.Add(wintersChill);
+                        RemoveConflictingBuffs(activeBuffs, wintersChill);
                     }
                 }
                 if (armor != null)
@@ -507,7 +507,8 @@ namespace Rawr.Mage
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<Buff>(), null), calculationOptions);
+            List<Buff> ignore;
+            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<Buff>(), null, out ignore), calculationOptions);
         }
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)

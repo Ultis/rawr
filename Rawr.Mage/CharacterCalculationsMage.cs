@@ -163,6 +163,8 @@ namespace Rawr.Mage
         public float ChanceToDie { get; set; }
         public float MeanIncomingDps { get; set; }
 
+        public List<Buff> ActiveBuffs { get; set; }
+
         #region Base State Stats
         public float BaseSpellHit { get; set; }
         public float BaseArcaneHitRate { get; set; }
@@ -236,7 +238,7 @@ namespace Rawr.Mage
             {
                 if (_WaterboltTemplate == null)
                 {
-                    _WaterboltTemplate = new WaterboltTemplate();
+                    _WaterboltTemplate = new WaterboltTemplate(this);
                 }
                 return _WaterboltTemplate;
             }
@@ -569,10 +571,10 @@ namespace Rawr.Mage
             SequenceItem.Calculations = this;
             double unexplained;
             Sequence sequence = GenerateRawSequence(false);
-            if (!sequence.SortGroups())
+            if (!sequence.SortGroups(displaySolver))
             {
                 sequence = GenerateRawSequence(true);
-                sequence.SortGroups();
+                sequence.SortGroups(displaySolver);
             }
 
             // mana gem/pot/evo positioning
@@ -839,6 +841,7 @@ namespace Rawr.Mage
             ManaSources["Innervate"] = 0.0f;
             ManaSources["Mana Tide"] = 0.0f;
             ManaSources["Drinking"] = 0.0f;
+            ManaSources["Water Elemental"] = 0.0f;
             ManaSources["Other"] = 0.0f;
             ManaUsage["Overflow"] = 0.0f;
             ManaUsage["Summon Water Elemental"] = 0.0f;
@@ -1015,6 +1018,15 @@ namespace Rawr.Mage
                             ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                             ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                            Spell waterbolt = WaterboltTemplate.GetSpell(SolutionVariable[i].State);
+                            SpellContribution contrib;
+                            if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
+                            {
+                                contrib = new SpellContribution() { Name = waterbolt.Name };
+                                DamageSources[waterbolt.Name] = contrib;
+                            }
+                            contrib.Hits += (float)Solution[i] / waterbolt.CastTime;
+                            contrib.Damage += waterbolt.DamagePerSecond * (float)Solution[i];
                             break;
                         case VariableType.ConjureManaGem:
                             cmg += Solution[i];
@@ -1028,6 +1040,7 @@ namespace Rawr.Mage
                             double value;
                             Cycle s = SolutionVariable[i].Cycle;
                             s.AddSpellContribution(DamageSources, (float)Solution[i]);
+                            s.AddEffectContribution(DamageSources, (float)Solution[i]);
                             s.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             s.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
