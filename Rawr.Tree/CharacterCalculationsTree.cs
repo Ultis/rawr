@@ -32,6 +32,22 @@ namespace Rawr.Tree
 
         public Character LocalCharacter { get; set; }
 
+        public float haste { get; set; }
+        float spellhaste { get; set; }
+        float haste_until_hard_cap { get; set; }
+        float haste_until_soft_cap { get; set; }
+
+        public void doHasteCalcs()
+        {
+            haste = (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);
+            spellhaste = 1 + BasicStats.SpellHaste;
+            float hard = (1.5f / (1f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
+            float soft = (1.5f / (1.3f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
+            haste_until_hard_cap = hard - BasicStats.HasteRating;
+            haste_until_soft_cap = soft - BasicStats.HasteRating;
+        }
+
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -46,19 +62,16 @@ namespace Rawr.Tree
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             float spi_from_trinkets = (BasicStats.SpiritFor20SecOnUse2Min / 6f);
             dictValues.Add("Spirit", BasicStats.Spirit.ToString() + (spi_from_trinkets > 0 || BasicStats.ExtraSpiritWhileCasting > 0 ? "*" + Math.Round(spi_from_trinkets, 2).ToString() + " Spirit from trinkets\n" + Math.Round(BasicStats.ExtraSpiritWhileCasting,2).ToString() + " Spirit while casting" : ""));
-            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus\n");
+            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
 
             bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
             dictValues.Add("MP5", Math.Round(Simulation.ManaPer5In5SR).ToString() + "*" + Math.Round(Simulation.ManaPer5Out5SR).ToString() + " Out of FSR\n" + Math.Round(Simulation.ReplenishRegen).ToString() + " From Replenishment\n" + (hasSpiWhileCasting ? "(values include extra Spirit while casting)\n" : "\n") + Math.Round(Simulation.ManaFromInnervate).ToString() + " extra mana from each Innervate");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
-            float haste = (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);
-            float sp = 1 + BasicStats.SpellHaste;
-            float hard = (1.5f / (1f * sp) - 1) * TreeConstants.HasteRatingToHaste;
-            float soft = (1.5f / (1.3f * sp) - 1) * TreeConstants.HasteRatingToHaste;
-            float haste_until_hard_cap = hard - BasicStats.HasteRating;
-            float haste_until_soft_cap = soft - BasicStats.HasteRating;
-            dictValues.Add("Spell Haste", Math.Round(sp, 2) + "%");
-            dictValues.Add("Global CD", Math.Round(1.5f / (haste * sp), 2) + "sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap\n" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until soft (GotEM) gcd cap");
+
+            doHasteCalcs();
+
+            dictValues.Add("Spell Haste", Math.Round((spellhaste * haste - 1.0f) * 100.0f, 2) + "%*" + Math.Round((spellhaste - 1.0f) * 100.0f, 2) + "% from spells effects\n" + Math.Round((haste - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
+            dictValues.Add("Global CD", Math.Round(1.5f / (haste * spellhaste), 2) + "sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap\n" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until soft (GotEM) gcd cap");
 
             dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString() + "* " + Math.Round(Simulation.UnusedMana, 0).ToString() + " mana remaining at end of fight");
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
@@ -127,6 +140,23 @@ namespace Rawr.Tree
             dictValues.Add("N (HoT) HPM", Math.Round(spell.HPM, 2).ToString());
             dictValues.Add("N (HoT) HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
             return dictValues;
+        }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            doHasteCalcs();
+
+            switch (calculation)
+            {
+                case "Mana": return BasicStats.Mana;
+                case "MP5": return Simulation.ManaPer5In5SR;
+                case "Spell Haste Percentage": return (spellhaste -1.0f) * 100.0f;
+                case "Haste Percentage": return (haste - 1.0f) * 100.0f;
+                case "Combined Haste Percentage": return (spellhaste * haste - 1.0f) * 100.0f;
+                case "Haste until Soft Cap": return haste_until_soft_cap;
+                case "Haste until Hard Cap": return haste_until_hard_cap;
+            }
+            return 0f;
         }
     }
 }

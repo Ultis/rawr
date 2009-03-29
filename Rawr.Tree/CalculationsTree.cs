@@ -231,6 +231,25 @@ namespace Rawr.Tree
             }
         }
 
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+					"Mana",
+					"MP5",
+					"Spell Haste Percentage",
+                    "Haste Percentage",
+                    "Combined Haste Percentage",
+                    "Haste until Soft Cap",
+                    "Haste until Hard Cap",
+					};
+                return _optimizableCalculationLabels;
+            }
+        }
+
 
         private CalculationOptionsPanelTree _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
