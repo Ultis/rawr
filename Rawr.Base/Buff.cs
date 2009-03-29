@@ -156,7 +156,7 @@ namespace Rawr
                     if (Calculations.Instance != null)
                     {
                         _cachedModel = Calculations.Instance.ToString();
-                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.HasRelevantStats(buff.GetTotalStats()));
+                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff));
                     }
                     else
                         _relevantBuffs = new List<Buff>();

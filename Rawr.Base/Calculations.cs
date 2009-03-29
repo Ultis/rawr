@@ -271,6 +271,18 @@ namespace Rawr
 				return Instance.IsItemRelevant(item);
 			return false;
 		}
+		public static bool IsBuffRelevant(Buff buff)
+		{
+			if (Instance != null)
+				return Instance.IsBuffRelevant(buff);
+			return false;
+		}
+		public static bool IsEnchantRelevant(Enchant enchant)
+		{
+			if (Instance != null)
+				return Instance.IsEnchantRelevant(enchant);
+			return false;
+		}
 		public static bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
 		{
 			if (Instance != null)
@@ -922,6 +934,30 @@ namespace Rawr
 					(RelevantItemTypes.Contains(item.Type)) && HasRelevantStats(item.Stats);
 			}
 			catch (Exception )
+			{
+				return false;
+			}
+		}
+
+		public virtual bool IsBuffRelevant(Buff buff)
+		{
+			try
+			{
+				return HasRelevantStats(buff.GetTotalStats());
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+		public virtual bool IsEnchantRelevant(Enchant enchant)
+		{
+			try
+			{
+				return HasRelevantStats(enchant.Stats);
+			}
+			catch (Exception)
 			{
 				return false;
 			}
