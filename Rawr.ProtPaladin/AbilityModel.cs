@@ -39,24 +39,25 @@ namespace Rawr.ProtPaladin
                     break;               
                 case Ability.ShieldOfRighteousness:
                     baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) * 1.3f + 520f;
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HammerOfTheRighteous:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) / Lookup.WeaponSpeed(Character, Stats) * 4f;
-                    DamageMultiplier *= (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
 					ArmorReduction = 0.0f;
                     break;
 				// Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
 				// While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
 				case Ability.SealOfVengeance:
 					baseDamage = (1.0f + 0.02f * Stats.SpellPower);
-					DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
 					ArmorReduction = 0.0f;
 					break;
                 // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
                 case Ability.JudgementOfVengeance:
                     baseDamage = (1.0f + 0.28f * Stats.SpellPower + 0.175f * Stats.AttackPower) * 1.5f;
-					DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Options.GlyphJudgement)
                     {
                         DamageMultiplier *= (1.0f + 0.01f);
@@ -66,7 +67,7 @@ namespace Rawr.ProtPaladin
                 case Ability.SealOfRighteousness:
                     baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * Stats.AttackPower) + 
                                  (Lookup.WeaponSpeed(Character, Stats) * 0.044f * Stats.SpellPower);
-                    DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Options.GlyphSealRighteousness)
                     {
                         DamageMultiplier *= (1.0f + 0.1f);
@@ -75,7 +76,7 @@ namespace Rawr.ProtPaladin
 					break;
 				case Ability.JudgementOfRighteousness:
                     baseDamage = (1.0f + 0.2f * Stats.AttackPower + 0.32f * Stats.SpellPower);
-                    DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Options.GlyphJudgement)
                     {
                         DamageMultiplier *= (1.0f + 0.01f);
@@ -86,26 +87,30 @@ namespace Rawr.ProtPaladin
 				// TODO: implement stacking mechanic for beginning-of-fight TPS
                 case Ability.HolyVengeance:
                     baseDamage = 5f * (0.016f * Stats.SpellPower + 0.032f * Stats.AttackPower);
-                    DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HolyShield:
                     baseDamage = (211f + (.056f * Stats.AttackPower) + (.09f * Stats.SpellPower)) * 1.3f;
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
                     break;
 				// TODO: Split Consecration into X number of individually resistable stacks
 				case Ability.Consecration:
-		            baseDamage = 904f + 0.32f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + 0.32f * Stats.AttackPower;
+                    baseDamage = 904f + 0.32f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + 0.32f * Stats.AttackPower;
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.Exorcism:
                     baseDamage = (1028f + 0.15f * Stats.SpellPower + 0.15f * Stats.AttackPower);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                         if (Options.GlyphExorcism)
                         DamageMultiplier *= (1.0f + 0.30f);
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.AvengersShield:
-					baseDamage = 846f + 0.07f * Stats.SpellPower + 0.07f * Stats.AttackPower;
+                    baseDamage = 846f + 0.07f * Stats.SpellPower + 0.07f * Stats.AttackPower;
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
 					break;
             }

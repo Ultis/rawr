@@ -718,7 +718,7 @@ focus on Survival Points.",
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
-                SpellCrit = (talents.CombatExpertise * 0.02f) + (talents.SanctityOfBattle * 0.01f),
+                SpellCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
                 BonusStrengthMultiplier = talents.DivineStrength * 0.03f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
