@@ -105,7 +105,7 @@ namespace Rawr.ProtPaladin
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
         {
-        	return (((float)Math.Floor(stats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise) + stats.Expertise)
+        	return ((stats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + stats.Expertise)
                     * ProtPaladin.ExpertiseToDodgeParryReduction) / 100.0f;
         }
 
@@ -117,6 +117,11 @@ namespace Rawr.ProtPaladin
         public static float BonusHitPercentage(Character character, Stats stats)
         {
             return ((stats.HitRating * ProtPaladin.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
+        }
+        
+        public static float BonusSpellHitPercentage(Character character, Stats stats)
+        {
+            return ((stats.HitRating * ProtPaladin.HitRatingToSpellHit) / 100.0f) + stats.SpellHit;
         }
 
         public static float BonusCritPercentage(Character character, Stats stats)
@@ -133,6 +138,38 @@ namespace Rawr.ProtPaladin
                                     - 4.8f) / 100.0f) + stats.PhysicalCrit);
         }
 
+        public static float BonusSpellCritPercentage(Character character, Stats stats)
+        {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            float spellCrit = Math.Min(1.0f, (((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Intellect * ProtPaladin.IntellectToCrit)) / 100.0f) + stats.SpellCrit);
+            
+            /*
+             * Unlike the melee combat system, spell crit makes absolutely no difference to hit chance. 
+             * All spells, regardless of whether they are treated as binary or not, roll hit and crit separately. 
+             * Conceptually, the game rolls for your hit chance first, and if the spell hits you have a separate roll for whether it crits. 
+             * Overall chance to crit over all spells cast is thus affected by hit rate. 
+             * To calculate overall crit rate, multiplying the two chances together: 
+             * Crit rate over all spell casts = crit * hit
+             * 
+             * For example, a caster with no spell hit rating gear or talents, 
+             * against a mob 3 levels higher (83% hit chance), and 30% crit rating from gear and talents: 
+             * crit rate over all spell casts = 30% * 83% = 24.9%
+             * 
+             * A level 80 player against a level 83 boss needs +26.232*k hit rating, to achieve +k% chance to hit with spells.
+             * In addition, direct damage spells suffer from partial resistance, but again, that has no effect on whether a spell hits or not.
+             */
+
+            if ((calcOpts.TargetLevel - character.Level) == 3)	// 83% chance to miss
+            	return spellCrit * Math.Min(1.0f, 0.83f + stats.SpellHit);
+            if ((calcOpts.TargetLevel - character.Level) == 2)	// 94% chance to miss
+            	return spellCrit * Math.Min(1.0f, 0.94f + stats.SpellHit);
+            if ((calcOpts.TargetLevel - character.Level) == 1)	// 95% chance to miss
+            	return spellCrit * Math.Min(1.0f, 0.95f + stats.SpellHit);
+            else 												// 96% chance to miss
+            	return spellCrit * Math.Min(1.0f, 0.96f + stats.SpellHit);
+
+        }
+        
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
         {
             // Grab base melee crit chance before adding ability-specific crit chance
@@ -148,7 +185,23 @@ namespace Rawr.ProtPaladin
 
             return Math.Min(1.0f, abilityCritChance);
         }
+/*        
+        public static float BonusSpellCritPercentage(Character character, Stats stats, Ability ability)
+        {
+            // Grab base spell crit chance before adding ability-specific crit chance
+            float abilityCritChance = BonusCitPercentage(character, stats);
 
+            switch (ability)
+            {
+                case Ability.Exorcism:
+                case Ability.HolyVengeance:
+                    abilityCritChance = 0.0f;
+                    break;
+            }
+
+            return Math.Min(1.0f, abilityCritChance);
+        }
+*/
         public static float WeaponDamage(Character character, Stats stats, bool normalized)
         {
             float weaponDamage = 1.0f;

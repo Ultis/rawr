@@ -91,7 +91,9 @@ namespace Rawr.ProtPaladin
         public float ParriedAttacks { get; set; }
         public float BlockedAttacks { get; set; }
         public float Hit { get; set; }
+        public float SpellHit { get; set; }
         public float Crit { get; set; }
+        public float SpellCrit { get; set; }
         public float Expertise { get; set; }
         public float Haste { get; set; }
         public float ArmorPenetration { get; set; }
@@ -107,9 +109,11 @@ namespace Rawr.ProtPaladin
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
 
             dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Strength", BasicStats.Strength.ToString());
             dictValues.Add("Agility", BasicStats.Agility.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}", BasicStats.Armor, ArmorReduction));
             dictValues.Add("Defense", Defense.ToString() + string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
             dictValues.Add("Dodge", string.Format("{0:0.00%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
@@ -165,15 +169,17 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Attack Power", string.Format("{0}", BasicStats.AttackPower));
             dictValues.Add("Spell Power", string.Format("{0}", BasicStats.SpellPower));
             dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}", Hit, BasicStats.HitRating));
+            dictValues.Add("Spell Hit", string.Format("{0:0.00%}*Hit Rating {1}", SpellHit, BasicStats.HitRating));
             dictValues.Add("Expertise",
-                string.Format("{0}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.",
-                                         (float)Math.Floor(BasicStats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise) + BasicStats.Expertise,
+                string.Format("{0:0.00}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.",
+                                         BasicStats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + BasicStats.Expertise,
                                 BasicStats.ExpertiseRating, Expertise));
             dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", Haste, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration",
                 string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}",
                                 ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
+            dictValues.Add("Spell Crit", string.Format("{0:0.00%}*Crit Rating {1}", SpellCrit, BasicStats.CritRating));
             dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine +
