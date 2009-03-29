@@ -260,7 +260,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Flash Heal",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_FlashHeal = 0.1f }
             });
@@ -268,7 +268,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Dispel",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_Dispel = 0.03f }
             });
@@ -276,7 +276,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Power Word: Shield",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_PowerWordShield = 0.2f }
             });
@@ -284,7 +284,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Circle of Healing",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_CircleOfHealing = 1f }
             });
@@ -292,7 +292,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Renew",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_Renew = 3f }
             });
@@ -300,7 +300,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Prayer of Healing",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_PrayerOfHealing = 0.2f }
             });
@@ -308,7 +308,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Holy Nova",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_HolyNova = 0.4f }
             });
@@ -316,7 +316,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Lightwell",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_Lightwell = 0.2f }
             });
@@ -324,7 +324,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Mass Dispel",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_MassDispel = 0.2f }
             });
@@ -332,7 +332,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Shadow Word: Pain",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_ShadowWordPain = 0.1f }
             });
@@ -340,7 +340,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Shadow",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_Shadow = 0.1f }
             });
@@ -348,7 +348,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Glyph of Shadow Word: Death",
-                Group = "Glyphs",
+                Group = "Priest Glyphs",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { GLYPH_ShadowWordDeath = 0.1f }
             });

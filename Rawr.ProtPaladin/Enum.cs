@@ -58,4 +58,24 @@ namespace Rawr.ProtPaladin
         Shadow,
         Nature,
     }
+
+    public enum CreatureType
+    {
+        Unspecified,
+        Humanoid,
+        Undead,
+        Demon,
+        Giant,
+        Elemental,
+        Mechanical,
+        Beast,
+        Dragonkin,
+    }
+
+    public enum AttackType
+    {
+        Melee,
+        Ranged,
+        Spell,
+    }
 }

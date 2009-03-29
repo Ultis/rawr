@@ -28,7 +28,8 @@ namespace Rawr.ProtPaladin
 			CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
 
             // Attacker Stats
-			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+            comboBoxTargetType.SelectedItem = calcOpts.TargetType.ToString();
+            numericUpDownTargetLevel.Value = calcOpts.TargetLevel;
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
             trackBarBossAttackValue.Value = calcOpts.BossAttackValue;
             trackBarBossAttackSpeed.Value = (int)(calcOpts.BossAttackSpeed / 0.25f);
@@ -60,6 +61,7 @@ namespace Rawr.ProtPaladin
             checkBoxGlyphOfSealOfVengeance.Checked = calcOpts.GlyphSealVengeance;
             checkBoxGlyphOfExorcism.Checked = calcOpts.GlyphExorcism;
             checkBoxGlyphOfDivinePlea.Checked = calcOpts.GlyphDivinePlea;
+            checkBoxGlyphOfSenseUndead.Checked = calcOpts.GlyphSenseUndead;
 
             calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
 			
@@ -88,7 +90,8 @@ namespace Rawr.ProtPaladin
                 labelThreatScale.Text = String.Format("{0:0.0}", ((float)(trackBarThreatScale.Value) * 0.1f));
 				labelMitigationScale.Text = String.Format("{0:0.0}", ((float)(trackBarMitigationScale.Value) * 0.1f));
 
-				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+				//c alcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+                calcOpts.TargetLevel = (int)numericUpDownTargetLevel.Value;
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 calcOpts.BossAttackValue = trackBarBossAttackValue.Value;
                 calcOpts.BossAttackSpeed = ((float)(trackBarBossAttackSpeed.Value) * 0.25f);
@@ -241,6 +244,36 @@ namespace Rawr.ProtPaladin
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void numericUpDownTargetLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.TargetLevel = (int)numericUpDownTargetLevel.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboBoxTargetType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.TargetType = comboBoxTargetType.SelectedItem.ToString();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfSenseUndead_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.GlyphSenseUndead = checkBoxGlyphOfSenseUndead.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 	}
 
 	[Serializable]
@@ -269,8 +302,10 @@ namespace Rawr.ProtPaladin
         public bool GlyphJudgement = false;
         public bool GlyphExorcism = false;
         public bool GlyphDivinePlea = false;
+        public bool GlyphSenseUndead = false;
         public bool UseHolyShield = true;
         public string SealChoice = "Seal of Vengeance";
+        public string TargetType = "Unspecified";
 		public PaladinTalents talents = null;
 	}
 }

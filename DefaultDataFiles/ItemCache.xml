@@ -11673,7 +11673,7 @@
     <Slot>Feet</Slot>
     <Stats>
       <Armor>1580</Armor>
-      <Stamina>63</Stamina>
+      <Stamina>94</Stamina>
       <Strength>74</Strength>
       <BlockRating>33</BlockRating>
       <BlockValue>77</BlockValue>
@@ -16469,7 +16469,7 @@
     <Slot>Waist</Slot>
     <Stats>
       <Armor>1293</Armor>
-      <Stamina>75</Stamina>
+      <Stamina>112</Stamina>
       <Strength>75</Strength>
       <DodgeRating>28</DodgeRating>
       <BlockRating>50</BlockRating>
@@ -18560,7 +18560,7 @@
     <Slot>OffHand</Slot>
     <Stats>
       <Armor>7890</Armor>
-      <Stamina>63</Stamina>
+      <Stamina>94</Stamina>
       <Strength>63</Strength>
       <DodgeRating>24</DodgeRating>
       <BlockRating>31</BlockRating>

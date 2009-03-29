@@ -103,7 +103,7 @@ namespace Rawr.ProtPaladin
 					break;
 				case Ability.Exorcism:
                     baseDamage = (1028f + 0.15f * Stats.SpellPower + 0.15f * Stats.AttackPower);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1f + Talents.SanctityOfBattle * 0.05f);
                         if (Options.GlyphExorcism)
                         DamageMultiplier *= (1.0f + 0.30f);
 					ArmorReduction = 0.0f;
@@ -171,6 +171,7 @@ namespace Rawr.ProtPaladin
             Name                = Lookup.Name(Ability);
             ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
+            DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character);
 
             CalculateDamage();
             CalculateThreat();

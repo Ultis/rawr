@@ -55,6 +55,23 @@ namespace Rawr.ProtPaladin
             }
         }
 
+        // Creature Type Damage Bonus from Crusade
+        public static float CreatureTypeDamageMultiplier(Character character)
+        {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+
+            switch (calcOpts.TargetType)
+            {
+                case "Humanoid":
+                case "Demon":
+                case "Elemental":
+                    return (1f + character.PaladinTalents.Crusade * 0.01f);
+                case "Undead":
+                    return (1f + character.PaladinTalents.Crusade * 0.01f) * (1f + (calcOpts.GlyphSenseUndead ? 0.01f : 0f));
+                default: return 1f;
+            }
+        }
+
         public static float StanceDamageMultipler(Character character, Stats stats)
         {
             return (1.0f) * (1.0f + stats.BonusDamageMultiplier);
@@ -172,14 +189,26 @@ namespace Rawr.ProtPaladin
         
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
         {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+
             // Grab base melee crit chance before adding ability-specific crit chance
             float abilityCritChance = BonusCritPercentage(character, stats);
-
+            float spellCritChance = BonusSpellCritPercentage(character, stats);
+            
             switch (ability)
-            {
+            {                
                 case Ability.Consecration:
                 case Ability.HolyVengeance:
+                case Ability.SealOfRighteousness:
                     abilityCritChance = 0.0f;
+                    break;
+                case Ability.JudgementOfRighteousness:
+                case Ability.SealOfVengeance:
+                case Ability.JudgementOfVengeance:                
+                    abilityCritChance = spellCritChance;
+                    break;
+                case Ability.Exorcism:
+                    abilityCritChance = (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon" ? 100f : spellCritChance);
                     break;
             }
 

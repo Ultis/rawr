@@ -1142,7 +1142,7 @@ focus on Survival Points.",
                 // Threat Stats
                 stats.CritRating + 
                 stats.PhysicalCrit + 
-                //stats.SpellCrit + 
+                stats.SpellCrit +
                 stats.WeaponDamage + 
                 stats.AttackPower + 
                 //stats.SpellHitRating +
@@ -1185,6 +1185,7 @@ focus on Survival Points.",
                 stats.ShadowResistanceBuff 
                 ) != 0;
         }
+
         /// <summary>
         /// Saves the talents for the character
         /// </summary>
