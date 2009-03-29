@@ -508,6 +508,7 @@ namespace Rawr.DPSWarr
                                                                  Item.ItemType.OneHandMace,
                                                                  Item.ItemType.OneHandSword,
                                                                  Item.ItemType.OneHandAxe,
+                                                                 Item.ItemType.Staff,
                                                                  Item.ItemType.Polearm,
                                                                  Item.ItemType.TwoHandMace,
                                                                  Item.ItemType.TwoHandSword,
