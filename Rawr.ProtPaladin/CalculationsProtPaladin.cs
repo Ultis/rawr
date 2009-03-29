@@ -1040,11 +1040,12 @@ focus on Survival Points.",
                     return new ComparisonCalculationBase[0];
             }
         }
-        //Hide the ranged weapon enchants. None of them apply to melee damage at all.
-        //public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
-        //{
-        //    return enchant.Slot == Item.ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
-        //}
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            if ((slot == Item.ItemSlot.OffHand && enchant.Slot != Item.ItemSlot.OffHand) || slot == Item.ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
 
         public override Stats GetRelevantStats(Stats stats)
         {

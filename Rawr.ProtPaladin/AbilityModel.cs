@@ -51,7 +51,8 @@ namespace Rawr.ProtPaladin
 				// While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
 				case Ability.SealOfVengeance:
 					baseDamage = (1.0f + 0.02f * Stats.SpellPower);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
+                        (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
 					ArmorReduction = 0.0f;
 					break;
                 // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
@@ -67,7 +68,8 @@ namespace Rawr.ProtPaladin
                 case Ability.SealOfRighteousness:
                     baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * Stats.AttackPower) + 
                                  (Lookup.WeaponSpeed(Character, Stats) * 0.044f * Stats.SpellPower);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) * 
+                        (1f + Stats.BonusSealOfRighteousnessDamageMultiplier);
                     if (Options.GlyphSealRighteousness)
                     {
                         DamageMultiplier *= (1.0f + 0.1f);
@@ -87,7 +89,8 @@ namespace Rawr.ProtPaladin
 				// TODO: implement stacking mechanic for beginning-of-fight TPS
                 case Ability.HolyVengeance:
                     baseDamage = 5f * (0.016f * Stats.SpellPower + 0.032f * Stats.AttackPower);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
+                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
+                        (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HolyShield:
