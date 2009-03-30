@@ -232,7 +232,7 @@ namespace Rawr.Retribution
         public float TimeUnder20 = .18f;
         public float Delay = .05f;
 
-        private Rotation.Ability[] _order = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
+        private Rotation.Ability[] _order = { Rotation.Ability.CrusaderStrike, Rotation.Ability.HammerOfWrath, Rotation.Ability.Judgement,
                                                    Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
         public Rotation.Ability[] Order {
             get { _cache = null; return _order; }
