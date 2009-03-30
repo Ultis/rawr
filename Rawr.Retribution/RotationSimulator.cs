@@ -47,90 +47,93 @@ namespace Rawr.Retribution
             float exoNext = 0;
             float howNext = sol.FightLength * (1f - rot.TimeUnder20);
             bool gcdUsed = false;
-            bool spellCast = false;
+
+            float wait = 0.1f;
 
             while (currentTime < sol.FightLength)
             {
-                spellCast = false;
                 foreach (Rotation.Ability ability in rot.Priorities)
                 {
                     if (ability == Rotation.Ability.Judgement)
                     {
-                        if (judgeNext <= currentTime)
+                        if (judgeNext <= currentTime + wait)
                         {
                             if (judgeFirst < 0) judgeFirst = currentTime;
                             judgeLast = currentTime;
                             gcdUsed = true;
                             judgeNext = currentTime + judgeCD;
+                            currentTime = judgeNext - judgeCD + 1.5f + rot.Delay;
                             sol.Judgement++;
                             break;
                         }
                     }
                     else if (ability == Rotation.Ability.CrusaderStrike)
                     {
-                        if (csNext <= currentTime)
+                        if (csNext <= currentTime + wait)
                         {
                             if (csFirst < 0) csFirst = currentTime;
                             csLast = currentTime;
                             gcdUsed = true;
                             csNext = currentTime + csCD;
+                            currentTime = csNext - csCD + 1.5f + rot.Delay;
                             sol.CrusaderStrike++;
                             break;
                         }
                     }
                     else if (ability == Rotation.Ability.DivineStorm)
                     {
-                        if (dsNext <= currentTime)
+                        if (dsNext <= currentTime + wait)
                         {
                             if (dsFirst < 0) dsFirst = currentTime;
                             dsLast = currentTime;
                             gcdUsed = true;
                             dsNext = currentTime + dsCD;
+                            currentTime = dsNext - dsCD + 1.5f + rot.Delay;
                             sol.DivineStorm++;
                             break;
                         }
                     }
                     else if (ability == Rotation.Ability.HammerOfWrath)
                     {
-                        if (howNext <= currentTime)
+                        if (howNext <= currentTime + wait)
                         {
                             if (howFirst < 0) howFirst = currentTime;
                             howLast = currentTime;
                             gcdUsed = true;
                             howNext = currentTime + howCD;
+                            currentTime = howNext - howCD + 1.5f + rot.Delay;
                             sol.HammerOfWrath++;
                             break;
                         }
                     }
                     else if (ability == Rotation.Ability.Consecration)
                     {
-                        if (consNext <= currentTime)
+                        if (consNext <= currentTime + wait)
                         {
                             if (consFirst < 0) consFirst = currentTime;
                             consLast = currentTime;
                             gcdUsed = true;
-                            spellCast = true;
                             consNext = currentTime + consCD;
+                            currentTime = consNext - consCD + rot.SpellGCD + rot.Delay;
                             sol.Consecration++;
                             break;
                         }
                     }
                     else if (ability == Rotation.Ability.Exorcism)
                     {
-                        if (exoNext <= currentTime)
+                        if (exoNext <= currentTime + wait)
                         {
                             if (exoFirst < 0) exoFirst = currentTime;
                             exoLast = currentTime;
                             gcdUsed = true;
-                            spellCast = true;
                             exoNext = currentTime + exoCD;
+                            currentTime = exoNext - exoCD + rot.SpellGCD + rot.Delay;
                             sol.Exorcism++;
                             break;
                         }
                     }
                 }
-                if (spellCast) currentTime += rot.SpellGCD + rot.Delay;
-                else currentTime += gcdUsed ? (1.5f + rot.Delay) : .01f;
+                if (!gcdUsed) currentTime += .01f;
                 gcdUsed = false;
             }
 

@@ -223,14 +223,8 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            float spellGCD = 1.5f / (1f + stats.SpellHaste);
-            Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, spellGCD, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
-                calcOpts.GlyphConsecration);
-            RotationSolution sol = RotationSimulator.SimulateRotation(rotation);
-
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             calc.BasicStats = stats;
-            calc.Rotation = sol;
 
             //damage multipliers
             float twoHandedSpec = 1f + 0.02f * talents.TwoHandedWeaponSpecialization;
@@ -326,23 +320,68 @@ namespace Rawr.Retribution
             calc.HammerOfWrathDPS = howAvgHit / 6f;
             #endregion
 
-            #region Seal
+            
             float sealDamage = calc.WeaponDamage * .48f * spellPowerMulti * talentMulti * partialResist * aw;
             float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
-            float sealProcs = (sol.FightLength / calc.AttackSpeed + sol.CrusaderStrike + sol.DivineStorm) * (1f - calc.ToMiss - calc.ToDodge);
-            calc.SealDPS = sealAvgHit * sealProcs / sol.FightLength;
-            #endregion
 
-            calc.OverallPoints = calc.DPSPoints = 
-                calc.WhiteDPS + 
-                calc.SealDPS + 
-                ((judgeAvgHit + judgeRightVen) * sol.Judgement +
-                (csAvgHit + csRightVen) * sol.CrusaderStrike +
-                (dsAvgHit + dsRightVen) * sol.DivineStorm +
-                exoAvgHit * sol.Exorcism +
-                consAvgHit * sol.Consecration + 
-                howAvgHit * sol.HammerOfWrath) / sol.FightLength;
+            if (calcOpts.SimulateRotation)
+            {
+                float spellGCD = 1.5f / (1f + stats.SpellHaste);
+                Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, spellGCD, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
+                    calcOpts.GlyphConsecration);
+                RotationSolution sol = RotationSimulator.SimulateRotation(rotation);
+                calc.Rotation = sol;
 
+                float sealProcs = (sol.FightLength / calc.AttackSpeed + sol.CrusaderStrike + sol.DivineStorm) * (1f - calc.ToMiss - calc.ToDodge);
+                calc.SealDPS = sealAvgHit * sealProcs / sol.FightLength;
+
+                calc.OverallPoints = calc.DPSPoints =
+                    calc.WhiteDPS +
+                    calc.SealDPS +
+                    ((judgeAvgHit + judgeRightVen) * sol.Judgement +
+                    (csAvgHit + csRightVen) * sol.CrusaderStrike +
+                    (dsAvgHit + dsRightVen) * sol.DivineStorm +
+                    exoAvgHit * sol.Exorcism +
+                    consAvgHit * sol.Consecration +
+                    howAvgHit * sol.HammerOfWrath) / sol.FightLength;
+
+            }
+            else
+            {
+                float sealProcs = fightLength * (1f / calc.AttackSpeed + 1f / calcOpts.CSCD + 1f / calcOpts.DSCD)
+                    * (1f - calc.ToMiss - calc.ToDodge);
+                calc.SealDPS = sealAvgHit * sealProcs / fightLength;
+                float sealProcs20 = fightLength * (1f / calc.AttackSpeed + 1f / calcOpts.CSCD20 + 1f / calcOpts.DSCD20)
+                    * (1f - calc.ToMiss - calc.ToDodge);
+                float sealDPS20 = sealAvgHit * sealProcs20 / fightLength;
+
+                calc.Rotation = new RotationSolution();
+                calc.Rotation.JudgementCD = calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20;
+                calc.Rotation.CrusaderStrikeCD = calcOpts.CSCD * (1f - calcOpts.TimeUnder20) + calcOpts.CSCD20 * calcOpts.TimeUnder20;
+                calc.Rotation.DivineStormCD = calcOpts.DSCD * (1f - calcOpts.TimeUnder20) + calcOpts.DSCD20 * calcOpts.TimeUnder20;
+                calc.Rotation.ConsecrationCD = calcOpts.ConsCD * (1f - calcOpts.TimeUnder20) + calcOpts.ConsCD20 * calcOpts.TimeUnder20;
+                calc.Rotation.ExorcismCD = calcOpts.ExoCD * (1f - calcOpts.TimeUnder20) + calcOpts.ExoCD20 * calcOpts.TimeUnder20;
+                calc.Rotation.HammerOfWrathCD = calcOpts.HoWCD20;
+
+                float dps = calc.WhiteDPS +
+                    calc.SealDPS +
+                    (judgeAvgHit + judgeRightVen) / calcOpts.JudgeCD +
+                    (csAvgHit + csRightVen) / calcOpts.CSCD +
+                    (dsAvgHit + dsRightVen) / calcOpts.DSCD +
+                    exoAvgHit / calcOpts.ExoCD +
+                    consAvgHit / calcOpts.ConsCD;
+
+                float dps20 = calc.WhiteDPS +
+                    sealDPS20 +
+                    (judgeAvgHit + judgeRightVen) / calcOpts.JudgeCD20 +
+                    (csAvgHit + csRightVen) / calcOpts.CSCD20 +
+                    (dsAvgHit + dsRightVen) / calcOpts.DSCD20 +
+                    exoAvgHit / calcOpts.ExoCD20 +
+                    consAvgHit / calcOpts.ConsCD20 +
+                    howAvgHit / calcOpts.HoWCD20;
+
+                calc.OverallPoints = calc.DPSPoints = dps * (1f - calcOpts.TimeUnder20) + dps20 * calcOpts.TimeUnder20;
+            }
             return calc;
         }
 
@@ -399,18 +438,31 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
-            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
-            float spellGCD = 1.5f / (1f + stats.SpellHaste);
-            Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, spellGCD, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
-                calcOpts.GlyphConsecration);
-            RotationSolution sol = RotationSimulator.SimulateRotation(rot);
+            float libramAP, libramCrit;
+            if (calcOpts.SimulateRotation)
+            {
+                stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
+                float spellGCD = 1.5f / (1f + stats.SpellHaste);
+                Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, spellGCD, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
+                    calcOpts.GlyphConsecration);
+                RotationSolution sol = RotationSimulator.SimulateRotation(rot);
+
+                libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
+                libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength
+                + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / sol.FightLength;
+            }
+            else
+            {
+                libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
+                libramCrit = stats.CritDivineStorm_8 * 8f / (calcOpts.DSCD * (1f - calcOpts.TimeUnder20) + calcOpts.DSCD20 * calcOpts.TimeUnder20)
+                    + stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
+            }
 
             float berserkingAP = stats.BerserkingProc * 140f;
 
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
             stats.Strength = (stats.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             stats.Intellect = stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
-            float libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
             stats.AttackPower = (stats.AttackPower + berserkingAP + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
             stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
             stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
@@ -423,8 +475,6 @@ namespace Rawr.Retribution
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
-            float libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength
-                + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / sol.FightLength;
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Agility / 5208.333333f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f + talentCrit;
