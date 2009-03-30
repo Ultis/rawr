@@ -328,7 +328,7 @@ namespace Rawr.Retribution
             float sealDamage = calc.WeaponDamage * .48f * spellPowerMulti * talentMulti * partialResist * aw;
             float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
             float sealProcs = (sol.FightLength / calc.AttackSpeed + sol.CrusaderStrike + sol.DivineStorm) * (1f - calc.ToMiss - calc.ToDodge);
-            calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge) / sol.FightLength;
+            calc.SealDPS = sealAvgHit * sealProcs / sol.FightLength;
             #endregion
 
             calc.OverallPoints = calc.DPSPoints = 
