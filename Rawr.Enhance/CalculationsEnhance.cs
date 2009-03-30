@@ -628,7 +628,7 @@ namespace Rawr
             //7: Lightning Shield DPS
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
             float damageLSBase = 380;
-            float damageLSCoef = 1f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
+            float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
             float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage);
             if (calcOpts.GlyphLS)

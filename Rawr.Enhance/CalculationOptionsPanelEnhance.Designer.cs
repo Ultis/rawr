@@ -30,6 +30,7 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
             this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.comboBoxOffhandImbue = new System.Windows.Forms.ComboBox();
@@ -61,7 +62,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
@@ -112,13 +112,24 @@
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // chbMagmaSearing
+            // 
+            this.chbMagmaSearing.AutoSize = true;
+            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 336);
+            this.chbMagmaSearing.Name = "chbMagmaSearing";
+            this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
+            this.chbMagmaSearing.TabIndex = 30;
+            this.chbMagmaSearing.Text = "Use Magma Totem instead of Searing Totem";
+            this.chbMagmaSearing.UseVisualStyleBackColor = true;
+            this.chbMagmaSearing.CheckedChanged += new System.EventHandler(this.chbMagmaSearing_CheckedChanged);
+            // 
             // chbBaseStatOption
             // 
             this.chbBaseStatOption.AutoSize = true;
             this.chbBaseStatOption.Location = new System.Drawing.Point(10, 313);
             this.chbBaseStatOption.Name = "chbBaseStatOption";
             this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
-            this.chbBaseStatOption.TabIndex = 35;
+            this.chbBaseStatOption.TabIndex = 29;
             this.chbBaseStatOption.Text = "Use AEP values in Relative Stats Chart";
             this.chbBaseStatOption.UseVisualStyleBackColor = true;
             this.chbBaseStatOption.CheckedChanged += new System.EventHandler(this.chbBaseStatOption_CheckedChanged);
@@ -142,25 +153,26 @@
             this.comboBoxOffhandImbue.Enabled = false;
             this.comboBoxOffhandImbue.FormattingEnabled = true;
             this.comboBoxOffhandImbue.Items.AddRange(new object[] {
+            "Windfury",
             "Flametongue"});
             this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 277);
             this.comboBoxOffhandImbue.Name = "comboBoxOffhandImbue";
             this.comboBoxOffhandImbue.Size = new System.Drawing.Size(159, 21);
-            this.comboBoxOffhandImbue.TabIndex = 33;
+            this.comboBoxOffhandImbue.TabIndex = 28;
             // 
             // comboBoxMainhandImbue
             // 
             this.comboBoxMainhandImbue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxMainhandImbue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMainhandImbue.Enabled = false;
             this.comboBoxMainhandImbue.FormattingEnabled = true;
             this.comboBoxMainhandImbue.Items.AddRange(new object[] {
-            "Windfury"});
+            "Windfury",
+            "Flametongue"});
             this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 250);
             this.comboBoxMainhandImbue.Name = "comboBoxMainhandImbue";
             this.comboBoxMainhandImbue.Size = new System.Drawing.Size(159, 21);
-            this.comboBoxMainhandImbue.TabIndex = 32;
+            this.comboBoxMainhandImbue.TabIndex = 27;
             // 
             // label8
             // 
@@ -189,7 +201,7 @@
             this.radioButtonScryer.Location = new System.Drawing.Point(74, 221);
             this.radioButtonScryer.Name = "radioButtonScryer";
             this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
-            this.radioButtonScryer.TabIndex = 28;
+            this.radioButtonScryer.TabIndex = 26;
             this.radioButtonScryer.Tag = "Shred";
             this.radioButtonScryer.Text = "Scryer";
             this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -205,7 +217,7 @@
             this.radioButtonAldor.Location = new System.Drawing.Point(6, 221);
             this.radioButtonAldor.Name = "radioButtonAldor";
             this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
-            this.radioButtonAldor.TabIndex = 29;
+            this.radioButtonAldor.TabIndex = 25;
             this.radioButtonAldor.TabStop = true;
             this.radioButtonAldor.Tag = "Mangle";
             this.radioButtonAldor.Text = "Aldor";
@@ -245,7 +257,7 @@
             this.trackBarNumberOfFerociousInspirations.Minimum = 1;
             this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
             this.trackBarNumberOfFerociousInspirations.Size = new System.Drawing.Size(184, 45);
-            this.trackBarNumberOfFerociousInspirations.TabIndex = 25;
+            this.trackBarNumberOfFerociousInspirations.TabIndex = 23;
             this.trackBarNumberOfFerociousInspirations.Value = 2;
             // 
             // label6
@@ -269,7 +281,7 @@
             this.trackBarBloodlustUptime.Minimum = 5;
             this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
             this.trackBarBloodlustUptime.Size = new System.Drawing.Size(184, 45);
-            this.trackBarBloodlustUptime.TabIndex = 23;
+            this.trackBarBloodlustUptime.TabIndex = 22;
             this.trackBarBloodlustUptime.TickFrequency = 5;
             this.trackBarBloodlustUptime.Value = 15;
             // 
@@ -288,7 +300,7 @@
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 24;
             this.trackBarTargetArmor.TickFrequency = 300;
-            this.trackBarTargetArmor.Value = 13083;
+            this.trackBarTargetArmor.Value = 10645;
             // 
             // label5
             // 
@@ -369,7 +381,7 @@
             this.chbGlyphFS.Location = new System.Drawing.Point(8, 19);
             this.chbGlyphFS.Name = "chbGlyphFS";
             this.chbGlyphFS.Size = new System.Drawing.Size(122, 17);
-            this.chbGlyphFS.TabIndex = 78;
+            this.chbGlyphFS.TabIndex = 40;
             this.chbGlyphFS.Text = "Glyph of Feral Spirits";
             this.chbGlyphFS.UseVisualStyleBackColor = true;
             this.chbGlyphFS.CheckedChanged += new System.EventHandler(this.chbGlyphFS_CheckedChanged);
@@ -380,7 +392,7 @@
             this.chbGlyphLL.Location = new System.Drawing.Point(7, 65);
             this.chbGlyphLL.Name = "chbGlyphLL";
             this.chbGlyphLL.Size = new System.Drawing.Size(118, 17);
-            this.chbGlyphLL.TabIndex = 77;
+            this.chbGlyphLL.TabIndex = 42;
             this.chbGlyphLL.Text = "Glyph of Lava Lash";
             this.chbGlyphLL.UseVisualStyleBackColor = true;
             this.chbGlyphLL.CheckedChanged += new System.EventHandler(this.chbGlyphLL_CheckedChanged);
@@ -391,7 +403,7 @@
             this.chbGlyphSS.Location = new System.Drawing.Point(7, 157);
             this.chbGlyphSS.Name = "chbGlyphSS";
             this.chbGlyphSS.Size = new System.Drawing.Size(120, 17);
-            this.chbGlyphSS.TabIndex = 76;
+            this.chbGlyphSS.TabIndex = 46;
             this.chbGlyphSS.Text = "Glyph of Stormstrike";
             this.chbGlyphSS.UseVisualStyleBackColor = true;
             this.chbGlyphSS.CheckedChanged += new System.EventHandler(this.chbGlyphSS_CheckedChanged);
@@ -402,7 +414,7 @@
             this.chbGlyphWF.Location = new System.Drawing.Point(7, 180);
             this.chbGlyphWF.Name = "chbGlyphWF";
             this.chbGlyphWF.Size = new System.Drawing.Size(154, 17);
-            this.chbGlyphWF.TabIndex = 74;
+            this.chbGlyphWF.TabIndex = 47;
             this.chbGlyphWF.Text = "Glyph of Windfury Weapon";
             this.chbGlyphWF.UseVisualStyleBackColor = true;
             this.chbGlyphWF.CheckedChanged += new System.EventHandler(this.chbGlyphWF_CheckedChanged);
@@ -414,7 +426,7 @@
             this.chbGlyphShocking.Location = new System.Drawing.Point(7, 134);
             this.chbGlyphShocking.Name = "chbGlyphShocking";
             this.chbGlyphShocking.Size = new System.Drawing.Size(113, 17);
-            this.chbGlyphShocking.TabIndex = 71;
+            this.chbGlyphShocking.TabIndex = 45;
             this.chbGlyphShocking.Text = "Glyph of Shocking";
             this.chbGlyphShocking.UseVisualStyleBackColor = true;
             this.chbGlyphShocking.CheckedChanged += new System.EventHandler(this.chbGlyphShocking_CheckedChanged);
@@ -425,7 +437,7 @@
             this.chbGlyphLS.Location = new System.Drawing.Point(7, 111);
             this.chbGlyphLS.Name = "chbGlyphLS";
             this.chbGlyphLS.Size = new System.Drawing.Size(143, 17);
-            this.chbGlyphLS.TabIndex = 68;
+            this.chbGlyphLS.TabIndex = 44;
             this.chbGlyphLS.Text = "Glyph of Lightning Shield";
             this.chbGlyphLS.UseVisualStyleBackColor = true;
             this.chbGlyphLS.CheckedChanged += new System.EventHandler(this.chbGlyphLS_CheckedChanged);
@@ -436,7 +448,7 @@
             this.chbGlyphLB.Location = new System.Drawing.Point(7, 88);
             this.chbGlyphLB.Name = "chbGlyphLB";
             this.chbGlyphLB.Size = new System.Drawing.Size(132, 17);
-            this.chbGlyphLB.TabIndex = 67;
+            this.chbGlyphLB.TabIndex = 43;
             this.chbGlyphLB.Text = "Glyph of Lightning Bolt";
             this.chbGlyphLB.UseVisualStyleBackColor = true;
             this.chbGlyphLB.CheckedChanged += new System.EventHandler(this.chbGlyphLB_CheckedChanged);
@@ -447,7 +459,7 @@
             this.chbGlyphFT.Location = new System.Drawing.Point(8, 42);
             this.chbGlyphFT.Name = "chbGlyphFT";
             this.chbGlyphFT.Size = new System.Drawing.Size(173, 17);
-            this.chbGlyphFT.TabIndex = 66;
+            this.chbGlyphFT.TabIndex = 41;
             this.chbGlyphFT.Text = "Glyph of Flametongue Weapon";
             this.chbGlyphFT.UseVisualStyleBackColor = true;
             this.chbGlyphFT.CheckedChanged += new System.EventHandler(this.chbGlyphFT_CheckedChanged);
@@ -484,17 +496,6 @@
             this.btnEnhSim.Text = "Export Stats to EnhSim config file";
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
-            // 
-            // chbMagmaSearing
-            // 
-            this.chbMagmaSearing.AutoSize = true;
-            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 336);
-            this.chbMagmaSearing.Name = "chbMagmaSearing";
-            this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
-            this.chbMagmaSearing.TabIndex = 36;
-            this.chbMagmaSearing.Text = "Use Magma Totem instead of Searing Totem";
-            this.chbMagmaSearing.UseVisualStyleBackColor = true;
-            this.chbMagmaSearing.CheckedChanged += new System.EventHandler(this.chbMagmaSearing_CheckedChanged);
             // 
             // CalculationOptionsPanelEnhance
             // 
