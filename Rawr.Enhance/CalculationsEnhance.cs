@@ -290,7 +290,7 @@ namespace Rawr
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
-            float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
+            float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
             float callOfThunder = .05f * character.ShamanTalents.CallOfThunder;
             switch (character.ShamanTalents.ElementalWeapons){
@@ -613,17 +613,21 @@ namespace Rawr
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
             float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
-            hitRollMultiplier = (1 - chanceSpellMiss) + (chanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
-            float dpsLB = (hitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
+            float lbhitRollMultiplier = (1 - chanceSpellMiss) + (chanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
+            float dpsLB = (lbhitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             if (stats.PendulumOfTelluricCurrentsProc > 0)
                 dpsLB += (1168f + 1752f) / 2f / 45f; // need to put the bonus dmg somewhere this seems as good a place as any, not great place though :(
             
             //6: Windfury DPS
-            float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
-            float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF
+            float dpsWF = 0f;
+            if (calcOpts.MainhandImbue == "Windfury")
+            {
+                float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
+                dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF
                         * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusPhysicalDamage);
+            }
 
             //7: Lightning Shield DPS
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
@@ -637,7 +641,7 @@ namespace Rawr
             //8: Searing Totem DPS
             float damageSTBase = calcOpts.Magma ? 371f : 105f;
             float damageSTCoef = calcOpts.Magma ? .1f : .1667f;
-            float damageST = (damageSTBase + damageSTCoef * spellDamage) * totemBonus;
+            float damageST = (damageSTBase + damageSTCoef * spellDamage) * callofFlameBonus;
             float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusFireDamage);
 
             //9: Flametongue Weapon DPS
