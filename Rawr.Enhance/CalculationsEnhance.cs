@@ -575,20 +575,28 @@ namespace Rawr
             //2: Stormstrike DPS
             float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
             float damageOHSwing = adjustedOHDPS * unhastedOHSpeed;
-            float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
-            float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
+            float dpsSS = 0f;
+            if (character.ShamanTalents.Stormstrike == 1)
+            {
+                float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
+                float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
-            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
+                dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
+            }
 
             //3: Lavalash DPS
-            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL
-                * (1 - chanceYellowMiss) * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage); //and no armor reduction yeya!
-            if (calcOpts.OffhandImbue == "Flametongue")
-            {  // 25% bonus dmg if FT imbue in OH
-                if (calcOpts.GlyphLL)
-                    dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
-                else
-                    dpsLL *= 1.25f;  
+            float dpsLL = 0f;
+            if (character.ShamanTalents.LavaLash == 1)
+            {
+                dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL
+                     * (1 - chanceYellowMiss) * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage); //and no armor reduction yeya!
+                if (calcOpts.OffhandImbue == "Flametongue")
+                {  // 25% bonus dmg if FT imbue in OH
+                    if (calcOpts.GlyphLL)
+                        dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
+                    else
+                        dpsLL *= 1.25f;
+                }
             }
 
             //4: Earth Shock DPS
@@ -629,7 +637,7 @@ namespace Rawr
             //8: Searing Totem DPS
             float damageSTBase = 105;
             float damageSTCoef = .1667f;
-            float damageST = damageSTBase + damageSTCoef * totemBonus;
+            float damageST = (damageSTBase + damageSTCoef * spellDamage) * totemBonus;
             float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusFireDamage);
 
             //9: Flametongue Weapon DPS
