@@ -392,11 +392,11 @@ namespace Rawr.Moonkin
             // Bonus multipliers
 			Stats statsTalents = new Stats()
 			{
-				BonusStaminaMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.02f * character.DruidTalents.SurvivalOfTheFittest) - 1,
-				BonusAgilityMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
-				BonusStrengthMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
-				BonusIntellectMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest) - 1,
-				BonusSpiritMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.05f * character.DruidTalents.LivingSpirit) - 1
+				BonusStaminaMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.02f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
+                BonusAgilityMultiplier = (1 + 0.02f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
+                BonusStrengthMultiplier = (0.02f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
+                BonusIntellectMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
+                BonusSpiritMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.05f * character.DruidTalents.LivingSpirit) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1
 			};
 			if (character.ActiveBuffsContains("Moonkin Form"))
 			{
