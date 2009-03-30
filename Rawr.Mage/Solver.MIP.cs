@@ -574,10 +574,10 @@ namespace Rawr.Mage
                     if (lp != null)
                     {
                         solution = lp.Solve();
-                        if (currentNode.Depth > 100)
+                        /*if (currentNode.Depth > 100)
                         {
                             lp = lp; // investigate
-                        }
+                        }*/
                         round++;
                         probeRound++;
                         valid = IsLpValid();
@@ -3344,7 +3344,7 @@ namespace Rawr.Mage
             double cooldownDuration = calculationResult.WaterElementalCooldown;
             VariableType activation = VariableType.SummonWaterElemental;
 
-            const double eps = 0.00001;
+            //const double eps = 0.00001;
             double[] segCount = GetSegmentCooldownCount(cooldown, VariableType.None);
             double[] segActivation = GetSegmentCooldownCount(Cooldown.None, activation);
 

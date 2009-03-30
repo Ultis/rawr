@@ -251,7 +251,7 @@ namespace Rawr.RestoSham
         //
         // Do the actual calculations:
         //
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             return GetCharacterCalculations(character, additionalItem, null);
         }

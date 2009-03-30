@@ -157,7 +157,7 @@ namespace Rawr.DPSWarr
         /// <param name="character"></param>
         /// <param name="additionalItem"></param>
         /// <returns></returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;

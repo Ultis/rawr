@@ -216,7 +216,7 @@ namespace Rawr.Retribution
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;

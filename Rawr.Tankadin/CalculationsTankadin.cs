@@ -261,7 +261,7 @@ you are being killed by burst damage, focus on Survival Points.",
             return .01f / (1 / 16f + .00956f / miss);
         }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             CalculationOptionsTankadin calcOpts = character.CalculationOptions as CalculationOptionsTankadin;
             Stats stats = GetCharacterStats(character, additionalItem);

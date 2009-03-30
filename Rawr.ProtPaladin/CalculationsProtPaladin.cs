@@ -269,7 +269,7 @@ focus on Survival Points.",
         }
         #endregion
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;

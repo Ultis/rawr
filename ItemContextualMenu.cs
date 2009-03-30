@@ -39,8 +39,8 @@ namespace Rawr
         private ToolStripMenuItem _menuItemEquipAll;
         private ToolStripMenuItem _menuItemDelete;
 		private ToolStripMenuItem _menuItemDeleteDuplicates;
-		private ToolStripMenuItem _menuItemCreateBearGemmings;
-		private ToolStripMenuItem _menuItemCreateCatGemmings;
+		//private ToolStripMenuItem _menuItemCreateBearGemmings;
+		//private ToolStripMenuItem _menuItemCreateCatGemmings;
         private ToolStripMenuItem _menuItemEvaluateUpgrade;
         private ToolStripMenuItem _menuItemCustomizeItem;
         private ToolStripMenuItem _menuItemEquipCustomizedItem;

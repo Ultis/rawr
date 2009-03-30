@@ -313,7 +313,7 @@ namespace Rawr.Moonkin
 			return calcOpts;
 		}
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;

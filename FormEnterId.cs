@@ -44,11 +44,11 @@ namespace Rawr
                     return int.Parse(m.Groups[1].Value);
                 }
 
-                return 0; 
+                return 0;
             }
         }
 
-        public string Name
+        public string ItemName
         {
             get { return textItemId.Text; }
         }

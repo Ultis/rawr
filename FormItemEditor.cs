@@ -335,7 +335,7 @@ namespace Rawr
                     if (itemId > 0)
 					    AddItemById(form.Value, form.UseArmory, form.UseWowhead);
                     else
-                        AddItemByName(form.Name, form.UseArmory, form.UseWowhead);
+                        AddItemByName(form.ItemName, form.UseArmory, form.UseWowhead);
 				}
 				finally
 				{

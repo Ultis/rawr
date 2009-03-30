@@ -404,7 +404,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
-			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character);
+			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character, null, true, true);
 			_calculatedStats = calcs;
 
 			FormItemSelection.CurrentCalculations = calcs;

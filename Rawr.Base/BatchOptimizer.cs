@@ -817,7 +817,7 @@ namespace Rawr.Optimizer
             float value = 0f;
             for (int i = 0; i < batchList.Count; i++)
             {
-                float characterValue = GetCalculationsValue(individual.Character[i], modelList[i].GetCharacterCalculations(individual.Character[i]), batchList[i].CalculationToOptimize, batchList[i].OptimizationRequirements);
+                float characterValue = GetCalculationsValue(individual.Character[i], modelList[i].GetCharacterCalculations(individual.Character[i], null, false, false), batchList[i].CalculationToOptimize, batchList[i].OptimizationRequirements);
                 valuation.OptimizedBatchValue.Add(characterValue);
                 value += weightList[i] * characterValue;
             }

@@ -272,7 +272,7 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
         {
             CharacterCalculationsProtWarr   calculatedStats = new CharacterCalculationsProtWarr();
             CalculationOptionsProtWarr      calcOpts        = character.CalculationOptions as CalculationOptionsProtWarr;

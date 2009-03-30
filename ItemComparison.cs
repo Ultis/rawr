@@ -47,7 +47,7 @@ namespace Rawr
             InitializeComponent();
         }
 
-		private volatile int _calculationCount = 0;
+		private int _calculationCount = 0;
 		private ComparisonCalculationBase[] _itemCalculations = null;
 		private AutoResetEvent _autoResetEvent = null;
         public void LoadGearBySlot(Character.CharacterSlot slot)
@@ -359,8 +359,10 @@ namespace Rawr
             Character baseChar = Character.Clone();
             Character newChar = Character.Clone();
             CharacterCalculationsBase currentCalc;
+            CharacterCalculationsBase newCalc;
             ComparisonCalculationBase compare;
             int orig;
+            currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true);
             foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
             {
                 TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
@@ -368,13 +370,20 @@ namespace Rawr
                 {
                     TalentDataAttribute talentData = talentDatas[0];
                     orig = baseChar.CurrentTalents.Data[talentData.Index];
-                    if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)) baseChar.CurrentTalents.Data[talentData.Index]--;
-                    else newChar.CurrentTalents.Data[talentData.Index]++;
-                    currentCalc = Calculations.GetCharacterCalculations(baseChar);
-                    compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newChar, talentData.Name, talentData.MaxPoints == orig);
+                    if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null))
+                    {
+                        newChar.CurrentTalents.Data[talentData.Index]--;
+                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                        compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.MaxPoints == orig);
+                    }
+                    else
+                    {
+                        newChar.CurrentTalents.Data[talentData.Index]++;
+                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                        compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.MaxPoints == orig);
+                    }
                     compare.Item = null;
                     talentCalculations.Add(compare);
-                    baseChar.CurrentTalents.Data[talentData.Index] = orig;
                     newChar.CurrentTalents.Data[talentData.Index] = orig;
                 }
             }
@@ -406,14 +415,14 @@ namespace Rawr
                     case Character.CharacterClass.DeathKnight: baseChar.DeathKnightTalents = new DeathKnightTalents(); break;
                     default: baseChar.DruidTalents = new DruidTalents(); break;
                 }
-                CharacterCalculationsBase currentCalculations = Calculations.GetCharacterCalculations(baseChar);
                 ComparisonCalculationBase compare;
                 Character newChar;
                 foreach (SavedTalentSpec spec in picker.SpecsFor(Character.Class))
                 {
                     newChar = Character.Clone();
                     newChar.CurrentTalents = spec.TalentSpec();
-                    compare = Calculations.GetCharacterComparisonCalculations(currentCalculations, newChar, spec.Name, spec == picker.CurrentSpec());
+                    CharacterCalculationsBase calculations = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                    compare = Calculations.GetCharacterComparisonCalculations(calculations, spec.Name, spec == picker.CurrentSpec());
                     compare.Item = null;
                     talentCalculations.Add(compare);
                 }

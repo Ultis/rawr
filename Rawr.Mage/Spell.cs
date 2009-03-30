@@ -1962,7 +1962,6 @@ namespace Rawr.Mage
         }
 
         private float arcaneBlastDamageMultiplier;
-        private float baseAdditiveSpellModifier;
         private float tormentTheWeak;
 
         public ArcaneBarrageTemplate(CharacterCalculationsMage calculations)
