@@ -665,11 +665,11 @@ focus on Survival Points.",
         public override Stats GetItemStats(Character character, Item additionalItem)
         {
             Stats statsItems = base.GetItemStats(character, additionalItem);
+            AttackTable attackTable= new AttackTable(character, statsItems);
 
-            // Assuming a GCD every 1.5s
-            float abilityPerSecond = 1.0f / 1.5f;
-            // Assumes 15% miss rate as we don't know the stats here--need to find a better solution
+            float abilityPerSecond = 1.0f / 6.0f;
             float hitRate = 0.85f;
+            
 
             //Mongoose
             if (character.MainHand != null && statsItems.MongooseProc > 0)
@@ -1043,7 +1043,10 @@ focus on Survival Points.",
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
         {
+            // Filters out Non-Shield Offhand Enchants and Ranged Enchants
             if ((slot == Item.ItemSlot.OffHand && enchant.Slot != Item.ItemSlot.OffHand) || slot == Item.ItemSlot.Ranged) return false;
+            // Filters out Death Knight and Two-Hander Enchants
+            if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == Item.ItemSlot.TwoHand) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -1121,58 +1124,60 @@ focus on Survival Points.",
             };
         }
 
-        public override bool HasRelevantStats(Stats stats)
+        public override bool IsItemRelevant(Item item)
+        {
+            try
+            {
+                return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString())) &&
+                    (RelevantItemTypes.Contains(item.Type)) && (HasRelevantStats(item.Stats) ||
+                    (((item.Slot == Item.ItemSlot.Trinket) || (item.IsGem)) && (hasRelevantTrinketGemStats(item.Stats))));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool hasRelevantTrinketGemStats(Stats stats)
         {
             return (
-                // Basic Stats
+                //Trinket+Gem Stats
                 stats.Strength +
-                stats.Agility +
                 stats.Stamina +
-                stats.Health +
-                // Tanking Stats
-                stats.Health +
-                stats.Armor +
-                stats.BonusArmor + 
-                stats.Miss + 
+                //Trinket Stats
+                stats.BlockValue +
+                //Gem Stats
+                stats.BonusArmorMultiplier +
+                stats.BonusBlockValueMultiplier +
+                //Tanking Stats
                 stats.Resilience +  
                 stats.ParryRating + 
                 stats.BlockRating + 
                 stats.BlockValue + 
                 stats.DefenseRating + 
-                stats.DodgeRating + 
-                // Threat Stats
-                stats.CritRating + 
-                stats.PhysicalCrit + 
-                stats.SpellCrit +
-                stats.WeaponDamage + 
-                stats.AttackPower + 
-                //stats.SpellHitRating +
-                stats.SpellPower + 
-                stats.HitRating + 
-                stats.ExpertiseRating + 
-                stats.ArmorPenetrationRating + 
-                stats.ArmorPenetration + 
-                // Paladin Stats
+                stats.DodgeRating +
+                stats.Resilience +
+                //Threat Stats
+                stats.CritRating +
+                stats.HitRating +
+                stats.ExpertiseRating
+                ) != 0;
+        }
+
+        public override bool HasRelevantStats(Stats stats)
+        {
+            return (
+                stats.DefenseRating +
+                stats.DodgeRating +
+                stats.ParryRating +
+                stats.BlockRating +
+
+                stats.BonusArmor +
+
                 stats.JudgementBlockValue +
-                stats.BonusHammerOfTheRighteousMultiplier +
                 stats.ConsecrationSpellPower +
-                stats.ShieldOfRighteousnessBlockValue +
-                stats.BonusSealOfCorruptionDamageMultiplier +
-                stats.BonusSealOfRighteousnessDamageMultiplier +
-                stats.BonusSealOfVengeanceDamageMultiplier +
-                // Multipliers
-                stats.BonusStrengthMultiplier +
-                stats.BonusAgilityMultiplier +
-                stats.BonusStaminaMultiplier +
-                stats.BonusHealthMultiplier + 
-                stats.ThreatIncreaseMultiplier + 
-                stats.BonusArmorMultiplier + 
-                stats.BonusAttackPowerMultiplier +
-                stats.BonusHolyDamageMultiplier +
-                stats.BaseArmorMultiplier + 
-                stats.DamageTakenMultiplier + 
-                stats.BonusBlockValueMultiplier +
-                // Resistances
+ 
+                //// Resistances
                 stats.AllResist +
                 stats.ArcaneResistance + 
                 stats.NatureResistance + 
@@ -1187,6 +1192,106 @@ focus on Survival Points.",
                 ) != 0;
         }
 
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            Stats stats = buff.Stats;
+            bool hasRelevantBuffStats = (
+                stats.Stamina +
+                stats.Strength +
+                stats.Agility +
+                stats.BonusArmor +
+                stats.Health +
+
+                stats.PhysicalCrit +
+                stats.SpellCrit +
+                stats.AttackPower +
+                stats.SpellPower +
+                stats.CritRating +
+                stats.HitRating +
+                stats.PhysicalHit +
+                stats.SpellHit +
+                stats.Miss +
+
+                stats.BonusStrengthMultiplier +
+                stats.BonusAgilityMultiplier +
+                stats.BonusStaminaMultiplier +
+                stats.BonusHealthMultiplier +
+
+                stats.ThreatIncreaseMultiplier +
+                stats.BonusArmorMultiplier +
+                stats.BonusAttackPowerMultiplier +
+                stats.BonusHolyDamageMultiplier +
+                stats.BaseArmorMultiplier +
+                stats.DamageTakenMultiplier +
+
+                stats.AllResist +
+                stats.ArcaneResistance +
+                stats.NatureResistance +
+                stats.FireResistance +
+                stats.FrostResistance +
+                stats.ShadowResistance +
+                stats.ArcaneResistanceBuff +
+                stats.NatureResistanceBuff +
+                stats.FireResistanceBuff +
+                stats.FrostResistanceBuff +
+                stats.ShadowResistanceBuff +
+
+                stats.BonusHammerOfTheRighteousMultiplier +
+                stats.ConsecrationSpellPower +
+                stats.ShieldOfRighteousnessBlockValue +
+                stats.BonusSealOfCorruptionDamageMultiplier +
+                stats.BonusSealOfRighteousnessDamageMultiplier +
+                stats.BonusSealOfVengeanceDamageMultiplier
+                ) != 0;
+
+            bool notClassSetBonus = ((buff.Group == "Set Bonuses") && !((buff.Name.Contains("Aegis")) || buff.Name.Contains("Redemption")));
+
+            return hasRelevantBuffStats && !notClassSetBonus;
+        }
+
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            Stats stats = enchant.Stats;
+
+            bool hasRelevantStats = (
+
+                stats.Strength +
+                stats.Stamina +
+                stats.Agility + 
+
+                stats.BlockValue +
+
+                stats.BonusArmor +
+                stats.ThreatIncreaseMultiplier +
+
+                //Tanking Stats
+                stats.Resilience +
+                stats.ParryRating +
+                stats.BlockRating +
+                stats.BlockValue +
+                stats.DefenseRating +
+                stats.DodgeRating +
+                stats.Resilience +
+
+                //Threat Stats
+                stats.CritRating +
+                stats.HitRating +
+                stats.ExpertiseRating +
+
+                //Enchant Procs
+                stats.MongooseProc +
+                stats.ExecutionerProc
+                ) != 0;
+
+            return hasRelevantStats;
+        }
+
+        public bool debugMode(Character character)
+        {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            return calcOpts.debugMode;
+        }
+
         /// <summary>
         /// Saves the talents for the character
         /// </summary>
@@ -1197,6 +1302,7 @@ focus on Survival Points.",
             calcOpts.talents = character.PaladinTalents;
         }
     }
+
 
     public class ProtPaladin
     {
