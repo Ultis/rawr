@@ -39,7 +39,6 @@ namespace Rawr
 			CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
-			trackBarExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
 			trackBarNumberOfFerociousInspirations.Value = calcOpts.NumberOfFerociousInspirations;
 			trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime * 100);
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
@@ -83,7 +82,6 @@ namespace Rawr
 			{
 				trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
-				labelExposeWeakness.Text = trackBarExposeWeakness.Value.ToString();
 				labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
 				labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 
@@ -92,8 +90,7 @@ namespace Rawr
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
 				calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;
 				calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
-				calcOpts.ExposeWeaknessAPValue = trackBarExposeWeakness.Value;
-                calcOpts.MainhandImbue = (string) comboBoxMainhandImbue.SelectedItem;
+				calcOpts.MainhandImbue = (string) comboBoxMainhandImbue.SelectedItem;
                 calcOpts.OffhandImbue = (string) comboBoxOffhandImbue.SelectedItem;
 				calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
@@ -105,6 +102,7 @@ namespace Rawr
                 calcOpts.GlyphSS = chbGlyphSS.Checked;
                 calcOpts.GlyphWF = chbGlyphWF.Checked;
                 calcOpts.BaseStatOption = chbBaseStatOption.Checked;
+                calcOpts.Magma = chbMagmaSearing.Checked;
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -246,6 +244,16 @@ namespace Rawr
             }
         }
 
+        private void chbMagmaSearing_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.Magma = chbMagmaSearing.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -260,6 +268,7 @@ namespace Rawr
         public bool GlyphSS { get; set; }
         public bool GlyphWF { get; set; }
         public bool BaseStatOption { get; set; }
+        public bool Magma { get; set; }
        
         public string GetXml()
 		{
@@ -273,7 +282,6 @@ namespace Rawr
 
 		public int TargetLevel = 83;
 		public int TargetArmor = 10645;
-		public int ExposeWeaknessAPValue = 200;
 		public int NumberOfFerociousInspirations = 2;
 		public float BloodlustUptime = 0.15f;
 		public string ShattrathFaction = "Aldor";

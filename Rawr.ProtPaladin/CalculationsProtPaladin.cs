@@ -1286,11 +1286,11 @@ focus on Survival Points.",
             return hasRelevantStats;
         }
 
-        public bool debugMode(Character character)
-        {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return calcOpts.debugMode;
-        }
+ //       public bool debugMode(Character character)
+ //       {
+ //           CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+ //           return calcOpts.debugMode;
+ //       }
 
         /// <summary>
         /// Saves the talents for the character

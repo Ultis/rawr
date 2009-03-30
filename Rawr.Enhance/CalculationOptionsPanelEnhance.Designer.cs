@@ -40,14 +40,11 @@
             this.radioButtonAldor = new System.Windows.Forms.RadioButton();
             this.labelNumberOfFerociousInspirations = new System.Windows.Forms.Label();
             this.labelBloodlustUptime = new System.Windows.Forms.Label();
-            this.labelExposeWeakness = new System.Windows.Forms.Label();
             this.trackBarNumberOfFerociousInspirations = new System.Windows.Forms.TrackBar();
             this.label6 = new System.Windows.Forms.Label();
             this.trackBarBloodlustUptime = new System.Windows.Forms.TrackBar();
-            this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
             this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
             this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -64,11 +61,11 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.gbGlyphs.SuspendLayout();
@@ -88,6 +85,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chbMagmaSearing);
             this.tabPage1.Controls.Add(this.chbBaseStatOption);
             this.tabPage1.Controls.Add(this.labelTargetArmorDescription);
             this.tabPage1.Controls.Add(this.comboBoxOffhandImbue);
@@ -98,14 +96,11 @@
             this.tabPage1.Controls.Add(this.radioButtonAldor);
             this.tabPage1.Controls.Add(this.labelNumberOfFerociousInspirations);
             this.tabPage1.Controls.Add(this.labelBloodlustUptime);
-            this.tabPage1.Controls.Add(this.labelExposeWeakness);
             this.tabPage1.Controls.Add(this.trackBarNumberOfFerociousInspirations);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.trackBarBloodlustUptime);
-            this.tabPage1.Controls.Add(this.trackBarExposeWeakness);
             this.tabPage1.Controls.Add(this.trackBarTargetArmor);
             this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.comboBoxTargetLevel);
             this.tabPage1.Controls.Add(this.label1);
@@ -120,7 +115,7 @@
             // chbBaseStatOption
             // 
             this.chbBaseStatOption.AutoSize = true;
-            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 364);
+            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 313);
             this.chbBaseStatOption.Name = "chbBaseStatOption";
             this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
             this.chbBaseStatOption.TabIndex = 35;
@@ -132,7 +127,7 @@
             // 
             this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 226);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 175);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
             this.labelTargetArmorDescription.Size = new System.Drawing.Size(192, 40);
             this.labelTargetArmorDescription.TabIndex = 34;
@@ -148,7 +143,7 @@
             this.comboBoxOffhandImbue.FormattingEnabled = true;
             this.comboBoxOffhandImbue.Items.AddRange(new object[] {
             "Flametongue"});
-            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 328);
+            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 277);
             this.comboBoxOffhandImbue.Name = "comboBoxOffhandImbue";
             this.comboBoxOffhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxOffhandImbue.TabIndex = 33;
@@ -162,7 +157,7 @@
             this.comboBoxMainhandImbue.FormattingEnabled = true;
             this.comboBoxMainhandImbue.Items.AddRange(new object[] {
             "Windfury"});
-            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 301);
+            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 250);
             this.comboBoxMainhandImbue.Name = "comboBoxMainhandImbue";
             this.comboBoxMainhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxMainhandImbue.TabIndex = 32;
@@ -170,7 +165,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(4, 331);
+            this.label8.Location = new System.Drawing.Point(4, 280);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 31;
@@ -179,7 +174,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 304);
+            this.label3.Location = new System.Drawing.Point(4, 253);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 30;
@@ -191,7 +186,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonScryer.AutoSize = true;
             this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonScryer.Location = new System.Drawing.Point(74, 272);
+            this.radioButtonScryer.Location = new System.Drawing.Point(74, 221);
             this.radioButtonScryer.Name = "radioButtonScryer";
             this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
             this.radioButtonScryer.TabIndex = 28;
@@ -207,7 +202,7 @@
             this.radioButtonAldor.AutoSize = true;
             this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.radioButtonAldor.Checked = true;
-            this.radioButtonAldor.Location = new System.Drawing.Point(6, 272);
+            this.radioButtonAldor.Location = new System.Drawing.Point(6, 221);
             this.radioButtonAldor.Name = "radioButtonAldor";
             this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
             this.radioButtonAldor.TabIndex = 29;
@@ -222,7 +217,7 @@
             this.labelNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelNumberOfFerociousInspirations.AutoSize = true;
-            this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(71, 174);
+            this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(71, 123);
             this.labelNumberOfFerociousInspirations.Name = "labelNumberOfFerociousInspirations";
             this.labelNumberOfFerociousInspirations.Size = new System.Drawing.Size(13, 13);
             this.labelNumberOfFerociousInspirations.TabIndex = 11;
@@ -233,22 +228,11 @@
             this.labelBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBloodlustUptime.AutoSize = true;
-            this.labelBloodlustUptime.Location = new System.Drawing.Point(71, 123);
+            this.labelBloodlustUptime.Location = new System.Drawing.Point(71, 72);
             this.labelBloodlustUptime.Name = "labelBloodlustUptime";
             this.labelBloodlustUptime.Size = new System.Drawing.Size(27, 13);
             this.labelBloodlustUptime.TabIndex = 12;
             this.labelBloodlustUptime.Text = "15%";
-            // 
-            // labelExposeWeakness
-            // 
-            this.labelExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelExposeWeakness.AutoSize = true;
-            this.labelExposeWeakness.Location = new System.Drawing.Point(71, 72);
-            this.labelExposeWeakness.Name = "labelExposeWeakness";
-            this.labelExposeWeakness.Size = new System.Drawing.Size(25, 13);
-            this.labelExposeWeakness.TabIndex = 15;
-            this.labelExposeWeakness.Text = "200";
             // 
             // trackBarNumberOfFerociousInspirations
             // 
@@ -256,7 +240,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarNumberOfFerociousInspirations.Enabled = false;
-            this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(74, 142);
+            this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(74, 91);
             this.trackBarNumberOfFerociousInspirations.Maximum = 4;
             this.trackBarNumberOfFerociousInspirations.Minimum = 1;
             this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
@@ -267,7 +251,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 145);
+            this.label6.Location = new System.Drawing.Point(7, 94);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(60, 39);
             this.label6.TabIndex = 13;
@@ -280,7 +264,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarBloodlustUptime.Enabled = false;
-            this.trackBarBloodlustUptime.Location = new System.Drawing.Point(74, 91);
+            this.trackBarBloodlustUptime.Location = new System.Drawing.Point(74, 40);
             this.trackBarBloodlustUptime.Maximum = 100;
             this.trackBarBloodlustUptime.Minimum = 5;
             this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
@@ -289,23 +273,6 @@
             this.trackBarBloodlustUptime.TickFrequency = 5;
             this.trackBarBloodlustUptime.Value = 15;
             // 
-            // trackBarExposeWeakness
-            // 
-            this.trackBarExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarExposeWeakness.Enabled = false;
-            this.trackBarExposeWeakness.LargeChange = 50;
-            this.trackBarExposeWeakness.Location = new System.Drawing.Point(74, 40);
-            this.trackBarExposeWeakness.Maximum = 500;
-            this.trackBarExposeWeakness.Minimum = 50;
-            this.trackBarExposeWeakness.Name = "trackBarExposeWeakness";
-            this.trackBarExposeWeakness.Size = new System.Drawing.Size(184, 45);
-            this.trackBarExposeWeakness.SmallChange = 10;
-            this.trackBarExposeWeakness.TabIndex = 22;
-            this.trackBarExposeWeakness.TickFrequency = 25;
-            this.trackBarExposeWeakness.Value = 200;
-            // 
             // trackBarTargetArmor
             // 
             this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -313,7 +280,7 @@
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.Enabled = false;
             this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 193);
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 142);
             this.trackBarTargetArmor.Maximum = 15000;
             this.trackBarTargetArmor.Minimum = 3000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
@@ -326,27 +293,17 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 94);
+            this.label5.Location = new System.Drawing.Point(7, 43);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(54, 26);
             this.label5.TabIndex = 20;
             this.label5.Text = "Bloodlust\r\nUptime %:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 43);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 39);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "Expose\r\nWeakness\r\nAP Bonus:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 193);
+            this.label2.Location = new System.Drawing.Point(-1, 142);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 17;
@@ -528,6 +485,17 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // chbMagmaSearing
+            // 
+            this.chbMagmaSearing.AutoSize = true;
+            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 336);
+            this.chbMagmaSearing.Name = "chbMagmaSearing";
+            this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
+            this.chbMagmaSearing.TabIndex = 36;
+            this.chbMagmaSearing.Text = "Use Magma Totem instead of Searing Totem";
+            this.chbMagmaSearing.UseVisualStyleBackColor = true;
+            this.chbMagmaSearing.CheckedChanged += new System.EventHandler(this.chbMagmaSearing_CheckedChanged);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -541,7 +509,6 @@
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.gbGlyphs.ResumeLayout(false);
@@ -565,14 +532,11 @@
         private System.Windows.Forms.RadioButton radioButtonAldor;
         private System.Windows.Forms.Label labelNumberOfFerociousInspirations;
         private System.Windows.Forms.Label labelBloodlustUptime;
-        private System.Windows.Forms.Label labelExposeWeakness;
         private System.Windows.Forms.TrackBar trackBarNumberOfFerociousInspirations;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TrackBar trackBarBloodlustUptime;
-        private System.Windows.Forms.TrackBar trackBarExposeWeakness;
         private System.Windows.Forms.TrackBar trackBarTargetArmor;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTargetLevel;
         private System.Windows.Forms.Label label1;
@@ -590,6 +554,7 @@
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
         private System.Windows.Forms.CheckBox chbGlyphFS;
+        private System.Windows.Forms.CheckBox chbMagmaSearing;
 
     }
 }

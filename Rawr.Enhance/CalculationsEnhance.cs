@@ -287,7 +287,7 @@ namespace Rawr
             int TS = character.ShamanTalents.ThunderingStrikes;
             int DWS = character.ShamanTalents.DualWieldSpecialization;
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
-            float spellMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
+            float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
@@ -414,7 +414,7 @@ namespace Rawr
 
 			#region Damage Model
             float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
-            float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
+            float attackPower = stats.AttackPower;
             float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating);
             float expertiseBonus = 0.0025f * (stats.Expertise + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating));
             float glancingRate = 0.24f;
@@ -604,7 +604,7 @@ namespace Rawr
             float stormstrikeMultiplier = 1.2f + ssGlyphBonus;
             float damageESBase = 872f;
             float coefES = .3858f;
-            float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * spellDamage);
+            float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellDamage);
             float hitRollMultiplier = (1 - chanceSpellMiss) + chanceSpellCrit * (critMultiplierSpell - 1);
             float dpsES = (hitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage);
 
@@ -612,7 +612,7 @@ namespace Rawr
             float damageLBBase = 765f;
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
-            float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
+            float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
             hitRollMultiplier = (1 - chanceSpellMiss) + (chanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
             float dpsLB = (hitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
             if (calcOpts.GlyphLB)
@@ -635,8 +635,8 @@ namespace Rawr
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
             //8: Searing Totem DPS
-            float damageSTBase = 105;
-            float damageSTCoef = .1667f;
+            float damageSTBase = calcOpts.Magma ? 371f : 105f;
+            float damageSTCoef = calcOpts.Magma ? .1f : .1667f;
             float damageST = (damageSTBase + damageSTCoef * spellDamage) * totemBonus;
             float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusFireDamage);
 
