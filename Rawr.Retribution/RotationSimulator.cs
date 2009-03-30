@@ -47,9 +47,11 @@ namespace Rawr.Retribution
             float exoNext = 0;
             float howNext = sol.FightLength * (1f - rot.TimeUnder20);
             bool gcdUsed = false;
+            bool spellCast = false;
 
             while (currentTime < sol.FightLength)
             {
+                spellCast = false;
                 foreach (Rotation.Ability ability in rot.Priorities)
                 {
                     if (ability == Rotation.Ability.Judgement)
@@ -107,6 +109,7 @@ namespace Rawr.Retribution
                             if (consFirst < 0) consFirst = currentTime;
                             consLast = currentTime;
                             gcdUsed = true;
+                            spellCast = true;
                             consNext = currentTime + consCD;
                             sol.Consecration++;
                             break;
@@ -119,13 +122,15 @@ namespace Rawr.Retribution
                             if (exoFirst < 0) exoFirst = currentTime;
                             exoLast = currentTime;
                             gcdUsed = true;
+                            spellCast = true;
                             exoNext = currentTime + exoCD;
                             sol.Exorcism++;
                             break;
                         }
                     }
                 }
-                currentTime += gcdUsed ? 1.5f : .5f;
+                if (spellCast) currentTime += rot.SpellGCD + rot.Delay;
+                else currentTime += gcdUsed ? (1.5f + rot.Delay) : .01f;
                 gcdUsed = false;
             }
 

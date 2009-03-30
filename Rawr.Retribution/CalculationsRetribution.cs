@@ -223,7 +223,8 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
+            float spellGCD = 1.5f / (1f + stats.SpellHaste);
+            Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, spellGCD, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
                 calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rotation);
 
@@ -397,7 +398,9 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
-            Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
+            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
+            float spellGCD = 1.5f / (1f + stats.SpellHaste);
+            Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, spellGCD, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
                 calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rot);
 

@@ -34,6 +34,8 @@ namespace Rawr.Retribution
             trkTime20.Value = (int)(calcOpts.TimeUnder20 * 100);
             lblTime20.Text = trkTime20.Value + "%";
 
+            nudDelay.Value = (decimal)calcOpts.Delay;
+
             chkGlyphJudgement.Checked = calcOpts.GlyphJudgement;
             chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
             chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
@@ -199,6 +201,16 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudDelay_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.Delay = (float)nudDelay.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -218,8 +230,7 @@ namespace Rawr.Retribution
         public int MobType = 0;
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
-
-        public bool SimulateMana = false;
+        public float Delay = .05f;
 
         private Rotation.Ability[] _order = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
                                                    Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
@@ -275,7 +286,7 @@ namespace Rawr.Retribution
             clone.MobType = MobType;
             clone.FightLength = FightLength;
             clone.TimeUnder20 = TimeUnder20;
-            clone.SimulateMana = SimulateMana;
+            clone.Delay = Delay;
 
             clone._order = (Rotation.Ability[])_order.Clone();
             clone._selected = (bool[])_selected.Clone();

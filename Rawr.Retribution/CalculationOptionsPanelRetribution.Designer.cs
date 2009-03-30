@@ -46,10 +46,14 @@
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.lblTime20 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.nudDelay = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -58,7 +62,7 @@
             this.groupBox1.Controls.Add(this.chkGlyphSenseUndead);
             this.groupBox1.Controls.Add(this.chkGlyphConsecration);
             this.groupBox1.Controls.Add(this.chkGlyphJudgement);
-            this.groupBox1.Location = new System.Drawing.Point(3, 236);
+            this.groupBox1.Location = new System.Drawing.Point(3, 263);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(162, 109);
             this.groupBox1.TabIndex = 0;
@@ -159,12 +163,15 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.nudDelay);
+            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.listUnlimitedPriority);
             this.groupBox2.Controls.Add(this.butUnlimitedDown);
             this.groupBox2.Controls.Add(this.butUnlimitedUp);
             this.groupBox2.Location = new System.Drawing.Point(3, 110);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(162, 120);
+            this.groupBox2.Size = new System.Drawing.Size(162, 147);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -274,6 +281,43 @@
             this.lblTime20.TabIndex = 30;
             this.lblTime20.Text = "100%";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 121);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.TabIndex = 33;
+            this.label3.Text = "Delay:";
+            // 
+            // nudDelay
+            // 
+            this.nudDelay.DecimalPlaces = 2;
+            this.nudDelay.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.nudDelay.Location = new System.Drawing.Point(49, 119);
+            this.nudDelay.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudDelay.Name = "nudDelay";
+            this.nudDelay.Size = new System.Drawing.Size(48, 20);
+            this.nudDelay.TabIndex = 34;
+            this.nudDelay.ValueChanged += new System.EventHandler(this.nudDelay_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(103, 121);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(24, 13);
+            this.label4.TabIndex = 35;
+            this.label4.Text = "sec";
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -295,8 +339,10 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -322,6 +368,9 @@
         private System.Windows.Forms.Button butUnlimitedUp;
         private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
         private System.Windows.Forms.CheckBox chkGlyphExorcism;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown nudDelay;
+        private System.Windows.Forms.Label label3;
 
     }
 }
