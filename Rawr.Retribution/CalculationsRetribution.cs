@@ -306,7 +306,8 @@ namespace Rawr.Retribution
             #endregion
 
             #region Consecration
-            calc.ConsecrationDPS = (72f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower) * vengeance * crusade * spellPowerMulti * partialResist * aw;
+            calc.ConsecrationDPS = (72f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower)
+                * vengeance * crusade * spellPowerMulti * partialResist * aw * (1f - calc.ToResist);
             float consAvgHit = calc.ConsecrationDPS * (calcOpts.GlyphConsecration ? 10f : 8f);
             #endregion
 
