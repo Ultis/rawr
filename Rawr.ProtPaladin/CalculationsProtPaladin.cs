@@ -1258,6 +1258,7 @@ focus on Survival Points.",
                 stats.Strength +
                 stats.Stamina +
                 stats.Agility + 
+				stats.Health +
 
                 stats.BlockValue +
 
