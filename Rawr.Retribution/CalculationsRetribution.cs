@@ -467,7 +467,6 @@ namespace Rawr.Retribution
             stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
             stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
             stats.Health += stats.Stamina * 10;
-            stats.Mana += stats.Intellect * 15f;
 
             stats.PhysicalHit += stats.HitRating / 3278.998947f;
             stats.SpellHit += stats.HitRating / 2623.199272f;
@@ -551,14 +550,31 @@ namespace Rawr.Retribution
             return base.IsItemRelevant(item);
         }
 
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            Stats stats = buff.Stats;
+            bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
+                stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
+                stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + stats.CritDivineStorm_8 +
+                stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
+                stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
+                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
+                stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
+                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + stats.SpellHaste +
+                stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
+                stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
+            return wantedStats;
+        }
+
         public override Stats GetRelevantStats(Stats stats)
         {
             return new Stats()
             {
                 Health = stats.Health,
-                Mana = stats.Mana,
                 Strength = stats.Strength,
                 Agility = stats.Agility,
+                Intellect = stats.Intellect,
                 Stamina = stats.Stamina,
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
@@ -568,6 +584,7 @@ namespace Rawr.Retribution
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 SpellCrit = stats.SpellCrit,
+                SpellHaste = stats.SpellHaste,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
 				PhysicalHit = stats.PhysicalHit,
@@ -604,18 +621,19 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
+            bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + stats.CritDivineStorm_8 +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
-                stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
-                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier +
+                stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
+                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier) > 0;
-            bool maybeStats = (stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
+            bool maybeStats = (stats.Agility + stats.Strength + 
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
-            bool ignoreStats = (stats.Spirit + stats.Intellect + stats.Mp5) > 0;
+            bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +
+                stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.BlockValue) > 0;
             return wantedStats || (maybeStats && ! ignoreStats);
         }
     }
