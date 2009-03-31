@@ -117,6 +117,7 @@ namespace Rawr.Retribution
 					    "Basic Stats:Melee Haste",
 					    "Basic Stats:Weapon Damage",
 					    "Basic Stats:Attack Speed",
+                        "DPS Breakdown:Total DPS",
                         "DPS Breakdown:White",
                         "DPS Breakdown:Seal",
 					    "DPS Breakdown:Crusader Strike",
@@ -125,7 +126,6 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Hammer of Wrath",
-                        "DPS Breakdown:Total DPS",
 					    "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
                         "Rotation Info:Consecration CD",
@@ -474,7 +474,8 @@ namespace Rawr.Retribution
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
-            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
+            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f
+                - (calcOpts.TargetLevel == 83 ? 0.048 : 0);
             stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Agility / 5208.333333f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f + talentCrit;
 
