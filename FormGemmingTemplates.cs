@@ -45,7 +45,8 @@ namespace Rawr
         
             InitializeComponent();
 			CreateGemmingTemplateControls();
-			numericUpDownCountGemmingsShown.Value = Properties.GeneralSettings.Default.CountGemmingsShown;
+            numericUpDownCountGemmingsShown.Value = Properties.GeneralSettings.Default.CountGemmingsShown;
+            setLabelText(); // forces change on load as text not updated if value hasn't changed
 		}
 
 		public void CreateGemmingTemplateControls()
@@ -222,8 +223,13 @@ namespace Rawr
 
 		private void numericUpDownCountGemmingsShown_ValueChanged(object sender, EventArgs e)
 		{
-			labelCountGemmingsShownDescription.Text = string.Format(labelCountGemmingsShownDescription.Tag.ToString(), (int)numericUpDownCountGemmingsShown.Value);
+            setLabelText();
 		}
+
+        private void setLabelText()
+        {
+            labelCountGemmingsShownDescription.Text = string.Format(labelCountGemmingsShownDescription.Tag.ToString(), (int)numericUpDownCountGemmingsShown.Value);
+        }
 
         /* Old Gemming System
         private Button removeButton(GroupBox parentBox){
