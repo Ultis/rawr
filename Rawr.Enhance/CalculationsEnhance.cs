@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
+using Rawr.Enhance;
 
 namespace Rawr
 {
@@ -10,106 +11,29 @@ namespace Rawr
 	public class CalculationsEnhance : CalculationsBase
     {
         #region Gemming Template
+        private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                ////Relevant Gem IDs for Enhancement Shamans
-                //Red
-                int[] delicate = { 39905, 39997, 40112, 42143 };
-                int[] bright = { 39906, 39999, 40114, 36766 };
-                int[] precise = { 39910, 40003, 40118, 42154 };
-                
-                //Yellow
-                int[] rigid = { 39915, 40014, 40125, 42156 };
-                int[] smooth = { 39914, 40013, 40124, 42149 };
-
-                //Orange
-                int[] accurate = { 39966, 40058, 40162 };
-                int[] deadly = { 39952, 40043, 40147 };
-                int[] glinting = { 39953, 40044, 40148 };
-                int[] pristine = { 39961, 40053, 40157 };
-                int[] wicked = { 39960, 40052, 40156 };
-
                 //Meta
-                // int austere = 41380;
+                int chaotic = 41285;
                 int relentless = 41398;
 
-                return new List<GemmingTemplate>() { 
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Agility
-						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Attack Power
-						RedId = bright[0], YellowId = bright[0], BlueId = bright[0], PrismaticId = bright[0], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
-						RedId = precise[0], YellowId = precise[0], BlueId = precise[0], PrismaticId = precise[0], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
-						RedId = rigid[0], YellowId = rigid[0], BlueId = rigid[0], PrismaticId = rigid[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
-						RedId = smooth[0], YellowId = smooth[0], BlueId = smooth[0], PrismaticId = smooth[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Expertise/Hit
-						RedId = accurate[0], YellowId = accurate[0], BlueId = accurate[0], PrismaticId = accurate[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Crit
-						RedId = deadly[0], YellowId = deadly[0], BlueId = deadly[0], PrismaticId = deadly[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Hit
-						RedId = glinting[0], YellowId = glinting[0], BlueId = glinting[0], PrismaticId = glinting[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Hit
-						RedId = pristine[0], YellowId = pristine[0], BlueId = pristine[0], PrismaticId = pristine[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
-						RedId = wicked[0], YellowId = wicked[0], BlueId = wicked[0], PrismaticId = wicked[0], MetaId = relentless },
-
-                   	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Agility
-						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Attack Power
-						RedId = bright[1], YellowId = bright[1], BlueId = bright[1], PrismaticId = bright[1], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Expertise
-						RedId = precise[1], YellowId = precise[1], BlueId = precise[1], PrismaticId = precise[1], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Hit
-						RedId = rigid[1], YellowId = rigid[1], BlueId = rigid[1], PrismaticId = rigid[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Crit
-						RedId = smooth[1], YellowId = smooth[1], BlueId = smooth[1], PrismaticId = smooth[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Expertise/Hit
-						RedId = accurate[1], YellowId = accurate[1], BlueId = accurate[1], PrismaticId = accurate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Agility/Crit
-						RedId = deadly[1], YellowId = deadly[1], BlueId = deadly[1], PrismaticId = deadly[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Agility/Hit
-						RedId = glinting[1], YellowId = glinting[1], BlueId = glinting[1], PrismaticId = glinting[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Attack Power/Hit
-						RedId = pristine[1], YellowId = pristine[1], BlueId = pristine[1], PrismaticId = pristine[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Attack Power/Crit
-						RedId = wicked[1], YellowId = wicked[1], BlueId = wicked[1], PrismaticId = wicked[1], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Agility
-						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Attack Power
-						RedId = bright[2], YellowId = bright[2], BlueId = bright[2], PrismaticId = bright[2], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Expertise
-						RedId = precise[2], YellowId = precise[2], BlueId = precise[2], PrismaticId = precise[2], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Hit
-						RedId = rigid[2], YellowId = rigid[2], BlueId = rigid[2], PrismaticId = rigid[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Crit
-						RedId = smooth[2], YellowId = smooth[2], BlueId = smooth[2], PrismaticId = smooth[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Expertise/Hit
-						RedId = accurate[2], YellowId = accurate[2], BlueId = accurate[2], PrismaticId = accurate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Agility/Crit
-						RedId = deadly[2], YellowId = deadly[2], BlueId = deadly[2], PrismaticId = deadly[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Agility/Hit
-						RedId = glinting[2], YellowId = glinting[2], BlueId = glinting[2], PrismaticId = glinting[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Attack Power/Hit
-						RedId = pristine[2], YellowId = pristine[2], BlueId = pristine[2], PrismaticId = pristine[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Attack Power/Crit
-						RedId = wicked[2], YellowId = wicked[2], BlueId = wicked[2], PrismaticId = wicked[2], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Agility
-						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Attack Power
-						RedId = bright[3], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[3], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Expertise
-						RedId = precise[3], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[3], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Hit
-						RedId = rigid[3], YellowId = rigid[3], BlueId = rigid[3], PrismaticId = rigid[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Crit
-						RedId = smooth[3], YellowId = smooth[3], BlueId = smooth[3], PrismaticId = smooth[3], MetaId = relentless },
-               };
+                if (_defaultGemmingTemplates == null)
+                {
+                    Gemming gemming = new Gemming();
+                    _defaultGemmingTemplates = new List<GemmingTemplate>();
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addJewelerTemplates(relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addJewelerTemplates(chaotic, false));
+                }
+                return _defaultGemmingTemplates;
             }
         }
         #endregion
@@ -663,9 +587,11 @@ namespace Rawr
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             float dpsDogs = 0f;
-            float bonusFSattackpower = calcOpts.GlyphFS ? attackPower * .3f : 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
-                dpsDogs = 2 * ((375f + .3f * APDPS + bonusFSattackpower / 14f) * (45f / 180f)) * (1 + bonusPhysicalDamage); 
+            {
+                float FSglyphdps = calcOpts.GlyphFS ? (attackPower * .3f) / 14f : 0f;
+                dpsDogs = 2 * ((375f + .3f * APDPS + FSglyphdps) * (45f / 180f)) * (1 + bonusPhysicalDamage);
+            }
             #endregion
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
@@ -910,30 +836,32 @@ namespace Rawr
 
 				case "Relative Stat Values":
 					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
-					float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 10 } }).OverallPoints - dpsBase);
-					float dpsAgi =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }).OverallPoints - dpsBase);
-				    float dpsAP  =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 20 } }).OverallPoints - dpsBase);
-                    float dpsInt =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 10 } }).OverallPoints - dpsBase);
-                    float dpsCrit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 10} }).OverallPoints - dpsBase);
-					float dpsExp =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 10 } }).OverallPoints - dpsBase);
-					float dpsHaste =	(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 10 } }).OverallPoints - dpsBase);
-					float dpsHit =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10 } }).OverallPoints - dpsBase);
+					float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 16 } }).OverallPoints - dpsBase);
+					float dpsAgi =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 16 } }).OverallPoints - dpsBase);
+				    float dpsAP  =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 32 } }).OverallPoints - dpsBase);
+                    float dpsInt =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 16 } }).OverallPoints - dpsBase);
+                    float dpsCrit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 16} }).OverallPoints - dpsBase);
+					float dpsExp =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 16 } }).OverallPoints - dpsBase);
+					float dpsHaste =	(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 16 } }).OverallPoints - dpsBase);
+					float dpsHit =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 16 } }).OverallPoints - dpsBase);
 					float dpsDmg =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
-					float dpsPen =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 } }).OverallPoints - dpsBase);
-                    float dpsSpd =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 12 } }).OverallPoints - dpsBase);
+					float dpsPen =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsSpd =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 19 } }).OverallPoints - dpsBase);
+                    float dpsSta =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 24 } }).OverallPoints - dpsBase);
 
 					return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationEnhance() { Name = "10 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "10 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-						new ComparisonCalculationEnhance() { Name = "20 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
-						new ComparisonCalculationEnhance() { Name = "10 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
-						new ComparisonCalculationEnhance() { Name = "10 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-						new ComparisonCalculationEnhance() { Name = "10 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
-						new ComparisonCalculationEnhance() { Name = "10 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-						new ComparisonCalculationEnhance() { Name = "10 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
+						new ComparisonCalculationEnhance() { Name = "24 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "16 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "16 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
+						new ComparisonCalculationEnhance() { Name = "32 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
+						new ComparisonCalculationEnhance() { Name = "16 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
+						new ComparisonCalculationEnhance() { Name = "16 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
+						new ComparisonCalculationEnhance() { Name = "16 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
+						new ComparisonCalculationEnhance() { Name = "16 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
+						new ComparisonCalculationEnhance() { Name = "16 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
 //						new ComparisonCalculationEnhance() { Name = "Weapon Damage", OverallPoints = dpsDmg, DPSPoints = dpsDmg },
-						new ComparisonCalculationEnhance() { Name = "10 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
-                        new ComparisonCalculationEnhance() { Name = "12 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
+						new ComparisonCalculationEnhance() { Name = "16 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
+                        new ComparisonCalculationEnhance() { Name = "19 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
 					};
 
 				default:

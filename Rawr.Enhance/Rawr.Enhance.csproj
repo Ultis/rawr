@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="CalculationsEnhance.cs" />
     <Compile Include="EnhSim.cs" />
+    <Compile Include="Gemming.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
