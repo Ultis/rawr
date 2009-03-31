@@ -897,7 +897,7 @@ namespace Rawr
 
 
 		public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
-		public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, false, true, false, "en"); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, "en"); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale)
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
