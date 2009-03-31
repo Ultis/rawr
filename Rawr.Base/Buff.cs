@@ -380,7 +380,7 @@ namespace Rawr
                 Group = "Armor",
                 Stats = { BonusArmor = 1205f },
                 Improvements = { 
-					new Buff { Name = "Improved Devotion Aura (Armor)", Stats = { BonusArmor = (float)Math.Floor(1205f * 0.5f) } }
+					new Buff { Name = "Improved Devotion Aura (Armor)", Source = "Prot Paladin", Stats = { BonusArmor = (float)Math.Floor(1205f * 0.5f) } }
 				}
             });
             #endregion
@@ -549,7 +549,7 @@ namespace Rawr
                 Group = "Intellect",
                 Stats = { Intellect = 48 },
                 Improvements = { 
-					new Buff { Name = "Improved Felhunter", Stats = { Intellect = (float)Math.Floor(48f * 0.1f) } }
+					new Buff { Name = "Improved Felhunter", Source = "Afflic Warlock", Stats = { Intellect = (float)Math.Floor(48f * 0.1f) } }
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Intellect" }),
             });
@@ -580,7 +580,7 @@ namespace Rawr
                 Group = "Physical Haste",
                 Stats = { PhysicalHaste = 0.16f },
                 Improvements = { 
-					new Buff { Name = "Improved Windfury Totem", Source = "Enh Shaman", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
+					new Buff { Name = "Improved Windfury Totem", Source = "Enhance Shaman", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
 				}
             });
             #endregion
@@ -625,7 +625,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Mp5 = 85 },
                 Improvements = { 
-					new Buff { Name = "Restorative Totems", Stats = { Mp5 = (float)Math.Floor(85f * 0.25f) } }
+					new Buff { Name = "Restorative Totems", Source = "Resto Shaman", Stats = { Mp5 = (float)Math.Floor(85f * 0.25f) } }
 				}
             });
             defaultBuffs.Add(new Buff
@@ -636,7 +636,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Mp5 = 91 },
                 Improvements = { 
-					new Buff { Name = "Improved Blessing of Wisdom", Stats = { Mp5 = (float)Math.Floor(91 * 0.2f) } }
+					new Buff { Name = "Improved Blessing of Wisdom", Source = "Holy Paladin", Stats = { Mp5 = (float)Math.Floor(91 * 0.2f) } }
 				}
             });
             #endregion
@@ -645,12 +645,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Elemental Oath",
+                Source = "Elem Shaman",
                 Group = "Spell Critical Strike Chance",
                 Stats = { SpellCrit = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Moonkin Form",
+                Source = "Moonkin Druid",
                 Group = "Spell Critical Strike Chance",
                 Stats = { SpellCrit = 0.05f }
             });
@@ -660,6 +662,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Focus Magic",
+                Source = "Mage",
                 Group = "Focus Magic, Spell Critical Strike Chance",
                 Stats = { SpellCrit = 0.03f }
             });
@@ -669,6 +672,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Wrath of Air Totem",
+                Source = "Shaman",
                 Group = "Spell Haste",
                 Stats = { SpellHaste = 0.05f }
             });
@@ -678,12 +682,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Demonic Pact",
+                Source = "Demo Warlock",
                 Group = "Spell Power",
                 Stats = { BonusSpellPowerDemonicPactMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Flametongue Totem",
+                Source = "Shaman",
                 Group = "Spell Power",
                 Stats = { SpellPower = 144f },
                 Improvements = { 
@@ -693,12 +699,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Totem of Wrath (Spell Power)",
+                Source = "Elem Shaman",
                 Group = "Spell Power",
                 Stats = { SpellPower = 280f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Divine Spirit",
+                Source = "Disc Priest",
                 Group = "Spell Power",
                 Stats = { SpellPower = 80f }
             });
@@ -708,6 +716,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Amplify Magic (on target, not self)",
+                Source = "Mage",
                 Group = "Spell Sensitivity",
                 Stats = { SpellPower = 255 },
                 Improvements = { 
@@ -720,16 +729,18 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Fel Intelligence (Spirit)",
+                Source = "Warlock",
                 Group = "Spirit",
                 Stats = { Spirit = 64f },
                 Improvements = { 
-					new Buff { Name = "Improved Felhunter", Stats = { Spirit = (float)Math.Floor(64f * 0.1f) } }
+					new Buff { Name = "Improved Felhunter", Source = "Afflic Warlock", Stats = { Spirit = (float)Math.Floor(64f * 0.1f) } }
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Spirit" }),
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Divinie Spirit",
+                Source = "Priest",
                 Group = "Spirit",
                 Stats = { Spirit = 80f },
                 ConflictingBuffs = new List<string>(new string[] { "Spirit" }),
@@ -740,6 +751,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Power Word: Fortitude",
+                Source = "Priest",
                 Group = "Stamina",
                 Stats = { Stamina = 165f },
                 Improvements = { 
@@ -753,6 +765,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Mark of the Wild",
+                Source = "Druid",
                 Group = "Stat Add",
                 Stats =
                 {
@@ -791,6 +804,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Blessing of Kings",
+                Source = "Paladin",
                 Group = "Stat Multiplier",
                 Stats =
                 {
@@ -807,6 +821,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Shadow Protection",
+                Source = "Priest",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Shadow Resistance Buff" }),
                 Stats = { ShadowResistanceBuff = 130 }
@@ -814,6 +829,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Shadow Resistance Aura",
+                Source = "Paladin",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Shadow Resistance Buff" }),
                 Stats = { ShadowResistanceBuff = 130 }
@@ -821,6 +837,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Aspect of the Wild",
+                Source = "Hunter",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Nature Resistance Buff" }),
                 Stats = { NatureResistanceBuff = 130 }
@@ -828,6 +845,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nature Resistance Totem",
+                Source = "Shaman",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Nature Resistance Buff" }),
                 Stats = { NatureResistanceBuff = 130 }
@@ -835,6 +853,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Frost Resistance Aura",
+                Source = "Paladin",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Frost Resistance Buff" }),
                 Stats = { FrostResistanceBuff = 130 }
@@ -842,6 +861,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Frost Resistance Totem",
+                Source = "Shaman",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Frost Resistance Buff" }),
                 Stats = { FrostResistanceBuff = 130 }
@@ -849,6 +869,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Fire Resistance Aura",
+                Source = "Paladin",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Fire Resistance Buff" }),
                 Stats = { FireResistanceBuff = 130 }
@@ -856,6 +877,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Fire Resistance Totem",
+                Source = "Shaman",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Fire Resistance Buff" }),
                 Stats = { FireResistanceBuff = 130 }
@@ -866,6 +888,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Concentration Aura",
+                Source = "Paladin",
                 Group = "Pushback Protection",
                 Stats = { InterruptProtection = 0.35f },
                 Improvements = { new Buff { Name = "Improved Concentration Aura", Stats = { InterruptProtection = 0.15f } } }
