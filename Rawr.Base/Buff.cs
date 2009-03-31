@@ -446,12 +446,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Ferocious Inspiration",
+                Source = "BM Hunter",
                 Group = "Damage (%)",
                 Stats = { BonusDamageMultiplier = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sanctified Retribution",
+                Source = "Ret Paladin",
                 Group = "Damage (%)",
                 Stats = { BonusDamageMultiplier = 0.03f }
             });
@@ -461,12 +463,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Blessing of Sanctuary",
+                Source = "Prot Paladin",
                 Group = "Damage Reduction (%)",
                 Stats = { DamageTakenMultiplier = -0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Grace",
+                Source = "Disc Priest",
                 Group = "Damage Reduction (%)",
                 Stats = { DamageTakenMultiplier = -0.03f }
             });
@@ -476,12 +480,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Moonkin Form",
+                Source = "Moonkin Druid",
                 Group = "Haste (%)",
                 Stats = { PhysicalHaste = 0.03f, SpellHaste = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Swift Retribution",
+                Source = "Ret Paladin",
                 Group = "Haste (%)",
                 Stats = { PhysicalHaste = 0.03f, SpellHaste = 0.03f }
             });
@@ -491,12 +497,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Devotion Aura (Healing Received %)",
+                Source = "Prot Paladin",
                 Group = "Healing Received (%)",
                 Stats = { HealingReceivedMultiplier = 0.06f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Tree of Life Aura",
+                Source = "Resto Druid",
                 Group = "Healing Received (%)",
                 Stats = { HealingReceivedMultiplier = 0.06f }
             });
@@ -506,6 +514,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Blood Pact",
+                Source = "Warlock Imp",
                 Group = "Health",
                 Stats = { Health = 1330 },
                 Improvements = { 
@@ -515,6 +524,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Commanding Shout",
+                Source = "Warrior",
                 Group = "Health",
                 Stats = { Health = 2250 },
                 Improvements = { 
@@ -527,6 +537,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Arcane Intellect",
+                Source = "Mage",
                 Group = "Intellect",
                 Stats = { Intellect = 60 },
                 ConflictingBuffs = new List<string>(new string[] { "Intellect" }),
@@ -534,6 +545,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Fel Intelligence (Intellect)",
+                Source = "Warlock",
                 Group = "Intellect",
                 Stats = { Intellect = 48 },
                 Improvements = { 
@@ -547,12 +559,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Leader of the Pack",
+                Source = "Feral Druid",
                 Group = "Physical Critical Strike Chance",
                 Stats = { PhysicalCrit = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Rampage",
+                Source = "Fury Warrior",
                 Group = "Physical Critical Strike Chance",
                 Stats = { PhysicalCrit = 0.05f }
             });
@@ -562,10 +576,11 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Windfury Totem",
+                Source = "Shaman",
                 Group = "Physical Haste",
                 Stats = { PhysicalHaste = 0.16f },
                 Improvements = { 
-					new Buff { Name = "Improved Windfury Totem", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
+					new Buff { Name = "Improved Windfury Totem", Source = "Enh Shaman", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
 				}
             });
             #endregion
@@ -574,24 +589,28 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Hunting Party",
+                Source = "Survival Hunter",
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Judgements of the Wise",
+                Source = "Ret Paladin",
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Vampiric Touch",
+                Source = "Shadow Priest",
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Soul Leech",
+                Source = "Dest Warlock",
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
             });
@@ -601,6 +620,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Mana Spring Totem",
+                Source = "Shaman",
                 Group = "Mana Regeneration",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Mp5 = 85 },
@@ -611,6 +631,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Blessing of Wisdom",
+                Source = "Paladin",
                 Group = "Mana Regeneration",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Mp5 = 91 },

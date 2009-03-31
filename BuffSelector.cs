@@ -120,8 +120,11 @@ namespace Rawr
 				{
 					ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
 					checkBoxImprovement.Tag = improvement;
-					checkBoxImprovement.Text = improvement.Name;
-					checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
+                    if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && improvement.Source != null)
+                        checkBoxImprovement.Text = improvement.Name + " (" + improvement.Source + ")";
+                    else
+                        checkBoxImprovement.Text = improvement.Name;
+                    checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
 						checkBoxImprovement.Padding.Top, checkBoxImprovement.Padding.Right, checkBoxImprovement.Padding.Bottom);
 					checkBoxImprovement.AutoSize = true;
 					checkBoxImprovement.Font = this.Font;
