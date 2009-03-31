@@ -792,6 +792,8 @@ namespace Rawr.Tree
             statsTalents.BonusStaminaMultiplier = 0.01f * character.DruidTalents.SurvivalOfTheFittest * 2;
             statsTalents.BonusStrengthMultiplier = 0.01f * character.DruidTalents.SurvivalOfTheFittest * 2;
 
+            statsTalents.SpellHaste = 0.01f * character.DruidTalents.CelestialFocus;
+
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;

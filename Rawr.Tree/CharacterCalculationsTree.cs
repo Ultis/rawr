@@ -42,7 +42,7 @@ namespace Rawr.Tree
             haste = (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);
             spellhaste = 1 + BasicStats.SpellHaste;
             float hard = (1.5f / (1f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
-            float soft = (1.5f / (1.3f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
+            float soft = (1.5f * (1.0f - 0.04f * LocalCharacter.DruidTalents.GiftOfTheEarthmother) / (1.0f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
             haste_until_hard_cap = hard - BasicStats.HasteRating;
             haste_until_soft_cap = soft - BasicStats.HasteRating;
         }
@@ -70,7 +70,7 @@ namespace Rawr.Tree
 
             doHasteCalcs();
 
-            dictValues.Add("Spell Haste", Math.Round((spellhaste * haste - 1.0f) * 100.0f, 2) + "%*" + Math.Round((spellhaste - 1.0f) * 100.0f, 2) + "% from spells effects\n" + Math.Round((haste - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
+            dictValues.Add("Spell Haste", Math.Round((spellhaste * haste - 1.0f) * 100.0f, 2) + "%*" + Math.Round((spellhaste - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((haste - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
             dictValues.Add("Global CD", Math.Round(1.5f / (haste * spellhaste), 2) + "sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap\n" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until soft (GotEM) gcd cap");
 
             dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString() + "* " + Math.Round(Simulation.UnusedMana, 0).ToString() + " mana remaining at end of fight");
