@@ -58,5 +58,17 @@ namespace Rawr.Properties {
                 this["Locale"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayBuffSource {
+            get {
+                return ((bool)(this["DisplayBuffSource"]));
+            }
+            set {
+                this["DisplayBuffSource"] = value;
+            }
+        }
     }
 }

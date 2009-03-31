@@ -21,6 +21,7 @@ namespace Rawr
         public string Group;
         public Stats Stats = new Stats();
         public string SetName;
+        public string Source;
         public int SetThreshold = 0;
         public List<Buff> Improvements = new List<Buff>();
         public bool IsCustom = false;
@@ -361,6 +362,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Strength of Earth Totem",
+                Source = "Shaman",
                 Group = "Agility and Strength",
                 Stats = { Strength = 155, Agility = 155 },
 				ConflictingBuffs = { "Agility", "Strength" },
@@ -374,6 +376,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Devotion Aura",
+                Source = "Paladin",
                 Group = "Armor",
                 Stats = { BonusArmor = 1205f },
                 Improvements = { 
@@ -386,12 +389,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Ancestral Healing",
+                Source = "Resto Shaman",
                 Group = "Armor (%)",
                 Stats = { BonusArmorMultiplier = 0.25f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Inspiration",
+                Source = "Priest",
                 Group = "Armor (%)",
                 Stats = { BonusArmorMultiplier = 0.25f }
             });
@@ -401,6 +406,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Battle Shout",
+                Source = "Warrior",
                 Group = "Attack Power",
                 Stats = { AttackPower = 548 },
                 Improvements = { 
@@ -410,6 +416,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Blessing of Might",
+                Source = "Paladin",
                 Group = "Attack Power",
                 Stats = { AttackPower = 550 },
                 Improvements = { 
@@ -422,12 +429,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Trueshot Aura",
+                Source = "MM Hunter",
                 Group = "Attack Power (%)",
                 Stats = { BonusAttackPowerMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Unleashed Rage",
+                Source = "Enhance Shaman",
                 Group = "Attack Power (%)",
                 Stats = { BonusAttackPowerMultiplier = 0.1f }
             });
@@ -1040,6 +1049,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Savage Combat",
+                Source = "Combat Rogue",
                 Group = "Physical Vulnerability",
                 Stats = { BonusPhysicalDamageMultiplier = 0.04f }
             });

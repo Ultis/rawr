@@ -20,6 +20,7 @@ namespace Rawr
 			{ 
 				BuildControls();
 				Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+                Rawr.UserControls.Options.GeneralSettings.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
                 ScrollHook.hookRec(this);
 			}
 		}
@@ -53,7 +54,14 @@ namespace Rawr
             ScrollHook.hookRec(this);
 		}
 
-		//i want to be free... from desolation and despair
+        void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
+        {
+            BuildControls();
+            LoadBuffsFromCharacter();
+            ScrollHook.hookRec(this);
+        }
+        
+        //i want to be free... from desolation and despair
 		Dictionary<string, GroupBox> GroupBoxes = new Dictionary<string, GroupBox>();
 		Dictionary<Buff, CheckBox> CheckBoxes = new Dictionary<Buff, CheckBox>();
 		private void BuildControls()
@@ -95,7 +103,10 @@ namespace Rawr
 			{
                 ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
 				checkBox.Tag = buff;
-				checkBox.Text = buff.Name;
+                if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && buff.Source != null)
+                    checkBox.Text = buff.Name + " (" + buff.Source + ")";
+                else
+                    checkBox.Text = buff.Name;
 				checkBox.AutoSize = true;
 				checkBox.Font = this.Font;
 				checkBox.Dock = DockStyle.Top;

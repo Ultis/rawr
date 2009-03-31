@@ -18,6 +18,7 @@ namespace Rawr.UserControls.Options
 			//cannot be in load, because its possible this tab won't show, and the values will not be initialized.
 			//if this happens, then the users settings will be cleared.
             checkBoxUseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
+            chbBuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
 
@@ -51,6 +52,7 @@ namespace Rawr.UserControls.Options
             string message = string.Empty;
             string title = string.Empty;
 			Rawr.Properties.GeneralSettings.Default.UseMultithreading = checkBoxUseMultithreading.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayBuffSource = chbBuffSource.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
 			Rawr.Properties.GeneralSettings.Default.Save();
             switch(_locale)
@@ -73,7 +75,8 @@ namespace Rawr.UserControls.Options
                     break;
             }
             if (!_locale.Equals("en"))
-                System.Windows.Forms.MessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.OK); 
+                System.Windows.Forms.MessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.OK);
+            OnDisplayBuffChanged();
             ItemCache.OnItemsChanged();
 		}
 
@@ -153,5 +156,12 @@ namespace Rawr.UserControls.Options
         {
             _locale = "ru";
         }
-	}
+
+        public static event EventHandler DisplayBuffChanged;
+        protected static void OnDisplayBuffChanged()
+        {
+            if (DisplayBuffChanged != null)
+                DisplayBuffChanged(null, EventArgs.Empty);
+        }
+    }
 }
