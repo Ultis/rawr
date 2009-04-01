@@ -225,7 +225,7 @@ namespace Rawr
 				}
 
 				InitializeAvailableItemList(character);
-
+                ApplyRacialandProfessionBuffs(docCharacter, character);
                 //I will tell you how he lived.
 				return character;
 			}
@@ -304,6 +304,20 @@ namespace Rawr
                 }
             }
 		}
+
+        private static void ApplyRacialandProfessionBuffs(XmlDocument doc, Character character)
+        {
+            if (character.Race == Character.CharacterRace.Draenei)
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+
+            foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))
+            {   // apply profession buffs if max skill
+                if (profession.Attributes["name"].Value == "Mining" && profession.Attributes["value"].Value == "450")
+                    character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
+                if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450")
+                    character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+            }
+        }
 
         public static Int32 GetItemIdByName(string item_name)
         {
