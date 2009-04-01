@@ -36,6 +36,36 @@ namespace Rawr.Mage
             //if (Character.MageTalents == null) Character.MageTalents = new MageTalents();
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(Character);
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            if (calculationOptions.ArcaneResist > 0 && calculationOptions.ArcaneResist <= 1)
+            {
+                if (calculationOptions.ArcaneResist == 1) calculationOptions.ArcaneResist = -1;
+                else calculationOptions.ArcaneResist *= 400;
+            }
+            if (calculationOptions.FireResist > 0 && calculationOptions.FireResist <= 1)
+            {
+                if (calculationOptions.FireResist == 1) calculationOptions.FireResist = -1;
+                else calculationOptions.FireResist *= 400;
+            }
+            if (calculationOptions.FrostResist > 0 && calculationOptions.FrostResist <= 1)
+            {
+                if (calculationOptions.FrostResist == 1) calculationOptions.FrostResist = -1;
+                else calculationOptions.FrostResist *= 400;
+            }
+            if (calculationOptions.ShadowResist > 0 && calculationOptions.ShadowResist <= 1)
+            {
+                if (calculationOptions.ShadowResist == 1) calculationOptions.ShadowResist = -1;
+                else calculationOptions.ShadowResist *= 400;
+            }
+            if (calculationOptions.NatureResist > 0 && calculationOptions.NatureResist <= 1)
+            {
+                if (calculationOptions.NatureResist == 1) calculationOptions.NatureResist = -1;
+                else calculationOptions.NatureResist *= 400;
+            }
+            if (calculationOptions.HolyResist > 0 && calculationOptions.HolyResist <= 1)
+            {
+                if (calculationOptions.HolyResist == 1) calculationOptions.HolyResist = -1;
+                else calculationOptions.HolyResist *= 400;
+            }
 
             loading = true;
             calculationOptionsMageBindingSource.DataSource = calculationOptions;

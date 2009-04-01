@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -41,6 +42,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxWarlockSpellPower = new System.Windows.Forms.TextBox();
+            this.label109 = new System.Windows.Forms.Label();
             this.label103 = new System.Windows.Forms.Label();
             this.checkBoxPowerInfusion = new System.Windows.Forms.CheckBox();
             this.label91 = new System.Windows.Forms.Label();
@@ -237,6 +240,10 @@
             this.label81 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
+            this.label108 = new System.Windows.Forms.Label();
+            this.numericUpDownDisplayAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownComparisonAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
             this.label104 = new System.Windows.Forms.Label();
             this.checkBoxMode31 = new System.Windows.Forms.CheckBox();
             this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
@@ -273,25 +280,18 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.numericUpDownComparisonAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownDisplayAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
-            this.label108 = new System.Windows.Forms.Label();
-            this.textBoxWarlockSpellPower = new System.Windows.Forms.TextBox();
-            this.label109 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -353,6 +353,11 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -478,6 +483,24 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxWarlockSpellPower
+            // 
+            this.textBoxWarlockSpellPower.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "WarlockSpellPower", true));
+            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(142, 460);
+            this.textBoxWarlockSpellPower.Name = "textBoxWarlockSpellPower";
+            this.textBoxWarlockSpellPower.Size = new System.Drawing.Size(75, 20);
+            this.textBoxWarlockSpellPower.TabIndex = 200;
+            // 
+            // label109
+            // 
+            this.label109.AutoSize = true;
+            this.label109.Location = new System.Drawing.Point(0, 463);
+            this.label109.Name = "label109";
+            this.label109.Size = new System.Drawing.Size(116, 13);
+            this.label109.TabIndex = 199;
+            this.label109.Text = "Warlock Spell Power: *";
+            this.toolTipMage.SetToolTip(this.label109, "Spell Power used for Demonic Pact buff value.");
             // 
             // label103
             // 
@@ -972,9 +995,10 @@
             this.label97.AutoSize = true;
             this.label97.Location = new System.Drawing.Point(0, 398);
             this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(87, 13);
+            this.label97.Size = new System.Drawing.Size(70, 13);
             this.label97.TabIndex = 184;
-            this.label97.Text = "Holy Resist (0-1):";
+            this.label97.Text = "Holy Resist: *";
+            this.toolTipMage.SetToolTip(this.label97, "Actual resistance of target, -1 for immunity.");
             // 
             // label24
             // 
@@ -1068,9 +1092,10 @@
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(0, 372);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(105, 13);
+            this.label20.Size = new System.Drawing.Size(88, 13);
             this.label20.TabIndex = 172;
-            this.label20.Text = "Shadow Resist (0-1):";
+            this.label20.Text = "Shadow Resist: *";
+            this.toolTipMage.SetToolTip(this.label20, "Actual resistance of target, -1 for immunity.");
             // 
             // textBoxNatureResist
             // 
@@ -1085,9 +1110,10 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(0, 346);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(98, 13);
+            this.label9.Size = new System.Drawing.Size(81, 13);
             this.label9.TabIndex = 170;
-            this.label9.Text = "Nature Resist (0-1):";
+            this.label9.Text = "Nature Resist: *";
+            this.toolTipMage.SetToolTip(this.label9, "Actual resistance of target, -1 for immunity.");
             // 
             // textBoxFrostResist
             // 
@@ -1102,9 +1128,10 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(0, 320);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(89, 13);
+            this.label8.Size = new System.Drawing.Size(72, 13);
             this.label8.TabIndex = 168;
-            this.label8.Text = "Frost Resist (0-1):";
+            this.label8.Text = "Frost Resist: *";
+            this.toolTipMage.SetToolTip(this.label8, "Actual resistance of target, -1 for immunity.");
             // 
             // textBoxFireResist
             // 
@@ -1119,9 +1146,10 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(0, 294);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(83, 13);
+            this.label7.Size = new System.Drawing.Size(66, 13);
             this.label7.TabIndex = 166;
-            this.label7.Text = "Fire Resist (0-1):";
+            this.label7.Text = "Fire Resist: *";
+            this.toolTipMage.SetToolTip(this.label7, "Actual resistance of target, -1 for immunity.");
             // 
             // textBoxArcaneResist
             // 
@@ -1136,9 +1164,10 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(0, 268);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(100, 13);
+            this.label6.Size = new System.Drawing.Size(83, 13);
             this.label6.TabIndex = 164;
-            this.label6.Text = "Arcane Resist (0-1):";
+            this.label6.Text = "Arcane Resist: *";
+            this.toolTipMage.SetToolTip(this.label6, "Actual resistance of target, -1 for immunity.");
             // 
             // textBoxAoeDuration
             // 
@@ -2529,6 +2558,66 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // numericUpDownMaxThreads
+            // 
+            this.numericUpDownMaxThreads.Location = new System.Drawing.Point(174, 254);
+            this.numericUpDownMaxThreads.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxThreads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxThreads.Name = "numericUpDownMaxThreads";
+            this.numericUpDownMaxThreads.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownMaxThreads.TabIndex = 199;
+            this.numericUpDownMaxThreads.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxThreads.ValueChanged += new System.EventHandler(this.numericUpDownMaxThreads_ValueChanged);
+            // 
+            // label108
+            // 
+            this.label108.AutoSize = true;
+            this.label108.Location = new System.Drawing.Point(0, 256);
+            this.label108.Name = "label108";
+            this.label108.Size = new System.Drawing.Size(140, 13);
+            this.label108.TabIndex = 198;
+            this.label108.Text = "Maximum Parallel Threads: *";
+            this.toolTipMage.SetToolTip(this.label108, "Controls how many threads can be executed in parallel if multithreading is enable" +
+                    "d, higher values will require more memory.");
+            // 
+            // numericUpDownDisplayAdvancedConstraintsLevel
+            // 
+            this.numericUpDownDisplayAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraintsLevel", true));
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(174, 228);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Name = "numericUpDownDisplayAdvancedConstraintsLevel";
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.TabIndex = 197;
+            // 
+            // numericUpDownComparisonAdvancedConstraintsLevel
+            // 
+            this.numericUpDownComparisonAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraintsLevel", true));
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(140, 228);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Name = "numericUpDownComparisonAdvancedConstraintsLevel";
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.TabIndex = 196;
+            // 
             // label104
             // 
             this.label104.AutoSize = true;
@@ -2895,89 +2984,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // numericUpDownComparisonAdvancedConstraintsLevel
-            // 
-            this.numericUpDownComparisonAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraintsLevel", true));
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(140, 228);
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Name = "numericUpDownComparisonAdvancedConstraintsLevel";
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
-            this.numericUpDownComparisonAdvancedConstraintsLevel.TabIndex = 196;
-            // 
-            // numericUpDownDisplayAdvancedConstraintsLevel
-            // 
-            this.numericUpDownDisplayAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraintsLevel", true));
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(174, 228);
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Name = "numericUpDownDisplayAdvancedConstraintsLevel";
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
-            this.numericUpDownDisplayAdvancedConstraintsLevel.TabIndex = 197;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
-            // numericUpDownMaxThreads
-            // 
-            this.numericUpDownMaxThreads.Location = new System.Drawing.Point(174, 254);
-            this.numericUpDownMaxThreads.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxThreads.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxThreads.Name = "numericUpDownMaxThreads";
-            this.numericUpDownMaxThreads.Size = new System.Drawing.Size(29, 20);
-            this.numericUpDownMaxThreads.TabIndex = 199;
-            this.numericUpDownMaxThreads.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxThreads.ValueChanged += new System.EventHandler(this.numericUpDownMaxThreads_ValueChanged);
-            // 
-            // label108
-            // 
-            this.label108.AutoSize = true;
-            this.label108.Location = new System.Drawing.Point(0, 256);
-            this.label108.Name = "label108";
-            this.label108.Size = new System.Drawing.Size(140, 13);
-            this.label108.TabIndex = 198;
-            this.label108.Text = "Maximum Parallel Threads: *";
-            this.toolTipMage.SetToolTip(this.label108, "Controls how many threads can be executed in parallel if multithreading is enable" +
-                    "d, higher values will require more memory.");
-            // 
-            // textBoxWarlockSpellPower
-            // 
-            this.textBoxWarlockSpellPower.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "WarlockSpellPower", true));
-            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(142, 460);
-            this.textBoxWarlockSpellPower.Name = "textBoxWarlockSpellPower";
-            this.textBoxWarlockSpellPower.Size = new System.Drawing.Size(75, 20);
-            this.textBoxWarlockSpellPower.TabIndex = 200;
-            // 
-            // label109
-            // 
-            this.label109.AutoSize = true;
-            this.label109.Location = new System.Drawing.Point(0, 463);
-            this.label109.Name = "label109";
-            this.label109.Size = new System.Drawing.Size(116, 13);
-            this.label109.TabIndex = 199;
-            this.label109.Text = "Warlock Spell Power: *";
-            this.toolTipMage.SetToolTip(this.label109, "Spell Power used for Demonic Pact buff value.");
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2989,6 +2995,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -3001,10 +3008,9 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
             this.ResumeLayout(false);
 
 		}

@@ -296,11 +296,6 @@ namespace Rawr.Mage
             AoeTargetLevel = 80;
             Latency = 0.1f;
             AoeTargets = 9;
-            ArcaneResist = 0;
-            FireResist = 0;
-            FrostResist = 0;
-            NatureResist = 0;
-            ShadowResist = 0;
             FightDuration = 300;
             HeroismAvailable = true;
             MoltenFuryPercentage = 0.3f;

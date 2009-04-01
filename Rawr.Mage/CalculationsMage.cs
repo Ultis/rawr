@@ -917,13 +917,13 @@ namespace Rawr.Mage
             int playerLevel = calculationOptions.PlayerLevel;
             float maxHitRate = 1.0f;
             float bossHitRate = Math.Min(maxHitRate, ((playerLevel <= calculationOptions.TargetLevel + 2) ? (0.96f - (playerLevel - calculationOptions.TargetLevel) * 0.01f) : (0.94f - (playerLevel - calculationOptions.TargetLevel - 2) * 0.11f)));
-            statsTotal.Mp5 -= 5 * calculationOptions.EffectShadowManaDrain * calculationOptions.EffectShadowManaDrainFrequency * bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            statsTotal.Mp5 -= 5 * calculationOptions.EffectShadowManaDrain * calculationOptions.EffectShadowManaDrainFrequency * bossHitRate * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.ShadowResistance, 0));
 
-            float fullResistRate = calculationOptions.EffectArcaneOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
-            fullResistRate += calculationOptions.EffectFireOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.FireResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
-            fullResistRate += calculationOptions.EffectFrostOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.FrostResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
-            fullResistRate += calculationOptions.EffectShadowOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
-            fullResistRate += calculationOptions.EffectNatureOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            float fullResistRate = calculationOptions.EffectArcaneOtherBinary * (1 - bossHitRate * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.ArcaneResistance, 0)));
+            fullResistRate += calculationOptions.EffectFireOtherBinary * (1 - bossHitRate * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.FireResistance, 0)));
+            fullResistRate += calculationOptions.EffectFrostOtherBinary * (1 - bossHitRate * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.FrostResistance, 0)));
+            fullResistRate += calculationOptions.EffectShadowOtherBinary * (1 - bossHitRate * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.ShadowResistance, 0)));
+            fullResistRate += calculationOptions.EffectNatureOtherBinary * (1 - bossHitRate * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.NatureResistance, 0)));
             fullResistRate += calculationOptions.EffectHolyOtherBinary * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectArcaneOther * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectFireOther * (1 - bossHitRate);
@@ -932,7 +932,7 @@ namespace Rawr.Mage
             fullResistRate += calculationOptions.EffectNatureOther * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectHolyOther * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowManaDrainFrequency * (1 - bossHitRate);
-            fullResistRate += calculationOptions.EffectShadowSilenceFrequency * (1 - bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            fullResistRate += calculationOptions.EffectShadowSilenceFrequency * (1 - bossHitRate * StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.ShadowResistance, 0));
             statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * character.MageTalents.MagicAbsorption * statsTotal.Mana;
 
             return statsTotal;

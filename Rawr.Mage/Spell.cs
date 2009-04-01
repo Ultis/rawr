@@ -1068,7 +1068,18 @@ namespace Rawr.Mage
                     CritBonus = calculations.BaseFrostFireCritBonus;
                     HitRate = calculations.BaseFrostFireHitRate;
                     ThreatMultiplier = calculations.FrostFireThreatMultiplier;
-                    RealResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
+                    if (calculationOptions.FireResist == -1)
+                    {
+                        RealResistance = calculationOptions.FrostResist;
+                    }
+                    else if (calculationOptions.FrostResist == -1)
+                    {
+                        RealResistance = calculationOptions.FireResist;
+                    }
+                    else
+                    {
+                        RealResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
+                    }
                     break;
                 case MagicSchool.Frost:
                     BaseSpellModifier = calculations.BaseFrostSpellModifier;
@@ -1111,7 +1122,7 @@ namespace Rawr.Mage
                 if (HitRate > Spell.MaxHitRate) HitRate = Spell.MaxHitRate;
             }
 
-            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - baseStats.SpellPenetration / (5 * playerLevel) * 0.75f) - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
+            PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, RealResistance, baseStats.SpellPenetration));
         }
 
         public static float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
