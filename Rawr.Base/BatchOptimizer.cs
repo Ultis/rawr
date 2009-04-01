@@ -173,6 +173,11 @@ namespace Rawr.Optimizer
                 availableItems = new List<string>(availableItems);
                 List<string> templateGems = new List<string>();
                 // this could actually be empty, but in practice they will populate it at least once before
+                // however as a sanity check if it is null fetch the template from the model
+                if (GemmingTemplate.AllTemplates.Count == 0 || GemmingTemplate.AllTemplates[modelList[0].Name] == null)
+                {
+                    GemmingTemplate.AllTemplates[modelList[0].Name] = new List<GemmingTemplate>(Calculations.Instance.DefaultGemmingTemplates);
+                }
                 foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[modelList[0].Name])
                 {
                     if (template.Enabled)
