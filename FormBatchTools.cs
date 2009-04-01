@@ -786,14 +786,16 @@ namespace Rawr
         private void OptimizeCurrentBatchCharacter()
         {
             int _thoroughness = trackBarThoroughness.Value;
-
-            if (optimizerRound == 0)
+            if (CurrentBatchCharacter.Character != null)
             {
-                bool _overrideRegem = checkBoxOverrideRegem.Checked;
-                bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
+                if (optimizerRound == 0)
+                {
+                    bool _overrideRegem = checkBoxOverrideRegem.Checked;
+                    bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
+                    optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
+                }
+                optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
             }
-            optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -833,8 +835,11 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
-            optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
+            if (CurrentBatchCharacter.Character != null)
+            {
+                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
+                optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
+            }
         }
 
         private void EvaluateUpgradeCurrentBatchCharacter(bool initializeCache)
@@ -853,14 +858,17 @@ namespace Rawr
             bool overrideReenchant = checkBoxOverrideReenchant.Checked;
 
             List<KeyValuePair<Character, float>> batchList = BatchCharacterList.GetBatchOptimizerList();
-            batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled);
-            batchOptimizer.OptimizeBatchProgressChanged += new OptimizeCharacterProgressChangedEventHandler(batchOptimizer_OptimizeBatchProgressChanged);
-            batchOptimizer.OptimizeBatchCompleted += new OptimizeBatchCompletedEventHandler(batchOptimizer_OptimizeBatchCompleted);
+            if (batchList[0].Key != null)
+            {
+                batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled);
+                batchOptimizer.OptimizeBatchProgressChanged += new OptimizeCharacterProgressChangedEventHandler(batchOptimizer_OptimizeBatchProgressChanged);
+                batchOptimizer.OptimizeBatchCompleted += new OptimizeBatchCompletedEventHandler(batchOptimizer_OptimizeBatchCompleted);
 
-            currentOperation = AsyncOperation.BatchOptimize;
-            buttonCancel.Enabled = true;
+                currentOperation = AsyncOperation.BatchOptimize;
+                buttonCancel.Enabled = true;
 
-            batchOptimizer.OptimizeCharacterAsync(thoroughness);
+                batchOptimizer.OptimizeCharacterAsync(thoroughness);
+            }
         }
 
         void batchOptimizer_OptimizeBatchCompleted(object sender, OptimizeBatchCompletedEventArgs e)
@@ -906,14 +914,17 @@ namespace Rawr
             bool overrideReenchant = checkBoxOverrideReenchant.Checked;
 
             List<KeyValuePair<Character, float>> batchList = BatchCharacterList.GetBatchOptimizerList();
-            batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled);
-            batchOptimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(batchOptimizer_ComputeUpgradesProgressChanged);
-            batchOptimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(batchOptimizer_ComputeUpgradesCompleted);
+            if (batchList[0].Key != null)
+            {
+                batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled);
+                batchOptimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(batchOptimizer_ComputeUpgradesProgressChanged);
+                batchOptimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(batchOptimizer_ComputeUpgradesCompleted);
 
-            currentOperation = AsyncOperation.BuildBatchUpgradeList;
-            buttonCancel.Enabled = true;
+                currentOperation = AsyncOperation.BuildBatchUpgradeList;
+                buttonCancel.Enabled = true;
 
-            batchOptimizer.ComputeUpgradesAsync(thoroughness, null);
+                batchOptimizer.ComputeUpgradesAsync(thoroughness, null);
+            }
         }
 
         void batchOptimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)

@@ -129,7 +129,7 @@ namespace Rawr.Optimizer
 
         public BatchOptimizer(List<KeyValuePair<Character, float>> batchList, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled)
         {
-            if (batchList == null || batchList.Count == 0) throw new ArgumentException("Batch list must have at least one element.");
+            if (batchList == null || batchList.Count == 0 || batchList[0].Key == null) throw new ArgumentException("Batch list must have at least one element.");
             this.batchList = new List<Character>();
             this.modelList = new List<CalculationsBase>();
             this.weightList = new List<float>();
