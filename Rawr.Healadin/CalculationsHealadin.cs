@@ -23,7 +23,7 @@ namespace Rawr.Healadin
 
                 //Meta
                 int insightful = 41401;
-                int revitalizing = 41376;
+                // int revitalizing = 41376;
 
                 return new List<GemmingTemplate>()
 				{

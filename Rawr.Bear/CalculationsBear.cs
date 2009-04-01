@@ -63,7 +63,7 @@ namespace Rawr.Bear
 
 				//Meta
 				int austere = 41380;
-				int relentless = 41398;
+				// int relentless = 41398;
 
 				return new List<GemmingTemplate>()
 				{

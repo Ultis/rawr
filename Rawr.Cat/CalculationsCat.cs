@@ -39,7 +39,7 @@ namespace Rawr.Cat
 				int[] deadly = { 39952, 40043, 40147 };
 
 				//Meta
-				int austere = 41380;
+				// int austere = 41380;
 				int relentless = 41398;
 
 				return new List<GemmingTemplate>()
