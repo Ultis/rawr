@@ -856,8 +856,6 @@ namespace Rawr.Cat
 						new ComparisonCalculationCat() { Name = "dps500", OverallPoints = dps500, DPSPoints = dps500 },
 					};
 					
-					break;
-
 				case "Relative Stat Values":
 					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
 					//float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 10 } }).OverallPoints - dpsBase) / 10f;
