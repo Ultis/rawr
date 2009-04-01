@@ -44,6 +44,8 @@ namespace Rawr.Healadin
 						
 					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
 						RedId = brilliant[3], YellowId = brilliant[3], BlueId = brilliant[3], PrismaticId = brilliant[3], MetaId = insightful },
+					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
+						RedId = brilliant[3], YellowId = brilliant[1], BlueId = brilliant[3], PrismaticId = brilliant[1], MetaId = insightful },
 				};
             }
         }

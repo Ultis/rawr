@@ -53,6 +53,8 @@ namespace Rawr.Retribution
 						
 					new GemmingTemplate() { Model = "Retribution", Group = "Jeweler",
 						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
+					new GemmingTemplate() { Model = "Retribution", Group = "Jeweler",
+						RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },
 				};
             }
         }
