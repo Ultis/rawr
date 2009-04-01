@@ -475,7 +475,7 @@ namespace Rawr.Retribution
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f
-                - (calcOpts.TargetLevel == 83 ? 0.048 : 0);
+                - (calcOpts.TargetLevel == 83 ? 0.048f : 0f);
             stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Agility / 5208.333333f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f + talentCrit;
 
