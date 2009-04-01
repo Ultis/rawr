@@ -951,6 +951,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Heroic Presence",
+                Source = "Draenei", 
                 Group = "Racial Buffs",
                 Stats = { SpellHit = 0.01f, PhysicalHit = 0.01f }
             });
@@ -964,18 +965,21 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Acid Spit",
+                Source = "BM Hunter (Worm pet)",
                 Group = "Armor (Major)",
                 Stats = { ArmorPenetration = 0.2f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Expose Armor",
+                Source = "Rogue",
                 Group = "Armor (Major)",
 				Stats = { ArmorPenetration = 0.2f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sunder Armor",
+                Source = "Warrior",
                 Group = "Armor (Major)",
 				Stats = { ArmorPenetration = 0.2f }
             });
@@ -985,18 +989,21 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Curse of Recklessness",
+                Source = "Warlock",
                 Group = "Armor (Minor)",
                 Stats = { ArmorPenetration = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Faerie Fire",
+                Source = "Druid",
                 Group = "Armor (Minor)",
 				Stats = { ArmorPenetration = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sting",
+                Source = "BM Hunter (Wasp pet)",
                 Group = "Armor (Minor)",
 				Stats = { ArmorPenetration = 0.05f }
             });
@@ -1006,6 +1013,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Hunter's Mark",
+                Source = "Hunter",
                 Group = "Ranged Attack Power",
                 Stats = { RangedAttackPower = 300f },
                 Improvements = { 
@@ -1027,12 +1035,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Mangle",
+                Source = "Feral Druid",
                 Group = "Bleed Damage",
                 Stats = { BonusBleedDamageMultiplier = 0.3f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Trauma",
+                Source = "Arms Warrior",
                 Group = "Bleed Damage",
                 Stats = { BonusBleedDamageMultiplier = 0.3f }
             });
@@ -1042,18 +1052,21 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Heart of the Crusader",
+                Source = "Ret Paladin",
                 Group = "Critical Strike Chance Taken",
                 Stats = { PhysicalCrit = 0.03f, SpellCrit = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Master Poisoner",
+                Source = "Assasin Rogue",
                 Group = "Critical Strike Chance Taken",
                 Stats = { PhysicalCrit = 0.03f, SpellCrit = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Totem of Wrath",
+                Source = "Elem Shaman",
                 Group = "Critical Strike Chance Taken",
                 Stats = { PhysicalCrit = 0.03f, SpellCrit = 0.03f }
             });
@@ -1063,6 +1076,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Judgement of Wisdom",
+                Source = "Paladin",
                 Group = "Mana Restore",
                 Stats = { ManaRestoreFromBaseManaPerHit = 0.01f }
             });
@@ -1072,12 +1086,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Insect Swarm",
+                Source = "Moonkin Druid",
                 Group = "Melee Hit Chance Reduction",
                 Stats = { Miss = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Scorpid Sting",
+                Source = "Hunter",
                 Group = "Melee Hit Chance Reduction",
                 Stats = { Miss = 0.03f }
             });
@@ -1087,6 +1103,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Blood Frenzy",
+                Source = "Arms Warrior",
                 Group = "Physical Vulnerability",
                 Stats = { BonusPhysicalDamageMultiplier = 0.04f }
             });
@@ -1103,18 +1120,21 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Winter's Chill",
+                Source = "Frost Mage",
                 Group = "Spell Critical Strike Taken",
                 Stats = { SpellCrit = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Scorch",
+                Source = "Fire Mage",
                 Group = "Spell Critical Strike Taken",
                 Stats = { SpellCrit = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Shadow Bolt",
+                Source = "Warlock",
                 Group = "Spell Critical Strike Taken",
                 Stats = { SpellCrit = 0.05f }
             });
@@ -1124,6 +1144,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Curse of the Elements",
+                Source = "Warlock",
                 Group = "Spell Damage Taken",
                 Stats =
                 {
@@ -1138,6 +1159,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Earth and Moon",
+                Source = "Moonkin Druid",
                 Group = "Spell Damage Taken",
                 Stats =
                 {
@@ -1152,6 +1174,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Ebon Plaguebringer",
+                Source = "Unholy Death Knight",
                 Group = "Spell Damage Taken",
                 Stats =
                 {
@@ -1166,6 +1189,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Rune of Razorice",
+                Source = "Death Knight",
                 Group = "Spell Damage Taken",
                 ConflictingBuffs = new List<string>(),
                 Stats =
@@ -1180,6 +1204,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Crypt Fever",
+                Source = "Unholy Death Knight",
                 Group = "Disease Damage Taken",
                 Stats = { BonusDiseaseDamageMultiplier = 0.3f }
             });
@@ -1189,12 +1214,14 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Faerie Fire",
+                Source = "Moonkin Druid",
                 Group = "Spell Hit Chance Taken",
                 Stats = { SpellHit = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Misery",
+                Source = "Shadow Priest",
                 Group = "Spell Hit Chance Taken",
                 Stats = { SpellHit = 0.03f }
             });
