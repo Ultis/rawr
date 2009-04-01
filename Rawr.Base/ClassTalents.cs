@@ -4433,8 +4433,8 @@ Hurls a holy shield at the enemy, dealing 440.14 to 536.14 Holy damage, Dazing t
         //Affects Protection; remove Shield of the Templar bonus from Shield of Righteousness, Holy Shield, Avenger's Shield
 		[TalentData(48, "Shield of the Templar", 3, 1, 2, 10, 46, new string[] {
 @"Reduces all damage taken by 1% and grants your Avenger's Shield a 33% chance to silence your targets for 3 sec.",
-@"Reduces all damage taken by 1% and grants your Avenger's Shield a 66% chance to silence your targets for 3 sec.",
-@"Reduces all damage taken by 1% and grants your Avenger's Shield a 100% chance to silence your targets for 3 sec.",})]
+@"Reduces all damage taken by 2% and grants your Avenger's Shield a 66% chance to silence your targets for 3 sec.",
+@"Reduces all damage taken by 3% and grants your Avenger's Shield a 100% chance to silence your targets for 3 sec.",})]
 		public int ShieldOfTheTemplar { get { return _data[48]; } set { _data[48] = value; } }
 
         //Changed in 3.1

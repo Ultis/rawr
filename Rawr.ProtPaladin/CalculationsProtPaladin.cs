@@ -101,8 +101,8 @@ namespace Rawr.ProtPaladin
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Base Stats:Health",
-					"Base Stats:Mana",
+                    "Base Stats:Health",
+                    "Base Stats:Mana",
                     "Base Stats:Strength",
                     "Base Stats:Agility",
                     "Base Stats:Stamina",
@@ -117,47 +117,48 @@ namespace Rawr.ProtPaladin
                     "Defensive Stats:Chance to be Crit",
                     "Defensive Stats:Resilience",
                     "Defensive Stats:Block Value",                      
-					"Defensive Stats:Avoidance",
+                    "Defensive Stats:Avoidance",
                     "Defensive Stats:Avoidance + Block",
                     "Defensive Stats:Guaranteed Reduction",
-					"Defensive Stats:Total Mitigation",
+                    "Defensive Stats:Total Mitigation",
                     "Defensive Stats:Attacker Speed",
-					"Defensive Stats:Damage Taken",
+                    "Defensive Stats:Damage Taken",
 
                     "Offensive Stats:Weapon Speed",
                     "Offensive Stats:Attack Power",
                     "Offensive Stats:Spell Power",
                     "Offensive Stats:Hit",
                     "Offensive Stats:Spell Hit",
-					"Offensive Stats:Haste",
-					"Offensive Stats:Armor Penetration",
-					"Offensive Stats:Crit",
-					"Offensive Stats:Spell Crit",
+                    "Offensive Stats:Haste",
+                    "Offensive Stats:Armor Penetration",
+                    "Offensive Stats:Crit",
+                    "Offensive Stats:Spell Crit",
                     "Offensive Stats:Expertise",
-					"Offensive Stats:Weapon Damage",
+                    "Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
                     "Offensive Stats:Total Damage/sec",
                     "Offensive Stats:Threat/sec",
                     //"Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
 
                     "Resistances:Nature Resist",
-					"Resistances:Fire Resist",
-					"Resistances:Frost Resist",
-					"Resistances:Shadow Resist",
-					"Resistances:Arcane Resist",
+                    "Resistances:Fire Resist",
+                    "Resistances:Frost Resist",
+                    "Resistances:Shadow Resist",
+                    "Resistances:Arcane Resist",
                     "Complex Stats:Ranking Mode*The currently selected ranking mode. Ranking modes can be changed in the Options tab.",
-					@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+                    @"Complex Stats:Overall Points*Overall Points are a sum of Mitigation, Threat and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
-Survival Points individually may be important.",
-					@"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
+Survival Points individually may be important.
+Remember to set your threat scale as needed.",
+                    @"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
 on average, through armor mitigation and avoidance. It is directly 
 relational to your Damage Taken. Ideally, you want to maximize 
 Mitigation Points, while maintaining 'enough' Survival Points 
 (see Survival Points). If you find yourself dying due to healers 
 running OOM, or being too busy healing you and letting other 
 raid members die, then focus on Mitigation Points.",
-					@"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
+                    @"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
 (pre-avoidance/block) you can take before dying. Unlike 
 Mitigation Points, you should not attempt to maximize this, 
 but rather get 'enough' of it, and then focus on Mitigation. 
@@ -170,7 +171,7 @@ focus on Survival Points.",
                     "Complex Stats:Frost Survival",
                     "Complex Stats:Shadow Survival",
                     "Complex Stats:Arcane Survival",
-					};
+                    };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -181,13 +182,13 @@ focus on Survival Points.",
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					"Health",
+                    "Health",
                     "Threat Per Second",
                     "% Total Mitigation",
-					"% Guaranteed Reduction",
-					"% Chance to Avoid Attacks",
+                    "% Guaranteed Reduction",
+                    "% Chance to Avoid Attacks",
                     "% chance to Avoid + Block Attacks",
-					"% Chance to be Crit",
+                    "% Chance to be Crit",
                     "% Chance to be Avoided", 
                     "Burst Time", 
                     "TankPoints", 
@@ -196,7 +197,7 @@ focus on Survival Points.",
                     "Frost Survival",
                     "Shadow Survival",
                     "Arcane Survival",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -210,9 +211,9 @@ focus on Survival Points.",
                     _customChartNames = new string[] {
                     "Ability Damage",
                     "Ability Threat",
-					"Combat Table",
-					"Item Budget",
-					};
+                    "Combat Table",
+                    "Item Budget",
+                    };
                 return _customChartNames;
             }
         }
@@ -241,15 +242,15 @@ focus on Survival Points.",
                 if (_relevantItemTypes == null)
                 {
                     _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
-					{
+                    {
                         Item.ItemType.Plate,
                         Item.ItemType.None,
-						Item.ItemType.Shield,
-						Item.ItemType.Libram,
-						Item.ItemType.OneHandAxe,
-						Item.ItemType.OneHandMace,
-						Item.ItemType.OneHandSword,
-					});
+                        Item.ItemType.Shield,
+                        Item.ItemType.Libram,
+                        Item.ItemType.OneHandAxe,
+                        Item.ItemType.OneHandMace,
+                        Item.ItemType.OneHandSword,
+                    });
                 }
                 return _relevantItemTypes;
             }
@@ -376,289 +377,294 @@ focus on Survival Points.",
             return calculatedStats;
         }
 
-        
-        #region Paladin Race Stats
-        private static float[,] BasePaladinRaceStats = new float[,] 
-		{
-        	 /* These values are well-defined by the sum of base value for Race, Class and gains from level.
-        	 * For information about Race and Class values see http://www.wowwiki.com/Race
-        	 * Infomation about Paladin stat gains from level is Negarines own research.
-        	 * 
-        	 * 						Strength,	Agility,	Stamina,	Intellect,	Spirit
-        	 * ["GainLvl80"]	{	129,		70,			121,		78,			84	}
-        	 * ["ClassBonus"]	{	2,			0,			2,			0,			1	}
-        	 * ["Human"]		{	20, 		20, 		20, 		20, 		21	}
-        	 * ["Orc"] 			{	23, 		17, 		22, 		17, 		23	}
-        	 * ["Dwarf"]		{	22, 		16, 		23, 		19, 		19	}
-        	 * ["NightElf"]		{	17, 		25, 		19, 		20, 		20	}
-        	 * ["Undead"]		{	19, 		18, 		21, 		18, 		25	}
-        	 * ["Tauren"]		{	25, 		15, 		22, 		15, 		22	}
-        	 * ["Gnome"]		{	15, 		23, 		19, 		24, 		20	}
-        	 * ["Troll"]		{	21, 		22, 		21, 		16, 		21	}
-        	 * ["Draenei"]		{	21, 		17, 		19, 		21, 		22	}
-        	 * ["BloodElf"]		{	17, 		22, 		18, 		24, 		19	}
-        	 */
-							//	Strength,	Agility,	Stamina,	Intellect,	Spirit,
-            /*Human*/		{	151f,	    90f,	    143f,   	98f,		105f,	},
-            /*Orc*/			{	154f,		87f,		145f,		95f,		108f,	},
-            /*Dwarf*/		{	153f,	    86f,	    146f,   	97f,		104f,	},
-			/*Night Elf*/	{	148f,	    95f,	    142f,   	98f,		105f,	},
-	        /*Undead*/		{	150f,	    88f,	    144f,   	96f,		110f,	},
-			/*Tauren*/		{	156f,		85f,		145f,		93f,		107f,	},
-	        /*Gnome*/		{	146f,	    93f,	    142f,   	102f,		105f,	},
-			/*Troll*/		{	153f,	    87f,	    144f,   	94f,		106f,	},
-			/*Draenei*/		{	153f,		92f,		142f,		99f,		107f,	},
-			/*BloodElf*/	{	148f,		92f,		141f,		102f,		104f,	},
-		};
-        
+        #region Paladin Base Stats
 
-        private Stats GetRaceStats(Character character)
+        /* These values are well-defined by the sum of base value for Race, Class and gains from level.
+        * For information about Race and Class values see http://www.wowwiki.com/Race
+        * Infomation about Paladin stat gains from level and the formula for base mana is Negarines own research.
+        *
+        * BaseMana and BaseHealth coefficients change at level 25 and 60.
+        *
+        * BaseMana from level 1 - 25:
+        * Let S_N = a_0 + a_1 + ... + a_N = SUM(a_n, n=0, N) be the partial sum to N of the sequence (a_n)
+        * BaseMana_0 = 42f, constant.
+        * BaseMana_1 = BaseMana_0 + BaseManaGain_1
+        * BaseMana_2 = BaseMana_0 + BaseManaGain_1 + BaseManaGain_2
+        * ...
+        * BaseMana_LVL = BaseMana_0 + BaseManaGain_1 + BaseManaGain_2 + ... + BaseManaGain_LVL
+        * BaseManaGain_n = -15f * IntLvlGain_n + 17 + n and finally
+        * BaseMana_LVL = BaseMana_0 + SUM(BaseManaGain_n, n=1, LVL) with
+        * IntLvlGain = {0,1,0,1,0,1,1,0,1,0,1,1,0,1,1,0,1,1,0,1,1,1,0,1} for level 1-25.
+        * If I ever find the algorithm behind their StatLvlGain...(Moebius Triangle is pretty darn close: Floor(n * PI) mod2)
+        * BaseMana from level 25 - 60: work in progess
+        * BaseMana from level 60 - 80: BaseMana_LVL ~ 144,1 * LVL - 7134,3
+        * You get the idea what it's like to model this, all you need is the DING! data ;o
+        */
+
+        private static float[] BaseHealth = new float[] // one-indexed
         {
-            Stats statsRace;
-            switch (character.Race)
-            {
-                case Character.CharacterRace.Human:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[0, 0],
-                        Agility = (float)BasePaladinRaceStats[0, 1],
-                        Stamina = (float)BasePaladinRaceStats[0, 2],
-                        Intellect = (float)BasePaladinRaceStats[0, 3],
-                        Spirit = (float)BasePaladinRaceStats[0, 4],
+            /*Paladin*/     0f, 18f, 26f, 34f, 42f, 50f, 58f, 66f, 84f, 92f, 100f, 108f, 116f, 124f, 132f, 131f,
+                            141f, 152f, 164f, 177f, 191f, 206f, 222f, 239f, 247f, 266f, 286f, 307f, 329f,
+                            342f, 366f, 391f, 407f, 434f, 462f, 481f, 511f, 542f, 564f, 597f, 621f, 656f,
+                            682f, 719f, 747f, 786f, 816f, 857f, 889f, 922f, 966f, 1001f, 1037f, 1084f, 1122f,
+                            1161f, 1201f, 1252f, 1294f, 1337f, 1381f, 1540f, 1708f, 1884f, 2068f, 2262f, 2466f,
+                            2679f, 2901f, 3134f, 3377f, 3629f, 3900f, 4191f, 4503f, 4839f, 5200f, 5588f, 6005f,
+                            6453f, 6934f,
+        };
 
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Miss = 0.05f,
-                        Parry = 5f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                        //Spirit *= 1.03f	// Human spirit bonus is 3%, need to research if wowwiki race spirit value already includes this. (20*1.03 = 21)
-                    };
-                    if ((character.MainHand != null) &&
-                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
-                    {
-                        statsRace.Expertise += 3f;
-                    }
-                    break;
-                case Character.CharacterRace.Orc:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[1, 0],
-                        Agility = (float)BasePaladinRaceStats[1, 1],
-                        Stamina = (float)BasePaladinRaceStats[1, 2],
-                        Intellect = (float)BasePaladinRaceStats[1, 3],
-                        Spirit = (float)BasePaladinRaceStats[1, 4],
+        private static float[] BaseMana = new float[] // one-indexed
+        {
+            /*Paladin*/     0f, 60f, 64f, 84f, 90f, 112f, 120f, 129f, 154f, 165f, 192f, 205f, 219f, 249f, 265f, 282f, 
+                            315f, 334f, 354f, 390f, 412f, 435f, 459f, 499f, 525f, 552f, 579f, 621f, 648f, 675f, 
+                            702f, 729f, 756f, 798f, 825f, 852f, 879f, 906f, 933f, 960f, 987f, 1014f, 1041f, 1068f, 
+                            1110f, 1137f, 1164f, 1176f, 1203f, 1230f, 1257f, 1284f, 1311f, 1338f, 1365f, 1392f, 
+                            1419f, 1446f, 1458f, 1485f, 1512f, 1656f, 1800f, 1944f, 2088f, 2232f, 2377f, 2521f, 
+                            2665f, 2809f, 2953f, 3097f, 3241f, 3385f, 3529f, 3673f, 3817f, 3962f, 4106f, 4250f, 4394f,
+        };
 
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
+        private static float[,] ClassStats = new float[,]
+        {
+                            //  Strength,   Agility,    Stamina,    Intellect,  Spirit,
+            /*Druid*/       {   1f,         0f,         0f,         2f,         2f     },
+            /*Hunter*/      {   0f,         3f,         1f,         0f,         1f     },
+            /*Mage*/        {   0f,         0f,         0f,         3f,         2f     },
+            /*Paladin*/     {   2f,         0f,         2f,         0f,         1f     },
+            /*Priest*/      {   0f,         0f,         0f,         2f,         3f     },
+            /*Rogue*/       {   1f,         3f,         1f,         0f,         0f     },
+            /*Shaman*/      {   1f,         0f,         1f,         1f,         2f     },
+            /*Warlock*/     {   0f,         0f,         1f,         2f,         2f     },
+            /*Warrior*/     {   3f,         0f,         2f,         0f,         0f     },
+        };
 
-                    if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == Item.ItemType.OneHandAxe))
-                    {
-                        statsRace.Expertise += 5f;
-                    }
-                    break;
-                case Character.CharacterRace.Dwarf:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[2, 0],
-                        Agility = (float)BasePaladinRaceStats[2, 1],
-                        Stamina = (float)BasePaladinRaceStats[2, 2],
-                        Intellect = (float)BasePaladinRaceStats[2, 3],
-                        Spirit = (float)BasePaladinRaceStats[2, 4],
+            /*              //  Strength,   Agility,    Stamina,    Intellect,  Spirit,     Health,     Mana
+            *  GainLvl1*    {   0f,         0f,         0f,         0f,         0f,         18f,        18f,   }, //paladin lvl 1 values 
+            *  GainLvl2*    {   1f,         1f,         1f,         1f,         1f,         8f,         4f,    }, //paladin lvl 2 values
+            *    ***
+            *  GainLvl79*   {   3f,         1f,         3f,         1f,         1f,         478f,       159f,  }, //paladin lvl 79 values 
+            *  GainLvl80*   {   3f,         2f,         2f,         2f,         2f,         501f,       174f,  }, //paladin lvl 80 values 
+            *
+            * The idea is to have an array over gained values from level 1-80 (the stat gain as seen in the yellow DING! text in game),
+            * To get the values for a certain level, simply sum down through the array from your level.
+            * The values are constant, but different for each class. I have all the values from 1-80 for Paladins, but only 1 AND 80 for the other classes. 
+            * To not write too much redundant example code, LevelStats listed here is for level = 80 only.
+            */
 
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
-                    if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == Item.ItemType.OneHandMace))
-                    {
-                        statsRace.Expertise += 5f;
-                    }
-                    break;
-                case Character.CharacterRace.NightElf:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[3, 0],
-                        Agility = (float)BasePaladinRaceStats[3, 1],
-                        Stamina = (float)BasePaladinRaceStats[3, 2],
-                        Intellect = (float)BasePaladinRaceStats[3, 3],
-                        Spirit = (float)BasePaladinRaceStats[3, 4],
+        private static float[,] LevelStats = new float[,]
+        {
+                            //  Strength,   Agility,    Stamina,    Intellect,  Spirit,
+            /*Druid*/       {   1f,         0f,         0f,         2f,         2f,    },
+            /*Hunter*/      {   0f,         3f,         1f,         0f,         1f,    },
+            /*Mage*/        {   0f,         0f,         0f,         3f,         2f,    },
+            /*Paladin*/     {   129f,       70f,        121f,       78f,        84f,   }, 
+            /*Priest*/      {   0f,         0f,         0f,         2f,         3f,    },
+            /*Rogue*/       {   1f,         3f,         1f,         0f,         0f,    },
+            /*Shaman*/      {   1f,         0f,         1f,         1f,         2f,    },
+            /*Warlock*/     {   0f,         0f,         1f,         2f,         2f,    },
+            /*Warrior*/     {   3f,         0f,         2f,         0f,         0f,    },
+        };
 
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Miss = 0.05f + 0.02f,
-                        Parry = 5f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
-                    break;
-                case Character.CharacterRace.Undead:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[4, 0],
-                        Agility = (float)BasePaladinRaceStats[4, 1],
-                        Stamina = (float)BasePaladinRaceStats[4, 2],
-                        Intellect = (float)BasePaladinRaceStats[4, 3],
-                        Spirit = (float)BasePaladinRaceStats[4, 4],
-
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
-                    break;
-                case Character.CharacterRace.Tauren:
-                    statsRace = new Stats()
-                    {
-                        Health = 7280f, // = 6934f * 1.05f
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[5, 0],
-                        Agility = (float)BasePaladinRaceStats[5, 1],
-                        Stamina = (float)BasePaladinRaceStats[5, 2],
-                        Intellect = (float)BasePaladinRaceStats[5, 3],
-                        Spirit = (float)BasePaladinRaceStats[5, 4],
-
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
-                    break;
-                case Character.CharacterRace.Gnome:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[6, 0],
-                        Agility = (float)BasePaladinRaceStats[6, 1],
-                        Stamina = (float)BasePaladinRaceStats[6, 2],
-                        Intellect = (float)BasePaladinRaceStats[6, 3],
-                        Spirit = (float)BasePaladinRaceStats[6, 4],
-
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
-                    break;
-                case Character.CharacterRace.Troll:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[7, 0],
-                        Agility = (float)BasePaladinRaceStats[7, 1],
-                        Stamina = (float)BasePaladinRaceStats[7, 2],
-                        Intellect = (float)BasePaladinRaceStats[7, 3],
-                        Spirit = (float)BasePaladinRaceStats[7, 4],
-
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                    };
-                    break;
-                case Character.CharacterRace.Draenei:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[8, 0],
-                        Agility = (float)BasePaladinRaceStats[8, 1],
-                        Stamina = (float)BasePaladinRaceStats[8, 2],
-                        Intellect = (float)BasePaladinRaceStats[8, 3],
-                        Spirit = (float)BasePaladinRaceStats[8, 4],
-
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                        PhysicalHit = 0.01f,
-                        SpellHit = 0.01f,
-                    };
-                    break;
-                case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats()
-                    {
-                        Health = 6934f,
-                        Mana = 4394f,
-                        Strength = (float)BasePaladinRaceStats[9, 0],
-                        Agility = (float)BasePaladinRaceStats[9, 1],
-                        Stamina = (float)BasePaladinRaceStats[9, 2],
-                        Intellect = (float)BasePaladinRaceStats[9, 3],
-                        Spirit = (float)BasePaladinRaceStats[9, 4],
-
-                        AttackPower = 220f,
-                        Dodge = 3.2685f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.032685f,
-                        SpellCrit = 0.03336f,
-                        //TODO Magic Resistance: Reduces the chance to be hit by spells by 2% There's no definition for this in Stats.cs
-                    };
-                    break;
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-
-            return statsRace;
-            /* 			
+        private static float[,] RaceStats = new float[,]
+        {
+                            //  Strength,   Agility,    Stamina,    Intellect,  Spirit,
+            /*Human*/       {   20f,        20f,        20f,        20f,        21f,   },
+            /*Orc =*/       {   23f,        17f,        22f,        17f,        23f,   },
+            /*Dwarf*/       {   22f,        16f,        23f,        19f,        19f,   },
+            /*NightElf*/    {   17f,        25f,        19f,        20f,        20f,   },
+            /*Undead*/      {   19f,        18f,        21f,        18f,        25f,   },
+            /*Tauren*/      {   25f,        15f,        22f,        15f,        22f,   },
+            /*Gnome*/       {   15f,        23f,        19f,        24f,        20f,   },
+            /*Troll*/       {   21f,        22f,        21f,        16f,        21f,   },
+            /*Draenei*/     {   21f,        17f,        19f,        21f,        22f,   },
+            /*BloodElf*/    {   17f,        22f,        18f,        24f,        19f,   },
+        };
+            /*
             Stats uniform to all races of paladins:
             I plan to pull those variables out of the switch case to make the Race gains more distinct from Class attributes
             something like:
-            statsClass = new Stats()
+            ClassStats = new Stats()
             {
-            	AttackPower = 220f,			// Base AP = (LVL * 3f) - 20f
-            	Dodge = 3.2685f,			// Base Dodge for the paladin class
-            	Health = 6934f,				// this is the Base Health for any level 80 character of any class. (tauren get 5% bonus on this value)
-            	Parry = 5f,					// Base Parry for a character with maxed out defense skill
-            	Miss = 0.05f,				// Base Miss for a character with maxed out defense skill
-            	PhysicalCrit = 0.032685f,	// Base Crit for the paladin class TODO: Check if this is different for other classes
-            	SpellCrit = 0.03336f,
-            	Mana = 4114f,				// this is the Base Mana for any level 80 character of any class
-            	Block = 5f,					// look into the block formula, this is a base value after all
+                Health = 6934f,             // Base Health for a level 80 paladin. (tauren get 5% bonus on this value)
+                Mana = 4394f,               // Base Mana for a level 80 paladin
+                AttackPower = 220f,         // Base Attack Power for level 80  (AP = (LVL * 3f) - 20f)
+                PhysicalCrit = 0.032685f,   // Base PhysicalCrit for paladins TODO: Check if this is different for other classes
+                SpellCrit = 0.03336f,       // Base SpellCrit for paladins
+                Miss = 0.05f,               // Base Miss for a character with maxed out defense skill
+                Dodge = 3.2685f,            // Base Dodge for a paladin
+                Parry = 5f,                 // Base Parry for a chracter with maxed out defense skill
+                Block = 5f,                 // Base Block for character with maxed out defense skill
             };
-            Stats statsBase = StatsRace + StatsClass;
+            Stats statsBase = RaceStats + StatsClass + StatsLevel;
             
             later in the code, the following arrays of stats are used,
             
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
-            
-            which suggests I will have to rename the later used StatsRace to StatsBase.
-			*/
+            Stats statsTotal = statsBase + statsItems + statsBuffs + statsTalents;
+            */
+
+        private Stats GetRaceStats(Character character)
+        {
+            int Lvl = character.Level; 
+            Stats statsBase = new Stats()
+            {
+                Health = BaseHealth[Lvl],   // Base Health for a level 80 paladin. (tauren get 5% bonus on this value)
+                Mana = BaseMana[Lvl],       // Base Mana for a level 80 paladin
+                AttackPower = 240f,         // Base Attack Power for level 80  AP = (Lvl * 3f)
+                PhysicalCrit = 0.032685f,   // Base PhysicalCrit for paladins
+                SpellCrit = 0.03336f,       // Base SpellCrit for paladins
+                Miss = 0.05f,               // Base Miss for a character with maxed out defense skill
+                Dodge = 3.2685f,            // Base Dodge for a paladin
+                Parry = 5f,                 // Base Parry for a chracter with maxed out defense skill
+                Block = 5f,                 // Base Block for character with maxed out defense skill
+            };
+            statsBase.Strength   = ClassStats[3, 0] + LevelStats[3, 0];
+            statsBase.Agility    = ClassStats[3, 1] + LevelStats[3, 1];
+            statsBase.Stamina    = ClassStats[3, 2] + LevelStats[3, 2];
+            statsBase.Intellect  = ClassStats[3, 3] + LevelStats[3, 3];
+            statsBase.Spirit     = ClassStats[3, 4] + LevelStats[3, 4];
+            switch (character.Race)
+//              foreach (int Race = 0; in RaceStats)
+//              {
+//                  statsBase.Attribute += RaceStats[Race, Value];
+//              };
+                {
+                case Character.CharacterRace.Human:
+
+                    statsBase.Strength  += RaceStats[0, 0];
+                    statsBase.Agility   += RaceStats[0, 1];
+                    statsBase.Stamina   += RaceStats[0, 2];
+                    statsBase.Intellect += RaceStats[0, 3];
+                    statsBase.Spirit    += RaceStats[0, 4];
+
+                    //The Human Spirit: Spirit increased by 3%.
+                    statsBase.BonusSpiritMultiplier *= 1.0f + 0.03f;//TODO: need to research if wowwiki race spirit value already includes this. (20*1.03 = 21)
+                    if ((character.MainHand != null) &&
+                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
+                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
+                    {
+                        statsBase.Expertise += 3f;
+                    }
+                    break;
+                case Character.CharacterRace.Orc:
+
+                    statsBase.Strength  += RaceStats[1, 0];
+                    statsBase.Agility   += RaceStats[1, 1];
+                    statsBase.Stamina   += RaceStats[1, 2];
+                    statsBase.Intellect += RaceStats[1, 3];
+                    statsBase.Spirit    += RaceStats[1, 4];
+
+                    //Command : Damage done by Death Knight, Hunter and Warlock pets increased by 5%
+                    //Axe Specialization : Expertise with One- and Two-handed Axes increased by 5.
+                    if ((character.MainHand != null) &&
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandAxe))
+                    {
+                        statsBase.Expertise += 5f;
+                    }
+                    break;
+                case Character.CharacterRace.Dwarf:
+
+                    statsBase.Strength  += RaceStats[2, 0];
+                    statsBase.Agility   += RaceStats[2, 1];
+                    statsBase.Stamina   += RaceStats[2, 2];
+                    statsBase.Intellect += RaceStats[2, 3];
+                    statsBase.Spirit    += RaceStats[2, 4];
+
+                    //Frost Resistance : Reduces the chance you will be hit by Frost spells by 2%
+                    //Gun Specialization : increases chance to critically hit with Guns by 1%
+                    //Stoneform : Activate to gain immunity to poison, disease, and bleed (will also remove these types of debuffs); 
+                    //            +10% Armor; Lasts 8 seconds. 3 minute cooldown.
+                    if ((character.MainHand != null) &&
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandMace))
+                    {
+                        statsBase.Expertise += 5f;
+                    }
+                    break;
+                case Character.CharacterRace.NightElf:
+
+                    statsBase.Strength  += RaceStats[3, 0];
+                    statsBase.Agility   += RaceStats[3, 1];
+                    statsBase.Stamina   += RaceStats[3, 2];
+                    statsBase.Intellect += RaceStats[3, 3];
+                    statsBase.Spirit    += RaceStats[3, 4];
+
+                    //Quickness : Reduces the chance that melee and ranged attackers will hit you by 2%.
+                    statsBase.Miss += 0.02f;
+                    //Nature Resistance : Reduces the chance you will be hit by Nature spells by 2%.
+                    break;
+                case Character.CharacterRace.Undead:
+
+                    statsBase.Strength  += RaceStats[4, 0];
+                    statsBase.Agility   += RaceStats[4, 1];
+                    statsBase.Stamina   += RaceStats[4, 2];
+                    statsBase.Intellect += RaceStats[4, 3];
+                    statsBase.Spirit    += RaceStats[4, 4];
+
+                    //Shadow Resistance : Reduces the chance you will be hit by Shadow spells by 2%.
+                    break;
+                case Character.CharacterRace.Tauren:
+
+                    statsBase.Strength  += RaceStats[5, 0];
+                    statsBase.Agility   += RaceStats[5, 1];
+                    statsBase.Stamina   += RaceStats[5, 2];
+                    statsBase.Intellect += RaceStats[5, 3];
+                    statsBase.Spirit    += RaceStats[5, 4];
+
+                    //Endurance : Base Health increased by 5%
+                    statsBase.Health = (float)Math.Floor(statsBase.Health * 1.05f);// = 7280f
+                    //Nature Resistance : Reduces the chance you will be hit by Nature spells by 2%.
+                    break;
+                case Character.CharacterRace.Gnome:
+
+                    statsBase.Strength  += RaceStats[6, 0];
+                    statsBase.Agility   += RaceStats[6, 1];
+                    statsBase.Stamina   += RaceStats[6, 2];
+                    statsBase.Intellect += RaceStats[6, 3];
+                    statsBase.Spirit    += RaceStats[6, 4];
+
+                    //Expansive Mind : Increase Intellect by 5%
+                    statsBase.BonusIntellectMultiplier *= 1f + 0.05f;
+                    //Arcane Resistance : Reduces the chance you will be hit by Arcane spells by 2%
+                    break;
+                case Character.CharacterRace.Troll:
+
+                    statsBase.Strength  += RaceStats[7, 0];
+                    statsBase.Agility   += RaceStats[7, 1];
+                    statsBase.Stamina   += RaceStats[7, 2];
+                    statsBase.Intellect += RaceStats[7, 3];
+                    statsBase.Spirit    += RaceStats[7, 4];
+
+                    //Regeneration : Increase health regeneration bonus by 10%. Also allows 10% of normal health regen during combat.
+                    //Beast Slaying : 5% damage bonus when fighting against Beasts.
+                    //Throwing Specialization : Increases chance to critically hit with Throwing Weapon by 1%. 
+                    //Bow Specialization : Increase Bow critical strike chance by 1%.
+                    break;
+                case Character.CharacterRace.Draenei:
+
+                    statsBase.Strength  += RaceStats[8, 0];
+                    statsBase.Agility   += RaceStats[8, 1];
+                    statsBase.Stamina   += RaceStats[8, 2];
+                    statsBase.Intellect += RaceStats[8, 3];
+                    statsBase.Spirit    += RaceStats[8, 4];
+
+                    //Shadow Resistance : Reduces the chance you will be hit by Shadow spells by 2%.
+                    //Heroic Presence : Increases chance to hit with all spells and attacks by 1% for you and all party members within 30 yards.
+                    statsBase.PhysicalHit = 0.01f;
+                    statsBase.SpellHit = 0.01f;
+                    break;
+                case Character.CharacterRace.BloodElf:
+
+                    statsBase.Strength  += RaceStats[9, 0];
+                    statsBase.Agility   += RaceStats[9, 1];
+                    statsBase.Stamina   += RaceStats[9, 2];
+                    statsBase.Intellect += RaceStats[9, 3];
+                    statsBase.Spirit    += RaceStats[9, 4];
+
+                    //TODO Magic Resistance : Reduces the chance you will be hit by spells by 2%. There's no definition for this in Stats.cs
+                    break;
+                default:
+                    statsBase = new Stats();
+                    break;
+            }
+            return statsBase;
         }
         #endregion
 
@@ -667,7 +673,7 @@ focus on Survival Points.",
             Stats statsItems = base.GetItemStats(character, additionalItem);
             AttackTable attackTable= new AttackTable(character, statsItems);
 
-            float abilityPerSecond = 1.0f / 6.0f;
+            float abilityPerSecond = 1.0f / 6.0f; // one HotR every 6seconds
             float hitRate = 0.85f;
             
 
@@ -693,7 +699,14 @@ focus on Survival Points.",
 
                 statsItems.ArmorPenetrationRating += 120.0f * procUptime;
             }
-
+            
+            //Average WeaponDamage = (Max+Min)/2
+            
+            if (character.MainHand == null) //unarmed
+                statsItems.WeaponDamage =( 1f + 2f ) / 2f;
+            else
+                statsItems.WeaponDamage = (character.MainHand.MaxDamage + character.MainHand.MaxDamage) / 2f;
+            
             return statsItems;
         }
 
@@ -702,7 +715,7 @@ focus on Survival Points.",
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             PaladinTalents talents = character.PaladinTalents;
 
-            Stats statsRace = GetRaceStats(character);
+            Stats statsBase = GetRaceStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsTalents = new Stats()
@@ -722,15 +735,15 @@ focus on Survival Points.",
                 BonusStrengthMultiplier = talents.DivineStrength * 0.03f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            Stats statsTotal = statsBase + statsItems + statsBuffs + statsTalents;
 
-            statsTotal.Intellect = (float)Math.Floor(statsRace.Intellect * (1.0f + statsTalents.BonusIntellectMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsBase.Intellect * (1.0f + statsTalents.BonusIntellectMultiplier));
             statsTotal.Intellect += (float)Math.Floor((statsItems.Intellect + statsBuffs.Intellect) * (1.0f + statsTalents.BonusIntellectMultiplier));
-            statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
-            statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1.0f + statsTalents.BonusStaminaMultiplier));
+            statsTotal.BaseAgility = statsBase.Agility + statsTalents.Agility;
+            statsTotal.Stamina = (float)Math.Floor(statsBase.Stamina * (1.0f + statsTalents.BonusStaminaMultiplier));
             statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1.0f + statsTalents.BonusStaminaMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier) * (1.0f + statsItems.BonusStaminaMultiplier));
-            statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             if (statsTotal.GreatnessProc > 0)
             {
@@ -740,7 +753,7 @@ focus on Survival Points.",
             {
                 statsTotal.Expertise += 10;
             }
-            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1f + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility = (float)Math.Floor((statsBase.Agility + statsTalents.Agility) * (1f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += (statsTotal.Stamina - 18f) * 10f;
             if (character.ActiveBuffsContains("Commanding Shout"))
@@ -751,7 +764,7 @@ focus on Survival Points.",
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength * 2f;
+            statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.SpellPower += (float)Math.Floor(statsTotal.Stamina * talents.TouchedByTheLight * 0.1f);
             //statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier));// not sure there's such a thing
@@ -764,16 +777,16 @@ focus on Survival Points.",
             statsTotal.BlockValue += (float)Math.Floor(statsTotal.Strength * ProtPaladin.StrengthToBlockValue - 10f);
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
 
-            statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.BonusCritMultiplier = statsRace.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;           
-            statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
+            statsTotal.ArmorPenetration = statsBase.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
+            statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
+            statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;           
+            statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
+            statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;//TODO: check PhysicalHaste
             // Haste Trinkets
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
-            statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
-            statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
+            statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
+            statsTotal.WeaponDamage += ((statsTotal.AttackPower / 14f) * Lookup.WeaponSpeed(character, statsTotal) );
+            statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 
             return statsTotal;
         }
@@ -1204,6 +1217,7 @@ focus on Survival Points.",
 
                 stats.PhysicalCrit +
                 stats.SpellCrit +
+                stats.PhysicalHaste +
                 stats.AttackPower +
                 stats.SpellPower +
                 stats.CritRating +

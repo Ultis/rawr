@@ -262,7 +262,7 @@ namespace Rawr.ProtPaladin
             if (character.MainHand != null)
                 return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusHastePercentage(character, stats)));
             else
-                return 1.0f;
+                return 2.0f;
         }
 
         public static float GlancingReduction(Character character)
@@ -335,7 +335,7 @@ namespace Rawr.ProtPaladin
                     break;
                 case HitResult.Block:
                     // The 5% base block should be moved into stats.Block as a base value like the others
-                    baseAvoid = 5.0f + stats.Block - LevelModifier(character);
+                    baseAvoid = stats.Block - LevelModifier(character);
                     modifiedAvoid = (stats.BlockRating * ProtPaladin.BlockRatingToBlock) + (defSkill * ProtPaladin.DefenseToBlock);
                     break;
                 case HitResult.Crit:

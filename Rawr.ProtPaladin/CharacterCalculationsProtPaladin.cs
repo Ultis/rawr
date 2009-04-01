@@ -112,7 +112,7 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Strength", BasicStats.Strength.ToString());
             dictValues.Add("Agility", BasicStats.Agility.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Stamina", string.Format("{0}*Increases Health by {1}", BasicStats.Stamina, (BasicStats.Stamina - 20f) * 10f + 20f));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}", BasicStats.Armor, ArmorReduction));
             dictValues.Add("Defense", Defense.ToString() + string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
@@ -154,11 +154,11 @@ namespace Rawr.ProtPaladin
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
 
-            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.NatureResistance + BasicStats.AllResist, NatureReduction));
-            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ArcaneResistance + BasicStats.AllResist, ArcaneReduction));
-            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FrostResistance + BasicStats.AllResist, FrostReduction));
-            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FireResistance + BasicStats.AllResist, FireReduction));
-            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ShadowResistance + BasicStats.AllResist, ShadowReduction));
+            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.NatureResistance + BasicStats.AllResist, NatureReduction));
+            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ArcaneResistance + BasicStats.AllResist, ArcaneReduction));
+            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.FrostResistance + BasicStats.AllResist, FrostReduction));
+            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.FireResistance + BasicStats.AllResist, FireReduction));
+            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ShadowResistance + BasicStats.AllResist, ShadowReduction));
             dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();
             dictValues["Frost Survival"] = FrostSurvivalPoints.ToString();
             dictValues["Fire Survival"] = FireSurvivalPoints.ToString();
@@ -168,8 +168,9 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Weapon Speed", string.Format("{0:0.00}*{1:0.00%} Haste", WeaponSpeed, Haste));
             dictValues.Add("Attack Power", string.Format("{0}", BasicStats.AttackPower));
             dictValues.Add("Spell Power", string.Format("{0}", BasicStats.SpellPower));
-            dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}", Hit, BasicStats.HitRating));
-            dictValues.Add("Spell Hit", string.Format("{0:0.00%}*Hit Rating {1}", SpellHit, BasicStats.HitRating));
+            dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}", Hit, BasicStats.HitRating, TargetLevel));
+            dictValues.Add("Spell Hit", string.Format("{0:0.00%}*Hit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
+                                                      SpellHit, BasicStats.HitRating, TargetLevel));
             dictValues.Add("Expertise",
                 string.Format("{0:0.00}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.",
                                          BasicStats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + BasicStats.Expertise,
@@ -178,9 +179,11 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Armor Penetration",
                 string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}",
                                 ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
-            dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
-            dictValues.Add("Spell Crit", string.Format("{0:0.00%}*Crit Rating {1}", SpellCrit, BasicStats.CritRating));
-            dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
+            dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
+                                                 Crit, BasicStats.CritRating, TargetLevel));
+            dictValues.Add("Spell Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
+                                                       SpellCrit, BasicStats.CritRating, TargetLevel));
+            dictValues.Add("Weapon Damage", string.Format("{0:0.00}*As average damage per {1}", BasicStats.WeaponDamage, Lookup.Name(Ability.None)));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine +
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
