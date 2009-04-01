@@ -695,7 +695,15 @@ namespace Rawr.Mage
         {
             get
             {
-                return (float)Math.Floor(Math.Floor(BaseCost * CostAmplifier) * CostModifier); // glyph and talent amplifiers are rounded down
+                return (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+            }
+        }
+
+        public float ABCost
+        {
+            get
+            {
+                return (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
             }
         }
 
@@ -779,10 +787,15 @@ namespace Rawr.Mage
 
         public void CalculateDerivedStats(CastingState castingState)
         {
-            CalculateDerivedStats(castingState, false, false, true);
+            CalculateDerivedStats(castingState, false, false, true, false);
         }
 
         public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot)
+        {
+            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, false);
+        }
+
+        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round)
         {
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
@@ -821,7 +834,7 @@ namespace Rawr.Mage
                 DamagePerSecond = AverageDamage / CastTime;
                 ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
             }
-            CostPerSecond = CalculateCost(mageTalents) / CastTime;
+            CostPerSecond = CalculateCost(mageTalents, round) / CastTime;
 
             /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
             float OO5SR = 0;
@@ -867,9 +880,17 @@ namespace Rawr.Mage
             return averageDamage;
         }
 
-        private float CalculateCost(MageTalents mageTalents)
+        private float CalculateCost(MageTalents mageTalents, bool round)
         {
-            float cost = (float)Math.Floor(Math.Floor(BaseCost * CostAmplifier) * CostModifier);
+            float cost;
+            if (round)
+            {
+                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+            }
+            else
+            {
+                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+            }
 
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
 
@@ -2011,7 +2032,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            spell.CalculateDerivedStats(castingState, false, pom, false);
+            spell.CalculateDerivedStats(castingState, false, pom, false, true);
             return spell;
         }
 
@@ -2029,7 +2050,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            spell.CalculateDerivedStats(castingState);
+            spell.CalculateDerivedStats(castingState, false, false, false, true);
             return spell;
         }
 
@@ -2040,7 +2061,7 @@ namespace Rawr.Mage
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += 2.00f * debuff;
-            spell.CalculateDerivedStats(castingState);
+            spell.CalculateDerivedStats(castingState, false, false, false, true);
             return spell;
         }
 
