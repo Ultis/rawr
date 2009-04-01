@@ -1005,7 +1005,7 @@ namespace Rawr.Moonkin
                     }
                 });
             }
-            // Thunder Capacitor (2.5s cooldown after a proc, 4 charges/proc)
+            // Thunder Capacitor (2.5s cooldown after a proc, 5(!) charges/proc)
             if (calcs.BasicStats.ThunderCapacitorProc > 0)
             {
                 procEffects.Add(new ProcEffect()
@@ -1016,8 +1016,8 @@ namespace Rawr.Moonkin
                         float baseDamage = (1181 + 1371) / 2.0f;
                         float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
                         float timeBetweenProcs = r.Duration / (sHi * sc * r.CastCount);
-                        if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 4.0f + 2.5f;
-                        else timeBetweenProcs *= 4.0f;
+                        if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 5.0f + 2.5f;
+                        else timeBetweenProcs *= 5.0f;
                         return averageDamage / timeBetweenProcs;
                     }
                 });
