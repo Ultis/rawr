@@ -708,33 +708,62 @@ namespace Rawr.Mage
             calculationResult.BaseShadowCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
             calculationResult.BaseHolyCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
 
-            calculationResult.BaseArcaneSpellPower = baseStats.SpellArcaneDamageRating + baseStats.SpellPower;
-            calculationResult.BaseFireSpellPower = baseStats.SpellFireDamageRating + baseStats.SpellPower;
-            calculationResult.BaseFrostSpellPower = baseStats.SpellFrostDamageRating + baseStats.SpellPower;
-            calculationResult.BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower;
-            calculationResult.BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
-            calculationResult.BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
+            calculationResult.IncomingDamageAmpMelee = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.Dodge);
+            calculationResult.IncomingDamageAmpPhysical = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation);
+            calculationResult.IncomingDamageAmpArcane = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ArcaneResistance, 0));
+            calculationResult.IncomingDamageAmpFire = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FireResistance, 0));
+            calculationResult.IncomingDamageAmpFrost = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FrostResistance, 0));
+            calculationResult.IncomingDamageAmpNature = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.NatureResistance, 0));
+            calculationResult.IncomingDamageAmpShadow = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ShadowResistance, 0));
+            calculationResult.IncomingDamageAmpHoly = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore);
+
+            calculationResult.IncomingDamageDpsMelee = calculationResult.IncomingDamageAmpMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculationResult.PhysicalCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.MeleeDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsPhysical = calculationResult.IncomingDamageAmpPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0 - calculationResult.PhysicalCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsArcane = calculationResult.IncomingDamageAmpArcane * (calculationOptions.ArcaneDps * (1 + Math.Max(0, calculationOptions.ArcaneCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.ArcaneDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsFire = calculationResult.IncomingDamageAmpFire * (calculationOptions.FireDps * (1 + Math.Max(0, calculationOptions.FireCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.FireDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsFrost = calculationResult.IncomingDamageAmpFrost * (calculationOptions.FrostDps * (1 + Math.Max(0, calculationOptions.FrostCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.FrostDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsNature = calculationResult.IncomingDamageAmpNature * (calculationOptions.NatureDps * (1 + Math.Max(0, calculationOptions.NatureCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.NatureDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsShadow = calculationResult.IncomingDamageAmpShadow * (calculationOptions.ShadowDps * (1 + Math.Max(0, calculationOptions.ShadowCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.ShadowDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+            calculationResult.IncomingDamageDpsHoly = calculationResult.IncomingDamageAmpHoly * (calculationOptions.HolyDps * (1 + Math.Max(0, calculationOptions.HolyCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.HolyDot * (1 - 0.5f * calculationResult.CritDamageReduction));
+
+            calculationResult.IncomingDamageDps = calculationResult.IncomingDamageDpsMelee + calculationResult.IncomingDamageDpsPhysical + calculationResult.IncomingDamageDpsArcane + calculationResult.IncomingDamageDpsFire + calculationResult.IncomingDamageDpsFrost + calculationResult.IncomingDamageDpsShadow + calculationResult.IncomingDamageDpsNature + calculationResult.IncomingDamageDpsHoly;
+            float incanterSpellPower = Math.Min((float)Math.Min(calculationOptions.AbsorptionPerSecond, calculationResult.IncomingDamageDps) * 0.05f * talents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
+            if (calculationOptions.AbsorptionPerSecond > calculationResult.IncomingDamageDps)
+            {
+                calculationResult.IncomingDamageDps = 0.0f;
+            }
+            else
+            {
+                calculationResult.IncomingDamageDps -= calculationOptions.AbsorptionPerSecond;
+            }
+
+            calculationResult.BaseArcaneSpellPower = baseStats.SpellArcaneDamageRating + baseStats.SpellPower + incanterSpellPower;
+            calculationResult.BaseFireSpellPower = baseStats.SpellFireDamageRating + baseStats.SpellPower + incanterSpellPower;
+            calculationResult.BaseFrostSpellPower = baseStats.SpellFrostDamageRating + baseStats.SpellPower + incanterSpellPower;
+            calculationResult.BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower + incanterSpellPower;
+            calculationResult.BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower + incanterSpellPower;
+            calculationResult.BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower + incanterSpellPower;
         }
 
         private float EvaluateSurvivability(Stats characterStats)
         {
-            double ampMelee = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation) * (1 - calculationResult.BaseState.Dodge);
-            double ampPhysical = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation);
-            double ampArcane = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, characterStats.ArcaneResistance, 0));
-            double ampFire = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, characterStats.FireResistance, 0));
-            double ampFrost = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, characterStats.FrostResistance, 0));
-            double ampNature = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, characterStats.NatureResistance, 0));
-            double ampShadow = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, characterStats.ShadowResistance, 0));
-            double ampHoly = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore);
+            double ampMelee = calculationResult.IncomingDamageAmpMelee;
+            double ampPhysical = calculationResult.IncomingDamageAmpPhysical;
+            double ampArcane = calculationResult.IncomingDamageAmpArcane;
+            double ampFire = calculationResult.IncomingDamageAmpFire;
+            double ampFrost = calculationResult.IncomingDamageAmpFrost;
+            double ampNature = calculationResult.IncomingDamageAmpNature;
+            double ampShadow = calculationResult.IncomingDamageAmpShadow;
+            double ampHoly = calculationResult.IncomingDamageAmpHoly;
 
-            double melee = ampMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculationResult.BaseState.PhysicalCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.MeleeDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double physical = ampPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0 - calculationResult.BaseState.PhysicalCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double arcane = ampArcane * (calculationOptions.ArcaneDps * (1 + Math.Max(0, calculationOptions.ArcaneCrit / 100.0 - calculationResult.BaseState.SpellCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.ArcaneDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double fire = ampFire * (calculationOptions.FireDps * (1 + Math.Max(0, calculationOptions.FireCrit / 100.0 - calculationResult.BaseState.SpellCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.FireDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double frost = ampFrost * (calculationOptions.FrostDps * (1 + Math.Max(0, calculationOptions.FrostCrit / 100.0 - calculationResult.BaseState.SpellCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.FrostDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double holy = ampHoly * (calculationOptions.HolyDps * (1 + Math.Max(0, calculationOptions.HolyCrit / 100.0 - calculationResult.BaseState.SpellCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.HolyDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double nature = ampNature * (calculationOptions.NatureDps * (1 + Math.Max(0, calculationOptions.NatureCrit / 100.0 - calculationResult.BaseState.SpellCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.NatureDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
-            double shadow = ampShadow * (calculationOptions.ShadowDps * (1 + Math.Max(0, calculationOptions.ShadowCrit / 100.0 - calculationResult.BaseState.SpellCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.ShadowDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
+            double melee = calculationResult.IncomingDamageDpsMelee;
+            double physical = calculationResult.IncomingDamageDpsPhysical;
+            double arcane = calculationResult.IncomingDamageDpsArcane;
+            double fire = calculationResult.IncomingDamageDpsFire;
+            double frost = calculationResult.IncomingDamageDpsFrost;
+            double nature = calculationResult.IncomingDamageDpsNature;
+            double shadow = calculationResult.IncomingDamageDpsShadow;
+            double holy = calculationResult.IncomingDamageDpsHoly;
 
             double burstWindow = calculationOptions.BurstWindow;
             double burstImpacts = calculationOptions.BurstImpacts;

@@ -172,6 +172,7 @@ namespace Rawr.Mage
         public bool FarmingMode { get; set; }
         public float FocusMagicTargetCritRate { get; set; }
         public bool UnlimitedMana { get; set; }
+        public float AbsorptionPerSecond { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }
         public bool CustomSpellMixEnabled { get; set; }

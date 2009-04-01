@@ -133,25 +133,17 @@
             this.label94 = new System.Windows.Forms.Label();
             this.label76 = new System.Windows.Forms.Label();
             this.textBoxEffectShadowBinary = new System.Windows.Forms.TextBox();
-            this.textBoxEffectShadow = new System.Windows.Forms.TextBox();
             this.label68 = new System.Windows.Forms.Label();
             this.textBoxEffectNatureBinary = new System.Windows.Forms.TextBox();
-            this.textBoxEffectNature = new System.Windows.Forms.TextBox();
             this.label69 = new System.Windows.Forms.Label();
             this.textBoxEffectHolyBinary = new System.Windows.Forms.TextBox();
-            this.textBoxEffectHoly = new System.Windows.Forms.TextBox();
             this.label70 = new System.Windows.Forms.Label();
             this.textBoxEffectFrostBinary = new System.Windows.Forms.TextBox();
-            this.textBoxEffectFrost = new System.Windows.Forms.TextBox();
             this.label71 = new System.Windows.Forms.Label();
             this.textBoxEffectFireBinary = new System.Windows.Forms.TextBox();
-            this.textBoxEffectFire = new System.Windows.Forms.TextBox();
             this.label72 = new System.Windows.Forms.Label();
             this.textBoxEffectArcaneBinary = new System.Windows.Forms.TextBox();
-            this.textBoxEffectArcane = new System.Windows.Forms.TextBox();
             this.label73 = new System.Windows.Forms.Label();
-            this.label74 = new System.Windows.Forms.Label();
-            this.label75 = new System.Windows.Forms.Label();
             this.textBoxManaDrainFrequency = new System.Windows.Forms.TextBox();
             this.label67 = new System.Windows.Forms.Label();
             this.textBoxManaDrain = new System.Windows.Forms.TextBox();
@@ -163,6 +155,15 @@
             this.textBoxEffectBonusSpirit = new System.Windows.Forms.TextBox();
             this.label62 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.textBoxAbsorptionPerSecond = new System.Windows.Forms.TextBox();
+            this.label74 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
+            this.textBoxEffectShadow = new System.Windows.Forms.TextBox();
+            this.textBoxEffectNature = new System.Windows.Forms.TextBox();
+            this.textBoxEffectHoly = new System.Windows.Forms.TextBox();
+            this.textBoxEffectFrost = new System.Windows.Forms.TextBox();
+            this.textBoxEffectFire = new System.Windows.Forms.TextBox();
+            this.textBoxEffectArcane = new System.Windows.Forms.TextBox();
             this.textBoxChanceToLiveScore = new System.Windows.Forms.TextBox();
             this.label63 = new System.Windows.Forms.Label();
             this.textBoxBurstImpacts = new System.Windows.Forms.TextBox();
@@ -1395,25 +1396,17 @@
             this.tabPage6.Controls.Add(this.label94);
             this.tabPage6.Controls.Add(this.label76);
             this.tabPage6.Controls.Add(this.textBoxEffectShadowBinary);
-            this.tabPage6.Controls.Add(this.textBoxEffectShadow);
             this.tabPage6.Controls.Add(this.label68);
             this.tabPage6.Controls.Add(this.textBoxEffectNatureBinary);
-            this.tabPage6.Controls.Add(this.textBoxEffectNature);
             this.tabPage6.Controls.Add(this.label69);
             this.tabPage6.Controls.Add(this.textBoxEffectHolyBinary);
-            this.tabPage6.Controls.Add(this.textBoxEffectHoly);
             this.tabPage6.Controls.Add(this.label70);
             this.tabPage6.Controls.Add(this.textBoxEffectFrostBinary);
-            this.tabPage6.Controls.Add(this.textBoxEffectFrost);
             this.tabPage6.Controls.Add(this.label71);
             this.tabPage6.Controls.Add(this.textBoxEffectFireBinary);
-            this.tabPage6.Controls.Add(this.textBoxEffectFire);
             this.tabPage6.Controls.Add(this.label72);
             this.tabPage6.Controls.Add(this.textBoxEffectArcaneBinary);
-            this.tabPage6.Controls.Add(this.textBoxEffectArcane);
             this.tabPage6.Controls.Add(this.label73);
-            this.tabPage6.Controls.Add(this.label74);
-            this.tabPage6.Controls.Add(this.label75);
             this.tabPage6.Controls.Add(this.textBoxManaDrainFrequency);
             this.tabPage6.Controls.Add(this.label67);
             this.tabPage6.Controls.Add(this.textBoxManaDrain);
@@ -1455,26 +1448,18 @@
             this.label76.AutoSize = true;
             this.label76.Location = new System.Drawing.Point(0, 165);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(72, 13);
+            this.label76.Size = new System.Drawing.Size(111, 13);
             this.label76.TabIndex = 232;
-            this.label76.Text = "Other Effects:";
-            this.toolTipMage.SetToolTip(this.label76, "Raw direct damage per second (before crit and mitigation).");
+            this.label76.Text = "Other Binary Effects: *";
+            this.toolTipMage.SetToolTip(this.label76, "Frequency of binary effects (number/second).");
             // 
             // textBoxEffectShadowBinary
             // 
             this.textBoxEffectShadowBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowOtherBinary", true));
-            this.textBoxEffectShadowBinary.Location = new System.Drawing.Point(142, 311);
+            this.textBoxEffectShadowBinary.Location = new System.Drawing.Point(112, 311);
             this.textBoxEffectShadowBinary.Name = "textBoxEffectShadowBinary";
-            this.textBoxEffectShadowBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectShadowBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectShadowBinary.TabIndex = 231;
-            // 
-            // textBoxEffectShadow
-            // 
-            this.textBoxEffectShadow.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowOther", true));
-            this.textBoxEffectShadow.Location = new System.Drawing.Point(78, 311);
-            this.textBoxEffectShadow.Name = "textBoxEffectShadow";
-            this.textBoxEffectShadow.Size = new System.Drawing.Size(45, 20);
-            this.textBoxEffectShadow.TabIndex = 230;
             // 
             // label68
             // 
@@ -1488,18 +1473,10 @@
             // textBoxEffectNatureBinary
             // 
             this.textBoxEffectNatureBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectNatureOtherBinary", true));
-            this.textBoxEffectNatureBinary.Location = new System.Drawing.Point(142, 285);
+            this.textBoxEffectNatureBinary.Location = new System.Drawing.Point(112, 285);
             this.textBoxEffectNatureBinary.Name = "textBoxEffectNatureBinary";
-            this.textBoxEffectNatureBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectNatureBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectNatureBinary.TabIndex = 228;
-            // 
-            // textBoxEffectNature
-            // 
-            this.textBoxEffectNature.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectNatureOther", true));
-            this.textBoxEffectNature.Location = new System.Drawing.Point(78, 285);
-            this.textBoxEffectNature.Name = "textBoxEffectNature";
-            this.textBoxEffectNature.Size = new System.Drawing.Size(45, 20);
-            this.textBoxEffectNature.TabIndex = 227;
             // 
             // label69
             // 
@@ -1513,18 +1490,10 @@
             // textBoxEffectHolyBinary
             // 
             this.textBoxEffectHolyBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHolyOtherBinary", true));
-            this.textBoxEffectHolyBinary.Location = new System.Drawing.Point(142, 259);
+            this.textBoxEffectHolyBinary.Location = new System.Drawing.Point(112, 259);
             this.textBoxEffectHolyBinary.Name = "textBoxEffectHolyBinary";
-            this.textBoxEffectHolyBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectHolyBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectHolyBinary.TabIndex = 225;
-            // 
-            // textBoxEffectHoly
-            // 
-            this.textBoxEffectHoly.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHolyOther", true));
-            this.textBoxEffectHoly.Location = new System.Drawing.Point(78, 259);
-            this.textBoxEffectHoly.Name = "textBoxEffectHoly";
-            this.textBoxEffectHoly.Size = new System.Drawing.Size(45, 20);
-            this.textBoxEffectHoly.TabIndex = 224;
             // 
             // label70
             // 
@@ -1538,18 +1507,10 @@
             // textBoxEffectFrostBinary
             // 
             this.textBoxEffectFrostBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFrostOtherBinary", true));
-            this.textBoxEffectFrostBinary.Location = new System.Drawing.Point(142, 233);
+            this.textBoxEffectFrostBinary.Location = new System.Drawing.Point(112, 233);
             this.textBoxEffectFrostBinary.Name = "textBoxEffectFrostBinary";
-            this.textBoxEffectFrostBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFrostBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectFrostBinary.TabIndex = 222;
-            // 
-            // textBoxEffectFrost
-            // 
-            this.textBoxEffectFrost.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFrostOther", true));
-            this.textBoxEffectFrost.Location = new System.Drawing.Point(78, 233);
-            this.textBoxEffectFrost.Name = "textBoxEffectFrost";
-            this.textBoxEffectFrost.Size = new System.Drawing.Size(45, 20);
-            this.textBoxEffectFrost.TabIndex = 221;
             // 
             // label71
             // 
@@ -1563,18 +1524,10 @@
             // textBoxEffectFireBinary
             // 
             this.textBoxEffectFireBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFireOtherBinary", true));
-            this.textBoxEffectFireBinary.Location = new System.Drawing.Point(142, 207);
+            this.textBoxEffectFireBinary.Location = new System.Drawing.Point(112, 207);
             this.textBoxEffectFireBinary.Name = "textBoxEffectFireBinary";
-            this.textBoxEffectFireBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFireBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectFireBinary.TabIndex = 219;
-            // 
-            // textBoxEffectFire
-            // 
-            this.textBoxEffectFire.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFireOther", true));
-            this.textBoxEffectFire.Location = new System.Drawing.Point(78, 207);
-            this.textBoxEffectFire.Name = "textBoxEffectFire";
-            this.textBoxEffectFire.Size = new System.Drawing.Size(45, 20);
-            this.textBoxEffectFire.TabIndex = 218;
             // 
             // label72
             // 
@@ -1588,18 +1541,10 @@
             // textBoxEffectArcaneBinary
             // 
             this.textBoxEffectArcaneBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectArcaneOtherBinary", true));
-            this.textBoxEffectArcaneBinary.Location = new System.Drawing.Point(142, 181);
+            this.textBoxEffectArcaneBinary.Location = new System.Drawing.Point(112, 181);
             this.textBoxEffectArcaneBinary.Name = "textBoxEffectArcaneBinary";
-            this.textBoxEffectArcaneBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectArcaneBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectArcaneBinary.TabIndex = 216;
-            // 
-            // textBoxEffectArcane
-            // 
-            this.textBoxEffectArcane.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectArcaneOther", true));
-            this.textBoxEffectArcane.Location = new System.Drawing.Point(78, 181);
-            this.textBoxEffectArcane.Name = "textBoxEffectArcane";
-            this.textBoxEffectArcane.Size = new System.Drawing.Size(45, 20);
-            this.textBoxEffectArcane.TabIndex = 215;
             // 
             // label73
             // 
@@ -1609,26 +1554,6 @@
             this.label73.Size = new System.Drawing.Size(44, 13);
             this.label73.TabIndex = 214;
             this.label73.Text = "Arcane:";
-            // 
-            // label74
-            // 
-            this.label74.AutoSize = true;
-            this.label74.Location = new System.Drawing.Point(138, 165);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(46, 13);
-            this.label74.TabIndex = 213;
-            this.label74.Text = "Binary: *";
-            this.toolTipMage.SetToolTip(this.label74, "Frequency of binary effects (number/second).");
-            // 
-            // label75
-            // 
-            this.label75.AutoSize = true;
-            this.label75.Location = new System.Drawing.Point(75, 165);
-            this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(57, 13);
-            this.label75.TabIndex = 212;
-            this.label75.Text = "Damage: *";
-            this.toolTipMage.SetToolTip(this.label75, "Frequency of partially resistable effects (number/second).");
             // 
             // textBoxManaDrainFrequency
             // 
@@ -1722,6 +1647,15 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.textBoxAbsorptionPerSecond);
+            this.tabPage5.Controls.Add(this.label74);
+            this.tabPage5.Controls.Add(this.label75);
+            this.tabPage5.Controls.Add(this.textBoxEffectShadow);
+            this.tabPage5.Controls.Add(this.textBoxEffectNature);
+            this.tabPage5.Controls.Add(this.textBoxEffectHoly);
+            this.tabPage5.Controls.Add(this.textBoxEffectFrost);
+            this.tabPage5.Controls.Add(this.textBoxEffectFire);
+            this.tabPage5.Controls.Add(this.textBoxEffectArcane);
             this.tabPage5.Controls.Add(this.textBoxChanceToLiveScore);
             this.tabPage5.Controls.Add(this.label63);
             this.tabPage5.Controls.Add(this.textBoxBurstImpacts);
@@ -1772,10 +1706,86 @@
             this.tabPage5.Text = "Survivability";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // textBoxAbsorptionPerSecond
+            // 
+            this.textBoxAbsorptionPerSecond.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AbsorptionPerSecond", true));
+            this.textBoxAbsorptionPerSecond.Location = new System.Drawing.Point(125, 264);
+            this.textBoxAbsorptionPerSecond.Name = "textBoxAbsorptionPerSecond";
+            this.textBoxAbsorptionPerSecond.Size = new System.Drawing.Size(75, 20);
+            this.textBoxAbsorptionPerSecond.TabIndex = 239;
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Location = new System.Drawing.Point(0, 267);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(123, 13);
+            this.label74.TabIndex = 238;
+            this.label74.Text = "Absorption per second: *";
+            this.toolTipMage.SetToolTip(this.label74, "Maximum available amount of absorption per second on average.");
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(201, 37);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(38, 13);
+            this.label75.TabIndex = 237;
+            this.label75.Text = "Freq: *";
+            this.toolTipMage.SetToolTip(this.label75, "Frequency of damage events (number/second).");
+            // 
+            // textBoxEffectShadow
+            // 
+            this.textBoxEffectShadow.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowOther", true));
+            this.textBoxEffectShadow.Location = new System.Drawing.Point(204, 235);
+            this.textBoxEffectShadow.Name = "textBoxEffectShadow";
+            this.textBoxEffectShadow.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectShadow.TabIndex = 236;
+            // 
+            // textBoxEffectNature
+            // 
+            this.textBoxEffectNature.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectNatureOther", true));
+            this.textBoxEffectNature.Location = new System.Drawing.Point(204, 209);
+            this.textBoxEffectNature.Name = "textBoxEffectNature";
+            this.textBoxEffectNature.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectNature.TabIndex = 235;
+            // 
+            // textBoxEffectHoly
+            // 
+            this.textBoxEffectHoly.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHolyOther", true));
+            this.textBoxEffectHoly.Location = new System.Drawing.Point(204, 183);
+            this.textBoxEffectHoly.Name = "textBoxEffectHoly";
+            this.textBoxEffectHoly.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectHoly.TabIndex = 234;
+            // 
+            // textBoxEffectFrost
+            // 
+            this.textBoxEffectFrost.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFrostOther", true));
+            this.textBoxEffectFrost.Location = new System.Drawing.Point(204, 157);
+            this.textBoxEffectFrost.Name = "textBoxEffectFrost";
+            this.textBoxEffectFrost.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFrost.TabIndex = 233;
+            // 
+            // textBoxEffectFire
+            // 
+            this.textBoxEffectFire.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFireOther", true));
+            this.textBoxEffectFire.Location = new System.Drawing.Point(204, 131);
+            this.textBoxEffectFire.Name = "textBoxEffectFire";
+            this.textBoxEffectFire.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFire.TabIndex = 232;
+            // 
+            // textBoxEffectArcane
+            // 
+            this.textBoxEffectArcane.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectArcaneOther", true));
+            this.textBoxEffectArcane.Location = new System.Drawing.Point(204, 105);
+            this.textBoxEffectArcane.Name = "textBoxEffectArcane";
+            this.textBoxEffectArcane.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectArcane.TabIndex = 231;
+            // 
             // textBoxChanceToLiveScore
             // 
             this.textBoxChanceToLiveScore.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveScore", true));
-            this.textBoxChanceToLiveScore.Location = new System.Drawing.Point(112, 323);
+            this.textBoxChanceToLiveScore.Location = new System.Drawing.Point(124, 342);
             this.textBoxChanceToLiveScore.Name = "textBoxChanceToLiveScore";
             this.textBoxChanceToLiveScore.Size = new System.Drawing.Size(75, 20);
             this.textBoxChanceToLiveScore.TabIndex = 220;
@@ -1783,7 +1793,7 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(0, 323);
+            this.label63.Location = new System.Drawing.Point(-1, 345);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(104, 13);
             this.label63.TabIndex = 219;
@@ -1793,7 +1803,7 @@
             // textBoxBurstImpacts
             // 
             this.textBoxBurstImpacts.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "BurstImpacts", true));
-            this.textBoxBurstImpacts.Location = new System.Drawing.Point(112, 297);
+            this.textBoxBurstImpacts.Location = new System.Drawing.Point(124, 316);
             this.textBoxBurstImpacts.Name = "textBoxBurstImpacts";
             this.textBoxBurstImpacts.Size = new System.Drawing.Size(75, 20);
             this.textBoxBurstImpacts.TabIndex = 216;
@@ -1801,7 +1811,7 @@
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(0, 297);
+            this.label61.Location = new System.Drawing.Point(-1, 319);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(110, 13);
             this.label61.TabIndex = 215;
@@ -1812,7 +1822,7 @@
             // textBoxBurstWindow
             // 
             this.textBoxBurstWindow.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "BurstWindow", true));
-            this.textBoxBurstWindow.Location = new System.Drawing.Point(112, 271);
+            this.textBoxBurstWindow.Location = new System.Drawing.Point(124, 290);
             this.textBoxBurstWindow.Name = "textBoxBurstWindow";
             this.textBoxBurstWindow.Size = new System.Drawing.Size(75, 20);
             this.textBoxBurstWindow.TabIndex = 214;
@@ -1820,7 +1830,7 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(0, 271);
+            this.label60.Location = new System.Drawing.Point(-1, 293);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(104, 13);
             this.label60.TabIndex = 213;
@@ -3168,25 +3178,17 @@
         private System.Windows.Forms.Label label64;
         private System.Windows.Forms.Label label76;
         private System.Windows.Forms.TextBox textBoxEffectShadowBinary;
-        private System.Windows.Forms.TextBox textBoxEffectShadow;
         private System.Windows.Forms.Label label68;
         private System.Windows.Forms.TextBox textBoxEffectNatureBinary;
-        private System.Windows.Forms.TextBox textBoxEffectNature;
         private System.Windows.Forms.Label label69;
         private System.Windows.Forms.TextBox textBoxEffectHolyBinary;
-        private System.Windows.Forms.TextBox textBoxEffectHoly;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.TextBox textBoxEffectFrostBinary;
-        private System.Windows.Forms.TextBox textBoxEffectFrost;
         private System.Windows.Forms.Label label71;
         private System.Windows.Forms.TextBox textBoxEffectFireBinary;
-        private System.Windows.Forms.TextBox textBoxEffectFire;
         private System.Windows.Forms.Label label72;
         private System.Windows.Forms.TextBox textBoxEffectArcaneBinary;
-        private System.Windows.Forms.TextBox textBoxEffectArcane;
         private System.Windows.Forms.Label label73;
-        private System.Windows.Forms.Label label74;
-        private System.Windows.Forms.Label label75;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label77;
@@ -3267,6 +3269,15 @@
         private System.Windows.Forms.Label label108;
         private System.Windows.Forms.TextBox textBoxWarlockSpellPower;
         private System.Windows.Forms.Label label109;
+        private System.Windows.Forms.TextBox textBoxAbsorptionPerSecond;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.TextBox textBoxEffectShadow;
+        private System.Windows.Forms.TextBox textBoxEffectNature;
+        private System.Windows.Forms.TextBox textBoxEffectHoly;
+        private System.Windows.Forms.TextBox textBoxEffectFrost;
+        private System.Windows.Forms.TextBox textBoxEffectFire;
+        private System.Windows.Forms.TextBox textBoxEffectArcane;
 
     }
 }

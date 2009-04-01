@@ -228,6 +228,27 @@ namespace Rawr.Mage
         public float SpellCritReduction { get; set; }
         public float CritDamageReduction { get; set; }
         public float Dodge { get; set; }
+
+        public double IncomingDamageAmpMelee { get; set; }
+        public double IncomingDamageAmpPhysical { get; set; }
+        public double IncomingDamageAmpArcane { get; set; }
+        public double IncomingDamageAmpFire { get; set; }
+        public double IncomingDamageAmpFrost { get; set; }
+        public double IncomingDamageAmpNature { get; set; }
+        public double IncomingDamageAmpShadow { get; set; }
+        public double IncomingDamageAmpHoly { get; set; }
+
+        public double IncomingDamageDpsMelee { get; set; }
+        public double IncomingDamageDpsPhysical { get; set; }
+        public double IncomingDamageDpsArcane { get; set; }
+        public double IncomingDamageDpsFire { get; set; }
+        public double IncomingDamageDpsFrost { get; set; }
+        public double IncomingDamageDpsNature { get; set; }
+        public double IncomingDamageDpsShadow { get; set; }
+        public double IncomingDamageDpsHoly { get; set; }
+
+        public double IncomingDamageDps { get; set; }
+
         #endregion
 
         #region Spell Templates
