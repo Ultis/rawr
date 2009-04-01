@@ -56,8 +56,14 @@ namespace Rawr
 
         void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
         {
-            BuildControls();
-            LoadBuffsFromCharacter();
+            foreach (CheckBox checkbox in CheckBoxes.Values)
+            {
+                Buff buff = checkbox.Tag as Buff;
+                if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && buff.Source != null)
+                    checkbox.Text = buff.Name + " (" + buff.Source + ")";
+                else
+                    checkbox.Text = buff.Name;
+            }
             ScrollHook.hookRec(this);
         }
         
