@@ -100,6 +100,7 @@ namespace Rawr.Mage
         private int rowManaGemMax = -1;
         private int rowHeroism = -1;
         private int rowArcanePower = -1;
+        private int rowHeroismManaGemEffect = -1;
         private int rowHeroismArcanePower = -1;
         private int rowIcyVeins = -1;
         private int rowWaterElemental = -1;
@@ -2030,6 +2031,7 @@ namespace Rawr.Mage
             if (powerInfusionAvailable) lp.SetRHSUnsafe(rowPowerInfusion, calculationOptions.AverageCooldowns ? calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown * calculationOptions.FightDuration : pilength);
             if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
+            if (heroismAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowHeroismManaGemEffect, calculationResult.ManaGemEffectDuration);
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
             //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
@@ -2263,6 +2265,7 @@ namespace Rawr.Mage
             if (arcanePowerAvailable) rowArcanePower = rowCount++;
             if (powerInfusionAvailable) rowPowerInfusion = rowCount++;
             if (heroismAvailable && arcanePowerAvailable) rowHeroismArcanePower = rowCount++;
+            if (heroismAvailable && manaGemEffectAvailable) rowHeroismManaGemEffect = rowCount++;
             if (icyVeinsAvailable) rowIcyVeins = rowCount++;
             if (moltenFuryAvailable) rowMoltenFury = rowCount++;
             //if (moltenFuryAvailable && potionOfWildMagicAvailable) rowMoltenFuryDestructionPotion = rowCount++;
@@ -2560,6 +2563,7 @@ namespace Rawr.Mage
             if (state.ArcanePower) lp.SetElementUnsafe(rowArcanePower, column, 1.0);
             if (state.PowerInfusion) lp.SetElementUnsafe(rowPowerInfusion, column, 1.0);
             if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
+            if (state.Heroism && state.ManaGemEffect) lp.SetElementUnsafe(rowHeroismManaGemEffect, column, 1.0);
             if (state.IcyVeins) lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
             if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
             //if (state.MoltenFury && state.PotionOfWildMagic) lp.SetElementUnsafe(rowMoltenFuryDestructionPotion, column, 1.0);

@@ -1392,16 +1392,14 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
             }
 
+            partialGroups.RemoveAll(group => group.Duration == 0);
             // finalize groups
             for (int i = 0; i < partialGroups.Count; i++)
             {
                 SequenceGroup group = partialGroups[i];
-                if (group.Duration > 0)
+                foreach (SequenceItem item in group.Item)
                 {
-                    foreach (SequenceItem item in group.Item)
-                    {
-                        item.Group.Add(group);
-                    }
+                    item.Group.Add(group);
                 }
                 for (int j = 0; j < partialGroups.Count; j++)
                 {
@@ -1411,7 +1409,6 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
             }
-            partialGroups.RemoveAll(group => group.Duration == 0);
             return partialGroups;
         }
 
