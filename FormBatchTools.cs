@@ -931,9 +931,16 @@ namespace Rawr
         {
             batchOptimizer.ComputeUpgradesProgressChanged -= new ComputeUpgradesProgressChangedEventHandler(batchOptimizer_ComputeUpgradesProgressChanged);
             batchOptimizer.ComputeUpgradesCompleted -= new ComputeUpgradesCompletedEventHandler(batchOptimizer_ComputeUpgradesCompleted);
-            FormUpgradeComparison.Instance.LoadData(e.Upgrades, null);
-            FormUpgradeComparison.Instance.Show();
-            FormUpgradeComparison.Instance.BringToFront();
+            if (!e.Cancelled)
+            {
+                FormUpgradeComparison.Instance.LoadData(e.Upgrades, null);
+                FormUpgradeComparison.Instance.Show();
+                FormUpgradeComparison.Instance.BringToFront();
+            }
+            currentOperation = AsyncOperation.None;
+            buttonCancel.Enabled = false;
+            UpdateStatusLabel();
+            statusProgressBar.Value = 0;
         }
 
         void batchOptimizer_ComputeUpgradesProgressChanged(object sender, ComputeUpgradesProgressChangedEventArgs e)
