@@ -1381,7 +1381,7 @@ namespace Rawr
             }
         }
 
-        public static String getWowheadWeightedReportURL(Character character)
+        public static String GetWowheadWeightedReportURL(Character character)
         {
             return "http://www.wowhead.com/?items&filter=minrl=" + character.Level + ";" + getWowheadClassFilter(character.Class) + getWowheadWeightFilter(character);
         }

@@ -10,6 +10,7 @@ using System.Xml;
 using Rawr.Forms;
 using System.IO;
 using System.Threading;
+using System.Drawing.Imaging;
 
 namespace Rawr
 {
@@ -109,10 +110,12 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 
 			LoadModel(ConfigModel);
 			InitializeComponent();
+			if (Type.GetType("Mono.Runtime") != null)
+				copyDataToClipboardToolStripMenuItem.Text += " (Doesn't work under Mono)";
 			Application.DoEvents();
 
 			Rectangle bounds = ConfigBounds;
-			if (bounds.Width != 0)
+			if (bounds.Width >= this.MinimumSize.Width && bounds.Height >= this.MinimumSize.Height)
 			{
 				this.StartPosition = FormStartPosition.Manual;
 				this.Bounds = bounds;
@@ -505,7 +508,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 				recentCharacterMenuItem.Tag = recentCharacter;
 				recentCharacterMenuItem.Click += new EventHandler(recentCharacterMenuItem_Click);
 				_recentCharacterMenuItems.Add(recentCharacterMenuItem);
-				fileToolStripMenuItem.DropDownItems.Insert(5, recentCharacterMenuItem);
+				fileToolStripMenuItem.DropDownItems.Insert(6, recentCharacterMenuItem);
 			}
 		}
 
@@ -1042,87 +1045,119 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 			{
 				//Clipboard isn't working
 				System.IO.File.WriteAllText("stats.txt", sb.ToString());
+				MessageBox.Show("Mono doesn't support modifying the clipboard, so stats have been saved to a 'stats.txt' file instead.");
 			}
 		}
 
 		private void slotToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.Cursor = Cursors.WaitCursor;
+
+			ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender;
+			string selectedTag = clickedMenuItem.Tag.ToString();
+
+			if (gearToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			{
+				gearToolStripMenuItem.Tag = selectedTag;
+				gearToolStripMenuItem.Text = "Gear > " + clickedMenuItem.Text;
+			}
+			else if (enchantsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			{
+				enchantsToolStripMenuItem.Tag = selectedTag;
+				enchantsToolStripMenuItem.Text = "Enchants > " + clickedMenuItem.Text;
+			}
+			else if (gemsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			{
+				gemsToolStripMenuItem.Tag = selectedTag;
+				gemsToolStripMenuItem.Text = "Gems > " + clickedMenuItem.Text;
+			}
+			else if (buffsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			{
+				buffsToolStripMenuItem.Tag = selectedTag;
+				buffsToolStripMenuItem.Text = "Buffs > " + clickedMenuItem.Text;
+			}
+
 			foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
 			{
-				if (item is ToolStripMenuItem)
+				ToolStripMenuItem menuItem = item as ToolStripMenuItem;
+				if (menuItem != null)
 				{
-					(item as ToolStripMenuItem).Checked = item == sender;
-					if ((item as ToolStripMenuItem).Checked)
+					menuItem.Checked = (string)menuItem.Tag == selectedTag;
+					if (menuItem.Checked)
 					{
-						string[] tag = item.Tag.ToString().Split('.');
-                        if (tag[0] == "CustomRendered") tag[0] = "Custom";
-						toolStripDropDownButtonSlot.Text = tag[0];
-						if (tag.Length > 1) toolStripDropDownButtonSlot.Text += " > " + item.Text;
+						toolStripDropDownButtonSlot.Text = "Slot: " + menuItem.Text;
 					}
 				}
 			}
+			foreach (ToolStripMenuItem menuItem in gearToolStripMenuItem.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in enchantsToolStripMenuItem.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in gemsToolStripMenuItem.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in buffsToolStripMenuItem.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+
+			toolStripDropDownButtonSlot.DropDown.Close(ToolStripDropDownCloseReason.ItemClicked);
+
 			if (!_loadingCharacter)
-				LoadComparisonData();
+				LoadComparisonData(selectedTag);
 			this.Cursor = Cursors.Default;
 		}
 
-		private void LoadComparisonData()
+		private string _currentChartTag = "Gear.Head";
+		private void LoadComparisonData() { LoadComparisonData(_currentChartTag); }
+		private void LoadComparisonData(string chartTag)
 		{
-			foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
+			_currentChartTag = chartTag;
+			itemComparison1.DisplayMode = ComparisonGraph.GraphDisplayMode.Subpoints;
+			string[] tag = chartTag.Split('.');
+			copyPawnStringToClipboardToolStripMenuItem.Visible = viewUpgradesOnLootRankToolStripMenuItem.Visible =
+				viewUpgradesOnWowheadToolStripMenuItem.Visible = labelRelativeStatValuesWarning.Visible =
+				tag[0] == "Relative Stat Values";
+
+			switch (tag[0])
 			{
-				if (item is ToolStripMenuItem && (item as ToolStripMenuItem).Checked && item.Tag != null)
-				{
-                    itemComparison1.DisplayMode = ComparisonGraph.GraphDisplayMode.Subpoints;
-					string[] tag = item.Tag.ToString().Split('.');
-					switch (tag[0])
-					{
-						case "Gear":
-						case "Gems":
-                            //Character._availableItems.Add(
-							itemComparison1.LoadGearBySlot((Character.CharacterSlot)Enum.Parse(typeof(Character.CharacterSlot), tag[1]));
-							break;
+				case "Gear":
+				case "Gems":
+					itemComparison1.LoadGearBySlot((Character.CharacterSlot)Enum.Parse(typeof(Character.CharacterSlot), tag[1]));
+					break;
 
-						case "Enchants":
-							itemComparison1.LoadEnchantsBySlot((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), tag[1]), _calculatedStats);
-							break;
+				case "Enchants":
+					itemComparison1.LoadEnchantsBySlot((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), tag[1]), _calculatedStats);
+					break;
 
-						case "Buffs":
-							string buffType = tag[1];
-							bool activeOnly = buffType.EndsWith("+");
-							buffType = buffType.Replace("+", "");
-							itemComparison1.LoadBuffs(_calculatedStats, activeOnly);
-							break;
+				case "Buffs":
+					itemComparison1.LoadBuffs(_calculatedStats, tag[1] == "Current");
+					break;
 
-						case "Current Gear/Enchants/Buffs":
-							itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
-							break;
+				case "Current Gear/Enchants/Buffs":
+					itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
+					break;
 
-						case "Direct Upgrades":
-							itemComparison1.LoadAvailableGear(_calculatedStats);
-							break;
+				case "Direct Upgrades":
+					itemComparison1.LoadAvailableGear(_calculatedStats);
+					break;
 
-						case "TalentSpecs":
-							itemComparison1.LoadTalentSpecs(talentPicker1);
-							break;
+				case "Talent Specs":
+					itemComparison1.LoadTalentSpecs(talentPicker1);
+					break;
 
-						case "Talents":
-							itemComparison1.LoadTalents();
-							break;
+				case "Talents":
+					itemComparison1.LoadTalents();
+					break;
 
-                        case "Relative Stat Values":
-                            itemComparison1.LoadRelativeStatValues();
-                            break;
+				case "Relative Stat Values":
+					itemComparison1.LoadRelativeStatValues();
+					break;
 
-						case "Custom":
-							itemComparison1.LoadCustomChart(tag[1]);
-							break;
+				case "Custom":
+					itemComparison1.LoadCustomChart(tag[1]);
+					break;
 
-                        case "CustomRendered":
-                            itemComparison1.LoadCustomRenderedChart(tag[1]);
-                            break;
-                    }
-				}
+				case "CustomRendered":
+					itemComparison1.LoadCustomRenderedChart(tag[1]);
+					break;
 			}
 		}
 
@@ -1137,7 +1172,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 					(item as ToolStripMenuItem).Checked = item == sender;
 					if ((item as ToolStripMenuItem).Checked)
 					{
-						toolStripDropDownButtonSort.Text = item.Text;
+						toolStripDropDownButtonSort.Text = "Sort: " + item.Text;
 						sort = (ComparisonGraph.ComparisonSort)((int)item.Tag);
 					}
 				}
@@ -1766,7 +1801,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Help"); }
 
 		private void tourOfRawrToolStripMenuItem_Click(object sender, EventArgs e)
-		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Tour"); }
+		{ Help.ShowHelp(null, "http://www.youtube.com/watch?v=OjRM5SUoOoQ"); }
 
 		private void gemmingsToolStripMenuItem_Click(object sender, EventArgs e)
 		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Gemmings"); }
@@ -1781,30 +1816,123 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
         { Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering"); }
 
         private void upgradeListToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormUpgradeComparison.Instance.Show();
-            FormUpgradeComparison.Instance.BringToFront();
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.DefaultExt = ".xml";
+			dialog.Filter = "Rawr Upgrade List Files | *.xml";
+			dialog.Multiselect = false;
+			if (dialog.ShowDialog(this) == DialogResult.OK && 
+				FormUpgradeComparison.Instance.LoadFile(dialog.FileName))
+			{
+				FormUpgradeComparison.Instance.Show();
+				FormUpgradeComparison.Instance.BringToFront();
+			}
+			dialog.Dispose();
         }
 
-        #region Exports section
+        #region Exports
         private void viewUpgradesOnWowheadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_loadingCharacter && _character != null)
-                Help.ShowHelp(null, Wowhead.getWowheadWeightedReportURL(_character));
+                Help.ShowHelp(null, Wowhead.GetWowheadWeightedReportURL(_character));
         }
 
-        private void copyPAWNStringToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void copyPawnStringToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_loadingCharacter && _character != null)
-                Exports.copyPawnString(_character);
+                Exports.CopyPawnString(_character);
         }
 
         private void viewUpgradesOnLootRankToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_loadingCharacter && _character != null)
-                Help.ShowHelp(null, Exports.getLootRankURL(_character));
-        }
-        #endregion
+                Help.ShowHelp(null, Exports.GetLootRankURL(_character));
+		}
 
+		private string GetChartDataCSV()
+		{
+			StringBuilder sb = new StringBuilder("Item Name,Slot,Gem1,Gem2,Gem3,Enchant,Source,Overall");
+			foreach (string subPointName in Calculations.SubPointNameColors.Keys)
+			{
+				sb.AppendFormat(",{0}", subPointName);
+			}
+			sb.AppendLine();
+			foreach (ComparisonCalculationBase comparisonCalculation in itemComparison1.ComparisonGraph.ItemCalculations)
+			{
+				ItemInstance item = comparisonCalculation.ItemInstance;
+				if (item != null)
+				{
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+						item.Item.Name.Replace(',', ';'),
+						item.Slot,
+						item.Gem1 != null ? item.Gem1.Name : null,
+						item.Gem2 != null ? item.Gem2.Name : null,
+						item.Gem3 != null ? item.Gem3.Name : null,
+						item.Enchant.Name,
+						item.Item.LocationInfo.Description.Split(',')[0],
+						comparisonCalculation.OverallPoints);
+					foreach (float subPoint in comparisonCalculation.SubPoints)
+						sb.AppendFormat(",{0}", subPoint);
+					sb.AppendLine();
+				}
+			}
+
+			return sb.ToString();
+		}
+
+		private void copyDataToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Clipboard.SetText(GetChartDataCSV(), TextDataFormat.Text);
+		}
+
+		private void exportToImageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.DefaultExt = ".png";
+			dialog.Filter = "PNG|*.png|GIF|*.gif|JPG|*.jpg|BMP|*.bmp";
+			if (dialog.ShowDialog(this) == DialogResult.OK)
+			{
+				try
+				{
+					ImageFormat imgFormat = ImageFormat.Bmp;
+					if (dialog.FileName.EndsWith(".png")) imgFormat = ImageFormat.Png;
+					else if (dialog.FileName.EndsWith(".gif")) imgFormat = ImageFormat.Gif;
+					else if (dialog.FileName.EndsWith(".jpg") || dialog.FileName.EndsWith(".jpeg")) imgFormat = ImageFormat.Jpeg;
+					itemComparison1.ComparisonGraph.PrerenderedGraph.Save(dialog.FileName, imgFormat);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+			dialog.Dispose();
+		}
+
+		private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.DefaultExt = ".csv";
+			dialog.Filter = "Comma Separated Values | *.csv";
+			if (dialog.ShowDialog(this) == DialogResult.OK)
+			{
+				try
+				{
+					using (StreamWriter writer = System.IO.File.CreateText(dialog.FileName))
+					{
+						writer.Write(GetChartDataCSV());
+						writer.Flush();
+						writer.Close();
+						writer.Dispose();
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+			dialog.Dispose();
+		}
+
+        #endregion
     }
 }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Rawr.Optimizer;
 using System.IO;
 using System.Xml.Serialization;
+using System.Drawing.Imaging;
 
 namespace Rawr
 {
@@ -16,6 +17,8 @@ namespace Rawr
         private FormUpgradeComparison()
         {
             InitializeComponent();
+			if (Type.GetType("Mono.Runtime") != null) 
+				copyDataToClipboardToolStripMenuItem.Text += " (Doesn't work under Mono)";
         }
 
         private static FormUpgradeComparison _instance;
@@ -70,7 +73,7 @@ namespace Rawr
             public List<ComparisonCalculationUpgrades[]> ItemCalculations;
         }
 
-        private void LoadFile(string file)
+        public bool LoadFile(string file)
         {
             try
             {
@@ -93,11 +96,14 @@ namespace Rawr
                         itemCalculations[data.Keys[i]] = data.ItemCalculations[i];
                     }
                     slotToolStripMenuItem_Click(allToolStripMenuItem, null);
+					return true;
                 }
             }
             catch
             {
+				MessageBox.Show("The chosen file is not a Rawr Upgrade List.", "Unable to Load Upgrade List", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+			return false;
         }
 
         private void SaveFile(string file)
@@ -119,11 +125,12 @@ namespace Rawr
                     XmlSerializer serializer = new XmlSerializer(typeof(SerializationData));
                     serializer.Serialize(writer, data);
                     writer.Close();
-                }
-            }
-            catch
-            {
-            }
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
         }
 
         public void LoadData(Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> calculations, string[] customSubpoints)
@@ -154,7 +161,7 @@ namespace Rawr
                     if ((item as ToolStripMenuItem).Checked)
                     {
                         string[] tag = item.Tag.ToString().Split('.');
-                        toolStripDropDownButtonSlot.Text = tag[0];
+                        toolStripDropDownButtonSlot.Text = "Chart: " + tag[0];
                         if (tag.Length > 1) toolStripDropDownButtonSlot.Text += " > " + item.Text;
                         comparisonGraph1.RoundValues = true;
                         comparisonGraph1.ItemCalculations = itemCalculations[(string)item.Tag];
@@ -175,7 +182,7 @@ namespace Rawr
                     (item as ToolStripMenuItem).Checked = item == sender;
                     if ((item as ToolStripMenuItem).Checked)
                     {
-                        toolStripDropDownButtonSort.Text = item.Text;
+                        toolStripDropDownButtonSort.Text = "Sort: " + item.Text;
                         sort = (ComparisonGraph.ComparisonSort)((int)item.Tag);
                     }
                 }
@@ -197,7 +204,7 @@ namespace Rawr
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.DefaultExt = ".xml";
-            dialog.Filter = "Rawr Upgrade List Files | *.xml";
+            dialog.Filter = "Rawr Upgrade List Files|*.xml";
             dialog.Multiselect = false;
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
@@ -210,7 +217,7 @@ namespace Rawr
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".xml";
-            dialog.Filter = "Rawr Upgrade List Files | *.xml";
+            dialog.Filter = "Rawr Upgrade List Files|*.xml";
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 SaveFile(dialog.FileName);
@@ -218,25 +225,82 @@ namespace Rawr
             dialog.Dispose();
         }
 
+		private string GetChartDataCSV()
+		{
+			StringBuilder sb = new StringBuilder("Item Name,Slot,Gem1,Gem2,Gem3,Enchant,Source,Overall Upgrade");
+			sb.AppendLine();
+			foreach (ComparisonCalculationUpgrades upgrade in comparisonGraph1.ItemCalculations)
+			{
+				ItemInstance item = upgrade.ItemInstance;
+				if (item != null)
+				{
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+						item.Item.Name.Replace(',',';'),
+						item.Slot,
+						item.Gem1 != null ? item.Gem1.Name : null,
+						item.Gem2 != null ? item.Gem2.Name : null,
+						item.Gem3 != null ? item.Gem3.Name : null,
+						item.Enchant.Name,
+						item.Item.LocationInfo.Description.Split(',')[0],
+						upgrade.OverallPoints);
+					sb.AppendLine();
+				}
+			}
+
+			return sb.ToString();
+		}
+
         private void copyDataToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (ComparisonCalculationUpgrades upgrade in itemCalculations["Gear.All"])
-            {
-                ItemInstance item = upgrade.ItemInstance;
-                if (item != null)
-                {
-                    sb.AppendFormat("{0}, {1}, {2}, {3}, {4}, {5}", item.Item.Name, item.Gem1 != null ? item.Gem1.Name : null, item.Gem2 != null ? item.Gem2.Name : null, item.Gem3 != null ? item.Gem3.Name : null, item.Enchant.Name, upgrade.OverallPoints);
-                    sb.AppendLine();
-                }
-            }
-
-            Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                //Clipboard isn't working
-                System.IO.File.WriteAllText("upgrades.txt", sb.ToString());
-            }
+			Clipboard.SetText(GetChartDataCSV(), TextDataFormat.Text);
         }
+
+		private void exportToImageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.DefaultExt = ".png";
+			dialog.Filter = "PNG|*.png|GIF|*.gif|JPG|*.jpg|BMP|*.bmp";
+			if (dialog.ShowDialog(this) == DialogResult.OK)
+			{
+				try
+				{
+					ImageFormat imgFormat = ImageFormat.Bmp;
+					if (dialog.FileName.EndsWith(".png")) imgFormat = ImageFormat.Png;
+					else if (dialog.FileName.EndsWith(".gif")) imgFormat = ImageFormat.Gif;
+					else if (dialog.FileName.EndsWith(".jpg") || dialog.FileName.EndsWith(".jpeg")) imgFormat = ImageFormat.Jpeg;
+					comparisonGraph1.PrerenderedGraph.Save(dialog.FileName, imgFormat);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+			dialog.Dispose();
+		}
+
+		private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.DefaultExt = ".csv";
+			dialog.Filter = "Comma Separated Values | *.csv";
+			if (dialog.ShowDialog(this) == DialogResult.OK)
+			{
+				try
+				{
+					using (StreamWriter writer = System.IO.File.CreateText(dialog.FileName))
+					{
+						writer.Write(GetChartDataCSV());
+						writer.Flush();
+						writer.Close();
+						writer.Dispose();
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+			dialog.Dispose();
+		}
     }
 }

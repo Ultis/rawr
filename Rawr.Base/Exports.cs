@@ -7,7 +7,7 @@ namespace Rawr
 {
     public static class Exports
     {
-        public static string getLootRankURL(Character character)
+        public static string GetLootRankURL(Character character)
         {
             StringBuilder lootrank = new System.Text.StringBuilder();
             lootrank.Append("http://www.lootrank.com/wow/wr.asp?"); // add URL header
@@ -18,15 +18,13 @@ namespace Rawr
             return lootrank.ToString();
         }
 
-        public static void copyPawnString(Character character)
+        public static void CopyPawnString(Character character)
         {
             StringBuilder pawn = new System.Text.StringBuilder();
             pawn.Append("( Pawn: v1: \"Rawr\": "); // adds pawn header
             pawn.Append(getPawnWeightFilter(character));
             pawn.AppendLine(" )"); // adds pawn footer
             Clipboard.SetText(pawn.ToString());
-            MessageBox.Show("Your weighted stats have been copied to the clipboard as a PAWN addon string", "Pawn String Export", MessageBoxButtons.OK);
-
         }
 
         private static string getLootRankClassAndArmour(Character.CharacterClass className)

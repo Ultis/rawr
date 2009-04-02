@@ -399,6 +399,7 @@ the Threat Scale defined on the Options tab.",
 				StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				stats.PhysicalCrit - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
+			float chanceCritBleed = rawChanceCrit;
 			attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 			
 			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 77; //TODO: Find correct base agi values at 80
@@ -425,9 +426,13 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifference, calculatedStats.CritReduction);
 
 			float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
-			float playerAttackSpeed = 1f / (1f / 1.5f + 1f / attackSpeed); //Merge auto and special attacks
-			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - chanceCrit, calcOpts.TargetAttackSpeed / playerAttackSpeed)) *
-				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - chanceCrit, calcOpts.TargetAttackSpeed / playerAttackSpeed));
+			float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / attackSpeed;
+			float lacerateTicksPerSecond = 1f / 3f;
+			float totalAttacksPerSecond = autoSpecialAttacksPerSecond + lacerateTicksPerSecond;
+			float averageSDAttackCritChance = (chanceCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond) + chanceCritBleed * (lacerateTicksPerSecond / totalAttacksPerSecond));
+			float playerAttackSpeed = 1f / totalAttacksPerSecond;
+			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, calcOpts.TargetAttackSpeed / playerAttackSpeed)) *
+				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, calcOpts.TargetAttackSpeed / playerAttackSpeed));
 			float blockValue = stats.AttackPower * 0.25f;
 			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.ConstantDamageReduction) * calcOpts.TargetDamage));
 			calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
@@ -954,15 +959,15 @@ the Threat Scale defined on the Options tab.",
 						//calcCrush.Name = " Crush ";
 						calcHit.Name = "Hit";
 
-						float crits = 2f + (0.2f * (currentCalculationsBear.TargetLevel - character.Level)) - currentCalculationsBear.CappedCritReduction;
+						float crits = 0.02f + (0.002f * (currentCalculationsBear.TargetLevel - character.Level)) - currentCalculationsBear.CappedCritReduction;
 						//float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.AvoidancePreDR)), 15f) - currentCalculationsBear.BasicStats.CritChanceReduction, 0f) : 0f;
-						float hits = Math.Max(100f - (Math.Max(0f, crits) + /*Math.Max(crushes, 0)*/ + (currentCalculationsBear.AvoidancePreDR)), 0f);
+						float hits = Math.Max(1f - (Math.Max(0f, crits) + /*Math.Max(crushes, 0)*/ + (currentCalculationsBear.AvoidancePreDR)), 0f);
 						
-						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss;
-						calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsBear.Dodge;
-						calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;
+						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss * 100f;
+						calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsBear.Dodge * 100f;
+						calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits * 100f;
 						//calcCrush.OverallPoints = calcCrush.SurvivalPoints = crushes;
-						calcHit.OverallPoints = calcHit.SurvivalPoints = hits;
+						calcHit.OverallPoints = calcHit.SurvivalPoints = hits * 100f;
 					}
 					return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcCrit, /*calcCrush,*/ calcHit };
 

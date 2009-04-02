@@ -40,7 +40,9 @@ namespace Rawr
                 _character = value;
                 comparisonGraph1.Character = _character;
             }
-        }
+		}
+
+		public ComparisonGraph ComparisonGraph { get { return comparisonGraph1; } }
 
         public ItemComparison()
         {
