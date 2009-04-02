@@ -812,7 +812,8 @@ namespace Rawr.Mage
             if (Instant) InterruptProtection = 1;
             if (castingState.IcyVeins) InterruptProtection = 1;
 
-            CastTime = template.CalculateCastTime(baseStats, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime);
+            float channelReduction;
+            CastTime = template.CalculateCastTime(baseStats, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
             float spellPower = RawSpellDamage;
             if (baseStats.SpellPowerFor15SecOnCast_50_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCast_50_45 * 15f / (45f + CastTime / CastProcs / 0.5f);
@@ -834,6 +835,7 @@ namespace Rawr.Mage
                 DamagePerSecond = AverageDamage / CastTime;
                 ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
             }
+            CastTime *= (1 - channelReduction);
             CostPerSecond = CalculateCost(mageTalents, round) / CastTime;
 
             /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
@@ -1133,7 +1135,7 @@ namespace Rawr.Mage
                 return 1 - (float)Math.Pow(1 - procChance, buffDuration / triggerInterval);
         }
 
-        public float CalculateCastTime(Stats baseStats, CalculationOptionsMage calculationOptions, float castingSpeed, float spellHasteRating, float interruptProtection, float critRate, bool pom, float baseCastTime)
+        public float CalculateCastTime(Stats baseStats, CalculationOptionsMage calculationOptions, float castingSpeed, float spellHasteRating, float interruptProtection, float critRate, bool pom, float baseCastTime, out float channelReduction)
         {
             // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
             float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
@@ -1147,6 +1149,7 @@ namespace Rawr.Mage
             float castTime = baseCastTime / castingSpeed + calculationOptions.Latency;
             castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + calculationOptions.Latency) * maxPushback * InterruptFactor;
             if (castTime < globalCooldown + calculationOptions.Latency) castTime = globalCooldown + calculationOptions.Latency;
+            channelReduction = 0.0f;
 
             // Quagmirran
             if (baseStats.SpellHasteFor6SecOnHit_10_45 > 0 && Ticks > 0)
@@ -1257,7 +1260,7 @@ namespace Rawr.Mage
                     tickFactor += InterruptFactor * castTime / Ticks * (i + 1) / Ticks;
                 }
                 tickFactor += InterruptFactor * (Ticks - maxLostTicks) * castTime / Ticks * maxLostTicks / Ticks;
-                castTime *= (1 - tickFactor);
+                channelReduction = tickFactor;
             }
 
             return castTime;

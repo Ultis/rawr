@@ -70,6 +70,10 @@ namespace Rawr.Mage
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
+            xml = xml.Replace("ArcaneBlast00", "ArcaneBlast0");
+            xml = xml.Replace("ArcaneBlast11", "ArcaneBlast1");
+            xml = xml.Replace("ArcaneBlast22", "ArcaneBlast2");
+            xml = xml.Replace("ArcaneBlast33", "ArcaneBlast3");
             System.Xml.Serialization.XmlSerializer serializer =
                 new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMage));
             System.IO.StringReader reader = new System.IO.StringReader(xml);
