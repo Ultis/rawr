@@ -192,33 +192,35 @@ namespace Rawr.Enhance
             }
             buffvalue = (buffs.SpellPower).ToString("F0", CultureInfo.InvariantCulture);
             sb.AppendLine("spellpower_buff                 " + buffvalue + "/280");
-            buffvalue = (buffs.SpellHit * 100).ToString("F1", CultureInfo.InvariantCulture);
+            float spellhit = buffs.SpellHit - (character.Race == Character.CharacterRace.Draenei ? 0.01f : 0f);
+            buffvalue = (spellhit * 100).ToString("F1", CultureInfo.InvariantCulture);
             sb.AppendLine("spell_hit_chance_debuff         " + buffvalue + "/3.0");
             buffvalue = (buffs.BonusDamageMultiplier * 100).ToString("F1", CultureInfo.InvariantCulture);
             sb.AppendLine("percentage_damage_increase      " + buffvalue + "/3.0");
             if (buffs.BonusAgilityMultiplier == .1f && buffs.BonusStaminaMultiplier == .1f && buffs.BonusStrengthMultiplier == .1f &&
                 buffs.BonusIntellectMultiplier == .1f && buffs.BonusSpiritMultiplier == .1f)
-                sb.AppendLine("stat_multiplier             10.0/10.0");
+                sb.AppendLine("stat_multiplier                 10.0/10.0");
             else
-                sb.AppendLine("stat_multiplier             0.0/10.0");
+                sb.AppendLine("stat_multiplier                 0.0/10.0");
+ /*
             if (buffs.Stamina == 37f)
-                sb.AppendLine("stat_add_buff               37/52");
+                sb.AppendLine("stat_add_buff                   37/52");
             else if (buffs.Stamina == 51f)
-                sb.AppendLine("stat_add_buff               51/52");
+                sb.AppendLine("stat_add_buff                   51/52");
             else
-                sb.AppendLine("stat_add_buff               0/52");
-            if (buffs.Agility == buffs.Strength)
+                sb.AppendLine("stat_add_buff                   0/52");
+            if (buffs.Agility == buffs.Strength && buffs.Strength > 0)
             {
-                buffvalue = (buffs.Strength - buffs.Stamina).ToString("F0", CultureInfo.InvariantCulture);
-                sb.AppendLine("agi_and_strength_buff       " + buffvalue + "/178");
+                buffvalue = buffs.Strength.ToString("F0", CultureInfo.InvariantCulture);
+                sb.AppendLine("agi_and_strength_buff           " + buffvalue + "/178");
             }
             else
-                sb.AppendLine("agi_and_strength_buff       0/178");
+                sb.AppendLine("agi_and_strength_buff           0/178");
             if (buffs.Intellect == 60f)
-                sb.AppendLine("intellect_buff              60/60");
+                sb.AppendLine("intellect_buff                  60/60");
             else
-                sb.AppendLine("intellect_buff              0/60");
-            
+                sb.AppendLine("intellect_buff                  0/60");
+*/            
             _configText = sb.ToString();
         }
 
