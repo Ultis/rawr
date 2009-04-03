@@ -1893,17 +1893,48 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 			sb.AppendLine();
 			foreach (ComparisonCalculationBase comparisonCalculation in itemComparison1.ComparisonGraph.ItemCalculations)
 			{
-				ItemInstance item = comparisonCalculation.ItemInstance;
-				if (item != null)
+				ItemInstance itemInstance = comparisonCalculation.ItemInstance;
+				Item item = comparisonCalculation.Item;
+				if (itemInstance != null)
 				{
 					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
-						item.Item.Name.Replace(',', ';'),
+						itemInstance.Item.Name.Replace(',', ';'),
+						itemInstance.Slot,
+						itemInstance.Gem1 != null ? itemInstance.Gem1.Name : null,
+						itemInstance.Gem2 != null ? itemInstance.Gem2.Name : null,
+						itemInstance.Gem3 != null ? itemInstance.Gem3.Name : null,
+						itemInstance.Enchant.Name,
+						itemInstance.Item.LocationInfo.Description.Split(',')[0],
+						comparisonCalculation.OverallPoints);
+					foreach (float subPoint in comparisonCalculation.SubPoints)
+						sb.AppendFormat(",{0}", subPoint);
+					sb.AppendLine();
+				}
+				else if (item != null)
+				{
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+						item.Name.Replace(',', ';'),
 						item.Slot,
-						item.Gem1 != null ? item.Gem1.Name : null,
-						item.Gem2 != null ? item.Gem2.Name : null,
-						item.Gem3 != null ? item.Gem3.Name : null,
-						item.Enchant.Name,
-						item.Item.LocationInfo.Description.Split(',')[0],
+						null,
+						null,
+						null,
+						null,
+						item.LocationInfo.Description.Split(',')[0],
+						comparisonCalculation.OverallPoints);
+					foreach (float subPoint in comparisonCalculation.SubPoints)
+						sb.AppendFormat(",{0}", subPoint);
+					sb.AppendLine();
+				}
+				else
+				{
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+						comparisonCalculation.Name.Replace(',', ';'),
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
 						comparisonCalculation.OverallPoints);
 					foreach (float subPoint in comparisonCalculation.SubPoints)
 						sb.AppendFormat(",{0}", subPoint);

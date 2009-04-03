@@ -55,7 +55,8 @@ namespace Rawr
 		private void DownloadDidYouKnows(object ignored)
 		{
 			string dyk = _webRequestWrapper.GetRandomDidYouKnow();
-			this.Invoke(new WaitCallback(DisplayDidYouKnow), dyk);
+			if (this.Visible)
+				this.Invoke(new WaitCallback(DisplayDidYouKnow), dyk);
 		}
 
 		private void DisplayDidYouKnow(object dyk)
@@ -66,7 +67,8 @@ namespace Rawr
 		private void DownloadKnownIssues(object ignored)
 		{
 			string ki = _webRequestWrapper.GetKnownIssues();
-			this.Invoke(new WaitCallback(DisplayKnownIssues), ki);
+			if (this.Visible)
+				this.Invoke(new WaitCallback(DisplayKnownIssues), ki);
 		}
 
 		private void DisplayKnownIssues(object ki)
