@@ -214,7 +214,7 @@ namespace Rawr
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {
-                    return ((model.HasRelevantStats(enchant.Stats) &&
+                    return ((model.IsEnchantRelevant(enchant) &&
                         (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
                         && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
                         || enchant.Id == 0;
