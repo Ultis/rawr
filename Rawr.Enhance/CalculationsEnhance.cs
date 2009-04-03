@@ -26,8 +26,8 @@ namespace Rawr
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true)); // Enable Rare gems by default
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    // Enable Rare gems by default
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
                     _defaultGemmingTemplates.AddRange(gemming.addJewelerTemplates(relentless, false));
@@ -372,52 +372,6 @@ namespace Rawr
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
 
-            if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
-            {
-                if (character.MainHandEnchant != null)
-                {
-                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
-                    float yellowChanceHit = (1f - chanceYellowMiss - chanceDodge);
-                    float yellowAttacksPerSecond = getYellowAttacksPerSecond(character, yellowChanceHit, baseHastedMHSpeed, true);
-                    if (character.MainHandEnchant.Id == 2673) // Mongoose Enchant
-                    {
-                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
-                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
-                        baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
-                    }
-                    if (character.MainHandEnchant.Id == 3789) // Berserker Enchant
-                    {
-                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
-                    }
-                }
-                if (character.OffHandEnchant != null)
-                {
-                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedOHSpeed;
-                    float yellowChanceHit = (1f - chanceYellowMiss - chanceDodge);
-                    float yellowAttacksPerSecond = getYellowAttacksPerSecond(character, yellowChanceHit, baseHastedOHSpeed, false);
-                    if (character.OffHandEnchant.Id == 2673)  // Mongoose Enchant
-                    {
-                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
-                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
-                        baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
-                    }
-                    if (character.OffHandEnchant.Id == 3789) // Berserker Enchant
-                    {
-                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
-                    }
-                }
-            }
-
             //XXX: Only MH WF for now
             float chanceToProcWFPerHit = .2f + (calcOpts.GlyphWF ? .02f : 0f);
             float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
@@ -432,10 +386,11 @@ namespace Rawr
             float bloodlustHaste = 1 + (calcOpts.BloodlustUptime * stats.Bloodlust);
             float hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
             float hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
-            float hitsPerSMHSS = (1f - chanceYellowMiss) /stormstrikeSpeed;
+            float hitsPerSMHSS = (1f - chanceYellowMiss) / stormstrikeSpeed;
             float hitsPerSOHSS = (hitsPerSMHSS - chanceYellowMiss) / stormstrikeSpeed; //OH only swings if MH connects
             float hitsPerSLL = (1f - chanceYellowMiss) / 6f;
-            float swingsPerSMHMelee, swingsPerSOHMelee;
+            float swingsPerSMHMelee = 0f;
+            float swingsPerSOHMelee = 0f;
             float wfProcsPerSecond = 0f;
             float mwProcsPerSecond = 0f;
             float secondsToFiveStack = 10f;
@@ -463,9 +418,9 @@ namespace Rawr
                 float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
                 flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);
 
-                hitsPerSMH = swingsPerSMHMelee * (1f - chanceWhiteMiss) + hitsPerSWF + hitsPerSMHSS;
-                hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss) + hitsPerSOHSS + hitsPerSLL;
-                mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH + (mwPPM / (60f / unhastedOHSpeed))  * hitsPerSOH;
+                hitsPerSMH = swingsPerSMHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSWF + hitsPerSMHSS;
+                hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSOHSS + hitsPerSLL;
+                mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH + (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
                 secondsToFiveStack /* oh but i want it now! */ = 5 / mwProcsPerSecond;
 
                 float couldCritSpellsPerS = (earthShocksPerS + 1 / secondsToFiveStack) * (1f - chanceSpellMiss);
@@ -475,6 +430,50 @@ namespace Rawr
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
             attackPower += attackPower * unleashedRage * urUptime;
+            float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + hitsPerSOHSS;
+                    
+            if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
+            {
+                if (character.MainHandEnchant != null)
+                {
+                    float whiteAttacksPerSecond = swingsPerSMHMelee * (1f - chanceWhiteMiss - chanceDodge);
+                    if (character.MainHandEnchant.Id == 2673) // Mongoose Enchant
+                    {
+                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
+                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
+                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
+                        baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
+                    }
+                    if (character.MainHandEnchant.Id == 3789) // Berserker Enchant
+                    {
+                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                    }
+                }
+                if (character.OffHandEnchant != null)
+                {
+                    float whiteAttacksPerSecond = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge);
+                    if (character.OffHandEnchant.Id == 2673)  // Mongoose Enchant
+                    {
+                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
+                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
+                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
+                        baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
+                    }
+                    if (character.OffHandEnchant.Id == 3789) // Berserker Enchant
+                    {
+                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                    }
+                }
+            }
+           
             #endregion
 
             #region Individual DPS
@@ -628,31 +627,6 @@ namespace Rawr
             calculatedStats.SpiritWolf = dpsDogs;
 
 			return calculatedStats;
-        }
-       
-        private float getYellowAttacksPerSecond(Character character, float yellowHitChance, float weaponSpeed, bool mainhand)
-        {
-            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            float yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24; // Stormstrike attacks
-            float WFProcChance = 1f / 6f;
-            if (calcOpts.GlyphWF)
-            {
-                // need to modify WFProcChance if WF Glyph
-                WFProcChance += .02f;
-            }
-            // now add WF yellow attacks
-            if (calcOpts.MainhandImbue == "windfury" && mainhand)
-            {
-                if (calcOpts.OffhandImbue == "windfury")
-                {
-                    // TODO wf on both need to modify chances
-                }
-                else
-                    yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed / WFProcChance);
-            }
-            else if (calcOpts.OffhandImbue =="windfury" & !mainhand)
-                yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed / WFProcChance);
-            return yellowAttacksPerSecond;
         }
         #endregion 
 
