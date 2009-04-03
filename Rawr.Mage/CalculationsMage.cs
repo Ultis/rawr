@@ -825,11 +825,15 @@ namespace Rawr.Mage
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect + statsGearEnchantsBuffs.Mana);
             statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
 
+            if (character.Race == Character.CharacterRace.BloodElf)
+            {
+                statsTotal.Mp5 += 5 * 0.06f * statsTotal.Mana / 120;
+            }
+
             float magicAbsorption = 0.5f * calculationOptions.PlayerLevel * character.MageTalents.MagicAbsorption;
             int frostWarding = character.MageTalents.FrostWarding;
             statsTotal.AllResist += magicAbsorption;
 
-            // TODO do similar for Mage Armor and Arcane Shielding
             if (statsTotal.MageIceArmor > 0)
             {
                 statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
