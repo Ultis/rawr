@@ -1885,7 +1885,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 
 		private string GetChartDataCSV()
 		{
-			StringBuilder sb = new StringBuilder("Item Name,Slot,Gem1,Gem2,Gem3,Enchant,Source,Overall");
+			StringBuilder sb = new StringBuilder("Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,Overall");
 			foreach (string subPointName in Calculations.SubPointNameColors.Keys)
 			{
 				sb.AppendFormat(",{0}", subPointName);
@@ -1897,8 +1897,9 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 				Item item = comparisonCalculation.Item;
 				if (itemInstance != null)
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
 						itemInstance.Item.Name.Replace(',', ';'),
+						comparisonCalculation.Equipped,
 						itemInstance.Slot,
 						itemInstance.Gem1 != null ? itemInstance.Gem1.Name : null,
 						itemInstance.Gem2 != null ? itemInstance.Gem2.Name : null,
@@ -1912,8 +1913,9 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 				}
 				else if (item != null)
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
 						item.Name.Replace(',', ';'),
+						comparisonCalculation.Equipped,
 						item.Slot,
 						null,
 						null,
@@ -1927,8 +1929,9 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 				}
 				else
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
 						comparisonCalculation.Name.Replace(',', ';'),
+						comparisonCalculation.Equipped,
 						null,
 						null,
 						null,
