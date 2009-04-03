@@ -271,7 +271,6 @@ namespace Rawr
         HolyLightPercentManaReduction,
         HolyLightCrit,
         HolyShockCrit,
-        GreatnessProc,
         Heal1Min,
         SpellsManaReduction,
         #endregion
@@ -395,6 +394,7 @@ namespace Rawr
         NatureResistanceBuff,
         ShadowResistanceBuff,
         MovementSpeed,
+        GreatnessProc,
         ManacostReduceWithin15OnUse1Min,
         #region Added by Rawr.*Priest for Glyphs
         GLYPH_FlashHeal,
@@ -2053,8 +2053,8 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float GreatnessProc
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.GreatnessProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.GreatnessProc] = value; }
+            get { return _rawNoStackData[(int)NonStackingStat.GreatnessProc]; }
+            set { _rawNoStackData[(int)NonStackingStat.GreatnessProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
