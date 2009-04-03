@@ -914,7 +914,8 @@ namespace Rawr.Optimizer
                     items = new List<Item>(itemById.Values).ToArray();
                 }
 
-                OptimizerCharacter __character = new OptimizerCharacter(_character, OptimizeFood, OptimizeElixirs);
+                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, OptimizeFood, OptimizeElixirs);
+                OptimizerCharacter __character;
                 for (int i = 0; i < items.Length; i++)
                 {
                     Item item = items[i];
@@ -942,7 +943,7 @@ namespace Rawr.Optimizer
                             {
                                 lockedSlot = Character.CharacterSlot.Trinket2;
                             }
-                            __character = BuildSingleItemSwapIndividual(__character, (int)lockedSlot, lockedItems[0]);
+                            __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
                             // instead of just putting in the first gemming on the list select the best one
                             float best = -10000000f;
                             CharacterCalculationsBase bestCalculations;
@@ -1031,7 +1032,8 @@ namespace Rawr.Optimizer
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetOptimizationValue(_character, baseCalculations);
 
-                OptimizerCharacter __character = new OptimizerCharacter(_character, OptimizeFood, OptimizeElixirs);
+                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, OptimizeFood, OptimizeElixirs);
+                OptimizerCharacter __character;
                 ItemInstance item = upgrade;
                 foreach (Character.CharacterSlot slot in slots)
                 {
@@ -1049,7 +1051,7 @@ namespace Rawr.Optimizer
                         }
                         List<object> savedItems = slotItems[(int)lockedSlot];
                         slotItems[(int)lockedSlot] = lockedItems;
-                        __character = BuildSingleItemSwapIndividual(__character, (int)lockedSlot, upgrade);
+                        __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, upgrade);
                         float best;
                         CharacterCalculationsBase bestCalculations;
                         Character bestCharacter;
