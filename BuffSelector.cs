@@ -238,6 +238,7 @@ namespace Rawr
 				return;
 			}
 			LoadBuffsFromCharacter();
+			UpdateEnabledStates();
 		}
 
 
