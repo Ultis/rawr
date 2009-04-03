@@ -252,7 +252,11 @@ namespace Rawr
 
         private void copyDataToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			Clipboard.SetText(GetChartDataCSV(), TextDataFormat.Text);
+			try
+			{
+				Clipboard.SetText(GetChartDataCSV(), TextDataFormat.Text);
+			}
+			catch { }
         }
 
 		private void exportToImageToolStripMenuItem_Click(object sender, EventArgs e)

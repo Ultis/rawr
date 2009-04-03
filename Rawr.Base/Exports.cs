@@ -24,7 +24,11 @@ namespace Rawr
             pawn.Append("( Pawn: v1: \"Rawr\": "); // adds pawn header
             pawn.Append(getPawnWeightFilter(character));
             pawn.AppendLine(" )"); // adds pawn footer
-            Clipboard.SetText(pawn.ToString());
+			try
+			{
+				Clipboard.SetText(pawn.ToString());
+			}
+			catch { }
         }
 
         private static string getLootRankClassAndArmour(Character.CharacterClass className)

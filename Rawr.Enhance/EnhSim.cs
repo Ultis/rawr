@@ -151,7 +151,11 @@ namespace Rawr.Enhance
 
         public void copyToClipboard()
         {
-            Clipboard.SetText(_configText);
+			try
+			{
+				Clipboard.SetText(_configText);
+			}
+			catch { }
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\n" + 
                 "Use the Import Clipboard Config option in EnhSimGUI to use it\n" +
                 "Or paste the config data into your config file in a decent text editor!",

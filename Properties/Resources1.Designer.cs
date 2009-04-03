@@ -346,5 +346,33 @@ namespace Rawr.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap RawrStart {
+            get {
+                object obj = ResourceManager.GetObject("RawrStart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap RawrStart_1 {
+            get {
+                object obj = ResourceManager.GetObject("RawrStart.1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap RawrStart_2 {
+            get {
+                object obj = ResourceManager.GetObject("RawrStart.2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap RawrStart_3 {
+            get {
+                object obj = ResourceManager.GetObject("RawrStart.3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

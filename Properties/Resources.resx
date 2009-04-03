@@ -118,44 +118,89 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Rawr_Splash" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Rawr.Splash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DiamondOutline" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DiamondOutline.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Rawr_Splash_ModelBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Rawr.Splash.ModelBackground.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Diamond" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Diamond.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Diamond3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Diamond3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Diamond4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Diamond4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Diamond2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Diamond2.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="across_right_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\across-right-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="RawrIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RawrIcon.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_over_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon-over-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="down_2_right_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-right-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_over_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon-over-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="RawrStart.2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RawrStart.2.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_1_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-1-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_2_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="across_left_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\across-left-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Diamond4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Diamond4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RawrStart.1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RawrStart.1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_left_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-left-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_4_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-4-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_2_right_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-right-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_1_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-1-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Rawr_Splash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Rawr.Splash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_left_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-left-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_over_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon-over-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="across_left_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\across-left-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="down_2_left_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-left-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="across_left_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\across-left-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Rawr_Splash_ModelBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Rawr.Splash.ModelBackground.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="across_right_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\across-right-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_right_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-right-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Diamond3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Diamond3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DiamondOutline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DiamondOutline.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_2_left_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-left-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Diamond2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Diamond2.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_over_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon-over-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_right_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-right-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_1_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-1-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RawrStart.3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RawrStart.3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="across_left_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\across-left-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -163,82 +208,49 @@
   <data name="across_right_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\across-right-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="across_right_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\across-right-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="across_right_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\across-right-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_1_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-1-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_1_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-1-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_1_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-1-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Diamond" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Diamond.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="down_2_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\down-2-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="down_2_left_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-left-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_left_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-left-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_left_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-left-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_right_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-right-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_right_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-right-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_right_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-right-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_2_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-2-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_3_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-3-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_3_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-3-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_3_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-3-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="down_4_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-4-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="down_right_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-right-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="down_4_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\down-4-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icon_over_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon-over-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_3_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-3-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="down_4_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\down-4-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="down_left_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-left-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="across_left_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\across-left-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_3_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-3-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="down_2_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="down_left_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\down-left-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="down_left_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-left-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="down_2_right_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-right-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="down_right_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-right-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="down_2_left_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-2-left-green.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="down_right_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-right-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="down_3_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down-3-grey.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="down_right_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\down-right-yellow.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="RawrStart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RawrStart.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

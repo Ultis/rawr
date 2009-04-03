@@ -622,6 +622,17 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 			StatusMessaging.Ready = true;
 			_timerCheckForUpdates = new System.Threading.Timer(new System.Threading.TimerCallback(_timerCheckForUpdates_Callback));
 			_timerCheckForUpdates.Change(3000, 1000 * 60 * 60 * 8); //Check for updates 3 sec after the form loads, and then again every 8 hours
+
+			if (Properties.Recent.Default.ShowStartPage)
+				ShowStartPage();
+		}
+
+		private void ShowStartPage()
+		{
+			FormStart formStart = new FormStart(this);
+			formStart.Left = this.Left + this.Width / 2 - formStart.Width / 2;
+			formStart.Top = this.Top + this.Height / 2 - formStart.Height / 2;
+			formStart.Show(this);
 		}
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
@@ -691,15 +702,29 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 		#region File Commands
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			NewCharacter();
+		}
+
+		public bool NewCharacter()
+		{
+			bool ret = false;
 			if (PromptToSaveBeforeClosing())
 			{
                 _characterPath = null;
 				LoadCharacterIntoForm(new Character());
+				ret = true;
 			}
+			return ret;
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			OpenCharacter();
+		}
+
+		public bool OpenCharacter()
+		{
+			bool ret = false;
 			if (PromptToSaveBeforeClosing())
 			{
 				OpenFileDialog dialog = new OpenFileDialog();
@@ -709,9 +734,11 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 				if (dialog.ShowDialog(this) == DialogResult.OK)
 				{
 					LoadSavedCharacter(dialog.FileName);
+					ret = true;
 				}
-                dialog.Dispose();
+				dialog.Dispose();
 			}
+			return ret;
 		}
 
         private void LoadCharacterIntoForm(Character character)
@@ -765,7 +792,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
             }
         }
 
-        private void LoadSavedCharacter(string path)
+        public void LoadSavedCharacter(string path)
         {
             StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
@@ -812,21 +839,28 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 
 		private void loadFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			LoadCharacterFromArmory();
+		}
+
+		public bool LoadCharacterFromArmory()
+		{
+			bool ret = false;
 			if (PromptToSaveBeforeClosing())
 			{
 				FormEnterNameRealm form = new FormEnterNameRealm();
-                form.Icon = this.Icon;
+				form.Icon = this.Icon;
 				if (form.ShowDialog(this) == DialogResult.OK)
 				{
 					StartProcessing();
-                    BackgroundWorker bw = new BackgroundWorker();
-                    bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
-                    bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterComplete);
-                    bw.RunWorkerAsync(new string[] {form.CharacterName, form.Realm, form.ArmoryRegion.ToString()});
-                    //LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
+					BackgroundWorker bw = new BackgroundWorker();
+					bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
+					bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterComplete);
+					bw.RunWorkerAsync(new string[] { form.CharacterName, form.Realm, form.ArmoryRegion.ToString() });
+					ret = true;
 				}
-                form.Dispose();
+				form.Dispose();
 			}
+			return ret;
 		}
 
         void bw_ArmoryGetCharacter(object sender, DoWorkEventArgs e)
@@ -1040,7 +1074,11 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 
             sb.AppendLine(Calculations.GetCharacterStatsString(Character));
 
-			Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
+			try
+			{
+				Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
+			}
+			catch { }
 			if (Type.GetType("Mono.Runtime") != null)
 			{
 				//Clipboard isn't working
@@ -1760,16 +1798,6 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
             return character;
         }
 
-		private void rawrWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Help.ShowHelp(null, "http://rawr.codeplex.com/");
-		}
-
-		private void donateToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Help.ShowHelp(null, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
-		}
-
         private void checkBoxWristBlacksmithingSocket_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCharacter && _character != null)
@@ -1813,7 +1841,13 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=BatchTools"); }
 
 		private void itemFilteringToolStripMenuItem_Click(object sender, EventArgs e)
-        { Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering"); }
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering"); }
+
+		private void rawrWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://rawr.codeplex.com/"); }
+
+		private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163"); }
 
         private void upgradeListToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1882,7 +1916,11 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 
 		private void copyDataToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Clipboard.SetText(GetChartDataCSV(), TextDataFormat.Text);
+			try
+			{
+				Clipboard.SetText(GetChartDataCSV(), TextDataFormat.Text);
+			}
+			catch { }
 		}
 
 		private void exportToImageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1934,5 +1972,10 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 		}
 
         #endregion
+
+		private void startPageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ShowStartPage();
+		}
     }
 }

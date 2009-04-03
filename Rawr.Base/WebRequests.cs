@@ -276,6 +276,36 @@ namespace Rawr
 			return html;
 		}
 
+		public string GetRandomDidYouKnow()
+		{
+			string html = DownloadText("http://rawr.codeplex.com/Wiki/View.aspx?title=DidYouKnow");
+			if (html == null || !html.Contains("-------<br />") || !html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Astrylian\">Astrylian</a>")) return string.Empty;
+			html = html.Substring(html.IndexOf("-------<br />") + 13);
+			if (!html.Contains("<br />-------")) return string.Empty;
+			html = html.Substring(0, html.IndexOf("<br />-------"));
+			html = html.Replace("<br />", "|");
+			string[] dyks = html.Split('|');
+			Random r = new Random();
+			List<string> randomDyks = new List<string>();
+			while (randomDyks.Count < 3 && randomDyks.Count < dyks.Length)
+			{
+				string dyk = dyks[r.Next(dyks.Length)];
+				if (!randomDyks.Contains(dyk)) randomDyks.Add(dyk);
+			}
+			return string.Join("\r\n\r\n", randomDyks.ToArray());
+		}
+
+		public string GetKnownIssues()
+		{
+			string html = DownloadText("http://rawr.codeplex.com/Wiki/View.aspx?title=KnownIssues");
+			if (html == null || !html.Contains("-------<br />") || !html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Astrylian\">Astrylian</a>")) return string.Empty;
+			html = html.Substring(html.IndexOf("-------<br />") + 13);
+			if (!html.Contains("<br />-------")) return string.Empty;
+			html = html.Substring(0, html.IndexOf("<br />-------"));
+			html = html.Replace("<br />", "\r\n");
+			return html;
+		}
+
 		public string DownloadClassTalentTree(Character.CharacterClass characterClass)
 		{
 			//http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js

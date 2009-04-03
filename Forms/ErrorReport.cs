@@ -65,7 +65,11 @@ namespace Rawr.Forms
                     temp = temp.InnerException;
                 }
             }
-            Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
+			try
+			{
+				Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
+			}
+			catch { }
             MessageBox.Show("Information has been copied to the clipboard.", "Copy to Clipboard",MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
     }

@@ -82,5 +82,17 @@ namespace Rawr.Properties {
                 this["WindowLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowStartPage {
+            get {
+                return ((bool)(this["ShowStartPage"]));
+            }
+            set {
+                this["ShowStartPage"] = value;
+            }
+        }
     }
 }
