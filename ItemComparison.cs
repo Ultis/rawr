@@ -115,18 +115,21 @@ namespace Rawr
 					List<Item> relevantItems = Character.GetRelevantItems(slot);
 					_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
 					_calculationCount = 0;
-					_autoResetEvent = new AutoResetEvent(!useMultithreading);
-					//DateTime before = DateTime.Now;
-					foreach (Item item in relevantItems)
-					{
-						if (useMultithreading)
-							ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
-						else
-							GetItemCalculations(item);
-					}
-					//Wait for all items to be processed
-					_autoResetEvent.WaitOne();
-					//Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
+                    if (relevantItems.Count > 0)
+                    {
+                        _autoResetEvent = new AutoResetEvent(!useMultithreading);
+                        //DateTime before = DateTime.Now;
+                        foreach (Item item in relevantItems)
+                        {
+                            if (useMultithreading)
+                                ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+                            else
+                                GetItemCalculations(item);
+                        }
+                        //Wait for all items to be processed
+                        _autoResetEvent.WaitOne();
+                        //Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
+                    }
                 }
             }
 
