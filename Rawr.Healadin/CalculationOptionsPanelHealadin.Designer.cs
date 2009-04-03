@@ -34,14 +34,11 @@
             this.chkLoHSelf = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.trkReplenishment = new System.Windows.Forms.TrackBar();
             this.nudDivinePlea = new System.Windows.Forms.NumericUpDown();
             this.lblDivinePlea = new System.Windows.Forms.Label();
-            this.nudSpiritual = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.trkActivity = new System.Windows.Forms.TrackBar();
@@ -75,7 +72,6 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDivinePlea)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSpiritual)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLEff)).BeginInit();
@@ -129,14 +125,11 @@
             this.groupBox2.Controls.Add(this.chkLoHSelf);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.lblReplenishment);
             this.groupBox2.Controls.Add(this.trkReplenishment);
             this.groupBox2.Controls.Add(this.nudDivinePlea);
             this.groupBox2.Controls.Add(this.lblDivinePlea);
-            this.groupBox2.Controls.Add(this.nudSpiritual);
-            this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
             this.groupBox2.Location = new System.Drawing.Point(3, 240);
@@ -149,7 +142,7 @@
             // chkLoHSelf
             // 
             this.chkLoHSelf.AutoSize = true;
-            this.chkLoHSelf.Location = new System.Drawing.Point(151, 98);
+            this.chkLoHSelf.Location = new System.Drawing.Point(151, 58);
             this.chkLoHSelf.Name = "chkLoHSelf";
             this.chkLoHSelf.Size = new System.Drawing.Size(106, 17);
             this.chkLoHSelf.TabIndex = 31;
@@ -160,7 +153,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(224, 74);
+            this.label11.Location = new System.Drawing.Point(224, 34);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(41, 13);
             this.label11.TabIndex = 30;
@@ -174,15 +167,6 @@
             this.label10.Size = new System.Drawing.Size(33, 13);
             this.label10.TabIndex = 29;
             this.label10.Text = "mana";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(252, 35);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(33, 13);
-            this.label8.TabIndex = 28;
-            this.label8.Text = "mana";
             // 
             // label2
             // 
@@ -223,7 +207,7 @@
             0,
             0,
             65536});
-            this.nudDivinePlea.Location = new System.Drawing.Point(151, 72);
+            this.nudDivinePlea.Location = new System.Drawing.Point(151, 32);
             this.nudDivinePlea.Maximum = new decimal(new int[] {
             20,
             0,
@@ -247,43 +231,11 @@
             // lblDivinePlea
             // 
             this.lblDivinePlea.AutoSize = true;
-            this.lblDivinePlea.Location = new System.Drawing.Point(148, 56);
+            this.lblDivinePlea.Location = new System.Drawing.Point(148, 16);
             this.lblDivinePlea.Name = "lblDivinePlea";
             this.lblDivinePlea.Size = new System.Drawing.Size(64, 13);
             this.lblDivinePlea.TabIndex = 9;
             this.lblDivinePlea.Text = "Divine Plea:";
-            // 
-            // nudSpiritual
-            // 
-            this.nudSpiritual.Increment = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.nudSpiritual.Location = new System.Drawing.Point(151, 33);
-            this.nudSpiritual.Maximum = new decimal(new int[] {
-            20000,
-            0,
-            0,
-            0});
-            this.nudSpiritual.Name = "nudSpiritual";
-            this.nudSpiritual.Size = new System.Drawing.Size(95, 20);
-            this.nudSpiritual.TabIndex = 8;
-            this.nudSpiritual.Value = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-            this.nudSpiritual.ValueChanged += new System.EventHandler(this.nudSpiritual_ValueChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(148, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Spiritual Attunement:";
             // 
             // label4
             // 
@@ -642,7 +594,6 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDivinePlea)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSpiritual)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -667,8 +618,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TrackBar trkActivity;
         private System.Windows.Forms.Label lblActivity;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown nudSpiritual;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown nudDivinePlea;
         private System.Windows.Forms.Label lblDivinePlea;
@@ -687,7 +636,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox chkGlyphDivinity;
         private System.Windows.Forms.CheckBox chkGlyphSealOfLight;

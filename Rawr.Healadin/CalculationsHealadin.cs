@@ -43,9 +43,9 @@ namespace Rawr.Healadin
 						RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
 						
 					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-						RedId = brilliant[3], YellowId = brilliant[3], BlueId = brilliant[3], PrismaticId = brilliant[3], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
 						RedId = brilliant[3], YellowId = brilliant[1], BlueId = brilliant[3], PrismaticId = brilliant[1], MetaId = insightful },
+					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
+						RedId = brilliant[3], YellowId = brilliant[3], BlueId = brilliant[3], PrismaticId = brilliant[3], MetaId = insightful },
 				};
             }
         }
@@ -235,7 +235,6 @@ namespace Rawr.Healadin
             calc.ManaMp5 = fight_length * stats.Mp5 / 5;
             calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
             calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fight_length * calcOpts.Replenishment;
-            calc.ManaSpiritual = calcOpts.Spiritual;
             if (stats.ManaRestoreOnCast_10_45 > 0)
             {
                 calc.ManaOther += (float)Math.Ceiling(fight_length / 60f - .25f) * stats.ManaRestoreOnCast_10_45;
@@ -259,7 +258,7 @@ namespace Rawr.Healadin
 				calc.ManaOther += (divine_pleas * 15f / fight_length) * greatnessMana * .25f * greatnessProcs; // Divine Plea
 			}
             calc.TotalMana = calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion + 
-                calc.ManaReplenishment + calc.ManaSpiritual + calc.ManaLayOnHands;
+                calc.ManaReplenishment + calc.ManaLayOnHands;
 
             float benediction = 1f - talents.Benediction * .02f;
             float ied = stats.ManaRestoreOnCast_5_15 * .035f;
@@ -461,7 +460,6 @@ namespace Rawr.Healadin
                 ComparisonCalculationHealadin Replenishment = new ComparisonCalculationHealadin("Replenishment");
                 ComparisonCalculationHealadin ArcaneTorrent = new ComparisonCalculationHealadin("Arcane Torrent");
                 ComparisonCalculationHealadin DivinePlea = new ComparisonCalculationHealadin("Divine Plea");
-                ComparisonCalculationHealadin Spiritual = new ComparisonCalculationHealadin("Spiritual Atunement");
                 ComparisonCalculationHealadin LoH = new ComparisonCalculationHealadin("Lay on Hands");
                 ComparisonCalculationHealadin Other = new ComparisonCalculationHealadin("Other");
 
@@ -472,10 +470,9 @@ namespace Rawr.Healadin
                 Replenishment.OverallPoints = Replenishment.ThroughputPoints = calc.ManaReplenishment;
                 ArcaneTorrent.OverallPoints = ArcaneTorrent.ThroughputPoints = calc.ManaArcaneTorrent;
                 DivinePlea.OverallPoints = DivinePlea.ThroughputPoints = calc.ManaDivinePlea;
-                Spiritual.OverallPoints = Spiritual.ThroughputPoints = calc.ManaSpiritual;
                 Other.OverallPoints = Other.ThroughputPoints = calc.ManaOther;
 
-                return new ComparisonCalculationBase[] { Base, Mp5, Potion, Replenishment, LoH, ArcaneTorrent, DivinePlea, Spiritual, Other };
+                return new ComparisonCalculationBase[] { Base, Mp5, Potion, Replenishment, LoH, ArcaneTorrent, DivinePlea, Other };
             }
             else if (chartName == "Mana Usage Breakdown")
             {

@@ -26,7 +26,6 @@ namespace Rawr.Healadin
             cmbLength.Value = (decimal)calcOpts.Length;
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
 
-            nudSpiritual.Value = (decimal)calcOpts.Spiritual;
             nudDivinePlea.Value = (decimal)calcOpts.DivinePlea;
             nudGHL.Value = (decimal)calcOpts.GHL_Targets;
 
@@ -120,16 +119,6 @@ namespace Rawr.Healadin
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 lblReplenishment.Text = trkReplenishment.Value + "%";
                 calcOpts.Replenishment = trkReplenishment.Value / 100f;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void nudSpiritual_ValueChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Spiritual = (float)nudSpiritual.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -273,12 +262,22 @@ namespace Rawr.Healadin
 
         private void chkGlyphHolyShock_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.GlyphHolyShock = chkGlyphHolyShock.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
         private void chkGlyphBeaconOfLight_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.GlyphBeaconOfLight = chkGlyphBeaconOfLight.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
     }
@@ -299,7 +298,6 @@ namespace Rawr.Healadin
 		public float Length = 6;
 		public float ManaAmt = 4300;
 		public float Activity = .85f;
-		public float Spiritual = 3600;
         public float Replenishment = .9f;
         public float DivinePlea = 1.25f;
         public float BoLUp = 1f;
@@ -325,7 +323,6 @@ namespace Rawr.Healadin
             clone.Length = Length;
             clone.ManaAmt = ManaAmt;
             clone.Activity = Activity;
-            clone.Spiritual = Spiritual;
             clone.Replenishment = Replenishment;
             clone.DivinePlea = DivinePlea;
             clone.BoLUp = BoLUp;

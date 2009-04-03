@@ -93,7 +93,6 @@ namespace Rawr.Healadin
         public float ManaArcaneTorrent { get; set; }
         public float ManaDivinePlea { get; set; }
         public float ManaLayOnHands { get; set; }
-        public float ManaSpiritual { get; set; }
         public float ManaOther { get; set; }
 
         private Stats _basicStats;
