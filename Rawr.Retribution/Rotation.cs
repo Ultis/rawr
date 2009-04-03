@@ -19,7 +19,7 @@ namespace Rawr.Retribution
             public int GetHashCode(Rotation obj)
             {
                 int ret = (obj.T7_4pc ? 512 : 0) + (obj.GlyphConsecrate ? 1024 : 0) + int.Parse((obj.TimeUnder20 * 100).ToString()) * 2048
-                     + int.Parse((obj.SpellGCD * 100).ToString()) * 4096 + int.Parse((obj.Delay * 100).ToString()) * 8192;
+                     + int.Parse((obj.Wait * 100).ToString()) * 4096 + int.Parse((obj.Delay * 100).ToString()) * 8192;
 
                 for (int i = 0; i < obj.Priorities.Length; i++)
                 {
@@ -37,16 +37,16 @@ namespace Rawr.Retribution
         public readonly bool GlyphConsecrate;
         public readonly Ability[] Priorities;
         public readonly float TimeUnder20;
-        public readonly float SpellGCD;
+        public readonly float Wait;
         public readonly float Delay;
 
-        public Rotation(Ability[] Priorities, float TimeUnder20, float SpellGCD, float Delay, bool T7_4pc, bool GlyphConsecrate)
+        public Rotation(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, bool GlyphConsecrate)
         {
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
             this.GlyphConsecrate = GlyphConsecrate;
             this.TimeUnder20 = TimeUnder20;
-            this.SpellGCD = (float)Math.Round(SpellGCD, 2);
+            this.Wait = (float)Math.Round(Wait, 2);
             this.Delay = (float)Math.Round(Delay, 2);
         }
 
@@ -64,7 +64,7 @@ namespace Rawr.Retribution
                 && (GlyphConsecrate == other.GlyphConsecrate)
                 && (TimeUnder20 == other.TimeUnder20)
                 && (Delay == other.Delay)
-                && (SpellGCD == other.SpellGCD);
+                && (Wait == other.Wait);
         }
 
         public static string ShortAbilityString(Ability ability)

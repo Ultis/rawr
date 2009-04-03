@@ -35,6 +35,7 @@ namespace Rawr.Retribution
             lblTime20.Text = trkTime20.Value + "%";
 
             nudDelay.Value = (decimal)calcOpts.Delay;
+            nudWait.Value = (decimal)calcOpts.Wait;
 
             nudJudge.Value = (decimal)calcOpts.JudgeCD;
             nudCS.Value = (decimal)calcOpts.CSCD;
@@ -233,10 +234,11 @@ namespace Rawr.Retribution
             {
                 listUnlimitedPriority.Enabled = true;
                 lblDelay.Enabled = true;
-                lblDelaySec.Enabled = true;
+                lblWait.Enabled = true;
                 butUnlimitedDown.Enabled = true;
                 butUnlimitedUp.Enabled = true;
                 nudDelay.Enabled = true;
+                nudWait.Enabled = true;
                 nudJudge.Enabled = false;
                 nudJudge20.Enabled = false;
                 nudCS.Enabled = false;
@@ -261,10 +263,11 @@ namespace Rawr.Retribution
             {
                 listUnlimitedPriority.Enabled = false;
                 lblDelay.Enabled = false;
-                lblDelaySec.Enabled = false;
+                lblWait.Enabled = false;
                 butUnlimitedDown.Enabled = false;
                 butUnlimitedUp.Enabled = false;
                 nudDelay.Enabled = false;
+                nudWait.Enabled = false;
                 nudJudge.Enabled = true;
                 nudJudge20.Enabled = true;
                 nudCS.Enabled = true;
@@ -418,6 +421,16 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudWait_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.Wait = (float)nudWait.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -438,6 +451,7 @@ namespace Rawr.Retribution
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
         public float Delay = .05f;
+        public float Wait = .05f;
 
         public bool SimulateRotation = true;
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkGlyphExorcism = new System.Windows.Forms.CheckBox();
             this.chkGlyphSenseUndead = new System.Windows.Forms.CheckBox();
@@ -38,6 +39,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cmbLevel = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblWait = new System.Windows.Forms.Label();
+            this.nudWait = new System.Windows.Forms.NumericUpDown();
             this.nudHoW20 = new System.Windows.Forms.NumericUpDown();
             this.nudExo20 = new System.Windows.Forms.NumericUpDown();
             this.nudExo = new System.Windows.Forms.NumericUpDown();
@@ -59,7 +62,6 @@
             this.lblJudge = new System.Windows.Forms.Label();
             this.radEffectiveCD = new System.Windows.Forms.RadioButton();
             this.radRotSim = new System.Windows.Forms.RadioButton();
-            this.lblDelaySec = new System.Windows.Forms.Label();
             this.nudDelay = new System.Windows.Forms.NumericUpDown();
             this.lblDelay = new System.Windows.Forms.Label();
             this.listUnlimitedPriority = new System.Windows.Forms.CheckedListBox();
@@ -70,8 +72,10 @@
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.lblTime20 = new System.Windows.Forms.Label();
+            this.labelsTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo)).BeginInit();
@@ -195,6 +199,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblWait);
+            this.groupBox2.Controls.Add(this.nudWait);
             this.groupBox2.Controls.Add(this.nudHoW20);
             this.groupBox2.Controls.Add(this.nudExo20);
             this.groupBox2.Controls.Add(this.nudExo);
@@ -216,7 +222,6 @@
             this.groupBox2.Controls.Add(this.lblJudge);
             this.groupBox2.Controls.Add(this.radEffectiveCD);
             this.groupBox2.Controls.Add(this.radRotSim);
-            this.groupBox2.Controls.Add(this.lblDelaySec);
             this.groupBox2.Controls.Add(this.nudDelay);
             this.groupBox2.Controls.Add(this.lblDelay);
             this.groupBox2.Controls.Add(this.listUnlimitedPriority);
@@ -228,6 +233,35 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
+            // 
+            // lblWait
+            // 
+            this.lblWait.AutoSize = true;
+            this.lblWait.Location = new System.Drawing.Point(168, 101);
+            this.lblWait.Name = "lblWait";
+            this.lblWait.Size = new System.Drawing.Size(36, 13);
+            this.lblWait.TabIndex = 60;
+            this.lblWait.Text = "Wait*:";
+            this.labelsTooltip.SetToolTip(this.lblWait, "Amount of time you will be willing to wait to use an ability of higher priority.");
+            // 
+            // nudWait
+            // 
+            this.nudWait.DecimalPlaces = 2;
+            this.nudWait.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.nudWait.Location = new System.Drawing.Point(171, 117);
+            this.nudWait.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudWait.Name = "nudWait";
+            this.nudWait.Size = new System.Drawing.Size(48, 20);
+            this.nudWait.TabIndex = 59;
+            this.nudWait.ValueChanged += new System.EventHandler(this.nudWait_ValueChanged);
             // 
             // nudHoW20
             // 
@@ -641,15 +675,6 @@
             this.radRotSim.UseVisualStyleBackColor = true;
             this.radRotSim.CheckedChanged += new System.EventHandler(this.radRotSim_CheckedChanged);
             // 
-            // lblDelaySec
-            // 
-            this.lblDelaySec.AutoSize = true;
-            this.lblDelaySec.Location = new System.Drawing.Point(187, 119);
-            this.lblDelaySec.Name = "lblDelaySec";
-            this.lblDelaySec.Size = new System.Drawing.Size(24, 13);
-            this.lblDelaySec.TabIndex = 35;
-            this.lblDelaySec.Text = "sec";
-            // 
             // nudDelay
             // 
             this.nudDelay.DecimalPlaces = 2;
@@ -658,7 +683,7 @@
             0,
             0,
             131072});
-            this.nudDelay.Location = new System.Drawing.Point(132, 117);
+            this.nudDelay.Location = new System.Drawing.Point(171, 78);
             this.nudDelay.Maximum = new decimal(new int[] {
             1,
             0,
@@ -672,11 +697,12 @@
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(132, 101);
+            this.lblDelay.Location = new System.Drawing.Point(168, 62);
             this.lblDelay.Name = "lblDelay";
-            this.lblDelay.Size = new System.Drawing.Size(37, 13);
+            this.lblDelay.Size = new System.Drawing.Size(41, 13);
             this.lblDelay.TabIndex = 33;
-            this.lblDelay.Text = "Delay:";
+            this.lblDelay.Text = "Delay*:";
+            this.labelsTooltip.SetToolTip(this.lblDelay, "Amount of time inbetween each ability use due to lag.");
             // 
             // listUnlimitedPriority
             // 
@@ -805,6 +831,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudWait)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo)).EndInit();
@@ -844,7 +871,6 @@
         private System.Windows.Forms.Button butUnlimitedUp;
         private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
         private System.Windows.Forms.CheckBox chkGlyphExorcism;
-        private System.Windows.Forms.Label lblDelaySec;
         private System.Windows.Forms.NumericUpDown nudDelay;
         private System.Windows.Forms.Label lblDelay;
         private System.Windows.Forms.RadioButton radEffectiveCD;
@@ -868,6 +894,9 @@
         private System.Windows.Forms.NumericUpDown nudDS;
         private System.Windows.Forms.NumericUpDown nudCS20;
         private System.Windows.Forms.NumericUpDown nudCS;
+        private System.Windows.Forms.Label lblWait;
+        private System.Windows.Forms.NumericUpDown nudWait;
+        private System.Windows.Forms.ToolTip labelsTooltip;
 
     }
 }
