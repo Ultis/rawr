@@ -694,6 +694,16 @@ namespace Rawr
 							{
 								activeBuffs.RemoveAt(i);
 								i--;
+                                // have to also remove any child buffs if they are present
+                                foreach (Buff improvement in b2.Improvements)
+                                {
+                                    int j = activeBuffs.IndexOf(improvement);
+                                    if (j >= 0)
+                                    {
+                                        activeBuffs.RemoveAt(j);
+                                        if (j <= i) i--;
+                                    }
+                                }
 								break;
 							}
 						}

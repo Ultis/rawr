@@ -1645,6 +1645,21 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, object[] items, int count, List<Buff> activeBuffs, string model)
+        {
+            IsLoading = true;
+            _name = name;
+            _realm = realm;
+            _region = region;
+            _race = race;
+            Array.Copy(items, _item, count);
+
+            IsLoading = false;
+            ActiveBuffs.AddRange(activeBuffs);
+            CurrentModel = model;
+            RecalculateSetBonuses();
+        }
+
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,  ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;

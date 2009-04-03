@@ -486,6 +486,39 @@ namespace Rawr.Optimizer
             return possibleGemmedItems;
         }
 
+        public static List<Buff> FilterList(List<Buff> unfilteredList)
+        {
+            List<Buff> filteredList = new List<Buff>();
+            foreach (Buff buff in unfilteredList)
+            {
+                if (buff == null)
+                {
+                    filteredList.Add(buff);
+                    continue;
+                }
+
+                bool addBuff = true;
+                List<Buff> removeBuffs = new List<Buff>();
+                foreach (Buff buff2 in filteredList)
+                {
+                    ArrayUtils.CompareResult compare = buff.Stats.CompareTo(buff2.Stats);
+                    if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
+                    {
+                        removeBuffs.Add(buff2);
+                    }
+                    else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
+                    {
+                        addBuff = false;
+                        break;
+                    }
+                }
+                foreach (Buff removeBuff in removeBuffs)
+                    filteredList.Remove(removeBuff);
+                if (addBuff) filteredList.Add(buff);
+            }
+            return filteredList;
+        }
+
         public static Enchant[] FilterList(List<Enchant> unfilteredList)
         {
             List<Enchant> filteredList = new List<Enchant>();

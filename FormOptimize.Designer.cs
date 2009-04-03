@@ -47,6 +47,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonUpgrades = new System.Windows.Forms.Button();
+            this.checkBoxOptimizeFood = new System.Windows.Forms.CheckBox();
+            this.checkBoxOptimizeElixir = new System.Windows.Forms.CheckBox();
+            this.checkBoxMixology = new System.Windows.Forms.CheckBox();
             this.groupBoxRequirements.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
@@ -135,9 +138,9 @@
             this.groupBoxRequirements.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxRequirements.Controls.Add(this.buttonAddRequirement);
-            this.groupBoxRequirements.Location = new System.Drawing.Point(12, 78);
+            this.groupBoxRequirements.Location = new System.Drawing.Point(12, 106);
             this.groupBoxRequirements.Name = "groupBoxRequirements";
-            this.groupBoxRequirements.Size = new System.Drawing.Size(303, 204);
+            this.groupBoxRequirements.Size = new System.Drawing.Size(303, 176);
             this.groupBoxRequirements.TabIndex = 6;
             this.groupBoxRequirements.TabStop = false;
             this.groupBoxRequirements.Text = "Additional Requirements";
@@ -233,6 +236,36 @@
             this.buttonUpgrades.UseVisualStyleBackColor = true;
             this.buttonUpgrades.Click += new System.EventHandler(this.buttonUpgrades_Click);
             // 
+            // checkBoxOptimizeFood
+            // 
+            this.checkBoxOptimizeFood.AutoSize = true;
+            this.checkBoxOptimizeFood.Location = new System.Drawing.Point(15, 83);
+            this.checkBoxOptimizeFood.Name = "checkBoxOptimizeFood";
+            this.checkBoxOptimizeFood.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxOptimizeFood.TabIndex = 9;
+            this.checkBoxOptimizeFood.Text = "Optimize Food";
+            this.checkBoxOptimizeFood.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOptimizeElixir
+            // 
+            this.checkBoxOptimizeElixir.AutoSize = true;
+            this.checkBoxOptimizeElixir.Location = new System.Drawing.Point(114, 83);
+            this.checkBoxOptimizeElixir.Name = "checkBoxOptimizeElixir";
+            this.checkBoxOptimizeElixir.Size = new System.Drawing.Size(120, 17);
+            this.checkBoxOptimizeElixir.TabIndex = 10;
+            this.checkBoxOptimizeElixir.Text = "Optimize Elixir/Flask";
+            this.checkBoxOptimizeElixir.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMixology
+            // 
+            this.checkBoxMixology.AutoSize = true;
+            this.checkBoxMixology.Location = new System.Drawing.Point(240, 83);
+            this.checkBoxMixology.Name = "checkBoxMixology";
+            this.checkBoxMixology.Size = new System.Drawing.Size(67, 17);
+            this.checkBoxMixology.TabIndex = 11;
+            this.checkBoxMixology.Text = "Mixology";
+            this.checkBoxMixology.UseVisualStyleBackColor = true;
+            // 
             // FormOptimize
             // 
             this.AcceptButton = this.buttonOptimize;
@@ -241,6 +274,9 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(578, 359);
             this.ControlBox = false;
+            this.Controls.Add(this.checkBoxMixology);
+            this.Controls.Add(this.checkBoxOptimizeElixir);
+            this.Controls.Add(this.checkBoxOptimizeFood);
             this.Controls.Add(this.buttonUpgrades);
             this.Controls.Add(this.groupBoxOptions);
             this.Controls.Add(this.groupBoxRequirements);
@@ -287,5 +323,8 @@
         private System.Windows.Forms.Button buttonUpgrades;
         private System.Windows.Forms.CheckBox checkBoxOverrideRegem;
         private System.Windows.Forms.CheckBox checkBoxOverrideReenchant;
+        private System.Windows.Forms.CheckBox checkBoxOptimizeFood;
+        private System.Windows.Forms.CheckBox checkBoxOptimizeElixir;
+        private System.Windows.Forms.CheckBox checkBoxMixology;
 	}
 }

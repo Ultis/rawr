@@ -159,6 +159,9 @@ namespace Rawr
             OptimizationRequirement[] _requirements = requirements.ToArray();
 
             _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance);
+            _optimizer.OptimizeFood = checkBoxOptimizeFood.Checked;
+            _optimizer.OptimizeElixirs = checkBoxOptimizeElixir.Checked;
+            _optimizer.Mixology = checkBoxMixology.Checked;
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -234,7 +237,11 @@ namespace Rawr
 				{
 					//Loading new items while IsLoading==true causes properties to be reset to their previously cached values, 
 					//so load all the items beforehand, then put them into the character all at once.
+                    _character.IsLoading = true;
                     _character.SetItems(bestCharacter);
+                    _character.ActiveBuffs = bestCharacter.ActiveBuffs;
+                    _character.IsLoading = false;
+                    _character.OnCalculationsInvalidated();
 					Close();
 				}
 				else
@@ -418,6 +425,9 @@ namespace Rawr
             }
 
             _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance);
+            _optimizer.OptimizeFood = checkBoxOptimizeFood.Checked;
+            _optimizer.OptimizeElixirs = checkBoxOptimizeElixir.Checked;
+            _optimizer.Mixology = checkBoxMixology.Checked;
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
