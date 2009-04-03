@@ -50,6 +50,7 @@
             this.checkBoxOptimizeFood = new System.Windows.Forms.CheckBox();
             this.checkBoxOptimizeElixir = new System.Windows.Forms.CheckBox();
             this.checkBoxMixology = new System.Windows.Forms.CheckBox();
+            this.checkBoxOptimizeTalents = new System.Windows.Forms.CheckBox();
             this.groupBoxRequirements.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
@@ -241,30 +242,40 @@
             this.checkBoxOptimizeFood.AutoSize = true;
             this.checkBoxOptimizeFood.Location = new System.Drawing.Point(15, 83);
             this.checkBoxOptimizeFood.Name = "checkBoxOptimizeFood";
-            this.checkBoxOptimizeFood.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxOptimizeFood.Size = new System.Drawing.Size(50, 17);
             this.checkBoxOptimizeFood.TabIndex = 9;
-            this.checkBoxOptimizeFood.Text = "Optimize Food";
+            this.checkBoxOptimizeFood.Text = "Food";
             this.checkBoxOptimizeFood.UseVisualStyleBackColor = true;
             // 
             // checkBoxOptimizeElixir
             // 
             this.checkBoxOptimizeElixir.AutoSize = true;
-            this.checkBoxOptimizeElixir.Location = new System.Drawing.Point(114, 83);
+            this.checkBoxOptimizeElixir.Location = new System.Drawing.Point(71, 83);
             this.checkBoxOptimizeElixir.Name = "checkBoxOptimizeElixir";
-            this.checkBoxOptimizeElixir.Size = new System.Drawing.Size(120, 17);
+            this.checkBoxOptimizeElixir.Size = new System.Drawing.Size(87, 17);
             this.checkBoxOptimizeElixir.TabIndex = 10;
-            this.checkBoxOptimizeElixir.Text = "Optimize Elixir/Flask";
+            this.checkBoxOptimizeElixir.Text = "Elixirs/Flasks";
             this.checkBoxOptimizeElixir.UseVisualStyleBackColor = true;
             // 
             // checkBoxMixology
             // 
             this.checkBoxMixology.AutoSize = true;
-            this.checkBoxMixology.Location = new System.Drawing.Point(240, 83);
+            this.checkBoxMixology.Location = new System.Drawing.Point(164, 83);
             this.checkBoxMixology.Name = "checkBoxMixology";
             this.checkBoxMixology.Size = new System.Drawing.Size(67, 17);
             this.checkBoxMixology.TabIndex = 11;
             this.checkBoxMixology.Text = "Mixology";
             this.checkBoxMixology.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOptimizeTalents
+            // 
+            this.checkBoxOptimizeTalents.AutoSize = true;
+            this.checkBoxOptimizeTalents.Location = new System.Drawing.Point(237, 83);
+            this.checkBoxOptimizeTalents.Name = "checkBoxOptimizeTalents";
+            this.checkBoxOptimizeTalents.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxOptimizeTalents.TabIndex = 12;
+            this.checkBoxOptimizeTalents.Text = "Talents";
+            this.checkBoxOptimizeTalents.UseVisualStyleBackColor = true;
             // 
             // FormOptimize
             // 
@@ -274,6 +285,7 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(578, 359);
             this.ControlBox = false;
+            this.Controls.Add(this.checkBoxOptimizeTalents);
             this.Controls.Add(this.checkBoxMixology);
             this.Controls.Add(this.checkBoxOptimizeElixir);
             this.Controls.Add(this.checkBoxOptimizeFood);
@@ -326,5 +338,6 @@
         private System.Windows.Forms.CheckBox checkBoxOptimizeFood;
         private System.Windows.Forms.CheckBox checkBoxOptimizeElixir;
         private System.Windows.Forms.CheckBox checkBoxMixology;
+        private System.Windows.Forms.CheckBox checkBoxOptimizeTalents;
 	}
 }

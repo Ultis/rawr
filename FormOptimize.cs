@@ -124,6 +124,29 @@ namespace Rawr
 			e.Cancel = _optimizer.IsBusy;
 		}
 
+        private List<TalentsBase> GetOptimizeTalentSpecs()
+        {
+            List<TalentsBase> talentSpecs = null;
+            if (checkBoxOptimizeTalents.Checked)
+            {
+                talentSpecs = new List<TalentsBase>();
+                foreach (SavedTalentSpec spec in FormMain.Instance.TalentPicker.SpecsFor(_character.Class))
+                {
+                    TalentsBase talents = spec.TalentSpec();
+                    int totalPoints = 0;
+                    for (int i = 0; i < talents.Data.Length; i++)
+                    {
+                        totalPoints += talents.Data[i];
+                    }
+                    if (totalPoints == _character.Level - 9)
+                    {
+                        talentSpecs.Add(talents);
+                    }
+                }
+            }
+            return talentSpecs;
+        }
+
 		private void buttonOptimize_Click(object sender, EventArgs e)
 		{
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
@@ -158,10 +181,7 @@ namespace Rawr
 			}
             OptimizationRequirement[] _requirements = requirements.ToArray();
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance);
-            _optimizer.OptimizeFood = checkBoxOptimizeFood.Checked;
-            _optimizer.OptimizeElixirs = checkBoxOptimizeElixir.Checked;
-            _optimizer.Mixology = checkBoxMixology.Checked;
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs());
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -240,8 +260,16 @@ namespace Rawr
                     _character.IsLoading = true;
                     _character.SetItems(bestCharacter);
                     _character.ActiveBuffs = bestCharacter.ActiveBuffs;
+                    if (checkBoxOptimizeTalents.Checked)
+                    {
+                        _character.CurrentTalents = bestCharacter.CurrentTalents;
+                    }
                     _character.IsLoading = false;
                     _character.OnCalculationsInvalidated();
+                    if (checkBoxOptimizeTalents.Checked)
+                    {
+                        FormMain.Instance.TalentPicker.Talents = _character.CurrentTalents;
+                    }
 					Close();
 				}
 				else
@@ -424,10 +452,7 @@ namespace Rawr
                 }
             }
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance);
-            _optimizer.OptimizeFood = checkBoxOptimizeFood.Checked;
-            _optimizer.OptimizeElixirs = checkBoxOptimizeElixir.Checked;
-            _optimizer.Mixology = checkBoxMixology.Checked;
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs());
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();

@@ -93,6 +93,14 @@ namespace Rawr
 			}
 		}
 
+        public TalentPicker TalentPicker
+        {
+            get
+            {
+                return talentPicker1;
+            }
+        }
+
 		private static FormMain _instance;
 		public static FormMain Instance { get { return FormMain._instance; } }
 		public FormMain()

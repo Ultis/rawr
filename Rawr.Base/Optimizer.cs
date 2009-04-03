@@ -4,6 +4,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Threading;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace Rawr
 {
@@ -221,37 +222,41 @@ namespace Rawr.Optimizer
         {
         }
 
-        public OptimizerCharacter(Character character, bool includeFood, bool includeElixir)
+        public OptimizerCharacter(Character character, bool includeFood, bool includeElixir, bool includeTalents)
         {
             Character = character;
-            if (includeFood || includeElixir)
+            if (includeFood || includeElixir || includeTalents)
             {
-                Items = new object[characterSlots + 3];
+                Items = new object[characterSlots + 4];
                 Array.Copy(character._item, Items, characterSlots);
-                foreach (Buff buff in character.ActiveBuffs)
+                if (includeFood || includeElixir)
                 {
-                    if (buff.Group == "Elixirs and Flasks")
+                    foreach (Buff buff in character.ActiveBuffs)
                     {
-                        bool isbattle = buff.ConflictingBuffs.Contains("Battle Elixir");
-                        bool isguardian = buff.ConflictingBuffs.Contains("Guardian Elixir");
-                        if (isbattle && isguardian)
+                        if (buff.Group == "Elixirs and Flasks")
                         {
-                            Items[characterSlots + 1] = buff;
+                            bool isbattle = buff.ConflictingBuffs.Contains("Battle Elixir");
+                            bool isguardian = buff.ConflictingBuffs.Contains("Guardian Elixir");
+                            if (isbattle && isguardian)
+                            {
+                                Items[characterSlots + 1] = buff;
+                            }
+                            else if (isbattle)
+                            {
+                                Items[characterSlots + 1] = buff;
+                            }
+                            else if (isguardian)
+                            {
+                                Items[characterSlots + 2] = buff;
+                            }
                         }
-                        else if (isbattle)
+                        else if (buff.Group == "Food")
                         {
-                            Items[characterSlots + 1] = buff;
+                            Items[characterSlots] = buff;
                         }
-                        else if (isguardian)
-                        {
-                            Items[characterSlots + 2] = buff;
-                        }
-                    }
-                    else if (buff.Group == "Food")
-                    {
-                        Items[characterSlots] = buff;
                     }
                 }
+                Items[characterSlots + 3] = character.CurrentTalents;
             }
             else
             {
@@ -278,62 +283,14 @@ namespace Rawr.Optimizer
         }
 
         private bool optimizeFood;
-        public bool OptimizeFood
-        {
-            get
-            {
-                return optimizeFood;
-            }
-            set
-            {
-                optimizeFood = value;
-                UpdateExtraSlots();
-            }
-        }
-
         private bool optimizeElixirs;
-        public bool OptimizeElixirs
-        {
-            get
-            {
-                return optimizeElixirs;
-            }
-            set
-            {
-                optimizeElixirs = value;
-                UpdateExtraSlots();
-            }
-        }
-
+        private bool optimizeTalents;
         private bool mixology;
-        public bool Mixology
-        {
-            get
-            {
-                return mixology;
-            }
-            set
-            {
-                mixology = value;
-            }
-        }
-
-        private void UpdateExtraSlots()
-        {
-            if (OptimizeFood || OptimizeElixirs)
-            {
-                slotCount = characterSlots + 3;
-            }
-            else
-            {
-                slotCount = characterSlots;
-            }
-        }
 
         public ItemInstanceOptimizer()
         {
             slotCount = characterSlots;
-            slotItems = new List<object>[characterSlots + 3];
+            slotItems = new List<object>[characterSlots + 4];
             validators = new List<OptimizerRangeValidatorBase<object>>() {
                 new UniqueItemValidator() { StartSlot = (int)Character.CharacterSlot.Finger1, EndSlot = (int)Character.CharacterSlot.Finger2 },
                 new UniqueItemValidator() { StartSlot = (int)Character.CharacterSlot.Trinket1, EndSlot = (int)Character.CharacterSlot.Trinket2 },
@@ -352,7 +309,7 @@ namespace Rawr.Optimizer
             slotItemsRandom = new List<KeyedList<KeyedList<ItemInstance>>>[characterSlots];
         }
 
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs)
         {
             _character = character;
             Model = model;
@@ -393,6 +350,46 @@ namespace Rawr.Optimizer
             slotItems[characterSlots] = food.ConvertAll(buff => (object)buff);
             slotItems[characterSlots + 1] = battle.ConvertAll(buff => (object)buff);
             slotItems[characterSlots + 2] = guardian.ConvertAll(buff => (object)buff);
+
+            this.optimizeFood = optimizeFood;
+            this.optimizeElixirs = optimizeElixirs;
+            this.mixology = mixology;
+            this.optimizeTalents = (talentSpecs != null && talentSpecs.Count > 0);
+
+            if (optimizeTalents)
+            {
+                slotItems[characterSlots + 3] = talentSpecs.ConvertAll(spec => (object)spec);
+                talentItem = new TalentItem[100];
+                TalentsBase talents = talentSpecs[0];
+                foreach (PropertyInfo pi in talents.GetType().GetProperties())
+                {
+                    TalentDataAttribute[] td = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
+                    if (td.Length > 0)
+                    {
+                        talentItem[td[0].Index] = new TalentItem() { pi = pi, talentData = td[0] };
+                        if (td[0].Index + 1 > talentItemCount)
+                        {
+                            talentItemCount = td[0].Index + 1;
+                        }
+                    }
+                }
+                for (int i = 0; i < talentItemCount; i++)
+                {
+                    if (talentItem[i].talentData.Prerequisite >= 0)
+                    {
+                        talentItem[talentItem[i].talentData.Prerequisite].childList.Add(i);
+                    }
+                }
+            }
+
+            if (optimizeFood || optimizeElixirs || optimizeTalents)
+            {
+                slotCount = characterSlots + 4;
+            }
+            else
+            {
+                slotCount = characterSlots;
+            }
 
             if (templateGemsEnabled)
             {
@@ -689,7 +686,7 @@ namespace Rawr.Optimizer
                 {
                     if (error == null) error = new NullReferenceException();
                 }
-                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character));
+                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character, null, false, optimizeTalents));
             }
             catch (Exception ex)
             {
@@ -813,7 +810,7 @@ namespace Rawr.Optimizer
 
                 if (injectCharacter || _thoroughness == 1)
                 {
-                    optimizedCharacter = Optimize(new OptimizerCharacter(character, OptimizeFood, OptimizeElixirs), out bestValue, out injected).Character;
+                    optimizedCharacter = Optimize(new OptimizerCharacter(character, optimizeFood, optimizeElixirs, optimizeTalents), out bestValue, out injected).Character;
                 }
                 else
                 {
@@ -914,7 +911,7 @@ namespace Rawr.Optimizer
                     items = new List<Item>(itemById.Values).ToArray();
                 }
 
-                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, OptimizeFood, OptimizeElixirs);
+                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, optimizeFood, optimizeElixirs, optimizeTalents);
                 OptimizerCharacter __character;
                 for (int i = 0; i < items.Length; i++)
                 {
@@ -1032,7 +1029,7 @@ namespace Rawr.Optimizer
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetOptimizationValue(_character, baseCalculations);
 
-                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, OptimizeFood, OptimizeElixirs);
+                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, optimizeFood, optimizeElixirs, optimizeTalents);
                 OptimizerCharacter __character;
                 ItemInstance item = upgrade;
                 foreach (Character.CharacterSlot slot in slots)
@@ -1266,7 +1263,7 @@ namespace Rawr.Optimizer
             try
             {
                 Item.OptimizerManagedVolatiliy = true;
-                return model.GetCharacterCalculations(individual.Character);
+                return model.GetCharacterCalculations(individual.Character, null, false, optimizeTalents);
             }
             finally
             {
@@ -1293,7 +1290,7 @@ namespace Rawr.Optimizer
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character, false);
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
-            if (OptimizeFood)
+            if (optimizeFood)
             {
                 Buff food = (Buff)items[characterSlots];
                 if (food != null && !character.ActiveBuffs.Contains(food))
@@ -1302,7 +1299,7 @@ namespace Rawr.Optimizer
                     CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, food);
                 }
             }
-            if (OptimizeElixirs)
+            if (optimizeElixirs)
             {
                 Buff battle = (Buff)items[characterSlots + 1];
                 Buff guardian = (Buff)items[characterSlots + 2];
@@ -1314,10 +1311,10 @@ namespace Rawr.Optimizer
                         if (!character.ActiveBuffs.Contains(battle))
                         {
                             character.ActiveBuffs.Add(battle);
-                            if (Mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
+                            if (mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
                         }
-                        else if (Mixology)
+                        else if (mixology)
                         {
                             // make sure we have all improvements
                             foreach (Buff improvement in battle.Improvements)
@@ -1337,10 +1334,10 @@ namespace Rawr.Optimizer
                         if (!character.ActiveBuffs.Contains(battle))
                         {
                             character.ActiveBuffs.Add(battle);
-                            if (Mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
+                            if (mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
                         }
-                        else if (Mixology)
+                        else if (mixology)
                         {
                             // make sure we have all improvements
                             foreach (Buff improvement in battle.Improvements)
@@ -1357,10 +1354,10 @@ namespace Rawr.Optimizer
                         if (!character.ActiveBuffs.Contains(guardian))
                         {
                             character.ActiveBuffs.Add(guardian);
-                            if (Mixology) character.ActiveBuffs.Add(guardian.Improvements[0]);
+                            if (mixology) character.ActiveBuffs.Add(guardian.Improvements[0]);
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, guardian);
                         }
-                        else if (Mixology)
+                        else if (mixology)
                         {
                             // make sure we have all improvements
                             foreach (Buff improvement in guardian.Improvements)
@@ -1373,6 +1370,10 @@ namespace Rawr.Optimizer
                         }
                     }
                 }
+            }
+            if (optimizeTalents)
+            {
+                character.CurrentTalents = (TalentsBase)items[characterSlots + 3];
             }
             return new OptimizerCharacter() { Character = character, Items = items };
         }
@@ -1615,7 +1616,11 @@ namespace Rawr.Optimizer
         {
             bool successful;
             OptimizerCharacter mutant = null;
-            if (itemGenerator == null || rand.NextDouble() < 0.9)
+            if (optimizeTalents && rand.NextDouble() < 0.5)
+            {
+                return BuildMutateTalentsCharacter(parent);
+            }
+            else if (itemGenerator == null || rand.NextDouble() < 0.9)
             {
                 return base.BuildMutantIndividual(parent);
             }
@@ -1636,6 +1641,102 @@ namespace Rawr.Optimizer
                 }
             }
             return mutant;
+        }
+
+        private class TalentItem
+        {
+            public PropertyInfo pi;
+            public TalentDataAttribute talentData;
+            public List<int> childList = new List<int>();
+        }
+
+        private TalentItem[] talentItem = new TalentItem[100];
+        private int talentItemCount;
+
+        private OptimizerCharacter BuildMutateTalentsCharacter(OptimizerCharacter parent)
+        {
+            object[] items = new object[slotCount];
+            Array.Copy(parent.Items, items, slotCount);
+            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, items, characterSlots,
+                parent.Character.ActiveBuffs, parent.Character.CurrentModel);
+            character.CalculationOptions = parent.Character.CalculationOptions;
+            character.Class = parent.Character.Class;
+            character.AssignAllTalentsFromCharacter(parent.Character, false);
+            character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
+            TalentsBase talents = (TalentsBase)((ICloneable)items[characterSlots + 3]).Clone();
+            items[characterSlots + 3] = talents;
+            int[,] treeCount = new int[3, 11];
+            for (int j = 0; j < talentItemCount; j++)
+            {
+                treeCount[talentItem[j].talentData.Tree, talentItem[j].talentData.Row - 1] += talents.Data[j];
+            }
+            // add the talent somewhere
+            bool talentAdded = false;
+            do
+            {
+                int index = rand.Next(talentItemCount);
+                if (talents.Data[index] == talentItem[index].talentData.MaxPoints) continue;
+                int p = talentItem[index].talentData.Prerequisite;
+                if (p >= 0 && talents.Data[p] < talentItem[p].talentData.MaxPoints) continue;
+                int points = 0;
+                for (int k = 0; k < talentItem[index].talentData.Row - 1; k++)
+                {
+                    points += treeCount[talentItem[index].talentData.Tree, k];
+                }
+                if (points < 5 * (talentItem[index].talentData.Row - 1)) continue;
+                // we're good, we can add the talent point
+                talents.Data[index]++;
+                talentAdded = true;
+            } while (!talentAdded);
+            // pick a talent with some points invested that we can take points out of
+            bool talentRemoved = false;
+            do
+            {
+                int index = rand.Next(talentItemCount);
+                if (talents.Data[index] == 0) continue;
+                bool locked = false;
+                foreach (int child in talentItem[index].childList)
+                {
+                    if (talents.Data[child] > 0)
+                    {
+                        locked = true;
+                        break;
+                    }
+                }
+                if (!locked)
+                {
+                    int i = 1;
+                    int pts = 0;
+                    int _row = talentItem[index].talentData.Row - 1;
+                    int tree = talentItem[index].talentData.Tree;
+                    for (i = 0; i <= _row; i++) pts += treeCount[tree, i];
+                    pts = pts - 1;
+                    for (i = _row + 1; i < 11; i++)
+                    {
+                        if (treeCount[tree, i] > 0)
+                        {
+                            if (pts >= i * 5)
+                            {
+                                pts += treeCount[tree, i];
+                            }
+                            else
+                            {
+                                i = -1;
+                                break;
+                            }
+                        }
+                    }
+                    if (i >= 0)
+                    {
+                        // we're good, we can remove the talent point
+                        talents.Data[index]--;
+                        treeCount[talentItem[index].talentData.Tree, talentItem[index].talentData.Row - 1]--;
+                        talentRemoved = true;
+                    }
+                }
+            } while (!talentRemoved);
+            character.CurrentTalents = talents;
+            return new OptimizerCharacter() { Character = character, Items = items };
         }
     }
 
