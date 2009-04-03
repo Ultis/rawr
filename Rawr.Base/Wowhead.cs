@@ -165,7 +165,7 @@ namespace Rawr
             if (site.Equals("en")) site = "www";
 			WebRequestWrapper wrw = new WebRequestWrapper();
             XmlDocument docItem = wrw.DownloadItemWowhead(site, query);
-			if (docItem.InnerXml.Contains("Item not found!")) return null;
+			if (docItem == null || docItem.InnerXml.Contains("Item not found!")) return null;
             // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
             int id = 0;
             foreach (XmlNode node in docItem.SelectNodes("wowhead/item")) { id = int.Parse(node.Attributes["id"].Value); }
