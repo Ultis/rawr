@@ -143,9 +143,82 @@ namespace Rawr.Enhance
             sb.AppendLine("lava_flows                      " + character.ShamanTalents.LavaFlows + "/3");
             sb.AppendLine("storm_earth_and_fire            " + character.ShamanTalents.StormEarthAndFire + "/3");
             sb.AppendLine("shamanism                       " + character.ShamanTalents.Shamanism + "/5");
-
-
-
+            sb.AppendLine();
+            sb.AppendLine("#########");
+            sb.AppendLine("# Buffs #");
+            sb.AppendLine("#########");
+            sb.AppendLine();
+            int arp = (int) Math.Floor(buffs.ArmorPenetration * 100f);
+            switch (arp)
+            {
+                case 0:
+                    sb.AppendLine("armor_debuff_major              0/2129");
+                    sb.AppendLine("armor_debuff_minor              0/532");
+                    break;
+                case 5:
+                    sb.AppendLine("armor_debuff_major              0/2129");
+                    sb.AppendLine("armor_debuff_minor              532/532");
+                    break;
+                case 20:
+                    sb.AppendLine("armor_debuff_major              2129/2129");
+                    sb.AppendLine("armor_debuff_minor              0/532");
+                    break;
+                case 25:
+                    sb.AppendLine("armor_debuff_major              2129/2129");
+                    sb.AppendLine("armor_debuff_minor              532/532");
+                    break;
+            }
+            string buffvalue = (buffs.BonusPhysicalDamageMultiplier * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("physical_vunerability_debuff    " + buffvalue + "/4.0");
+            buffvalue = (buffs.PhysicalHaste * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("melee_haste_buff                " + buffvalue + "/23.6"); // includes improved moonkin aura, swift retribution
+            buffvalue = (buffs.PhysicalCrit * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("melee_crit_chance_buff          " + buffvalue + "/8.0");
+            buffvalue = buffs.AttackPower.ToString("F0", CultureInfo.InvariantCulture);
+            sb.AppendLine("attack_power_buff_flat          " + buffvalue + "/688");
+            buffvalue = (buffs.SpellHaste * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("spell_haste_buff                " + buffvalue + "/8.15"); // includes improved moonkin aura, swift retribution
+            buffvalue = (buffs.SpellCrit * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("spell_crit_chance_buff          " + buffvalue + "/13.0");
+            //                spell_crit_chance_debuff	0.0/10.0	//%, improved scorch, winter's chill now wrapped up into spell_crit_chance_buff
+            if (buffs.BonusFireDamageMultiplier >= 0.13f && buffs.BonusNatureDamageMultiplier >= 0.13f && buffs.BonusArcaneDamageMultiplier >= 0.13f
+                && buffs.BonusFrostDamageMultiplier >= 0.13f && buffs.BonusHolyDamageMultiplier >= 0.13f)
+            {
+                sb.AppendLine("spell_damage_debuff             13.0/13.0");
+            }
+            else
+            {
+                sb.AppendLine("spell_damage_debuff             0.0/13.0");
+            }
+            buffvalue = (buffs.SpellPower).ToString("F0", CultureInfo.InvariantCulture);
+            sb.AppendLine("spellpower_buff                 " + buffvalue + "/280");
+            buffvalue = (buffs.SpellHit * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("spell_hit_chance_debuff         " + buffvalue + "/3.0");
+            buffvalue = (buffs.BonusDamageMultiplier * 100).ToString("F1", CultureInfo.InvariantCulture);
+            sb.AppendLine("percentage_damage_increase      " + buffvalue + "/3.0");
+            if (buffs.BonusAgilityMultiplier == .1f && buffs.BonusStaminaMultiplier == .1f && buffs.BonusStrengthMultiplier == .1f &&
+                buffs.BonusIntellectMultiplier == .1f && buffs.BonusSpiritMultiplier == .1f)
+                sb.AppendLine("stat_multiplier             10.0/10.0");
+            else
+                sb.AppendLine("stat_multiplier             0.0/10.0");
+            if (buffs.Stamina == 37f)
+                sb.AppendLine("stat_add_buff               37/52");
+            else if (buffs.Stamina == 51f)
+                sb.AppendLine("stat_add_buff               51/52");
+            else
+                sb.AppendLine("stat_add_buff               0/52");
+            if (buffs.Agility == buffs.Strength)
+            {
+                buffvalue = (buffs.Strength - buffs.Stamina).ToString("F0", CultureInfo.InvariantCulture);
+                sb.AppendLine("agi_and_strength_buff       " + buffvalue + "/178");
+            }
+            else
+                sb.AppendLine("agi_and_strength_buff       0/178");
+            if (buffs.Intellect == 60f)
+                sb.AppendLine("intellect_buff              60/60");
+            else
+                sb.AppendLine("intellect_buff              0/60");
+            
             _configText = sb.ToString();
         }
 
