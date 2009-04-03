@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -1161,7 +1162,7 @@ namespace Rawr
 			copyPawnStringToClipboardToolStripMenuItem.Visible = viewUpgradesOnLootRankToolStripMenuItem.Visible =
 				viewUpgradesOnWowheadToolStripMenuItem.Visible = labelRelativeStatValuesWarning.Visible =
 				tag[0] == "Relative Stat Values";
-
+            copyEnhSimConfigToClipboardToolStripMenuItem.Visible = _character.CurrentModel == "Enhance";
 			switch (tag[0])
 			{
 				case "Gear":
@@ -2012,6 +2013,19 @@ namespace Rawr
 			}
 			dialog.Dispose();
 		}
+
+        private void copyEnhSimConfigToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Type formOptionsPanel = Calculations.CalculationOptionsPanel.GetType();
+            if (formOptionsPanel.FullName == "Rawr.CalculationOptionsPanelEnhance")
+            {
+                MethodInfo exportMethod = formOptionsPanel.GetMethod("Export");
+                if (exportMethod != null)
+                {
+                    exportMethod.Invoke(Calculations.CalculationOptionsPanel, null);
+                }
+            }
+        }
 
         #endregion
 
