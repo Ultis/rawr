@@ -108,6 +108,8 @@ namespace Rawr.Mage
                     "Solution:Spell Cycles",
                     "Solution:By Spell",
                     "Solution:Sequence*Cycle sequence reconstruction based on optimum cycles",
+                    "Solution:Minimum Range",
+                    "Solution:Threat Reduction",
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
                     "Spell Info:MBAM*Missile Barrage Arcane Missiles",
@@ -266,99 +268,16 @@ namespace Rawr.Mage
             Dictionary<string, string> dict = CalculationOptions.Calculations.DisplayCalculationValues;
 			foreach (KeyValuePair<string, string> kvp in dict)
 			{
-                //if (kvp.Key != "Sequence" && kvp.Key != "Spell Cycles")
+                string[] value = kvp.Value.Split('*');
+                if (value.Length == 2)
                 {
-                    string[] value = kvp.Value.Split('*');
-                    if (value.Length == 2)
-                    {
-                        sb.AppendFormat("\r\n{0}: {1}\r\n{2}\r\n", kvp.Key, value[0], value[1]);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
-                    }
-                }
-			}
-
-            // spell cycles
-            /*sb.AppendFormat("\r\n\r\nSpell Cycles:\r\n\r\n");
-            if (calculations.MageArmor != null) sb.AppendLine(calculations.MageArmor);
-            Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
-            Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
-            double manaPotion = 0;
-            double manaGem = 0;
-            for (int i = 0; i < calculations.SolutionVariable.Count; i++)
-            {
-                if (calculations.Solution[i] > 0.01)
-                {
-                    switch (calculations.SolutionVariable[i].Type)
-                    {
-                        case VariableType.IdleRegen:
-                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Idle Regen", calculations.Solution[i]));
-                            break;
-                        case VariableType.Evocation:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", calculations.Solution[i] / calculations.EvocationDuration));
-                            break;
-                        case VariableType.ManaPotion:
-                            manaPotion += calculations.Solution[i];
-                            break;
-                        case VariableType.ManaGem:
-                            manaGem += calculations.Solution[i];
-                            break;
-                        case VariableType.DrumsOfBattle:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", calculations.Solution[i] / calculations.BaseState.GlobalCooldown));
-                            break;
-                        case VariableType.Drinking:
-                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", calculations.Solution[i]));
-                            break;
-                        case VariableType.TimeExtension:
-                            break;
-                        case VariableType.AfterFightRegen:
-                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", calculations.Solution[i]));
-                            break;
-                        case VariableType.Wand:
-                        case VariableType.Spell:
-                            double value;
-                            Spell s = calculations.SolutionVariable[i].Spell;
-                            string label = ((calculations.SolutionVariable[i].State.BuffLabel.Length > 0) ? (calculations.SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
-                            combinedSolution.TryGetValue(label, out value);
-                            combinedSolution[label] = value + calculations.Solution[i];
-                            combinedSolutionData[label] = i;
-                            //stats.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));                            
-                            break;
-                    }
-                }
-            }
-            if (manaPotion > 0)
-            {
-                sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", manaPotion));
-            }
-            if (manaGem > 0)
-            {
-                sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", manaGem));
-            }
-            foreach (KeyValuePair<string, double> kvp in combinedSolution)
-            {
-                Spell s = calculations.SolutionVariable[combinedSolutionData[kvp.Key]].Spell;
-                if (s != null)
-                {
-                    sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps) {5}", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, s.Sequence));
+                    sb.AppendFormat("\r\n{0}: {1}\r\n{2}\r\n", kvp.Key, value[0], value[1]);
                 }
                 else
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                    sb.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
                 }
-            }
-            //if (calculations.WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", calculations.WaterElementalDuration / 45f));
-
-            // sequence
-            string sequence = dict["Sequence"];
-            if (sequence != "*Disabled" && sequence != "*Unavailable")
-            {
-                string[] value = sequence.Split('*');
-                sb.AppendFormat("\r\n\r\nSequence:\r\n\r\n");
-                sb.Append(value[1]);
-            }*/
+			}
 
 			return sb.ToString();
         }
@@ -2198,6 +2117,8 @@ namespace Rawr.Mage
                     "Haste Rating",
                     "PVP Trinket",
                     "Movement Speed",
+                    "Minimum Range",
+                    "Threat Reduction",
 					};
                 return _optimizableCalculationLabels;
             }

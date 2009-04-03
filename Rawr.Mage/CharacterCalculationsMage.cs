@@ -1138,6 +1138,8 @@ namespace Rawr.Mage
                 sb.AppendFormat("{0}: {1:F}%, {2:F} Damage, {3:F} Hits\r\n", contrib.Name, 100.0 * contrib.Damage / totalDamage, contrib.Damage, contrib.Hits);
             }
             dictValues.Add("By Spell", sb.ToString());
+            dictValues.Add("Minimum Range", String.Format("{0:F}", MinimumRange));
+            dictValues.Add("Threat Reduction", String.Format("{0:F}%", ThreatReduction * 100));
             CalculationOptions.Calculations = this;
             return dictValues;
         }
@@ -1168,8 +1170,36 @@ namespace Rawr.Mage
                     return BaseStats.PVPTrinket;
                 case "Movement Speed":
                     return BaseStats.MovementSpeed;
+                case "Minimum Range":
+                    return MinimumRange;
+                case "Threat Reduction":
+                    return ThreatReduction;
             }
             return 0;
+        }
+
+        public float MinimumRange
+        {
+            get
+            {
+                float minRange = float.PositiveInfinity;
+                foreach (SpellContribution contrib in DamageSources.Values)
+                {
+                    if (contrib.Range < minRange)
+                    {
+                        minRange = contrib.Range;
+                    }
+                }
+                return minRange;
+            }
+        }
+
+        public float ThreatReduction
+        {
+            get
+            {
+                return 1 - Tps / DpsRating;
+            }
         }
     }
 }

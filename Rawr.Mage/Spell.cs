@@ -222,6 +222,7 @@ namespace Rawr.Mage
         public string Name;
         public float Hits;
         public float Damage;
+        public float Range;
 
         public int CompareTo(SpellContribution other)
         {
@@ -572,6 +573,7 @@ namespace Rawr.Mage
         public float DotDamageCoefficient { get { return template.DotDamageCoefficient; } }
         public float DotDuration { get { return template.DotDuration; } }
         public float AoeDamageCap { get { return template.AoeDamageCap; } }
+        public float Range { get { return template.Range; } }
 
         public float MinHitDamage
         {
@@ -921,6 +923,7 @@ namespace Rawr.Mage
             }
             contrib.Hits += HitProcs * duration / CastTime;
             contrib.Damage += AverageDamage * duration / CastTime;
+            contrib.Range = Range;
         }
 
         public void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
@@ -945,6 +948,7 @@ namespace Rawr.Mage
 
         public bool Instant;
         public int BaseCost;
+        public float Range;
         public float BaseCastTime;
         public float BaseCooldown;
         public MagicSchool MagicSchool;
@@ -1013,6 +1017,7 @@ namespace Rawr.Mage
             BaseCost = cost;
             BaseCastTime = castTime;
             BaseCooldown = cooldown;
+            Range = range;
             MagicSchool = magicSchool;
             BaseMinDamage = minDamage;
             BaseMaxDamage = maxDamage;
@@ -1041,6 +1046,12 @@ namespace Rawr.Mage
             if (MagicSchool == MagicSchool.Arcane) BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) BaseInterruptProtection += 0.35f * mageTalents.BurningSoul;
+            if (Range != 0)
+            {
+                if (MagicSchool == MagicSchool.Arcane) Range += mageTalents.MagicAttunement * 3;
+                if (MagicSchool == MagicSchool.Fire) Range += mageTalents.FlameThrowing * 3;
+                if (MagicSchool == MagicSchool.Frost) Range *= (1 + mageTalents.ArcticReach * 0.1f);
+            }
             BaseInterruptProtection += baseStats.InterruptProtection;
 
             int playerLevel = calculationOptions.PlayerLevel;
@@ -1519,7 +1530,7 @@ namespace Rawr.Mage
         }
 
         public ConjureManaGemTemplate(CharacterCalculationsMage calculations)
-            : base("Conjure Mana Gem", false, false, false, 30, 3, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
+            : base("Conjure Mana Gem", false, false, false, 0, 3, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
         {
             Calculate(calculations);
         }
@@ -2386,7 +2397,7 @@ namespace Rawr.Mage
         }
 
         public BlizzardTemplate(CharacterCalculationsMage calculations)
-            : base("Blizzard", true, false, true, 0, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 4, 1)
+            : base("Blizzard", true, false, true, 30, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 4, 1)
         {
             Calculate(calculations);
             if (!calculations.CalculationOptions.Mode31) CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + calculations.MageTalents.IceShards / 3.0f + 0.25f * calculations.MageTalents.SpellPower + calculations.BaseStats.CritBonusDamage)); // special case because it is not affected by Burnout
@@ -2406,7 +2417,7 @@ namespace Rawr.Mage
     public class LightningBoltTemplate : SpellTemplate
     {
         public LightningBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Lightning Bolt", false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0)
+            : base("Lightning Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0)
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
@@ -2417,7 +2428,7 @@ namespace Rawr.Mage
     public class ThunderBoltTemplate : SpellTemplate
     {
         public ThunderBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Lightning Bolt", false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 1181, 1371, 0, 0, 0, 0, 0, 0)
+            : base("Lightning Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Nature, 1181, 1371, 0, 0, 0, 0, 0, 0)
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
@@ -2428,7 +2439,7 @@ namespace Rawr.Mage
     public class ArcaneBoltTemplate : SpellTemplate
     {
         public ArcaneBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Bolt", false, true, false, 0, 50, 0, 0, MagicSchool.Arcane, 333, 367, 0, 0, 0, 0, 0, 0)
+            : base("Arcane Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Arcane, 333, 367, 0, 0, 0, 0, 0, 0)
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
@@ -2439,7 +2450,7 @@ namespace Rawr.Mage
     public class PendulumOfTelluricCurrentsTemplate : SpellTemplate
     {
         public PendulumOfTelluricCurrentsTemplate(CharacterCalculationsMage calculations)
-            : base("Pendulum of Telluric Currents", false, true, false, 0, 50, 0, 0, MagicSchool.Shadow, 1168, 1752, 0, 0, 0, 0, 0, 0)
+            : base("Pendulum of Telluric Currents", false, true, false, 0, 0, 0, 0, MagicSchool.Shadow, 1168, 1752, 0, 0, 0, 0, 0, 0)
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
@@ -2450,7 +2461,7 @@ namespace Rawr.Mage
     public class LightweaveBoltTemplate : SpellTemplate
     {
         public LightweaveBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Lightweave Bolt", false, true, false, 0, 50, 0, 0, MagicSchool.Holy, 1000, 1200, 0, 0, 0, 0, 0, 0)
+            : base("Lightweave Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Holy, 1000, 1200, 0, 0, 0, 0, 0, 0)
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
