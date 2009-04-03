@@ -243,6 +243,7 @@
 			// 
 			// panelDidYouKnow
 			// 
+			this.panelDidYouKnow.AutoScroll = true;
 			this.panelDidYouKnow.BackColor = System.Drawing.Color.Transparent;
 			this.panelDidYouKnow.Controls.Add(this.labelDidYouKnow);
 			this.panelDidYouKnow.Location = new System.Drawing.Point(190, 121);
@@ -424,6 +425,7 @@
 			// 
 			// panelKnownIssues
 			// 
+			this.panelKnownIssues.AutoScroll = true;
 			this.panelKnownIssues.BackColor = System.Drawing.Color.Transparent;
 			this.panelKnownIssues.Controls.Add(this.labelKnownIssues);
 			this.panelKnownIssues.Location = new System.Drawing.Point(190, 121);
@@ -445,6 +447,7 @@
 			// 
 			// panelVersionHistory
 			// 
+			this.panelVersionHistory.AutoScroll = true;
 			this.panelVersionHistory.BackColor = System.Drawing.Color.Transparent;
 			this.panelVersionHistory.Controls.Add(this.labelVersionHistory);
 			this.panelVersionHistory.Location = new System.Drawing.Point(190, 121);
@@ -456,7 +459,7 @@
 			// labelVersionHistory
 			// 
 			this.labelVersionHistory.BackColor = System.Drawing.Color.Transparent;
-			this.labelVersionHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.labelVersionHistory.Dock = System.Windows.Forms.DockStyle.Top;
 			this.labelVersionHistory.Location = new System.Drawing.Point(0, 0);
 			this.labelVersionHistory.Name = "labelVersionHistory";
 			this.labelVersionHistory.Padding = new System.Windows.Forms.Padding(4);

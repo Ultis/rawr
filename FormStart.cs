@@ -17,6 +17,29 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
+			labelVersionHistory.Text = @"v2.2.0b6
+ - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b6. Thanks!
+ - Start Page! There's now a start page when you launch Rawr, which helps you get started. We're still filling in some of the content on this page, but we're looking for lots of feedback on how you like it, and what else you might want on it.
+ - Chart Selection Interface! There is now a more streamlined interface for choosing charts!
+ - Chart Exports! There's now an Exports menu above the charts, which allow you to export the data in the current chart to either Clipboard, CSV, or Image.
+ - Multilingual Support! In the options, you'll find a locale setting. After setting that, items loaded from wowhead will load their foreign names.
+ - Food/Flask/Elixirs Optimization! There are now options to optimize food/flask/elixirs in the Optimizer dialog.
+ - On the Relative Stat Values chart, there are 3 additional exports: Copy a Pawn string to Clipboard, View weighted upgrades on Wowhead, and View weighted upgrades on Lootrank.
+ - You can now load an individual item from PTR Wowhead by pasting in the PTR Wowhead link to it on the Add Item dialog.
+ - There's now a setting in the Options dialog to add the source class/spec to buffs on the Buffs tab.
+ - Rawr.Tree: More 3.1 changes. More optimizer additional requirements.
+ - Rawr.Cat: More 3.1 changes.
+ - Rawr.Bear: More 3.1 changes.
+ - Rawr.Mage: Added Mana Source/Usage charts. More 3.1 changes. Improved advanced calculations. Incanter's Absorbtion is now (simply) modeled.
+ - Rawr.Moonkin: More 3.1 changes.
+ - Rawr.RestoSham: Couple bugfixes.
+ - Rawr.Retribution: Added Glyph chart. More 3.1 changes.
+ - Rawr.Healadin: Added Glyph chart. More 3.1 changes.
+ - Rawr.EnhSham: Coupled bugfixes. More 3.1 changes.
+ - Rawr.ProtWarr: More 3.1 changes.
+ - Rawr.Warlock: More 3.1 changes. Improvements to talent/spell support.";
+			labelVersionHistory.Height = 540;
+
 			this.DoubleBuffered = true;
 			_formMain = formMain;
 
