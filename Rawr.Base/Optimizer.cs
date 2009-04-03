@@ -381,6 +381,10 @@ namespace Rawr.Optimizer
                     }
                 }
             }
+            else
+            {
+                slotItems[characterSlots + 3] = new List<object>();
+            }
 
             if (optimizeFood || optimizeElixirs || optimizeTalents)
             {
