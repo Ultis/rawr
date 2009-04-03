@@ -1294,8 +1294,11 @@ namespace Rawr.Optimizer
             if (OptimizeFood)
             {
                 Buff food = (Buff)items[characterSlots];
-                character.ActiveBuffs.Add(food);
-                CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, food);
+                if (food != null && !character.ActiveBuffs.Contains(food))
+                {
+                    character.ActiveBuffs.Add(food);
+                    CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, food);
+                }
             }
             if (OptimizeElixirs)
             {
@@ -1304,26 +1307,68 @@ namespace Rawr.Optimizer
                 if (battle != null && battle.ConflictingBuffs.Contains("Guardian Elixir"))
                 {
                     // flask
-                    if (battle != null && !character.ActiveBuffs.Contains(battle))
+                    if (battle != null)
                     {
-                        character.ActiveBuffs.Add(battle);
-                        if (Mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
-                        CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
+                        if (!character.ActiveBuffs.Contains(battle))
+                        {
+                            character.ActiveBuffs.Add(battle);
+                            if (Mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
+                            CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
+                        }
+                        else if (Mixology)
+                        {
+                            // make sure we have all improvements
+                            foreach (Buff improvement in battle.Improvements)
+                            {
+                                if (!character.ActiveBuffs.Contains(improvement))
+                                {
+                                    character.ActiveBuffs.Add(improvement);
+                                }
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    if (battle != null && !character.ActiveBuffs.Contains(battle))
+                    if (battle != null)
                     {
-                        character.ActiveBuffs.Add(battle);
-                        if (Mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
-                        CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
+                        if (!character.ActiveBuffs.Contains(battle))
+                        {
+                            character.ActiveBuffs.Add(battle);
+                            if (Mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
+                            CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
+                        }
+                        else if (Mixology)
+                        {
+                            // make sure we have all improvements
+                            foreach (Buff improvement in battle.Improvements)
+                            {
+                                if (!character.ActiveBuffs.Contains(improvement))
+                                {
+                                    character.ActiveBuffs.Add(improvement);
+                                }
+                            }
+                        }
                     }
-                    if (guardian != null && !character.ActiveBuffs.Contains(guardian))
+                    if (guardian != null)
                     {
-                        character.ActiveBuffs.Add(guardian);
-                        if (Mixology) character.ActiveBuffs.Add(guardian.Improvements[0]);
-                        CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, guardian);
+                        if (!character.ActiveBuffs.Contains(guardian))
+                        {
+                            character.ActiveBuffs.Add(guardian);
+                            if (Mixology) character.ActiveBuffs.Add(guardian.Improvements[0]);
+                            CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, guardian);
+                        }
+                        else if (Mixology)
+                        {
+                            // make sure we have all improvements
+                            foreach (Buff improvement in guardian.Improvements)
+                            {
+                                if (!character.ActiveBuffs.Contains(improvement))
+                                {
+                                    character.ActiveBuffs.Add(improvement);
+                                }
+                            }
+                        }
                     }
                 }
             }
