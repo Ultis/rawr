@@ -64,4 +64,78 @@ namespace Rawr
         [GlyphData(15, "Glyph of Ice Lance", true, @"Your Ice Lance now causes 4 times damage against frozen targets higher level than you instead of triple damage.")]
         public bool GlyphOfIceLance { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
     }
+    public partial class PaladinTalents
+        {
+        private bool[] _glyphData = new bool[34];
+        public override bool[] GlyphData { get { return _glyphData; } }
+        
+        [GlyphData(0, "Glyph of Avenging Wrath", true, @"Reduces the cooldown of your Hammer of Wrath spell by 50% while Avenging Wrath is active.")]
+        public bool GlyphOfAvengingWrath { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(1, "Glyph of Avenger's Shield", true, @"Your Avenger's Shield hits 2 fewer targets, but for 100% more damage.")]
+        public bool GlyphOfAvengersShield { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(2, "Glyph of Seal of Blood", true, @"When your Seal of Blood, Seal of the Martyr, Judgement of Blood, or Judgement of the Martyr deals damage to you, you gain 11% of the damage done as mana.")]
+        public bool GlyphOfSealOfBlood { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(3, "Glyph of Seal of Righteousness", true, @"Increases the damage done by Seal of Righteousness by 10%.")]
+        public bool GlyphOfSealOfRighteousness { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData(4, "Glyph of Seal of Vengeance", true, @"Your Seal of Vengeance or Seal of Corruption also grants 10 expertise while active.")]
+        public bool GlyphOfSealOfVengeance { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(5, "Glyph of Hammer of Wrath", true, @"Reduces the mana cost of Hammer of Wrath by 100%.")]
+        public bool GlyphOfHammerOfWrath { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        [GlyphData(6, "Glyph of Beacon of Light", true, @"Increases the duration of Beacon of Light by 30 sec.")]
+        public bool GlyphOfBeaconOfLight { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(7, "Glyph of Divine Plea", true, @"While Divine Plea is active, you take 3% reduced damage from all sources.")]
+        public bool GlyphOfDivinePlea { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        [GlyphData(8, "Glyph of Divine Storm", true, @"Your Divine Storm now heals for an additional 15% of the damage it causes.")]
+        public bool GlyphOfDivineStorm { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        [GlyphData(9, "Glyph of Hammer of the Righteous", true, @"Your Hammer of the Righteous hits 1 additional target.")]
+        public bool GlyphOfHammerOfTheRighteous { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(10, "Glyph of Holy Shock", true, @"Reduces the cooldown of Holy Shock by 1 sec.")]
+        public bool GlyphOfHolyShock { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(11, "Glyph of Salvation", true, @"When you cast Hand of Salvation on yourself, it also reduces damage taken by 20%.")]
+        public bool GlyphOfSalvation  { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(12, "Glyph of Shield of Righteousness", true, @"Reduces the mana cost of Shield of Righteousness by 80%.")]
+        public bool GlyphOfShieldOfRighteousness { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(13, "Glyph of Seal of Wisdom", true, @"While Seal of Wisdom is active, the cost of your healing spells is reduced by 5%.")]
+        public bool GlyphOfSealOfWisdom { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Cleansing", true, @"Reduces the mana cost of your Cleanse and Purify spells by 20%.")]
+        public bool GlyphOfCleansing { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Seal of Light", true, @"While Seal of Light is active, the effect of your healing spells is increased by 5%.")]
+        public bool GlyphOfSealOfLight { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(16, "Glyph of the Wise", false, @"Reduces the mana cost of your Seal of Wisdom spell by 50%.")]
+        public bool GlyphOftheWise { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Turn Evil", true, @"Reduces the casting time of your Turn Evil spell by 100%, but increases the cooldown by 8 sec.")]
+        public bool GlyphOfTurnEvil { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Consecration", true, @"Increases the duration and cooldown of Consecration by 2 sec.")]
+        public bool GlyphOfConsecration { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, "Glyph of Crusader Strike", true, @"Reduces the mana cost of your Crusader Strike ability by 20%.")]
+        public bool GlyphOfCrusaderStrike { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, "Glyph of Exorcism", true, @"Increases damage done by Exorcism by 20%.")]
+        public bool GlyphOfExorcism { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(21, "Glyph of Flash of Light", true, @"Your Flash of Light has an additional 5% critical strike chance.")]
+        public bool GlyphOfFlashOfLight { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, "Glyph of Seal of Command", true, @"Increases the chance of dealing Seal of Command damage by 20%.")]
+        public bool GlyphOfSealOfCommand { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        [GlyphData(23, "Glyph of Blessing of Kings", false, @"Reduces the mana cost of your Blessing of Kings and Greater Blessing of Kings spells by 50%.")]
+        public bool GlyphOfBlessingOfKings { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Sense Undead", false, @"Damage against Undead increased by 1% while your Sense Undead ability is active.")]
+        public bool GlyphOfSenseUndead { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, "Glyph of Righteous Defense", true, @"Increases the chance for your Righteous Defense ability to work successfully by 8% on each target.")]
+        public bool GlyphOfRighteousDefense { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(26, "Glyph of Spiritual Attunement", true, @"Increases the amount of mana gained from your Spiritual Attunement spell by an additional 2%.")]
+        public bool GlyphOfSpiritualAttunement { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        [GlyphData(27, "Glyph of Divinity", true, @"Your Lay on Hands grants twice as much mana as normal and also grants you as much mana as it grants your target.")]
+        public bool GlyphOfDivinity { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(28, "Glyph of Blessing of Wisdom", false, @"Increases the duration of your Blessing of Wisdom spell by 20 min when cast on yourself.")]
+        public bool GlyphOfBlessingOfWisdom { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
+        [GlyphData(29, "Glyph of Hammer of Justice", true, @"Increases your Hammer of Justice range by 5 yards.")]
+        public bool GlyphOfHammerOfJustice { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
+        [GlyphData(30, "Glyph of Lay on Hands", false, @"Reduces the cooldown of your Lay on Hands spell by 5 min.")]
+        public bool GlyphOfLayonHands { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
+        [GlyphData(31, "Glyph of Judgement", true, @"Your Judgements deal 10% more damage.")]
+        public bool GlyphOfJudgement { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
+        [GlyphData(32, "Glyph of Holy Light", true, @"Your Holy Light grants 10% of its heal amount to up to 5 friendly targets within 8 yards of the initial target.")]
+        public bool GlyphOfHolyLight { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+        [GlyphData(33, "Glyph of Blessing of Might", false, @"Increases the duration of your Blessing of Might spell by 20 min when cast on yourself.")]
+        public bool GlyphOfBlessingOfMight { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
+    }
 }

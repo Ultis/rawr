@@ -4047,7 +4047,7 @@ Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume 
 		public int Riptide { get { return _data[79]; } set { _data[79] = value; } }
 	}
 
-	public class PaladinTalents : TalentsBase, ICloneable
+	public partial class PaladinTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[78];
 		public override int[] Data { get { return _data; } }public PaladinTalents() { }
@@ -4059,6 +4059,7 @@ Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume 
 		{
 			PaladinTalents clone = (PaladinTalents)MemberwiseClone();
 			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
 			return clone;
 		}
 
