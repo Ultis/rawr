@@ -44,12 +44,47 @@ namespace Rawr
 	public abstract class TalentsBase
 	{
 		public abstract int[] Data { get; }
+        public virtual bool[] GlyphData { get { return null; } }
+
+        protected void LoadString(string code)
+        {
+            int[] _data = Data;
+            string[] tmp = code.Split('.');
+            string talents = tmp[0];
+            if (talents.Length == _data.Length)
+            {
+                List<int> data = new List<int>();
+                foreach (Char digit in talents)
+                    data.Add(int.Parse(digit.ToString()));
+                data.CopyTo(_data);
+            }
+            if (tmp.Length > 1)
+            {
+                string glyphs = tmp[1];
+                bool[] _glyphData = GlyphData;
+                if (_glyphData != null && glyphs.Length == _glyphData.Length)
+                {
+                    List<bool> data = new List<bool>();
+                    foreach (Char digit in glyphs)
+                        data.Add(int.Parse(digit.ToString()) == 1);
+                    data.CopyTo(_glyphData);
+                }
+            }
+        }
 
 		public override string ToString()
 		{
 			StringBuilder ret = new StringBuilder();
 			foreach (int digit in Data)
 				ret.Append(digit.ToString());
+            if (GlyphData != null)
+            {
+                ret.Append('.');
+                foreach (bool glyph in GlyphData)
+                {
+                    ret.Append(glyph ? '1' : '0');
+                }
+            }
 			return ret.ToString();
 		}
 	}
@@ -60,13 +95,7 @@ namespace Rawr
 		public override int[] Data { get { return _data; } }public PriestTalents() { }
 		public PriestTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
+            LoadString(talents);
 		}
 		object ICloneable.Clone()
 		{
@@ -635,25 +664,20 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%. You are 
 		public int Dispersion { get { return _data[80]; } set { _data[80] = value; } }
 	}
 
-	public class MageTalents : TalentsBase, ICloneable
+	public partial class MageTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[86];
 		public override int[] Data { get { return _data; } }public MageTalents() { }
 		public MageTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			MageTalents clone = (MageTalents)MemberwiseClone();
 			clone._data = (int[])_data.Clone();
-			return clone;
+            clone._glyphData = (bool[])_glyphData.Clone();
+            return clone;
 		}
 
 		public MageTalents Clone()
@@ -1240,14 +1264,8 @@ Stuns the target for 5 sec. Only usable on Frozen targets.",})]
 		public override int[] Data { get { return _data; } }public WarlockTalents() { }
 		public WarlockTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			WarlockTalents clone = (WarlockTalents)MemberwiseClone();
@@ -1835,14 +1853,8 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
 			{
 				talents = talents.Insert(56, "0");
 			}
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			DruidTalents clone = (DruidTalents)MemberwiseClone();
@@ -2403,14 +2415,8 @@ Heals up to 5 friendly party or raid members within 15 yards of the target for 6
 		public override int[] Data { get { return _data; } }public RogueTalents() { }
 		public RogueTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			RogueTalents clone = (RogueTalents)MemberwiseClone();
@@ -2946,14 +2952,8 @@ Enter the Shadow Dance, allowing the use of Sap, Garrotte, Ambush, Cheap Shot, P
 		public override int[] Data { get { return _data; } }public HunterTalents() { }
 		public HunterTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			HunterTalents clone = (HunterTalents)MemberwiseClone();
@@ -3518,13 +3518,7 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
 		public override int[] Data { get { return _data; } }public ShamanTalents() { }
 		public ShamanTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
+            LoadString(talents);
             // work around for patch 3.1 model whilst armory is patch 3.0
             if (talents.Length == 78)
             {
@@ -4059,14 +4053,8 @@ Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume 
 		public override int[] Data { get { return _data; } }public PaladinTalents() { }
 		public PaladinTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			PaladinTalents clone = (PaladinTalents)MemberwiseClone();
@@ -4631,14 +4619,8 @@ An instant weapon attack that causes Holy damage to up to 4 enemies within 8 yar
 		public override int[] Data { get { return _data; } }public WarriorTalents() { }
 		public WarriorTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			WarriorTalents clone = (WarriorTalents)MemberwiseClone();
@@ -5186,14 +5168,8 @@ Sends a wave of force in front of the warrior, causing 426 damage (based on atta
 		public override int[] Data { get { return _data; } }public DeathKnightTalents() { }
 		public DeathKnightTalents(string talents)
 		{
-			if (talents.Length == _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(_data);
-			}
-		}
+            LoadString(talents);
+        }
 		object ICloneable.Clone()
 		{
 			DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();

@@ -756,6 +756,7 @@ namespace Rawr.Mage
         public override Dictionary<string, string> GetAsynchronousCharacterDisplayCalculationValues()
         {
             CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
+            smp.displaySolver = displaySolver;
             Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal(true);
             SolverLogForm.Instance.DisableSolver(displaySolver);
             ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);

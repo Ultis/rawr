@@ -200,7 +200,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Item Budget", "Glyphs", "Mana Sources", "Mana Usage" };
+                    _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage" };
                 return _customChartNames;
             }
         }
@@ -755,18 +755,18 @@ namespace Rawr.Mage
 
             if (statsTotal.MageIceArmor > 0)
             {
-                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.25f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
+                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding) * (1 + (character.MageTalents.GlyphOfIceArmor ? 0.2f : 0.0f)));
+                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.25f * frostWarding) * (1 + (character.MageTalents.GlyphOfIceArmor ? 0.2f : 0.0f)));
             }
             if (statsTotal.MageMageArmor > 0)
             {
                 if (calculationOptions.Mode31)
                 {
-                    statsTotal.SpellCombatManaRegeneration += 0.5f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
+                    statsTotal.SpellCombatManaRegeneration += 0.5f + (character.MageTalents.GlyphOfMageArmor ? 0.2f : 0.0f);
                 }
                 else
                 {
-                    statsTotal.SpellCombatManaRegeneration += 0.3f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
+                    statsTotal.SpellCombatManaRegeneration += 0.3f + (character.MageTalents.GlyphOfMageArmor ? 0.2f : 0.0f);
                 }
                 statsTotal.AllResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + character.MageTalents.ArcaneShielding * 0.25f);
             }
@@ -774,18 +774,18 @@ namespace Rawr.Mage
             {
                 if (calculationOptions.Mode31)
                 {
-                    statsTotal.CritRating += (0.35f + (calculationOptions.GlyphOfMoltenArmor ? 0.2f : 0.0f)) * statsTotal.Spirit;
+                    statsTotal.CritRating += (0.35f + (character.MageTalents.GlyphOfMoltenArmor ? 0.2f : 0.0f)) * statsTotal.Spirit;
                 }
                 else
                 {
-                    statsTotal.SpellCrit += 0.03f + (calculationOptions.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+                    statsTotal.SpellCrit += 0.03f + (character.MageTalents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
                 }
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
                 statsTotal.SpellCrit += calculationOptions.EffectCritBonus;
             }
-            if (calculationOptions.GlyphOfManaGem)
+            if (character.MageTalents.GlyphOfManaGem)
             {
                 statsTotal.BonusManaGem += 0.4f;
             }
@@ -865,13 +865,9 @@ namespace Rawr.Mage
             return statsTotal;
         }
          
-        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower", "GlyphOfFrostfire", "GlyphOfArcaneBlast", "GlyphOfArcaneMissiles", "GlyphOfIceLance", "GlyphOfArcaneBarrage", "GlyphOfLivingBomb" };
-        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power", "Glyph of Frostfire", "Glyph of Arcane Blast", "Glyph of Arcane Missiles", "Glyph of Ice Lance", "Glyph of Arcane Barrage", "Glyph of Living Bomb" };
-
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsMage currentCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
 
@@ -881,156 +877,6 @@ namespace Rawr.Mage
 
             switch (chartName)
             {
-                /*case "Talents (per talent point)":
-                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-
-                    Type t = typeof(MageTalents);
-                    foreach (System.Reflection.PropertyInfo info in t.GetProperties())
-                    {
-                        object[] attributes = info.GetCustomAttributes(typeof(TalentDataAttribute), false);
-                        if (attributes.Length > 0)
-                        {
-                            TalentDataAttribute talentData = (TalentDataAttribute)attributes[0];
-
-                            string talent = talentData.Name;
-                            int maxPoints = talentData.MaxPoints;
-                            int currentPoints = (int)info.GetValue(talents, null);
-
-                            if (currentPoints > 0)
-                            {
-                                info.SetValue(talents, 0, null);
-                                calc = GetCharacterCalculations(character, null, false, true, false) as CharacterCalculationsMage;
-
-                                comparison = CreateNewComparisonCalculation();
-                                comparison.Name = string.Format("{0} ({1})", talent, currentPoints);
-                                comparison.Equipped = true;
-                                comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints) / (float)currentPoints;
-                                subPoints = new float[calc.SubPoints.Length];
-                                for (int i = 0; i < calc.SubPoints.Length; i++)
-                                {
-                                    subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]) / (float)currentPoints;
-                                }
-                                comparison.SubPoints = subPoints;
-
-                                comparisonList.Add(comparison);
-                            }
-
-                            if (currentPoints < maxPoints)
-                            {
-                                info.SetValue(talents, maxPoints, null);
-                                calc = GetCharacterCalculations(character, null, false, true, false) as CharacterCalculationsMage;
-
-                                comparison = CreateNewComparisonCalculation();
-                                comparison.Name = string.Format("{0} ({1})", talent, maxPoints);
-                                comparison.Equipped = false;
-                                comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(maxPoints - currentPoints);
-                                subPoints = new float[calc.SubPoints.Length];
-                                for (int i = 0; i < calc.SubPoints.Length; i++)
-                                {
-                                    subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(maxPoints - currentPoints);
-                                }
-                                comparison.SubPoints = subPoints;
-
-                                comparisonList.Add(comparison);
-                            }
-
-                            info.SetValue(talents, currentPoints, null);
-                        }
-                    }
-
-                    return comparisonList.ToArray();*/
-                case "Glyphs":
-                    calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-
-                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-
-                    for (int index = 0; index < GlyphList.Length; index++)
-                    {
-                        string glyph = GlyphList[index];
-                        bool glyphEnabled = calculationOptions.GetGlyphByName(glyph);
-
-                        if (glyphEnabled)
-                        {
-                            calculationOptions.SetGlyphByName(glyph, false);
-                            calc = GetCharacterCalculations(character, null, false, true, true) as CharacterCalculationsMage;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = GlyphListFriendly[index];
-                            comparison.Equipped = true;
-                            comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints);
-                            subPoints = new float[calc.SubPoints.Length];
-                            for (int i = 0; i < calc.SubPoints.Length; i++)
-                            {
-                                subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]);
-                            }
-                            comparison.SubPoints = subPoints;
-
-                            comparisonList.Add(comparison);
-                        }
-                        else
-                        {
-                            calculationOptions.SetGlyphByName(glyph, true);
-                            calc = GetCharacterCalculations(character, null, false, true, true) as CharacterCalculationsMage;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = GlyphListFriendly[index];
-                            comparison.Equipped = false;
-                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints);
-                            subPoints = new float[calc.SubPoints.Length];
-                            for (int i = 0; i < calc.SubPoints.Length; i++)
-                            {
-                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]);
-                            }
-                            comparison.SubPoints = subPoints;
-
-                            comparisonList.Add(comparison);
-                        }
-
-                        calculationOptions.SetGlyphByName(glyph, glyphEnabled);
-                    }
-
-                    return comparisonList.ToArray();
-                /*case "Talent Specs":
-                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-                    comparison = CreateNewComparisonCalculation();
-                    comparison.Name = "Current";
-                    comparison.Equipped = true;
-                    comparison.OverallPoints = currentCalc.OverallPoints;
-                    subPoints = new float[currentCalc.SubPoints.Length];
-                    for (int i = 0; i < currentCalc.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = currentCalc.SubPoints[i];
-                    }
-                    comparison.SubPoints = subPoints;
-
-                    comparisonList.Add(comparison);
-
-                    Character charClone = character.Clone();
-
-                    System.Windows.Forms.Control talentPicker = (((System.Windows.Forms.TabControl)(_calculationOptionsPanel.Parent.Parent)).TabPages[1].Controls[0]);
-                    //        public List<SavedTalentSpec> SpecsFor(Character.CharacterClass charClass)
-
-                    foreach (object savedTalentSpec in (System.Collections.IEnumerable)(talentPicker.GetType().GetMethod("SpecsFor").Invoke(talentPicker, new object[] { Character.CharacterClass.Mage })))
-                    {
-                        charClone.MageTalents = (MageTalents)(savedTalentSpec.GetType().GetMethod("TalentSpec").Invoke(savedTalentSpec, new object[] { }));
-
-                        calc = GetCharacterCalculations(charClone, null, false, true, false) as CharacterCalculationsMage;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = savedTalentSpec.ToString();
-                        comparison.Equipped = (character.MageTalents.ToString().Equals(charClone.MageTalents.ToString()));
-                        comparison.OverallPoints = calc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
-                    }
-
-                    return comparisonList.ToArray();*/
                 case "Item Budget":
                     return EvaluateItemBudget(character);
                 case "Mana Sources":

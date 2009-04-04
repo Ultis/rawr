@@ -1631,7 +1631,7 @@ namespace Rawr.Mage
             : base("Frostbolt", false, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            if (calculations.CalculationOptions.GlyphOfFrostbolt)
+            if (calculations.MageTalents.GlyphOfFrostbolt)
             {
                 BaseDirectDamageModifier *= 1.05f;
             }
@@ -1691,7 +1691,7 @@ namespace Rawr.Mage
             : base("Fireball", false, false, false, 35, 3.5f, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            if (calculations.CalculationOptions.GlyphOfFireball)
+            if (calculations.MageTalents.GlyphOfFireball)
             {
                 BasePeriodicDamage = 0.0f;
                 BaseCritRate += 0.05f;
@@ -1752,7 +1752,7 @@ namespace Rawr.Mage
             : base("Frostfire Bolt", false, false, false, 40, 3.0f, 0, MagicSchool.FrostFire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            if (calculations.CalculationOptions.GlyphOfFrostfire)
+            if (calculations.MageTalents.GlyphOfFrostfire)
             {
                 BaseCritRate += 0.02f;
                 BaseDirectDamageModifier *= 1.02f;
@@ -1837,7 +1837,7 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            if (castingState.CalculationOptions.GlyphOfLivingBomb)
+            if (castingState.MageTalents.GlyphOfLivingBomb)
             {
                 spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, spell.CritRate)) * (castingState.FireCritBonus - 1));
             }
@@ -1954,7 +1954,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             if (castingState.Frozen)
             {
-                if (castingState.CalculationOptions.GlyphOfIceLance && castingState.CalculationOptions.TargetLevel > castingState.CalculationOptions.PlayerLevel)
+                if (castingState.MageTalents.GlyphOfIceLance && castingState.CalculationOptions.TargetLevel > castingState.CalculationOptions.PlayerLevel)
                 {
                     spell.SpellModifier *= 4;
                 }
@@ -2015,8 +2015,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
-            arcaneBlastDamageMultiplier = calculations.CalculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            if (calculations.CalculationOptions.GlyphOfArcaneBarrage)
+            arcaneBlastDamageMultiplier = calculations.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            if (calculations.MageTalents.GlyphOfArcaneBarrage)
             {
                 BaseCostAmplifier *= 0.8f; // TODO is it additive or multiplicative?
             }
@@ -2103,7 +2103,7 @@ namespace Rawr.Mage
             Calculate(calculations);
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
             BaseCostModifier += baseStats.ArcaneBlastBonus;
-            arcaneBlastDamageMultiplier = calculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
             baseAdditiveSpellModifier = 1.0f + baseStats.ArcaneBlastBonus + 0.02f * mageTalents.SpellImpact;
             tormentTheWeak = 0.04f * mageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
@@ -2264,13 +2264,13 @@ namespace Rawr.Mage
             : base("Arcane Missiles", true, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 5, 6)
         {
             base.Calculate(calculations);
-            if (calculations.CalculationOptions.GlyphOfArcaneMissiles)
+            if (calculations.MageTalents.GlyphOfArcaneMissiles)
             {
                 CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * calculations.MageTalents.SpellPower + 0.1f * calculations.MageTalents.Burnout + calculations.BaseStats.CritBonusDamage + 0.25f));
             }
             SpellDamageCoefficient += 0.15f * calculations.MageTalents.ArcaneEmpowerment;
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
-            arcaneBlastDamageMultiplier = calculations.CalculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            arcaneBlastDamageMultiplier = calculations.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier);
             BaseInterruptProtection += 0.2f * calculations.MageTalents.ArcaneStability;
         }
@@ -2302,7 +2302,7 @@ namespace Rawr.Mage
             : base("Arcane Explosion", false, true, true, 0, 0, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            if (calculations.CalculationOptions.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
+            if (calculations.MageTalents.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
             BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact);
             AoeDamageCap = 37500;
@@ -6614,7 +6614,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -6751,7 +6751,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7057,7 +7057,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7197,7 +7197,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7258,7 +7258,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7307,7 +7307,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7356,7 +7356,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7405,7 +7405,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7454,7 +7454,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7503,7 +7503,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -7553,7 +7553,7 @@ namespace Rawr.Mage
                 int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
                 int extraScorches = 1;
                 if (Sc.HitRate >= 1.0) extraScorches = 0;
-                if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+                if (castingState.MageTalents.GlyphOfImprovedScorch)
                 {
                     averageScorchesNeeded = 1;
                     extraScorches = 0;
@@ -7606,7 +7606,7 @@ namespace Rawr.Mage
             {
                 int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
                 int extraScorches = 1;
-                if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+                if (castingState.MageTalents.GlyphOfImprovedScorch)
                 {
                     averageScorchesNeeded = 1;
                     extraScorches = 0;

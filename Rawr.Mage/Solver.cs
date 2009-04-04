@@ -350,9 +350,9 @@ namespace Rawr.Mage
             calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
             calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
             calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
-            calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
+            calculationResult.ArcanePowerDuration = 15.0 + (talents.GlyphOfArcanePower ? 3.0 : 0.0);
             calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
-            calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
+            calculationResult.WaterElementalCooldown = (180.0 - (talents.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
             calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.ImprovedWaterElemental;
             calculationResult.PowerInfusionDuration = 15.0;
             calculationResult.PowerInfusionCooldown = 120.0;

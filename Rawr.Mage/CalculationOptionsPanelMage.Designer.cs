@@ -2222,7 +2222,7 @@
             this.label106.TabIndex = 199;
             this.label106.Text = "Glyph of Ice Lance: *";
             this.toolTipMage.SetToolTip(this.label106, "Your Ice Lance now causes 4 times damage against frozen targets higher level than" +
-                    " you instead of triple damage.\r\n");
+                    " you instead of triple damage.");
             // 
             // checkBoxGlyphOfIceLance
             // 

@@ -1194,6 +1194,10 @@ namespace Rawr
 					itemComparison1.LoadTalents();
 					break;
 
+                case "Glyphs":
+                    itemComparison1.LoadGlyphs();
+                    break;
+
 				case "Relative Stat Values":
 					itemComparison1.LoadRelativeStatValues();
 					break;

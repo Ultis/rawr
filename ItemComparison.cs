@@ -400,6 +400,48 @@ namespace Rawr
 			_characterSlot = Character.CharacterSlot.None;
         }
 
+        public void LoadGlyphs()
+        {
+            List<ComparisonCalculationBase> glyphCalculations = new List<ComparisonCalculationBase>();
+            Character baseChar = Character.Clone();
+            Character newChar = Character.Clone();
+            CharacterCalculationsBase currentCalc;
+            CharacterCalculationsBase newCalc;
+            ComparisonCalculationBase compare;
+            bool orig;
+            currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true);
+            foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
+            {
+                GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                if (glyphDatas.Length > 0)
+                {
+                    GlyphDataAttribute glyphData = glyphDatas[0];
+                    orig = baseChar.CurrentTalents.GlyphData[glyphData.Index];
+                    if (orig)
+                    {
+                        newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
+                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                        compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig);
+                    }
+                    else
+                    {
+                        newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
+                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                        compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig);
+                    }
+                    compare.Item = null;
+                    glyphCalculations.Add(compare);
+                    newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
+                }
+            }
+
+            comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
+            comparisonGraph1.ItemCalculations = glyphCalculations.ToArray();
+            comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
+            _characterSlot = Character.CharacterSlot.None;
+        }
+
         public void LoadTalentSpecs(TalentPicker picker)
         {
             List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
