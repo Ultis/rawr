@@ -59,7 +59,7 @@ namespace Rawr.UserControls.Options
             {
                 case "de":
                     title = "Profil Aktualisieren";
-                    message = "Sie müssen 'Update Item Cache from Wowhead' to reload Artikel für die Deutsche Lokalisierung.";
+                    message = "Um die deutsche Lokalisierung nachzuladen müssen sie auf 'Update Item Cache from Wowhead' drücken.";
                     break;
                 case "fr":
                     title = "Mise à jour du Profil";
