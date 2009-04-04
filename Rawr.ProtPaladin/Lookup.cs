@@ -67,7 +67,7 @@ namespace Rawr.ProtPaladin
                 case "Elemental":
                     return (1f + character.PaladinTalents.Crusade * 0.01f);
                 case "Undead":
-                    return (1f + character.PaladinTalents.Crusade * 0.01f) * (1f + (calcOpts.GlyphSenseUndead ? 0.01f : 0f));
+                    return (1f + character.PaladinTalents.Crusade * 0.01f) * (1f + (character.PaladinTalents.GlyphOfSenseUndead ? 0.01f : 0f));
                 default: return 1f;
             }
         }
@@ -95,7 +95,7 @@ namespace Rawr.ProtPaladin
             float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier);
             //Talents
             damageTaken *= (1f - talents.ImprovedRighteousFury * 0.02f) * (1f - talents.ShieldOfTheTemplar * 0.01f);
-            if (calcOpts.GlyphDivinePlea)
+            if (talents.GlyphOfDivinePlea)
             {
                 damageTaken *= (1f - 0.03f);
             }

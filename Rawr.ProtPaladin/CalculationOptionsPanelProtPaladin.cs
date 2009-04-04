@@ -26,6 +26,7 @@ namespace Rawr.ProtPaladin
 				Character.CalculationOptions = new CalculationOptionsProtPaladin();
 
 			CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+            PaladinTalents Talents = Character.PaladinTalents;
 
             // Attacker Stats
             comboBoxTargetType.SelectedItem = calcOpts.TargetType.ToString();
@@ -57,11 +58,11 @@ namespace Rawr.ProtPaladin
             radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
 
             // Glyphs
-            checkBoxGlyphOfJudgement.Checked = calcOpts.GlyphJudgement;
-            checkBoxGlyphOfSealOfVengeance.Checked = calcOpts.GlyphSealVengeance;
-            checkBoxGlyphOfExorcism.Checked = calcOpts.GlyphExorcism;
-            checkBoxGlyphOfDivinePlea.Checked = calcOpts.GlyphDivinePlea;
-            checkBoxGlyphOfSenseUndead.Checked = calcOpts.GlyphSenseUndead;
+            checkBoxGlyphOfJudgement.Checked  = Talents.GlyphOfJudgement;
+            checkBoxGlyphOfSealOfVengeance.Checked = Talents.GlyphOfSealOfVengeance;
+            checkBoxGlyphOfExorcism.Checked = Talents.GlyphOfExorcism;
+            checkBoxGlyphOfDivinePlea.Checked = Talents.GlyphOfDivinePlea;
+            checkBoxGlyphOfSenseUndead.Checked = Talents.GlyphOfSenseUndead;
 
             calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
 			
@@ -143,47 +144,7 @@ namespace Rawr.ProtPaladin
                 Character.OnCalculationsInvalidated();
             }
         }
-
-        void checkBoxGlyphOfJudgement_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                calcOpts.GlyphJudgement = checkBoxGlyphOfJudgement.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        void checkBoxGlyphOfSealOfVengeance_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                calcOpts.GlyphSealVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void checkBoxGlyphOfExorcism_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                calcOpts.GlyphExorcism = checkBoxGlyphOfExorcism.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void checkBoxGlyphOfDivinePlea_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                calcOpts.GlyphDivinePlea = checkBoxGlyphOfDivinePlea.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
+        
         private void extendedToolTipMitigtionScale_Click(object sender, EventArgs e)
         {
             if (!radioButtonMitigationScale.Checked)
@@ -235,16 +196,6 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        private void checkBoxGlyphOfSealOfRighteousness_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                calcOpts.GlyphSealRighteousness = checkBoxGlyphOfSealOfRighteousness.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void numericUpDownTargetLevel_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
@@ -265,16 +216,76 @@ namespace Rawr.ProtPaladin
             }
         }
 
+        #region Glyphs
+
+        private void checkBoxGlyphOfJudgement_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                PaladinTalents Talents = Character.PaladinTalents;
+                Talents.GlyphOfJudgement = checkBoxGlyphOfJudgement.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfSealOfVengeance_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                PaladinTalents Talents = Character.PaladinTalents;
+                Talents.GlyphOfSealOfVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfExorcism_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                PaladinTalents Talents = Character.PaladinTalents;
+                Talents.GlyphOfExorcism = checkBoxGlyphOfExorcism.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfDivinePlea_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                PaladinTalents Talents = Character.PaladinTalents;
+                Talents.GlyphOfDivinePlea = checkBoxGlyphOfDivinePlea.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void checkBoxGlyphOfSenseUndead_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                calcOpts.GlyphSenseUndead = checkBoxGlyphOfSenseUndead.Checked;
+                PaladinTalents Talents = Character.PaladinTalents;
+                Talents.GlyphOfSenseUndead = checkBoxGlyphOfSenseUndead.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
-	}
+
+        private void checkBoxGlyphOfSealOfRighteousness_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                PaladinTalents Talents = Character.PaladinTalents;
+                Talents.GlyphOfSealOfRighteousness = checkBoxGlyphOfSealOfRighteousness.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        #endregion
+    }
 
 	[Serializable]
 	public class CalculationOptionsProtPaladin : ICalculationOptionBase
@@ -297,15 +308,17 @@ namespace Rawr.ProtPaladin
 		public float ThreatScale = 8.0f;
         public float MitigationScale = 0.125f;
         public int RankingMode = 1;
+        /*
         public bool GlyphSealVengeance = false;
         public bool GlyphSealRighteousness = false;
         public bool GlyphJudgement = false;
         public bool GlyphExorcism = false;
         public bool GlyphDivinePlea = false;
         public bool GlyphSenseUndead = false;
+        */
         public bool UseHolyShield = true;
         public string SealChoice = "Seal of Vengeance";
         public string TargetType = "Unspecified";
-		public PaladinTalents talents = null;
+        public PaladinTalents talents = null;
 	}
 }

@@ -749,7 +749,7 @@ focus on Survival Points.",
             {
                 statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15f / 48f);
             }
-            if (calcOpts.GlyphSealVengeance && calcOpts.SealChoice == "Seal of Vengeance") 
+            if (talents.GlyphOfSealOfVengeance && calcOpts.SealChoice == "Seal of Vengeance") 
             {
                 statsTotal.Expertise += 10;
             }

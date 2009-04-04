@@ -59,7 +59,7 @@ namespace Rawr.ProtPaladin
                 case Ability.JudgementOfVengeance:
                     baseDamage = (1.0f + 0.28f * Stats.SpellPower + 0.175f * Stats.AttackPower) * 1.5f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
-                    if (Options.GlyphJudgement)
+                    if (Talents.GlyphOfJudgement)
                     {
                         DamageMultiplier *= (1.0f + 0.01f);
                     }                    
@@ -70,7 +70,7 @@ namespace Rawr.ProtPaladin
                                  (Lookup.WeaponSpeed(Character, Stats) * 0.044f * Stats.SpellPower);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) * 
                         (1f + Stats.BonusSealOfRighteousnessDamageMultiplier);
-                    if (Options.GlyphSealRighteousness)
+                    if (Talents.GlyphOfSealOfRighteousness)
                     {
                         DamageMultiplier *= (1.0f + 0.1f);
                     }
@@ -79,7 +79,7 @@ namespace Rawr.ProtPaladin
 				case Ability.JudgementOfRighteousness:
                     baseDamage = (1.0f + 0.2f * Stats.AttackPower + 0.32f * Stats.SpellPower);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
-                    if (Options.GlyphJudgement)
+                    if (Talents.GlyphOfJudgement)
                     {
                         DamageMultiplier *= (1.0f + 0.01f);
                     }
@@ -107,7 +107,7 @@ namespace Rawr.ProtPaladin
 				case Ability.Exorcism:
                     baseDamage = (1028f + 0.15f * Stats.SpellPower + 0.15f * Stats.AttackPower);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1f + Talents.SanctityOfBattle * 0.05f);
-                        if (Options.GlyphExorcism)
+                        if (Talents.GlyphOfExorcism)
                         DamageMultiplier *= (1.0f + 0.30f);
 					ArmorReduction = 0.0f;
 					break;
