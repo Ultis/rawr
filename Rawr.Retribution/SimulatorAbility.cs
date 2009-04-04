@@ -24,7 +24,7 @@ namespace Rawr.Retribution
             NextUse = 0;
         }
 
-        public bool UseAbility(float currentTime)
+        public float UseAbility(float currentTime)
         {
             if (NextUse <= currentTime + Wait)
             {
@@ -33,11 +33,11 @@ namespace Rawr.Retribution
                 LastUse = currentTime;
                 NextUse = currentTime + Cooldown;
                 Uses++;
-                return true;
+                return currentTime + 1.5f + Delay;
             }
             else
             {
-                return false;
+                return -1;
             }
         }
 

@@ -30,19 +30,30 @@ namespace Rawr.Retribution
             abilities[(int)Rotation.Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
 
             bool gcdUsed;
+            float minNext, tryUse;
+
             while (currentTime < sol.FightLength)
             {
                 gcdUsed = false;
                 foreach (Rotation.Ability ability in rot.Priorities)
                 {
-                    if (abilities[(int)ability].UseAbility(currentTime))
+                    tryUse = abilities[(int)ability].UseAbility(currentTime);
+                    if (tryUse > 0)
                     {
-                        currentTime += 1.5f + rot.Delay;
+                        currentTime = tryUse;
                         gcdUsed = true;
                         break;
                     }
                 }
-                if (!gcdUsed) currentTime += .01f;
+                if (!gcdUsed)
+                {
+                    minNext = sol.FightLength;
+                    foreach (SimulatorAbility simab in abilities)
+                    {
+                        if (simab.NextUse < minNext) minNext = simab.NextUse;
+                    }
+                    currentTime = minNext;
+                }
             }
 
             sol.Judgement = abilities[(int)Rotation.Ability.Judgement].Uses;
