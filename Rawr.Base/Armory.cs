@@ -323,6 +323,9 @@ namespace Rawr
                 }
             }
 
+            character.ActiveBuffs.AddRange(Calculations.GetModel(character.CurrentModel).DefaultBuffs(character));
+            bool[] glyphData = Calculations.GetModel(character.CurrentModel).DefaultGlyphs(character);
+            if (glyphData != null) character.CurrentTalents.GlyphData = glyphData;
         }
 
         public static Int32 GetItemIdByName(string item_name)

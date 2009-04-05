@@ -370,6 +370,15 @@ namespace Rawr
 					new Buff { Name = "Enhancing Totems", Stats = { Strength = (float)Math.Floor(155f * 0.15f), Agility = (float)Math.Floor(155f * 0.15f) } }
 				}
             });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Horn of Winter",
+                Source = "Death Knight",
+                Group = "Agility and Strength",
+                Stats = { Strength = 155, Agility = 155 },
+                ConflictingBuffs = { "Agility", "Strength" }
+            });
             #endregion
 
             #region Armor

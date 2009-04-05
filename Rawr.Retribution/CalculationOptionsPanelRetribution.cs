@@ -49,10 +49,10 @@ namespace Rawr.Retribution
             nudExo20.Value = (decimal)calcOpts.ExoCD20;
             nudHoW20.Value = (decimal)calcOpts.HoWCD20;
 
-            chkGlyphJudgement.Checked = calcOpts.GlyphJudgement;
-            chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
-            chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
-            chkGlyphExorcism.Checked = calcOpts.GlyphExorcism;
+            chkGlyphJudgement.Checked = Character.PaladinTalents.GlyphOfJudgement;
+            chkGlyphConsecration.Checked = Character.PaladinTalents.GlyphOfConsecration;
+            chkGlyphSenseUndead.Checked = Character.PaladinTalents.GlyphOfSenseUndead;
+            chkGlyphExorcism.Checked = Character.PaladinTalents.GlyphOfExorcism;
 
             UpdatePriority(calcOpts);
 
@@ -78,7 +78,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphJudgement = chkGlyphJudgement.Checked;
+                Character.PaladinTalents.GlyphOfJudgement = chkGlyphJudgement.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -119,7 +119,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphConsecration = chkGlyphConsecration.Checked;
+                Character.PaladinTalents.GlyphOfConsecration = chkGlyphConsecration.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -129,7 +129,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphSenseUndead = chkGlyphSenseUndead.Checked;
+                Character.PaladinTalents.GlyphOfSenseUndead = chkGlyphSenseUndead.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -213,7 +213,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.GlyphExorcism = chkGlyphExorcism.Checked;
+                Character.PaladinTalents.GlyphOfExorcism = chkGlyphExorcism.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -496,10 +496,10 @@ namespace Rawr.Retribution
             }
         }        
 
-        public bool GlyphJudgement = true;
-        public bool GlyphConsecration = true;
-        public bool GlyphSenseUndead = true;
-        public bool GlyphExorcism = true;
+        //public bool GlyphJudgement = true;
+        //public bool GlyphConsecration = true;
+        //public bool GlyphSenseUndead = true;
+        //public bool GlyphExorcism = true;
 
         public float JudgeCD = 7.1f;
         public float CSCD = 7.1f;
@@ -541,10 +541,10 @@ namespace Rawr.Retribution
             clone._order = (Rotation.Ability[])_order.Clone();
             clone._selected = (bool[])_selected.Clone();
 
-            clone.GlyphJudgement = GlyphJudgement;
-            clone.GlyphConsecration = GlyphConsecration;
-            clone.GlyphSenseUndead = GlyphSenseUndead;
-            clone.GlyphExorcism = GlyphExorcism;
+            //clone.GlyphJudgement = GlyphJudgement;
+            //clone.GlyphConsecration = GlyphConsecration;
+            //clone.GlyphSenseUndead = GlyphSenseUndead;
+            //clone.GlyphExorcism = GlyphExorcism;
 
             return clone;
         }

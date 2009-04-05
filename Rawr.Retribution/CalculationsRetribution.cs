@@ -59,6 +59,36 @@ namespace Rawr.Retribution
             }
         }
 
+        private static List<Buff> _cachedDefaultBuffs = null;
+        public override List<Buff> DefaultBuffs(Character character)
+        {
+            if (_cachedDefaultBuffs == null)
+            {
+                _cachedDefaultBuffs = new List<Buff>();
+                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
+                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
+            }
+            return _cachedDefaultBuffs;
+        }
+
+        private static bool[] _cachedDefaultGlyphs = null;
+        public override bool[] DefaultGlyphs(Character character)
+        {
+            if (_cachedDefaultGlyphs == null)
+            {
+                PaladinTalents talents = new PaladinTalents();
+                talents.GlyphOfJudgement = true;
+                talents.GlyphOfConsecration = true;
+                talents.GlyphOfSenseUndead = true;
+                talents.GlyphOfExorcism = true;
+                _cachedDefaultGlyphs = talents.GlyphData;
+            }
+            return _cachedDefaultGlyphs;
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -81,7 +111,6 @@ namespace Rawr.Retribution
                 return _subPointNameColors;
             }
         }
-
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
@@ -235,7 +264,7 @@ namespace Rawr.Retribution
             //damage multipliers
             float twoHandedSpec = 1f + 0.02f * talents.TwoHandedWeaponSpecialization;
             float crusade = (1f + (calcOpts.MobType < 3 ? .02f : .01f) * talents.Crusade)
-                * (calcOpts.GlyphSenseUndead && calcOpts.MobType == 0 ? 1.01f : 1f);
+                * (talents.GlyphOfSenseUndead && calcOpts.MobType == 0 ? 1.01f : 1f);
             float vengeance = 1f + 0.03f * talents.Vengeance;
             float talentMulti = twoHandedSpec * crusade * vengeance;
             float critBonus = 2f * (1f + stats.BonusCritMultiplier);
@@ -301,7 +330,7 @@ namespace Rawr.Retribution
             #region Judgement
             float judgeCrit = stats.PhysicalCrit + .06f * talents.Fanaticism;
             float judgeHitDamage = (calc.WeaponDamage * .26f + .18f * stats.SpellPower + .11f * stats.AttackPower) * aw
-                * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
+                * spellPowerMulti * talentMulti * partialResist * aow * (talents.GlyphOfJudgement ? 1.1f : 1f);
             float judgeAvgDamage = judgeHitDamage * ((1f - judgeCrit) + judgeCrit * critBonus * rightVen) * rangeAvoid;
             calc.JudgementDPS = judgeAvgDamage / (8f - stats.JudgementCDReduction);
             #endregion
@@ -309,13 +338,13 @@ namespace Rawr.Retribution
             #region Consecration
             calc.ConsecrationDPS = (72f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower)
                 * vengeance * crusade * spellPowerMulti * partialResist * aw * spellAvoid;
-            float consAvgDamage = calc.ConsecrationDPS * (calcOpts.GlyphConsecration ? 10f : 8f);
+            float consAvgDamage = calc.ConsecrationDPS * (talents.GlyphOfConsecration ? 10f : 8f);
             #endregion
 
             #region Exorcism
             float exoCrit = (calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
-            float exoHitDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * 
-                aw * sanctBattle * (1f + stats.ExorcismMultiplier) * (calcOpts.GlyphExorcism ? 1.2f : 1f);
+            float exoHitDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist *
+                aw * sanctBattle * (1f + stats.ExorcismMultiplier) * (talents.GlyphOfExorcism ? 1.2f : 1f);
             float exoAvgDamage = exoHitDamage * ((1f - exoCrit) + exoCrit * spellCritBonus) * spellAvoid;
             calc.ExorcismDPS = exoAvgDamage / 15f;
             #endregion
@@ -334,8 +363,8 @@ namespace Rawr.Retribution
             if (calcOpts.SimulateRotation)
             {
                 float spellGCD = 1.5f / (1f + stats.SpellHaste);
-                Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
-                    calcOpts.GlyphConsecration);
+                Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay,
+                    stats.JudgementCDReduction > 0 ? true : false, talents.GlyphOfConsecration);
                 RotationSolution sol = RotationSimulator.SimulateRotation(rotation);
                 calc.Rotation = sol;
 
@@ -450,8 +479,8 @@ namespace Rawr.Retribution
             {
                 stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
                 float spellGCD = 1.5f / (1f + stats.SpellHaste);
-                Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay, stats.JudgementCDReduction > 0 ? true : false,
-                    calcOpts.GlyphConsecration);
+                Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay,
+                    stats.JudgementCDReduction > 0 ? true : false, talents.GlyphOfConsecration);
                 RotationSolution sol = RotationSimulator.SimulateRotation(rot);
 
                 libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
@@ -494,59 +523,59 @@ namespace Rawr.Retribution
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            if (chartName == "Glyphs")
-            {
+            //if (chartName == "Glyphs")
+            //{
                 
-                CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            //    CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
 
-                Character baseChar = character.Clone();
-                CalculationOptionsRetribution baseOpts = initOpts.Clone();
-                baseChar.CalculationOptions = baseOpts;
+            //    Character baseChar = character.Clone();
+            //    CalculationOptionsRetribution baseOpts = initOpts.Clone();
+            //    baseChar.CalculationOptions = baseOpts;
 
-                Character deltaChar = character.Clone();
-                CalculationOptionsRetribution deltaOpts = initOpts.Clone();
-                deltaChar.CalculationOptions = deltaOpts;
+            //    Character deltaChar = character.Clone();
+            //    CalculationOptionsRetribution deltaOpts = initOpts.Clone();
+            //    deltaChar.CalculationOptions = deltaOpts;
 
-                CharacterCalculationsBase baseCalc;
+            //    CharacterCalculationsBase baseCalc;
 
-                ComparisonCalculationBase Judgement;
-                baseOpts.GlyphJudgement = false;
-                deltaOpts.GlyphJudgement = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                Judgement = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Judgement", initOpts.GlyphJudgement);
-                deltaOpts.GlyphJudgement = baseOpts.GlyphJudgement = initOpts.GlyphJudgement;
-                Judgement.Item = null;
+            //    ComparisonCalculationBase Judgement;
+            //    baseOpts.GlyphJudgement = false;
+            //    deltaOpts.GlyphJudgement = true;
+            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
+            //    Judgement = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Judgement", initOpts.GlyphJudgement);
+            //    deltaOpts.GlyphJudgement = baseOpts.GlyphJudgement = initOpts.GlyphJudgement;
+            //    Judgement.Item = null;
 
-                ComparisonCalculationBase Consecration;
-                baseOpts.GlyphConsecration = false;
-                deltaOpts.GlyphConsecration = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                Consecration = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Consecration", initOpts.GlyphConsecration);
-                deltaOpts.GlyphConsecration = baseOpts.GlyphConsecration = initOpts.GlyphConsecration;
-                Consecration.Item = null;
+            //    ComparisonCalculationBase Consecration;
+            //    baseOpts.GlyphConsecration = false;
+            //    deltaOpts.GlyphConsecration = true;
+            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
+            //    Consecration = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Consecration", initOpts.GlyphConsecration);
+            //    deltaOpts.GlyphConsecration = baseOpts.GlyphConsecration = initOpts.GlyphConsecration;
+            //    Consecration.Item = null;
 
-                ComparisonCalculationBase SenseUndead;
-                baseOpts.GlyphSenseUndead = false;
-                deltaOpts.GlyphSenseUndead = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                SenseUndead = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Sense Undead", initOpts.GlyphSenseUndead);
-                deltaOpts.GlyphSenseUndead = baseOpts.GlyphSenseUndead = initOpts.GlyphSenseUndead;
-                SenseUndead.Item = null;
+            //    ComparisonCalculationBase SenseUndead;
+            //    baseOpts.GlyphSenseUndead = false;
+            //    deltaOpts.GlyphSenseUndead = true;
+            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
+            //    SenseUndead = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Sense Undead", initOpts.GlyphSenseUndead);
+            //    deltaOpts.GlyphSenseUndead = baseOpts.GlyphSenseUndead = initOpts.GlyphSenseUndead;
+            //    SenseUndead.Item = null;
 
-                ComparisonCalculationBase Exorcism;
-                baseOpts.GlyphExorcism = false;
-                deltaOpts.GlyphExorcism = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                Exorcism = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Exorcism", initOpts.GlyphExorcism);
-                deltaOpts.GlyphExorcism = baseOpts.GlyphExorcism = initOpts.GlyphExorcism;
-                Exorcism.Item = null;
+            //    ComparisonCalculationBase Exorcism;
+            //    baseOpts.GlyphExorcism = false;
+            //    deltaOpts.GlyphExorcism = true;
+            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
+            //    Exorcism = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Exorcism", initOpts.GlyphExorcism);
+            //    deltaOpts.GlyphExorcism = baseOpts.GlyphExorcism = initOpts.GlyphExorcism;
+            //    Exorcism.Item = null;
 
-                return new ComparisonCalculationBase[] { Judgement, Consecration, SenseUndead, Exorcism };
-            }
-            else
-            {
+            //    return new ComparisonCalculationBase[] { Judgement, Consecration, SenseUndead, Exorcism };
+            //}
+            //else
+            //{
                 return new ComparisonCalculationBase[0];
-            }
+            //}
         }
 
         public override bool IsItemRelevant(Item item)
