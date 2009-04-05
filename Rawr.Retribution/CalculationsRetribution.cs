@@ -84,6 +84,8 @@ namespace Rawr.Retribution
             character.ActiveBuffs.Add(Buff.GetBuffByName("Curse of the Elements"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Endless Rage"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
 
             character.PaladinTalents.GlyphOfJudgement = true;
             character.PaladinTalents.GlyphOfConsecration = true;

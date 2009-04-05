@@ -50,6 +50,30 @@ namespace Rawr.Healadin
             }
         }
 
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgements of the Wise"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Tree of Life Aura"));
+
+            character.PaladinTalents.GlyphOfHolyLight = true;
+            character.PaladinTalents.GlyphOfDivinity = true;
+            character.PaladinTalents.GlyphOfSealOfWisdom = true;
+        }
+
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {

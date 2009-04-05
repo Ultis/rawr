@@ -592,6 +592,14 @@ namespace Rawr
 					new Buff { Name = "Improved Windfury Totem", Source = "Enhance Shaman", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
 				}
             });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Improved Icy Talons",
+                Source = "Death Knight",
+                Group = "Physical Haste",
+                Stats = { PhysicalHaste = 0.2f }
+            });
             #endregion
 
             #region Replenishment
@@ -631,7 +639,6 @@ namespace Rawr
                 Name = "Mana Spring Totem",
                 Source = "Shaman",
                 Group = "Mana Regeneration",
-                ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Mp5 = 85 },
                 Improvements = { 
 					new Buff { Name = "Restorative Totems", Source = "Resto Shaman", Stats = { Mp5 = (float)Math.Floor(85f * 0.25f) } }
@@ -642,7 +649,6 @@ namespace Rawr
                 Name = "Blessing of Wisdom",
                 Source = "Paladin",
                 Group = "Mana Regeneration",
-                ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Mp5 = 91 },
                 Improvements = { 
 					new Buff { Name = "Improved Blessing of Wisdom", Source = "Holy Paladin", Stats = { Mp5 = (float)Math.Floor(91 * 0.2f) } }
