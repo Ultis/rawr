@@ -61,17 +61,34 @@ namespace Rawr.Retribution
 
         public override void SetDefaults(Character character)
         {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blood Frenzy"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Scorch"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Curse of the Elements"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
 
-            PaladinTalents talents = character.PaladinTalents;
-            talents.GlyphOfJudgement = true;
-            talents.GlyphOfConsecration = true;
-            talents.GlyphOfSenseUndead = true;
-            talents.GlyphOfExorcism = true;
+            character.PaladinTalents.GlyphOfJudgement = true;
+            character.PaladinTalents.GlyphOfConsecration = true;
+            character.PaladinTalents.GlyphOfSenseUndead = true;
+            character.PaladinTalents.GlyphOfExorcism = true;
         }
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
@@ -347,7 +364,6 @@ namespace Rawr.Retribution
 
             if (calcOpts.SimulateRotation)
             {
-                float spellGCD = 1.5f / (1f + stats.SpellHaste);
                 Rotation rotation = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay,
                     stats.JudgementCDReduction > 0 ? true : false, talents.GlyphOfConsecration);
                 RotationSolution sol = RotationSimulator.SimulateRotation(rotation);
@@ -462,8 +478,6 @@ namespace Rawr.Retribution
             float libramAP, libramCrit;
             if (calcOpts.SimulateRotation)
             {
-                stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
-                float spellGCD = 1.5f / (1f + stats.SpellHaste);
                 Rotation rot = new Rotation(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay,
                     stats.JudgementCDReduction > 0 ? true : false, talents.GlyphOfConsecration);
                 RotationSolution sol = RotationSimulator.SimulateRotation(rot);
@@ -582,7 +596,7 @@ namespace Rawr.Retribution
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
-                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + stats.SpellHaste +
+                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + 
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             return wantedStats;
@@ -605,7 +619,6 @@ namespace Rawr.Retribution
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 SpellCrit = stats.SpellCrit,
-                SpellHaste = stats.SpellHaste,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
 				PhysicalHit = stats.PhysicalHit,
