@@ -240,7 +240,7 @@ namespace Rawr
                 }
 
                 foreach (Control c in grpMinorGlyph.Controls) c.Dispose();
-                grpMinorGlyph.Controls.Clear;
+                grpMinorGlyph.Controls.Clear();
                 if (minors.Count == 0) grpMinorGlyph.Hide();
                 else grpMinorGlyph.Show();
                 for (int i = 0; i < minors.Count; i++)
