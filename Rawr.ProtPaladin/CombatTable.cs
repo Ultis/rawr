@@ -16,6 +16,7 @@ namespace Rawr.ProtPaladin
         public float Parry { get; protected set; }
         public float Block { get; protected set; }
         public float Glance { get; protected set; }
+        public float Resist { get; protected set; }
         public float Critical { get; protected set; }
         public float Hit { get; protected set; }
 
@@ -91,10 +92,10 @@ namespace Rawr.ProtPaladin
             // Avoidance
             if (Lookup.IsAvoidable(Ability))
             {
-            // Dodge
+                // Dodge
                 Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge) - bonusExpertise));
                 tableSize += Dodge;
-            // Parry
+                // Parry
                 Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry) - bonusExpertise));
                 tableSize += Parry;
             }
@@ -103,6 +104,12 @@ namespace Rawr.ProtPaladin
             {
                 Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance)));
                 tableSize += Glance;
+            }
+            // Resist
+            if (Lookup.IsResistable(Ability))
+            {
+                Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist)));
+                tableSize += Resist;
             }
             // Critical Hit
             Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability));

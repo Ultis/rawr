@@ -31,6 +31,7 @@ namespace Rawr.ProtPaladin
         Parry,
         Block,
         Glance,
+        Resist,
         Crit,
         Hit,
     }

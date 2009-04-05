@@ -50,6 +50,9 @@ namespace Rawr.ProtPaladin
                 case HitResult.Glance:
                     return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
 
+                case HitResult.Resist:
+                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
+
                 default:
                     return 0.0f;
             }
@@ -357,6 +360,29 @@ namespace Rawr.ProtPaladin
                     return true;
                 default:
                     return false;
+            }
+        }
+
+        public static bool IsResistable(Ability ability)
+        {   
+            switch (ability)
+            {
+                case Ability.ShieldOfRighteousness:
+                case Ability.HammerOfTheRighteous:
+                case Ability.SealOfVengeance: 
+                case Ability.HolyVengeance:
+                case Ability.JudgementOfVengeance:
+                case Ability.SealOfRighteousness:
+                case Ability.JudgementOfRighteousness:
+                case Ability.Exorcism:
+                case Ability.HammerOfWrath:
+                case Ability.AvengersShield:
+                case Ability.HolyShield:
+                case Ability.RetributionAura:
+                case Ability.Consecration:
+                    return true;
+                default:
+                return false;
             }
         }
 

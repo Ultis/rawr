@@ -113,7 +113,7 @@ namespace Rawr.ProtPaladin
 					break;
 			}
 
-            if (Options.UseHolyShield && Character.PaladinTalents.HolyShield != 0)
+            if (Character.PaladinTalents.HolyShield != 0)
             {
                 // Holy Shield
                 // TODO: Model Holy Shield Charges

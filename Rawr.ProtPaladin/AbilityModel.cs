@@ -43,9 +43,12 @@ namespace Rawr.ProtPaladin
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HammerOfTheRighteous:
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) / Lookup.WeaponSpeed(Character, Stats) * 4f;
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
-					ArmorReduction = 0.0f;
+                    if (Talents.HammerOfTheRighteous > 0 && Character.MainHand != null)
+                    {
+                        baseDamage = (Stats.AttackPower / 14 + (Character.MainHand.MinDamage + Character.MainHand.MaxDamage) / 2 / Character.MainHand.Speed) * 4f;
+                        DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
+                        ArmorReduction = 0.0f;
+                    }
                     break;
 				// Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
 				// While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
@@ -94,9 +97,12 @@ namespace Rawr.ProtPaladin
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HolyShield:
-                    baseDamage = (211f + (.056f * Stats.AttackPower) + (.09f * Stats.SpellPower)) * 1.3f;
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-					ArmorReduction = 0.0f;
+                    if (Talents.HolyShield > 0)
+                    {
+                        baseDamage = (211f + (.056f * Stats.AttackPower) + (.09f * Stats.SpellPower)) * 1.3f;
+                        DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
+                        ArmorReduction = 0.0f;
+                    }
                     break;
 				// TODO: Split Consecration into X number of individually resistable stacks
 				case Ability.Consecration:
@@ -124,6 +130,8 @@ namespace Rawr.ProtPaladin
             baseDamage = (baseDamage * (1.0f - AttackTable.Critical)) + (baseDamage * critMultiplier * AttackTable.Critical);
             // Average glancing blow reduction
             baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
+            // Average resist reduction
+            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Resist));
             // Armor reduction
             baseDamage *= (1.0f - ArmorReduction);
             // Missed attacks
