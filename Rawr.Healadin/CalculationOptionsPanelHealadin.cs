@@ -35,16 +35,6 @@ namespace Rawr.Healadin
             chkJotP.Checked = calcOpts.JotP;
             chkLoHSelf.Checked = calcOpts.LoHSelf;
 
-            chkGlyphHolyLight.Checked = Character.PaladinTalents.GlyphOfHolyLight;
-            chkGlyphFlashOfLight.Checked = Character.PaladinTalents.GlyphOfFlashOfLight;
-            chkGlyphSealOfLight.Checked = Character.PaladinTalents.GlyphOfSealOfLight;
-            chkGlyphSealOfWisdom.Checked = Character.PaladinTalents.GlyphOfSealOfWisdom;
-            chkGlyphDivinity.Checked = Character.PaladinTalents.GlyphOfDivinity;
-            chkGlyphHolyShock.Checked = Character.PaladinTalents.GlyphOfHolyShock;
-            chkGlyphBeaconOfLight.Checked = Character.PaladinTalents.GlyphOfBeaconOfLight;
-            if (chkGlyphSealOfLight.Checked) chkGlyphSealOfWisdom.Enabled = false;
-            else if (chkGlyphSealOfWisdom.Checked) chkGlyphSealOfLight.Enabled = false;
-
             trkReplenishment.Value = (int)(calcOpts.Replenishment * 100);
             lblReplenishment.Text = trkReplenishment.Value + "%";
 
@@ -176,57 +166,6 @@ namespace Rawr.Healadin
             }
         }
 
-        private void chkGSoW_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfSealOfWisdom = chkGlyphSealOfWisdom.Checked;
-                chkGlyphSealOfLight.Enabled = !chkGlyphSealOfWisdom.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGHL_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfHolyLight = chkGlyphHolyLight.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGDivinity_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfDivinity = chkGlyphDivinity.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGFoL_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfFlashOfLight = chkGlyphFlashOfLight.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGSoL_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfSealOfLight = chkGlyphSealOfLight.Checked;
-                chkGlyphSealOfWisdom.Enabled = !chkGlyphSealOfLight.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
 
         private void chkLoHSelf_CheckedChanged(object sender, EventArgs e)
         {
@@ -256,26 +195,6 @@ namespace Rawr.Healadin
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.BurstScale = trkBurstScale.Value / 100f;
                 lblBurstScale.Text = trkBurstScale.Value + "%";
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphHolyShock_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfHolyShock = chkGlyphHolyShock.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphBeaconOfLight_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                Character.PaladinTalents.GlyphOfBeaconOfLight = chkGlyphBeaconOfLight.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

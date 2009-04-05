@@ -104,6 +104,10 @@ namespace Rawr
 			}
 		}
 
+        private int _tree1Count;
+        private int _tree2Count;
+        private int _tree3Count;
+
 		void _character_ClassChanged(object sender, EventArgs e)
         {
             Talents = _character.CurrentTalents;
@@ -124,7 +128,7 @@ namespace Rawr
             }
             if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null)
             {
-                CustomSpec = new SavedTalentSpec("Custom", _talents);
+                CustomSpec = new SavedTalentSpec("Custom", _talents, _tree1Count, _tree2Count, _tree3Count);
                 classTalents.Add(CustomSpec);
             }
             return classTalents;
@@ -132,8 +136,9 @@ namespace Rawr
 
         public SavedTalentSpec CurrentSpec()
         {
-            if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null) return CustomSpec;
-            return (SavedTalentSpec)comboBoxTalentSpec.SelectedItem;
+            if (comboBoxTalentSpec.SelectedItem == null) return CustomSpec;
+            else if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null) return CustomSpec;
+            else return (SavedTalentSpec)comboBoxTalentSpec.SelectedItem;
         }
 
         private bool _updateSaved = false;
@@ -152,7 +157,7 @@ namespace Rawr
                 }
                 if (current == null)
                 {
-                    current = new SavedTalentSpec("Custom", null);
+                    current = new SavedTalentSpec("Custom", null, _tree1Count, _tree2Count, _tree3Count);
                     classTalents.Add(current);
                 }
                 _updateSaved = true;
@@ -171,12 +176,19 @@ namespace Rawr
                 _treeNames = new List<string>((string[])Talents.GetType().GetField("TreeNames").GetValue(Talents));
                 talentTree1.CharacterClass = _character.Class;
                 talentTree1.TreeName = _treeNames[0];
+                tabPageTree1.Text = _treeNames[0];
                 talentTree2.CharacterClass = _character.Class;
                 talentTree2.TreeName = _treeNames[1];
+                tabPageTree2.Text = _treeNames[1];
                 talentTree3.CharacterClass = _character.Class;
                 talentTree3.TreeName = _treeNames[2];
+                tabPageTree3.Text = _treeNames[2];
 
-                TalentTree currentTree;              
+                TalentTree currentTree;
+
+                List<GlyphDataAttribute> majors = new List<GlyphDataAttribute>();
+                List<GlyphDataAttribute> minors = new List<GlyphDataAttribute>();
+
 				foreach (PropertyInfo pi in Talents.GetType().GetProperties())
 				{
 					TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
@@ -193,12 +205,58 @@ namespace Rawr
                             (int)pi.GetValue(Talents, null), talentData.MaxPoints, talentData.Prerequisite >= 0 ? _talentPickerItems[talentData.Prerequisite] : null);
                         _talentPickerItems[talentData.Index] = item;
                         currentTree.AddTalent(item);
-						//TalentPickerItem item = new TalentPickerItem(_character.Class, talentData.Name, _treeNames[talentData.Tree], talentData.Description,
-						//	false, talentData.Index, talentData.Prerequisite, talentData.Row, talentData.Column, (int)pi.GetValue(Talents, null), talentData.MaxPoints);
-						//item.Location = new Point(-45 + (talentData.Column * 63), -57 + (talentData.Row * 65));
+
 						item.CurrentRankChanged += new EventHandler(item_CurrentRankChanged);
 					}
+
+                    GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                    if (glyphDatas.Length > 0)
+                    {
+                        GlyphDataAttribute glyphData = glyphDatas[0];
+                        if (glyphData.Major) majors.Add(glyphData);
+                        else minors.Add(glyphData);
+                    }
 				}
+
+                tabPageGlyphs.SuspendLayout();
+                grpMajorGlyph.Controls.Clear();
+                if (majors.Count == 0) grpMajorGlyph.Hide();
+                else grpMajorGlyph.Show();
+                for (int i = 0; i < majors.Count; i++)
+                {
+                    GlyphDataAttribute glyph = majors[i];
+                    CheckBox cb = new CheckBox();
+                    grpMajorGlyph.Controls.Add(cb);
+                    cb.AutoSize = true;
+                    cb.Text = glyph.Name;
+                    cb.Tag = glyph.Index;
+                    cb.Checked = Talents.GlyphData[glyph.Index];
+                    cb.UseVisualStyleBackColor = true;
+                    cb.Location = new Point(6, 19 + 23 * i);
+                    cb.CheckedChanged += new System.EventHandler(this.glyph_ValueChanged);
+                    tooltipGlyph.SetToolTip(cb, glyph.Description);
+                }
+
+                grpMinorGlyph.Controls.Clear();
+                if (minors.Count == 0) grpMinorGlyph.Hide();
+                else grpMinorGlyph.Show();
+                for (int i = 0; i < minors.Count; i++)
+                {
+                    GlyphDataAttribute glyph = minors[i];
+                    CheckBox cb = new CheckBox();
+                    grpMinorGlyph.Controls.Add(cb);
+                    cb.AutoSize = true;
+                    cb.Text = glyph.Name;
+                    cb.Tag = glyph.Index;
+                    cb.Checked = Talents.GlyphData[glyph.Index];
+                    cb.UseVisualStyleBackColor = true;
+                    cb.Location = new Point(6, 19 + 23 * i);
+                    cb.CheckedChanged += new System.EventHandler(this.glyph_ValueChanged);
+                    tooltipGlyph.SetToolTip(cb, glyph.Description);
+                }
+                tabPageGlyphs.ResumeLayout();
+                //grpMinorGlyph.Top = grpMajorGlyph.Height + 9;
+
                 talentTree1.Redraw();
                 talentTree2.Redraw();
                 talentTree3.Redraw();
@@ -246,12 +304,23 @@ namespace Rawr
             talentTree3.Reset();
         }
 
-        void item_CurrentRankChanged(object sender, EventArgs e)
+        private void glyph_ValueChanged(object sender, EventArgs e)
+        {
+            if (!Character.IsLoading)
+            {
+                Talents.GlyphData[(int)((CheckBox)sender).Tag] = ((CheckBox)sender).Checked;
+                UpdateSavedTalents();
+                _character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void item_CurrentRankChanged(object sender, EventArgs e)
         {
 			TalentItem item = sender as TalentItem;
-            tabPageTree1.Text = string.Format("{0} ({1})", _treeNames[0], talentTree1.TotalPoints());
-            tabPageTree2.Text = string.Format("{0} ({1})", _treeNames[1], talentTree2.TotalPoints());
-            tabPageTree3.Text = string.Format("{0} ({1})", _treeNames[2], talentTree3.TotalPoints());
+
+            _tree1Count = talentTree1.TotalPoints();
+            _tree2Count = talentTree2.TotalPoints();
+            _tree3Count = talentTree3.TotalPoints();
 			if (!Character.IsLoading)
 			{
 				if (item != null)
@@ -292,7 +361,7 @@ namespace Rawr
                     String specName = form.TalentSpecName();
                     if (spec == null)
                     {
-                        spec = new SavedTalentSpec(specName, _talents);
+                        spec = new SavedTalentSpec(specName, _talents, _tree1Count, _tree2Count, _tree3Count);
                         _savedTalents.Add(spec);
                     }
                     else spec.Spec = _talents.ToString();

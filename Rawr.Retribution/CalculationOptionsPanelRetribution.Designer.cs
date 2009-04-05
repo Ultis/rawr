@@ -29,11 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkGlyphExorcism = new System.Windows.Forms.CheckBox();
-            this.chkGlyphSenseUndead = new System.Windows.Forms.CheckBox();
-            this.chkGlyphConsecration = new System.Windows.Forms.CheckBox();
-            this.chkGlyphJudgement = new System.Windows.Forms.CheckBox();
             this.cmbMobType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -73,7 +68,6 @@
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.lblTime20 = new System.Windows.Forms.Label();
             this.labelsTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
@@ -91,63 +85,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.chkGlyphExorcism);
-            this.groupBox1.Controls.Add(this.chkGlyphSenseUndead);
-            this.groupBox1.Controls.Add(this.chkGlyphConsecration);
-            this.groupBox1.Controls.Add(this.chkGlyphJudgement);
-            this.groupBox1.Location = new System.Drawing.Point(6, 455);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(225, 66);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Glyphs";
-            // 
-            // chkGlyphExorcism
-            // 
-            this.chkGlyphExorcism.AutoSize = true;
-            this.chkGlyphExorcism.Location = new System.Drawing.Point(6, 42);
-            this.chkGlyphExorcism.Name = "chkGlyphExorcism";
-            this.chkGlyphExorcism.Size = new System.Drawing.Size(68, 17);
-            this.chkGlyphExorcism.TabIndex = 3;
-            this.chkGlyphExorcism.Text = "Exorcism";
-            this.chkGlyphExorcism.UseVisualStyleBackColor = true;
-            this.chkGlyphExorcism.CheckedChanged += new System.EventHandler(this.chkGlyphExorcism_CheckedChanged);
-            // 
-            // chkGlyphSenseUndead
-            // 
-            this.chkGlyphSenseUndead.AutoSize = true;
-            this.chkGlyphSenseUndead.Location = new System.Drawing.Point(108, 42);
-            this.chkGlyphSenseUndead.Name = "chkGlyphSenseUndead";
-            this.chkGlyphSenseUndead.Size = new System.Drawing.Size(97, 17);
-            this.chkGlyphSenseUndead.TabIndex = 2;
-            this.chkGlyphSenseUndead.Text = "Sense Undead";
-            this.chkGlyphSenseUndead.UseVisualStyleBackColor = true;
-            this.chkGlyphSenseUndead.CheckedChanged += new System.EventHandler(this.chkGlyphSenseUndead_CheckedChanged);
-            // 
-            // chkGlyphConsecration
-            // 
-            this.chkGlyphConsecration.AutoSize = true;
-            this.chkGlyphConsecration.Location = new System.Drawing.Point(108, 19);
-            this.chkGlyphConsecration.Name = "chkGlyphConsecration";
-            this.chkGlyphConsecration.Size = new System.Drawing.Size(88, 17);
-            this.chkGlyphConsecration.TabIndex = 1;
-            this.chkGlyphConsecration.Text = "Consecration";
-            this.chkGlyphConsecration.UseVisualStyleBackColor = true;
-            this.chkGlyphConsecration.CheckedChanged += new System.EventHandler(this.chkGlyphConsecration_CheckedChanged);
-            // 
-            // chkGlyphJudgement
-            // 
-            this.chkGlyphJudgement.AutoSize = true;
-            this.chkGlyphJudgement.Location = new System.Drawing.Point(6, 19);
-            this.chkGlyphJudgement.Name = "chkGlyphJudgement";
-            this.chkGlyphJudgement.Size = new System.Drawing.Size(78, 17);
-            this.chkGlyphJudgement.TabIndex = 0;
-            this.chkGlyphJudgement.Text = "Judgement";
-            this.chkGlyphJudgement.UseVisualStyleBackColor = true;
-            this.chkGlyphJudgement.CheckedChanged += new System.EventHandler(this.chkGlyphJudgement_CheckedChanged);
             // 
             // cmbMobType
             // 
@@ -819,7 +756,6 @@
             this.Controls.Add(this.trkTime20);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.cmbLength);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.cmbLevel);
             this.Controls.Add(this.label2);
@@ -827,8 +763,6 @@
             this.Controls.Add(this.cmbMobType);
             this.Name = "CalculationOptionsPanelRetribution";
             this.Size = new System.Drawing.Size(300, 594);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).EndInit();
@@ -853,14 +787,10 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox chkGlyphJudgement;
         private System.Windows.Forms.ComboBox cmbMobType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbLevel;
-        private System.Windows.Forms.CheckBox chkGlyphConsecration;
-        private System.Windows.Forms.CheckBox chkGlyphSenseUndead;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TrackBar trkTime20;
@@ -870,7 +800,6 @@
         private System.Windows.Forms.Button butUnlimitedDown;
         private System.Windows.Forms.Button butUnlimitedUp;
         private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
-        private System.Windows.Forms.CheckBox chkGlyphExorcism;
         private System.Windows.Forms.NumericUpDown nudDelay;
         private System.Windows.Forms.Label lblDelay;
         private System.Windows.Forms.RadioButton radEffectiveCD;

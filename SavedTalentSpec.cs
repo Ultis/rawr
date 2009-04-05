@@ -11,11 +11,18 @@ namespace Rawr
         public Character.CharacterClass Class { get; set; }
         public string Spec { get; set; }
 
-        public SavedTalentSpec() : this("", null) { ; }
+        public int Tree1 { get; set; }
+        public int Tree2 { get; set; }
+        public int Tree3 { get; set; }
 
-        public SavedTalentSpec(String name, TalentsBase talentSpec)
+        public SavedTalentSpec() : this("", null, 0, 0, 0) { ; }
+
+        public SavedTalentSpec(String name, TalentsBase talentSpec, int tree1, int tree2, int tree3)
         {
             Name = name;
+            Tree1 = tree1;
+            Tree2 = tree2;
+            Tree3 = tree3;
             if (talentSpec != null)
             {
                 Spec = talentSpec.ToString();
@@ -51,7 +58,7 @@ namespace Rawr
 
         public override string ToString()
         {
-            return Name;
+            return string.Format("{0} ({1}/{2}/{3})", Name, Tree1, Tree2, Tree3);
         }
 
         public bool Equals(TalentsBase talents)

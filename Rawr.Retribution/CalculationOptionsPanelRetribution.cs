@@ -49,11 +49,6 @@ namespace Rawr.Retribution
             nudExo20.Value = (decimal)calcOpts.ExoCD20;
             nudHoW20.Value = (decimal)calcOpts.HoWCD20;
 
-            chkGlyphJudgement.Checked = Character.PaladinTalents.GlyphOfJudgement;
-            chkGlyphConsecration.Checked = Character.PaladinTalents.GlyphOfConsecration;
-            chkGlyphSenseUndead.Checked = Character.PaladinTalents.GlyphOfSenseUndead;
-            chkGlyphExorcism.Checked = Character.PaladinTalents.GlyphOfExorcism;
-
             UpdatePriority(calcOpts);
 
             if (calcOpts.SimulateRotation) radRotSim.Checked = true;
@@ -69,16 +64,6 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.MobType = cmbMobType.SelectedIndex;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphJudgement_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                Character.PaladinTalents.GlyphOfJudgement = chkGlyphJudgement.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -110,26 +95,6 @@ namespace Rawr.Retribution
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.TimeUnder20 = trkTime20.Value / 100f;
                 lblTime20.Text = trkTime20.Value + "%";
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphConsecration_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                Character.PaladinTalents.GlyphOfConsecration = chkGlyphConsecration.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphSenseUndead_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                Character.PaladinTalents.GlyphOfSenseUndead = chkGlyphSenseUndead.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -204,16 +169,6 @@ namespace Rawr.Retribution
                 if (e.NewValue == CheckState.Unchecked) calcOpts.Selected[e.Index] = false;
                 else calcOpts.Selected[e.Index] = true;
 
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphExorcism_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                Character.PaladinTalents.GlyphOfExorcism = chkGlyphExorcism.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

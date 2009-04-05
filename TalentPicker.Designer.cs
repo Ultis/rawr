@@ -28,21 +28,27 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             this.panelTop = new System.Windows.Forms.Panel();
             this.talentSpecButton = new System.Windows.Forms.Button();
             this.comboBoxTalentSpec = new System.Windows.Forms.ComboBox();
             this.tabPageTree3 = new System.Windows.Forms.TabPage();
-            this.talentTree3 = new Rawr.TalentTree();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageTree1 = new System.Windows.Forms.TabPage();
-            this.talentTree1 = new Rawr.TalentTree();
             this.tabPageTree2 = new System.Windows.Forms.TabPage();
+            this.tabPageGlyphs = new System.Windows.Forms.TabPage();
+            this.grpMinorGlyph = new System.Windows.Forms.GroupBox();
+            this.grpMajorGlyph = new System.Windows.Forms.GroupBox();
+            this.tooltipGlyph = new System.Windows.Forms.ToolTip(this.components);
+            this.talentTree1 = new Rawr.TalentTree();
             this.talentTree2 = new Rawr.TalentTree();
+            this.talentTree3 = new Rawr.TalentTree();
             this.panelTop.SuspendLayout();
             this.tabPageTree3.SuspendLayout();
             this.tabControlMain.SuspendLayout();
             this.tabPageTree1.SuspendLayout();
             this.tabPageTree2.SuspendLayout();
+            this.tabPageGlyphs.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -91,25 +97,17 @@
             this.tabPageTree3.Size = new System.Drawing.Size(289, 471);
             this.tabPageTree3.TabIndex = 2;
             this.tabPageTree3.Text = "Restoration";
-            // 
-            // talentTree3
-            // 
-            this.talentTree3.AutoSize = true;
-            this.talentTree3.CharacterClass = Rawr.Character.CharacterClass.Paladin;
-            this.talentTree3.Location = new System.Drawing.Point(0, 0);
-            this.talentTree3.Name = "talentTree3";
-            this.talentTree3.Size = new System.Drawing.Size(269, 717);
-            this.talentTree3.TabIndex = 0;
-            this.talentTree3.TreeName = "Holy";
+            this.tabPageTree3.UseVisualStyleBackColor = true;
             // 
             // tabControlMain
             // 
             this.tabControlMain.Controls.Add(this.tabPageTree1);
             this.tabControlMain.Controls.Add(this.tabPageTree2);
             this.tabControlMain.Controls.Add(this.tabPageTree3);
+            this.tabControlMain.Controls.Add(this.tabPageGlyphs);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMain.HotTrack = true;
-            this.tabControlMain.ItemSize = new System.Drawing.Size(98, 21);
+            this.tabControlMain.ItemSize = new System.Drawing.Size(72, 21);
             this.tabControlMain.Location = new System.Drawing.Point(0, 24);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.Padding = new System.Drawing.Point(3, 3);
@@ -129,16 +127,7 @@
             this.tabPageTree1.Size = new System.Drawing.Size(289, 471);
             this.tabPageTree1.TabIndex = 0;
             this.tabPageTree1.Text = "Balance";
-            // 
-            // talentTree1
-            // 
-            this.talentTree1.AutoSize = true;
-            this.talentTree1.CharacterClass = Rawr.Character.CharacterClass.Paladin;
-            this.talentTree1.Location = new System.Drawing.Point(0, 0);
-            this.talentTree1.Name = "talentTree1";
-            this.talentTree1.Size = new System.Drawing.Size(270, 717);
-            this.talentTree1.TabIndex = 0;
-            this.talentTree1.TreeName = "Holy";
+            this.tabPageTree1.UseVisualStyleBackColor = true;
             // 
             // tabPageTree2
             // 
@@ -151,6 +140,51 @@
             this.tabPageTree2.Size = new System.Drawing.Size(289, 471);
             this.tabPageTree2.TabIndex = 1;
             this.tabPageTree2.Text = "Feral Combat";
+            this.tabPageTree2.UseVisualStyleBackColor = true;
+            // 
+            // tabPageGlyphs
+            // 
+            this.tabPageGlyphs.AutoScroll = true;
+            this.tabPageGlyphs.Controls.Add(this.grpMinorGlyph);
+            this.tabPageGlyphs.Controls.Add(this.grpMajorGlyph);
+            this.tabPageGlyphs.Location = new System.Drawing.Point(4, 25);
+            this.tabPageGlyphs.Name = "tabPageGlyphs";
+            this.tabPageGlyphs.Size = new System.Drawing.Size(289, 471);
+            this.tabPageGlyphs.TabIndex = 3;
+            this.tabPageGlyphs.Text = "Glyphs";
+            this.tabPageGlyphs.UseVisualStyleBackColor = true;
+            // 
+            // grpMinorGlyph
+            // 
+            this.grpMinorGlyph.AutoSize = true;
+            this.grpMinorGlyph.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpMinorGlyph.Location = new System.Drawing.Point(0, 19);
+            this.grpMinorGlyph.Name = "grpMinorGlyph";
+            this.grpMinorGlyph.Size = new System.Drawing.Size(289, 19);
+            this.grpMinorGlyph.TabIndex = 1;
+            this.grpMinorGlyph.TabStop = false;
+            this.grpMinorGlyph.Text = "Minor";
+            // 
+            // grpMajorGlyph
+            // 
+            this.grpMajorGlyph.AutoSize = true;
+            this.grpMajorGlyph.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpMajorGlyph.Location = new System.Drawing.Point(0, 0);
+            this.grpMajorGlyph.Name = "grpMajorGlyph";
+            this.grpMajorGlyph.Size = new System.Drawing.Size(289, 19);
+            this.grpMajorGlyph.TabIndex = 0;
+            this.grpMajorGlyph.TabStop = false;
+            this.grpMajorGlyph.Text = "Major";
+            // 
+            // talentTree1
+            // 
+            this.talentTree1.AutoSize = true;
+            this.talentTree1.CharacterClass = Rawr.Character.CharacterClass.Paladin;
+            this.talentTree1.Location = new System.Drawing.Point(0, 0);
+            this.talentTree1.Name = "talentTree1";
+            this.talentTree1.Size = new System.Drawing.Size(270, 717);
+            this.talentTree1.TabIndex = 0;
+            this.talentTree1.TreeName = "Holy";
             // 
             // talentTree2
             // 
@@ -161,6 +195,16 @@
             this.talentTree2.Size = new System.Drawing.Size(269, 717);
             this.talentTree2.TabIndex = 0;
             this.talentTree2.TreeName = "Holy";
+            // 
+            // talentTree3
+            // 
+            this.talentTree3.AutoSize = true;
+            this.talentTree3.CharacterClass = Rawr.Character.CharacterClass.Paladin;
+            this.talentTree3.Location = new System.Drawing.Point(0, 0);
+            this.talentTree3.Name = "talentTree3";
+            this.talentTree3.Size = new System.Drawing.Size(269, 717);
+            this.talentTree3.TabIndex = 0;
+            this.talentTree3.TreeName = "Holy";
             // 
             // TalentPicker
             // 
@@ -178,6 +222,8 @@
             this.tabPageTree1.PerformLayout();
             this.tabPageTree2.ResumeLayout(false);
             this.tabPageTree2.PerformLayout();
+            this.tabPageGlyphs.ResumeLayout(false);
+            this.tabPageGlyphs.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -194,5 +240,9 @@
         private TalentTree talentTree3;
         private TalentTree talentTree2;
         private System.Windows.Forms.Button talentSpecButton;
+        private System.Windows.Forms.TabPage tabPageGlyphs;
+        private System.Windows.Forms.GroupBox grpMajorGlyph;
+        private System.Windows.Forms.GroupBox grpMinorGlyph;
+        private System.Windows.Forms.ToolTip tooltipGlyph;
 	}
 }
