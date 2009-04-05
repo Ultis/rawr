@@ -44,7 +44,7 @@ namespace Rawr
 	public abstract class TalentsBase
 	{
 		public abstract int[] Data { get; }
-        public virtual bool[] GlyphData { get { return null; } set { GlyphData = value; } }
+        public virtual bool[] GlyphData { get { return null; } }
 
         protected void LoadString(string code)
         {

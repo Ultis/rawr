@@ -29,7 +29,7 @@ namespace Rawr
     public partial class MageTalents
     {
         private bool[] _glyphData = new bool[16];
-        public override bool[] GlyphData { get { return _glyphData; } set { _glyphData = value; } }
+        public override bool[] GlyphData { get { return _glyphData; } }
 
         [GlyphData(0, "Glyph of Fireball", true, @"Increases the critical strike chance of Fireball by 5%, but removes the damage over time effect.")]
         public bool GlyphOfFireball { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
@@ -73,7 +73,7 @@ namespace Rawr
     public partial class PaladinTalents
         {
         private bool[] _glyphData = new bool[34];
-        public override bool[] GlyphData { get { return _glyphData; } set { _glyphData = value; } }
+        public override bool[] GlyphData { get { return _glyphData; } }
         
         [GlyphData(0, "Glyph of Avenging Wrath", true, @"Reduces the cooldown of your Hammer of Wrath spell by 50% while Avenging Wrath is active.")]
         public bool GlyphOfAvengingWrath { get { return _glyphData[0]; } set { _glyphData[0] = value; } }

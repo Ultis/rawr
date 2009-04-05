@@ -59,34 +59,19 @@ namespace Rawr.Retribution
             }
         }
 
-        private static List<Buff> _cachedDefaultBuffs = null;
-        public override List<Buff> DefaultBuffs(Character character)
+        public override void SetDefaults(Character character)
         {
-            if (_cachedDefaultBuffs == null)
-            {
-                _cachedDefaultBuffs = new List<Buff>();
-                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
-                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-                _cachedDefaultBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
-            }
-            return _cachedDefaultBuffs;
-        }
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
 
-        private static bool[] _cachedDefaultGlyphs = null;
-        public override bool[] DefaultGlyphs(Character character)
-        {
-            if (_cachedDefaultGlyphs == null)
-            {
-                PaladinTalents talents = new PaladinTalents();
-                talents.GlyphOfJudgement = true;
-                talents.GlyphOfConsecration = true;
-                talents.GlyphOfSenseUndead = true;
-                talents.GlyphOfExorcism = true;
-                _cachedDefaultGlyphs = talents.GlyphData;
-            }
-            return _cachedDefaultGlyphs;
+            PaladinTalents talents = character.PaladinTalents;
+            talents.GlyphOfJudgement = true;
+            talents.GlyphOfConsecration = true;
+            talents.GlyphOfSenseUndead = true;
+            talents.GlyphOfExorcism = true;
         }
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;

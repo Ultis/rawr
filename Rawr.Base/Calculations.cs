@@ -516,23 +516,12 @@ namespace Rawr
         }
 
         /// <summary>
-        /// List of default buffs recommended by the model for newly imported Armory characters
-        /// /// <param name="character">The character who the buffs are for.</param>
-        /// <returns>A list of default enabled buffs.</returns>
+        /// Set the defaults (like Glyphs/Buffs) for newly imported Armory characters
+        /// /// <param name="character">The character who the defaults are for.</param>
         /// </summary>
-        public virtual List<Buff> DefaultBuffs(Character character)
+        public virtual void SetDefaults(Character character)
         {
-            return new List<Buff>();
-        }
-
-        /// <summary>
-        /// List of default glyphs recommended by the model for newly imported Armory characters
-        /// /// <param name="character">The character who the glyphs are for.</param>
-        /// <returns>A GlyphData bool array from ClassTalents of default enable glyphs.</returns>
-        /// </summary>
-        public virtual bool[] DefaultGlyphs(Character character)
-        {
-            return null;
+            ;
         }
 
 		/// <summary>
