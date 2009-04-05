@@ -220,6 +220,8 @@ namespace Rawr
 
                 tabPageGlyphs.SuspendLayout();
                 grpMajorGlyph.Controls.Clear();
+
+                foreach (Control c in grpMajorGlyph.Controls) c.Dispose();
                 if (majors.Count == 0) grpMajorGlyph.Hide();
                 else grpMajorGlyph.Show();
                 for (int i = 0; i < majors.Count; i++)
@@ -233,11 +235,12 @@ namespace Rawr
                     cb.Checked = Talents.GlyphData[glyph.Index];
                     cb.UseVisualStyleBackColor = true;
                     cb.Location = new Point(6, 19 + 23 * i);
-                    cb.CheckedChanged += new System.EventHandler(this.glyph_ValueChanged);
+                    cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
                     tooltipGlyph.SetToolTip(cb, glyph.Description);
                 }
 
-                grpMinorGlyph.Controls.Clear();
+                foreach (Control c in grpMinorGlyph.Controls) c.Dispose();
+                grpMinorGlyph.Controls.Clear;
                 if (minors.Count == 0) grpMinorGlyph.Hide();
                 else grpMinorGlyph.Show();
                 for (int i = 0; i < minors.Count; i++)
@@ -251,11 +254,10 @@ namespace Rawr
                     cb.Checked = Talents.GlyphData[glyph.Index];
                     cb.UseVisualStyleBackColor = true;
                     cb.Location = new Point(6, 19 + 23 * i);
-                    cb.CheckedChanged += new System.EventHandler(this.glyph_ValueChanged);
+                    cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
                     tooltipGlyph.SetToolTip(cb, glyph.Description);
                 }
                 tabPageGlyphs.ResumeLayout();
-                //grpMinorGlyph.Top = grpMajorGlyph.Height + 9;
 
                 talentTree1.Redraw();
                 talentTree2.Redraw();
