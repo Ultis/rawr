@@ -88,7 +88,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.TargetLevel = cmbMobType.SelectedIndex + 80;
+                calcOpts.TargetLevel = cmbLevel.SelectedIndex + 80;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -447,7 +447,7 @@ namespace Rawr.Retribution
 		}
 
 		public int TargetLevel = 83;
-        public int MobType = 0;
+        public int MobType = 2;
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
         public float Delay = .05f;

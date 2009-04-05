@@ -203,6 +203,10 @@ namespace Rawr.Retribution
 		}
 
 
+        private readonly float[] DodgeChance = { 0.05f, 0.055f, 0.06f, 0.065f };
+        private readonly float[] MissChance = { 0.05f, 0.052f, 0.054f, 0.08f };
+        private readonly float[] ResistChance = { 0.04f, 0.05f, 0.06f, 0.17f };
+
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -247,9 +251,9 @@ namespace Rawr.Retribution
             float physPowerMulti = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             const float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
 
-            calc.ToMiss = (float)Math.Max(0.08f - stats.PhysicalHit, 0f);
-            calc.ToDodge = (float)Math.Max(0.065f - stats.Expertise * .0025f, 0f);
-            calc.ToResist = (float)Math.Max(0.17f - stats.SpellHit, 0f);
+            calc.ToMiss = (float)Math.Max(MissChance[calcOpts.TargetLevel - 80] - stats.PhysicalHit, 0f);
+            calc.ToDodge = (float)Math.Max(DodgeChance[calcOpts.TargetLevel - 80] - stats.Expertise * .0025f, 0f);
+            calc.ToResist = (float)Math.Max(ResistChance[calcOpts.TargetLevel - 80] - stats.SpellHit, 0f);
 
             float meleeAvoid = 1f - calc.ToMiss - calc.ToDodge;
             float rangeAvoid = 1f - calc.ToMiss;
@@ -475,10 +479,11 @@ namespace Rawr.Retribution
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
-            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f
-                - (calcOpts.TargetLevel == 83 ? 0.048f : 0f);
-            stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Agility / 5208.333333f + talentCrit;
-            stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f + talentCrit;
+            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
+            stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + 
+                stats.Agility / 5208.333333f + talentCrit - (calcOpts.TargetLevel == 83 ? 0.048f : 0f);
+            stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f +
+                talentCrit - (calcOpts.TargetLevel == 83 ? 0.03f : 0f);
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + stats.HasteRating * 1.3f / 3278.998947f) - 1f;
 
