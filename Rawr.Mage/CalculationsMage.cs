@@ -252,6 +252,62 @@ namespace Rawr.Mage
             }
         }
 
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgements of the Wise"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
+            if (character.MageTalents.FocusMagic == 1) character.ActiveBuffs.Add(Buff.GetBuffByName("Focus Magic"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Concentration Aura"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Concentration Aura"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgement of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Scorch"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Ebon Plaguebringer"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+            if (character.MageTalents.EmpoweredFire > 0)
+            {
+                if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3)
+                {
+                    character.MageTalents.GlyphOfFrostfire = true;
+                    character.MageTalents.GlyphOfMoltenArmor = true;
+                    character.MageTalents.GlyphOfLivingBomb = true;
+                }
+                else
+                {
+                    character.MageTalents.GlyphOfFireball = true;
+                    character.MageTalents.GlyphOfMoltenArmor = true;
+                    character.MageTalents.GlyphOfLivingBomb = true;
+                }
+            }
+            else if (character.MageTalents.EmpoweredFrostbolt > 0)
+            {
+                character.MageTalents.GlyphOfFrostbolt = true;
+                character.MageTalents.GlyphOfMoltenArmor = true;
+                character.MageTalents.GlyphOfIceLance = true;
+            }
+            else if (character.MageTalents.ArcaneEmpowerment > 0)
+            {
+                character.MageTalents.GlyphOfArcaneMissiles = true;
+                character.MageTalents.GlyphOfMoltenArmor = true;
+                character.MageTalents.GlyphOfArcaneBlast = true;
+            }
+        }
+
         public override string GetCharacterStatsString(Character character)
         {
 			StringBuilder sb = new StringBuilder();

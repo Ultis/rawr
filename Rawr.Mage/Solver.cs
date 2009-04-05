@@ -2910,49 +2910,19 @@ namespace Rawr.Mage
                             }
                             list.Add(CycleId.FrostboltFOF);
                         }
-                        else if (talents.ArcaneBarrage > 0)
+                        else if (talents.ArcaneEmpowerment > 0)
                         {
-                            if (talents.ImprovedFrostbolt > 0)
+                            list.Add(CycleId.ABAM);
+                            list.Add(CycleId.AB3AM);
+                            if (talents.MissileBarrage > 0)
                             {
-                                list.Add(CycleId.FrostboltFOF);
-                                list.Add(CycleId.FrBABar);
-                                list.Add(CycleId.FrB2ABar);
-                            }
-                            if (talents.ImprovedFireball > 0)
-                            {
-                                list.Add(CycleId.Fireball);
-                                list.Add(CycleId.FBABar);
-                                list.Add(CycleId.FB2ABar);
-                            }
-                            if (talents.ArcaneEmpowerment > 0)
-                            {
-                                list.Add(CycleId.ABAM);
                                 list.Add(CycleId.AB3AM2MBAM);
-                                list.Add(CycleId.AB3AM);
-                                if (talents.MissileBarrage > 0)
+                                list.Add(CycleId.ABSpam3MBAM);
+                                if (talents.ArcaneBarrage > 0)
                                 {
                                     list.Add(CycleId.ABABar1MBAM);
                                     list.Add(CycleId.ABABar2MBAM);
                                     list.Add(CycleId.AB3ABar3MBAM);
-                                    list.Add(CycleId.ABSpam3MBAM);
-                                }
-                            }
-                            if (talents.ImprovedFrostbolt == 0 && talents.ImprovedFireball == 0 && talents.ArcaneEmpowerment == 0)
-                            {
-                                list.Add(CycleId.FrBABar);
-                                list.Add(CycleId.FBABar);
-                                list.Add(CycleId.ABABar0C);
-                                list.Add(CycleId.FB2ABar);
-                                list.Add(CycleId.FrB2ABar);
-                                list.Add(CycleId.ABAM);
-                                list.Add(CycleId.AB3AM2MBAM);
-                                list.Add(CycleId.AB3AM);
-                                if (talents.MissileBarrage > 0)
-                                {
-                                    list.Add(CycleId.ABABar1MBAM);
-                                    list.Add(CycleId.ABABar2MBAM);
-                                    list.Add(CycleId.AB3ABar3MBAM);
-                                    list.Add(CycleId.ABSpam3MBAM);
                                 }
                             }
                         }

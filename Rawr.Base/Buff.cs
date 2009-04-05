@@ -748,7 +748,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff
             {
-                Name = "Divinie Spirit",
+                Name = "Divine Spirit",
                 Source = "Priest",
                 Group = "Spirit",
                 Stats = { Spirit = 80f },
