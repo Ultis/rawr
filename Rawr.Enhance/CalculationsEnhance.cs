@@ -387,7 +387,7 @@ namespace Rawr
             float hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
             float hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
             float hitsPerSMHSS = (1f - chanceYellowMiss) / stormstrikeSpeed;
-            float hitsPerSOHSS = (hitsPerSMHSS - chanceYellowMiss) / stormstrikeSpeed; //OH only swings if MH connects
+            float hitsPerSOHSS = (1f - 2 * chanceYellowMiss) / stormstrikeSpeed; //OH only swings if MH connects
             float hitsPerSLL = (1f - chanceYellowMiss) / 6f;
             float swingsPerSMHMelee = 0f;
             float swingsPerSOHMelee = 0f;
@@ -504,7 +504,7 @@ namespace Rawr
                 float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
                 float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
-                dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
+                dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
             }
 
             //3: Lavalash DPS
@@ -512,7 +512,7 @@ namespace Rawr
             if (character.ShamanTalents.LavaLash == 1)
             {
                 dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL
-                     * (1 - chanceYellowMiss) * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage); //and no armor reduction yeya!
+                      * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {  // 25% bonus dmg if FT imbue in OH
                     if (calcOpts.GlyphLL)
