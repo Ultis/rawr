@@ -285,7 +285,6 @@ namespace Rawr
         APCrusaderStrike_10,
         CrusaderStrikeDamage,
         ConsecrationSpellPower,
-        CritDivineStorm_8,
         CritJudgement_5,
         JudgementCDReduction,
         #endregion
@@ -2082,15 +2081,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Crit on Divine Storm (8 sec)")]
-        [Category("Equipment Procs")]
-        public float CritDivineStorm_8
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CritDivineStorm_8]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CritDivineStorm_8] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

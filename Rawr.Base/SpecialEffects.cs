@@ -838,7 +838,8 @@ namespace Rawr
                 line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
                 stats.LavaBurstBonus = float.Parse(line);
             }
-            else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec.")
+            else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec." ||
+                    line == "Your Crusader Strike ability also grants you 120 attack power for 10 sec.")
             {
                 stats.APCrusaderStrike_10 = 120f;
             }
@@ -860,7 +861,11 @@ namespace Rawr
             }     
             else if (line == "Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec.")
             {
-                stats.CritDivineStorm_8 = 73f;
+                stats.DivineStormDamage = 81;
+            }
+            else if (line == "Causes your Divine Storm to deal an additional 81 damage.")
+            {
+                stats.DivineStormDamage = 81;
             }
             else if (line == "Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec.")
             {

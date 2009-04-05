@@ -451,14 +451,12 @@ namespace Rawr.Retribution
                 RotationSolution sol = RotationSimulator.SimulateRotation(rot);
 
                 libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
-                libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength
-                + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / sol.FightLength;
+                libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength;
             }
             else
             {
                 libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
-                libramCrit = stats.CritDivineStorm_8 * 8f / (calcOpts.DSCD * (1f - calcOpts.TimeUnder20) + calcOpts.DSCD20 * calcOpts.TimeUnder20)
-                    + stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
+                libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
             }
 
             float berserkingAP = stats.BerserkingProc * 140f;
@@ -560,7 +558,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + stats.CritDivineStorm_8 +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + 
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
@@ -608,7 +606,6 @@ namespace Rawr.Retribution
                 DivineStormMultiplier = stats.DivineStormMultiplier,
                 BerserkingProc = stats.BerserkingProc,
                 GreatnessProc = stats.GreatnessProc,
-                CritDivineStorm_8 = stats.CritDivineStorm_8,
                 CritJudgement_5 = stats.CritJudgement_5,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 APCrusaderStrike_10 = stats.APCrusaderStrike_10,
@@ -628,7 +625,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + stats.CritDivineStorm_8 +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + 
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
