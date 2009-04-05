@@ -316,7 +316,13 @@ namespace Rawr
                     character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
                 if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450")
                     character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+                if (profession.Attributes["name"].Value == "Blacksmithing" && int.Parse(profession.Attributes["value"].Value) >= 400)
+                {
+                    character.WristBlacksmithingSocketEnabled = true;
+                    character.HandsBlacksmithingSocketEnabled = true;
+                }
             }
+
         }
 
         public static Int32 GetItemIdByName(string item_name)
