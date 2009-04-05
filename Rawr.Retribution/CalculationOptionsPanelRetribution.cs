@@ -496,11 +496,6 @@ namespace Rawr.Retribution
             }
         }        
 
-        //public bool GlyphJudgement = true;
-        //public bool GlyphConsecration = true;
-        //public bool GlyphSenseUndead = true;
-        //public bool GlyphExorcism = true;
-
         public float JudgeCD = 7.1f;
         public float CSCD = 7.1f;
         public float DSCD = 10.5f;
@@ -540,11 +535,6 @@ namespace Rawr.Retribution
 
             clone._order = (Rotation.Ability[])_order.Clone();
             clone._selected = (bool[])_selected.Clone();
-
-            //clone.GlyphJudgement = GlyphJudgement;
-            //clone.GlyphConsecration = GlyphConsecration;
-            //clone.GlyphSenseUndead = GlyphSenseUndead;
-            //clone.GlyphExorcism = GlyphExorcism;
 
             return clone;
         }

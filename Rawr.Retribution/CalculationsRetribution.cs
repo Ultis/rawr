@@ -179,7 +179,7 @@ namespace Rawr.Retribution
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] { "Glyphs" };
+                    _customChartNames = new string[] { };
                 }
                 return _customChartNames;
             }
@@ -522,59 +522,7 @@ namespace Rawr.Retribution
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            //if (chartName == "Glyphs")
-            //{
-                
-            //    CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
-
-            //    Character baseChar = character.Clone();
-            //    CalculationOptionsRetribution baseOpts = initOpts.Clone();
-            //    baseChar.CalculationOptions = baseOpts;
-
-            //    Character deltaChar = character.Clone();
-            //    CalculationOptionsRetribution deltaOpts = initOpts.Clone();
-            //    deltaChar.CalculationOptions = deltaOpts;
-
-            //    CharacterCalculationsBase baseCalc;
-
-            //    ComparisonCalculationBase Judgement;
-            //    baseOpts.GlyphJudgement = false;
-            //    deltaOpts.GlyphJudgement = true;
-            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
-            //    Judgement = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Judgement", initOpts.GlyphJudgement);
-            //    deltaOpts.GlyphJudgement = baseOpts.GlyphJudgement = initOpts.GlyphJudgement;
-            //    Judgement.Item = null;
-
-            //    ComparisonCalculationBase Consecration;
-            //    baseOpts.GlyphConsecration = false;
-            //    deltaOpts.GlyphConsecration = true;
-            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
-            //    Consecration = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Consecration", initOpts.GlyphConsecration);
-            //    deltaOpts.GlyphConsecration = baseOpts.GlyphConsecration = initOpts.GlyphConsecration;
-            //    Consecration.Item = null;
-
-            //    ComparisonCalculationBase SenseUndead;
-            //    baseOpts.GlyphSenseUndead = false;
-            //    deltaOpts.GlyphSenseUndead = true;
-            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
-            //    SenseUndead = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Sense Undead", initOpts.GlyphSenseUndead);
-            //    deltaOpts.GlyphSenseUndead = baseOpts.GlyphSenseUndead = initOpts.GlyphSenseUndead;
-            //    SenseUndead.Item = null;
-
-            //    ComparisonCalculationBase Exorcism;
-            //    baseOpts.GlyphExorcism = false;
-            //    deltaOpts.GlyphExorcism = true;
-            //    baseCalc = Calculations.GetCharacterCalculations(baseChar);
-            //    Exorcism = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Exorcism", initOpts.GlyphExorcism);
-            //    deltaOpts.GlyphExorcism = baseOpts.GlyphExorcism = initOpts.GlyphExorcism;
-            //    Exorcism.Item = null;
-
-            //    return new ComparisonCalculationBase[] { Judgement, Consecration, SenseUndead, Exorcism };
-            //}
-            //else
-            //{
-                return new ComparisonCalculationBase[0];
-            //}
+            return new ComparisonCalculationBase[0];
         }
 
         public override bool IsItemRelevant(Item item)

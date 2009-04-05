@@ -134,7 +134,6 @@ namespace Rawr.Healadin
                     _customChartNames = new string[] {
                     "Mana Pool Breakdown",
                     "Mana Usage Breakdown",
-                    "Glyphs"
 					};
                 return _customChartNames;
             }
@@ -223,13 +222,13 @@ namespace Rawr.Healadin
 			float active_length = fight_length * calcOpts.Activity;
 
             float divine_pleas = (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
-            float glyph_sow = (calcOpts.GlyphSealOfWisdom ? .95f : 1f);
-            float heal_multi = (calcOpts.GlyphSealOfLight ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier)
+            float glyph_sow = (talents.GlyphOfSealOfWisdom ? .95f : 1f);
+            float heal_multi = (talents.GlyphOfSealOfLight ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier)
                 * (1f - .5f * divine_pleas * 15f / fight_length) * (1f + talents.Divinity * .01f);
 
 
             calc.ManaBase = stats.Mana;
-            calc.ManaLayOnHands = 1950 * ((calcOpts.GlyphDivinity ? 1 : 0) + (calcOpts.LoHSelf ? 1 : 0)) * (calcOpts.GlyphDivinity ? 2f : 1f);
+            calc.ManaLayOnHands = 1950 * ((talents.GlyphOfDivinity ? 1 : 0) + (calcOpts.LoHSelf ? 1 : 0)) * (talents.GlyphOfDivinity ? 2f : 1f);
             calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 120f - .25f) : 0);
             calc.ManaDivinePlea = stats.Mana * .25f * divine_pleas;
             calc.ManaMp5 = fight_length * stats.Mp5 / 5;
@@ -287,7 +286,7 @@ namespace Rawr.Healadin
             #region Maintaining BoL
             if (talents.BeaconOfLight > 0)
             {
-                calc.BoLCasts = (float)Math.Ceiling(fight_length * calcOpts.BoLUp / (calcOpts.GlyphBeaconOfLight ? 90f : 60f));
+                calc.BoLCasts = (float)Math.Ceiling(fight_length * calcOpts.BoLUp / (talents.GlyphOfBeaconOfLight ? 90f : 60f));
                 calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(base_mana * .35f * benediction) - ied - stats.SpellsManaReduction);
             }
             #endregion
@@ -301,7 +300,7 @@ namespace Rawr.Healadin
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
             calc.FoLAvgHeal = (835.5f + (stats.SpellPower + stats.FlashOfLightSpellPower) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FlashOfLightMultiplier) * heal_multi;
             float fol_baseMana = (int)(base_mana * .07f);
-            calc.FoLCrit = stats.SpellCrit + stats.FlashOfLightCrit + talents.HolyPower * .01f + (calcOpts.GlyphFlashOfLight ? .05f : 0f);
+            calc.FoLCrit = stats.SpellCrit + stats.FlashOfLightCrit + talents.HolyPower * .01f + (talents.GlyphOfFlashOfLight ? .05f : 0f);
             calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied - stats.SpellsManaReduction;
             float fol_dimana = fol_baseMana * glyph_sow * .5f - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied;
             float fol_heal = calc.FoLAvgHeal * ((1 - calc.FoLCrit) + 1.5f  * (1f + stats.BonusCritHealMultiplier) * calc.FoLCrit);
@@ -355,7 +354,7 @@ namespace Rawr.Healadin
 
             if (talents.HolyShock > 0 && calcOpts.HolyShock > 0)
             {
-                calc.HSTime = (float)(Math.Floor(fight_length * calcOpts.HolyShock / (calcOpts.GlyphHolyShock ? 5f : 6f)) * calc.HSCastTime);
+                calc.HSTime = (float)(Math.Floor(fight_length * calcOpts.HolyShock / (talents.GlyphOfHolyShock ? 5f : 6f)) * calc.HSCastTime);
                 calc.HSHealed = calc.HSTime * calc.HSHPS;
                 calc.HSUsage = calc.HSTime * hs_mps;
             }
@@ -390,7 +389,7 @@ namespace Rawr.Healadin
             calc.FoLHealed = calc.FoLTime * calc.FoLHPS;
             calc.HLHealed = calc.HLTime * calc.HLHPS + di_healing + df_healing;
             calc.HLTime += di_time;
-            if (calcOpts.GlyphHolyLight) calc.HLGlyph = calc.HLHealed * calcOpts.GHL_Targets * 0.1f * heal_multi *
+            if (talents.GlyphOfHolyLight) calc.HLGlyph = calc.HLHealed * calcOpts.GHL_Targets * 0.1f * heal_multi *
                 ((1 - stats.SpellCrit - talents.HolyPower * .01f) + 1.5f * (1f + stats.BonusCritHealMultiplier) * (stats.SpellCrit + talents.HolyPower * .01f));
 
             calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed + calc.HLGlyph;
@@ -494,84 +493,6 @@ namespace Rawr.Healadin
                 SS.OverallPoints = SS.ThroughputPoints = calc.SSUsage;
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL, SS };
-            }
-            else if (chartName == "Glyphs")
-            {
-
-                CalculationOptionsHealadin initOpts = character.CalculationOptions as CalculationOptionsHealadin;
-
-                Character baseChar = character.Clone();
-                CalculationOptionsHealadin baseOpts = initOpts.Clone();
-                baseChar.CalculationOptions = baseOpts;
-
-                Character deltaChar = character.Clone();
-                CalculationOptionsHealadin deltaOpts = initOpts.Clone();
-                deltaChar.CalculationOptions = deltaOpts;
-
-                CharacterCalculationsBase baseCalc;
-
-                ComparisonCalculationBase HolyLight;
-                baseOpts.GlyphHolyLight = false;
-                deltaOpts.GlyphHolyLight = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                HolyLight = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Holy Light", initOpts.GlyphHolyLight);
-                deltaOpts.GlyphHolyLight = baseOpts.GlyphHolyLight = initOpts.GlyphHolyLight;
-                HolyLight.Item = null;
-
-                ComparisonCalculationBase FlashOfLight;
-                baseOpts.GlyphFlashOfLight = false;
-                deltaOpts.GlyphFlashOfLight = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                FlashOfLight = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Flash of Light", initOpts.GlyphFlashOfLight);
-                deltaOpts.GlyphFlashOfLight = baseOpts.GlyphFlashOfLight = initOpts.GlyphFlashOfLight;
-                FlashOfLight.Item = null;
-
-                ComparisonCalculationBase Divinity;
-                baseOpts.GlyphDivinity = false;
-                deltaOpts.GlyphDivinity = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                Divinity = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Divnity", initOpts.GlyphDivinity);
-                deltaOpts.GlyphDivinity = baseOpts.GlyphDivinity = initOpts.GlyphDivinity;
-                Divinity.Item = null;
-
-                ComparisonCalculationBase SealOfWisdom;
-                baseOpts.GlyphSealOfWisdom = false;
-                deltaOpts.GlyphSealOfWisdom = true;
-                baseOpts.GlyphSealOfLight = deltaOpts.GlyphSealOfLight = false;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                SealOfWisdom = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Wisdom", initOpts.GlyphSealOfWisdom);
-                deltaOpts.GlyphSealOfWisdom = baseOpts.GlyphSealOfWisdom = initOpts.GlyphSealOfWisdom;
-                deltaOpts.GlyphSealOfLight = baseOpts.GlyphSealOfLight = initOpts.GlyphSealOfLight;
-                SealOfWisdom.Item = null;
-
-                ComparisonCalculationBase SealOfLight;
-                baseOpts.GlyphSealOfLight = false;
-                deltaOpts.GlyphSealOfLight = true;
-                baseOpts.GlyphSealOfWisdom = deltaOpts.GlyphSealOfWisdom = false;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                SealOfLight = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Light", initOpts.GlyphSealOfLight);
-                deltaOpts.GlyphSealOfLight = baseOpts.GlyphSealOfLight = initOpts.GlyphSealOfLight;
-                deltaOpts.GlyphSealOfWisdom = baseOpts.GlyphSealOfWisdom = initOpts.GlyphSealOfWisdom;
-                SealOfLight.Item = null;
-
-                ComparisonCalculationBase HolyShock;
-                baseOpts.GlyphHolyShock = false;
-                deltaOpts.GlyphHolyShock = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                HolyShock = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Holy Shock", initOpts.GlyphHolyShock);
-                deltaOpts.GlyphHolyShock = baseOpts.GlyphHolyShock = initOpts.GlyphHolyShock;
-                HolyShock.Item = null;
-
-                ComparisonCalculationBase BeaconOfLight;
-                baseOpts.GlyphBeaconOfLight = false;
-                deltaOpts.GlyphBeaconOfLight = true;
-                baseCalc = Calculations.GetCharacterCalculations(baseChar);
-                BeaconOfLight = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Beacon of Light", initOpts.GlyphBeaconOfLight);
-                deltaOpts.GlyphBeaconOfLight = baseOpts.GlyphBeaconOfLight = initOpts.GlyphBeaconOfLight;
-                BeaconOfLight.Item = null;
-
-                return new ComparisonCalculationBase[] { HolyLight, FlashOfLight, Divinity, SealOfWisdom, 
-                    SealOfLight, HolyShock, BeaconOfLight };
             }
             return new ComparisonCalculationBase[] {};
         }
