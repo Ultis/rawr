@@ -105,9 +105,9 @@ namespace Rawr.Retribution
             loading = true;
 
             listUnlimitedPriority.Items.Clear();
-            listUnlimitedPriority.Items.AddRange(new string[] { Rotation.AbilityString(calcOpts.Order[0]), Rotation.AbilityString(calcOpts.Order[1]),
-                 Rotation.AbilityString(calcOpts.Order[2]), Rotation.AbilityString(calcOpts.Order[3]),
-                  Rotation.AbilityString(calcOpts.Order[4]), Rotation.AbilityString(calcOpts.Order[5])});
+            listUnlimitedPriority.Items.AddRange(new string[] { RotationParameters.AbilityString(calcOpts.Order[0]), RotationParameters.AbilityString(calcOpts.Order[1]),
+                 RotationParameters.AbilityString(calcOpts.Order[2]), RotationParameters.AbilityString(calcOpts.Order[3]),
+                  RotationParameters.AbilityString(calcOpts.Order[4]), RotationParameters.AbilityString(calcOpts.Order[5])});
 
             for (int i = 0; i < 6; i++) listUnlimitedPriority.SetItemChecked(i, calcOpts.Selected[i]);
 
@@ -122,7 +122,7 @@ namespace Rawr.Retribution
                 int sel = listUnlimitedPriority.SelectedIndex;
                 if (sel > 0 && sel <= 5)
                 {
-                    Rotation.Ability temp1 = calcOpts.Order[sel - 1];
+                    RotationParameters.Ability temp1 = calcOpts.Order[sel - 1];
                     calcOpts.Order[sel - 1] = calcOpts.Order[sel];
                     calcOpts.Order[sel] = temp1;
 
@@ -145,7 +145,7 @@ namespace Rawr.Retribution
                 int sel = listUnlimitedPriority.SelectedIndex;
                 if (sel >= 0 && sel < 5)
                 {
-                    Rotation.Ability temp1 = calcOpts.Order[sel + 1];
+                    RotationParameters.Ability temp1 = calcOpts.Order[sel + 1];
                     calcOpts.Order[sel + 1] = calcOpts.Order[sel];
                     calcOpts.Order[sel] = temp1;
 
@@ -410,9 +410,9 @@ namespace Rawr.Retribution
 
         public bool SimulateRotation = true;
 
-        private Rotation.Ability[] _order = { Rotation.Ability.CrusaderStrike, Rotation.Ability.HammerOfWrath, Rotation.Ability.Judgement,
-                                                   Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
-        public Rotation.Ability[] Order {
+        private RotationParameters.Ability[] _order = { RotationParameters.Ability.CrusaderStrike, RotationParameters.Ability.HammerOfWrath, RotationParameters.Ability.Judgement,
+                                                   RotationParameters.Ability.DivineStorm, RotationParameters.Ability.Consecration, RotationParameters.Ability.Exorcism };
+        public RotationParameters.Ability[] Order {
             get { _cache = null; return _order; }
             set { _cache = null; _order = value; }
         }
@@ -424,10 +424,10 @@ namespace Rawr.Retribution
             set { _cache = null; _selected = value; }
         }
 
-        private Rotation.Ability[] _cache = null;
+        private RotationParameters.Ability[] _cache = null;
 
         [XmlIgnore]        
-        public Rotation.Ability[] Priorities
+        public RotationParameters.Ability[] Priorities
         {
             get
             {
@@ -435,7 +435,7 @@ namespace Rawr.Retribution
                 {
                     int count = 0;
                     foreach (bool b in _selected) { if (b) count++; }
-                    _cache = new Rotation.Ability[count];
+                    _cache = new RotationParameters.Ability[count];
 
                     int sel = 0;
                     for (int i = 0; i < _order.Length; i++)
@@ -488,7 +488,7 @@ namespace Rawr.Retribution
             clone.ExoCD20 = ExoCD20;
             clone.HoWCD20 = HoWCD20;
 
-            clone._order = (Rotation.Ability[])_order.Clone();
+            clone._order = (RotationParameters.Ability[])_order.Clone();
             clone._selected = (bool[])_selected.Clone();
 
             return clone;

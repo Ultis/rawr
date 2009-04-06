@@ -6,9 +6,9 @@ namespace Rawr.Retribution
 {
     static class RotationSimulator
     {
-        private static Dictionary<Rotation, RotationSolution> savedSolutions = new Dictionary<Rotation, RotationSolution>(new Rotation.RotationComparer());
+        private static Dictionary<RotationParameters, RotationSolution> savedSolutions = new Dictionary<RotationParameters, RotationSolution>(new RotationParameters.RotationComparer());
 
-        public static RotationSolution SimulateRotation(Rotation rot)
+        public static RotationSolution SimulateRotation(RotationParameters rot)
         {
             if (savedSolutions.ContainsKey(rot)) return savedSolutions[rot];
 
@@ -20,14 +20,14 @@ namespace Rawr.Retribution
             
             SimulatorAbility[] abilities = new SimulatorAbility[6];
 
-            abilities[(int)Rotation.Ability.Judgement] = new SimulatorAbility(rot.T7_4pc ? 7 : 8);
-            abilities[(int)Rotation.Ability.CrusaderStrike] = new SimulatorAbility(6);
-            abilities[(int)Rotation.Ability.DivineStorm] = new SimulatorAbility(10);
-            abilities[(int)Rotation.Ability.Consecration] = new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8);
-            abilities[(int)Rotation.Ability.Exorcism] = new SimulatorAbility(15);
-            abilities[(int)Rotation.Ability.HammerOfWrath] = new SimulatorAbility(6);
+            abilities[(int)RotationParameters.Ability.Judgement] = new SimulatorAbility(rot.T7_4pc ? 7 : 8);
+            abilities[(int)RotationParameters.Ability.CrusaderStrike] = new SimulatorAbility(6);
+            abilities[(int)RotationParameters.Ability.DivineStorm] = new SimulatorAbility(10);
+            abilities[(int)RotationParameters.Ability.Consecration] = new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8);
+            abilities[(int)RotationParameters.Ability.Exorcism] = new SimulatorAbility(15);
+            abilities[(int)RotationParameters.Ability.HammerOfWrath] = new SimulatorAbility(6);
 
-            abilities[(int)Rotation.Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
+            abilities[(int)RotationParameters.Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
 
             bool gcdUsed;
             float minNext, tryUse;
@@ -35,7 +35,7 @@ namespace Rawr.Retribution
             while (currentTime < sol.FightLength)
             {
                 gcdUsed = false;
-                foreach (Rotation.Ability ability in rot.Priorities)
+                foreach (RotationParameters.Ability ability in rot.Priorities)
                 {
                     tryUse = abilities[(int)ability].UseAbility(currentTime);
                     if (tryUse > 0)
@@ -56,23 +56,23 @@ namespace Rawr.Retribution
                 }
             }
 
-            sol.Judgement = abilities[(int)Rotation.Ability.Judgement].Uses;
-            sol.JudgementCD = abilities[(int)Rotation.Ability.Judgement].EffectiveCooldown();
+            sol.Judgement = abilities[(int)RotationParameters.Ability.Judgement].Uses;
+            sol.JudgementCD = abilities[(int)RotationParameters.Ability.Judgement].EffectiveCooldown();
 
-            sol.CrusaderStrike = abilities[(int)Rotation.Ability.CrusaderStrike].Uses;
-            sol.CrusaderStrikeCD = abilities[(int)Rotation.Ability.CrusaderStrike].EffectiveCooldown();
+            sol.CrusaderStrike = abilities[(int)RotationParameters.Ability.CrusaderStrike].Uses;
+            sol.CrusaderStrikeCD = abilities[(int)RotationParameters.Ability.CrusaderStrike].EffectiveCooldown();
 
-            sol.DivineStorm = abilities[(int)Rotation.Ability.DivineStorm].Uses;
-            sol.DivineStormCD = abilities[(int)Rotation.Ability.DivineStorm].EffectiveCooldown();
+            sol.DivineStorm = abilities[(int)RotationParameters.Ability.DivineStorm].Uses;
+            sol.DivineStormCD = abilities[(int)RotationParameters.Ability.DivineStorm].EffectiveCooldown();
 
-            sol.Consecration = abilities[(int)Rotation.Ability.Consecration].Uses;
-            sol.ConsecrationCD = abilities[(int)Rotation.Ability.Consecration].EffectiveCooldown();
+            sol.Consecration = abilities[(int)RotationParameters.Ability.Consecration].Uses;
+            sol.ConsecrationCD = abilities[(int)RotationParameters.Ability.Consecration].EffectiveCooldown();
 
-            sol.Exorcism = abilities[(int)Rotation.Ability.Exorcism].Uses;
-            sol.ExorcismCD = abilities[(int)Rotation.Ability.Exorcism].EffectiveCooldown();
+            sol.Exorcism = abilities[(int)RotationParameters.Ability.Exorcism].Uses;
+            sol.ExorcismCD = abilities[(int)RotationParameters.Ability.Exorcism].EffectiveCooldown();
 
-            sol.HammerOfWrath = abilities[(int)Rotation.Ability.HammerOfWrath].Uses;
-            sol.HammerOfWrathCD = abilities[(int)Rotation.Ability.HammerOfWrath].EffectiveCooldown();
+            sol.HammerOfWrath = abilities[(int)RotationParameters.Ability.HammerOfWrath].Uses;
+            sol.HammerOfWrathCD = abilities[(int)RotationParameters.Ability.HammerOfWrath].EffectiveCooldown();
 
             savedSolutions[rot] = sol;
 

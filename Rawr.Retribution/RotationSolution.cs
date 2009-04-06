@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    class RotationSolution
+    public class RotationSolution
     {
         public int Judgement { get; set;}
         public int CrusaderStrike { get; set; }

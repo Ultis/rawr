@@ -85,6 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ability.cs" />
+    <Compile Include="Rotation.cs" />
     <Compile Include="SimulatorAbility.cs" />
     <Compile Include="CalculationOptionsPanelRetribution.cs">
       <SubType>UserControl</SubType>
@@ -101,7 +103,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rotation.cs" />
+    <Compile Include="RotationParameters.cs" />
     <Compile Include="RotationSimulator.cs" />
     <Compile Include="RotationSolution.cs" />
   </ItemGroup>

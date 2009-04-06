@@ -4,99 +4,142 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    public class Rotation
+    public abstract class Rotation
     {
 
-        public class RotationComparer : IEqualityComparer<Rotation>
+        protected Ability cs;
+        protected Ability judge;
+        protected Ability ds;
+        protected Ability exo;
+        protected Ability how;
+        protected Ability cons;
+        protected Ability seal;
+        protected White white;
+
+        public Rotation()
         {
-            private readonly int[] encode = { 1, 2, 3, 4, 5, 6 }; 
-
-            public bool Equals(Rotation one, Rotation two)
-            {
-                return one.Equals(two);
-            }
-
-            public int GetHashCode(Rotation obj)
-            {
-                int ret = (obj.T7_4pc ? 512 : 0) + (obj.GlyphConsecrate ? 1024 : 0) + int.Parse((obj.TimeUnder20 * 100).ToString()) * 2048
-                     + int.Parse((obj.Wait * 100).ToString()) * 4096 + int.Parse((obj.Delay * 100).ToString()) * 8192;
-
-                for (int i = 0; i < obj.Priorities.Length; i++)
-                {
-                    ret += (int)obj.Priorities[i] * (4 ^ i);
-                }
-                
-                return ret;
-            }
-
+            cs = new CrusaderStrike();
+            judge = new Judgement();
+            ds = new DivineStorm();
+            exo = new Exorcism();
+            how = new HammerOfWrath();
+            cons = new Consecration();
+            seal = new SealOfBlood();
+            white = new White();
         }
 
-        public enum Ability { Judgement=0, CrusaderStrike, DivineStorm, Consecration, HammerOfWrath, Exorcism };
+        public abstract void SetAbilityDPS(CharacterCalculationsRetribution calc);
 
-        public readonly bool T7_4pc;
-        public readonly bool GlyphConsecrate;
-        public readonly Ability[] Priorities;
-        public readonly float TimeUnder20;
-        public readonly float Wait;
-        public readonly float Delay;
-
-        public Rotation(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, bool GlyphConsecrate)
+        public void SetDPS(CharacterCalculationsRetribution calc)
         {
-            this.Priorities = Priorities;
-            this.T7_4pc = T7_4pc;
-            this.GlyphConsecrate = GlyphConsecrate;
-            this.TimeUnder20 = TimeUnder20;
-            this.Wait = (float)Math.Round(Wait, 2);
-            this.Delay = (float)Math.Round(Delay, 2);
+            calc.WhiteDPS = white.WhiteDPS();
+            SetAbilityDPS(calc);
+            
+            calc.DPSPoints =
+                calc.WhiteDPS +
+                calc.SealDPS +
+                calc.JudgementDPS +
+                calc.CrusaderStrikeDPS +
+                calc.DivineStormDPS +
+                calc.ExorcismDPS +
+                calc.ConsecrationDPS +
+                calc.HammerOfWrathDPS;
         }
 
-        public bool Equals(Rotation other)
+        public abstract float GetMeleeAttacksPerSec();
+        public abstract float GetPhysicalAttacksPerSec();
+
+        public float GetMeleeCritsPerSec()
         {
-            if (Priorities.Length != other.Priorities.Length) return false;
-            for (int i = 0; i < Priorities.Length; i++)
-            {
-                if (Priorities[i] != other.Priorities[i])
-                {
-                    return false;
-                }
-            }
-            return (T7_4pc == other.T7_4pc)
-                && (GlyphConsecrate == other.GlyphConsecrate)
-                && (TimeUnder20 == other.TimeUnder20)
-                && (Delay == other.Delay)
-                && (Wait == other.Wait);
+            return GetMeleeAttacksPerSec() * Ability.Stats.PhysicalCrit * Ability.GetMeleeAvoid();
         }
 
-        public static string ShortAbilityString(Ability ability)
+        public float GetPhysicalCritsPerSec()
         {
-            if (ability == Ability.Consecration) return "Con";
-            if (ability == Ability.CrusaderStrike) return "CS";
-            if (ability == Ability.Judgement) return "Jud";
-            if (ability == Ability.DivineStorm) return "DS";
-            if (ability == Ability.Exorcism) return "Exo";
-            if (ability == Ability.HammerOfWrath) return "HoW";
-            return "?";
+            return GetPhysicalAttacksPerSec() * Ability.Stats.PhysicalCrit * Ability.GetMeleeAvoid();
         }
 
-        public static string AbilityString(Ability ability)
+    }
+
+    public class Simulator : Rotation
+    {
+
+        public RotationSolution Solution { get; set; }
+
+        public Simulator(RotationParameters rot)
+            : base()
         {
-            if (ability == Ability.Consecration) return "Consecration";
-            if (ability == Ability.CrusaderStrike) return "Crusader Strike";
-            if (ability == Ability.Judgement) return "Judgement";
-            if (ability == Ability.DivineStorm) return "Divine Storm";
-            if (ability == Ability.Exorcism) return "Exorcism";
-            if (ability == Ability.HammerOfWrath) return "Hammer of Wrath";
-            return "?";
+            Solution = RotationSimulator.SimulateRotation(rot);
         }
 
-        public override string ToString()
+        public override void SetAbilityDPS(CharacterCalculationsRetribution calc)
         {
-            string ret = "";
-            foreach (Ability a in Priorities)
-            {
-                ret += ShortAbilityString(a) + ", ";
-            }
-            return ret;
+            calc.Rotation = Solution;
+
+            calc.SealDPS = seal.AverageDamage() * GetMeleeAttacksPerSec() * Ability.GetMeleeAvoid();
+            calc.JudgementDPS = judge.AverageDamage() * Solution.Judgement / Solution.FightLength;
+            calc.CrusaderStrikeDPS = cs.AverageDamage() * Solution.CrusaderStrike / Solution.FightLength;
+            calc.DivineStormDPS = ds.AverageDamage() * Solution.DivineStorm / Solution.FightLength;
+            calc.ConsecrationDPS = cons.AverageDamage() * Solution.Consecration / Solution.FightLength;
+            calc.ExorcismDPS = exo.AverageDamage() * Solution.Exorcism / Solution.FightLength;
+            calc.HammerOfWrathDPS = how.AverageDamage() * Solution.HammerOfWrath / Solution.FightLength;
+        }
+
+        public override float GetMeleeAttacksPerSec()
+        {
+            return (Solution.CrusaderStrike + Solution.DivineStorm) / Solution.FightLength + 1f / Ability.AttackSpeed;
+        }
+
+        public override float GetPhysicalAttacksPerSec()
+        {
+            return GetMeleeAttacksPerSec() + (Solution.Judgement + Solution.HammerOfWrath) / Solution.FightLength;
+        }
+
+    }
+
+    public class EffectiveCooldown : Rotation
+    {
+
+        private readonly CalculationOptionsRetribution _calcOpts;
+
+        public EffectiveCooldown(CalculationOptionsRetribution calcOpts)
+            : base()
+        {
+            _calcOpts = calcOpts;
+        }
+
+        public override void SetAbilityDPS(CharacterCalculationsRetribution calc)
+        {
+
+            calc.Rotation = new RotationSolution();
+            calc.Rotation.JudgementCD = _calcOpts.JudgeCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.JudgeCD20 * _calcOpts.TimeUnder20;
+            calc.Rotation.CrusaderStrikeCD = _calcOpts.CSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.CSCD20 * _calcOpts.TimeUnder20;
+            calc.Rotation.DivineStormCD = _calcOpts.DSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.DSCD20 * _calcOpts.TimeUnder20;
+            calc.Rotation.ConsecrationCD = _calcOpts.ConsCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ConsCD20 * _calcOpts.TimeUnder20;
+            calc.Rotation.ExorcismCD = _calcOpts.ExoCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ExoCD20 * _calcOpts.TimeUnder20;
+            calc.Rotation.HammerOfWrathCD = _calcOpts.HoWCD20;
+
+            calc.SealDPS = seal.AverageDamage() * GetMeleeAttacksPerSec() * Ability.GetMeleeAvoid();
+            calc.JudgementDPS = judge.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.JudgeCD + _calcOpts.TimeUnder20 / _calcOpts.JudgeCD20);
+            calc.CrusaderStrikeDPS = cs.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.CSCD + _calcOpts.TimeUnder20 / _calcOpts.CSCD20);
+            calc.DivineStormDPS = ds.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.DSCD + _calcOpts.TimeUnder20 / _calcOpts.DSCD20);
+            calc.ConsecrationDPS = cons.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ConsCD + _calcOpts.TimeUnder20 / _calcOpts.ConsCD20);
+            calc.ExorcismDPS = exo.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ExoCD + _calcOpts.TimeUnder20 / _calcOpts.ExoCD20);
+            calc.HammerOfWrathDPS = how.AverageDamage() * (_calcOpts.TimeUnder20 / _calcOpts.HoWCD20);
+        }
+
+        public override float GetMeleeAttacksPerSec()
+        {
+            return 1f / Ability.AttackSpeed
+                + (1f / _calcOpts.CSCD + 1f / _calcOpts.DSCD) * (1f - _calcOpts.TimeUnder20)
+                + (1f / _calcOpts.CSCD20 + 1f / _calcOpts.DSCD20) * _calcOpts.TimeUnder20;
+        }
+
+        public override float GetPhysicalAttacksPerSec()
+        {
+            return GetMeleeAttacksPerSec()
+                + (1f / _calcOpts.JudgeCD) * (1f - _calcOpts.TimeUnder20)
+                + (1f / _calcOpts.JudgeCD20 + 1f / _calcOpts.HoWCD20) * _calcOpts.TimeUnder20;
         }
 
     }

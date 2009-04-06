@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    class CharacterCalculationsRetribution : CharacterCalculationsBase
+    public class CharacterCalculationsRetribution : CharacterCalculationsBase
     {
         private float _overallPoints = 0f;
         public override float OverallPoints
