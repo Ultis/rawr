@@ -258,6 +258,22 @@ namespace Rawr.Retribution
         private readonly float[] MissChance = { 0.05f, 0.052f, 0.054f, 0.08f };
         private readonly float[] ResistChance = { 0.04f, 0.05f, 0.06f, 0.17f };
 
+        private float GetMissChance(float hit, int targetLevel)
+        {
+            return (float)Math.Max(MissChance[targetLevel - 80] - hit, 0f);
+        }
+
+        private float GetDodgeChance(float expertise, int targetLevel)
+        {
+            return (float)Math.Max(DodgeChance[targetLevel - 80] - expertise * .0025f, 0f);
+        }
+
+        private float GetResistChance(float spellHit, int targetLevel)
+        {
+            return (float)Math.Max(ResistChance[targetLevel - 80] - spellHit, 0f);
+        }
+
+
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -302,9 +318,9 @@ namespace Rawr.Retribution
             float physPowerMulti = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             const float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
 
-            calc.ToMiss = (float)Math.Max(MissChance[calcOpts.TargetLevel - 80] - stats.PhysicalHit, 0f);
-            calc.ToDodge = (float)Math.Max(DodgeChance[calcOpts.TargetLevel - 80] - stats.Expertise * .0025f, 0f);
-            calc.ToResist = (float)Math.Max(ResistChance[calcOpts.TargetLevel - 80] - stats.SpellHit, 0f);
+            calc.ToMiss = GetMissChance(stats.PhysicalHit, calcOpts.TargetLevel);
+            calc.ToDodge = GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
+            calc.ToResist = GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
 
             float meleeAvoid = 1f - calc.ToMiss - calc.ToDodge;
             float rangeAvoid = 1f - calc.ToMiss;
@@ -343,16 +359,16 @@ namespace Rawr.Retribution
 
             #region Divine Storm
             float dsCrit = stats.PhysicalCrit + stats.DivineStormCrit;
-            float dsHitDamage = (normalizedWeaponDamage + stats.DivineStormDamage) * 1.1f *
-                talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
+            float dsHitDamage = (normalizedWeaponDamage + stats.DivineStormDamage) * (1f + stats.DivineStormMultiplier) * 1.1f
+                * talentMulti * physPowerMulti * armorReduction * aow * aw;
             float dsAvgDamage = dsHitDamage * ((1f - dsCrit) + dsCrit * critBonus * rightVen) * meleeAvoid;
             calc.DivineStormDPS = dsAvgDamage / 10f;
             #endregion
 
             #region Judgement
             float judgeCrit = stats.PhysicalCrit + .06f * talents.Fanaticism;
-            float judgeHitDamage = (calc.WeaponDamage * .26f + .18f * stats.SpellPower + .11f * stats.AttackPower) * aw
-                * spellPowerMulti * talentMulti * partialResist * aow * (talents.GlyphOfJudgement ? 1.1f : 1f);
+            float judgeHitDamage = (calc.WeaponDamage * .26f + .18f * stats.SpellPower + .11f * stats.AttackPower)
+                * aw * spellPowerMulti * talentMulti * partialResist * aow * (talents.GlyphOfJudgement ? 1.1f : 1f);
             float judgeAvgDamage = judgeHitDamage * ((1f - judgeCrit) + judgeCrit * critBonus * rightVen) * rangeAvoid;
             calc.JudgementDPS = judgeAvgDamage / (8f - stats.JudgementCDReduction);
             #endregion
@@ -365,15 +381,16 @@ namespace Rawr.Retribution
 
             #region Exorcism
             float exoCrit = (calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
-            float exoHitDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist *
-                aw * sanctBattle * (1f + stats.ExorcismMultiplier) * (talents.GlyphOfExorcism ? 1.2f : 1f);
+            float exoHitDamage = (1087f + .42f * stats.SpellPower) * (1f + stats.ExorcismMultiplier) * (talents.GlyphOfExorcism ? 1.2f : 1f)
+                * vengeance * crusade * spellPowerMulti * partialResist * aw * sanctBattle;
             float exoAvgDamage = exoHitDamage * ((1f - exoCrit) + exoCrit * spellCritBonus) * spellAvoid;
             calc.ExorcismDPS = exoAvgDamage / 15f;
             #endregion
 
             #region Hammer of Wrath
             float howCrit = (float)Math.Min(1f, stats.PhysicalCrit + .25f * talents.SanctifiedWrath);
-            float howHitDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist * aw * (1f + stats.HammerOfWrathMultiplier);
+            float howHitDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower)
+                * spellPowerMulti * talentMulti * partialResist * aw * (1f + stats.HammerOfWrathMultiplier);
             float howAvgDamage = howHitDamage * ((1f - howCrit) + howCrit * critBonus) * rangeAvoid;
             calc.HammerOfWrathDPS = howAvgDamage / 6f;
             #endregion
@@ -481,9 +498,6 @@ namespace Rawr.Retribution
             statsRace.Agility += 70f;
             statsRace.Stamina += 122f;
             statsRace.Intellect += 78f;
-            statsRace.Spirit += 82f;
-            statsRace.Dodge = .032685f;
-            statsRace.Parry = .05f;
             statsRace.AttackPower = 220f;
             statsRace.Health = 6754f;
             statsRace.Mana = 4114;
@@ -495,6 +509,7 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
+            float timeBetweenMelee, timeBetweenPhysical;
             float libramAP, libramCrit;
             if (calcOpts.SimulateRotation)
             {
@@ -504,40 +519,96 @@ namespace Rawr.Retribution
 
                 libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
                 libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength;
+
+                timeBetweenMelee = (sol.CrusaderStrike + sol.DivineStorm) / sol.FightLength;
+                timeBetweenPhysical = timeBetweenMelee + (sol.Judgement + sol.HammerOfWrath) / sol.FightLength;
             }
             else
             {
                 libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
                 libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
+
+                timeBetweenMelee = 1f / calcOpts.CSCD + 1f / calcOpts.DSCD;
+                timeBetweenPhysical = timeBetweenMelee + 1f / calcOpts.JudgeCD;
             }
 
             float berserkingAP = stats.BerserkingProc * 140f;
 
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
-            stats.Strength = (stats.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
-            stats.Intellect = stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
-            stats.AttackPower = (stats.AttackPower + berserkingAP + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
-            stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
-            stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
+
+            stats.Strength += greatnessStr;
+            stats.AttackPower += berserkingAP + libramAP ;
+            stats.CritRating += libramCrit;
+
+            ConvertRatings(stats, talents, calcOpts.TargetLevel);
+
+            float rangeAvoid = 1f - GetMissChance(stats.PhysicalHit, calcOpts.TargetLevel);
+            float meleeAvoid = rangeAvoid - GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
+
+            float attackSpeed = (character.MainHand == null ? 3.5f : character.MainHand.Speed) / (1f + stats.PhysicalHaste);
+            timeBetweenMelee += 1f / attackSpeed;
+            timeBetweenPhysical += 1f / attackSpeed;
+
+            timeBetweenMelee = 1f / timeBetweenMelee;
+            timeBetweenPhysical = 1f / timeBetweenPhysical;
+
+            Stats avgStats = new Stats();
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use)
+                {
+                    avgStats += effect.GetAverageStats();
+                }
+                else if (effect.Trigger == Trigger.MeleeCrit)
+                {
+                    avgStats += effect.GetAverageStats(timeBetweenMelee, stats.PhysicalCrit * meleeAvoid);
+                }
+                else if (effect.Trigger == Trigger.MeleeHit)
+                {
+                    avgStats += effect.GetAverageStats(timeBetweenMelee, meleeAvoid);
+                }
+                else if (effect.Trigger == Trigger.PhysicalCrit)
+                {
+                    avgStats += effect.GetAverageStats(timeBetweenPhysical, stats.PhysicalCrit * meleeAvoid);
+                }
+                else if (effect.Trigger == Trigger.PhysicalHit)
+                {
+                    avgStats += effect.GetAverageStats(timeBetweenPhysical, meleeAvoid);
+                }
+            }
+
+            stats = statsBaseGear + statsBuffs + statsRace + avgStats;
+            stats.Strength += greatnessStr;
+            stats.AttackPower += berserkingAP + libramAP;
+            stats.CritRating += libramCrit;
+
+            ConvertRatings(stats, talents, calcOpts.TargetLevel);
+
+            return stats;
+        }
+
+        private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel)
+        {
+            stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
+            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
+            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
+            stats.Agility *= (1 + stats.BonusAgilityMultiplier);
+            stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
             stats.Health += stats.Stamina * 10;
 
             stats.PhysicalHit += stats.HitRating / 3278.998947f;
             stats.SpellHit += stats.HitRating / 2623.199272f;
-            stats.Expertise += talents.CombatExpertise * 2 + stats.ExpertiseRating * 4f / 32.78998947f;// *1.25f;
-            // Haste trinket (Meteorite Whetstone)
-            stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
+            stats.Expertise += talents.CombatExpertise * 2 + stats.ExpertiseRating * 4f / 32.78998947f;
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
-            stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + 
-                stats.Agility / 5208.333333f + talentCrit - (calcOpts.TargetLevel == 83 ? 0.048f : 0f);
-            stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f +
-                talentCrit - (calcOpts.TargetLevel == 83 ? 0.03f : 0f);
+            stats.PhysicalCrit = stats.PhysicalCrit + stats.CritRating / 4590.598679f +
+                stats.Agility / 5208.333333f + talentCrit - (targetLevel == 83 ? 0.048f : 0f);
+            stats.SpellCrit = stats.SpellCrit + stats.CritRating / 4590.598679f + stats.Intellect / 16666.66709f +
+                talentCrit - (targetLevel == 83 ? 0.03f : 0f);
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + stats.HasteRating * 1.3f / 3278.998947f) - 1f;
 
             stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
-
-            return stats;
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -572,7 +643,7 @@ namespace Rawr.Retribution
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Health = stats.Health,
                 Strength = stats.Strength,
@@ -618,6 +689,24 @@ namespace Rawr.Retribution
                 HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
                 CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier
             };
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                {
+                    if (HasRelevantSpecialEffectStats(effect.Stats))
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            return s;
+        }
+
+        public bool HasRelevantSpecialEffectStats(Stats stats)
+        {
+            return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
+                + stats.HasteRating) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -635,7 +724,17 @@ namespace Rawr.Retribution
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +
                 stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.BlockValue) > 0;
-            return wantedStats || (maybeStats && ! ignoreStats);
+            bool specialEffect = false;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                {
+                    specialEffect = HasRelevantSpecialEffectStats(effect.Stats);
+                    if (specialEffect) break;
+                }
+            }
+            return wantedStats || ((maybeStats || specialEffect) && !ignoreStats);
         }
     }
 }
