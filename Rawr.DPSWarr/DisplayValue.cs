@@ -5,7 +5,7 @@ namespace Rawr.DPSWarr
     public class DisplayValue
     {
         //MultiPurpose Enum-Class.  The ("Base Stats", "Health") along with the GroupedList() method below, along
-        //with CalculationsRogue.CharacterDisplayCalculationLabels tell the UI to create a group called "Base Stats" and put 
+        //with CalculationsDPSWarr.CharacterDisplayCalculationLabels tell the UI to create a group called "Base Stats" and put 
         //in a label named "Health".  The CharacterCalculationsRogue.GetCharacterDisplayCalculationValues method maps a 
         //string (key) to a value.  The UI will look for a key named "Health", and display the corresponding value.  By using 
         //this class as the stand-in for the string, we can keep the UI labels and key-value pairs in sync in a single class.

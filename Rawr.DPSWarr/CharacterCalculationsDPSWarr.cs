@@ -18,7 +18,6 @@ namespace Rawr.DPSWarr
 
         private readonly Dictionary<DisplayValue, string> _dictValues = new Dictionary<DisplayValue, string>();
 
-        
         public Stats BasicStats { get; private set; }
 
         public override float OverallPoints
@@ -70,13 +69,6 @@ namespace Rawr.DPSWarr
 
         public override float GetOptimizableCalculationValue(string calculation)
         {
-            /* "Health",
-             * "Haste Rating",
-             * "Expertise Rating",
-             * "Hit Rating",
-             * "Agility",
-             * "Attack Power"
-             */
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;

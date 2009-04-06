@@ -65,13 +65,8 @@ namespace Rawr
         public bool GlyphOfIceLance { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
     }
 
-
-
-
-
-
     public partial class PaladinTalents
-        {
+    {
         private bool[] _glyphData = new bool[34];
         public override bool[] GlyphData { get { return _glyphData; } }
         
@@ -143,6 +138,67 @@ namespace Rawr
         public bool GlyphOfHolyLight { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
         [GlyphData(33, "Glyph of Blessing of Might", false, @"Increases the duration of your Blessing of Might spell by 20 min when cast on yourself.")]
         public bool GlyphOfBlessingOfMight { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
+    }
+
+    public partial class WarriorTalents
+    {
+        private bool[] _glyphData = new bool[27];
+        public override bool[] GlyphData { get { return _glyphData; } }
+
+        [GlyphData(0, "Glyph of Battle", false, @"Increases the duration of your Battle Shout by 1 min.")]
+        public bool GlyphOfBattle { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        [GlyphData( 1, "Glyph of Heroic Strike", true, @"You gain 10 rage when you critically strike with your Heroic Strike ability.")]
+        public bool GlyphOfHeroicStrike { get { return _glyphData[ 1]; } set { _glyphData[ 1] = value; } }
+        [GlyphData(2, "Glyph of Rending", true, @"Increases the duration of your Rend ability by 6 sec.")]
+        public bool GlyphOfRending { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData( 3, "Glyph of Rapid Charge", true, @"Reduces the cooldown of your Charge ability by 20%.")]
+        public bool GlyphOfRapidCharge { get { return _glyphData[ 3]; } set { _glyphData[ 3] = value; } }
+        [GlyphData(4, "Glyph of Charge", false, @"Increases the range of your Charge ability by 5 yards.")]
+        public bool GlyphOfCharge { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData( 5, "Glyph of Resonating Power", true, @"Reduces the rage cost of your Thunder Clap ability by 5.")]
+        public bool GlyphOfResonatingPower { get { return _glyphData[ 5]; } set { _glyphData[ 5] = value; } }
+        [GlyphData(6, "Glyph of Thunder Clap", false, @"Increases the radius of your Thunder Clap ability by 2 yards.")]
+        public bool GlyphOfThunderClap { get { return _glyphData[ 6]; } set { _glyphData[ 6] = value; } }
+        [GlyphData(7, "Glyph of Hamstring", true, @"Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.")]
+        public bool GlyphOfHamstring { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(8, "Glyph of Taunt", true, @"Increases the change for your Taunt ability to succeed by 8%.")]
+        public bool GlyphOfTaunt { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        [GlyphData( 9, "Glyph of Sunder Armor", true, @"Your Sunder Armor ability effects a second nearby target.")]
+        public bool GlyphOfSunderArmor { get { return _glyphData[ 9]; } set { _glyphData[ 9] = value; } }
+        [GlyphData(10, "Glyph of Bloodrage", false, @"Reduces the health cost of your Bloodrage ability by 100%.")]
+        public bool GlyphOfBloodrage { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(11, "Glyph of Overpower", true, @"Adds a 50% chance to enable your Overpower when your attacks are parried.")]
+        public bool GlyphOfOverpower { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(12, "Glyph of Revenge", true, @"After using Revenge, your next Heroic Strike costs no rage.")]
+        public bool GlyphOfRevenge { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(13, "Glyph of Barbaric Insults", true, @"Your Mocking Blow ability also taunts the target.")]
+        public bool GlyphOfBarbaricInsults { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Mocking Blow", false, @"Increases the damage of your Mocking Blow ability by 25%.")]
+        public bool GlyphOfMockingBlow { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Last Stand", true, @"Reduces the cooldown of your Last Stand ability by 3 min, but also reduces the maximum health gained by 10%.")]
+        public bool GlyphOfLastStand { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(16, "Glyph of Cleaving", true, @"Increases the number of targets your Cleave hits by 1.")]
+        public bool GlyphOfCleaving { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Execution", true, @"Your Execute ability deals damage as if you had 10 additional rage.")]
+        public bool GlyphOfExecution { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Sweeping Strikes", true, @"You generate 30 rage over 12 sec when you use your Sweeping Strieks ability.")]
+        public bool GlyphOfSweepingStrikes { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, "Glyph of Whirlwind", true, @"Reduces the cooldown of your Whirlwind ability by 2 sec.")]
+        public bool GlyphOfWhirlwind { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, "Glyph of Blocking", true, @"Increases your block value by 10% for 10 sec after using your Shield Slam ability.")]
+        public bool GlyphOfBlocking { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(21, "Glyph of Mortal Strike", true, @"Increases the damage of your Mortal Strike ability by 10%.")]
+        public bool GlyphOfMortalStrike { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, "Glyph of Bloodthirst", true, @"Increases the healing your recieve from Bloodthirst ability by 100%.")]
+        public bool GlyphOfBloodthirst { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        [GlyphData(23, "Glyph of Devastate", true, @"Your Devastate ability now applies two stacks of Sunder Armor.")]
+        public bool GlyphOfDevastate { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Victory Rush", true, @"Your Victory Ruch ability has a 30% increased critical strike chance against targets above 70% health.")]
+        public bool GlyphOfVictoryRush { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, "Glyph of Enduring Victory", false, @"Increases the window of opportunity in which you can use Victory Rush by 5 sec.")]
+        public bool GlyphOfEnduringVictory { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(26, "Glyph of Intervene", true, @"Increases the number of attacks you intercept for your intervene target by 1.")]
+        public bool GlyphOfIntervene { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
     }
 
     public partial class DruidTalents

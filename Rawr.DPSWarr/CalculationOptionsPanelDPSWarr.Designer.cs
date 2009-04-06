@@ -23,83 +23,131 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.labelTargetArmorDescription = new System.Windows.Forms.Label();
-            this.comboBoxArmorBosses = new System.Windows.Forms.ComboBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.CB_TargLvl = new System.Windows.Forms.ComboBox();
+            this.LB_TargLvl = new System.Windows.Forms.Label();
+            this.LB_TargArmor = new System.Windows.Forms.Label();
+            this.LB_TargArmorDesc = new System.Windows.Forms.Label();
+            this.CB_TargArmor = new System.Windows.Forms.ComboBox();
+            this.GB_Bosses = new System.Windows.Forms.GroupBox();
+            this.CB_ToughLvl = new System.Windows.Forms.ComboBox();
+            this.LB_ToughLvl = new System.Windows.Forms.Label();
+            this.GB_Bosses.SuspendLayout();
             this.SuspendLayout();
             // 
-            // comboBoxTargetLevel
+            // CB_TargLvl
             // 
-            this.comboBoxTargetLevel.FormattingEnabled = true;
-            this.comboBoxTargetLevel.Location = new System.Drawing.Point(92, 14);
-            this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(105, 21);
-            this.comboBoxTargetLevel.TabIndex = 0;
-            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Target Level:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 52);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Target Armor:";
-            // 
-            // labelTargetArmorDescription
-            // 
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(26, 87);
-            this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(157, 55);
-            this.labelTargetArmorDescription.TabIndex = 5;
-            // 
-            // comboBoxArmorBosses
-            // 
-            this.comboBoxArmorBosses.FormattingEnabled = true;
-            this.comboBoxArmorBosses.Items.AddRange(new object[] {
+            this.CB_TargLvl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_TargLvl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TargLvl.FormattingEnabled = true;
+            this.CB_TargLvl.Items.AddRange(new object[] {
             "83",
             "82",
             "81",
             "80"});
-            this.comboBoxArmorBosses.Location = new System.Drawing.Point(91, 44);
-            this.comboBoxArmorBosses.Name = "comboBoxArmorBosses";
-            this.comboBoxArmorBosses.Size = new System.Drawing.Size(105, 21);
-            this.comboBoxArmorBosses.TabIndex = 8;
-            this.comboBoxArmorBosses.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmorBosses_SelectedIndexChanged);
+            this.CB_TargLvl.Location = new System.Drawing.Point(79, 3);
+            this.CB_TargLvl.Name = "CB_TargLvl";
+            this.CB_TargLvl.Size = new System.Drawing.Size(155, 21);
+            this.CB_TargLvl.TabIndex = 1;
+            this.CB_TargLvl.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
-            // groupBox3
+            // LB_TargLvl
             // 
-            this.groupBox3.Location = new System.Drawing.Point(15, 71);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(181, 74);
-            this.groupBox3.TabIndex = 9;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Bosses";
+            this.LB_TargLvl.AutoSize = true;
+            this.LB_TargLvl.Location = new System.Drawing.Point(3, 6);
+            this.LB_TargLvl.Name = "LB_TargLvl";
+            this.LB_TargLvl.Size = new System.Drawing.Size(70, 13);
+            this.LB_TargLvl.TabIndex = 0;
+            this.LB_TargLvl.Text = "Target Level:";
+            // 
+            // LB_TargArmor
+            // 
+            this.LB_TargArmor.AutoSize = true;
+            this.LB_TargArmor.Location = new System.Drawing.Point(3, 33);
+            this.LB_TargArmor.Name = "LB_TargArmor";
+            this.LB_TargArmor.Size = new System.Drawing.Size(71, 13);
+            this.LB_TargArmor.TabIndex = 2;
+            this.LB_TargArmor.Text = "Target Armor:";
+            // 
+            // LB_TargArmorDesc
+            // 
+            this.LB_TargArmorDesc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TargArmorDesc.Location = new System.Drawing.Point(3, 16);
+            this.LB_TargArmorDesc.Name = "LB_TargArmorDesc";
+            this.LB_TargArmorDesc.Size = new System.Drawing.Size(222, 328);
+            this.LB_TargArmorDesc.TabIndex = 0;
+            // 
+            // CB_TargArmor
+            // 
+            this.CB_TargArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_TargArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TargArmor.FormattingEnabled = true;
+            this.CB_TargArmor.Items.AddRange(new object[] {
+            "10900",
+            "12000",
+            "13083"});
+            this.CB_TargArmor.Location = new System.Drawing.Point(79, 30);
+            this.CB_TargArmor.Name = "CB_TargArmor";
+            this.CB_TargArmor.Size = new System.Drawing.Size(155, 21);
+            this.CB_TargArmor.TabIndex = 3;
+            this.CB_TargArmor.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmorBosses_SelectedIndexChanged);
+            // 
+            // GB_Bosses
+            // 
+            this.GB_Bosses.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.GB_Bosses.Controls.Add(this.LB_TargArmorDesc);
+            this.GB_Bosses.Location = new System.Drawing.Point(6, 76);
+            this.GB_Bosses.Name = "GB_Bosses";
+            this.GB_Bosses.Size = new System.Drawing.Size(228, 347);
+            this.GB_Bosses.TabIndex = 6;
+            this.GB_Bosses.TabStop = false;
+            this.GB_Bosses.Text = "Bosses";
+            // 
+            // CB_ToughLvl
+            // 
+            this.CB_ToughLvl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_ToughLvl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_ToughLvl.FormattingEnabled = true;
+            this.CB_ToughLvl.Items.AddRange(new object[] {
+            "",
+            "Rank 1: STA 3",
+            "Rank 2: STA 5",
+            "Rank 3: STA 7",
+            "Rank 4: STA 10",
+            "Rank 5: STA 30",
+            "Rank 6: STA 50"});
+            this.CB_ToughLvl.Location = new System.Drawing.Point(79, 57);
+            this.CB_ToughLvl.Name = "CB_ToughLvl";
+            this.CB_ToughLvl.Size = new System.Drawing.Size(155, 21);
+            this.CB_ToughLvl.TabIndex = 5;
+            // 
+            // LB_ToughLvl
+            // 
+            this.LB_ToughLvl.AutoSize = true;
+            this.LB_ToughLvl.Location = new System.Drawing.Point(3, 60);
+            this.LB_ToughLvl.Name = "LB_ToughLvl";
+            this.LB_ToughLvl.Size = new System.Drawing.Size(80, 13);
+            this.LB_ToughLvl.TabIndex = 4;
+            this.LB_ToughLvl.Text = "Toughness Lvl:";
             // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.comboBoxArmorBosses);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBoxTargetLevel);
-            this.Controls.Add(this.labelTargetArmorDescription);
-            this.Controls.Add(this.groupBox3);
+            this.AutoSize = true;
+            this.Controls.Add(this.CB_ToughLvl);
+            this.Controls.Add(this.LB_ToughLvl);
+            this.Controls.Add(this.CB_TargArmor);
+            this.Controls.Add(this.LB_TargArmor);
+            this.Controls.Add(this.LB_TargLvl);
+            this.Controls.Add(this.CB_TargLvl);
+            this.Controls.Add(this.GB_Bosses);
             this.Name = "CalculationOptionsPanelDPSWarr";
-            this.Size = new System.Drawing.Size(209, 432);
+            this.Size = new System.Drawing.Size(238, 432);
+            this.GB_Bosses.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -107,11 +155,13 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxTargetLevel;
-		private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label labelTargetArmorDescription;
-        private System.Windows.Forms.ComboBox comboBoxArmorBosses;
-        private System.Windows.Forms.GroupBox groupBox3;
+        public System.Windows.Forms.ComboBox CB_TargLvl;
+        public System.Windows.Forms.Label LB_TargLvl;
+        public System.Windows.Forms.Label LB_TargArmor;
+        public System.Windows.Forms.Label LB_TargArmorDesc;
+        public System.Windows.Forms.ComboBox CB_TargArmor;
+        public System.Windows.Forms.GroupBox GB_Bosses;
+        public System.Windows.Forms.ComboBox CB_ToughLvl;
+        public System.Windows.Forms.Label LB_ToughLvl;
     }
 }

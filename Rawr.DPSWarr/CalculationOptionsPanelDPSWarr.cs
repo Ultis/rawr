@@ -16,10 +16,10 @@ namespace Rawr.DPSWarr
             armorBosses.Add(12000, "Grobbulus");
             armorBosses.Add(13083, "-");
 
-            comboBoxArmorBosses.DisplayMember = "Key";
-            comboBoxArmorBosses.DataSource = new BindingSource(armorBosses, null);
+            CB_TargArmor.DisplayMember = "Key";
+            CB_TargArmor.DataSource = new BindingSource(armorBosses, null);
 
-            comboBoxTargetLevel.DataSource = new[] {83, 82, 81, 80};
+            CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
         }
 
         protected override void LoadCalculationOptions()
@@ -32,8 +32,8 @@ namespace Rawr.DPSWarr
 
         private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var targetArmor = int.Parse(comboBoxArmorBosses.Text);
-            labelTargetArmorDescription.Text = armorBosses[targetArmor];
+            var targetArmor = int.Parse(CB_TargArmor.Text);
+            LB_TargArmorDesc.Text = armorBosses[targetArmor];
 
             if (Character != null && Character.CalculationOptions != null)
             {
@@ -48,7 +48,7 @@ namespace Rawr.DPSWarr
             if (Character != null && Character.CalculationOptions != null)
             {
                 var calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.Text);
+                calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
                 Character.OnCalculationsInvalidated();
             }
         }

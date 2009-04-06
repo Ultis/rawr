@@ -56,7 +56,7 @@ namespace Rawr.DPSWarr
             SetupRelevantItemTypes();
         }
         
-        private readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
+        public readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
         private readonly string[] _customChartNames = new[] {"Item Budget"};
         private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.Red}};
         private List<Item.ItemType> _relevantItemTypes;
@@ -68,7 +68,10 @@ namespace Rawr.DPSWarr
 
         public override string[] CharacterDisplayCalculationLabels
         {
-            get { return DisplayValue.GroupedList(); }
+            get {
+
+                return DisplayValue.GroupedList();
+            }
         }
 
         public override Dictionary<string, Color> SubPointNameColors
@@ -375,8 +378,7 @@ namespace Rawr.DPSWarr
                     baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSWarr;
 
                     float mod = 1;
-                    for (int index = 0; index < itemList.Length; index++)
-                    {
+                    for (int index = 0; index < itemList.Length; index++) {
                         calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsDPSWarr;
 
                         comparison = CreateNewComparisonCalculation();
@@ -384,32 +386,23 @@ namespace Rawr.DPSWarr
                         comparison.Equipped = false;
                         comparison.OverallPoints = (calc.OverallPoints - baseCalc.OverallPoints)/10;
                         subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            if (comparison.Name == "Strength")
-                            {
+                        for (int i = 0; i < calc.SubPoints.Length; i++) {
+                            if (comparison.Name == "Strength") {
                                 subPoints[i] = 1;
-                            }
-                            else
-                            {
+                            } else {
                                 subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
                                 subPoints[i] /= 10;
                                 subPoints[i] /= mod;
                             }
                         }
                         comparison.SubPoints = subPoints;
-                        if (comparison.Name == "Strength")
-                        {
+                        if (comparison.Name == "Strength") {
                             mod = comparison.OverallPoints;
                             comparison.OverallPoints = 1;
-                        }
-                        else if (comparison.Name == "Expertise Rating")
-                        {
+                        } else if (comparison.Name == "Expertise Rating") {
                             comparison.OverallPoints /= mod;
                             comparison.OverallPoints /= 8.197f;
-                        }
-                        else
-                        {
+                        } else {
                             comparison.OverallPoints /= mod;
                         }
 
@@ -420,47 +413,42 @@ namespace Rawr.DPSWarr
                     return new ComparisonCalculationBase[0];
             }
         }
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            return new Stats
-                       {
-                           Stamina = stats.Stamina,
-                           Agility = stats.Agility,
-                           Strength = stats.Strength,
-                           AttackPower = stats.AttackPower,
-                           BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                           BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                           BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                           BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                           Health = stats.Health,
-                           CritRating = stats.CritRating,
-                           HitRating = stats.HitRating,
-                           HasteRating = stats.HasteRating,
-                           ExpertiseRating = stats.ExpertiseRating,
-                           ArmorPenetration = stats.ArmorPenetration,
-                           WeaponDamage = stats.WeaponDamage,
-                           BonusCritMultiplier = stats.BonusCritMultiplier,
-                           //WindfuryAPBonus = stats.WindfuryAPBonus,
-                           MongooseProc = stats.MongooseProc,
-                           MongooseProcAverage = stats.MongooseProcAverage,
-                           MongooseProcConstant = stats.MongooseProcConstant,
-                           ExecutionerProc = stats.ExecutionerProc,
-                           BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
-                           Armor = stats.Armor,
-                           PhysicalCrit = stats.PhysicalCrit,
-                           PhysicalHaste = stats.PhysicalHaste,
-                           BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                           BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                           BonusSlamDamage = stats.BonusSlamDamage,
-                           DreadnaughtBonusRageProc = stats.DreadnaughtBonusRageProc,
-                           BerserkingProc = stats.BerserkingProc
-                       };
+        public override Stats GetRelevantStats(Stats stats) {
+            return new Stats {
+                Stamina = stats.Stamina,
+                Agility = stats.Agility,
+                Strength = stats.Strength,
+                AttackPower = stats.AttackPower,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+                Health = stats.Health,
+                CritRating = stats.CritRating,
+                HitRating = stats.HitRating,
+                HasteRating = stats.HasteRating,
+                ExpertiseRating = stats.ExpertiseRating,
+                ArmorPenetration = stats.ArmorPenetration,
+                WeaponDamage = stats.WeaponDamage,
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                //WindfuryAPBonus = stats.WindfuryAPBonus,
+                MongooseProc = stats.MongooseProc,
+                MongooseProcAverage = stats.MongooseProcAverage,
+                MongooseProcConstant = stats.MongooseProcConstant,
+                ExecutionerProc = stats.ExecutionerProc,
+                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+                Armor = stats.Armor,
+                PhysicalCrit = stats.PhysicalCrit,
+                PhysicalHaste = stats.PhysicalHaste,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusSlamDamage = stats.BonusSlamDamage,
+                DreadnaughtBonusRageProc = stats.DreadnaughtBonusRageProc,
+                BerserkingProc = stats.BerserkingProc
+            };
         }
-
-        public override bool HasRelevantStats(Stats stats)
-        {
-            return
-            (
+        public override bool HasRelevantStats(Stats stats) {
+            return (
                 stats.Agility + 
                 stats.Strength + 
                 stats.BonusAgilityMultiplier + 
@@ -488,37 +476,31 @@ namespace Rawr.DPSWarr
                 stats.BonusSlamDamage +
                 stats.BerserkingProc) != 0;
         }
-
-
-
-        private void SetupRelevantItemTypes()
-        {
-            _relevantItemTypes = new List<Item.ItemType>(new[]
-                                                             {
-                                                                 Item.ItemType.None,
-                                                                 Item.ItemType.Leather,
-                                                                 Item.ItemType.Mail,
-                                                                 Item.ItemType.Plate,
-                                                                 Item.ItemType.Bow,
-                                                                 Item.ItemType.Crossbow,
-                                                                 Item.ItemType.Gun,
-                                                                 Item.ItemType.Thrown,
-                                                                 Item.ItemType.Dagger,
-                                                                 Item.ItemType.FistWeapon,
-                                                                 Item.ItemType.OneHandMace,
-                                                                 Item.ItemType.OneHandSword,
-                                                                 Item.ItemType.OneHandAxe,
-                                                                 Item.ItemType.Staff,
-                                                                 Item.ItemType.Polearm,
-                                                                 Item.ItemType.TwoHandMace,
-                                                                 Item.ItemType.TwoHandSword,
-                                                                 Item.ItemType.TwoHandAxe
-                                                             });
+        private void SetupRelevantItemTypes() {
+            _relevantItemTypes = new List<Item.ItemType>(new[] {
+                Item.ItemType.None,
+                Item.ItemType.Leather,
+                Item.ItemType.Mail,
+                Item.ItemType.Plate,
+                Item.ItemType.Bow,
+                Item.ItemType.Crossbow,
+                Item.ItemType.Gun,
+                Item.ItemType.Thrown,
+                Item.ItemType.Dagger,
+                Item.ItemType.FistWeapon,
+                Item.ItemType.OneHandMace,
+                Item.ItemType.OneHandSword,
+                Item.ItemType.OneHandAxe,
+                Item.ItemType.Staff,
+                Item.ItemType.Polearm,
+                Item.ItemType.TwoHandMace,
+                Item.ItemType.TwoHandSword,
+                Item.ItemType.TwoHandAxe
+            });
         }
 
         #region Warrior Race Stats
-        private static float[,] BaseWarriorRaceStats = new float[,] 
-		{
+        private static float[,] BaseWarriorRaceStats = new float[,] {
 							//	Strength,	Agility,	Stamina
             /*Human*/		{	174f,	    113f,	    159f,   },
             /*Orc*/			{	178f,		110f,		162f,	},

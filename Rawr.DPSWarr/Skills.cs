@@ -1,61 +1,48 @@
-﻿namespace Rawr.DPSWarr
-{
-    public class Skills
-    {
-        public Skills(WarriorTalents talents, Stats stats, CombatFactors combatFactors,WhiteAttacks whiteStats)
-        {
+﻿namespace Rawr.DPSWarr {
+    public class Skills {
+        public Skills(WarriorTalents talents, Stats stats, CombatFactors combatFactors,WhiteAttacks whiteStats) {
             _talents = talents;
             _stats = stats;
             _combatFactors = combatFactors;
             _whiteStats = whiteStats;
         }
-
         private readonly WarriorTalents _talents;
         private readonly Stats _stats;
         private readonly CombatFactors _combatFactors;
         private readonly WhiteAttacks _whiteStats;
-
         float heroicStrikePercent;
         float heroicStrikesPerSecond;
 
-
         #region Fury Skill Hits
-        public float BloodThirstHits()
-        {
+        public float BloodThirstHits() {
             return (3.0f / 16)*_talents.Bloodthirst;//*(1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance);
         }
-
-        public float WhirlWindHits()
-        {
+        public float WhirlWindHits() {
             float wwCount = 1.0f / 8;
-            if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1)
+            if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1) {
                 wwCount = 0;
+            }
             return wwCount;/* * ((1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance)
                             + (1 - _combatFactors.YellowMissChance - _combatFactors.OhDodgeChance));*/
         }
-
-        public float HeroicStrikeHits(float rageModifier)
-        {
+        public float HeroicStrikeHits(float rageModifier) {
             float hsHits = (1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance);
             hsHits *= (rageModifier + freeRage() / (15.0f - _talents.ImprovedHeroicStrike + heroicStrikeRage()));
-            if (hsHits < 0)
-                hsHits = 0;
+            if (hsHits < 0) { hsHits = 0; }
             heroicStrikesPerSecond = hsHits;
             return hsHits;
         }
-
-        public float BloodsurgeProcs()
-        {
+        public float BloodsurgeProcs() {
             float chance = _talents.Bloodsurge * 0.0666666666f;
             float procs = 3 + 4 + ((16 / _combatFactors.MainHandSpeed) * heroicStrikePercent);
             procs *= chance;
             //test -= (0.2f * 0.2f);
             procs = (procs / 16) - (chance * chance + 0.01f);
-            if (procs < 0)
-                procs = 0;
+            if (procs < 0) { procs = 0; }
             return procs;
         }
         #endregion
+
         #region Arms Skill Hits
         
         public float MortalStrikeHits()
