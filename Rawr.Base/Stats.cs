@@ -427,6 +427,8 @@ namespace Rawr
         HealingSpellCast,
         MeleeHit,
         MeleeCrit,
+        PhysicalHit,
+        PhysicalCrit,
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
