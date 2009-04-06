@@ -1030,6 +1030,7 @@ namespace Rawr
                     float average_spell_power = spell_power / (cooldown_sec / uptime);
 					stats.SpellPower += average_spell_power;
 				}
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = spell_power }, uptime, cooldown_sec));
 			}
 			else if (line.StartsWith("Increases your Spirit by "))
 			{

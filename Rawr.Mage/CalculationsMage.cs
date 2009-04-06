@@ -2028,7 +2028,7 @@ namespace Rawr.Mage
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
 				AllResist = stats.AllResist,
 				MageAllResist = stats.MageAllResist,
@@ -2069,7 +2069,7 @@ namespace Rawr.Mage
                 EvocationExtension = stats.EvocationExtension,
                 BonusMageNukeMultiplier = stats.BonusMageNukeMultiplier,
                 LightningCapacitorProc = stats.LightningCapacitorProc,
-                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                //SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 ManaRestorePerCast = stats.ManaRestorePerCast,
                 ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
@@ -2080,7 +2080,7 @@ namespace Rawr.Mage
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
                 SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
-                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
+                //SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellHasteFor5SecOnCrit_50 = stats.SpellHasteFor5SecOnCrit_50,
                 SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
                 SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
@@ -2092,7 +2092,7 @@ namespace Rawr.Mage
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
                 AldorRegaliaInterruptProtection = stats.AldorRegaliaInterruptProtection,
-                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
+                //SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 InterruptProtection = stats.InterruptProtection,
@@ -2117,19 +2117,40 @@ namespace Rawr.Mage
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
-                SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
+                //SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
 				CritBonusDamage = stats.CritBonusDamage,
 				BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 EggOfMortalEssenceArcaneMissilesProc = stats.EggOfMortalEssenceArcaneMissilesProc,
                 SpellPowerFor15SecOnCast_50_45 = stats.SpellPowerFor15SecOnCast_50_45,
                 BonusSpellPowerDemonicPactMultiplier = stats.BonusSpellPowerDemonicPactMultiplier,
             };
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use)
+                {
+                    if (effect.Stats.SpellPower > 0)
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            return s;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
             float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.SpellPowerFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor15SecOnManaGem + stats.BonusManaGem + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.HasteRatingFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellPowerFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestoreOnCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.SpellPowerFor10SecOnCast_15_45 + stats.ManaRestoreOnCast_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45 + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.SpellPowerFor20SecOnUse5Min + stats.CritBonusDamage + stats.LightweaveEmbroideryProc + stats.BonusDamageMultiplier + stats.SpellPowerFor10SecOnCast_10_45 + stats.EggOfMortalEssenceArcaneMissilesProc + stats.SpellPowerFor15SecOnCast_50_45 + stats.BonusSpellPowerDemonicPactMultiplier;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use)
+                {
+                    if (effect.Stats.SpellPower > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
             return (mageStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
         }
 

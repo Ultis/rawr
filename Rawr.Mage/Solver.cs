@@ -203,6 +203,7 @@ namespace Rawr.Mage
         private static bool IsItemActivatable(ItemInstance item)
         {
             if (item == null || item.Item == null) return false;
+            if (item.Item.Stats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.Use)) return true;
             return (item.Item.Stats.SpellPowerFor15SecOnUse2Min + item.Item.Stats.SpellPowerFor20SecOnUse2Min + item.Item.Stats.HasteRatingFor20SecOnUse2Min + item.Item.Stats.SpellPowerFor15SecOnUse90Sec + item.Item.Stats.HasteRatingFor20SecOnUse5Min + item.Item.Stats.SpellPowerFor20SecOnUse5Min > 0);
         }
 
@@ -381,6 +382,11 @@ namespace Rawr.Mage
             if (trinket1Available)
             {
                 Stats s = character.Trinket1.Item.Stats;
+                foreach (SpecialEffect effect in s.SpecialEffects(e => e.Trigger == Trigger.Use))
+                {
+                    trinket1Duration = effect.Duration;
+                    trinket1Cooldown = effect.Cooldown;
+                }
                 if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min > 0)
                 {
                     trinket1Duration = 20;
@@ -408,6 +414,11 @@ namespace Rawr.Mage
             if (trinket2Available)
             {
                 Stats s = character.Trinket2.Item.Stats;
+                foreach (SpecialEffect effect in s.SpecialEffects(e => e.Trigger == Trigger.Use))
+                {
+                    trinket2Duration = effect.Duration;
+                    trinket2Cooldown = effect.Cooldown;
+                }
                 if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min > 0)
                 {
                     trinket2Duration = 20;

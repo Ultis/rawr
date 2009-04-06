@@ -207,39 +207,6 @@
             this.label49 = new System.Windows.Forms.Label();
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.label107 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfLivingBomb = new System.Windows.Forms.CheckBox();
-            this.label106 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfIceLance = new System.Windows.Forms.CheckBox();
-            this.label105 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcaneBarrage = new System.Windows.Forms.CheckBox();
-            this.label92 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcaneMissiles = new System.Windows.Forms.CheckBox();
-            this.label93 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcaneBlast = new System.Windows.Forms.CheckBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfFrostfire = new System.Windows.Forms.CheckBox();
-            this.label90 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcanePower = new System.Windows.Forms.CheckBox();
-            this.label89 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfIceArmor = new System.Windows.Forms.CheckBox();
-            this.label85 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfMoltenArmor = new System.Windows.Forms.CheckBox();
-            this.label86 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfMageArmor = new System.Windows.Forms.CheckBox();
-            this.label87 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfManaGem = new System.Windows.Forms.CheckBox();
-            this.label88 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfWaterElemental = new System.Windows.Forms.CheckBox();
-            this.label84 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcaneExplosion = new System.Windows.Forms.CheckBox();
-            this.label83 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfImprovedScorch = new System.Windows.Forms.CheckBox();
-            this.label82 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfFrostbolt = new System.Windows.Forms.CheckBox();
-            this.label81 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label108 = new System.Windows.Forms.Label();
@@ -288,7 +255,6 @@
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
@@ -302,7 +268,6 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -2151,374 +2116,6 @@
             this.toolTipMage.SetToolTip(this.label34, "Determines the weight of health in the overall rating (express in terms of dps va" +
                     "lue per health).");
             // 
-            // tabPage7
-            // 
-            this.tabPage7.Controls.Add(this.label107);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfLivingBomb);
-            this.tabPage7.Controls.Add(this.label106);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfIceLance);
-            this.tabPage7.Controls.Add(this.label105);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcaneBarrage);
-            this.tabPage7.Controls.Add(this.label92);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcaneMissiles);
-            this.tabPage7.Controls.Add(this.label93);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcaneBlast);
-            this.tabPage7.Controls.Add(this.label11);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfFrostfire);
-            this.tabPage7.Controls.Add(this.label90);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcanePower);
-            this.tabPage7.Controls.Add(this.label89);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfIceArmor);
-            this.tabPage7.Controls.Add(this.label85);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfMoltenArmor);
-            this.tabPage7.Controls.Add(this.label86);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfMageArmor);
-            this.tabPage7.Controls.Add(this.label87);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfManaGem);
-            this.tabPage7.Controls.Add(this.label88);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfWaterElemental);
-            this.tabPage7.Controls.Add(this.label84);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcaneExplosion);
-            this.tabPage7.Controls.Add(this.label83);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfImprovedScorch);
-            this.tabPage7.Controls.Add(this.label82);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfFrostbolt);
-            this.tabPage7.Controls.Add(this.label81);
-            this.tabPage7.Controls.Add(this.checkBoxGlyphOfFireball);
-            this.tabPage7.Location = new System.Drawing.Point(4, 40);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(252, 507);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "Glyphs";
-            this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // label107
-            // 
-            this.label107.AutoSize = true;
-            this.label107.Location = new System.Drawing.Point(3, 303);
-            this.label107.Name = "label107";
-            this.label107.Size = new System.Drawing.Size(117, 13);
-            this.label107.TabIndex = 201;
-            this.label107.Text = "Glyph of Living Bomb: *";
-            this.toolTipMage.SetToolTip(this.label107, "The periodic damage from your Living Bomb can now be critical strikes.");
-            // 
-            // checkBoxGlyphOfLivingBomb
-            // 
-            this.checkBoxGlyphOfLivingBomb.AutoSize = true;
-            this.checkBoxGlyphOfLivingBomb.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfLivingBomb", true));
-            this.checkBoxGlyphOfLivingBomb.Location = new System.Drawing.Point(146, 303);
-            this.checkBoxGlyphOfLivingBomb.Name = "checkBoxGlyphOfLivingBomb";
-            this.checkBoxGlyphOfLivingBomb.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfLivingBomb.TabIndex = 200;
-            this.checkBoxGlyphOfLivingBomb.UseVisualStyleBackColor = true;
-            // 
-            // label106
-            // 
-            this.label106.AutoSize = true;
-            this.label106.Location = new System.Drawing.Point(3, 283);
-            this.label106.Name = "label106";
-            this.label106.Size = new System.Drawing.Size(107, 13);
-            this.label106.TabIndex = 199;
-            this.label106.Text = "Glyph of Ice Lance: *";
-            this.toolTipMage.SetToolTip(this.label106, "Your Ice Lance now causes 4 times damage against frozen targets higher level than" +
-                    " you instead of triple damage.");
-            // 
-            // checkBoxGlyphOfIceLance
-            // 
-            this.checkBoxGlyphOfIceLance.AutoSize = true;
-            this.checkBoxGlyphOfIceLance.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfIceLance", true));
-            this.checkBoxGlyphOfIceLance.Location = new System.Drawing.Point(146, 283);
-            this.checkBoxGlyphOfIceLance.Name = "checkBoxGlyphOfIceLance";
-            this.checkBoxGlyphOfIceLance.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfIceLance.TabIndex = 198;
-            this.checkBoxGlyphOfIceLance.UseVisualStyleBackColor = true;
-            // 
-            // label105
-            // 
-            this.label105.AutoSize = true;
-            this.label105.Location = new System.Drawing.Point(3, 263);
-            this.label105.Name = "label105";
-            this.label105.Size = new System.Drawing.Size(133, 13);
-            this.label105.TabIndex = 197;
-            this.label105.Text = "Glyph of Arcane Barrage: *";
-            this.toolTipMage.SetToolTip(this.label105, "Reduces the mana cost of Arcane Barrage by 20%.");
-            // 
-            // checkBoxGlyphOfArcaneBarrage
-            // 
-            this.checkBoxGlyphOfArcaneBarrage.AutoSize = true;
-            this.checkBoxGlyphOfArcaneBarrage.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneBarrage", true));
-            this.checkBoxGlyphOfArcaneBarrage.Location = new System.Drawing.Point(146, 263);
-            this.checkBoxGlyphOfArcaneBarrage.Name = "checkBoxGlyphOfArcaneBarrage";
-            this.checkBoxGlyphOfArcaneBarrage.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcaneBarrage.TabIndex = 196;
-            this.checkBoxGlyphOfArcaneBarrage.UseVisualStyleBackColor = true;
-            // 
-            // label92
-            // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(3, 243);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(132, 13);
-            this.label92.TabIndex = 195;
-            this.label92.Text = "Glyph of Arcane Missiles: *";
-            this.toolTipMage.SetToolTip(this.label92, "Increases the critical strike damage bonus of Arcane Missiles by 25%.");
-            // 
-            // checkBoxGlyphOfArcaneMissiles
-            // 
-            this.checkBoxGlyphOfArcaneMissiles.AutoSize = true;
-            this.checkBoxGlyphOfArcaneMissiles.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneMissiles", true));
-            this.checkBoxGlyphOfArcaneMissiles.Location = new System.Drawing.Point(146, 243);
-            this.checkBoxGlyphOfArcaneMissiles.Name = "checkBoxGlyphOfArcaneMissiles";
-            this.checkBoxGlyphOfArcaneMissiles.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcaneMissiles.TabIndex = 194;
-            this.checkBoxGlyphOfArcaneMissiles.UseVisualStyleBackColor = true;
-            // 
-            // label93
-            // 
-            this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(3, 223);
-            this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(119, 13);
-            this.label93.TabIndex = 193;
-            this.label93.Text = "Glyph of Arcane Blast: *";
-            this.toolTipMage.SetToolTip(this.label93, "Increases the damage from your Arcane Blast buff by 3%.");
-            // 
-            // checkBoxGlyphOfArcaneBlast
-            // 
-            this.checkBoxGlyphOfArcaneBlast.AutoSize = true;
-            this.checkBoxGlyphOfArcaneBlast.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneBlast", true));
-            this.checkBoxGlyphOfArcaneBlast.Location = new System.Drawing.Point(146, 223);
-            this.checkBoxGlyphOfArcaneBlast.Name = "checkBoxGlyphOfArcaneBlast";
-            this.checkBoxGlyphOfArcaneBlast.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcaneBlast.TabIndex = 192;
-            this.checkBoxGlyphOfArcaneBlast.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 203);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(96, 13);
-            this.label11.TabIndex = 191;
-            this.label11.Text = "Glyph of Frostfire: *";
-            this.toolTipMage.SetToolTip(this.label11, "Increases the initial damage dealt by Frostfire Bolt by 2% and its critical strik" +
-                    "e chance by 2%.");
-            // 
-            // checkBoxGlyphOfFrostfire
-            // 
-            this.checkBoxGlyphOfFrostfire.AutoSize = true;
-            this.checkBoxGlyphOfFrostfire.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFrostfire", true));
-            this.checkBoxGlyphOfFrostfire.Location = new System.Drawing.Point(146, 203);
-            this.checkBoxGlyphOfFrostfire.Name = "checkBoxGlyphOfFrostfire";
-            this.checkBoxGlyphOfFrostfire.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfFrostfire.TabIndex = 190;
-            this.checkBoxGlyphOfFrostfire.UseVisualStyleBackColor = true;
-            // 
-            // label90
-            // 
-            this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(3, 183);
-            this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(126, 13);
-            this.label90.TabIndex = 189;
-            this.label90.Text = "Glyph of Arcane Power: *";
-            this.toolTipMage.SetToolTip(this.label90, "Increases the duration of Arcane Power by 3 sec.");
-            // 
-            // checkBoxGlyphOfArcanePower
-            // 
-            this.checkBoxGlyphOfArcanePower.AutoSize = true;
-            this.checkBoxGlyphOfArcanePower.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcanePower", true));
-            this.checkBoxGlyphOfArcanePower.Location = new System.Drawing.Point(146, 183);
-            this.checkBoxGlyphOfArcanePower.Name = "checkBoxGlyphOfArcanePower";
-            this.checkBoxGlyphOfArcanePower.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcanePower.TabIndex = 188;
-            this.checkBoxGlyphOfArcanePower.UseVisualStyleBackColor = true;
-            // 
-            // label89
-            // 
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(3, 163);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(104, 13);
-            this.label89.TabIndex = 187;
-            this.label89.Text = "Glyph of Ice Armor: *";
-            this.toolTipMage.SetToolTip(this.label89, "Your Ice Armor and Frost Armor spells grant an additional 20% armor and resistanc" +
-                    "e.");
-            // 
-            // checkBoxGlyphOfIceArmor
-            // 
-            this.checkBoxGlyphOfIceArmor.AutoSize = true;
-            this.checkBoxGlyphOfIceArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfIceArmor", true));
-            this.checkBoxGlyphOfIceArmor.Location = new System.Drawing.Point(146, 163);
-            this.checkBoxGlyphOfIceArmor.Name = "checkBoxGlyphOfIceArmor";
-            this.checkBoxGlyphOfIceArmor.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfIceArmor.TabIndex = 186;
-            this.checkBoxGlyphOfIceArmor.UseVisualStyleBackColor = true;
-            // 
-            // label85
-            // 
-            this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(3, 143);
-            this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(121, 13);
-            this.label85.TabIndex = 185;
-            this.label85.Text = "Glyph of Molten Armor: *";
-            this.toolTipMage.SetToolTip(this.label85, "Your Molten Armor spell grants an additional 15% of your spirit as critical strik" +
-                    "e rating.");
-            // 
-            // checkBoxGlyphOfMoltenArmor
-            // 
-            this.checkBoxGlyphOfMoltenArmor.AutoSize = true;
-            this.checkBoxGlyphOfMoltenArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfMoltenArmor", true));
-            this.checkBoxGlyphOfMoltenArmor.Location = new System.Drawing.Point(146, 143);
-            this.checkBoxGlyphOfMoltenArmor.Name = "checkBoxGlyphOfMoltenArmor";
-            this.checkBoxGlyphOfMoltenArmor.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfMoltenArmor.TabIndex = 184;
-            this.checkBoxGlyphOfMoltenArmor.UseVisualStyleBackColor = true;
-            // 
-            // label86
-            // 
-            this.label86.AutoSize = true;
-            this.label86.Location = new System.Drawing.Point(3, 123);
-            this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(116, 13);
-            this.label86.TabIndex = 183;
-            this.label86.Text = "Glyph of Mage Armor: *";
-            this.toolTipMage.SetToolTip(this.label86, "Your Mage Armor spell grants an additional 20% mana regeneration while casting.");
-            // 
-            // checkBoxGlyphOfMageArmor
-            // 
-            this.checkBoxGlyphOfMageArmor.AutoSize = true;
-            this.checkBoxGlyphOfMageArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfMageArmor", true));
-            this.checkBoxGlyphOfMageArmor.Location = new System.Drawing.Point(146, 123);
-            this.checkBoxGlyphOfMageArmor.Name = "checkBoxGlyphOfMageArmor";
-            this.checkBoxGlyphOfMageArmor.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfMageArmor.TabIndex = 182;
-            this.checkBoxGlyphOfMageArmor.UseVisualStyleBackColor = true;
-            // 
-            // label87
-            // 
-            this.label87.AutoSize = true;
-            this.label87.Location = new System.Drawing.Point(3, 103);
-            this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(111, 13);
-            this.label87.TabIndex = 181;
-            this.label87.Text = "Glyph of Mana Gem: *";
-            this.toolTipMage.SetToolTip(this.label87, "Increases the mana recieved from using a mana gem by 40%.");
-            // 
-            // checkBoxGlyphOfManaGem
-            // 
-            this.checkBoxGlyphOfManaGem.AutoSize = true;
-            this.checkBoxGlyphOfManaGem.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfManaGem", true));
-            this.checkBoxGlyphOfManaGem.Location = new System.Drawing.Point(146, 103);
-            this.checkBoxGlyphOfManaGem.Name = "checkBoxGlyphOfManaGem";
-            this.checkBoxGlyphOfManaGem.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfManaGem.TabIndex = 180;
-            this.checkBoxGlyphOfManaGem.UseVisualStyleBackColor = true;
-            // 
-            // label88
-            // 
-            this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(3, 83);
-            this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(137, 13);
-            this.label88.TabIndex = 179;
-            this.label88.Text = "Glyph of Water Elemental: *";
-            this.toolTipMage.SetToolTip(this.label88, "Reduces the cooldown of your Summon Water Elemental spell by 30 sec.");
-            // 
-            // checkBoxGlyphOfWaterElemental
-            // 
-            this.checkBoxGlyphOfWaterElemental.AutoSize = true;
-            this.checkBoxGlyphOfWaterElemental.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfWaterElemental", true));
-            this.checkBoxGlyphOfWaterElemental.Location = new System.Drawing.Point(146, 83);
-            this.checkBoxGlyphOfWaterElemental.Name = "checkBoxGlyphOfWaterElemental";
-            this.checkBoxGlyphOfWaterElemental.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfWaterElemental.TabIndex = 178;
-            this.checkBoxGlyphOfWaterElemental.UseVisualStyleBackColor = true;
-            // 
-            // label84
-            // 
-            this.label84.AutoSize = true;
-            this.label84.Location = new System.Drawing.Point(3, 63);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(141, 13);
-            this.label84.TabIndex = 177;
-            this.label84.Text = "Glyph of Arcane Explosion: *";
-            this.toolTipMage.SetToolTip(this.label84, "Reduces mana cost of Arcane Explosion by 10%.");
-            // 
-            // checkBoxGlyphOfArcaneExplosion
-            // 
-            this.checkBoxGlyphOfArcaneExplosion.AutoSize = true;
-            this.checkBoxGlyphOfArcaneExplosion.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneExplosion", true));
-            this.checkBoxGlyphOfArcaneExplosion.Location = new System.Drawing.Point(146, 63);
-            this.checkBoxGlyphOfArcaneExplosion.Name = "checkBoxGlyphOfArcaneExplosion";
-            this.checkBoxGlyphOfArcaneExplosion.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcaneExplosion.TabIndex = 176;
-            this.checkBoxGlyphOfArcaneExplosion.UseVisualStyleBackColor = true;
-            // 
-            // label83
-            // 
-            this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(3, 43);
-            this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(140, 13);
-            this.label83.TabIndex = 175;
-            this.label83.Text = "Glyph of Improved Scorch: *";
-            this.toolTipMage.SetToolTip(this.label83, "The Improved Scorch talent now generates 3 applications of the Improved Scorch ef" +
-                    "fect each time Scorch is cast.");
-            // 
-            // checkBoxGlyphOfImprovedScorch
-            // 
-            this.checkBoxGlyphOfImprovedScorch.AutoSize = true;
-            this.checkBoxGlyphOfImprovedScorch.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfImprovedScorch", true));
-            this.checkBoxGlyphOfImprovedScorch.Location = new System.Drawing.Point(146, 43);
-            this.checkBoxGlyphOfImprovedScorch.Name = "checkBoxGlyphOfImprovedScorch";
-            this.checkBoxGlyphOfImprovedScorch.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfImprovedScorch.TabIndex = 174;
-            this.checkBoxGlyphOfImprovedScorch.UseVisualStyleBackColor = true;
-            // 
-            // label82
-            // 
-            this.label82.AutoSize = true;
-            this.label82.Location = new System.Drawing.Point(3, 23);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(99, 13);
-            this.label82.TabIndex = 173;
-            this.label82.Text = "Glyph of Frostbolt: *";
-            this.toolTipMage.SetToolTip(this.label82, "Increases the damage dealt by Frostbolt by 5%, but removes the slowing effect.");
-            // 
-            // checkBoxGlyphOfFrostbolt
-            // 
-            this.checkBoxGlyphOfFrostbolt.AutoSize = true;
-            this.checkBoxGlyphOfFrostbolt.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFrostbolt", true));
-            this.checkBoxGlyphOfFrostbolt.Location = new System.Drawing.Point(146, 23);
-            this.checkBoxGlyphOfFrostbolt.Name = "checkBoxGlyphOfFrostbolt";
-            this.checkBoxGlyphOfFrostbolt.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfFrostbolt.TabIndex = 172;
-            this.checkBoxGlyphOfFrostbolt.UseVisualStyleBackColor = true;
-            // 
-            // label81
-            // 
-            this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(3, 3);
-            this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(92, 13);
-            this.label81.TabIndex = 171;
-            this.label81.Text = "Glyph of Fireball: *";
-            this.toolTipMage.SetToolTip(this.label81, "Increases the critical strike chance of Fireball by 5%, but removes the damage ov" +
-                    "er time effect.");
-            // 
-            // checkBoxGlyphOfFireball
-            // 
-            this.checkBoxGlyphOfFireball.AutoSize = true;
-            this.checkBoxGlyphOfFireball.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFireball", true));
-            this.checkBoxGlyphOfFireball.Location = new System.Drawing.Point(146, 3);
-            this.checkBoxGlyphOfFireball.Name = "checkBoxGlyphOfFireball";
-            this.checkBoxGlyphOfFireball.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfFireball.TabIndex = 170;
-            this.checkBoxGlyphOfFireball.UseVisualStyleBackColor = true;
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.numericUpDownMaxThreads);
@@ -3014,8 +2611,6 @@
             this.tabPage6.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
-            this.tabPage7.ResumeLayout(false);
-            this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).EndInit();
@@ -3200,37 +2795,12 @@
         private System.Windows.Forms.Label label79;
         private System.Windows.Forms.ComboBox comboBoxPlayerLevel;
         private System.Windows.Forms.Label label80;
-        private System.Windows.Forms.TabPage tabPage7;
-        private System.Windows.Forms.Label label81;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfFireball;
-        private System.Windows.Forms.Label label84;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneExplosion;
-        private System.Windows.Forms.Label label83;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfImprovedScorch;
-        private System.Windows.Forms.Label label82;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfFrostbolt;
-        private System.Windows.Forms.Label label85;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfMoltenArmor;
-        private System.Windows.Forms.Label label86;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfMageArmor;
-        private System.Windows.Forms.Label label87;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfManaGem;
-        private System.Windows.Forms.Label label88;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfWaterElemental;
-        private System.Windows.Forms.Label label89;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfIceArmor;
         private System.Windows.Forms.TextBox textBoxFocusMagicRate;
         private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.Label label90;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcanePower;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfFrostfire;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBoxUnlimitedMana;
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.CheckBox checkBoxPotionOfSpeed;
-        private System.Windows.Forms.Label label93;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneBlast;
         private System.Windows.Forms.TextBox textBoxBonusCrit;
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.TextBox textBoxHolyResist;
@@ -3238,8 +2808,6 @@
         private System.Windows.Forms.Label label99;
         private System.Windows.Forms.CheckBox checkBoxDebugCooldownSegmentation;
         private System.Windows.Forms.Button buttonComputeOptimalArcaneCycles;
-        private System.Windows.Forms.Label label92;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneMissiles;
         private System.Windows.Forms.CheckBox checkBoxVariableSegmentDuration;
         private System.Windows.Forms.Label label96;
         private System.Windows.Forms.ComboBox comboBoxSegmentDuration;
@@ -3257,12 +2825,6 @@
         private System.Windows.Forms.Button buttonAdvancedSolverLog;
         private System.Windows.Forms.Label label104;
         private System.Windows.Forms.CheckBox checkBoxMode31;
-        private System.Windows.Forms.Label label107;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfLivingBomb;
-        private System.Windows.Forms.Label label106;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfIceLance;
-        private System.Windows.Forms.Label label105;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneBarrage;
         private System.Windows.Forms.NumericUpDown numericUpDownComparisonAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownDisplayAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxThreads;

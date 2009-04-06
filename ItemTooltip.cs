@@ -181,7 +181,8 @@ namespace Rawr
                                 hasSockets = true;
                             }
 
-                            var positiveStats = Calculations.GetRelevantStats(_currentItem.Stats).Values(x => x > 0);
+                            Stats relevantStats = Calculations.GetRelevantStats(_currentItem.Stats);
+                            var positiveStats = relevantStats.Values(x => x > 0);
 
                             #region Calculate statHeight
                             var xGrid = new
@@ -210,6 +211,22 @@ namespace Rawr
                                 if (Stats.IsPercentage(info)) value *= 100;
                                 value = (float)Math.Round(value * 100f) / 100f;
                                 string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
+                                statsList.Add(text);
+                                float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
+                                // once we write on a line store where the next line would be
+                                // (alternatively we could put the yPos update code below this at the top of the loop)
+                                ypos_nextline = yPos + yGrid.step;
+                                int steps = (int)Math.Ceiling(width / xGrid.step);
+                                xPos += steps * xGrid.step;
+                                if (xPos > xGrid.max)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
+                            }
+                            foreach (SpecialEffect effect in relevantStats.SpecialEffects())
+                            {
+                                string text = effect.ToString();
                                 statsList.Add(text);
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
                                 // once we write on a line store where the next line would be

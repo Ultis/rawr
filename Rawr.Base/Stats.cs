@@ -412,6 +412,23 @@ namespace Rawr
         #endregion
     }
 
+    public enum Trigger : int
+    {
+        Use,
+        SpellHit,
+        SpellCrit,
+        SpellCast,
+        SpellMiss,
+        DamageSpellHit,
+        DamageSpellCrit,
+        DamageSpellCast,
+        HealingSpellHit,
+        HealingSpellCrit,
+        HealingSpellCast,
+        MeleeHit,
+        MeleeCrit,
+    }
+
     [System.AttributeUsage(System.AttributeTargets.Property)]
     public class CommonStat : System.Attribute
     {
@@ -432,12 +449,322 @@ namespace Rawr
     /// 
 
     [Serializable]
+    public class SpecialEffect
+    {
+        public Trigger Trigger { get; set; }
+        public Stats Stats { get; set; }
+        public float Duration { get; set; }
+        public float Cooldown { get; set; }
+        public float Chance { get; set; }
+        public int MaxStack { get; set; }
+
+        public SpecialEffect()
+        {
+            Chance = 1.0f;
+            MaxStack = 1;
+        }
+
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown)
+        {
+            Chance = 1.0f;
+            MaxStack = 1;
+            Trigger = trigger;
+            Duration = duration;
+            Cooldown = cooldown;
+            Stats = stats;
+        }
+
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance)
+        {
+            Chance = chance;
+            MaxStack = 1;
+            Trigger = trigger;
+            Duration = duration;
+            Cooldown = cooldown;
+            Stats = stats;
+        }
+
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance, int maxStack)
+        {
+            Chance = chance;
+            MaxStack = maxStack;
+            Trigger = trigger;
+            Duration = duration;
+            Cooldown = cooldown;
+            Stats = stats;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        public Stats GetAverageStats()
+        {
+            return GetAverageStats(0.0f);
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        public Stats GetAverageStats(float triggerInterval)
+        {
+            return GetAverageStats(triggerInterval, 1.0f);
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        public Stats GetAverageStats(float triggerInterval, float triggerChance)
+        {
+            return Stats * GetAverageUptime(triggerInterval, triggerChance);
+        }
+
+        /// <summary>
+        /// Computes average uptime of the effect given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        public float GetAverageUptime(float triggerInterval, float triggerChance)
+        {
+            if (Cooldown > Duration)
+            {
+                return Duration / (Cooldown + triggerInterval / triggerChance / Chance);
+            }
+            else if (Cooldown == 0.0f)
+            {
+                return 1.0f - (float)Math.Pow(1.0 - triggerChance * Chance, Duration / triggerInterval);
+            }
+            else
+            {
+                //P(E0) = P(E0|S0)*P(S0) + P(E0|!S0) * (1 - P(S0))
+                //=1 - (1 - P(S0)) + P(E0|!S0) * (1 - P(S0))
+                //=1 + P(!S0) * (1 - P(E0|!S0))
+                //=1 + (1 - P0) * (1 - P(E0|!S0))
+
+                //P(E0|!S0) = P(S1|!S0) + P(E0|!S0,!S1)*P(!S1|!S0)
+
+                //P(S1|!S0) = P(!S0|S1)*P(S1)/P(!S0) = P0 / (1 - P0)
+                //P(!S1|!S0) = P(!S0|!S1)*P(!S1)/P(!S0) = P(!S0|!S1)
+
+                //P(E0|!S0) = P0 / (1 - P0) + P(E0|!S0,!S1)*P(!S0|!S1)
+
+                //P(E0|!S0,!S1) = P(S2|!S0,!S1) + P(E0|!S0,!S1,!S2)*P(!S2|!S0,!S1)
+
+                //P(S2|!S0,!S1) = P(!S0,S1)/P(!S0,!S1) = (P(!S0) - P(!S0,!S1))/P(!S0,!S1)
+
+                //P(!S0,!S1) = P(!S0|!S1) * P(!S1) = P(!S0|!S1) * (1 - P0)
+
+
+
+                //P(S0|!S1,!S2,...,!SC) = PT
+                //P(S0|Sn) = 0, 0 < n <= C
+
+                //P(S0) = P(S0|S1)*P(S1) + P(S0|!S1)*P(!S1)
+                //=P(S0|!S1)*(1 - P(S0))
+
+                //P(S0) * (1 + P(S0|!S1)) = P(S0|!S1)
+                //P(S0) = P(S0|!S1) / (1 + P(S0|!S1))
+
+                //P(S0|!S1) = P(S0|!S1,S2)*P(S2|!S1) + P(S0|!S1,!S2)*P(!S2|!S1)
+                //=P(S0|!S1,S2)*P(S1|!S0) + P(S0|!S1,!S2)*P(!S1|!S0)
+                //=P(S0|!S1,!S2)*(1 - P(S0|!S1))
+
+                //P(S0|!S1) * (1 + P(S0|!S1,!S2)) = P(S0|!S1,!S2)
+                //P(S0|!S1) = P(S0|!S1,!S2) / (1 + P(S0|!S1,!S2))
+
+
+                //P(S0|!S1,!S2) = P(S0|!S1,!S2,S3)*P(S3|!S1,!S2) + P(S0|!S1,!S2,!S3)*P(!S3|!S1,!S2)
+                //=P(S0|!S1,!S2,!S3)*P(!S3|!S1,!S2) = P(S0|!S1,!S2,!S3) * (1 - P(S0|!S1,!S2))
+
+                //P(!S3|!S1,!S2) = P(!S2|!S0,!S1) = P(!S0|!S2,!S1)*P(!S1,!S0) / P(!S0,!S1) = P(!S0|!S2,!S1) = 1 - P(S0|!S1,!S2)
+
+                //P(S0|!S1,!S2) = P(S0|!S1,!S2,!S3) / (1 + P(S0|!S1,!S2,!S3))
+
+                //PC = PT / (1 + PT)
+                //PC_1 = PC / (1 + PC) = PT / (1 + PT) / ((1 + 2 * PT) / (1 + PT)) = PT / (1 + 2 * PT)
+                //PC_2 = PT / (1 + 2 * PT) / ((1 + 3 * PT) / (1 + 2 * PT)) = PT / (1 + 3 * PT)
+
+
+                //P0 = PT / (1 + C * PT)
+
+
+
+                //P0 / (1 - P0) = PT / (1 + C * PT) / ((1 + (C - 1) * PT) / (1 + C * PT)) = PT / (1 + (C - 1) * PT) = P1
+
+                //Pk = PT / (1 + (C - k) * PT)
+
+                //P(E0) = 1 + (1 - P0) * (1 - P(E0|!S0))
+
+                //P(E0|!S0) = P0 / (1 - P0) + P(E0|!S0,!S1)*P(!S0|!S1)
+                //=P1 + P(E0|!S0,!S1)*(1 - P1)
+
+
+                //P(E0|!S0,!S1) = P(S2|!S0,!S1) + P(E0|!S0,!S1,!S2)*P(!S2|!S0,!S1)
+
+
+                //P(S2|!S0,!S1) = P(!S0|S2,!S1) * P(S2,!S1) / P(!S0,!S1) = P(S1,!S0) / P(!S0,!S1) = P(!S0|S1) * P(S1) / [P(!S0|!S1) * P(!S1)]
+                //=P0 / [(1 - P(S0|!S1)) * (1 - P0) = P0 / [(1 - P1) * (1 - P0)]
+                //=P1 / (1 - P1) = P2
+
+
+                //P(E0|!S0,!S1) = P2 + P(E0|!S0,!S1,!S2)*(1 - P2)
+
+
+                //P(E0|!S0,!S1,!S2,...,!SD-1) = 0
+
+
+                //PED = 0
+
+                //PED_1 = PD_1
+
+                //PED_2 = PD_2 + PD_1 * (1 - PD_2) = PD_2 + PD_1 - PD_1 * PD_2 =
+                //[PT * (1 + (C - D + 1) * PT) + PT * (1 + (C - D + 2) * PT) - PT * PT] / [(1 + (C - D + 2) * PT) * (1 + (C - D + 1) * PT)]
+                //PT * 2 * [(1 + (C - D + 1) * PT)] / [(1 + (C - D + 2) * PT) * (1 + (C - D + 1) * PT)]
+                //2 * PT / (1 + (C - D + 2) * PT) = 2 * PD_2
+                //PED_3 = 3 * PD_3
+                //PE0 = D * P0, if D < C
+
+                //P(E0|!S0,!S1,...,!SC-1) = PC + P(E0|!S0,!S1,!S2,...,!SC)*(1 - PC)
+
+
+                //P(E0|!S0,!S1,!S2,...,!SC) = P(E0|!S0-C,SC+1)*P(SC+1|!S0-C) + P(E0|!S0-C,!SC+1)*P(!SC+1|!S0-C)
+                //=P(SC+1|!S0-C) + P(E0|!S0-C,!SC+1)*P(!SC+1|!S0-C)
+
+
+                //P(SC+1|!S0-C) = P(!S0-C,SC+1) / P(!S0-C) = P(!S0,!S1-C,SC+1) / P(!S0-C) = P(!S0|!S1-C,SC+1) * P(!S0-C-1,SC) / P(!S0-C) = 
+                //(1 - PT) * P(SC|!S0-C-1) * P(!S0-C-1) / [P(!SC|!S0-C-1) * P(!S0-C-1)] = 
+                //(1 - PT) * P(SC|!S0-C-1) / P(!SC|!S0-C-1)
+                //= (1 - PT) * PT / (1 - PT) = PT
+
+
+                //P(E0|!S0,!S1,!S2,...,!SC) = PT + P(E0|!S0-C,!SC+1) * (1 - PT)
+
+
+                //PED = 0
+                //PED_1 = PT
+
+                //PED_2 = PT + PED_1 * (1 - PT) = PT + PT * (1 - PT) = 2 * PT - PT * PT = 1 - (1 - 2 * PT + PT * PT) = 1 - (1 - PT) ^ 2
+
+                //PED_3 = PT + PED_2 * (1 - PT) = PT + [1 - (1 - PT) ^ 2] * (1 - PT) =
+                //PT + [(1 - PT) - (1 - PT) ^ 3] = 1 - (1 - PT) ^ 3
+
+
+                //PEC = 1 - (1 - PT) ^ (D - C)
+
+
+                //PEC_1 = PC-1 + PEC*(1 - PC-1)
+
+                //PEC_2 = PC-2 + PEC_1*(1 - PC-2) = PC-2 + [PC-1 + PEC*(1 - PC-1)]*(1 - PC-2) = PC_2 + PC_1 - PC_1 * PC_2 + PEC*(1 - PC_1)*(1 - PC_2)
+                //= 1 - (1 - PC_1)*(1 - PC_2) + PEC * (1 - PC_1)*(1 - PC_2) = 1 - (1 - PC_1)*(1 - PC_2) * (1 - PEC)
+
+
+                //(1 - PC_1)*(1 - PC_2) = 1 - [PC_2 + PC_1 - PC_1 * PC_2] = 1 - 2 * PC_2
+
+                //PEC_2 = 1 - (1 - 2 * PC_2) * (1 - PEC)
+
+                //PE0 = 1 - (1 - C * P0) * (1 - PEC)
+                //= 1 - (1 - C * PT / (1 + C * PT)) * (1 - PEC)
+                //= 1 - 1 / (1 + C * PT) * (1 - PEC)
+
+                //= 1 - 1 / (1 + C * PT) * (1 - PT) ^ (D - C)
+                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * Chance) * (float)Math.Pow(1 - triggerChance * Chance, (Duration - Cooldown) / triggerInterval);
+            }
+        }
+
+        private string CooldownString
+        {
+            get
+            {
+                int cooldown = (int)Cooldown;
+                if (cooldown % 60 == 0)
+                {
+                    return (cooldown / 60).ToString() + " Min";
+                }
+                else
+                {
+                    return cooldown.ToString() + " Sec";
+                }
+            }
+        }
+
+        private string DurationString
+        {
+            get
+            {
+                int duration = (int)Duration;
+                return duration.ToString() + " Sec";
+            }
+        }
+
+        private string TriggerString
+        {
+            get
+            {
+                switch (Trigger)
+                {
+                    case Trigger.DamageSpellCast:
+                        return " on Damaging Spell Cast";
+                    case Trigger.DamageSpellCrit:
+                        return " on Damaging Spell Crit";
+                    case Trigger.DamageSpellHit:
+                        return " on Damaging Spell Hit";
+                    case Trigger.HealingSpellCast:
+                        return " on Healing Spell Cast";
+                    case Trigger.HealingSpellCrit:
+                        return " on Healing Spell Crit";
+                    case Trigger.HealingSpellHit:
+                        return " on Healing Spell Hit";
+                    case Trigger.MeleeCrit:
+                        return " on Melee Crit";
+                    case Trigger.MeleeHit:
+                        return " on Melee Hit";
+                    case Trigger.SpellCast:
+                        return " on Spell Cast";
+                    case Trigger.SpellCrit:
+                        return " on Spell Crit";
+                    case Trigger.SpellHit:
+                        return " on Spell Hit";
+                    case Trigger.SpellMiss:
+                        return " on Spell Miss";
+                    case Trigger.Use:
+                        return "";
+                    default:
+                        return " " + Trigger.ToString();
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            if (Chance == 1.0f)
+            {
+                return string.Format("{0} ({1}{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+            }
+            else
+            {
+                return string.Format("{0} ({1} {2:F}%{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+            }
+        }
+    }
+
+    [Serializable]
     public unsafe class Stats
     {
         internal float[] _rawAdditiveData = new float[AdditiveStatCount];
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
         internal float[] _rawNoStackData = new float[NonStackingStatCount];
+        private SpecialEffect[] _rawSpecialEffectData = _emptySpecialEffectData;
+
+        private static SpecialEffect[] _emptySpecialEffectData = new SpecialEffect[0];
+        private const int _defaultSpecialEffectDataCapacity = 4;
+        private int _rawSpecialEffectDataSize;
 
         //internal float[] _sparseData;
         internal int[] _sparseIndices;
@@ -3673,6 +4000,24 @@ namespace Rawr
 
         #endregion
 
+        private void EnsureSpecialEffectCapacity(int min)
+        {
+            if (_rawSpecialEffectData.Length < min)
+            {
+                int num = (_rawSpecialEffectData.Length == 0) ? _defaultSpecialEffectDataCapacity : (_rawSpecialEffectData.Length * 2);
+                if (num < min)
+                {
+                    num = min;
+                }
+                SpecialEffect[] destinationArray = new SpecialEffect[num];
+                if (_rawSpecialEffectDataSize > 0)
+                {
+                    Array.Copy(_rawSpecialEffectData, 0, destinationArray, 0, _rawSpecialEffectDataSize);
+                }
+                _rawSpecialEffectData = destinationArray;
+            }
+        }
+
         /// <summary>
         /// Adds together two stats, when using a + operator. When adding additional stats for
         /// Rawr to track, after adding the stat property, also add a line for it to this method,
@@ -3706,7 +4051,60 @@ namespace Rawr
             {
                 c._rawNoStackData[i] = Math.Max(a._rawNoStackData[i], b._rawNoStackData[i]);
             }
+            int specialEffectCount = a._rawSpecialEffectDataSize + b._rawSpecialEffectDataSize;
+            if (specialEffectCount > 0)
+            {
+                c._rawSpecialEffectData = new SpecialEffect[specialEffectCount];
+                c._rawSpecialEffectDataSize = specialEffectCount;
+                if (a._rawSpecialEffectDataSize > 0)
+                {
+                    Array.Copy(a._rawSpecialEffectData, c._rawSpecialEffectData, a._rawSpecialEffectDataSize);
+                }
+                if (a._rawSpecialEffectDataSize > 0)
+                {
+                    Array.Copy(b._rawSpecialEffectData, 0, c._rawSpecialEffectData, a._rawSpecialEffectDataSize, b._rawSpecialEffectDataSize);
+                }
+            }
             return c;
+        }
+
+        public void AddSpecialEffect(SpecialEffect specialEffect)
+        {
+            EnsureSpecialEffectCapacity(_rawSpecialEffectDataSize + 1);
+            _rawSpecialEffectData[_rawSpecialEffectDataSize] = specialEffect;
+            _rawSpecialEffectDataSize++;
+        }
+
+        public IEnumerable<SpecialEffect> SpecialEffects()
+        {
+            for (int i = 0; i < _rawSpecialEffectDataSize; i++)
+            {
+                yield return _rawSpecialEffectData[i];
+            }
+        }
+
+        public IEnumerable<SpecialEffect> SpecialEffects(Predicate<SpecialEffect> match)
+        {
+            for (int i = 0; i < _rawSpecialEffectDataSize; i++)
+            {
+                SpecialEffect effect = _rawSpecialEffectData[i];
+                if (match(effect)) yield return effect;
+            }
+        }
+
+        public bool ContainsSpecialEffect(Predicate<SpecialEffect> match)
+        {
+            for (int i = 0; i < _rawSpecialEffectDataSize; i++)
+            {
+                SpecialEffect effect = _rawSpecialEffectData[i];
+                if (match(effect)) return true;
+            }
+            return false;
+        }
+
+        public bool ContainsSpecialEffect()
+        {
+            return _rawSpecialEffectDataSize > 0;
         }
 
         /// <summary>
@@ -3740,30 +4138,65 @@ namespace Rawr
             {
                 c._rawNoStackData[i] = a._rawNoStackData[i] * b;
             }
+            // undefined for special effects
             return c;
         }
 
         public void Accumulate(Stats data)
         {
-            float[] add = data._rawAdditiveData;
-            for (int i = 0; i < _rawAdditiveData.Length; i++)
+            if (data._sparseIndices != null)
             {
-                _rawAdditiveData[i] += add[i];
+                int i = 0;
+                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawAdditiveData[index] += data._rawAdditiveData[index];
+                }
+                for (int a = 0; a < data._sparseMultiplicativeCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawMultiplicativeData[index] = (1 + _rawMultiplicativeData[index]) * (1 + data._rawMultiplicativeData[index]) - 1;
+                }
+                for (int a = 0; a < data._sparseInverseMultiplicativeCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - data._rawInverseMultiplicativeData[index]);
+                }
+                for (int a = 0; a < data._sparseNoStackCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    float value = data._rawNoStackData[index];
+                    if (value > _rawNoStackData[index]) _rawNoStackData[index] = value;
+                }
             }
-            add = data._rawMultiplicativeData;
-            for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+            else
             {
-                _rawMultiplicativeData[i] = (1 + _rawMultiplicativeData[i]) * (1 + add[i]) - 1;
+                float[] add = data._rawAdditiveData;
+                for (int i = 0; i < _rawAdditiveData.Length; i++)
+                {
+                    _rawAdditiveData[i] += add[i];
+                }
+                add = data._rawMultiplicativeData;
+                for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+                {
+                    _rawMultiplicativeData[i] = (1 + _rawMultiplicativeData[i]) * (1 + add[i]) - 1;
+                }
+                add = data._rawInverseMultiplicativeData;
+                for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+                {
+                    _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - add[i]);
+                }
+                add = data._rawNoStackData;
+                for (int i = 0; i < _rawNoStackData.Length; i++)
+                {
+                    if (add[i] > _rawNoStackData[i]) _rawNoStackData[i] = add[i];
+                }
             }
-            add = data._rawInverseMultiplicativeData;
-            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+            if (data._rawSpecialEffectDataSize > 0)
             {
-                _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - add[i]);
-            }
-            add = data._rawNoStackData;
-            for (int i = 0; i < _rawNoStackData.Length; i++)
-            {
-                if (add[i] > _rawNoStackData[i]) _rawNoStackData[i] = add[i];
+                EnsureSpecialEffectCapacity(_rawSpecialEffectDataSize + data._rawSpecialEffectDataSize);
+                Array.Copy(data._rawSpecialEffectData, 0, _rawSpecialEffectData, _rawSpecialEffectDataSize, data._rawSpecialEffectDataSize);
+                _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
             }
         }
 
@@ -3858,6 +4291,12 @@ namespace Rawr
                     }
                 }
             }
+            if (data._rawSpecialEffectDataSize > 0)
+            {
+                EnsureSpecialEffectCapacity(_rawSpecialEffectDataSize + data._rawSpecialEffectDataSize);
+                Array.Copy(data._rawSpecialEffectData, 0, _rawSpecialEffectData, _rawSpecialEffectDataSize, data._rawSpecialEffectDataSize);
+                _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
+            }
         }
 
         public bool Equals(Stats other)
@@ -3868,6 +4307,10 @@ namespace Rawr
         {
             if (ReferenceEquals(other, null))
                 return 0;
+            if (this._rawSpecialEffectDataSize > 0 || other._rawSpecialEffectDataSize > 0)
+            {
+                return ArrayUtils.CompareResult.Unequal; // not sure if we need to actually go through and compare each
+            }
             if (this._sparseIndices != null && other._sparseIndices != null)
             {
                 bool haveGreaterThan = false, haveLessThan = false;
@@ -4126,6 +4569,7 @@ namespace Rawr
                 return true;
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 return false;
+            if (x._rawSpecialEffectDataSize > 0 || y._rawSpecialEffectDataSize > 0) return false;
             return ArrayUtils.AllEqual(x._rawAdditiveData, y._rawAdditiveData) &&
                 ArrayUtils.AllEqual(x._rawMultiplicativeData, y._rawMultiplicativeData) &&
                 ArrayUtils.AllEqual(x._rawNoStackData, y._rawNoStackData);
@@ -4154,6 +4598,7 @@ namespace Rawr
         {
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 throw new ArgumentNullException();
+            if (x._rawSpecialEffectDataSize > 0 || y._rawSpecialEffectDataSize > 0) return false;
             return ArrayUtils.AllCompare(x._rawAdditiveData, y._rawAdditiveData, comparison)
                 && ArrayUtils.AllCompare(x._rawMultiplicativeData, y._rawMultiplicativeData, comparison)
                 && ArrayUtils.AllCompare(x._rawInverseMultiplicativeData, y._rawInverseMultiplicativeData, comparison)

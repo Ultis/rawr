@@ -250,39 +250,6 @@ namespace Rawr.Mage
             return clone;
         }
 
-        [XmlIgnore]
-        public bool GlyphOfFireball { get { return Character.MageTalents.GlyphOfFireball; } set { Character.MageTalents.GlyphOfFireball = value; } }
-        [XmlIgnore]
-        public bool GlyphOfFrostfire { get { return Character.MageTalents.GlyphOfFrostfire; } set { Character.MageTalents.GlyphOfFrostfire = value; } }
-        [XmlIgnore]
-        public bool GlyphOfFrostbolt { get { return Character.MageTalents.GlyphOfFrostbolt; } set { Character.MageTalents.GlyphOfFrostbolt = value; } }
-        [XmlIgnore]
-        public bool GlyphOfIceArmor { get { return Character.MageTalents.GlyphOfIceArmor; } set { Character.MageTalents.GlyphOfIceArmor = value; } }
-        [XmlIgnore]
-        public bool GlyphOfImprovedScorch { get { return Character.MageTalents.GlyphOfImprovedScorch; } set { Character.MageTalents.GlyphOfImprovedScorch = value; } }
-        [XmlIgnore]
-        public bool GlyphOfMageArmor { get { return Character.MageTalents.GlyphOfMageArmor; } set { Character.MageTalents.GlyphOfMageArmor = value; } }
-        [XmlIgnore]
-        public bool GlyphOfManaGem { get { return Character.MageTalents.GlyphOfManaGem; } set { Character.MageTalents.GlyphOfManaGem = value; } }
-        [XmlIgnore]
-        public bool GlyphOfMoltenArmor { get { return Character.MageTalents.GlyphOfMoltenArmor; } set { Character.MageTalents.GlyphOfMoltenArmor = value; } }
-        [XmlIgnore]
-        public bool GlyphOfWaterElemental { get { return Character.MageTalents.GlyphOfWaterElemental; } set { Character.MageTalents.GlyphOfWaterElemental = value; } }
-        [XmlIgnore]
-        public bool GlyphOfArcaneExplosion { get { return Character.MageTalents.GlyphOfArcaneExplosion; } set { Character.MageTalents.GlyphOfArcaneExplosion = value; } }
-        [XmlIgnore]
-        public bool GlyphOfArcanePower { get { return Character.MageTalents.GlyphOfArcanePower; } set { Character.MageTalents.GlyphOfArcanePower = value; } }
-        [XmlIgnore]
-        public bool GlyphOfArcaneBlast { get { return Character.MageTalents.GlyphOfArcaneBlast; } set { Character.MageTalents.GlyphOfArcaneBlast = value; } }
-        [XmlIgnore]
-        public bool GlyphOfArcaneMissiles { get { return Character.MageTalents.GlyphOfArcaneMissiles; } set { Character.MageTalents.GlyphOfArcaneMissiles = value; } }
-        [XmlIgnore]
-        public bool GlyphOfArcaneBarrage { get { return Character.MageTalents.GlyphOfArcaneBarrage; } set { Character.MageTalents.GlyphOfArcaneBarrage = value; } }
-        [XmlIgnore]
-        public bool GlyphOfLivingBomb { get { return Character.MageTalents.GlyphOfLivingBomb; } set { Character.MageTalents.GlyphOfLivingBomb = value; } }
-        [XmlIgnore]
-        public bool GlyphOfIceLance { get { return Character.MageTalents.GlyphOfIceLance; } set { Character.MageTalents.GlyphOfIceLance = value; } }
-
         private CalculationOptionsMage()
         {
             TargetLevel = 83;
