@@ -473,7 +473,7 @@ namespace Rawr
                     newChar = Character.Clone();
                     newChar.CurrentTalents = spec.TalentSpec();
                     CharacterCalculationsBase calculations = Calculations.GetCharacterCalculations(newChar, null, false, true);
-                    compare = Calculations.GetCharacterComparisonCalculations(calculations, spec.Name, spec == picker.CurrentSpec());
+                    compare = Calculations.GetCharacterComparisonCalculations(calculations, spec.ToString(), spec == picker.CurrentSpec());
                     compare.Item = null;
                     talentCalculations.Add(compare);
                 }
