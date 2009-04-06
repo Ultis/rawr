@@ -409,6 +409,7 @@ namespace Rawr
             CharacterCalculationsBase newCalc;
             ComparisonCalculationBase compare;
             bool orig;
+            List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
             currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true);
             foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
             {
@@ -416,22 +417,25 @@ namespace Rawr
                 if (glyphDatas.Length > 0)
                 {
                     GlyphDataAttribute glyphData = glyphDatas[0];
-                    orig = baseChar.CurrentTalents.GlyphData[glyphData.Index];
-                    if (orig)
+                    if (relevant == null || relevant.Contains(glyphData.Name))
                     {
-                        newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
-                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
-                        compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig);
+                        orig = baseChar.CurrentTalents.GlyphData[glyphData.Index];
+                        if (orig)
+                        {
+                            newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
+                            newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                            compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig);
+                        }
+                        else
+                        {
+                            newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
+                            newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                            compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig);
+                        }
+                        compare.Item = null;
+                        glyphCalculations.Add(compare);
+                        newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
                     }
-                    else
-                    {
-                        newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
-                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
-                        compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig);
-                    }
-                    compare.Item = null;
-                    glyphCalculations.Add(compare);
-                    newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
                 }
             }
 

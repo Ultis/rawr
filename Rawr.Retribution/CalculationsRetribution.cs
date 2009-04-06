@@ -93,6 +93,24 @@ namespace Rawr.Retribution
             character.PaladinTalents.GlyphOfExorcism = true;
         }
 
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Judgement");
+                _relevantGlyphs.Add("Glyph of Exorcism");
+                _relevantGlyphs.Add("Glyph of Sense Undead");
+                _relevantGlyphs.Add("Glyph of Consecration");
+                _relevantGlyphs.Add("Glyph of Seal of Blood");
+                _relevantGlyphs.Add("Glyph of Crusader Strike");
+                _relevantGlyphs.Add("Glyph of Hammer of Wrath");
+                _relevantGlyphs.Add("Glyph of Avenging Wrath");
+            }
+            return _relevantGlyphs;
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,

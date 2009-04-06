@@ -517,11 +517,20 @@ namespace Rawr
 
         /// <summary>
         /// Set the defaults (like Glyphs/Buffs) for newly imported Armory characters
-        /// /// <param name="character">The character who the defaults are for.</param>
+        /// <param name="character">The character who the defaults are for.</param>
         /// </summary>
         public virtual void SetDefaults(Character character)
         {
             ;
+        }
+
+        /// <summary>
+        /// Which glyphs are relevant to this model.
+        /// <return>Name of the relevant Glyphs.</return>
+        /// </summary>
+        public virtual List<string> GetRelevantGlyphs()
+        {
+            return null;
         }
 
 		/// <summary>

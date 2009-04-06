@@ -74,6 +74,25 @@ namespace Rawr.Healadin
             character.PaladinTalents.GlyphOfSealOfWisdom = true;
         }
 
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Seal of Wisdom");
+                _relevantGlyphs.Add("Glyph of Seal of Light");
+                _relevantGlyphs.Add("Glyph of Holy Light");
+                _relevantGlyphs.Add("Glyph of Flash of Light");
+                _relevantGlyphs.Add("Glyph of Holy Shock");
+                _relevantGlyphs.Add("Glyph of Divinity");
+                _relevantGlyphs.Add("Glyph of Beacon of Light");
+                _relevantGlyphs.Add("Glyph of the Wise");
+                _relevantGlyphs.Add("Glyph of Lay on Hands");
+            }
+            return _relevantGlyphs;
+        }
+
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {

@@ -188,6 +188,7 @@ namespace Rawr
 
                 List<GlyphDataAttribute> majors = new List<GlyphDataAttribute>();
                 List<GlyphDataAttribute> minors = new List<GlyphDataAttribute>();
+                List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
 
 				foreach (PropertyInfo pi in Talents.GetType().GetProperties())
 				{
@@ -219,44 +220,56 @@ namespace Rawr
 				}
 
                 tabPageGlyphs.SuspendLayout();
-                grpMajorGlyph.Controls.Clear();
 
                 foreach (Control c in grpMajorGlyph.Controls) c.Dispose();
-                if (majors.Count == 0) grpMajorGlyph.Hide();
-                else grpMajorGlyph.Show();
-                for (int i = 0; i < majors.Count; i++)
+                grpMajorGlyph.Controls.Clear();
+
+                int count = 0;
+                foreach (GlyphDataAttribute glyph in majors)
                 {
-                    GlyphDataAttribute glyph = majors[i];
-                    CheckBox cb = new CheckBox();
-                    grpMajorGlyph.Controls.Add(cb);
-                    cb.AutoSize = true;
-                    cb.Text = glyph.Name;
-                    cb.Tag = glyph.Index;
-                    cb.Checked = Talents.GlyphData[glyph.Index];
-                    cb.UseVisualStyleBackColor = true;
-                    cb.Location = new Point(6, 19 + 23 * i);
-                    cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
-                    tooltipGlyph.SetToolTip(cb, glyph.Description);
+                    if (relevant == null || relevant.Contains(glyph.Name))
+                    {
+                        CheckBox cb = new CheckBox();
+                        grpMajorGlyph.Controls.Add(cb);
+                        cb.AutoSize = true;
+                        cb.Text = glyph.Name;
+                        cb.Tag = glyph.Index;
+                        cb.Checked = Talents.GlyphData[glyph.Index];
+                        cb.UseVisualStyleBackColor = true;
+                        cb.Location = new Point(6, 19 + 23 * count);
+                        cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
+                        tooltipGlyph.SetToolTip(cb, glyph.Description);
+                        count++;
+                    }
                 }
+                if (count == 0) grpMajorGlyph.Hide();
+                else grpMajorGlyph.Show();
+                count = 0;
 
                 foreach (Control c in grpMinorGlyph.Controls) c.Dispose();
                 grpMinorGlyph.Controls.Clear();
-                if (minors.Count == 0) grpMinorGlyph.Hide();
-                else grpMinorGlyph.Show();
-                for (int i = 0; i < minors.Count; i++)
+
+                foreach (GlyphDataAttribute glyph in minors)
                 {
-                    GlyphDataAttribute glyph = minors[i];
-                    CheckBox cb = new CheckBox();
-                    grpMinorGlyph.Controls.Add(cb);
-                    cb.AutoSize = true;
-                    cb.Text = glyph.Name;
-                    cb.Tag = glyph.Index;
-                    cb.Checked = Talents.GlyphData[glyph.Index];
-                    cb.UseVisualStyleBackColor = true;
-                    cb.Location = new Point(6, 19 + 23 * i);
-                    cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
-                    tooltipGlyph.SetToolTip(cb, glyph.Description);
+                    if (relevant == null || relevant.Contains(glyph.Name))
+                    {
+                        CheckBox cb = new CheckBox();
+                        grpMinorGlyph.Controls.Add(cb);
+                        cb.AutoSize = true;
+                        cb.Text = glyph.Name;
+                        cb.Tag = glyph.Index;
+                        cb.Checked = Talents.GlyphData[glyph.Index];
+                        cb.UseVisualStyleBackColor = true;
+                        cb.Location = new Point(6, 19 + 23 * count);
+                        cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
+                        tooltipGlyph.SetToolTip(cb, glyph.Description);
+                        count++;
+                    }
                 }
+
+                if (count == 0) grpMinorGlyph.Hide();
+                else grpMinorGlyph.Show();
+
                 tabPageGlyphs.ResumeLayout();
 
                 talentTree1.Redraw();
