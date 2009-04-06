@@ -80,6 +80,23 @@ namespace Rawr.ProtPaladin
             }
         }
 
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Judgement");
+                _relevantGlyphs.Add("Glyph of Exorcism");
+                _relevantGlyphs.Add("Glyph of Sense Undead");
+                _relevantGlyphs.Add("Glyph of Consecration");
+                _relevantGlyphs.Add("Glyph of Seal of Vengeance");
+                _relevantGlyphs.Add("Glyph of Seal of Righteousness");
+                _relevantGlyphs.Add("Glyph of Divine Plea");
+            }
+            return _relevantGlyphs;
+        }
+
         #region Variables and Properties
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel

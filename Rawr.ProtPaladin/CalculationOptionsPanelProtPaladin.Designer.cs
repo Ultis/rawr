@@ -61,21 +61,12 @@ namespace Rawr.ProtPaladin
             this.label4 = new System.Windows.Forms.Label();
             this.numericUpDownTargetLevel = new System.Windows.Forms.NumericUpDown();
             this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
-            this.groupBoxGlyphs = new System.Windows.Forms.GroupBox();
-            this.checkBoxGlyphOfSealOfRighteousness = new System.Windows.Forms.CheckBox();
-            this.checkBoxGlyphOfExorcism = new System.Windows.Forms.CheckBox();
-            this.checkBoxGlyphOfDivinePlea = new System.Windows.Forms.CheckBox();
-            this.checkBoxGlyphOfSealOfVengeance = new System.Windows.Forms.CheckBox();
-            this.checkBoxGlyphOfJudgement = new System.Windows.Forms.CheckBox();
             this.groupBoxPaladinAbilities = new System.Windows.Forms.GroupBox();
             this.checkBoxUseHolyShield = new System.Windows.Forms.CheckBox();
             this.Glyphs = new System.Windows.Forms.TabControl();
             this.tabPageTarget = new System.Windows.Forms.TabPage();
             this.tabPageRanking = new System.Windows.Forms.TabPage();
             this.tabPageAbilities = new System.Windows.Forms.TabPage();
-            this.tabPageGlyphs = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.checkBoxGlyphOfSenseUndead = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxPaladinSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
@@ -85,14 +76,11 @@ namespace Rawr.ProtPaladin
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
-            this.groupBoxGlyphs.SuspendLayout();
             this.groupBoxPaladinAbilities.SuspendLayout();
             this.Glyphs.SuspendLayout();
             this.tabPageTarget.SuspendLayout();
             this.tabPageRanking.SuspendLayout();
             this.tabPageAbilities.SuspendLayout();
-            this.tabPageGlyphs.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -522,72 +510,6 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackSpeed.Value = 8;
             this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // groupBoxGlyphs
-            // 
-            this.groupBoxGlyphs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfSealOfRighteousness);
-            this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfExorcism);
-            this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfDivinePlea);
-            this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfSealOfVengeance);
-            this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfJudgement);
-            this.groupBoxGlyphs.Location = new System.Drawing.Point(6, 6);
-            this.groupBoxGlyphs.Name = "groupBoxGlyphs";
-            this.groupBoxGlyphs.Size = new System.Drawing.Size(270, 153);
-            this.groupBoxGlyphs.TabIndex = 6;
-            this.groupBoxGlyphs.TabStop = false;
-            this.groupBoxGlyphs.Text = "Major Glyphs";
-            // 
-            // checkBoxGlyphOfSealOfRighteousness
-            // 
-            this.checkBoxGlyphOfSealOfRighteousness.Location = new System.Drawing.Point(6, 67);
-            this.checkBoxGlyphOfSealOfRighteousness.Name = "checkBoxGlyphOfSealOfRighteousness";
-            this.checkBoxGlyphOfSealOfRighteousness.Size = new System.Drawing.Size(216, 24);
-            this.checkBoxGlyphOfSealOfRighteousness.TabIndex = 12;
-            this.checkBoxGlyphOfSealOfRighteousness.Text = "Glyph of Seal of Righteousness";
-            this.checkBoxGlyphOfSealOfRighteousness.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfSealOfRighteousness.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfSealOfRighteousness_CheckedChanged);
-            // 
-            // checkBoxGlyphOfExorcism
-            // 
-            this.checkBoxGlyphOfExorcism.Location = new System.Drawing.Point(6, 91);
-            this.checkBoxGlyphOfExorcism.Name = "checkBoxGlyphOfExorcism";
-            this.checkBoxGlyphOfExorcism.Size = new System.Drawing.Size(216, 24);
-            this.checkBoxGlyphOfExorcism.TabIndex = 11;
-            this.checkBoxGlyphOfExorcism.Text = "Glyph of Exorcism";
-            this.checkBoxGlyphOfExorcism.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfExorcism.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfExorcism_CheckedChanged);
-            // 
-            // checkBoxGlyphOfDivinePlea
-            // 
-            this.checkBoxGlyphOfDivinePlea.Location = new System.Drawing.Point(6, 115);
-            this.checkBoxGlyphOfDivinePlea.Name = "checkBoxGlyphOfDivinePlea";
-            this.checkBoxGlyphOfDivinePlea.Size = new System.Drawing.Size(216, 24);
-            this.checkBoxGlyphOfDivinePlea.TabIndex = 10;
-            this.checkBoxGlyphOfDivinePlea.Text = "Glyph of Divine Plea";
-            this.checkBoxGlyphOfDivinePlea.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfDivinePlea.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfDivinePlea_CheckedChanged);
-            // 
-            // checkBoxGlyphOfSealOfVengeance
-            // 
-            this.checkBoxGlyphOfSealOfVengeance.Location = new System.Drawing.Point(6, 43);
-            this.checkBoxGlyphOfSealOfVengeance.Name = "checkBoxGlyphOfSealOfVengeance";
-            this.checkBoxGlyphOfSealOfVengeance.Size = new System.Drawing.Size(216, 24);
-            this.checkBoxGlyphOfSealOfVengeance.TabIndex = 9;
-            this.checkBoxGlyphOfSealOfVengeance.Text = "Glyph of Seal of Vengeance";
-            this.checkBoxGlyphOfSealOfVengeance.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfSealOfVengeance.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfSealOfVengeance_CheckedChanged);
-            // 
-            // checkBoxGlyphOfJudgement
-            // 
-            this.checkBoxGlyphOfJudgement.Location = new System.Drawing.Point(6, 19);
-            this.checkBoxGlyphOfJudgement.Name = "checkBoxGlyphOfJudgement";
-            this.checkBoxGlyphOfJudgement.Size = new System.Drawing.Size(216, 24);
-            this.checkBoxGlyphOfJudgement.TabIndex = 8;
-            this.checkBoxGlyphOfJudgement.Text = "Glyph of Judgement";
-            this.checkBoxGlyphOfJudgement.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfJudgement.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfJudgement_CheckedChanged);
-            // 
             // groupBoxPaladinAbilities
             // 
             this.groupBoxPaladinAbilities.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -618,7 +540,6 @@ namespace Rawr.ProtPaladin
             this.Glyphs.Controls.Add(this.tabPageTarget);
             this.Glyphs.Controls.Add(this.tabPageRanking);
             this.Glyphs.Controls.Add(this.tabPageAbilities);
-            this.Glyphs.Controls.Add(this.tabPageGlyphs);
             this.Glyphs.Location = new System.Drawing.Point(6, 6);
             this.Glyphs.Name = "Glyphs";
             this.Glyphs.SelectedIndex = 0;
@@ -659,40 +580,6 @@ namespace Rawr.ProtPaladin
             this.tabPageAbilities.Text = "Abilities";
             this.tabPageAbilities.UseVisualStyleBackColor = true;
             // 
-            // tabPageGlyphs
-            // 
-            this.tabPageGlyphs.Controls.Add(this.groupBox3);
-            this.tabPageGlyphs.Controls.Add(this.groupBoxGlyphs);
-            this.tabPageGlyphs.Location = new System.Drawing.Point(4, 22);
-            this.tabPageGlyphs.Name = "tabPageGlyphs";
-            this.tabPageGlyphs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGlyphs.Size = new System.Drawing.Size(282, 519);
-            this.tabPageGlyphs.TabIndex = 3;
-            this.tabPageGlyphs.Text = "Glyphs";
-            this.tabPageGlyphs.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.checkBoxGlyphOfSenseUndead);
-            this.groupBox3.Location = new System.Drawing.Point(6, 165);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(270, 57);
-            this.groupBox3.TabIndex = 7;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Minor Glyphs";
-            // 
-            // checkBoxGlyphOfSenseUndead
-            // 
-            this.checkBoxGlyphOfSenseUndead.Location = new System.Drawing.Point(6, 19);
-            this.checkBoxGlyphOfSenseUndead.Name = "checkBoxGlyphOfSenseUndead";
-            this.checkBoxGlyphOfSenseUndead.Size = new System.Drawing.Size(216, 24);
-            this.checkBoxGlyphOfSenseUndead.TabIndex = 8;
-            this.checkBoxGlyphOfSenseUndead.Text = "Glyph of Sense Undead";
-            this.checkBoxGlyphOfSenseUndead.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfSenseUndead.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfSenseUndead_CheckedChanged);
-            // 
             // CalculationOptionsPanelProtPaladin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -712,15 +599,12 @@ namespace Rawr.ProtPaladin
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).EndInit();
-            this.groupBoxGlyphs.ResumeLayout(false);
             this.groupBoxPaladinAbilities.ResumeLayout(false);
             this.groupBoxPaladinAbilities.PerformLayout();
             this.Glyphs.ResumeLayout(false);
             this.tabPageTarget.ResumeLayout(false);
             this.tabPageRanking.ResumeLayout(false);
             this.tabPageAbilities.ResumeLayout(false);
-            this.tabPageGlyphs.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}
@@ -752,25 +636,16 @@ namespace Rawr.ProtPaladin
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipTankPoints;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipBurstTime;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipMitigtionScale;
-        private System.Windows.Forms.GroupBox groupBoxGlyphs;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipDamageOutput;
         private System.Windows.Forms.RadioButton radioButtonDamageOutput;
         private System.Windows.Forms.RadioButton radioButtonSoR;
         private System.Windows.Forms.RadioButton radioButtonSoV;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfSealOfVengeance;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfJudgement;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfExorcism;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfDivinePlea;
         private System.Windows.Forms.GroupBox groupBoxPaladinAbilities;
         private System.Windows.Forms.CheckBox checkBoxUseHolyShield;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfSealOfRighteousness;
         private System.Windows.Forms.TabControl Glyphs;
         private System.Windows.Forms.TabPage tabPageTarget;
         private System.Windows.Forms.TabPage tabPageRanking;
         private System.Windows.Forms.TabPage tabPageAbilities;
-        private System.Windows.Forms.TabPage tabPageGlyphs;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfSenseUndead;
         private System.Windows.Forms.NumericUpDown numericUpDownTargetLevel;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;

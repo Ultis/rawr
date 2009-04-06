@@ -58,11 +58,11 @@ namespace Rawr.ProtPaladin
             radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
 
             // Glyphs
-            checkBoxGlyphOfJudgement.Checked  = Talents.GlyphOfJudgement;
-            checkBoxGlyphOfSealOfVengeance.Checked = Talents.GlyphOfSealOfVengeance;
-            checkBoxGlyphOfExorcism.Checked = Talents.GlyphOfExorcism;
-            checkBoxGlyphOfDivinePlea.Checked = Talents.GlyphOfDivinePlea;
-            checkBoxGlyphOfSenseUndead.Checked = Talents.GlyphOfSenseUndead;
+            //checkBoxGlyphOfJudgement.Checked  = Talents.GlyphOfJudgement;
+            //checkBoxGlyphOfSealOfVengeance.Checked = Talents.GlyphOfSealOfVengeance;
+            //checkBoxGlyphOfExorcism.Checked = Talents.GlyphOfExorcism;
+            //checkBoxGlyphOfDivinePlea.Checked = Talents.GlyphOfDivinePlea;
+            //checkBoxGlyphOfSenseUndead.Checked = Talents.GlyphOfSenseUndead;
 
             calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
 			
@@ -216,75 +216,75 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        #region Glyphs
+        //#region Glyphs
 
-        private void checkBoxGlyphOfJudgement_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                PaladinTalents Talents = Character.PaladinTalents;
-                Talents.GlyphOfJudgement = checkBoxGlyphOfJudgement.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        //private void checkBoxGlyphOfJudgement_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+        //        PaladinTalents Talents = Character.PaladinTalents;
+        //        Talents.GlyphOfJudgement = checkBoxGlyphOfJudgement.Checked;
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
 
-        private void checkBoxGlyphOfSealOfVengeance_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                PaladinTalents Talents = Character.PaladinTalents;
-                Talents.GlyphOfSealOfVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        //private void checkBoxGlyphOfSealOfVengeance_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+        //        PaladinTalents Talents = Character.PaladinTalents;
+        //        Talents.GlyphOfSealOfVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
 
-        private void checkBoxGlyphOfExorcism_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                PaladinTalents Talents = Character.PaladinTalents;
-                Talents.GlyphOfExorcism = checkBoxGlyphOfExorcism.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        //private void checkBoxGlyphOfExorcism_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+        //        PaladinTalents Talents = Character.PaladinTalents;
+        //        Talents.GlyphOfExorcism = checkBoxGlyphOfExorcism.Checked;
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
 
-        private void checkBoxGlyphOfDivinePlea_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                PaladinTalents Talents = Character.PaladinTalents;
-                Talents.GlyphOfDivinePlea = checkBoxGlyphOfDivinePlea.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        //private void checkBoxGlyphOfDivinePlea_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+        //        PaladinTalents Talents = Character.PaladinTalents;
+        //        Talents.GlyphOfDivinePlea = checkBoxGlyphOfDivinePlea.Checked;
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
 
-        private void checkBoxGlyphOfSenseUndead_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                PaladinTalents Talents = Character.PaladinTalents;
-                Talents.GlyphOfSenseUndead = checkBoxGlyphOfSenseUndead.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        //private void checkBoxGlyphOfSenseUndead_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+        //        PaladinTalents Talents = Character.PaladinTalents;
+        //        Talents.GlyphOfSenseUndead = checkBoxGlyphOfSenseUndead.Checked;
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
 
-        private void checkBoxGlyphOfSealOfRighteousness_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-                PaladinTalents Talents = Character.PaladinTalents;
-                Talents.GlyphOfSealOfRighteousness = checkBoxGlyphOfSealOfRighteousness.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        //private void checkBoxGlyphOfSealOfRighteousness_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+        //        PaladinTalents Talents = Character.PaladinTalents;
+        //        Talents.GlyphOfSealOfRighteousness = checkBoxGlyphOfSealOfRighteousness.Checked;
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
 
-        #endregion
+        //#endregion
     }
 
 	[Serializable]
