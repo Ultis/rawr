@@ -53,12 +53,6 @@
             this.lblTreantLifespan = new System.Windows.Forms.Label();
             this.lblUptimeValue = new System.Windows.Forms.Label();
             this.lblLifespanValue = new System.Windows.Forms.Label();
-            this.cmbGlyph1 = new System.Windows.Forms.ComboBox();
-            this.cmbGlyph2 = new System.Windows.Forms.ComboBox();
-            this.lblGlyph1 = new System.Windows.Forms.Label();
-            this.lblGlyph2 = new System.Windows.Forms.Label();
-            this.cmbGlyph3 = new System.Windows.Forms.ComboBox();
-            this.lblGlyph3 = new System.Windows.Forms.Label();
             this.lblUserRotation = new System.Windows.Forms.Label();
             this.cmbUserRotation = new System.Windows.Forms.ComboBox();
             this.lblEclipseType = new System.Windows.Forms.Label();
@@ -311,82 +305,10 @@
             this.lblLifespanValue.TabIndex = 34;
             this.lblLifespanValue.Text = "50";
             // 
-            // cmbGlyph1
-            // 
-            this.cmbGlyph1.FormattingEnabled = true;
-            this.cmbGlyph1.Items.AddRange(new object[] {
-            "None",
-            "Starfire",
-            "Moonfire",
-            "Insect Swarm",
-            "Starfall"});
-            this.cmbGlyph1.Location = new System.Drawing.Point(108, 376);
-            this.cmbGlyph1.Name = "cmbGlyph1";
-            this.cmbGlyph1.Size = new System.Drawing.Size(93, 21);
-            this.cmbGlyph1.TabIndex = 16;
-            this.cmbGlyph1.SelectedIndexChanged += new System.EventHandler(this.cmbGlyph1_SelectedIndexChanged);
-            // 
-            // cmbGlyph2
-            // 
-            this.cmbGlyph2.FormattingEnabled = true;
-            this.cmbGlyph2.Items.AddRange(new object[] {
-            "None",
-            "Starfire",
-            "Moonfire",
-            "Insect Swarm",
-            "Starfall"});
-            this.cmbGlyph2.Location = new System.Drawing.Point(108, 403);
-            this.cmbGlyph2.Name = "cmbGlyph2";
-            this.cmbGlyph2.Size = new System.Drawing.Size(93, 21);
-            this.cmbGlyph2.TabIndex = 17;
-            this.cmbGlyph2.SelectedIndexChanged += new System.EventHandler(this.cmbGlyph2_SelectedIndexChanged);
-            // 
-            // lblGlyph1
-            // 
-            this.lblGlyph1.AutoSize = true;
-            this.lblGlyph1.Location = new System.Drawing.Point(3, 379);
-            this.lblGlyph1.Name = "lblGlyph1";
-            this.lblGlyph1.Size = new System.Drawing.Size(75, 13);
-            this.lblGlyph1.TabIndex = 37;
-            this.lblGlyph1.Text = "Major Glyph 1:";
-            // 
-            // lblGlyph2
-            // 
-            this.lblGlyph2.AutoSize = true;
-            this.lblGlyph2.Location = new System.Drawing.Point(3, 406);
-            this.lblGlyph2.Name = "lblGlyph2";
-            this.lblGlyph2.Size = new System.Drawing.Size(75, 13);
-            this.lblGlyph2.TabIndex = 38;
-            this.lblGlyph2.Text = "Major Glyph 2:";
-            // 
-            // cmbGlyph3
-            // 
-            this.cmbGlyph3.FormattingEnabled = true;
-            this.cmbGlyph3.Items.AddRange(new object[] {
-            "None",
-            "Starfire",
-            "Moonfire",
-            "Insect Swarm",
-            "Starfall"});
-            this.cmbGlyph3.Location = new System.Drawing.Point(108, 431);
-            this.cmbGlyph3.Name = "cmbGlyph3";
-            this.cmbGlyph3.Size = new System.Drawing.Size(93, 21);
-            this.cmbGlyph3.TabIndex = 18;
-            this.cmbGlyph3.SelectedIndexChanged += new System.EventHandler(this.cmbGlyph3_SelectedIndexChanged);
-            // 
-            // lblGlyph3
-            // 
-            this.lblGlyph3.AutoSize = true;
-            this.lblGlyph3.Location = new System.Drawing.Point(3, 434);
-            this.lblGlyph3.Name = "lblGlyph3";
-            this.lblGlyph3.Size = new System.Drawing.Size(75, 13);
-            this.lblGlyph3.TabIndex = 42;
-            this.lblGlyph3.Text = "Major Glyph 3:";
-            // 
             // lblUserRotation
             // 
             this.lblUserRotation.AutoSize = true;
-            this.lblUserRotation.Location = new System.Drawing.Point(6, 512);
+            this.lblUserRotation.Location = new System.Drawing.Point(6, 429);
             this.lblUserRotation.Name = "lblUserRotation";
             this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
             this.lblUserRotation.TabIndex = 44;
@@ -405,7 +327,7 @@
             "IS/MF/SF",
             "SF Spam",
             "W Spam"});
-            this.cmbUserRotation.Location = new System.Drawing.Point(108, 509);
+            this.cmbUserRotation.Location = new System.Drawing.Point(108, 426);
             this.cmbUserRotation.Name = "cmbUserRotation";
             this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
             this.cmbUserRotation.TabIndex = 21;
@@ -414,7 +336,7 @@
             // lblEclipseType
             // 
             this.lblEclipseType.AutoSize = true;
-            this.lblEclipseType.Location = new System.Drawing.Point(3, 462);
+            this.lblEclipseType.Location = new System.Drawing.Point(3, 379);
             this.lblEclipseType.Name = "lblEclipseType";
             this.lblEclipseType.Size = new System.Drawing.Size(68, 13);
             this.lblEclipseType.TabIndex = 46;
@@ -426,7 +348,7 @@
             this.cmbEclipseType.Items.AddRange(new object[] {
             "Lunar",
             "Solar"});
-            this.cmbEclipseType.Location = new System.Drawing.Point(108, 459);
+            this.cmbEclipseType.Location = new System.Drawing.Point(108, 376);
             this.cmbEclipseType.Name = "cmbEclipseType";
             this.cmbEclipseType.Size = new System.Drawing.Size(93, 21);
             this.cmbEclipseType.TabIndex = 19;
@@ -435,7 +357,7 @@
             // chkMoonfireAlways
             // 
             this.chkMoonfireAlways.AutoSize = true;
-            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 486);
+            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 403);
             this.chkMoonfireAlways.Name = "chkMoonfireAlways";
             this.chkMoonfireAlways.Size = new System.Drawing.Size(138, 17);
             this.chkMoonfireAlways.TabIndex = 20;
@@ -452,12 +374,6 @@
             this.Controls.Add(this.lblEclipseType);
             this.Controls.Add(this.cmbUserRotation);
             this.Controls.Add(this.lblUserRotation);
-            this.Controls.Add(this.lblGlyph3);
-            this.Controls.Add(this.cmbGlyph3);
-            this.Controls.Add(this.lblGlyph2);
-            this.Controls.Add(this.lblGlyph1);
-            this.Controls.Add(this.cmbGlyph2);
-            this.Controls.Add(this.cmbGlyph1);
             this.Controls.Add(this.lblLifespanValue);
             this.Controls.Add(this.lblUptimeValue);
             this.Controls.Add(this.lblTreantLifespan);
@@ -484,7 +400,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 540);
+            this.Size = new System.Drawing.Size(204, 455);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -519,12 +435,6 @@
         private System.Windows.Forms.Label lblTreantLifespan;
         private System.Windows.Forms.Label lblUptimeValue;
         private System.Windows.Forms.Label lblLifespanValue;
-        private System.Windows.Forms.ComboBox cmbGlyph1;
-        private System.Windows.Forms.ComboBox cmbGlyph2;
-        private System.Windows.Forms.Label lblGlyph1;
-        private System.Windows.Forms.Label lblGlyph2;
-        private System.Windows.Forms.ComboBox cmbGlyph3;
-        private System.Windows.Forms.Label lblGlyph3;
         private System.Windows.Forms.Label lblUserRotation;
         private System.Windows.Forms.ComboBox cmbUserRotation;
         private System.Windows.Forms.Label lblEclipseType;

@@ -293,7 +293,7 @@ namespace Rawr.Moonkin
             float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
             float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            bool starfireGlyph = calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire";
+            bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
 
             switch (SpellsUsed.Count)
             {
@@ -455,7 +455,7 @@ namespace Rawr.Moonkin
             float omenOfClarityProcChance = character.DruidTalents.OmenOfClarity * 0.06f;
             float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            bool starfireGlyph = calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire";
+            bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
 
             float moonfireCasts = SpellsUsed.Contains("MF") ? 1.0f + (calcOpts.MoonfireAlways ? 1.0f : 0.0f) : 0.0f;
             float insectSwarmCasts = SpellsUsed.Contains("IS") ? 2.0f : 0.0f;
@@ -793,7 +793,7 @@ namespace Rawr.Moonkin
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
 
 			// Do Starfall calculations.
-            bool starfallGlyph = calcOpts.glyph1 == "Starfall" || calcOpts.glyph2 == "Starfall" || calcOpts.glyph3 == "Starfall";
+            bool starfallGlyph = character.DruidTalents.GlyphOfStarfall;
 			float starfallDamage = (character.DruidTalents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit, Wrath.CriticalDamageModifier) : 0.0f;
             float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
             float starfallDivisor = starfallCD + 1.0f / 6.0f;
@@ -1022,6 +1022,21 @@ namespace Rawr.Moonkin
                     }
                 });
             }
+            // Lightweave Embroidery (1100 Holy damage, 50% chance on cast, 45s internal cooldown)
+            if (calcs.BasicStats.LightweaveEmbroideryProc > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float baseDamage = (1000 + 1200) / 2.0f;
+                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
+                        float timeBetweenProcs = r.Duration / (sHi * r.CastCount * 0.5f) + 45f;
+                        return averageDamage / timeBetweenProcs;
+                    }
+                });
+            }
             // Pendulum of Telluric Currents (15% chance on spell hit, 45s internal cooldown)
             if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
             {
@@ -1186,7 +1201,7 @@ namespace Rawr.Moonkin
 					spiritRegen = StatConversion.GetSpiritRegenSec(userSpirit, userIntellect);
                     //spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;
                 }
-                float innervateManaRate = spiritRegen * 4 + calcs.BasicStats.Mp5 / 5f;
+                float innervateManaRate = spiritRegen * 4 * (character.DruidTalents.GlyphOfInnervate ? 1.2f : 1.0f) + calcs.BasicStats.Mp5 / 5f;
                 float innervateTime = numInnervates * 20.0f;
                 totalInnervateMana = innervateManaRate * innervateTime;
             }
@@ -1334,9 +1349,9 @@ namespace Rawr.Moonkin
             Wrath.BaseDamage += stats.WrathDmg;
             InsectSwarm.IdolExtraSpellPower += stats.InsectSwarmDmg;
 
-            float moonfireDDGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? -0.9f : 0.0f;
-            float moonfireDotGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? 0.75f : 0.0f;
-            float insectSwarmGlyph = (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm" || calcOpts.glyph3 == "Insect Swarm") ? 0.3f : 0.0f;
+            float moonfireDDGlyph = character.DruidTalents.GlyphOfMoonfire ? -0.9f : 0.0f;
+            float moonfireDotGlyph = character.DruidTalents.GlyphOfMoonfire ? 0.75f : 0.0f;
+            float insectSwarmGlyph = character.DruidTalents.GlyphOfInsectSwarm ? 0.3f : 0.0f;
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury)
             // Moonfire: Damage +(0.05 * Imp Moonfire) (Additive with Moonfury/Genesis/Glyph)

@@ -1843,7 +1843,7 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
         public int ChaosBolt { get { return _data[80]; } set { _data[80] = value; } }
 	}
 
-	public class DruidTalents : TalentsBase, ICloneable
+	public partial class DruidTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[84];
 		public override int[] Data { get { return _data; } }public DruidTalents() { }

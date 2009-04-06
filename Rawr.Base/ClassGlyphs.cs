@@ -144,4 +144,27 @@ namespace Rawr
         [GlyphData(33, "Glyph of Blessing of Might", false, @"Increases the duration of your Blessing of Might spell by 20 min when cast on yourself.")]
         public bool GlyphOfBlessingOfMight { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
     }
+
+    public partial class DruidTalents
+    {
+        private bool[] _glyphData = new bool[5];
+        public override bool[] GlyphData
+        {
+            get
+            {
+                return _glyphData;
+            }
+        }
+
+        [GlyphData(0, "Glyph of Innervate", true, @"Innervate now grants the caster full mana regeneration while casting for 20 sec, in addition to the effect on the target.  If the caster targets <him/her>self, the mana regeneration effect of your Innervate is increased by 20%.")]
+        public bool GlyphOfInnervate { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        [GlyphData(1, "Glyph of Insect Swarm", true, @"Increases the damage of your Insect Swarm ability by 30%, but it no longer affects your victim's chance to hit.")]
+        public bool GlyphOfInsectSwarm { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(2, "Glyph of Moonfire", true, @"Increases the periodic damage of your Moonfire ability by 75%, but initial damage is decreased by 90%.")]
+        public bool GlyphOfMoonfire { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(3, "Glyph of Starfall", true, @"Reduces the cooldown of Starfall by 30 sec.")]
+        public bool GlyphOfStarfall { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(4, "Glyph of Starfire", true, @"Your Starfire ability increases the duration of your Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]
+        public bool GlyphOfStarfire { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+    }
 }

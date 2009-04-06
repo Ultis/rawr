@@ -41,9 +41,9 @@ namespace Rawr.Moonkin
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
-            cmbGlyph1.SelectedItem = calcOpts.glyph1.ToString();
+/*            cmbGlyph1.SelectedItem = calcOpts.glyph1.ToString();
             cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
-            cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();
+            cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();*/
             cmbUserRotation.SelectedItem = calcOpts.userRotation;
             if (calcOpts.LunarEclipse)
                 cmbEclipseType.SelectedItem = "Lunar";
@@ -149,7 +149,7 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
 
-        private void cmbGlyph1_SelectedIndexChanged(object sender, EventArgs e)
+/*        private void cmbGlyph1_SelectedIndexChanged(object sender, EventArgs e)
         {
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.glyph1 = cmbGlyph1.SelectedItem.ToString();
@@ -168,7 +168,7 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.glyph3 = cmbGlyph3.SelectedItem.ToString();
             Character.OnCalculationsInvalidated();
-        }
+        }*/
 
         private void cmbUserRotation_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -327,9 +327,9 @@ namespace Rawr.Moonkin
 		public string AldorScryer = "Aldor";
         public float ReplenishmentUptime = 1.0f;
         public float TreantLifespan = 1.0f;
-        public string glyph1 = "Starfire";
+/*        public string glyph1 = "Starfire";
         public string glyph2 = "Moonfire";
-        public string glyph3 = "Insect Swarm";
+        public string glyph3 = "Insect Swarm";*/
         public bool LunarEclipse = true;
         public bool MoonfireAlways = true;
         public string userRotation = "None";
