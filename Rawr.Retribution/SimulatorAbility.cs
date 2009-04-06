@@ -31,7 +31,7 @@ namespace Rawr.Retribution
                 if (NextUse > currentTime) currentTime = NextUse;
                 if (FirstUse < 0) FirstUse = currentTime;
                 LastUse = currentTime;
-                NextUse = currentTime + Cooldown;
+                NextUse = currentTime + Cooldown + Delay;
                 Uses++;
                 return currentTime + 1.5f + Delay;
             }

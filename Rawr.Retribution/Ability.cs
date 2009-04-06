@@ -62,17 +62,14 @@ namespace Rawr.Retribution
         public static float GetMissChance(float hit, int targetLevel) { return (float)Math.Max(MissChance[targetLevel - 80] - hit, 0f); }
         public static float GetDodgeChance(float expertise, int targetLevel) { return (float)Math.Max(DodgeChance[targetLevel - 80] - expertise * .0025f, 0f); }
         public static float GetResistChance(float spellHit, int targetLevel) { return (float)Math.Max(ResistChance[targetLevel - 80] - spellHit, 0f); }
-
         public static float GetMeleeAvoid()
         {
             return 1f - GetMissChance(_stats.PhysicalHit, _calcOpts.TargetLevel) - GetDodgeChance(_stats.Expertise, _calcOpts.TargetLevel);
         }
-
         public static float GetRangeAvoid()
         {
             return 1f - GetMissChance(Stats.PhysicalHit, _calcOpts.TargetLevel);
         }
-
         public static float GetSpellAvoid()
         {
             return 1f - GetResistChance(Stats.SpellHit, _calcOpts.TargetLevel);
@@ -96,8 +93,6 @@ namespace Rawr.Retribution
             NormalWeaponDamage = WeaponDamage * 3.3f / baseSpeed;
         }
 
-
-
         public Ability(AbilityType abilityType, DamageType damageType, bool usesWeapon, bool righteousVengeance)
         {
             AbilityType = abilityType;
@@ -108,28 +103,36 @@ namespace Rawr.Retribution
 
         public virtual float AverageDamage()
         {
-            float chanceToLand, critBonus, critChance;
+            float chanceToLand, critBonus;
             if (AbilityType == AbilityType.Melee)
             {
                 chanceToLand = GetMeleeAvoid();
                 critBonus = 2f * (1f + Stats.BonusCritMultiplier);
-                critChance = (float)Math.Min(1f, Stats.PhysicalCrit + AbilityCritChance());
             }
             else if (AbilityType == AbilityType.Range)
             {
                 chanceToLand = GetRangeAvoid();
                 critBonus = 2f * (1f + Stats.BonusCritMultiplier);
-                critChance = (float)Math.Min(1f, Stats.PhysicalCrit + AbilityCritChance());
             }
             else // Spell
             {
                 chanceToLand = GetSpellAvoid();
                 critBonus = 1.5f * (1f + Stats.BonusSpellCritMultiplier);
-                critChance = (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance());
             }
             float rightVen = RighteousVengeance ? 1f + .1f * _talents.RighteousVengeance : 1f;
+            return HitDamage() * ((1f - CritChance()) + CritChance() * critBonus * rightVen) * chanceToLand;
+        }
 
-            return HitDamage() * ((1f - critChance) + critChance * critBonus * rightVen) * chanceToLand;
+        public float CritChance()
+        {
+            if (AbilityType == AbilityType.Spell)
+            {
+                return (float)Math.Max(Math.Min(1f, Stats.SpellCrit + AbilityCritChance()), 0);
+            }
+            else
+            {
+                return (float)Math.Max(Math.Min(1f, Stats.PhysicalCrit + AbilityCritChance()), 0);
+            }
         }
 
         public float HitDamage()
@@ -153,6 +156,7 @@ namespace Rawr.Retribution
         }
 
         public abstract float AbilityDamage();
+
         public virtual float AbilityCritChance() { return 0; }
 
     }
@@ -164,7 +168,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (WeaponDamage * .26f + .18f * _stats.SpellPower + .11f * _stats.AttackPower)
+            return (WeaponDamage * .26f + _stats.SpellPower * .18f + _stats.AttackPower * .11f)
                 * (1f + .05f * _talents.TheArtOfWar)
                 * (_talents.GlyphOfJudgement ? 1.1f : 1f);
         }
@@ -183,6 +187,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
+            if (_talents.CrusaderStrike == 0) return 0;
             return (NormalWeaponDamage * 1.1f + _stats.CrusaderStrikeDamage)
                 * (1f + .05f * _talents.SanctityOfBattle)
                 * (1f + .05f * _talents.TheArtOfWar)
@@ -203,6 +208,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
+            if (_talents.DivineStorm == 0) return 0;
             return (NormalWeaponDamage * 1.1f + _stats.DivineStormDamage)
                 * (1f + .05f * _talents.TheArtOfWar)
                 * (1f + _stats.DivineStormMultiplier);
