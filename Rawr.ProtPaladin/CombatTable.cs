@@ -83,11 +83,12 @@ namespace Rawr.ProtPaladin
         protected override void Calculate()
         {
             float tableSize = 0.0f;
-            float bonusHit = Lookup.BonusHitPercentage(Character, Stats);
+            float bonusHit = Lookup.HitChance(Character, Stats);
             float bonusExpertise = Lookup.BonusExpertisePercentage(Character, Stats);
 
             // Miss
-            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
+            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, 1.0f - bonusHit));
+//            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
             tableSize += Miss;
             // Avoidance
             if (Lookup.IsAvoidable(Ability))
@@ -124,6 +125,40 @@ namespace Rawr.ProtPaladin
         }
 
         public AttackTable(Character character, Stats stats, Ability ability)
+        {
+            Initialize(character, stats, ability);
+        }
+    }
+    public class SpellAttackTable : CombatTable
+    {
+        protected override void Calculate()
+        {
+            float tableSize = 0.0f;
+            float bonusHit = Lookup.SpellHitChance(Character, Stats);
+
+            // Miss
+            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
+            tableSize += Miss;
+            // Hit
+            Hit = Math.Max(0.0f, 1.0f - tableSize);
+//TODO: Clean up and refactor for spells
+//            // Resist
+//            if (Lookup.IsResistable(Ability))
+//            {
+//                Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist)));
+//                tableSize += Resist;
+//            }
+//            // Critical Hit
+//            Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability));
+//            tableSize += Critical;
+        }
+
+        public SpellAttackTable(Character character, Stats stats)
+        {
+            Initialize(character, stats, Ability.None);
+        }
+
+        public SpellAttackTable(Character character, Stats stats, Ability ability)
         {
             Initialize(character, stats, ability);
         }

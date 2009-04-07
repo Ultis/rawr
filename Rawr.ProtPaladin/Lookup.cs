@@ -32,11 +32,18 @@ namespace Rawr.ProtPaladin
 
             switch (avoidanceType)
             {
+
                 case HitResult.Miss:
-                    if ((calcOpts.TargetLevel - character.Level) < 3)
-                        return 0.05f + 0.005f * (calcOpts.TargetLevel - character.Level);
+            
+                    // Assuming 8.20% miss chance against a lvl 83 target.
+                    if ((calcOpts.TargetLevel - character.Level) == 3)
+                        return 8.20f;
+                    if ((calcOpts.TargetLevel - character.Level) == 2)
+                        return 5.40f;
+                    if ((calcOpts.TargetLevel - character.Level) == 1)
+                        return 5.20f;
                     else
-                        return 0.08f;
+                        return 5.00f;
 
                 case HitResult.Dodge:
                     return 0.065f;
@@ -134,17 +141,40 @@ namespace Rawr.ProtPaladin
             return ((stats.HasteRating * ProtPaladin.HasteRatingToHaste) / 100.0f) + stats.PhysicalHaste;
         }
 
-        public static float BonusHitPercentage(Character character, Stats stats)
+        public static float HitChance(Character character, Stats stats)
         {
-            return ((stats.HitRating * ProtPaladin.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
-        }
-        
-        public static float BonusSpellHitPercentage(Character character, Stats stats)
-        {
-            return ((stats.HitRating * ProtPaladin.HitRatingToSpellHit) / 100.0f) + stats.SpellHit;
+            float physicalHit = ((stats.HitRating * ProtPaladin.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
+            
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            
+            // Assuming 8.20% miss chance against a lvl 83 target.
+            if ((calcOpts.TargetLevel - character.Level) == 3)    // 91.80% chance to hit
+                return Math.Min(1.0f, 0.9180f + physicalHit);
+            if ((calcOpts.TargetLevel - character.Level) == 2)    // 94.60% chance to hit
+                return Math.Min(1.0f, 0.9460f + physicalHit);
+            if ((calcOpts.TargetLevel - character.Level) == 1)    // 94.80% chance to hit
+                return Math.Min(1.0f, 0.9480f + physicalHit);
+            else                                                  // 95% chance to hit
+                return Math.Min(1.0f, 0.95f + physicalHit);
         }
 
-        public static float BonusCritPercentage(Character character, Stats stats)
+        public static float SpellHitChance(Character character, Stats stats)
+        {
+            float spellHit = ((stats.HitRating * ProtPaladin.HitRatingToSpellHit) / 100.0f) + stats.SpellHit;
+            
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            
+            if ((calcOpts.TargetLevel - character.Level) == 3)    // 83% chance to hit
+                return Math.Min(1.0f, 0.83f + spellHit);
+            if ((calcOpts.TargetLevel - character.Level) == 2)    // 94% chance to hit
+                return Math.Min(1.0f, 0.94f + spellHit);
+            if ((calcOpts.TargetLevel - character.Level) == 1)    // 95% chance to hit
+                return Math.Min(1.0f, 0.95f + spellHit);
+            else                                                  // 96% chance to hit
+                return Math.Min(1.0f, 0.96f + spellHit);
+        }
+
+        public static float CritChance(Character character, Stats stats)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
 
@@ -158,9 +188,9 @@ namespace Rawr.ProtPaladin
                                     - 4.8f) / 100.0f) + stats.PhysicalCrit);
         }
 
-        public static float BonusSpellCritPercentage(Character character, Stats stats)
+        public static float SpellCritChance(Character character, Stats stats)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            //CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             float spellCrit = Math.Min(1.0f, (((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Intellect * ProtPaladin.IntellectToCrit)) / 100.0f) + stats.SpellCrit);
             
             /*
@@ -179,15 +209,7 @@ namespace Rawr.ProtPaladin
              * In addition, direct damage spells suffer from partial resistance, but again, that has no effect on whether a spell hits or not.
              */
 
-            if ((calcOpts.TargetLevel - character.Level) == 3)	// 83% chance to miss
-            	return spellCrit * Math.Min(1.0f, 0.83f + stats.SpellHit);
-            if ((calcOpts.TargetLevel - character.Level) == 2)	// 94% chance to miss
-            	return spellCrit * Math.Min(1.0f, 0.94f + stats.SpellHit);
-            if ((calcOpts.TargetLevel - character.Level) == 1)	// 95% chance to miss
-            	return spellCrit * Math.Min(1.0f, 0.95f + stats.SpellHit);
-            else 												// 96% chance to miss
-            	return spellCrit * Math.Min(1.0f, 0.96f + stats.SpellHit);
-
+            return spellCrit * SpellHitChance(character, stats); //moved target level dependency to spell hit chance
         }
         
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
@@ -195,26 +217,38 @@ namespace Rawr.ProtPaladin
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
 
             // Grab base melee crit chance before adding ability-specific crit chance
-            float abilityCritChance = BonusCritPercentage(character, stats);
-            float spellCritChance = BonusSpellCritPercentage(character, stats);
+            float abilityCritChance = CritChance(character, stats);
+            float spellCritChance = SpellCritChance(character, stats);
             
             switch (ability)
             {                
                 case Ability.Consecration:
+                case Ability.HolyShield:
                 case Ability.HolyVengeance:
                 case Ability.SealOfRighteousness:
+                case Ability.RetributionAura:
                     abilityCritChance = 0.0f;
                     break;
+                case Ability.None:
                 case Ability.JudgementOfRighteousness:
                 case Ability.SealOfVengeance:
-                case Ability.JudgementOfVengeance:                
-                    abilityCritChance = spellCritChance;
+                case Ability.JudgementOfVengeance:
+                case Ability.AvengersShield:
+                case Ability.HammerOfTheRighteous:
+                case Ability.ShieldOfRighteousness:
+                case Ability.HammerOfWrath:
+                    abilityCritChance *= 1.0f;
                     break;
                 case Ability.Exorcism:
-                    abilityCritChance = (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon" ? 100f : spellCritChance);
+                    if (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon")
+                    {
+                        // 100% chance the spell will crit, if it hits.
+                        abilityCritChance = SpellHitChance(character, stats);
+                    }
+                //case Ability.HandOfReckoning:
+                    abilityCritChance = spellCritChance;
                     break;
             }
-
             return Math.Min(1.0f, abilityCritChance);
         }
 /*        
@@ -337,7 +371,6 @@ namespace Rawr.ProtPaladin
                     modifiedAvoid = 1.0f / (1.0f / 16.0f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Block:
-                    // The 5% base block should be moved into stats.Block as a base value like the others
                     baseAvoid = stats.Block - LevelModifier(character);
                     modifiedAvoid = (stats.BlockRating * ProtPaladin.BlockRatingToBlock) + (defSkill * ProtPaladin.DefenseToBlock);
                     break;

@@ -339,10 +339,10 @@ focus on Survival Points.",
             calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature);
             calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow);
 
-            calculatedStats.Hit = Lookup.BonusHitPercentage(character, stats);
-            calculatedStats.SpellHit = Lookup.BonusSpellHitPercentage(character, stats);
-            calculatedStats.Crit = Lookup.BonusCritPercentage(character, stats);
-            calculatedStats.SpellCrit = Lookup.BonusSpellCritPercentage(character, stats);
+            calculatedStats.Hit = Lookup.HitChance(character, stats);
+            calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats);
+            calculatedStats.Crit = Lookup.CritChance(character, stats);
+            calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats);
             calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);            
             calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
             calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
@@ -802,7 +802,7 @@ focus on Survival Points.",
             // Haste Trinkets
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.WeaponDamage += ((statsTotal.AttackPower / 14f) * Lookup.WeaponSpeed(character, statsTotal) );
+            statsTotal.WeaponDamage += ((statsTotal.AttackPower / 14f));// * Lookup.WeaponSpeed(character, statsTotal) );
             statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 
             return statsTotal;

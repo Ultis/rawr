@@ -23,12 +23,13 @@ namespace Rawr.ProtPaladin
         {
             get { return AttackTable.Critical; }
         }
-
+        public bool IsSpell;
+        
         private void CalculateDamage()
         {
             float baseDamage        = 0.0f;
             float critMultiplier    = 1.0f;
-
+            //bool IsSpell;
             critMultiplier = (2.0f * (1.0f + Stats.BonusCritMultiplier));
 
             switch (Ability)
@@ -41,6 +42,7 @@ namespace Rawr.ProtPaladin
                     baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) * 1.3f + 520f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
+					IsSpell = true;
                     break;
                 case Ability.HammerOfTheRighteous:
                     if (Talents.HammerOfTheRighteous > 0 && Character.MainHand != null)
@@ -48,6 +50,7 @@ namespace Rawr.ProtPaladin
                         baseDamage = (Stats.AttackPower / 14 + (Character.MainHand.MinDamage + Character.MainHand.MaxDamage) / 2 / Character.MainHand.Speed) * 4f;
                         DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
                         ArmorReduction = 0.0f;
+                    IsSpell = true;
                     }
                     break;
 				// Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
@@ -64,9 +67,10 @@ namespace Rawr.ProtPaladin
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Talents.GlyphOfJudgement)
                     {
-                        DamageMultiplier *= (1.0f + 0.01f);
+                        DamageMultiplier *= (1.0f + 0.10f);
                     }                    
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
                     break;
                 case Ability.SealOfRighteousness:
                     baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * Stats.AttackPower) + 
@@ -75,18 +79,20 @@ namespace Rawr.ProtPaladin
                         (1f + Stats.BonusSealOfRighteousnessDamageMultiplier);
                     if (Talents.GlyphOfSealOfRighteousness)
                     {
-                        DamageMultiplier *= (1.0f + 0.1f);
+                        DamageMultiplier *= (1.0f + 0.10f);
                     }
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
 					break;
 				case Ability.JudgementOfRighteousness:
                     baseDamage = (1.0f + 0.2f * Stats.AttackPower + 0.32f * Stats.SpellPower);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Talents.GlyphOfJudgement)
                     {
-                        DamageMultiplier *= (1.0f + 0.01f);
+                        DamageMultiplier *= (1.0f + 0.10f);
                     }
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
 					break;
 				// 5 stacks of Holy Vengeance are assumed
 				// TODO: implement stacking mechanic for beginning-of-fight TPS
@@ -95,6 +101,7 @@ namespace Rawr.ProtPaladin
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
                         (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
                     break;
                 case Ability.HolyShield:
                     if (Talents.HolyShield > 0)
@@ -102,25 +109,36 @@ namespace Rawr.ProtPaladin
                         baseDamage = (211f + (.056f * Stats.AttackPower) + (.09f * Stats.SpellPower)) * 1.3f;
                         DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                         ArmorReduction = 0.0f;
+                    IsSpell = true;
                     }
                     break;
 				// TODO: Split Consecration into X number of individually resistable stacks
 				case Ability.Consecration:
-                    baseDamage = 904f + 0.32f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + 0.32f * Stats.AttackPower;
+                    baseDamage = 113f + 0.04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + 0.04f * Stats.AttackPower;
+                    if (Talents.GlyphOfConsecration)
+                    {
+                        baseDamage *= 10f;
+                    }
+                    else baseDamage *= 8f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
 					break;
 				case Ability.Exorcism:
                     baseDamage = (1028f + 0.15f * Stats.SpellPower + 0.15f * Stats.AttackPower);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1f + Talents.SanctityOfBattle * 0.05f);
-                        if (Talents.GlyphOfExorcism)
-                        DamageMultiplier *= (1.0f + 0.30f);
+                    if (Talents.GlyphOfExorcism)
+                    {
+                        DamageMultiplier *= (1.0f + 0.20f);
+                    }
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
 					break;
 				case Ability.AvengersShield:
-                    baseDamage = 846f + 0.07f * Stats.SpellPower + 0.07f * Stats.AttackPower;
+					baseDamage = (846f + 0.07f * Stats.SpellPower + 0.07f * Stats.AttackPower) * 1.3f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
 					ArmorReduction = 0.0f;
+                    IsSpell = true;
 					break;
             }
 
@@ -129,13 +147,23 @@ namespace Rawr.ProtPaladin
             // Average critical strike bonuses
             baseDamage = (baseDamage * (1.0f - AttackTable.Critical)) + (baseDamage * critMultiplier * AttackTable.Critical);
             // Average glancing blow reduction
-            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
+
             // Average resist reduction
-            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Resist));
+            if (IsSpell)
+            {
+            	baseDamage *= (1.0f - (StatConversion.GetAverageResistance(Character.Level, Options.TargetLevel, 0, Stats.SpellPenetration) * AttackTable.Resist));
+            }
+            //baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Resist));
             // Armor reduction
+            else
+            {
+            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
             baseDamage *= (1.0f - ArmorReduction);
-            // Missed attacks
             baseDamage *= (1.0f - AttackTable.AnyMiss);
+            }
+
+            // Missed attacks
+
 
             Damage = baseDamage;
         }
