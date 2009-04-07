@@ -1316,9 +1316,9 @@ namespace Rawr
             {
                 Name = "Flask of Stoneblood",
                 Group = "Elixirs and Flasks",
-                Stats = { Health = 750 },
+                Stats = { Health = 1300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 320 } } }
+                Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 650 } } }
             });
             defaultBuffs.Add(new Buff()
             {
