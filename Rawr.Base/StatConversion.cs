@@ -98,7 +98,7 @@ namespace Rawr
 
         #endregion
 
-        #region Functions for Player Characters
+        #region Functions for Plain Rating Conversions
 
         public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
         /// <summary>
@@ -302,7 +302,7 @@ namespace Rawr
         }
         #endregion
 
-        #region Functions for NPCs
+        #region Functions for More complex things.
 
         // Found by Rallik, http://elitistjerks.com/f31/t29453-combat_ratings_level_80_a/p16/#post1170842
         /// <summary>
@@ -326,7 +326,28 @@ namespace Rawr
             return 1f - DamageTaken;
         }
 
-        private static float AttackerPenalty(int LevelDelta)
+
+        /// <summary>
+        /// Returns the chance to miss (0.09 = 9% chance to miss)
+        /// </summary>
+        /// <param name="LevelDelta">Attacker Level - Defender Level</param>
+        /// <param name="bPvP">Set to True if Player vs Player combat</param>
+        /// <returns>The chance to miss (0.09 = 9% chance to miss)</returns>
+        public static float GetSpellMiss(int LevelDelta, bool bPvP)
+        {
+            if (LevelDelta <= -3)
+            {// No guarantee that 75% miss is the cap!!!
+                if (bPvP)
+                    return (float)Math.Min(0.75f, 0.13f - (LevelDelta + 3) * 0.07f);
+                else
+                    return (float)Math.Min(0.75f, 0.17f - (LevelDelta + 3) * 0.09f);
+            }
+            if (LevelDelta >= 4)
+                return 0.0f;
+            return 0.04f - (LevelDelta * 0.01f);
+        }
+
+        private static float AttackerResistancePenalty(int LevelDelta)
         {
             if (LevelDelta == 1)
                 return 0f;
@@ -349,12 +370,12 @@ namespace Rawr
             float TargetResistance, float AttackerSpellPenetration)
         {
             float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
-            return ActualResistance / (AttackerLevel * 5f + AttackerPenalty(AttackerLevel - TargetLevel) + ActualResistance) + 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel);
+            return ActualResistance / (AttackerLevel * 5f + AttackerResistancePenalty(AttackerLevel - TargetLevel) + ActualResistance) + 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel);
         }
 
         /// <summary>
         /// Returns a Table giving the chance to fall within a resistance slice cutoff.
-        /// The table is float[11] Table, where Table[0] is 0% resisted, and Table[1] is 100% resisted.
+        /// The table is float[11] Table, where Table[0] is 0% resisted, and Table[10] is 100% resisted.
         /// Each Table entry gives how much chance to roll into that slice.
         /// So if Table[1] contains 0.165, that means you have a 16.5% chance to resist 10% damage.
         /// </summary>
@@ -402,6 +423,58 @@ namespace Rawr
                 if (ResistTable[x] > 0f)
                     return 0.1f * x;
             return 0f;
+        }
+
+        public class CombatTable
+        {
+            public float Miss;
+            public float Dodge;
+            public float Parry;
+            public float Glancing;
+            public float Block;
+            public float Crit;
+            //public float Crush;
+            public float Hit;
+
+            public bool bPlayerTarget;
+            public bool bBehind;
+
+            public float Evasion()
+            {
+                return Miss + (bBehind ? (bPlayerTarget ? 0f : Dodge) : (Dodge + Parry));
+            }
+
+            public CombatTable()
+            {
+                Miss = Dodge = Parry = Glancing = Block = Crit = Hit = 0f;
+                bPlayerTarget = bBehind = false;
+            }
+        }
+
+        // http://elitistjerks.com/f31/t37032-faq_working_theories_raiding_level_80_a/
+
+        public static CombatTable GetCombatTablePlayer_vs_NPC(int AttackerLevel, int TargetLevel,
+            bool bDualWield, float HitBonus, float ExpertiseBonus, float CritChance)
+        {
+            CombatTable ct = new CombatTable();
+
+            int DeltaLevel = AttackerLevel - TargetLevel;
+            if (DeltaLevel == -3)
+            {   // +3 or Skull (Boss)
+                ct.Miss = bDualWield ? 0.27f : 0.08f;
+                ct.Dodge = 0.065f;
+                ct.Parry = 0.14f;
+                ct.Crit = -0.036f;
+            }
+            else if (DeltaLevel == -2)
+                ct.Miss = 0.054f;
+            else if (DeltaLevel == -1)
+                ct.Miss = 0.052f;
+            else if (DeltaLevel == 0)
+                ct.Miss = 0.05f;
+
+
+            return ct;
         }
 
         #endregion
