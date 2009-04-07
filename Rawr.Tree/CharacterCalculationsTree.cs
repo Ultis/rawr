@@ -71,7 +71,11 @@ namespace Rawr.Tree
             doHasteCalcs();
 
             dictValues.Add("Spell Haste", Math.Round((spellhaste * haste - 1.0f) * 100.0f, 2) + "%*" + Math.Round((spellhaste - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((haste - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
-            dictValues.Add("Global CD", Math.Round(1.5f / (haste * spellhaste), 2) + "sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap\n" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until soft (GotEM) gcd cap");
+            // Use Nourish cast time to equal normal GCD
+            Spell spell = new Nourish(this, BasicStats);
+            dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap");
+            spell = new Lifebloom(this, BasicStats);
+            dictValues.Add("Lifebloom Global CD", Math.Round(spell.CastTime, 2) + " sec*" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until Lifebloom (GotEM) gcd cap");
 
             dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString() + "* " + Math.Round(Simulation.UnusedMana, 0).ToString() + " mana remaining at end of fight");
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
@@ -86,7 +90,7 @@ namespace Rawr.Tree
             dictValues.Add("Casts per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());
             dictValues.Add("Crits per minute until OOM", Math.Round(Simulation.CritsPerMinute, 2).ToString());
 
-            Spell spell = new Regrowth(this, BasicStats, true);
+             spell = new Regrowth(this, BasicStats, true);
             dictValues.Add("RG Heal", Math.Round(spell.AverageHealing, 2) + "*" + 
                 "Base: " + Math.Round(spell.BaseMinHeal, 2) + " - " + Math.Round(spell.BaseMaxHeal, 2) + "\n" +
                 Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + 
@@ -153,8 +157,10 @@ namespace Rawr.Tree
                 case "Spell Haste Percentage": return (spellhaste -1.0f) * 100.0f;
                 case "Haste Percentage": return (haste - 1.0f) * 100.0f;
                 case "Combined Haste Percentage": return (spellhaste * haste - 1.0f) * 100.0f;
-                case "Haste until Soft Cap": return haste_until_soft_cap;
+                case "Haste until Lifebloom Cap": return haste_until_soft_cap;
                 case "Haste until Hard Cap": return haste_until_hard_cap;
+                case "GCD (milliseconds)": return (new Nourish(this, BasicStats)).gcd * 1000.0f;  // Use Nourish gcd to equal normal GCD
+                case "Lifebloom GCD (milliseconds)": return (new Lifebloom(this, BasicStats)).CastTime * 1000.0f;
             }
             return 0f;
         }

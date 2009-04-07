@@ -164,6 +164,7 @@ namespace Rawr.Tree
                         "Basic Stats:Spell Crit",
                         "Basic Stats:Spell Haste",
                         "Basic Stats:Global CD",
+                        "Basic Stats:Lifebloom Global CD",
 
                         "Simulation:Time until OOM",
                         "Simulation:Total healing done",
@@ -240,10 +241,12 @@ namespace Rawr.Tree
                     _optimizableCalculationLabels = new string[] {
 					"Mana",
 					"MP5",
+                    "GCD (milliseconds)",
+                    "Lifebloom GCD (milliseconds)",
 					"Spell Haste Percentage",
                     "Haste Percentage",
                     "Combined Haste Percentage",
-                    "Haste until Soft Cap",
+                    "Haste until Lifebloom Cap",
                     "Haste until Hard Cap",
 					};
                 return _optimizableCalculationLabels;
@@ -996,6 +999,15 @@ namespace Rawr.Tree
                 return false;
 
             return (stats.SpellCombatManaRegeneration + stats.Intellect > 0);
+        }
+
+        /* Wildebees 20090407 : Overload base function to disable all enchants on OffHand for tree druids */
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            if (slot == Item.ItemSlot.OffHand) 
+                return false;
+
+            return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
