@@ -156,6 +156,7 @@ namespace Rawr
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
 			foreach (Control ctrl in groupBoxRequirements.Controls)
 			{
+				ctrl.Enabled = false;
 				if (ctrl is Panel) 
 				{
                     OptimizationRequirement requirement = new OptimizationRequirement();
@@ -191,9 +192,13 @@ namespace Rawr
                 }
             }
 
-            buttonOptimize.Text = "Optimizing...";
+			buttonOptimize.Text = "Optimizing...";
+			buttonCancel.Text = "Cancel";
             buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-                trackBarThoroughness.Enabled = false;
+                trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+				checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = 
+				comboBoxCalculationToOptimize.Enabled = false;
+
             buttonCancel.DialogResult = DialogResult.None;
 
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
@@ -231,8 +236,13 @@ namespace Rawr
 			{
 				labelMax.Text = string.Empty;
 				buttonOptimize.Text = "Optimize";
-                buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-				 trackBarThoroughness.Enabled = true;
+				buttonCancel.Text = "Close";
+				buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+					trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+					checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+					comboBoxCalculationToOptimize.Enabled = true;
+				foreach (Control ctrl in groupBoxRequirements.Controls)
+					ctrl.Enabled = true;
 				progressBarAlt.Value = progressBarMain.Value = 0;
 			}
 			else
@@ -243,8 +253,13 @@ namespace Rawr
 				{
 					labelMax.Text = string.Empty;
 					buttonOptimize.Text = "Optimize";
-                    buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-					 trackBarThoroughness.Enabled = true;
+					buttonCancel.Text = "Close";
+					buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+						trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+						checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+						comboBoxCalculationToOptimize.Enabled = true;
+					foreach (Control ctrl in groupBoxRequirements.Controls)
+						ctrl.Enabled = true;
 					progressBarAlt.Value = progressBarMain.Value = 0;
 					MessageBox.Show(this,"Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results");
 				}
@@ -276,8 +291,13 @@ namespace Rawr
 				{
 					labelMax.Text = string.Empty;
 					buttonOptimize.Text = "Optimize";
-                    buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-					 trackBarThoroughness.Enabled = true;
+					buttonCancel.Text = "Close";
+					buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+						trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+						checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+						comboBoxCalculationToOptimize.Enabled = true;
+					foreach (Control ctrl in groupBoxRequirements.Controls)
+						ctrl.Enabled = true;
 					progressBarAlt.Value = progressBarMain.Value = 0;
 				}
 			}
@@ -300,9 +320,14 @@ namespace Rawr
             if (e.Cancelled)
             {
                 labelMax.Text = string.Empty;
-                buttonUpgrades.Text = "Build Upgrade List";
-                buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-                 trackBarThoroughness.Enabled = true;
+				buttonUpgrades.Text = "Build Upgrade List";
+				buttonCancel.Text = "Close";
+				buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+					trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+					checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+					comboBoxCalculationToOptimize.Enabled = true;
+				foreach (Control ctrl in groupBoxRequirements.Controls)
+					ctrl.Enabled = true;
                 progressBarAlt.Value = progressBarMain.Value = 0;
             }
             else
@@ -419,6 +444,7 @@ namespace Rawr
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
             foreach (Control ctrl in groupBoxRequirements.Controls)
             {
+				ctrl.Enabled = false;
                 if (ctrl is Panel)
                 {
                     OptimizationRequirement requirement = new OptimizationRequirement();
@@ -462,9 +488,12 @@ namespace Rawr
                 }
             }
 
-            buttonUpgrades.Text = "Calculating...";
-            buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-                trackBarThoroughness.Enabled = false;
+			buttonUpgrades.Text = "Calculating...";
+			buttonCancel.Text = "Cancel";
+			buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+				trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+				checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+				comboBoxCalculationToOptimize.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
@@ -508,5 +537,20 @@ namespace Rawr
             }
             _character.OptimizationRequirements = requirements;
         }
+
+		private void progressBarMain_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void progressBarAlt_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void FormOptimize_Load(object sender, EventArgs e)
+		{
+
+		}
 	}
 }
