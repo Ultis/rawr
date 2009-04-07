@@ -741,14 +741,8 @@ namespace Rawr.Moonkin
         // Results data from the calculations, which will be sent to the UI.
         Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
 
-        public void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
+        private float GetSpellHit(CharacterCalculationsMoonkin calcs)
         {
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            procEffects = new List<ProcEffect>();
-            RecreateSpells(character, ref calcs);
-            cachedResults = new Dictionary<string, RotationData>();
-
-            float trinketDPS = 0.0f;
             float baseHit = 1.0f;
             switch (calcs.TargetLevel)
             {
@@ -769,10 +763,22 @@ namespace Rawr.Moonkin
                     break;
             }
             baseHit = (float)Math.Min(1.0f, baseHit + calcs.SpellHit);
+            return baseHit;
+        }
+
+        public void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
+        {
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            procEffects = new List<ProcEffect>();
+            RecreateSpells(character, ref calcs);
+            cachedResults = new Dictionary<string, RotationData>();
+
+            float trinketDPS = 0.0f;
             float baseSpellPower = calcs.SpellPower;
+            float baseHit = GetSpellHit(calcs);
             float baseCrit = calcs.SpellCrit;
             float baseHaste = calcs.SpellHaste;
-            DoOnUseTrinketCalcs(calcs, baseHit, ref baseSpellPower, ref baseCrit, ref baseHaste, ref trinketDPS);
+            //DoOnUseTrinketCalcs(calcs, baseHit, ref baseSpellPower, ref baseCrit, ref baseHaste, ref trinketDPS);
             BuildProcList(calcs);
 
             float maxDamageDone = 0.0f;
@@ -924,7 +930,7 @@ namespace Rawr.Moonkin
         private void BuildProcList(CharacterCalculationsMoonkin calcs)
         {
             // Sundial of the Exiled, et al. (Spell power 10 sec on hit, 10% chance, 45s cooldown)
-            if (calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 > 0)
+            /*if (calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 > 0)
             {
                 procEffects.Add(new ProcEffect()
                 {
@@ -1004,6 +1010,50 @@ namespace Rawr.Moonkin
                         return 10.0f / (10.0f + timeToProc);
                     }
                 });
+            }*/
+            // New trinket code
+            foreach (SpecialEffect effect in calcs.BasicStats.SpecialEffects())
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp += effect.Stats.SpellPower;
+                        sc += StatConversion.GetSpellCritFromRating(effect.Stats.CritRating);
+                        sHa += StatConversion.GetSpellHasteFromRating(effect.Stats.HasteRating);
+                    },
+                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp -= effect.Stats.SpellPower;
+                        sc -= StatConversion.GetSpellCritFromRating(effect.Stats.CritRating);
+                        sHa -= StatConversion.GetSpellHasteFromRating(effect.Stats.HasteRating);
+                    },
+                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                    {
+                        float upTime = 0.0f;
+                        switch (effect.Trigger)
+                        {
+                            case Trigger.Use:
+                                upTime = effect.GetAverageUptime(0f, 1f);
+                                break;
+                            case Trigger.SpellHit:
+                            case Trigger.DamageSpellHit:
+                                upTime = effect.GetAverageUptime(r.Duration / r.CastCount, GetSpellHit(c));
+                                break;
+                            case Trigger.DamageSpellCrit:
+                            case Trigger.SpellCrit:
+                                upTime = effect.GetAverageUptime(r.Duration / r.CastCount, c.SpellCrit);
+                                break;
+                            case Trigger.SpellCast:
+                            case Trigger.DamageSpellCast:
+                                upTime = effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
+                                break;
+                            default:
+                                throw new ArgumentException("Invalid trigger found while calculating trinket uptime");
+                        }
+                        return upTime;
+                    }
+                });
             }
             // Thunder Capacitor (2.5s cooldown after a proc, 5(!) charges/proc)
             if (calcs.BasicStats.ThunderCapacitorProc > 0)
@@ -1023,7 +1073,7 @@ namespace Rawr.Moonkin
                 });
             }
             // Lightweave Embroidery (1100 Holy damage, 50% chance on cast, 45s internal cooldown)
-            if (calcs.BasicStats.LightweaveEmbroideryProc > 0)
+            /*if (calcs.BasicStats.LightweaveEmbroideryProc > 0)
             {
                 procEffects.Add(new ProcEffect()
                 {
@@ -1036,7 +1086,7 @@ namespace Rawr.Moonkin
                         return averageDamage / timeBetweenProcs;
                     }
                 });
-            }
+            }*/
             // Pendulum of Telluric Currents (15% chance on spell hit, 45s internal cooldown)
             if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
             {
@@ -1242,7 +1292,7 @@ namespace Rawr.Moonkin
 		}
 
         // Clicky trinket calculations
-        private void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float spellPower, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
+/*        private void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float spellPower, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
         {
             // Shatterered Sun Pendant (45s internal CD)
             if (calcs.BasicStats.ShatteredSunAcumenProc > 0)
@@ -1278,7 +1328,7 @@ namespace Rawr.Moonkin
             {
                 spellPower += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
             }
-        }
+        }*/
 
         // Redo the spell calculations
         private void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)

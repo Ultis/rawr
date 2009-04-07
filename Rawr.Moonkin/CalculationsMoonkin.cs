@@ -943,7 +943,7 @@ namespace Rawr.Moonkin
             // 4) Proc is spell power OR
             // 5) Proc is spell crit OR
             // 6) Proc is spell haste
-            foreach (SpecialEffect effect in stats.SpecialEffects)
+            foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.DamageSpellCast ||
@@ -974,7 +974,7 @@ namespace Rawr.Moonkin
             // 4) Proc is spell power OR
             // 5) Proc is spell crit OR
             // 6) Proc is spell haste
-            foreach (SpecialEffect effect in stats.SpecialEffects)
+            foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.DamageSpellCast ||
