@@ -306,7 +306,7 @@ namespace Rawr
                 }
                 else
                 {
-                    stats.HasteRatingOnPhysicalAttack += rating;
+                    stats.HasteRatingOnPhysicalAttack += rating * 10 / 45;
                 }
 			}
 			else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your armor penetration rating by "))
