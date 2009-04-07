@@ -1042,7 +1042,7 @@ namespace Rawr.Moonkin
                                 break;
                             case Trigger.DamageSpellCrit:
                             case Trigger.SpellCrit:
-                                upTime = effect.GetAverageUptime(r.Duration / r.CastCount, c.SpellCrit);
+                                upTime = effect.GetAverageUptime(r.Duration / (r.CastCount - (r.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit);
                                 break;
                             case Trigger.SpellCast:
                             case Trigger.DamageSpellCast:
@@ -1126,7 +1126,7 @@ namespace Rawr.Moonkin
                     CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                     {
                         float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float baseDamage = (744 + 956) / 2.0f;
+                        float baseDamage = (1750f + 2250f) / 2.0f;
                         float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
                         float timeBetweenProcs = r.Duration / ((r.CastCount + r.DotTicks) * 0.35f) + 45.0f;
                         return averageDamage / timeBetweenProcs;
