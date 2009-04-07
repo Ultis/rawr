@@ -32,7 +32,6 @@
             this.cmbMobType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.cmbLevel = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblWait = new System.Windows.Forms.Label();
             this.nudWait = new System.Windows.Forms.NumericUpDown();
@@ -68,6 +67,9 @@
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.lblTime20 = new System.Windows.Forms.Label();
             this.labelsTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmbSeal = new System.Windows.Forms.ComboBox();
+            this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
@@ -84,6 +86,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMobType
@@ -93,7 +96,8 @@
             this.cmbMobType.Items.AddRange(new object[] {
             "Undead",
             "Demon",
-            "Humanoid, Elemental",
+            "Humanoid",
+            "Elemental",
             "Other"});
             this.cmbMobType.Location = new System.Drawing.Point(156, 19);
             this.cmbMobType.Name = "cmbMobType";
@@ -113,26 +117,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(153, 43);
+            this.label2.Location = new System.Drawing.Point(153, 88);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Target Level:";
-            // 
-            // cmbLevel
-            // 
-            this.cmbLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLevel.FormattingEnabled = true;
-            this.cmbLevel.Items.AddRange(new object[] {
-            "80",
-            "81",
-            "82",
-            "83"});
-            this.cmbLevel.Location = new System.Drawing.Point(157, 59);
-            this.cmbLevel.Name = "cmbLevel";
-            this.cmbLevel.Size = new System.Drawing.Size(46, 21);
-            this.cmbLevel.TabIndex = 5;
-            this.cmbLevel.SelectedIndexChanged += new System.EventHandler(this.cmbLevel_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -746,18 +735,67 @@
             this.lblTime20.TabIndex = 30;
             this.lblTime20.Text = "100%";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(153, 43);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(31, 13);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Seal:";
+            // 
+            // cmbSeal
+            // 
+            this.cmbSeal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSeal.FormattingEnabled = true;
+            this.cmbSeal.Items.AddRange(new object[] {
+            "Blood",
+            "Command",
+            "Righteousness",
+            "None"});
+            this.cmbSeal.Location = new System.Drawing.Point(156, 59);
+            this.cmbSeal.Name = "cmbSeal";
+            this.cmbSeal.Size = new System.Drawing.Size(114, 21);
+            this.cmbSeal.TabIndex = 31;
+            this.cmbSeal.SelectedIndexChanged += new System.EventHandler(this.cmbSeal_SelectedIndexChanged);
+            // 
+            // nudTargetLevel
+            // 
+            this.nudTargetLevel.Location = new System.Drawing.Point(229, 86);
+            this.nudTargetLevel.Maximum = new decimal(new int[] {
+            83,
+            0,
+            0,
+            0});
+            this.nudTargetLevel.Minimum = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            this.nudTargetLevel.Name = "nudTargetLevel";
+            this.nudTargetLevel.Size = new System.Drawing.Size(42, 20);
+            this.nudTargetLevel.TabIndex = 33;
+            this.nudTargetLevel.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            this.nudTargetLevel.ValueChanged += new System.EventHandler(this.nudTargetLevel_ValueChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.nudTargetLevel);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cmbSeal);
             this.Controls.Add(this.lblTime20);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.trkTime20);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.cmbLength);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.cmbLevel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbMobType);
@@ -780,6 +818,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -790,7 +829,6 @@
         private System.Windows.Forms.ComboBox cmbMobType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cmbLevel;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TrackBar trkTime20;
@@ -826,6 +864,9 @@
         private System.Windows.Forms.Label lblWait;
         private System.Windows.Forms.NumericUpDown nudWait;
         private System.Windows.Forms.ToolTip labelsTooltip;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmbSeal;
+        private System.Windows.Forms.NumericUpDown nudTargetLevel;
 
     }
 }

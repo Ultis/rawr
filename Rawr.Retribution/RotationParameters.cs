@@ -29,9 +29,7 @@ namespace Rawr.Retribution
                 return ret;
             }
 
-        }
-
-        public enum Ability { Judgement=0, CrusaderStrike, DivineStorm, Consecration, HammerOfWrath, Exorcism };
+        }       
 
         public readonly bool T7_4pc;
         public readonly bool GlyphConsecrate;

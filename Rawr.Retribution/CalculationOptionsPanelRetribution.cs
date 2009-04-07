@@ -27,8 +27,8 @@ namespace Rawr.Retribution
 
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 
-            cmbMobType.SelectedIndex = calcOpts.MobType;
-            cmbLevel.SelectedIndex = calcOpts.TargetLevel - 80;
+            cmbMobType.SelectedIndex = (int)calcOpts.Mob;
+            cmbSeal.SelectedIndex = (int)calcOpts.Seal;
             cmbLength.Value = (decimal)calcOpts.FightLength;
 
             trkTime20.Value = (int)(calcOpts.TimeUnder20 * 100);
@@ -36,6 +36,7 @@ namespace Rawr.Retribution
 
             nudDelay.Value = (decimal)calcOpts.Delay;
             nudWait.Value = (decimal)calcOpts.Wait;
+            nudTargetLevel.Value = (decimal)calcOpts.TargetLevel;
 
             nudJudge.Value = (decimal)calcOpts.JudgeCD;
             nudCS.Value = (decimal)calcOpts.CSCD;
@@ -63,17 +64,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.MobType = cmbMobType.SelectedIndex;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void cmbLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.TargetLevel = cmbLevel.SelectedIndex + 80;
+                calcOpts.Mob = (MobType)Enum.Parse(typeof(MobType), cmbMobType.Text);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -122,7 +113,7 @@ namespace Rawr.Retribution
                 int sel = listUnlimitedPriority.SelectedIndex;
                 if (sel > 0 && sel <= 5)
                 {
-                    RotationParameters.Ability temp1 = calcOpts.Order[sel - 1];
+                    Ability temp1 = calcOpts.Order[sel - 1];
                     calcOpts.Order[sel - 1] = calcOpts.Order[sel];
                     calcOpts.Order[sel] = temp1;
 
@@ -145,7 +136,7 @@ namespace Rawr.Retribution
                 int sel = listUnlimitedPriority.SelectedIndex;
                 if (sel >= 0 && sel < 5)
                 {
-                    RotationParameters.Ability temp1 = calcOpts.Order[sel + 1];
+                    Ability temp1 = calcOpts.Order[sel + 1];
                     calcOpts.Order[sel + 1] = calcOpts.Order[sel];
                     calcOpts.Order[sel] = temp1;
 
@@ -386,6 +377,26 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudTargetLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.TargetLevel = (int)nudTargetLevel.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cmbSeal_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.Seal = (Seal)Enum.Parse(typeof(Seal), cmbSeal.Text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -402,7 +413,8 @@ namespace Rawr.Retribution
 		}
 
 		public int TargetLevel = 83;
-        public int MobType = 2;
+        public MobType Mob = MobType.Humanoid;
+        public Seal Seal = Seal.Blood;
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
         public float Delay = .05f;
@@ -410,9 +422,9 @@ namespace Rawr.Retribution
 
         public bool SimulateRotation = true;
 
-        private RotationParameters.Ability[] _order = { RotationParameters.Ability.CrusaderStrike, RotationParameters.Ability.HammerOfWrath, RotationParameters.Ability.Judgement,
-                                                   RotationParameters.Ability.DivineStorm, RotationParameters.Ability.Consecration, RotationParameters.Ability.Exorcism };
-        public RotationParameters.Ability[] Order {
+        private Ability[] _order = { Ability.CrusaderStrike, Ability.HammerOfWrath, Ability.Judgement,
+                                                   Ability.DivineStorm, Ability.Consecration, Ability.Exorcism };
+        public Ability[] Order {
             get { _cache = null; return _order; }
             set { _cache = null; _order = value; }
         }
@@ -424,10 +436,10 @@ namespace Rawr.Retribution
             set { _cache = null; _selected = value; }
         }
 
-        private RotationParameters.Ability[] _cache = null;
+        private Ability[] _cache = null;
 
         [XmlIgnore]        
-        public RotationParameters.Ability[] Priorities
+        public Ability[] Priorities
         {
             get
             {
@@ -435,7 +447,7 @@ namespace Rawr.Retribution
                 {
                     int count = 0;
                     foreach (bool b in _selected) { if (b) count++; }
-                    _cache = new RotationParameters.Ability[count];
+                    _cache = new Ability[count];
 
                     int sel = 0;
                     for (int i = 0; i < _order.Length; i++)
@@ -469,7 +481,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
 
             clone.TargetLevel = TargetLevel;
-            clone.MobType = MobType;
+            clone.Mob = Mob;
             clone.FightLength = FightLength;
             clone.TimeUnder20 = TimeUnder20;
             clone.Delay = Delay;
@@ -488,7 +500,7 @@ namespace Rawr.Retribution
             clone.ExoCD20 = ExoCD20;
             clone.HoWCD20 = HoWCD20;
 
-            clone._order = (RotationParameters.Ability[])_order.Clone();
+            clone._order = (Ability[])_order.Clone();
             clone._selected = (bool[])_selected.Clone();
 
             return clone;

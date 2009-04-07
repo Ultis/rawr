@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.Retribution
 {
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", Character.CharacterClass.Paladin)]
-	class CalculationsRetribution : CalculationsBase
+    class CalculationsRetribution : CalculationsBase
     {
 
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -14,48 +14,89 @@ namespace Rawr.Retribution
             {
                 ////Relevant Gem IDs
 
+                //hit
+                int[] rigid = { 39915, 40014, 40125, 42156 };  // +hit
+
                 //red
                 int[] bold = { 39900, 39996, 40111, 42142 };  // +str
 
                 //Orange
-                int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
+                //int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
                 int[] etched = { 39948, 40038, 40143 };  // +str,+hit
 
                 //Purple
                 int[] sovereign = { 39934, 40022, 40129 }; // +str,+stam
 
+                //Green
+                int[] vivid = { 39975, 40088, 40166 }; // +hit,+stam
+
                 //Meta
                 int relentless = 41398;
                 int chaotic = 41285;
 
-                return new List<GemmingTemplate>()
-				{
-					new GemmingTemplate() { Model = "Retribution", Group = "Uncommon",
-						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Retribution", Group = "Uncommon",
-						RedId = bold[0], YellowId = inscribed[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Retribution", Group = "Uncommon",
-						RedId = bold[0], YellowId = etched[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
+                List<GemmingTemplate> retval = new List<GemmingTemplate>();
 
-					new GemmingTemplate() { Model = "Retribution", Group = "Rare", Enabled = true,
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Retribution", Group = "Rare", Enabled = true,
-						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Retribution", Group = "Rare", Enabled = true,
-						RedId = bold[1], YellowId = etched[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
-						
-					new GemmingTemplate() { Model = "Retribution", Group = "Epic",
-						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Retribution", Group = "Epic",
-						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Retribution", Group = "Epic",
-						RedId = bold[2], YellowId = etched[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
-						
-					new GemmingTemplate() { Model = "Retribution", Group = "Jeweler",
-						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
-					new GemmingTemplate() { Model = "Retribution", Group = "Jeweler",
-						RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },
-				};
+                string[] groupName = { "Uncommon", "Rare", "Epic" };
+                for (int i = 0; i < 3; i++)
+                {
+                    retval.Add(new GemmingTemplate()
+                    {
+                        Model = "Retribution",
+                        Group = groupName[i],
+                        RedId = bold[i],
+                        YellowId = bold[i],
+                        BlueId = bold[i],
+                        PrismaticId = bold[i],
+                        MetaId = relentless,
+                        Enabled = i == 1
+                    });
+                    retval.Add(new GemmingTemplate()
+                    {
+                        Model = "Retribution",
+                        Group = groupName[i],
+                        RedId = etched[i],
+                        YellowId = rigid[i],
+                        BlueId = vivid[i],
+                        PrismaticId = rigid[i],
+                        MetaId = relentless,
+                        Enabled = i == 1
+                    });
+                    retval.Add(new GemmingTemplate()
+                    {
+                        Model = "Retribution",
+                        Group = groupName[i],
+                        RedId = bold[i],
+                        YellowId = etched[i],
+                        BlueId = sovereign[i],
+                        PrismaticId = bold[i],
+                        MetaId = relentless,
+                        Enabled = i == 1
+                    });
+                }
+
+                retval.Add(new GemmingTemplate()
+                {
+                    Model = "Retribution",
+                    Group = "Jeweler",
+                    RedId = bold[1],
+                    YellowId = bold[3],
+                    BlueId = bold[3],
+                    PrismaticId = bold[1],
+                    MetaId = chaotic
+                });
+                retval.Add(new GemmingTemplate()
+                {
+                    Model = "Retribution",
+                    Group = "Jeweler",
+                    RedId = bold[3],
+                    YellowId = bold[3],
+                    BlueId = bold[3],
+                    PrismaticId = bold[3],
+                    MetaId = chaotic
+                });
+
+
+                return retval;
             }
         }
 
@@ -104,6 +145,8 @@ namespace Rawr.Retribution
                 _relevantGlyphs.Add("Glyph of Sense Undead");
                 _relevantGlyphs.Add("Glyph of Consecration");
                 _relevantGlyphs.Add("Glyph of Seal of Blood");
+                _relevantGlyphs.Add("Glyph of Seal of Command");
+                _relevantGlyphs.Add("Glyph of Seal of Righteousness");
                 _relevantGlyphs.Add("Glyph of Crusader Strike");
                 _relevantGlyphs.Add("Glyph of Hammer of Wrath");
                 _relevantGlyphs.Add("Glyph of Avenging Wrath");
@@ -161,25 +204,25 @@ namespace Rawr.Retribution
                     List<string> labels = new List<string>(new string[]
                     {
                         "Basic Stats:Health",
-					    "Basic Stats:Strength",
-					    "Basic Stats:Agility",
-					    "Basic Stats:Attack Power",
-					    "Basic Stats:Crit Chance",
-					    "Basic Stats:Miss Chance",
-					    "Basic Stats:Dodge Chance",
-					    "Basic Stats:Melee Haste",
-					    "Basic Stats:Weapon Damage",
-					    "Basic Stats:Attack Speed",
+                        "Basic Stats:Strength",
+                        "Basic Stats:Agility",
+                        "Basic Stats:Attack Power",
+                        "Basic Stats:Crit Chance",
+                        "Basic Stats:Miss Chance",
+                        "Basic Stats:Dodge Chance",
+                        "Basic Stats:Melee Haste",
+                        "Basic Stats:Weapon Damage",
+                        "Basic Stats:Attack Speed",
                         "DPS Breakdown:Total DPS",
                         "DPS Breakdown:White",
                         "DPS Breakdown:Seal",
-					    "DPS Breakdown:Crusader Strike",
+                        "DPS Breakdown:Crusader Strike",
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Hammer of Wrath",
-					    "Rotation Info:Crusader Strike CD",
+                        "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
                         "Rotation Info:Consecration CD",
                         "Rotation Info:Exorcism CD",
@@ -199,7 +242,7 @@ namespace Rawr.Retribution
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] { };
+                    _customChartNames = new string[] { "Seals" };
                 }
                 return _customChartNames;
             }
@@ -218,22 +261,22 @@ namespace Rawr.Retribution
             get
             {
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
-					{
-						Item.ItemType.None,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-                        Item.ItemType.Plate,
-                        Item.ItemType.Libram,
-                        Item.ItemType.Polearm,
-                        Item.ItemType.TwoHandAxe,
-                        Item.ItemType.TwoHandMace,
-                        Item.ItemType.TwoHandSword
-					}));
+                {
+                    Item.ItemType.None,
+                    Item.ItemType.Leather,
+                    Item.ItemType.Mail,
+                    Item.ItemType.Plate,
+                    Item.ItemType.Libram,
+                    Item.ItemType.Polearm,
+                    Item.ItemType.TwoHandAxe,
+                    Item.ItemType.TwoHandMace,
+                    Item.ItemType.TwoHandSword
+                }));
             }
         }
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
-		public override ComparisonCalculationBase CreateNewComparisonCalculation()
+        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationRetribution();
         }
@@ -244,14 +287,14 @@ namespace Rawr.Retribution
         }
 
 
-		public override ICalculationOptionBase DeserializeDataObject(string xml)
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRetribution));
-			System.IO.StringReader reader = new System.IO.StringReader(xml);
-			CalculationOptionsRetribution calcOpts = serializer.Deserialize(reader) as CalculationOptionsRetribution;
-			return calcOpts;
-		}
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+            new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRetribution));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsRetribution calcOpts = serializer.Deserialize(reader) as CalculationOptionsRetribution;
+            return calcOpts;
+        }
 
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
@@ -275,25 +318,24 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            Ability.SetValues(character, stats);
-
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             calc.BasicStats = stats;
-            calc.AttackSpeed = Ability.AttackSpeed;
-            calc.WeaponDamage = Ability.WeaponDamage;
-            calc.ToMiss = Ability.GetMissChance(stats.PhysicalHit, calcOpts.TargetLevel);
-            calc.ToDodge = Ability.GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
-            calc.ToResist = Ability.GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
+            CombatStats combats = new CombatStats(character, stats);
+
+            calc.AttackSpeed = combats.AttackSpeed;
+            calc.WeaponDamage = combats.WeaponDamage;
+            calc.ToMiss = CombatStats.GetMissChance(stats.PhysicalHit, calcOpts.TargetLevel);
+            calc.ToDodge = CombatStats.GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
+            calc.ToResist = CombatStats.GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
 
             Rotation rot;
             if (calcOpts.SimulateRotation)
             {
-                rot = new Simulator(new RotationParameters(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay,
-                    stats.JudgementCDReduction > 0 ? true : false, talents.GlyphOfConsecration));
+                rot = new Simulator(combats);
             }
             else
             {
-                rot = new EffectiveCooldown(calcOpts);
+                rot = new EffectiveCooldown(combats);
             }
 
             rot.SetDPS(calc);
@@ -355,11 +397,22 @@ namespace Rawr.Retribution
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
             Rotation rot;
-            float libramAP, libramCrit;
+            float libramAP = 0, libramCrit = 0;
+
+            float berserkingAP = stats.BerserkingProc * 140f;
+
+            float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
+
+            stats.Strength += greatnessStr;
+            stats.AttackPower += berserkingAP + libramAP;
+            stats.CritRating += libramCrit;
+
+            ConvertRatings(stats, talents, calcOpts.TargetLevel);
+
+            CombatStats combats = new CombatStats(character, stats);
             if (calcOpts.SimulateRotation)
             {
-                rot = new Simulator(new RotationParameters(calcOpts.Priorities, calcOpts.TimeUnder20, calcOpts.Wait, calcOpts.Delay,
-                    stats.JudgementCDReduction > 0 ? true : false, talents.GlyphOfConsecration));
+                rot = new Simulator(combats);
                 RotationSolution sol = ((Simulator)rot).Solution;
 
                 libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
@@ -368,22 +421,10 @@ namespace Rawr.Retribution
             }
             else
             {
-                rot = new EffectiveCooldown(calcOpts);
+                rot = new EffectiveCooldown(combats);
                 libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
                 libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
             }
-
-            float berserkingAP = stats.BerserkingProc * 140f;
-
-            float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
-
-            stats.Strength += greatnessStr;
-            stats.AttackPower += berserkingAP + libramAP ;
-            stats.CritRating += libramCrit;
-
-            ConvertRatings(stats, talents, calcOpts.TargetLevel);
-
-            Ability.SetValues(character, stats);
 
             Stats statsAverage = new Stats();
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -398,7 +439,7 @@ namespace Rawr.Retribution
                 }
                 else if (effect.Trigger == Trigger.MeleeHit)
                 {
-                    statsAverage += effect.GetAverageStats(1f / rot.GetMeleeAttacksPerSec(), Ability.GetMeleeAvoid());
+                    statsAverage += effect.GetAverageStats(1f / rot.GetMeleeAttacksPerSec(), 1f);
                 }
                 else if (effect.Trigger == Trigger.PhysicalCrit)
                 {
@@ -406,7 +447,7 @@ namespace Rawr.Retribution
                 }
                 else if (effect.Trigger == Trigger.PhysicalHit)
                 {
-                    statsAverage += effect.GetAverageStats(1f / rot.GetPhysicalAttacksPerSec(), Ability.GetMeleeAvoid());
+                    statsAverage += effect.GetAverageStats(1f / rot.GetPhysicalAttacksPerSec(), 1f);
                 }
             }
 
@@ -446,13 +487,49 @@ namespace Rawr.Retribution
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            return new ComparisonCalculationBase[0];
+            if (chartName == "Seals")
+            {
+
+                CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+
+                Character baseChar = character.Clone();
+                CalculationOptionsRetribution baseOpts = initOpts.Clone();
+                baseChar.CalculationOptions = baseOpts;
+                baseOpts.Seal = Seal.None;
+                CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(baseChar);
+
+                Character deltaChar = character.Clone();
+                CalculationOptionsRetribution deltaOpts = initOpts.Clone();
+                deltaChar.CalculationOptions = deltaOpts;
+
+                ComparisonCalculationBase Blood;
+                deltaOpts.Seal = Seal.Blood;
+                Blood = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Blood", initOpts.Seal == Seal.Blood);
+                Blood.Item = null;
+
+                ComparisonCalculationBase Command;
+                deltaOpts.Seal = Seal.Command;
+                Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == Seal.Command);
+                Command.Item = null;
+
+                ComparisonCalculationBase Righteousness;
+                deltaOpts.Seal = Seal.Righteousness;
+                Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == Seal.Righteousness);
+                Righteousness.Item = null;
+
+                return new ComparisonCalculationBase[] { Blood, Command, Righteousness };
+            }
+            else
+            {
+                return new ComparisonCalculationBase[0];
+            }
+
         }
 
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == Item.ItemSlot.OffHand ||
-                (item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Libram))
+            (item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Libram))
                 return false;
             return base.IsItemRelevant(item);
         }
@@ -463,12 +540,12 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + 
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
-                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + 
+                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             return wantedStats;
@@ -486,15 +563,15 @@ namespace Rawr.Retribution
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-				ArmorPenetration = stats.ArmorPenetration,
-				ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                ArmorPenetration = stats.ArmorPenetration,
+                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 SpellCrit = stats.SpellCrit,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
-				PhysicalHit = stats.PhysicalHit,
-				SpellHit = stats.SpellHit,
+                PhysicalHit = stats.PhysicalHit,
+                SpellHit = stats.SpellHit,
                 Expertise = stats.Expertise,
                 SpellPower = stats.SpellPower,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -525,7 +602,7 @@ namespace Rawr.Retribution
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
                 {
                     if (HasRelevantSpecialEffectStats(effect.Stats))
                     {
@@ -539,7 +616,7 @@ namespace Rawr.Retribution
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
             return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
-                + stats.HasteRating) > 0;
+            + stats.HasteRating) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -547,12 +624,12 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc + 
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier) > 0;
-            bool maybeStats = (stats.Agility + stats.Strength + 
+            bool maybeStats = (stats.Agility + stats.Strength +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +
@@ -561,7 +638,7 @@ namespace Rawr.Retribution
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
                 {
                     specialEffect = HasRelevantSpecialEffectStats(effect.Stats);
                     if (specialEffect) break;

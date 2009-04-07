@@ -85,7 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ability.cs" />
+    <Compile Include="Skill.cs" />
+    <Compile Include="CombatStats.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="SimulatorAbility.cs" />
     <Compile Include="CalculationOptionsPanelRetribution.cs">
