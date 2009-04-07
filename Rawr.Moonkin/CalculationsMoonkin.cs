@@ -856,7 +856,7 @@ namespace Rawr.Moonkin
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
@@ -936,10 +936,63 @@ namespace Rawr.Moonkin
                 InsectSwarmDmg = stats.InsectSwarmDmg,
                 LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc
             };
+            // Add special effects that meet the following criteria:
+            // 1) On-use OR
+            // 2) On damaging spell hit/crit/cast OR
+            // 3) On all spell hit/crit/cast/miss, AND
+            // 4) Proc is spell power OR
+            // 5) Proc is spell crit OR
+            // 6) Proc is spell haste
+            foreach (SpecialEffect effect in stats.SpecialEffects)
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.DamageSpellCast ||
+                    effect.Trigger == Trigger.DamageSpellCrit ||
+                    effect.Trigger == Trigger.DamageSpellHit ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.SpellMiss)
+                {
+                    if (effect.Stats.SpellPower > 0 ||
+                        effect.Stats.SpellCritRating > 0 ||
+                        effect.Stats.SpellHasteRating > 0)
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            return s;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
+            // Check for special effects that meet the following criteria:
+            // 1) On-use OR
+            // 2) On damaging spell hit/crit/cast OR
+            // 3) On all spell hit/crit/cast/miss, AND
+            // 4) Proc is spell power OR
+            // 5) Proc is spell crit OR
+            // 6) Proc is spell haste
+            foreach (SpecialEffect effect in stats.SpecialEffects)
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.DamageSpellCast ||
+                    effect.Trigger == Trigger.DamageSpellCrit ||
+                    effect.Trigger == Trigger.DamageSpellHit ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.SpellMiss)
+                {
+                    if (effect.Stats.SpellPower > 0 ||
+                        effect.Stats.SpellCritRating > 0 ||
+                        effect.Stats.SpellHasteRating > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
             return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse5Min + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration + stats.Bloodlust + stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreOnCrit_25_45 + stats.ThunderCapacitorProc + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc + stats.DarkmoonCardDeathProc + stats.GreatnessProc + stats.EclipseBonus + stats.StarfireProc + stats.InsectSwarmDmg + stats.LightweaveEmbroideryProc) > 0;
         }
     }

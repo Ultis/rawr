@@ -1861,7 +1861,8 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
 		object ICloneable.Clone()
 		{
 			DruidTalents clone = (DruidTalents)MemberwiseClone();
-			clone._data = (int[])_data.Clone();
+            clone._data = (int[])_data.Clone();
+            clone._glyphData = (bool[])_glyphData.Clone();
 			return clone;
 		}
 
