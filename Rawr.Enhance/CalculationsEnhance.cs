@@ -788,6 +788,26 @@ namespace Rawr
 
         }
 
+        #region RelevantGlyphs
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Feral Spirit");
+                _relevantGlyphs.Add("Glyph of Flametongue Weapon");
+                _relevantGlyphs.Add("Glyph of Lava Lash");
+                _relevantGlyphs.Add("Glyph of Lightning Shield");
+                _relevantGlyphs.Add("Glyph of Lightning Bolt");
+                _relevantGlyphs.Add("Glyph of Shocking");
+                _relevantGlyphs.Add("Glyph of Stormstrike");
+                _relevantGlyphs.Add("Glyph of Windfury Weapon");
+            }
+            return _relevantGlyphs;
+        }
+        #endregion
+
         #region Custom Chart Data
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{

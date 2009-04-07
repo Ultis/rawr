@@ -233,7 +233,7 @@ namespace Rawr
         public bool GlyphofHealingWave { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
         [GlyphData(1, "Glyph of Lightning Bolt", true, @"Increases the damage dealt by Lightning Bolt by 4%.")]
         public bool GlyphofLightningBolt { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-        [GlyphData(2, "Glyph of Shocking", true, @"Reduces the global cooldown triggered by your shock spells to 0.5 sec.")]
+        [GlyphData(2, "Glyph of Shocking", true, @"Reduces the global cooldown triggered by your shock spells by 0.5 sec.")]
         public bool GlyphofShocking { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
         [GlyphData(3, "Glyph of Lightning Shield", true, @"Increases the damage from Lightning Shield by 20%.")]
         public bool GlyphofLightningShield { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
