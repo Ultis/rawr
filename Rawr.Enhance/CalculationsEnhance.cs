@@ -229,7 +229,6 @@ namespace Rawr
                     break;
             }
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + stats.BonusFlurryHaste;
-            //patch 3.08 float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1, character.ShamanTalents.Flurry) + stats.BonusFlurryHaste;
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
             float critMultiplierMelee = 2f + stats.BonusCritMultiplier;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury + stats.BonusSpellCritMultiplier;
@@ -277,7 +276,7 @@ namespace Rawr
                 spellCritModifier += character.ShamanTalents.GlyphofFlametongueWeapon ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
             }
-            if (calcOpts.OffhandImbue == "Flametongue")
+            if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
                 spellCritModifier += character.ShamanTalents.GlyphofFlametongueWeapon ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
@@ -383,11 +382,11 @@ namespace Rawr
             float flurryUptime = 1f;
             float edUptime = 0f;
             float urUptime = 0f;
-            float bloodlustHaste = 1 + (calcOpts.BloodlustUptime * stats.Bloodlust);
+            float bloodlustHaste = 1 + (bloodlustUptime * stats.Bloodlust);
             float hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
             float hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
             float hitsPerSMHSS = (1f - chanceYellowMiss) / stormstrikeSpeed;
-            float hitsPerSOHSS = (1f - 2 * chanceYellowMiss) / stormstrikeSpeed; //OH only swings if MH connects
+            float hitsPerSOHSS = character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMiss) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
             float hitsPerSLL = (1f - chanceYellowMiss) / 6f;
             float swingsPerSMHMelee = 0f;
             float swingsPerSOHMelee = 0f;
@@ -402,8 +401,9 @@ namespace Rawr
             float hitsPerSWF = 0f;
             for (int i = 0; i < 5; i++)
             {
-                hastedMHSpeed = baseHastedMHSpeed / (1f + (flurryUptime * flurryHasteBonus)) / bloodlustHaste;
-                hastedOHSpeed = baseHastedOHSpeed / (1f + (flurryUptime * flurryHasteBonus)) / bloodlustHaste;
+                float bonusHaste = (1f + (flurryUptime * flurryHasteBonus)) * bloodlustHaste;
+                hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
+                hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
                 swingsPerSOHMelee = 1f / hastedOHSpeed;
                 //Flat Windfury Society
@@ -419,7 +419,8 @@ namespace Rawr
                 flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);
 
                 hitsPerSMH = swingsPerSMHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSWF + hitsPerSMHSS;
-                hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSOHSS + hitsPerSLL;
+                if (character.ShamanTalents.DualWield == 1)
+                    hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSOHSS + hitsPerSLL;
                 mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH + (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
                 secondsToFiveStack /* oh but i want it now! */ = 5 / mwProcsPerSecond;
 
@@ -430,7 +431,7 @@ namespace Rawr
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
             attackPower += attackPower * unleashedRage * urUptime;
-            float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + hitsPerSOHSS;
+            float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
                     
             if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
             {
@@ -453,7 +454,7 @@ namespace Rawr
                         attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
                     }
                 }
-                if (character.OffHandEnchant != null)
+                if (character.OffHandEnchant != null && character.ShamanTalents.DualWield == 1)
                 {
                     float whiteAttacksPerSecond = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge);
                     if (character.OffHandEnchant.Id == 2673)  // Mongoose Enchant
@@ -492,8 +493,10 @@ namespace Rawr
 
             float meleeMultipliers = weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
 
-            float dpsMelee = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * unhastedMHSpeed / hastedMHSpeed +
-                              (dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * unhastedOHSpeed / hastedOHSpeed) * meleeMultipliers;
+            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * unhastedMHSpeed / hastedMHSpeed) * meleeMultipliers;
+            float dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * unhastedOHSpeed / hastedOHSpeed) * meleeMultipliers;
+            float dpsMelee = dpsMHMeleeTotal + character.ShamanTalents.DualWield == 1 ? dpsOHMeleeTotal : 0f;
+                              
 
             //2: Stormstrike DPS
             float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
@@ -503,7 +506,8 @@ namespace Rawr
             {
                 float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
                 float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
-
+                if (character.ShamanTalents.DualWield == 0)
+                    dpsOHSS = 0f;
                 dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
             }
 
@@ -513,7 +517,7 @@ namespace Rawr
             {
                 dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL
                       * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery; //and no armor reduction yeya!
-                if (calcOpts.OffhandImbue == "Flametongue")
+                if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
                 {  // 25% bonus dmg if FT imbue in OH
                     if (character.ShamanTalents.GlyphofLavaLash)
                         dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
@@ -547,7 +551,7 @@ namespace Rawr
             float dpsWF = 0f;
             if (calcOpts.MainhandImbue == "Windfury")
             {
-                float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
+                float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * unhastedMHSpeed);
                 dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF
                         * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusPhysicalDamage);
             }
@@ -576,7 +580,7 @@ namespace Rawr
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
                 dpsFT += hitRollMultiplier * damageFT * hitsPerSMH * (1 + bonusFireDamage);
             }
-            if (calcOpts.OffhandImbue == "Flametongue")
+            if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
                 float damageFTBase = 274 * unhastedOHSpeed / 4.0f;
                 float damageFTCoef = .16f * unhastedOHSpeed / 4.0f;
