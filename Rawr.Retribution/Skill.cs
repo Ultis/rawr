@@ -310,7 +310,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.WeaponDamage * .45f + Stats.SpellPower * .23f;
+            return (Combats.WeaponDamage + Stats.SpellPower * .23f) * .45f;
         }
 
     }
@@ -340,8 +340,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return 5f * (Stats.SpellPower * 0.016f + Stats.AttackPower * 0.032f)
-                * (1f + .03f * Talents.SealsOfThePure)
-                * (Talents.GlyphOfSealOfRighteousness ? 1.1f : 1f);
+                * (1f + .03f * Talents.SealsOfThePure);
         }
 
         public override float AbilityCritChance() { return -1f; }
