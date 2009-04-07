@@ -146,6 +146,7 @@ namespace Rawr.Retribution
                 _relevantGlyphs.Add("Glyph of Consecration");
                 _relevantGlyphs.Add("Glyph of Seal of Blood");
                 _relevantGlyphs.Add("Glyph of Seal of Command");
+                _relevantGlyphs.Add("Glyph of Seal of Vengeance");
                 _relevantGlyphs.Add("Glyph of Seal of Righteousness");
                 _relevantGlyphs.Add("Glyph of Crusader Strike");
                 _relevantGlyphs.Add("Glyph of Hammer of Wrath");
@@ -406,6 +407,7 @@ namespace Rawr.Retribution
             stats.Strength += greatnessStr;
             stats.AttackPower += berserkingAP + libramAP;
             stats.CritRating += libramCrit;
+            stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
             ConvertRatings(stats, talents, calcOpts.TargetLevel);
 
@@ -455,6 +457,7 @@ namespace Rawr.Retribution
             stats.Strength += greatnessStr;
             stats.AttackPower += berserkingAP + libramAP;
             stats.CritRating += libramCrit;
+            stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
             ConvertRatings(stats, talents, calcOpts.TargetLevel);
 
@@ -517,7 +520,12 @@ namespace Rawr.Retribution
                 Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == Seal.Righteousness);
                 Righteousness.Item = null;
 
-                return new ComparisonCalculationBase[] { Blood, Command, Righteousness };
+                ComparisonCalculationBase Vengeance;
+                deltaOpts.Seal = Seal.Vengeance;
+                Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == Seal.Vengeance);
+                Vengeance.Item = null;
+
+                return new ComparisonCalculationBase[] { Blood, Command, Righteousness, Vengeance };
             }
             else
             {

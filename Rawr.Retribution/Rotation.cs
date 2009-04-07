@@ -43,6 +43,11 @@ namespace Rawr.Retribution
                 seal = new SealOfBlood(combats);
                 judge = new JudgementOfBlood(combats);
             }
+            else if (combats.CalcOpts.Seal == Seal.Vengeance)
+            {
+                seal = new SealOfVengeance(combats);
+                judge = new JudgementOfVengeance(combats);
+            }
             else
             {
                 seal = new None(combats);
@@ -75,6 +80,11 @@ namespace Rawr.Retribution
                 float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
                 float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
                 return 1f / timeBetweenProcs;
+            }
+
+            if (seal.GetType() == typeof(SealOfVengeance))
+            {
+                return 1f / 3f;
             }
             else
             {

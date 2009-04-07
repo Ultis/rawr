@@ -10,6 +10,7 @@ namespace Rawr.Retribution
         Blood = 0,
         Command,
         Righteousness,
+        Vengeance,
         None
     }
 

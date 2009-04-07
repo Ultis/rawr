@@ -752,6 +752,7 @@
             "Blood",
             "Command",
             "Righteousness",
+            "Vengeance",
             "None"});
             this.cmbSeal.Location = new System.Drawing.Point(156, 59);
             this.cmbSeal.Name = "cmbSeal";
