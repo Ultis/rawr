@@ -14,5 +14,6 @@ namespace Rawr.DPSWarr {
         public int TargetLevel = 83;
         public int TargetArmor = 12900;
         public int ToughnessLvl = 0;
+        public bool FuryStance = true;
     }
 }

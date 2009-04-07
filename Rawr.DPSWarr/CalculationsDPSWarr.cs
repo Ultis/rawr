@@ -4,15 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Rawr.DPSWarr
-{
+namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
-    public class CalculationsDPSWarr : CalculationsBase
-    {
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
+    public class CalculationsDPSWarr : CalculationsBase {
+        public override List<GemmingTemplate> DefaultGemmingTemplates {
+            get {
 				////Relevant Gem IDs for DPSWarrs
 				//Red
 				int[] bold = { 39900, 39996, 40111, 42142 };
@@ -26,8 +22,7 @@ namespace Rawr.DPSWarr
 				//Meta
 				int chaotic = 41285;
 
-				return new List<GemmingTemplate>()
-				{
+				return new List<GemmingTemplate>() {
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon", //Max Strength
 						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon", //Strength
@@ -50,126 +45,71 @@ namespace Rawr.DPSWarr
 				};
             }
         }
-
-        public CalculationsDPSWarr()
-        {
-            SetupRelevantItemTypes();
-        }
-        
+        public CalculationsDPSWarr() { SetupRelevantItemTypes(); }
         public readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
         private readonly string[] _customChartNames = new[] {"Item Budget"};
         private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.Red}};
         private List<Item.ItemType> _relevantItemTypes;
-
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-        {
-            get { return _calculationOptionsPanel; }
-        }
-
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get {
-
-                return DisplayValue.GroupedList();
+        public override CalculationOptionsPanelBase CalculationOptionsPanel { get { return _calculationOptionsPanel; } }
+        public override string[] CharacterDisplayCalculationLabels { get { return DisplayValue.GroupedList(); } }
+        public override Dictionary<string, Color> SubPointNameColors { get { return _subPointNameColors; } }
+        public override string[] CustomChartNames { get { return _customChartNames; } }
+        public override List<Item.ItemType> RelevantItemTypes { get { return _relevantItemTypes; } }
+        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warrior; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsDPSWarr(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot) {
+            if (item == null || character == null) {
+                return false;
+            } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == Item.ItemType.Polearm) {
+                return false;
+            } else if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1) {
+                return true;
+            } else if (slot == Character.CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == Item.ItemSlot.TwoHand) {
+                return false;
+            } else if (item.Type == Item.ItemType.Polearm && slot == Character.CharacterSlot.MainHand) {
+                return true;
+            } else {
+                return base.ItemFitsInSlot(item, character, slot);
             }
         }
-
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get { return _subPointNameColors; }
-        }
-
-        public override string[] CustomChartNames
-        {
-            get { return _customChartNames; }
-        }
-
-        public override List<Item.ItemType> RelevantItemTypes
-        {
-            get { return _relevantItemTypes; }
-        }
-
-        public override Character.CharacterClass TargetClass
-        {
-            get { return Character.CharacterClass.Warrior; }
-        }
-
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
-        {
-            return new ComparisonCalculationsDPSWarr();
-        }
-
-        public override CharacterCalculationsBase CreateNewCharacterCalculations()
-        {
-            return new CharacterCalculationsDPSWarr();
-        }
-
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
-        {
-            if (item == null || character == null)
-                return false;
-            else if (character.WarriorTalents.TitansGrip == 1 && item.Type == Item.ItemType.Polearm)
-                return false;
-            else if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1)
-                return true;
-            else if (slot == Character.CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == Item.ItemSlot.TwoHand)
-                return false;
-            else if (item.Type == Item.ItemType.Polearm && slot == Character.CharacterSlot.MainHand)
-                return true;
-            else
-                return base.ItemFitsInSlot(item, character, slot);
-        }
-
-        public override bool IncludeOffHandInCalculations(Character character)
-        {
-            if (character.OffHand == null)
-                return false;
-            if (character.CurrentTalents is WarriorTalents)
-            {
+        public override bool IncludeOffHandInCalculations(Character character) {
+            if (character.OffHand == null) { return false; }
+            if (character.CurrentTalents is WarriorTalents) {
                 WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
-                if (talents.TitansGrip > 0)
+                if (talents.TitansGrip > 0) {
                     return true;
-                else// if (character.MainHand.Slot != Item.ItemSlot.TwoHand)
+                } else {// if (character.MainHand.Slot != Item.ItemSlot.TwoHand)
                     return base.IncludeOffHandInCalculations(character);
-                //else
-                //    return false;
+                }
             }
             return false;
         }
-
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
-        {
-            if (character != null && (character.WarriorTalents != null && enchant != null))
-            {
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot) {
+            if (character != null && (character.WarriorTalents != null && enchant != null)) {
                 return enchant.FitsInSlot(slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
             }
             return enchant.FitsInSlot(slot);
         }
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
             var s = new XmlSerializer(typeof (CalculationOptionsDPSWarr));
             var sr = new StringReader(xml);
             var calcOpts = s.Deserialize(sr) as CalculationOptionsDPSWarr;
             return calcOpts;
         }
-
         /// <summary>
         /// Calculate damage output
         /// </summary>
         /// <param name="character"></param>
         /// <param name="additionalItem"></param>
         /// <returns></returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
-        {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange) {
             var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             var combatFactors = new CombatFactors(character, stats);
             return GetCalculations(combatFactors, stats, calcOpts, character.WarriorTalents);
         }
-
-        private static CharacterCalculationsBase GetCalculations(CombatFactors combatFactors, Stats stats, CalculationOptionsDPSWarr calcOpts, WarriorTalents talents)
-        {
+        private static CharacterCalculationsBase GetCalculations(CombatFactors combatFactors, Stats stats, CalculationOptionsDPSWarr calcOpts, WarriorTalents talents) {
             var calculatedStats = new CharacterCalculationsDPSWarr(stats);
             var whiteAttacks = new WhiteAttacks(talents, stats, combatFactors);
             var skillAttacks = new Skills(talents, stats, combatFactors, whiteAttacks);
@@ -218,9 +158,7 @@ namespace Rawr.DPSWarr
 
             return calculatedStats;
         }
-
-        public Stats GetBuffsStats(Character character)
-        {
+        public Stats GetBuffsStats(Character character) {
             var statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             //Mongoose
@@ -243,9 +181,7 @@ namespace Rawr.DPSWarr
 
             return statsBuffs;
         }
-
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
@@ -344,15 +280,13 @@ namespace Rawr.DPSWarr
                     return new ComparisonCalculationBase[0];
             }
         }*/
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             CharacterCalculationsDPSWarr baseCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
 
-            switch (chartName)
-            {
+            switch (chartName) {
                 case "Item Budget":
                     Item[] itemList = new Item[] {
                         new Item() { Stats = new Stats() { Strength = 10 } },
@@ -498,7 +432,6 @@ namespace Rawr.DPSWarr
                 Item.ItemType.TwoHandAxe
             });
         }
-
         #region Warrior Race Stats
         private static float[,] BaseWarriorRaceStats = new float[,] {
 							//	Strength,	Agility,	Stamina
@@ -513,15 +446,11 @@ namespace Rawr.DPSWarr
 			/*BloodElf*/	{	0f,		    0f,		    0f,	    },
 			/*Draenei*/		{	176f,		110f,		159f,	},
 		};
-
-        private Stats GetRaceStats(Character character)
-        {
+        private Stats GetRaceStats(Character character) {
             Stats statsRace;
-            switch (character.Race)
-            {
+            switch (character.Race) {
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[0, 0],
                         Agility = (float)BaseWarriorRaceStats[0, 1],
@@ -535,8 +464,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Orc:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[1, 0],
                         Agility = (float)BaseWarriorRaceStats[1, 1],
@@ -550,8 +478,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Dwarf:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[2, 0],
                         Agility = (float)BaseWarriorRaceStats[2, 1],
@@ -565,8 +492,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.NightElf:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[3, 0],
                         Agility = (float)BaseWarriorRaceStats[3, 1],
@@ -580,8 +506,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Undead:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[4, 0],
                         Agility = (float)BaseWarriorRaceStats[4, 1],
@@ -595,8 +520,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Tauren:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 8338f,
                         Strength = (float)BaseWarriorRaceStats[5, 0],
                         Agility = (float)BaseWarriorRaceStats[5, 1],
@@ -610,8 +534,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Gnome:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[6, 0],
                         Agility = (float)BaseWarriorRaceStats[6, 1],
@@ -625,8 +548,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Troll:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[7, 0],
                         Agility = (float)BaseWarriorRaceStats[7, 1],
@@ -640,8 +562,7 @@ namespace Rawr.DPSWarr
                     };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats()
-                    {
+                    statsRace = new Stats() {
                         Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[9, 0],
                         Agility = (float)BaseWarriorRaceStats[9, 1],
@@ -659,7 +580,6 @@ namespace Rawr.DPSWarr
                     statsRace = new Stats();
                     break;
             }
-
             return statsRace;
         }
         #endregion

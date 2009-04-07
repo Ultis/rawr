@@ -31,6 +31,8 @@
             this.GB_Bosses = new System.Windows.Forms.GroupBox();
             this.CB_ToughLvl = new System.Windows.Forms.ComboBox();
             this.LB_ToughLvl = new System.Windows.Forms.Label();
+            this.RB_StanceFury = new System.Windows.Forms.RadioButton();
+            this.RB_StanceArms = new System.Windows.Forms.RadioButton();
             this.GB_Bosses.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +76,7 @@
             this.LB_TargArmorDesc.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LB_TargArmorDesc.Location = new System.Drawing.Point(3, 16);
             this.LB_TargArmorDesc.Name = "LB_TargArmorDesc";
-            this.LB_TargArmorDesc.Size = new System.Drawing.Size(222, 328);
+            this.LB_TargArmorDesc.Size = new System.Drawing.Size(222, 297);
             this.LB_TargArmorDesc.TabIndex = 0;
             // 
             // CB_TargArmor
@@ -98,9 +100,9 @@
             this.GB_Bosses.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_Bosses.Controls.Add(this.LB_TargArmorDesc);
-            this.GB_Bosses.Location = new System.Drawing.Point(6, 76);
+            this.GB_Bosses.Location = new System.Drawing.Point(6, 107);
             this.GB_Bosses.Name = "GB_Bosses";
-            this.GB_Bosses.Size = new System.Drawing.Size(228, 347);
+            this.GB_Bosses.Size = new System.Drawing.Size(228, 316);
             this.GB_Bosses.TabIndex = 6;
             this.GB_Bosses.TabStop = false;
             this.GB_Bosses.Text = "Bosses";
@@ -133,11 +135,35 @@
             this.LB_ToughLvl.TabIndex = 4;
             this.LB_ToughLvl.Text = "Toughness Lvl:";
             // 
+            // RB_StanceFury
+            // 
+            this.RB_StanceFury.AutoSize = true;
+            this.RB_StanceFury.Checked = true;
+            this.RB_StanceFury.Location = new System.Drawing.Point(6, 84);
+            this.RB_StanceFury.Name = "RB_StanceFury";
+            this.RB_StanceFury.Size = new System.Drawing.Size(82, 17);
+            this.RB_StanceFury.TabIndex = 7;
+            this.RB_StanceFury.TabStop = true;
+            this.RB_StanceFury.Text = "Fury Stance";
+            this.RB_StanceFury.UseVisualStyleBackColor = true;
+            // 
+            // RB_StanceArms
+            // 
+            this.RB_StanceArms.AutoSize = true;
+            this.RB_StanceArms.Location = new System.Drawing.Point(120, 84);
+            this.RB_StanceArms.Name = "RB_StanceArms";
+            this.RB_StanceArms.Size = new System.Drawing.Size(85, 17);
+            this.RB_StanceArms.TabIndex = 8;
+            this.RB_StanceArms.Text = "Arms Stance";
+            this.RB_StanceArms.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.RB_StanceArms);
+            this.Controls.Add(this.RB_StanceFury);
             this.Controls.Add(this.CB_ToughLvl);
             this.Controls.Add(this.LB_ToughLvl);
             this.Controls.Add(this.CB_TargArmor);
@@ -163,5 +189,7 @@
         public System.Windows.Forms.GroupBox GB_Bosses;
         public System.Windows.Forms.ComboBox CB_ToughLvl;
         public System.Windows.Forms.Label LB_ToughLvl;
+        private System.Windows.Forms.RadioButton RB_StanceFury;
+        private System.Windows.Forms.RadioButton RB_StanceArms;
     }
 }
