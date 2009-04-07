@@ -768,13 +768,24 @@ namespace Rawr
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flametongue Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
 
+            if (character.ShamanTalents.ImprovedWindfuryTotem == 2)
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
+            if (character.ShamanTalents.EnhancingTotems == 3)
+            {
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems")); // add both the Agi Str one 
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems.")); // and the spellpower one
+            }
+
             character.ShamanTalents.GlyphofStormstrike = true;
+            character.ShamanTalents.GlyphofFlametongueWeapon = true;
+            character.ShamanTalents.GlyphofWindfuryWeapon = true;
+
         }
 
         #region Custom Chart Data
