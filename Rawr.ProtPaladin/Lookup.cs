@@ -37,13 +37,13 @@ namespace Rawr.ProtPaladin
             
                     // Assuming 8.20% miss chance against a lvl 83 target.
                     if ((calcOpts.TargetLevel - character.Level) == 3)
-                        return 8.20f;
+                        return 0.082f;
                     if ((calcOpts.TargetLevel - character.Level) == 2)
-                        return 5.40f;
+                        return 0.054f;
                     if ((calcOpts.TargetLevel - character.Level) == 1)
-                        return 5.20f;
+                        return 0.052f;
                     else
-                        return 5.00f;
+                        return 0.05f;
 
                 case HitResult.Dodge:
                     return 0.065f;
