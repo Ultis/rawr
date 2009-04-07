@@ -203,8 +203,7 @@ namespace Rawr.Mage
         private static bool IsItemActivatable(ItemInstance item)
         {
             if (item == null || item.Item == null) return false;
-            if (item.Item.Stats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.Use)) return true;
-            return (item.Item.Stats.SpellPowerFor15SecOnUse2Min + item.Item.Stats.SpellPowerFor20SecOnUse2Min + item.Item.Stats.HasteRatingFor20SecOnUse2Min + item.Item.Stats.SpellPowerFor15SecOnUse90Sec + item.Item.Stats.HasteRatingFor20SecOnUse5Min + item.Item.Stats.SpellPowerFor20SecOnUse5Min > 0);
+            return (item.Item.Stats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.Use));
         }
 
         private double MaximizeColdsnapDuration(double fightDuration, double coldsnapCooldown, double effectDuration, double effectCooldown, out int coldsnapCount)
@@ -347,7 +346,7 @@ namespace Rawr.Mage
             flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
             drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
             waterElementalAvailable = !calculationOptions.DisableCooldowns && (talents.SummonWaterElemental == 1);
-            manaGemEffectAvailable = calculationOptions.ManaGemEnabled && baseStats.SpellPowerFor15SecOnManaGem > 0;
+            calculationResult.ManaGemEffect = manaGemEffectAvailable = calculationOptions.ManaGemEnabled && baseStats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.ManaGem);
             calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
             calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
             calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
@@ -387,26 +386,6 @@ namespace Rawr.Mage
                     trinket1Duration = effect.Duration;
                     trinket1Cooldown = effect.Cooldown;
                 }
-                if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min > 0)
-                {
-                    trinket1Duration = 20;
-                    trinket1Cooldown = 120;
-                }
-                if (s.SpellPowerFor15SecOnUse90Sec > 0)
-                {
-                    trinket1Duration = 15;
-                    trinket1Cooldown = 90;
-                }
-                if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
-                {
-                    trinket1Duration = 20;
-                    trinket1Cooldown = 300;
-                }
-                if (s.SpellPowerFor15SecOnUse2Min > 0)
-                {
-                    trinket1Duration = 15;
-                    trinket1Cooldown = 120;
-                }
                 calculationResult.Trinket1Duration = trinket1Duration;
                 calculationResult.Trinket1Cooldown = trinket1Cooldown;
                 calculationResult.Trinket1Name = character.Trinket1.Item.Name;
@@ -419,35 +398,15 @@ namespace Rawr.Mage
                     trinket2Duration = effect.Duration;
                     trinket2Cooldown = effect.Cooldown;
                 }
-                if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min > 0)
-                {
-                    trinket2Duration = 20;
-                    trinket2Cooldown = 120;
-                }
-                if (s.SpellPowerFor15SecOnUse90Sec > 0)
-                {
-                    trinket2Duration = 15;
-                    trinket2Cooldown = 90;
-                }
-                if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
-                {
-                    trinket2Duration = 20;
-                    trinket2Cooldown = 300;
-                }
-                if (s.SpellPowerFor15SecOnUse2Min > 0)
-                {
-                    trinket2Duration = 15;
-                    trinket2Cooldown = 120;
-                }
                 calculationResult.Trinket2Duration = trinket2Duration;
                 calculationResult.Trinket2Cooldown = trinket2Cooldown;
                 calculationResult.Trinket2Name = character.Trinket2.Item.Name;
             }
             if (manaGemEffectAvailable)
             {
-                if (baseStats.SpellPowerFor15SecOnManaGem > 0)
+                foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Trigger == Trigger.ManaGem))
                 {
-                    manaGemEffectDuration = 15;
+                    manaGemEffectDuration = effect.Duration;
                 }
                 calculationResult.ManaGemEffectDuration = manaGemEffectDuration;
             }

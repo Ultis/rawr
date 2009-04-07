@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Reflection.Emit;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -57,7 +58,6 @@ namespace Rawr
         DodgeRating,
         DrumsOfBattle,
         DrumsOfWar,
-        EggOfMortalEssenceArcaneMissilesProc,
         EvocationExtension,
         ExecutionerProc,
         Expertise,
@@ -140,12 +140,10 @@ namespace Rawr
         SpellPowerFor10SecOnResist,
         SpellPowerFor15SecOnCrit_20_45,
         SpellPowerFor15SecOnCast_50_45,
-        SpellPowerFor15SecOnManaGem,
         SpellPowerFor15SecOnUse90Sec,
         SpellPowerFor15SecOnUse2Min,
         SpellPowerFor20SecOnUse2Min,
         SpellPowerFor20SecOnUse5Min,
-        SpellPowerFor6SecOnCrit,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
         SpellPowerFromAttackPowerPercentage,
@@ -429,6 +427,7 @@ namespace Rawr
         MeleeCrit,
         PhysicalHit,
         PhysicalCrit,
+        ManaGem,
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
@@ -736,6 +735,12 @@ namespace Rawr
                         return " on Spell Miss";
                     case Trigger.Use:
                         return "";
+                    case Trigger.PhysicalHit:
+                        return " on Physical Hit";
+                    case Trigger.PhysicalCrit:
+                        return " on Physical Hit";
+                    case Trigger.ManaGem:
+                        return " on Mana Gem";
                     default:
                         return " " + Trigger.ToString();
                 }
@@ -744,13 +749,27 @@ namespace Rawr
 
         public override string ToString()
         {
-            if (Chance == 1.0f)
+            if (Cooldown == 0.0f)
             {
-                return string.Format("{0} ({1}{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+                if (Chance == 1.0f)
+                {
+                    return string.Format("{0} ({1}{3})", Stats.ToString(), DurationString, Chance * 100, TriggerString);
+                }
+                else
+                {
+                    return string.Format("{0} ({1} {2:F}%{3})", Stats.ToString(), DurationString, Chance * 100, TriggerString);
+                }
             }
             else
             {
-                return string.Format("{0} ({1} {2:F}%{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+                if (Chance == 1.0f)
+                {
+                    return string.Format("{0} ({1}{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+                }
+                else
+                {
+                    return string.Format("{0} ({1} {2:F}%{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+                }
             }
         }
     }
@@ -762,11 +781,16 @@ namespace Rawr
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
         internal float[] _rawNoStackData = new float[NonStackingStatCount];
-        private SpecialEffect[] _rawSpecialEffectData = _emptySpecialEffectData;
+        [System.ComponentModel.DefaultValueAttribute(null)]
+        [XmlArray("SpecialEffects")]
+        [XmlArrayItem(IsNullable = false)]
+        public SpecialEffect[] _rawSpecialEffectData = null;
 
-        private static SpecialEffect[] _emptySpecialEffectData = new SpecialEffect[0];
+        //private static SpecialEffect[] _emptySpecialEffectData = new SpecialEffect[0];
         private const int _defaultSpecialEffectDataCapacity = 4;
-        private int _rawSpecialEffectDataSize;
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [XmlElement("SpecialEffectCount")]
+        public int _rawSpecialEffectDataSize;
 
         //internal float[] _sparseData;
         internal int[] _sparseIndices;
@@ -1761,14 +1785,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power Increase for 6 sec on Crit")]
-        public float SpellPowerFor6SecOnCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor6SecOnCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor6SecOnCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (50% 5 sec/Crit)")]
         [Category("Equipment Procs")]
         public float SpellHasteFor5SecOnCrit_50
@@ -1805,16 +1821,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnHeal_10_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnHeal_10_45] = value; }
-        }
-
-        // 10% chance, 45 sec internal cooldown
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Haste (10% 10 sec/AM Cast)")]
-        [Category("Equipment Procs")]
-        public float EggOfMortalEssenceArcaneMissilesProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.EggOfMortalEssenceArcaneMissilesProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.EggOfMortalEssenceArcaneMissilesProc] = value; }
         }
 
         // 10% chance, 45 sec internal cooldown
@@ -1927,16 +1933,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusManaGem]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusManaGem] = value; }
-        }
-
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (15 sec/Gem)")]
-        [Category("Equipment Procs")]
-        public float SpellPowerFor15SecOnManaGem
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnManaGem]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnManaGem] = value; }
         }
 
         // 10% chance, 45 sec internal cooldown
@@ -4004,9 +4000,9 @@ namespace Rawr
 
         private void EnsureSpecialEffectCapacity(int min)
         {
-            if (_rawSpecialEffectData.Length < min)
+            if (_rawSpecialEffectData == null || _rawSpecialEffectData.Length < min)
             {
-                int num = (_rawSpecialEffectData.Length == 0) ? _defaultSpecialEffectDataCapacity : (_rawSpecialEffectData.Length * 2);
+                int num = (_rawSpecialEffectData == null || _rawSpecialEffectData.Length == 0) ? _defaultSpecialEffectDataCapacity : (_rawSpecialEffectData.Length * 2);
                 if (num < min)
                 {
                     num = min;
@@ -4062,7 +4058,7 @@ namespace Rawr
                 {
                     Array.Copy(a._rawSpecialEffectData, c._rawSpecialEffectData, a._rawSpecialEffectDataSize);
                 }
-                if (a._rawSpecialEffectDataSize > 0)
+                if (b._rawSpecialEffectDataSize > 0)
                 {
                     Array.Copy(b._rawSpecialEffectData, 0, c._rawSpecialEffectData, a._rawSpecialEffectDataSize, b._rawSpecialEffectDataSize);
                 }
@@ -4626,6 +4622,10 @@ namespace Rawr
 
                     sb.AppendFormat("{0}{1}, ", value, Extensions.DisplayName(info));
                 }
+            }
+            foreach (SpecialEffect effect in SpecialEffects())
+            {
+                sb.AppendFormat("{0}, ", effect);
             }
 
             return sb.ToString().TrimEnd(' ', ',');

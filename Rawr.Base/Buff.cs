@@ -256,6 +256,7 @@ namespace Rawr
         private static List<Buff> GetDefaultBuffs()
         {
             List<Buff> defaultBuffs = new List<Buff>();
+            Buff buff;
 
             #region Glyphs
             defaultBuffs.Add(new Buff
@@ -1799,15 +1800,16 @@ namespace Rawr
                 SetName = "Tirisfal Regalia",
                 SetThreshold = 2
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Tirisfal Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SpellPowerFor6SecOnCrit = 70f },
+                Stats = new Stats(),
                 SetName = "Tirisfal Regalia",
                 SetThreshold = 4
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = 70f }, 6.0f, 0.0f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Tempest Regalia 2 Piece Bonus",
@@ -1907,7 +1909,7 @@ namespace Rawr
                 SetName = "Wrath of Spellfire",
                 SetThreshold = 3
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Spellstrike 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -1916,6 +1918,7 @@ namespace Rawr
                 SetName = "Spellstrike Infusion",
                 SetThreshold = 2
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 92 }, 10, 0, 0.05f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Lightbringer Raiment 4 Piece",
@@ -1971,15 +1974,16 @@ namespace Rawr
                 SetName = "Thunderheart Raiment",
                 SetThreshold = 4
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Frostfire Garb 2 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusManaGem = 0.4f, SpellPowerFor15SecOnManaGem = 225f },
+                Stats = { BonusManaGem = 0.4f },
                 SetName = "Frostfire Garb",
                 SetThreshold = 2
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ManaGem, new Stats() { SpellPower = 225f }, 15f, 0f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Frostfire Garb 4 Piece",

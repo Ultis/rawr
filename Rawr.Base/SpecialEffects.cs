@@ -42,6 +42,7 @@ namespace Rawr
                 else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                 {
                     stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
                 }
                 else if (gemBonus == "+5% Shield Block Value")
                 {
@@ -500,30 +501,35 @@ namespace Rawr
 			{
 				// Serpent-Coil Braid
 				stats.BonusManaGem += 0.25f;
-				stats.SpellPowerFor15SecOnManaGem += 225;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.ManaGem, new Stats() { SpellPower = 225 }, 15f, 0f));
 			}
 			else if (line.StartsWith("Grants 170 increased spell power for 10 sec when one of your spells is resisted."))
 			{
 				// Eye of Magtheridon
 				stats.SpellPowerFor10SecOnResist += 170;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellMiss, new Stats() { SpellPower = 170 }, 10, 0));
 			}
 			else if (line.StartsWith("Your spell critical strikes have a 50% chance to grant you 145 spell haste rating for 5 sec."))
 			{
 				stats.SpellHasteFor5SecOnCrit_50 += 145;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { HasteRating = 145 }, 5, 0, 0.5f));
 			}
 			else if (line.StartsWith("Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs."))
 			{
 				stats.SpellHasteFor6SecOnHit_10_45 += 320;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { HasteRating = 320 }, 6, 45, 0.1f));
 			}
             else if (line.StartsWith("Your spell casts have a chance to increase your spell power by 590 for 10 sec."))
             {
                 // Flow of Knowledge
                 stats.SpellPowerFor10SecOnCast_10_45 += 590;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
             }
 			else if (line.StartsWith("Chance on spell critical hit to increase your spell power by 225 for 10 secs."))
 			{
 				// Shiffar's Nexus-Horn
 				stats.SpellPowerFor10SecOnCrit_20_45 += 225;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = 225 }, 10, 45, 0.2f));
 			}
 			else if (line.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
 			{
@@ -546,6 +552,7 @@ namespace Rawr
 				//        if (name == "Sextant of Unstable Currents")
 				//        {
 				stats.SpellPowerFor15SecOnCrit_20_45 += value;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = value }, duration, 45, 0.2f));
 				//        }
 				//        break;
 				//}
@@ -574,6 +581,7 @@ namespace Rawr
 				//        if (name == "Robe of the Elder Scribes")
 				//        {
 				stats.SpellPowerFor10SecOnHit_10_45 += value;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = value }, duration, 45, 0.1f));
 				//        }
 				//        break;
 				//}
@@ -593,7 +601,8 @@ namespace Rawr
 				//        {
 				// Fixed in 2.4 to be 10 sec instead of 15
 				stats.SpellPowerFor10SecOnHit_10_45 += value;
-				//        }
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = value }, duration, 45, 0.1f));
+                //        }
 				//        break;
 				//}
 			}
@@ -741,16 +750,19 @@ namespace Rawr
                 stats.SpellPowerFor10SecOnHit_10_45 += 512;
                 // This is a nasty trick for compatibility = when designing a healer, please use this version:
                 stats.SpellPowerFor10SecOnHeal_10_45 += 512;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 512 }, 10, 45, 0.1f));
             }
             else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 590 for 10 sec."))
             {
                 // Sundial of the Exiled (NOT FOR HEALERS)
                 stats.SpellPowerFor10SecOnHit_10_45 += 590;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
             }
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
             {
                 // Dying Curse
                 stats.SpellPowerFor10SecOnCast_15_45 += 765;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 765 }, 10, 45, 0.15f));
             }
             else if (line.StartsWith("Each time you cast a damaging or healing spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
             {
@@ -776,12 +788,12 @@ namespace Rawr
             {
                 // Embrace of the Spider
                 stats.SpellHasteFor10SecOnCast_10_45 += 505;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 505 }, 10, 45, 0.1f));
             }
             else if (line.StartsWith("Your direct healing and heal over time spells have a chance to increase your haste rating by 505 for 10 secs."))
             {
                 // The Egg of Mortal Essence
                 stats.SpellHasteFor10SecOnHeal_10_45 += 505;
-                stats.EggOfMortalEssenceArcaneMissilesProc = 505;
             }
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
@@ -1075,6 +1087,7 @@ namespace Rawr
 			{
 				// The Skull of Gul'dan
 				stats.HasteRatingFor20SecOnUse2Min += 175;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 175 }, 20.0f, 120.0f));
 			}
 			else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
 			{
@@ -1093,6 +1106,7 @@ namespace Rawr
 			else if (line.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec."))
 			{
 				stats.HasteRatingFor20SecOnUse5Min += 330;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 330 }, 20, 300));
 			}
 			else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
 			{

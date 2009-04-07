@@ -101,6 +101,7 @@ namespace Rawr.Mage
 
         public string MageArmor { get; set; }
 
+        public bool ManaGemEffect { get; set; }
         public double EvocationDuration;
         public double EvocationRegen;
         public double EvocationDurationIV;
@@ -669,7 +670,7 @@ namespace Rawr.Mage
             sequence.GroupTrinket1();
             sequence.GroupTrinket2();
             List<SequenceGroup> list = sequence.GroupManaGemEffect();
-            if (list != null && BaseStats.SpellPowerFor15SecOnManaGem > 0 && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
+            if (list != null && ManaGemEffect && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
             {
                 float manaBurn = 0;
                 for (int i = 0; i < SolutionVariable.Count; i++)

@@ -2147,7 +2147,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double potTime = RemoveIndex(VariableType.ManaPotion);
             double gemTime = RemoveIndex(VariableType.ManaGem);
             double evoTime = RemoveIndex(VariableType.Evocation);
-            bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellPowerFor15SecOnManaGem > 0);
+            bool gemActivated = SequenceItem.Calculations.ManaGemEffect;
             double gemValue = SequenceItem.Calculations.ManaGemValue;
             double gemMaxValue = SequenceItem.Calculations.MaxManaGemValue;
             double potValue = SequenceItem.Calculations.ManaPotionValue;
@@ -2768,7 +2768,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
             bool coldsnap = SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1;
             double coldsnapCooldownDuration = SequenceItem.Calculations.ColdsnapCooldown;
-            bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellPowerFor15SecOnManaGem > 0);
+            bool gemActivated = SequenceItem.Calculations.ManaGemEffect;
 
             int gemCount = 0;
             double potionCooldown = 0;
