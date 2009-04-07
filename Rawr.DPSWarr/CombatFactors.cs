@@ -127,6 +127,7 @@ namespace Rawr.DPSWarr {
                     baseExpertise += 5f;
                 }
             }
+            baseExpertise = (int)System.Math.Truncate(baseExpertise);
 
             return baseExpertise;
         }
