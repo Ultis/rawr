@@ -49,16 +49,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.gbGlyphs = new System.Windows.Forms.GroupBox();
-            this.chbGlyphFS = new System.Windows.Forms.CheckBox();
-            this.chbGlyphLL = new System.Windows.Forms.CheckBox();
-            this.chbGlyphSS = new System.Windows.Forms.CheckBox();
-            this.chbGlyphWF = new System.Windows.Forms.CheckBox();
-            this.chbGlyphShocking = new System.Windows.Forms.CheckBox();
-            this.chbGlyphLS = new System.Windows.Forms.CheckBox();
-            this.chbGlyphLB = new System.Windows.Forms.CheckBox();
-            this.chbGlyphFT = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
@@ -67,15 +57,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            this.gbGlyphs.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabPage1);
-            this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
@@ -347,123 +334,6 @@
             this.label1.TabIndex = 18;
             this.label1.Text = "Target Level: ";
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.gbGlyphs);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(264, 525);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Glyphs";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // gbGlyphs
-            // 
-            this.gbGlyphs.Controls.Add(this.chbGlyphFS);
-            this.gbGlyphs.Controls.Add(this.chbGlyphLL);
-            this.gbGlyphs.Controls.Add(this.chbGlyphSS);
-            this.gbGlyphs.Controls.Add(this.chbGlyphWF);
-            this.gbGlyphs.Controls.Add(this.chbGlyphShocking);
-            this.gbGlyphs.Controls.Add(this.chbGlyphLS);
-            this.gbGlyphs.Controls.Add(this.chbGlyphLB);
-            this.gbGlyphs.Controls.Add(this.chbGlyphFT);
-            this.gbGlyphs.Location = new System.Drawing.Point(3, 6);
-            this.gbGlyphs.Name = "gbGlyphs";
-            this.gbGlyphs.Size = new System.Drawing.Size(258, 211);
-            this.gbGlyphs.TabIndex = 57;
-            this.gbGlyphs.TabStop = false;
-            this.gbGlyphs.Text = "Glyphs";
-            // 
-            // chbGlyphFS
-            // 
-            this.chbGlyphFS.AutoSize = true;
-            this.chbGlyphFS.Location = new System.Drawing.Point(8, 19);
-            this.chbGlyphFS.Name = "chbGlyphFS";
-            this.chbGlyphFS.Size = new System.Drawing.Size(122, 17);
-            this.chbGlyphFS.TabIndex = 40;
-            this.chbGlyphFS.Text = "Glyph of Feral Spirits";
-            this.chbGlyphFS.UseVisualStyleBackColor = true;
-            this.chbGlyphFS.CheckedChanged += new System.EventHandler(this.chbGlyphFS_CheckedChanged);
-            // 
-            // chbGlyphLL
-            // 
-            this.chbGlyphLL.AutoSize = true;
-            this.chbGlyphLL.Location = new System.Drawing.Point(7, 65);
-            this.chbGlyphLL.Name = "chbGlyphLL";
-            this.chbGlyphLL.Size = new System.Drawing.Size(118, 17);
-            this.chbGlyphLL.TabIndex = 42;
-            this.chbGlyphLL.Text = "Glyph of Lava Lash";
-            this.chbGlyphLL.UseVisualStyleBackColor = true;
-            this.chbGlyphLL.CheckedChanged += new System.EventHandler(this.chbGlyphLL_CheckedChanged);
-            // 
-            // chbGlyphSS
-            // 
-            this.chbGlyphSS.AutoSize = true;
-            this.chbGlyphSS.Location = new System.Drawing.Point(7, 157);
-            this.chbGlyphSS.Name = "chbGlyphSS";
-            this.chbGlyphSS.Size = new System.Drawing.Size(120, 17);
-            this.chbGlyphSS.TabIndex = 46;
-            this.chbGlyphSS.Text = "Glyph of Stormstrike";
-            this.chbGlyphSS.UseVisualStyleBackColor = true;
-            this.chbGlyphSS.CheckedChanged += new System.EventHandler(this.chbGlyphSS_CheckedChanged);
-            // 
-            // chbGlyphWF
-            // 
-            this.chbGlyphWF.AutoSize = true;
-            this.chbGlyphWF.Location = new System.Drawing.Point(7, 180);
-            this.chbGlyphWF.Name = "chbGlyphWF";
-            this.chbGlyphWF.Size = new System.Drawing.Size(154, 17);
-            this.chbGlyphWF.TabIndex = 47;
-            this.chbGlyphWF.Text = "Glyph of Windfury Weapon";
-            this.chbGlyphWF.UseVisualStyleBackColor = true;
-            this.chbGlyphWF.CheckedChanged += new System.EventHandler(this.chbGlyphWF_CheckedChanged);
-            // 
-            // chbGlyphShocking
-            // 
-            this.chbGlyphShocking.AutoSize = true;
-            this.chbGlyphShocking.Enabled = false;
-            this.chbGlyphShocking.Location = new System.Drawing.Point(7, 134);
-            this.chbGlyphShocking.Name = "chbGlyphShocking";
-            this.chbGlyphShocking.Size = new System.Drawing.Size(113, 17);
-            this.chbGlyphShocking.TabIndex = 45;
-            this.chbGlyphShocking.Text = "Glyph of Shocking";
-            this.chbGlyphShocking.UseVisualStyleBackColor = true;
-            this.chbGlyphShocking.CheckedChanged += new System.EventHandler(this.chbGlyphShocking_CheckedChanged);
-            // 
-            // chbGlyphLS
-            // 
-            this.chbGlyphLS.AutoSize = true;
-            this.chbGlyphLS.Location = new System.Drawing.Point(7, 111);
-            this.chbGlyphLS.Name = "chbGlyphLS";
-            this.chbGlyphLS.Size = new System.Drawing.Size(143, 17);
-            this.chbGlyphLS.TabIndex = 44;
-            this.chbGlyphLS.Text = "Glyph of Lightning Shield";
-            this.chbGlyphLS.UseVisualStyleBackColor = true;
-            this.chbGlyphLS.CheckedChanged += new System.EventHandler(this.chbGlyphLS_CheckedChanged);
-            // 
-            // chbGlyphLB
-            // 
-            this.chbGlyphLB.AutoSize = true;
-            this.chbGlyphLB.Location = new System.Drawing.Point(7, 88);
-            this.chbGlyphLB.Name = "chbGlyphLB";
-            this.chbGlyphLB.Size = new System.Drawing.Size(132, 17);
-            this.chbGlyphLB.TabIndex = 43;
-            this.chbGlyphLB.Text = "Glyph of Lightning Bolt";
-            this.chbGlyphLB.UseVisualStyleBackColor = true;
-            this.chbGlyphLB.CheckedChanged += new System.EventHandler(this.chbGlyphLB_CheckedChanged);
-            // 
-            // chbGlyphFT
-            // 
-            this.chbGlyphFT.AutoSize = true;
-            this.chbGlyphFT.Location = new System.Drawing.Point(8, 42);
-            this.chbGlyphFT.Name = "chbGlyphFT";
-            this.chbGlyphFT.Size = new System.Drawing.Size(173, 17);
-            this.chbGlyphFT.TabIndex = 41;
-            this.chbGlyphFT.Text = "Glyph of Flametongue Weapon";
-            this.chbGlyphFT.UseVisualStyleBackColor = true;
-            this.chbGlyphFT.CheckedChanged += new System.EventHandler(this.chbGlyphFT_CheckedChanged);
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.tbModuleNotes);
@@ -511,9 +381,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.gbGlyphs.ResumeLayout(false);
-            this.gbGlyphs.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
@@ -541,20 +408,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTargetLevel;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox gbGlyphs;
-        private System.Windows.Forms.CheckBox chbGlyphLL;
-        private System.Windows.Forms.CheckBox chbGlyphSS;
-        private System.Windows.Forms.CheckBox chbGlyphWF;
-        private System.Windows.Forms.CheckBox chbGlyphShocking;
-        private System.Windows.Forms.CheckBox chbGlyphLS;
-        private System.Windows.Forms.CheckBox chbGlyphLB;
-        private System.Windows.Forms.CheckBox chbGlyphFT;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnEnhSim;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
-        private System.Windows.Forms.CheckBox chbGlyphFS;
         private System.Windows.Forms.CheckBox chbMagmaSearing;
 
     }

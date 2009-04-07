@@ -3518,7 +3518,7 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
         #endregion
     }
 
-	public class ShamanTalents : TalentsBase, ICloneable
+	public partial class ShamanTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[80];
 		public override int[] Data { get { return _data; } }public ShamanTalents() { }
@@ -3543,7 +3543,8 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
 		{
 			ShamanTalents clone = (ShamanTalents)MemberwiseClone();
 			clone._data = (int[])_data.Clone();
-			return clone;
+            clone._glyphData = (bool[])_glyphData.Clone();
+            return clone;
 		}
 
 		public ShamanTalents Clone()

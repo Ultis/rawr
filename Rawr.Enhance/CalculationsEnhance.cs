@@ -274,12 +274,12 @@ namespace Rawr
             float spellCritModifier = stats.SpellCrit;
             if (calcOpts.MainhandImbue == "Flametongue")
             {
-                spellCritModifier += calcOpts.GlyphFT ? .02f : 0f;
+                spellCritModifier += character.ShamanTalents.GlyphofFlametongueWeapon ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
             }
             if (calcOpts.OffhandImbue == "Flametongue")
             {
-                spellCritModifier += calcOpts.GlyphFT ? .02f : 0f;
+                spellCritModifier += character.ShamanTalents.GlyphofFlametongueWeapon ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
             }
             
@@ -373,7 +373,7 @@ namespace Rawr
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
 
             //XXX: Only MH WF for now
-            float chanceToProcWFPerHit = .2f + (calcOpts.GlyphWF ? .02f : 0f);
+            float chanceToProcWFPerHit = .2f + (character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
             float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
 
             //The Swing Loop
@@ -515,7 +515,7 @@ namespace Rawr
                       * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {  // 25% bonus dmg if FT imbue in OH
-                    if (calcOpts.GlyphLL)
+                    if (character.ShamanTalents.GlyphofLavaLash)
                         dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
                     else
                         dpsLL *= 1.25f;
@@ -523,7 +523,7 @@ namespace Rawr
             }
 
             //4: Earth Shock DPS
-            float ssGlyphBonus = calcOpts.GlyphSS ? .08f : 0f;
+            float ssGlyphBonus = character.ShamanTalents.GlyphofStormstrike ? .08f : 0f;
             float stormstrikeMultiplier = 1.2f + ssGlyphBonus;
             float damageESBase = 872f;
             float coefES = .3858f;
@@ -538,7 +538,7 @@ namespace Rawr
             float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
             float lbhitRollMultiplier = (1 - chanceSpellMiss) + (chanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
             float dpsLB = (lbhitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
-            if (calcOpts.GlyphLB)
+            if (character.ShamanTalents.GlyphofLightningBolt)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             if (stats.PendulumOfTelluricCurrentsProc > 0)
                 dpsLB += (1168f + 1752f) / 2f / 45f; // need to put the bonus dmg somewhere this seems as good a place as any, not great place though :(
@@ -558,7 +558,7 @@ namespace Rawr
             float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
             float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage);
-            if (calcOpts.GlyphLS)
+            if (character.ShamanTalents.GlyphofLightningShield)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
             //8: Searing Totem DPS
@@ -588,7 +588,7 @@ namespace Rawr
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
             {
-                float FSglyphdps = calcOpts.GlyphFS ? (attackPower * .3f) / 14f : 0f;
+                float FSglyphdps = character.ShamanTalents.GlyphofFeralSpirit ? (attackPower * .3f) / 14f : 0f;
                 dpsDogs = 2 * ((375f + .3f * APDPS + FSglyphdps) * (45f / 180f)) * (1 + bonusPhysicalDamage);
             }
             #endregion
@@ -764,8 +764,18 @@ namespace Rawr
             stats.SpellPower = (float)Math.Floor(stats.SpellPower + (stats.AttackPower * .1f * MQ * (1f + stats.BonusSpellPowerMultiplier)));
             return stats;
         }
-
         #endregion
+
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
+
+            character.ShamanTalents.GlyphofStormstrike = true;
+        }
 
         #region Custom Chart Data
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)

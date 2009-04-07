@@ -104,7 +104,7 @@ namespace Rawr.Enhance
             sb.AppendLine("metagem                         " + _metagem);
             sb.AppendLine();
 
-            addGlyphs(calcOpts, sb);
+            addGlyphs(character, sb);
             sb.AppendLine();
             sb.AppendLine("glyph_minor1                    -");
             sb.AppendLine("glyph_minor2                    -");
@@ -238,45 +238,45 @@ namespace Rawr.Enhance
             
         }
 
-        private void addGlyphs(CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
+        private void addGlyphs(Character character, System.Text.StringBuilder sb)
         {
             int glyphNumber = 0;
-            if (calcOpts.GlyphFS)
+            if (character.ShamanTalents.GlyphofFeralSpirit)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    feral_spirit");
             }
-            if (calcOpts.GlyphFT)
+            if (character.ShamanTalents.GlyphofFlametongueWeapon)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    flametongue_weapon");
             }
-            if (calcOpts.GlyphLB)
+            if (character.ShamanTalents.GlyphofLightningBolt)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    lightning_bolt");
             }
-            if (calcOpts.GlyphLL)
+            if (character.ShamanTalents.GlyphofLavaLash)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    lava_lash");
             }
-            if (calcOpts.GlyphLS)
+            if (character.ShamanTalents.GlyphofLightningShield)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    lightning_shield");
             }
-            if (calcOpts.GlyphShocking)
+            if (character.ShamanTalents.GlyphofShocking)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    earth_shock");
             }
-            if (calcOpts.GlyphSS)
+            if (character.ShamanTalents.GlyphofStormstrike)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    stormstrike");
             }
-            if (calcOpts.GlyphWF)
+            if (character.ShamanTalents.GlyphofWindfuryWeapon)
             {
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    windfury_weapon");

@@ -223,4 +223,67 @@ namespace Rawr
         [GlyphData(4, "Glyph of Starfire", true, @"Your Starfire ability increases the duration of your Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]
         public bool GlyphOfStarfire { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
     }
+
+    public partial class ShamanTalents
+    {
+        private bool[] _glyphData = new bool[28];
+        public override bool[] GlyphData { get { return _glyphData; } }
+
+        [GlyphData(0, "Glyph of Healing Wave", true, @"Your Healing Wave also heals you for 20% of the healing effect when you heal someone else.")]
+        public bool GlyphofHealingWave { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        [GlyphData(1, "Glyph of Lightning Bolt", true, @"Increases the damage dealt by Lightning Bolt by 4%.")]
+        public bool GlyphofLightningBolt { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(2, "Glyph of Shocking", true, @"Reduces the global cooldown triggered by your shock spells to 0.5 sec.")]
+        public bool GlyphofShocking { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(3, "Glyph of Lightning Shield", true, @"Increases the damage from Lightning Shield by 20%.")]
+        public bool GlyphofLightningShield { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(4, "Glyph of Flame Shock", true, @"Increases the duration of your Flame Shock ability by 6 sec and it is not consumed by casting Lava Burst.")]
+        public bool GlyphofFlameShock { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData(5, "Glyph of Flametongue Weapon", true, @"Increases spell critical strike chance by 2% while Flametongue Weapon is active.")]
+        public bool GlyphofFlametongueWeapon { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(6, "Glyph of Lava Lash", true, @"Damage on your Lava Lash is increased by an additional 10% if your weapon is enchanted with Flametongue.")]
+        public bool GlyphofLavaLash { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        [GlyphData(7, "Glyph of Fire Nova Totem", true, @"Reduces the cooldown of your Fire Nova Totem by 3 seconds.")]
+        public bool GlyphofFireNovaTotem { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(8, "Glyph of Frost Shock", true, @"Increases the duration of your Frost Shock by 2 sec.")]
+        public bool GlyphofFrostShock { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        [GlyphData(9, "Glyph of Healing Stream Totem", true, @"Your Healing Stream Totem heals for an additional 20%.")]
+        public bool GlyphofHealingStreamTotem { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        [GlyphData(10, "Glyph of Lesser Healing Wave", true, @"Your Lesser Healing Wave heals for 20% more if the target is also affected by your Earth Shield.")]
+        public bool GlyphofLesserHealingWave { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(11, "Glyph of Water Mastery", true, @"Increases the passive mana regeneration of your Water Shield spell by 30%.")]
+        public bool GlyphofWaterMastery { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(12, "Glyph of Earthliving Weapon", true, @"Increases the chance for your Earthliving weapon to trigger by 5%.")]
+        public bool GlyphofEarthlivingWeapon { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(13, "Glyph of Windfury Weapon", true, @"Increases the chance per swing for Windfury Weapon to trigger by 2%.")]
+        public bool GlyphofWindfuryWeapon { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Chain Lightning", true, @"Your Chain Lightning strikes 1 additional target.")]
+        public bool GlyphofChainLightning { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Chain Heal", true, @"Your Chain Heal heals 1 additional target.")]
+        public bool GlyphofChainHeal { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(16, "Glyph of Earth Shield", true, @"Increases the amount healed by your Earth Shield by 20%.")]
+        public bool GlyphofEarthShield { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Feral Spirit", true, @"Your spirit wolves gain an additional 30% of your attack power.")]
+        public bool GlyphofFeralSpirit { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Hex", true, @"Increases the damage your Hex target can take before the Hex effect is removed by 20%.")]
+        public bool GlyphofHex { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, "Glyph of Mana Tide Totem", true, @"Your Mana Tide Totem grants an additional 1% of each target's maximum mana each time it pulses.")]
+        public bool GlyphofManaTideTotem { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, "Glyph of Riptide", true, @"Increases the duration of Riptide by 6 sec.")]
+        public bool GlyphofRiptide { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(21, "Glyph of Stoneclaw Totem", true, @"Your Stoneclaw Totem also places a damage absorb shield on you, equal to 4 times the strength of the shield it places on your totems.")]
+        public bool GlyphofStoneclawTotem { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, "Glyph of Stormstrike", true, @"Increases the Nature damage bonus from your Stormstrike ability by an additional 8%.")]
+        public bool GlyphofStormstrike { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        [GlyphData(23, "Glyph of Thunder", true, @"Reduces the cooldown on Thunderstorm by 10 sec.")]
+        public bool GlyphofThunder { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Totem of Wrath", true, @"When you cast Totem of Wrath, you gain 30% of the totem's bonus spell power for 5 min.")]
+        public bool GlyphofTotemofWrath { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, "Glyph of Elemental Mastery", true, @"Reduces the cooldown of your Elemental Mastery ability by 30 sec.")]
+        public bool GlyphofElementalMastery { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(26, "Glyph of Lava", true, @"Your Lava Burst spell gains an additional 10% of your spellpower.")]
+        public bool GlyphofLava { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        [GlyphData(27, "Glyph of Fire Elemental Totem", true, @"Reduces the cooldown of your Fire Elemental Totem by 10 min.")]
+        public bool GlyphofFireElementalTotem { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+    }
 }

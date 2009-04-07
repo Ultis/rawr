@@ -11,7 +11,6 @@ namespace Rawr
     public partial class CalculationOptionsPanelEnhance : CalculationOptionsPanelBase
     {
         private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
-        private int _glyphCount = 0;
 
         public CalculationOptionsPanelEnhance()
         {
@@ -32,18 +31,7 @@ namespace Rawr
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
 
-            chbGlyphFT.Checked = calcOpts.GlyphFT;
-            chbGlyphLL.Checked = calcOpts.GlyphLL;
-            chbGlyphLB.Checked = calcOpts.GlyphLB;
-            chbGlyphLS.Checked = calcOpts.GlyphLS;
-            chbGlyphShocking.Checked = calcOpts.GlyphShocking;
-            chbGlyphSS.Checked = calcOpts.GlyphSS;
-            chbGlyphWF.Checked = calcOpts.GlyphWF;
             chbBaseStatOption.Checked = calcOpts.BaseStatOption;
-
-            _glyphCount = (chbGlyphFT.Checked ? 1 : 0) + (chbGlyphLL.Checked ? 1 : 0) + (chbGlyphLB.Checked ? 1 : 0) +
-                          (chbGlyphLS.Checked ? 1 : 0) + (chbGlyphSS.Checked ? 1 : 0) + (chbGlyphWF.Checked ? 1 : 0) +
-                          (chbGlyphShocking.Checked ? 1 : 0);
 
             labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
@@ -82,134 +70,10 @@ namespace Rawr
                 calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
                 calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
-                calcOpts.GlyphFT = chbGlyphFT.Checked;
-                calcOpts.GlyphLL = chbGlyphLL.Checked;
-                calcOpts.GlyphLB = chbGlyphLB.Checked;
-                calcOpts.GlyphLS = chbGlyphLS.Checked;
-                calcOpts.GlyphShocking = chbGlyphShocking.Checked;
-                calcOpts.GlyphSS = chbGlyphSS.Checked;
-                calcOpts.GlyphWF = chbGlyphWF.Checked;
                 calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 calcOpts.Magma = chbMagmaSearing.Checked;
 
                 Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private bool checkMaxGlyphs(CheckBox glyph)
-        {
-            if (glyph.Checked & _glyphCount == 3)
-            {
-                System.Windows.Forms.MessageBox.Show("You can enable a maximum of three glyphs",
-                                                     "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
-                glyph.Checked = false;
-                return false;
-            }
-            _glyphCount += glyph.Checked ? 1 : -1;
-            return true;
-        }
-
-        private void chbGlyphFT_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphFT))
-                {
-                    calcOpts.GlyphFT = chbGlyphFT.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphLL_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphLL))
-                {
-                    calcOpts.GlyphLL = chbGlyphLL.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphLB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphLB))
-                {
-                    calcOpts.GlyphLB = chbGlyphLB.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphLS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphLS))
-                {
-                    calcOpts.GlyphLS = chbGlyphLS.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphShocking_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphShocking))
-                {
-                    calcOpts.GlyphShocking = chbGlyphShocking.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphSS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphSS))
-                {
-                    calcOpts.GlyphSS = chbGlyphSS.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphWF_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphWF))
-                {
-                    calcOpts.GlyphWF = chbGlyphWF.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
-            }
-        }
-
-        private void chbGlyphFS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                if (checkMaxGlyphs(chbGlyphFS))
-                {
-                    calcOpts.GlyphFS = chbGlyphFS.Checked;
-                    Character.OnCalculationsInvalidated();
-                };
             }
         }
 
@@ -251,14 +115,6 @@ namespace Rawr
 	[Serializable]
 	public class CalculationOptionsEnhance : ICalculationOptionBase
 	{
-        public bool GlyphFS { get; set; }
-        public bool GlyphFT { get; set; }
-        public bool GlyphLL { get; set; }
-        public bool GlyphLB { get; set; }
-        public bool GlyphLS { get; set; }
-        public bool GlyphShocking { get; set; }
-        public bool GlyphSS { get; set; }
-        public bool GlyphWF { get; set; }
         public bool BaseStatOption { get; set; }
         public bool Magma { get; set; }
        
