@@ -1176,8 +1176,48 @@ namespace Rawr.Mage
                     return MinimumRange;
                 case "Threat Reduction":
                     return ThreatReduction;
+                case "Arcane Nondps Talents":
+                    return ArcaneNondpsTalents;
+                case "Fire Nondps Talents":
+                    return FireNondpsTalents;
+                case "Frost Nondps Talents":
+                    return FrostNondpsTalents;
+                case "Partially Modeled Talents":
+                    return PartiallyModeledTalents;
             }
             return 0;
+        }
+
+        public float ArcaneNondpsTalents
+        {
+            get
+            {
+                return MageTalents.ArcaneSubtlety + MageTalents.ArcaneFortitude + MageTalents.MagicAbsorption + MageTalents.MagicAttunement + MageTalents.ArcaneShielding + MageTalents.ImprovedCounterspell + MageTalents.ImprovedBlink + MageTalents.PresenceOfMind + MageTalents.PrismaticCloak + MageTalents.IncantersAbsorption + MageTalents.Slow;
+            }
+        }
+
+        public float FireNondpsTalents
+        {
+            get
+            {
+                return MageTalents.ImprovedFireBlast + MageTalents.BurningDetermination + MageTalents.FlameThrowing + MageTalents.Impact + MageTalents.BurningSoul + MageTalents.MoltenShields + MageTalents.BlastWave + MageTalents.BlazingSpeed + MageTalents.FieryPayback + MageTalents.DragonsBreath + MageTalents.Firestarter;
+            }
+        }
+
+        public float FrostNondpsTalents
+        {
+            get
+            {
+                return MageTalents.Frostbite + MageTalents.FrostWarding + MageTalents.Permafrost + MageTalents.ImprovedBlizzard + MageTalents.ArcticReach + MageTalents.FrozenCore + MageTalents.ImprovedConeOfCold + MageTalents.IceBarrier + MageTalents.ShatteredBarrier + MageTalents.DeepFreeze;
+            }
+        }
+
+        public float PartiallyModeledTalents
+        {
+            get
+            {
+                return MageTalents.ArcaneSubtlety + MageTalents.MagicAttunement + MageTalents.ArcaneShielding + MageTalents.ImprovedCounterspell + MageTalents.ImprovedBlink + MageTalents.PresenceOfMind + MageTalents.IncantersAbsorption + MageTalents.Slow + MageTalents.ImprovedFireBlast + MageTalents.BurningDetermination + MageTalents.FlameThrowing + MageTalents.Impact + MageTalents.BurningSoul + MageTalents.MoltenShields + MageTalents.BlastWave + MageTalents.BlazingSpeed + MageTalents.FieryPayback + MageTalents.DragonsBreath + MageTalents.Firestarter + MageTalents.Frostbite + MageTalents.FrostWarding + MageTalents.Permafrost + MageTalents.ImprovedBlizzard + MageTalents.ArcticReach + MageTalents.ImprovedConeOfCold + MageTalents.IceBarrier + MageTalents.ShatteredBarrier + MageTalents.DeepFreeze;
+            }
         }
 
         public float MinimumRange

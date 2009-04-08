@@ -1690,6 +1690,7 @@ namespace Rawr.Optimizer
                 if (points < 5 * (talentItem[index].talentData.Row - 1)) continue;
                 // we're good, we can add the talent point
                 talents.Data[index]++;
+                treeCount[talentItem[index].talentData.Tree, talentItem[index].talentData.Row - 1]++;
                 talentAdded = true;
             } while (!talentAdded);
             // pick a talent with some points invested that we can take points out of

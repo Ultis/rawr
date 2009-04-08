@@ -2021,6 +2021,10 @@ namespace Rawr.Mage
                     "Movement Speed",
                     "Minimum Range",
                     "Threat Reduction",
+                    "Arcane Nondps Talents",
+                    "Fire Nondps Talents",
+                    "Frost Nondps Talents",
+                    "Partially Modeled Talents",
 					};
                 return _optimizableCalculationLabels;
             }
