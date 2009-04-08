@@ -336,10 +336,10 @@ namespace Rawr.Cat
 
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
-				maintainMangle, (calcOpts.GlyphOfMangle ? 18f : 12f) + timeToReapplyDebuffs, 
+				maintainMangle, (character.DruidTalents.GlyphOfMangle ? 18f : 12f) + timeToReapplyDebuffs, 
 				12f + stats.BonusRipDuration + timeToReapplyDebuffs, 9f + timeToReapplyDebuffs, stats.BonusSavageRoarDuration,
-				character.DruidTalents.Berserk > 0 ? (calcOpts.GlyphOfBerserk ? 20f : 15f) : 0f, attackSpeed, 
-				character.DruidTalents.OmenOfClarity > 0, calcOpts.GlyphOfShred, chanceAvoided, 
+				character.DruidTalents.Berserk > 0 ? (character.DruidTalents.GlyphOfBerserk ? 20f : 15f) : 0f, attackSpeed, 
+				character.DruidTalents.OmenOfClarity > 0, character.DruidTalents.GlyphOfShred, chanceAvoided, 
 				cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
@@ -347,24 +347,25 @@ namespace Rawr.Cat
 
 			//StringBuilder rotations = new StringBuilder();
 			for (int roarCP = 1; roarCP < 6; roarCP++)
-				for (int useShred = 0; useShred < 2; useShred++)
-					for (int useRip = 0; useRip < 2; useRip++)
-						for (int useFerociousBite = 0; useFerociousBite < 2; useFerociousBite++)
-						{
-							CatRotationCalculator.CatRotationCalculation rotationCalculation =
-								rotationCalculator.GetRotationCalculations(
-								useShred == 1, useRip == 1, useFerociousBite == 1, roarCP);
-							//rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
-							if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
-								rotationCalculationDPS = rotationCalculation;
-						}
+				for (int useRake = 0; useRake < 2; useRake++)
+					for (int useShred = 0; useShred < 2; useShred++)
+						for (int useRip = 0; useRip < 2; useRip++)
+							for (int useFerociousBite = 0; useFerociousBite < 2; useFerociousBite++)
+							{
+								CatRotationCalculator.CatRotationCalculation rotationCalculation =
+									rotationCalculator.GetRotationCalculations(
+									useRake == 1, useShred == 1, useRip == 1, useFerociousBite == 1, roarCP);
+								//rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
+								if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+									rotationCalculationDPS = rotationCalculation;
+							}
 
-			float ripDurationMultiplier = (calcOpts.GlyphOfShred && rotationCalculationDPS.ShredDamageTotal > 0 ? 
+			float ripDurationMultiplier = (character.DruidTalents.GlyphOfShred && rotationCalculationDPS.ShredDamageTotal > 0 ? 
 				rotationCalculator.RipDuration + 6 : rotationCalculator.RipDuration) / 12f;
 
 			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
 			calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
-				calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar);
+				calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar);
 			//calculatedStats.Rotations = rotations.ToString();
 			#endregion
 
@@ -621,7 +622,7 @@ namespace Rawr.Cat
 					Stamina = 96f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
-					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
+					BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
 					PhysicalCrit = 0.07476f } : 
 				new Stats() {
 					Health = 7599f,
@@ -630,7 +631,7 @@ namespace Rawr.Cat
 					Stamina = 100f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
-					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
+					BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
 					PhysicalCrit = 0.07476f
 				};
 
@@ -666,7 +667,7 @@ namespace Rawr.Cat
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusCritMultiplier = 0.1f * ((float)talents.PredatoryInstincts / 3f), 
 				BonusFerociousBiteDamageMultiplier = 0.03f * talents.FeralAggression,
-				BonusRipDuration = (character.CalculationOptions as CalculationOptionsCat).GlyphOfRip ? 4f : 0f,
+				BonusRipDuration = talents.GlyphOfRip ? 4f : 0f,
 			};
 
 			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -1000,7 +1001,6 @@ namespace Rawr.Cat
 					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                    BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
 					Health = stats.Health,
 					MangleCatCostReduction = stats.MangleCatCostReduction,
 					TigersFuryCooldownReduction = stats.TigersFuryCooldownReduction,
@@ -1046,11 +1046,34 @@ namespace Rawr.Cat
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc + stats.MongooseProc +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BerserkingProc +
-				stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
+				stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.GreatnessProc +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
+		}
+
+		public override void SetDefaults(Character character)
+		{
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Horn of Winter"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Battle Shout"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Icy Talons"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Endless Rage"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Agility Food"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
+
+			character.DruidTalents.GlyphOfSavageRoar = true;
+			character.DruidTalents.GlyphOfShred = true;
+			character.DruidTalents.GlyphOfRip = true;
 		}
 	}
 
@@ -1164,8 +1187,9 @@ namespace Rawr.Cat
 			dictValues.Add("Rip Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RipDamageTotal / HighestDPSRotation.DamageTotal, RipDamagePerHit, RipDamagePerSwing));
 			dictValues.Add("Bite Damage", string.Format(attackFormat, 100f * HighestDPSRotation.BiteDamageTotal / HighestDPSRotation.DamageTotal, BiteDamagePerHit, BiteDamagePerSwing));
 
-			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\nKeep Rake up.\r\n{2}{3}{4}Use {5} for combo points.",
+			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\n{2}{3}{4}{5}Use {6} for combo points.",
 				HighestDPSRotation.Name.Replace(" + ", "+"), HighestDPSRotation.RoarCP,
+				HighestDPSRotation.Name.Contains("Rake") ? "Keep Rake up.\r\n" : "",
 				HighestDPSRotation.Name.Contains("Rip") ? "Keep 5cp Rip up.\r\n" : "",
 				HighestDPSRotation.Name.Contains("Mangle") ? "Keep Mangle up.\r\n" : "",
 				HighestDPSRotation.Name.Contains("Bite") ? "Use Ferocious Bite to use up extra combo points.\r\n" : "",

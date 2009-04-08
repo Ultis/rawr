@@ -28,13 +28,9 @@ namespace Rawr
 			numericUpDownTargetArmor.Value = calcOpts.TargetArmor;
 			checkBoxFerociousBite.Checked = calcOpts.CustomUseFerociousBite;
 			checkBoxRip.Checked = calcOpts.CustomUseRip;
+			checkBoxRake.Checked = calcOpts.CustomUseRake;
 			checkBoxShred.Checked = calcOpts.CustomUseShred;
 			comboBoxSavageRoar.SelectedItem = calcOpts.CustomCPSavageRoar.ToString();
-			checkBoxGlyphOfMangle.Checked = calcOpts.GlyphOfMangle;
-			checkBoxGlyphOfShred.Checked = calcOpts.GlyphOfShred;
-			checkBoxGlyphOfRip.Checked = calcOpts.GlyphOfRip;
-			checkBoxGlyphOfBerserk.Checked = calcOpts.GlyphOfBerserk;
-			checkBoxGlyphOfSavageRoar.Checked = calcOpts.GlyphOfSavageRoar;
 			numericUpDownDuration.Value = calcOpts.Duration;
 			
 			_loadingCalculationOptions = false;
@@ -50,13 +46,9 @@ namespace Rawr
 				calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
 				calcOpts.CustomUseFerociousBite = checkBoxFerociousBite.Checked;
 				calcOpts.CustomUseRip = checkBoxRip.Checked;
+				calcOpts.CustomUseRake = checkBoxRake.Checked;
 				calcOpts.CustomUseShred = checkBoxShred.Checked;
 				calcOpts.CustomCPSavageRoar = int.Parse(comboBoxSavageRoar.SelectedItem.ToString());
-				calcOpts.GlyphOfMangle = checkBoxGlyphOfMangle.Checked;
-				calcOpts.GlyphOfShred = checkBoxGlyphOfShred.Checked;
-				calcOpts.GlyphOfRip = checkBoxGlyphOfRip.Checked;
-				calcOpts.GlyphOfBerserk = checkBoxGlyphOfBerserk.Checked;
-				calcOpts.GlyphOfSavageRoar = checkBoxGlyphOfSavageRoar.Checked;
 				calcOpts.Duration = (int)numericUpDownDuration.Value;
 				
 				Character.OnCalculationsInvalidated();
@@ -82,13 +74,9 @@ namespace Rawr
 		public int TargetArmor = 10645;
 		public bool CustomUseShred = false;
 		public bool CustomUseRip = false;
+		public bool CustomUseRake = false;
 		public bool CustomUseFerociousBite = false;
 		public int CustomCPSavageRoar = 2;
-		public bool GlyphOfMangle = true;
-		public bool GlyphOfShred = true;
-		public bool GlyphOfRip = true;
-		public bool GlyphOfBerserk = true;
-		public bool GlyphOfSavageRoar = true;
 		public int Duration = 300;
 	}
 }

@@ -1364,6 +1364,32 @@ the Threat Scale defined on the Options tab.",
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating) != 0;
 		}
 		#endregion
+
+		public override void SetDefaults(Character character)
+		{
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Horn of Winter"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Battle Shout"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Icy Talons"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Agility Food"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
+
+			character.DruidTalents.GlyphOfMaul = true;
+			character.DruidTalents.GlyphOfGrowl = true;
+			character.DruidTalents.GlyphOfFrenziedRegeneration = true;
+		}
 	}
 
 	/// <summary>

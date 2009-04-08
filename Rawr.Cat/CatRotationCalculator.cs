@@ -75,7 +75,7 @@ namespace Rawr.Cat
 			RoarEnergy = roarEnergy;
 		}
 
-		public CatRotationCalculation GetRotationCalculations(bool useShred, bool useRip, bool useFerociousBite, int roarCP)
+		public CatRotationCalculation GetRotationCalculations(bool useRake, bool useShred, bool useRip, bool useFerociousBite, int roarCP)
 		{
 			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			if (BerserkDuration > 0)
@@ -99,11 +99,17 @@ namespace Rawr.Cat
 			#endregion
 
 			#region Rake
-			float rakeCount = Duration / RakeDuration;
-			float rakeTotalEnergy = rakeCount * RakeEnergy;
-			float rakeCP = rakeCount * CPPerCPG;
-			totalCPAvailable += rakeCP;
-			totalEnergyAvailable -= rakeTotalEnergy;
+			float rakeCount = 0;
+			float rakeTotalEnergy = 0;
+			float rakeCP = 0;
+			if (useRake)
+			{
+				rakeCount = Duration / RakeDuration;
+				rakeTotalEnergy = rakeCount * RakeEnergy;
+				rakeCP = rakeCount * CPPerCPG;
+				totalCPAvailable += rakeCP;
+				totalEnergyAvailable -= rakeTotalEnergy;
+			}
 			#endregion
 
 			#region Mangle
@@ -234,6 +240,7 @@ namespace Rawr.Cat
 
 			StringBuilder rotationName = new StringBuilder();
 			if (MaintainMangle || !useShred) rotationName.Append("Mangle+");
+			if (useRake) rotationName.Append("Rake+");
 			if (useShred) rotationName.Append("Shred+");
 			if (useRip) rotationName.Append("Rip+");
 			if (useFerociousBite) rotationName.Append("Bite+");

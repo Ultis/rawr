@@ -368,7 +368,7 @@ namespace Rawr
                 Stats = { Strength = 155, Agility = 155 },
 				ConflictingBuffs = { "Agility", "Strength" },
                 Improvements = { 
-					new Buff { Name = "Enhancing Totems", Stats = { Strength = (float)Math.Floor(155f * 0.15f), Agility = (float)Math.Floor(155f * 0.15f) } }
+					new Buff { Name = "Enhancing Totems (Agility/Strength)", Stats = { Strength = (float)Math.Floor(155f * 0.15f), Agility = (float)Math.Floor(155f * 0.15f) } }
 				}
             });
 
@@ -708,8 +708,8 @@ namespace Rawr
                 Source = "Shaman",
                 Group = "Spell Power",
                 Stats = { SpellPower = 144f },
-                Improvements = { // NB. deliberately added extra . character as otherwise we get a clash of names making this buff invisible to GetBuffByName
-					new Buff { Name = "Enhancing Totems.", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
+                Improvements = {
+					new Buff { Name = "Enhancing Totems (Spell Power)", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
                 },
             });
             defaultBuffs.Add(new Buff
@@ -1319,7 +1319,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Health = 1300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 650 } } }
+                Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 320 } } }
             });
             defaultBuffs.Add(new Buff()
             {

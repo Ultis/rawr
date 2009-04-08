@@ -782,8 +782,8 @@ namespace Rawr
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
             if (character.ShamanTalents.EnhancingTotems == 3)
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems")); // add both the Agi Str one 
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems.")); // and the spellpower one
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)")); // add both the Agi Str one 
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Spell Power)")); // and the spellpower one
             }
 
             character.ShamanTalents.GlyphofStormstrike = true;

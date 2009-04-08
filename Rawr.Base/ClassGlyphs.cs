@@ -63,7 +63,69 @@ namespace Rawr
         public bool GlyphOfLivingBomb { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
         [GlyphData(15, "Glyph of Ice Lance", true, @"Your Ice Lance now causes 4 times damage against frozen targets higher level than you instead of triple damage.")]
         public bool GlyphOfIceLance { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-    }
+	}
+
+	public partial class DruidTalents
+	{
+		private bool[] _glyphData = new bool[24];
+		public override bool[] GlyphData { get { return _glyphData; } }
+
+		//Cat Glyphs
+		[GlyphData(0, "Glyph of Mangle", true, @"Increases the duration of Mangle by 6 sec.")]
+		public bool GlyphOfMangle { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+		[GlyphData(1, "Glyph of Shred", true, @"")]
+		public bool GlyphOfShred { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+		[GlyphData(2, "Glyph of Rip", true, @"")]
+		public bool GlyphOfRip { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+		[GlyphData(3, "Glyph of Berserk", true, @"")]
+		public bool GlyphOfBerserk { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+		[GlyphData(4, "Glyph of Savage Roar", true, @"")]
+		public bool GlyphOfSavageRoar { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+
+		//Bear Glyphs
+		[GlyphData(5, "Glyph of Growl", true, @"Increases the chance for your Growl ability to work successfully by 8%.")]
+		public bool GlyphOfGrowl { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+		[GlyphData(6, "Glyph of Maul", true, @"Your Maul ability now hits 1 additional target.")]
+		public bool GlyphOfMaul { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+		[GlyphData(7, "Glyph of Frenzied Regeneration", true, @"While Frenzied Regeneration is active, healing effects on you are 20% more powerful.")]
+		public bool GlyphOfFrenziedRegeneration { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+		
+		//Moonkin Glyphs
+		[GlyphData(8, "Glyph of Focus", true, @"Increases the damage done by Starfall by 20%, but decreases its radius by 50%.")]
+		public bool GlyphOfFocus { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+		[GlyphData(9, "Glyph of Insect Swarm", true, @"Increases the damage of your Insect Swarm ability by 20%, but it no longer affects your victim's chance to hit.")]
+		public bool GlyphOfInsectSwarm { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+		[GlyphData(10, "Glyph of Monsoon", true, @"Reduces the cooldown of your Typhoon spell by 3 sec.")]
+		public bool GlyphOfMonsoon { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+		[GlyphData(11, "Glyph of Moonfire", true, @"Increases the periodic damage of your Moonfire ability by 75%, but initial damage is decreased by 90%.")]
+		public bool GlyphOfMoonfire { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+		[GlyphData(12, "Glyph of Starfall", true, @"Reduces the cooldown of Starfall by 30 sec.")]
+		public bool GlyphOfStarfall { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+		[GlyphData(13, "Glyph of Starfire", true, @"Your Starfire ability increases the duration of your Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]
+		public bool GlyphOfStarfire { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+		[GlyphData(14, "Glyph of Wrath", true, @"Reduces the pushback suffered from damaging attacks while casting your Wrath spell by 50%.")]
+		public bool GlyphOfWrath { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+
+		//Tree Glyphs
+		[GlyphData(15, "Glyph of Healing Touch", true, @"Decreases the cast time of Healing Touch by 1.5 sec., the mana cost by 25%, and the amount healed by 50%.")]
+		public bool GlyphOfHealingTouch { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+		[GlyphData(16, "Glyph of Innervate", true, @"Innervate now grants the caster full mana regeneration while casting for 20 sec, in addition to the effect on the target. If the caster targets him or herself, the mana regeneration effect of your Innervate is increased by 20%.")]
+		public bool GlyphOfInnervate { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+		[GlyphData(17, "Glyph of Lifebloom", true, @"Increases the duration of Lifebloom by 1 sec.")]
+		public bool GlyphOfLifebloom { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+		[GlyphData(18, "Glyph of Nourish", true, @"Your Nourish heals for an additional 6% for each of your heal over time effects present on the target.")]
+		public bool GlyphOfNourish { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+		[GlyphData(19, "Glyph of Rebirth", true, @"Players resurrected by Rebirth are returned to life with 100% health.")]
+		public bool GlyphOfRebirth { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+		[GlyphData(20, "Glyph of Regrowth", true, @"Increases the healing of your Regrowth spell by 20% if your Regrowth effect is still active on the target.")]
+		public bool GlyphOfRegrowth { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+		[GlyphData(21, "Glyph of Rejuvenation", true, @"While your Rejuvenation targets are below 50% health, you will heal them for an additional 50% health.")]
+		public bool GlyphOfRejuvenation { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+		[GlyphData(22, "Glyph of Swiftmend", true, @"Your Swiftmend ability no longer consumes a Rejuvenation or Regrowth effect from the target.")]
+		public bool GlyphOfSwiftmend { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+		[GlyphData(23, "Glyph of Wild Growth", true, @"Wild Growth can affect 1 additional target.")]
+		public bool GlyphOfWildGrowth { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+	}
 
     public partial class PaladinTalents
     {
@@ -199,29 +261,6 @@ namespace Rawr
         public bool GlyphOfEnduringVictory { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         [GlyphData(26, "Glyph of Intervene", true, @"Increases the number of attacks you intercept for your intervene target by 1.")]
         public bool GlyphOfIntervene { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
-    }
-
-    public partial class DruidTalents
-    {
-        private bool[] _glyphData = new bool[5];
-        public override bool[] GlyphData
-        {
-            get
-            {
-                return _glyphData;
-            }
-        }
-
-        [GlyphData(0, "Glyph of Innervate", true, @"Innervate now grants the caster full mana regeneration while casting for 20 sec, in addition to the effect on the target.  If the caster targets <him/her>self, the mana regeneration effect of your Innervate is increased by 20%.")]
-        public bool GlyphOfInnervate { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
-        [GlyphData(1, "Glyph of Insect Swarm", true, @"Increases the damage of your Insect Swarm ability by 30%, but it no longer affects your victim's chance to hit.")]
-        public bool GlyphOfInsectSwarm { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-        [GlyphData(2, "Glyph of Moonfire", true, @"Increases the periodic damage of your Moonfire ability by 75%, but initial damage is decreased by 90%.")]
-        public bool GlyphOfMoonfire { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-        [GlyphData(3, "Glyph of Starfall", true, @"Reduces the cooldown of Starfall by 30 sec.")]
-        public bool GlyphOfStarfall { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
-        [GlyphData(4, "Glyph of Starfire", true, @"Your Starfire ability increases the duration of your Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]
-        public bool GlyphOfStarfire { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
     }
 
     public partial class ShamanTalents

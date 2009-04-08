@@ -33,18 +33,14 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.checkBoxShred = new System.Windows.Forms.CheckBox();
 			this.checkBoxRip = new System.Windows.Forms.CheckBox();
+			this.checkBoxRake = new System.Windows.Forms.CheckBox();
 			this.checkBoxFerociousBite = new System.Windows.Forms.CheckBox();
 			this.comboBoxSavageRoar = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.numericUpDownTargetArmor = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
-			this.checkBoxGlyphOfRip = new System.Windows.Forms.CheckBox();
-			this.checkBoxGlyphOfMangle = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
-			this.checkBoxGlyphOfSavageRoar = new System.Windows.Forms.CheckBox();
-			this.checkBoxGlyphOfBerserk = new System.Windows.Forms.CheckBox();
-			this.checkBoxGlyphOfShred = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
@@ -82,10 +78,11 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.checkBoxShred);
 			this.groupBox1.Controls.Add(this.checkBoxRip);
+			this.groupBox1.Controls.Add(this.checkBoxRake);
 			this.groupBox1.Controls.Add(this.checkBoxFerociousBite);
 			this.groupBox1.Controls.Add(this.comboBoxSavageRoar);
 			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Location = new System.Drawing.Point(3, 151);
+			this.groupBox1.Location = new System.Drawing.Point(3, 82);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(265, 73);
 			this.groupBox1.TabIndex = 7;
@@ -95,7 +92,7 @@
 			// checkBoxShred
 			// 
 			this.checkBoxShred.AutoSize = true;
-			this.checkBoxShred.Location = new System.Drawing.Point(54, 19);
+			this.checkBoxShred.Location = new System.Drawing.Point(52, 19);
 			this.checkBoxShred.Name = "checkBoxShred";
 			this.checkBoxShred.Size = new System.Drawing.Size(54, 17);
 			this.checkBoxShred.TabIndex = 1;
@@ -114,10 +111,21 @@
 			this.checkBoxRip.UseVisualStyleBackColor = true;
 			this.checkBoxRip.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
+			// checkBoxRake
+			// 
+			this.checkBoxRake.AutoSize = true;
+			this.checkBoxRake.Location = new System.Drawing.Point(207, 19);
+			this.checkBoxRake.Name = "checkBoxRake";
+			this.checkBoxRake.Size = new System.Drawing.Size(52, 17);
+			this.checkBoxRake.TabIndex = 1;
+			this.checkBoxRake.Text = "Rake";
+			this.checkBoxRake.UseVisualStyleBackColor = true;
+			this.checkBoxRake.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
 			// checkBoxFerociousBite
 			// 
 			this.checkBoxFerociousBite.AutoSize = true;
-			this.checkBoxFerociousBite.Location = new System.Drawing.Point(114, 19);
+			this.checkBoxFerociousBite.Location = new System.Drawing.Point(110, 19);
 			this.checkBoxFerociousBite.Name = "checkBoxFerociousBite";
 			this.checkBoxFerociousBite.Size = new System.Drawing.Size(93, 17);
 			this.checkBoxFerociousBite.TabIndex = 1;
@@ -182,28 +190,6 @@
 			this.label3.TabIndex = 5;
 			this.label3.Text = "Target Armor:";
 			// 
-			// checkBoxGlyphOfRip
-			// 
-			this.checkBoxGlyphOfRip.AutoSize = true;
-			this.checkBoxGlyphOfRip.Location = new System.Drawing.Point(115, 82);
-			this.checkBoxGlyphOfRip.Name = "checkBoxGlyphOfRip";
-			this.checkBoxGlyphOfRip.Size = new System.Drawing.Size(84, 17);
-			this.checkBoxGlyphOfRip.TabIndex = 1;
-			this.checkBoxGlyphOfRip.Text = "Glyph of Rip";
-			this.checkBoxGlyphOfRip.UseVisualStyleBackColor = true;
-			this.checkBoxGlyphOfRip.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// checkBoxGlyphOfMangle
-			// 
-			this.checkBoxGlyphOfMangle.AutoSize = true;
-			this.checkBoxGlyphOfMangle.Location = new System.Drawing.Point(6, 82);
-			this.checkBoxGlyphOfMangle.Name = "checkBoxGlyphOfMangle";
-			this.checkBoxGlyphOfMangle.Size = new System.Drawing.Size(103, 17);
-			this.checkBoxGlyphOfMangle.TabIndex = 1;
-			this.checkBoxGlyphOfMangle.Text = "Glyph of Mangle";
-			this.checkBoxGlyphOfMangle.UseVisualStyleBackColor = true;
-			this.checkBoxGlyphOfMangle.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
@@ -239,50 +225,12 @@
             0});
 			this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
-			// checkBoxGlyphOfSavageRoar
-			// 
-			this.checkBoxGlyphOfSavageRoar.AutoSize = true;
-			this.checkBoxGlyphOfSavageRoar.Location = new System.Drawing.Point(115, 105);
-			this.checkBoxGlyphOfSavageRoar.Name = "checkBoxGlyphOfSavageRoar";
-			this.checkBoxGlyphOfSavageRoar.Size = new System.Drawing.Size(131, 17);
-			this.checkBoxGlyphOfSavageRoar.TabIndex = 1;
-			this.checkBoxGlyphOfSavageRoar.Text = "Glyph of Savage Roar";
-			this.checkBoxGlyphOfSavageRoar.UseVisualStyleBackColor = true;
-			this.checkBoxGlyphOfSavageRoar.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// checkBoxGlyphOfBerserk
-			// 
-			this.checkBoxGlyphOfBerserk.AutoSize = true;
-			this.checkBoxGlyphOfBerserk.Location = new System.Drawing.Point(6, 105);
-			this.checkBoxGlyphOfBerserk.Name = "checkBoxGlyphOfBerserk";
-			this.checkBoxGlyphOfBerserk.Size = new System.Drawing.Size(104, 17);
-			this.checkBoxGlyphOfBerserk.TabIndex = 1;
-			this.checkBoxGlyphOfBerserk.Text = "Glyph of Berserk";
-			this.checkBoxGlyphOfBerserk.UseVisualStyleBackColor = true;
-			this.checkBoxGlyphOfBerserk.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// checkBoxGlyphOfShred
-			// 
-			this.checkBoxGlyphOfShred.AutoSize = true;
-			this.checkBoxGlyphOfShred.Location = new System.Drawing.Point(6, 128);
-			this.checkBoxGlyphOfShred.Name = "checkBoxGlyphOfShred";
-			this.checkBoxGlyphOfShred.Size = new System.Drawing.Size(104, 17);
-			this.checkBoxGlyphOfShred.TabIndex = 1;
-			this.checkBoxGlyphOfShred.Text = "Glyph of Shred";
-			this.checkBoxGlyphOfShred.UseVisualStyleBackColor = true;
-			this.checkBoxGlyphOfShred.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
 			// CalculationOptionsPanelCat
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.checkBoxGlyphOfShred);
-			this.Controls.Add(this.checkBoxGlyphOfBerserk);
-			this.Controls.Add(this.checkBoxGlyphOfMangle);
-			this.Controls.Add(this.checkBoxGlyphOfSavageRoar);
-			this.Controls.Add(this.checkBoxGlyphOfRip);
 			this.Controls.Add(this.numericUpDownDuration);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.numericUpDownTargetArmor);
@@ -312,12 +260,8 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.NumericUpDown numericUpDownTargetArmor;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.CheckBox checkBoxGlyphOfRip;
-		private System.Windows.Forms.CheckBox checkBoxGlyphOfMangle;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.NumericUpDown numericUpDownDuration;
-		private System.Windows.Forms.CheckBox checkBoxGlyphOfSavageRoar;
-		private System.Windows.Forms.CheckBox checkBoxGlyphOfBerserk;
-		private System.Windows.Forms.CheckBox checkBoxGlyphOfShred;
+		private System.Windows.Forms.CheckBox checkBoxRake;
 	}
 }
