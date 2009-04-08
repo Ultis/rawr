@@ -430,7 +430,7 @@ namespace Rawr.ShadowPriest
             }
         }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = GetRaceStats(character);

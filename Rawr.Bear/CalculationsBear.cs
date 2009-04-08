@@ -348,7 +348,7 @@ the Threat Scale defined on the Options tab.",
 		/// <param name="character">The Character to calculate resutls for</param>
 		/// <param name="additionalItem">An additional item to grant the Character the stats of (as if it were worn)</param>
 		/// <returns>The CharacterCalculationsBear containing the results of the calculations</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			int targetLevel = calcOpts.TargetLevel;

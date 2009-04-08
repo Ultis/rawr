@@ -367,7 +367,7 @@ namespace Rawr
             CharacterCalculationsBase newCalc;
             ComparisonCalculationBase compare;
             int orig;
-            currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true);
+            currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
             foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
             {
                 TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
@@ -378,13 +378,13 @@ namespace Rawr
                     if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null))
                     {
                         newChar.CurrentTalents.Data[talentData.Index]--;
-                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                         compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.MaxPoints == orig);
                     }
                     else
                     {
                         newChar.CurrentTalents.Data[talentData.Index]++;
-                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                        newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                         compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.MaxPoints == orig);
                     }
                     compare.Item = null;
@@ -410,7 +410,7 @@ namespace Rawr
             ComparisonCalculationBase compare;
             bool orig;
             List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
-            currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true);
+            currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
             foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
             {
                 GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
@@ -423,13 +423,13 @@ namespace Rawr
                         if (orig)
                         {
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
-                            newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                            newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                             compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig);
                         }
                         else
                         {
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
-                            newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                            newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                             compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig);
                         }
                         compare.Item = null;
@@ -472,7 +472,7 @@ namespace Rawr
                 {
                     newChar = Character.Clone();
                     newChar.CurrentTalents = spec.TalentSpec();
-                    CharacterCalculationsBase calculations = Calculations.GetCharacterCalculations(newChar, null, false, true);
+                    CharacterCalculationsBase calculations = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                     compare = Calculations.GetCharacterComparisonCalculations(calculations, spec.ToString(), spec == picker.CurrentSpec());
                     compare.Item = null;
                     talentCalculations.Add(compare);

@@ -416,7 +416,7 @@ namespace Rawr
 
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
-			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character, null, true, true);
+			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character, null, true, true, true);
 			_calculatedStats = calcs;
 
 			FormItemSelection.CurrentCalculations = calcs;

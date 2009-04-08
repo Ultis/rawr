@@ -226,9 +226,9 @@ namespace Rawr
 		{
 			return Instance.GetCharacterCalculations(character);
 		}
-        public static CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public static CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            return Instance.GetCharacterCalculations(character, additionalItem, referenceCalculation, significantChange);
+            return Instance.GetCharacterCalculations(character, additionalItem, referenceCalculation, significantChange, needsDisplayCalculations);
         }
         public static Stats GetCharacterStats(Character character)
 		{
@@ -451,8 +451,8 @@ namespace Rawr
 		/// </summary>
 		public virtual string[] OptimizableCalculationLabels { get { return new string[0]; } }
 
-		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null, false, false); }
-        public virtual CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem) { return GetCharacterCalculations(character, additionalItem, false, false); }
+		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null, false, false, false); }
+        public virtual CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem) { return GetCharacterCalculations(character, additionalItem, false, false, false); }
         /// <summary>
 		/// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
 		/// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -469,10 +469,11 @@ namespace Rawr
         /// the character displayed in main window; False for comparison calculations in comparison charts.</param>
         /// <param name="significantChange">True if the difference from reference calculation can potentially result in significantly
         /// different result, for example when changing talents or glyphs.</param>
+        /// <param name="needsDisplayCalculations">When False the model can ignore any calculations that are not used for rating directly (such as GetCharacterDisplayCalculationValues).</param>
 		/// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
 		/// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
 		/// CharacterCalculationsBase comments for more details.</returns>
-		public abstract CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange);
+		public abstract CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations);
 		
 		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
 		/// <summary>
@@ -581,13 +582,13 @@ namespace Rawr
 				characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
 			else
 			{
-				characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false);
+				characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false, false);
 				_cachedCharacter = character;
 				_cachedSlot = slot;
 				_cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
 			}
 
-			CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, null, false, false);
+			CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, null, false, false, false);
 
 			ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
 			itemCalc.ItemInstance = item;
@@ -621,13 +622,13 @@ namespace Rawr
                 characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
             else
             {
-                characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false);
+                characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false, false);
                 _cachedCharacter = character;
                 _cachedSlot = slot;
                 _cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
             }
 
-            CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem, false, false);
+            CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem, false, false, false);
 
             ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
             itemCalc.Item = additionalItem;
@@ -662,7 +663,7 @@ namespace Rawr
 					calcsEquipped = currentCalcs;
 					Character charUnequipped = character.Clone();
 					charUnequipped.SetEnchantBySlot(enchant.Slot, null);
-					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false);
+					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
 				}
 				else
 				{
@@ -670,8 +671,8 @@ namespace Rawr
 					Character charEquipped = character.Clone();
 					charUnequipped.SetEnchantBySlot(enchant.Slot, null);
 					charEquipped.SetEnchantBySlot(enchant.Slot, enchant);
-					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false);
-					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false);
+					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
 				}
 				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
 				enchantCalc.Name = enchant.Name;
@@ -789,8 +790,8 @@ namespace Rawr
                     RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);
                     RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff);
 
-					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false);
-					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false);
+					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
 
 					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
 					buffCalc.Name = buff.Name;
@@ -812,7 +813,7 @@ namespace Rawr
 		public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations, 
 			Character character, string name, bool equipped)
 		{
-			CharacterCalculationsBase characterCalculations = GetCharacterCalculations(character, null, false, true);
+			CharacterCalculationsBase characterCalculations = GetCharacterCalculations(character, null, false, true, false);
 			ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
 			comparisonCalculations.Name = name;
 			comparisonCalculations.Item = new Item() { Name = name };
@@ -1119,7 +1120,7 @@ namespace Rawr
             {
                 // Get change bounds
                 Item item = new Item() { Stats = new Stats() };
-                CharacterCalculationsBase charCalcsBase = Calculations.GetCharacterCalculations(character, null, false, false);
+                CharacterCalculationsBase charCalcsBase = Calculations.GetCharacterCalculations(character, null, false, false, false);
                 float basePoints = charCalcsBase.OverallPoints;
                 float upperChangePoint = 1.0f;
                 float lowerChangePoint = 0.0f;
@@ -1132,11 +1133,11 @@ namespace Rawr
                 // Get new overall points with the [upperChangePoint] improvement
                 property.SetValue(item.Stats, upperChangePoint, null);
                 item.InvalidateCachedData();
-				CharacterCalculationsBase charCalcsUpper = Calculations.Instance.GetCharacterCalculations(character, item, false, false);
+				CharacterCalculationsBase charCalcsUpper = Calculations.Instance.GetCharacterCalculations(character, item, false, false, false);
 				// Get new overall points with the [lowerChangePoint] improvement
 				property.SetValue(item.Stats, lowerChangePoint, null);
 				item.InvalidateCachedData();
-				CharacterCalculationsBase charCalcsLower = Calculations.Instance.GetCharacterCalculations(character, item, false, false);
+				CharacterCalculationsBase charCalcsLower = Calculations.Instance.GetCharacterCalculations(character, item, false, false, false);
 				// Create new CCB, populate, and return it.
                 ccb = Calculations.CreateNewComparisonCalculation();
 				ccb.Name = Extensions.DisplayName(property);
@@ -1168,7 +1169,7 @@ namespace Rawr
             bool continuous;
             property.SetValue(tagItem.Stats, resolution, null);
             tagItem.InvalidateCachedData();
-            continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false).OverallPoints;
+            continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
             // if continuity was detected in the first alteration, then test the second direction (to guard against cases 
             // where we just happen to be on the threshold)
             if (continuous)
@@ -1177,7 +1178,7 @@ namespace Rawr
                 tagItem.InvalidateCachedData();
                 // Since we've already determined that the first alteration was continuous, whether this one is 
                 // determines whether both are continuous.
-                continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false).OverallPoints;
+                continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
             }
             return continuous;
         }
@@ -1219,7 +1220,7 @@ namespace Rawr
                 tagItem.InvalidateCachedData();
                 // If the midpoint leaves the OverallPoints unchanged, the change point 
                 // is in the upper half of the given range.
-                float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false).OverallPoints;
+                float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
                 if (basePoints == newOverall)
                 {
 					return GetStatValueUpperChangePoint(character, basePoints, property, tagItem, midPoint, upperBound, resolution);
@@ -1251,7 +1252,7 @@ namespace Rawr
 				tagItem.InvalidateCachedData();
 				// If the midpoint leaves the OverallPoints unchanged, the change point 
 				// is in the lower half of the given range.
-				float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false).OverallPoints;
+				float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
 				if (basePoints == newOverall)
 				{
 					return GetStatValueLowerChangePoint(character, basePoints, property, tagItem, lowerBound, midPoint, resolution);

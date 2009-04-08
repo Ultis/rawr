@@ -84,7 +84,7 @@ namespace Rawr.Rogue
         /// <returns></returns>
         /// Much of this code is based on Aldriana's RogueCalc
         /// 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             Talents.Initialize(character.RogueTalents);
             var stats = GetCharacterStats(character, additionalItem);

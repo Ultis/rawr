@@ -690,7 +690,7 @@ namespace Rawr.Optimizer
                 {
                     if (error == null) error = new NullReferenceException();
                 }
-                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character, null, false, optimizeTalents));
+                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character, null, false, optimizeTalents, false));
             }
             catch (Exception ex)
             {
@@ -1267,7 +1267,7 @@ namespace Rawr.Optimizer
             try
             {
                 Item.OptimizerManagedVolatiliy = true;
-                return model.GetCharacterCalculations(individual.Character, null, false, optimizeTalents);
+                return model.GetCharacterCalculations(individual.Character, null, false, optimizeTalents, false);
             }
             finally
             {

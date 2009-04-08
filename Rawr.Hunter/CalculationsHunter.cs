@@ -422,7 +422,7 @@ namespace Rawr.Hunter
 			return returnValue;
 		}
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
 			CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
 			if (character == null)

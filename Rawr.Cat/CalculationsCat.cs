@@ -209,7 +209,7 @@ namespace Rawr.Cat
 			return calcOpts;
 		}
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
 			//_cachedCharacter = character;
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;

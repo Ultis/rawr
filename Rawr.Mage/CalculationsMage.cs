@@ -342,13 +342,13 @@ namespace Rawr.Mage
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            return GetCharacterCalculations(character, additionalItem, referenceCalculation && calculationOptions.IncrementalOptimizations, significantChange, calculationOptions.SmartOptimization && !significantChange);
+            return GetCharacterCalculations(character, additionalItem, referenceCalculation && calculationOptions.IncrementalOptimizations, significantChange, calculationOptions.SmartOptimization && !significantChange, needsDisplayCalculations);
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet, bool ignoreIncrementalSet, bool useGlobalOptimizations)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet, bool ignoreIncrementalSet, bool useGlobalOptimizations, bool needsDisplayCalculations)
         {
             CharacterCalculationsBase ret;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
@@ -1004,7 +1004,7 @@ namespace Rawr.Mage
 
             // offset might be very far from current position, so make sure to force incremental set recalc
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            baseCalc = GetCharacterCalculations(character, new Item() { Stats = offset }, forceIncrementalBaseRecalculation, false, calculationOptions.SmartOptimization) as CharacterCalculationsMage;
+            baseCalc = GetCharacterCalculations(character, new Item() { Stats = offset }, forceIncrementalBaseRecalculation, false, calculationOptions.SmartOptimization, false) as CharacterCalculationsMage;
             baseStats = baseCalc.BaseStats;
 
             for (int index = 0; index < statList.Length; index++)
@@ -1532,7 +1532,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization);
+                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization, false);
                     }
 
                     break;
@@ -1647,7 +1647,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization);
+                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization, false);
                     }
 
                     break;
@@ -1763,7 +1763,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization);
+                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization, false);
                     }
 
                     break;
@@ -1878,7 +1878,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization);
+                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization, false);
                     }
 
                     break;
@@ -1994,7 +1994,7 @@ namespace Rawr.Mage
 					// restore incremental base
 					if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
 					{
-                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization);
+                        GetCharacterCalculations(character, null, true, false, calculationOptions.SmartOptimization, false);
 					}
 
 					break;

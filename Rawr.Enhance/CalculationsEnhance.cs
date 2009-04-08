@@ -188,7 +188,7 @@ namespace Rawr
         }
 
         #region Main Calculations
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             #region Applied Stats
             //_cachedCharacter = character;

@@ -731,7 +731,7 @@ namespace Rawr.Tree
             return result;
         }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)character.CalculationOptions;
             CharacterCalculationsTree calculatedStats = new CharacterCalculationsTree();
