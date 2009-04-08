@@ -1390,6 +1390,21 @@ the Threat Scale defined on the Options tab.",
 			character.DruidTalents.GlyphOfGrowl = true;
 			character.DruidTalents.GlyphOfFrenziedRegeneration = true;
 		}
+
+		private static List<string> _relevantGlyphs;
+		public override List<string> GetRelevantGlyphs()
+		{
+			if (_relevantGlyphs == null)
+			{
+				_relevantGlyphs = new List<string>();
+				_relevantGlyphs.Add("Glyph of Maul");
+				_relevantGlyphs.Add("Glyph of Growl");
+				_relevantGlyphs.Add("Glyph of Frenzied Regeneration");
+				_relevantGlyphs.Add("Glyph of Mangle");
+				_relevantGlyphs.Add("Glyph of Berserk");
+			}
+			return _relevantGlyphs;
+		}
 	}
 
 	/// <summary>

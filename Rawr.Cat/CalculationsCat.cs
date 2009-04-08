@@ -1075,6 +1075,21 @@ namespace Rawr.Cat
 			character.DruidTalents.GlyphOfShred = true;
 			character.DruidTalents.GlyphOfRip = true;
 		}
+
+		private static List<string> _relevantGlyphs;
+		public override List<string> GetRelevantGlyphs()
+		{
+			if (_relevantGlyphs == null)
+			{
+				_relevantGlyphs = new List<string>();
+				_relevantGlyphs.Add("Glyph of Mangle");
+				_relevantGlyphs.Add("Glyph of Shred");
+				_relevantGlyphs.Add("Glyph of Rip");
+				_relevantGlyphs.Add("Glyph of Berserk");
+				_relevantGlyphs.Add("Glyph of Savage Roar");
+			}
+			return _relevantGlyphs;
+		}
 	}
 
     public class CharacterCalculationsCat : CharacterCalculationsBase
