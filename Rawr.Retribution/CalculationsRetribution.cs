@@ -223,6 +223,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Hammer of Wrath",
+                        "DPS Breakdown:Other*From trinket procs",
                         "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
                         "Rotation Info:Consecration CD",
@@ -338,7 +339,7 @@ namespace Rawr.Retribution
             {
                 rot = new EffectiveCooldown(combats);
             }
-
+            calc.OtherDPS = stats.ArcaneDamage;
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
 
@@ -402,9 +403,6 @@ namespace Rawr.Retribution
 
             float berserkingAP = stats.BerserkingProc * 140f;
 
-            float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
-
-            stats.Strength += greatnessStr;
             stats.AttackPower += berserkingAP + libramAP;
             stats.CritRating += libramCrit;
             stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
@@ -435,27 +433,40 @@ namespace Rawr.Retribution
                 {
                     statsAverage += effect.GetAverageStats();
                 }
-                else if (effect.Trigger == Trigger.MeleeCrit)
-                {
-                    statsAverage += effect.GetAverageStats(1f / rot.GetMeleeCritsPerSec(), 1f);
-                }
-                else if (effect.Trigger == Trigger.MeleeHit)
-                {
-                    statsAverage += effect.GetAverageStats(1f / rot.GetMeleeAttacksPerSec(), 1f);
-                }
-                else if (effect.Trigger == Trigger.PhysicalCrit)
-                {
-                    statsAverage += effect.GetAverageStats(1f / rot.GetPhysicalCritsPerSec(), 1f);
-                }
-                else if (effect.Trigger == Trigger.PhysicalHit)
-                {
-                    statsAverage += effect.GetAverageStats(1f / rot.GetPhysicalAttacksPerSec(), 1f);
+                else {
+                    float trigger = 0;
+                    if (effect.Trigger == Trigger.MeleeCrit)
+                    {
+                        trigger = 1f / rot.GetMeleeCritsPerSec();
+                    }
+                    else if (effect.Trigger == Trigger.MeleeHit)
+                    {
+                        trigger = 1f / rot.GetMeleeAttacksPerSec();
+                    }
+                    else if (effect.Trigger == Trigger.PhysicalCrit)
+                    {
+                        trigger = 1f / rot.GetPhysicalCritsPerSec();
+                    }
+                    else if (effect.Trigger == Trigger.PhysicalHit)
+                    {
+                        trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    }
+
+                    if (effect.MaxStack > 1)
+                    {
+                        float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
+                        statsAverage = effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
+                    }
+                    else
+                    {
+                        statsAverage += effect.GetAverageStats(trigger);
+                    }
                 }
             }
 
             stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
-            stats.Strength += greatnessStr;
             stats.AttackPower += berserkingAP + libramAP;
+            stats.Strength += stats.HighestStat;
             stats.CritRating += libramCrit;
             stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
@@ -548,7 +559,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
@@ -594,7 +605,6 @@ namespace Rawr.Retribution
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
                 BerserkingProc = stats.BerserkingProc,
-                GreatnessProc = stats.GreatnessProc,
                 CritJudgement_5 = stats.CritJudgement_5,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 APCrusaderStrike_10 = stats.APCrusaderStrike_10,
@@ -624,7 +634,7 @@ namespace Rawr.Retribution
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
             return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
-            + stats.HasteRating) > 0;
+            + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -632,7 +642,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.GreatnessProc +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +

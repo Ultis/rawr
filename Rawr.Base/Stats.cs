@@ -302,6 +302,7 @@ namespace Rawr
 		DevastateCritIncrease,
 		DreadnaughtBonusRageProc,
         #endregion
+        ArcaneDamage,
     }
 
     enum MultiplicativeStat : int
@@ -392,6 +393,7 @@ namespace Rawr
         ShadowResistanceBuff,
         MovementSpeed,
         GreatnessProc,
+        HighestStat,
         ManacostReduceWithin15OnUse1Min,
         #region Added by Rawr.*Priest for Glyphs
         GLYPH_FlashHeal,
@@ -2382,6 +2384,15 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Highest Stat")]
+        [Category("Equipment Procs")]
+        public float HighestStat
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.HighestStat]; }
+            set { _rawNoStackData[(int)NonStackingStat.HighestStat] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healed every 1 min")]
         [Category("Equipment Procs")]
         public float Heal1Min
@@ -2391,8 +2402,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("AP on Crusader Strike (10 sec)")]
+        [DisplayName("Arcane Damage")]
         [Category("Equipment Procs")]
+        public float ArcaneDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ArcaneDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ArcaneDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("AP on Crusader Strike (10 sec)")]
+        [Category("Retribution")]
         public float APCrusaderStrike_10
         {
             get { return _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_10]; }
@@ -2401,7 +2421,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Crusader Strike Damage")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float CrusaderStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage]; }
@@ -2410,7 +2430,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Crit on Judgement (5 sec)")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float CritJudgement_5
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritJudgement_5]; }
@@ -2419,7 +2439,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Consecration Spell Power")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float ConsecrationSpellPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower]; }
@@ -2428,7 +2448,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Divine Storm Damage")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float DivineStormDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineStormDamage]; }
@@ -2438,7 +2458,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Divine Storm Damage")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float DivineStormMultiplier
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
@@ -2448,7 +2468,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Crusader Strike Damage")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float CrusaderStrikeMultiplier
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier]; }
@@ -2458,7 +2478,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Exorcism Damage")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float ExorcismMultiplier
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier]; }
@@ -2468,7 +2488,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Hammer of Wrath Damage")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float HammerOfWrathMultiplier
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier]; }
@@ -2478,7 +2498,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Crusader Strike Crit")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float CrusaderStrikeCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit]; }
@@ -2488,7 +2508,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Divine Storm Crit")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float DivineStormCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineStormCrit]; }
@@ -2497,7 +2517,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("sec Judgement CD Reduction")]
-        [Category("Equipment Procs")]
+        [Category("Retribution")]
         public float JudgementCDReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction]; }
@@ -2507,7 +2527,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Flash of Light Spell Power")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float FlashOfLightSpellPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower]; }
@@ -2517,7 +2537,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Flash of Light Healing")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float FlashOfLightMultiplier
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
@@ -2528,7 +2548,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Flash of Light Crit")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float FlashOfLightCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit]; }
@@ -2537,7 +2557,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Holy Light Spell Power")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float HolyLightSpellPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower]; }
@@ -2555,7 +2575,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Holy Light Mana Cost Reduction")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float HolyLightManaCostReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction]; }
@@ -2565,7 +2585,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Holy Light Crit")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float HolyLightCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCrit]; }
@@ -2575,7 +2595,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Holy Shock Crit")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float HolyShockCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyShockCrit]; }
@@ -2585,7 +2605,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Holy Light Cost Reduction")]
-        [Category("Equipment Procs")]
+        [Category("Healadin")]
         public float HolyLightPercentManaReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction]; }

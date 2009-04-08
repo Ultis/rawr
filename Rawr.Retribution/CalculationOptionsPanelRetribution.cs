@@ -36,6 +36,7 @@ namespace Rawr.Retribution
 
             nudDelay.Value = (decimal)calcOpts.Delay;
             nudWait.Value = (decimal)calcOpts.Wait;
+            nudStackTrinket.Value = (decimal)calcOpts.StackTrinketReset;
             nudTargetLevel.Value = (decimal)calcOpts.TargetLevel;
 
             nudJudge.Value = (decimal)calcOpts.JudgeCD;
@@ -397,6 +398,16 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudStackTrinket_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.StackTrinketReset = (int)nudStackTrinket.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -419,6 +430,8 @@ namespace Rawr.Retribution
         public float TimeUnder20 = .18f;
         public float Delay = .05f;
         public float Wait = .05f;
+
+        public int StackTrinketReset = 0;
 
         public bool SimulateRotation = true;
 

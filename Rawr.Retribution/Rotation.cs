@@ -70,7 +70,8 @@ namespace Rawr.Retribution
                 calc.DivineStormDPS +
                 calc.ExorcismDPS +
                 calc.ConsecrationDPS +
-                calc.HammerOfWrathDPS;
+                calc.HammerOfWrathDPS +
+                calc.OtherDPS;
         }
 
         public float SealProcsPerSec()

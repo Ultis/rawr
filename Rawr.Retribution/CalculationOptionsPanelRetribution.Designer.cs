@@ -70,6 +70,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cmbSeal = new System.Windows.Forms.ComboBox();
             this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.nudStackTrinket = new System.Windows.Forms.NumericUpDown();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
@@ -87,6 +89,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStackTrinket)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMobType
@@ -783,11 +786,35 @@
             0});
             this.nudTargetLevel.ValueChanged += new System.EventHandler(this.nudTargetLevel_ValueChanged);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 458);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(113, 13);
+            this.label4.TabIndex = 34;
+            this.label4.Text = "Stacked trinkets reset:";
+            // 
+            // nudStackTrinket
+            // 
+            this.nudStackTrinket.Location = new System.Drawing.Point(124, 456);
+            this.nudStackTrinket.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nudStackTrinket.Name = "nudStackTrinket";
+            this.nudStackTrinket.Size = new System.Drawing.Size(40, 20);
+            this.nudStackTrinket.TabIndex = 35;
+            this.nudStackTrinket.ValueChanged += new System.EventHandler(this.nudStackTrinket_ValueChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.nudStackTrinket);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.nudTargetLevel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbSeal);
@@ -820,6 +847,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStackTrinket)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -868,6 +896,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbSeal;
         private System.Windows.Forms.NumericUpDown nudTargetLevel;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown nudStackTrinket;
 
     }
 }

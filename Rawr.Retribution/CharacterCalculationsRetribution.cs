@@ -36,6 +36,7 @@ namespace Rawr.Retribution
         public float ConsecrationDPS { get; set; }
         public float ExorcismDPS { get; set; }
         public float HammerOfWrathDPS { get; set; }
+        public float OtherDPS { get; set; }
 
         public float ToMiss { get; set; }
         public float ToDodge { get; set; }
@@ -68,6 +69,7 @@ namespace Rawr.Retribution
             dictValues.Add("Exorcism", ExorcismDPS.ToString("N0"));
             dictValues.Add("Divine Storm", DivineStormDPS.ToString("N0"));
             dictValues.Add("Hammer of Wrath", HammerOfWrathDPS.ToString("N0"));
+            dictValues.Add("Other", OtherDPS.ToString("N0"));
             dictValues.Add("Total DPS", OverallPoints.ToString("N0"));
 
             dictValues.Add("Crusader Strike CD", Rotation.CrusaderStrikeCD.ToString("N2"));
