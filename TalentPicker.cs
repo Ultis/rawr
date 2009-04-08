@@ -236,7 +236,7 @@ namespace Rawr
                         cb.Tag = glyph.Index;
                         cb.Checked = Talents.GlyphData[glyph.Index];
                         cb.UseVisualStyleBackColor = true;
-                        cb.Location = new Point(6, 19 + 23 * count);
+                        cb.Location = new Point(8, 17 + 21 * count);
                         cb.CheckedChanged += new EventHandler(this.glyph_ValueChanged);
                         tooltipGlyph.SetToolTip(cb, glyph.Description);
                         count++;
