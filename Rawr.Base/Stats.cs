@@ -4115,21 +4115,88 @@ namespace Rawr
             _rawSpecialEffectDataSize++;
         }
 
-        public IEnumerable<SpecialEffect> SpecialEffects()
+        public struct SpecialEffectEnumerator : IEnumerator<SpecialEffect>, IDisposable, System.Collections.IEnumerator, IEnumerable<SpecialEffect>
         {
-            for (int i = 0; i < _rawSpecialEffectDataSize; i++)
+            private Stats stats;
+            private int index;
+            private SpecialEffect current;
+            private Predicate<SpecialEffect> match;
+
+            internal SpecialEffectEnumerator(Stats stats, Predicate<SpecialEffect> match)
             {
-                yield return _rawSpecialEffectData[i];
+                this.stats = stats;
+                this.match = match;
+                index = 0;
+                current = null;
+            }
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext()
+            {
+                while (index < stats._rawSpecialEffectDataSize)
+                {
+                    current = stats._rawSpecialEffectData[index];
+                    index++;
+                    if (match == null || match(current)) return true;
+                }
+                index = stats._rawSpecialEffectDataSize + 1;
+                current = null;
+                return false;
+            }
+
+            public SpecialEffect Current
+            {
+                get
+                {
+                    return current;
+                }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get
+                {
+                    if ((index == 0) || (index == (stats._rawSpecialEffectDataSize + 1)))
+                    {
+                        throw new InvalidOperationException();
+                    }
+                    return Current;
+                }
+            }
+
+            void System.Collections.IEnumerator.Reset()
+            {
+                index = 0;
+                current = null;
+            }
+
+            public SpecialEffectEnumerator GetEnumerator()
+            {
+                return this;
+            }
+
+            IEnumerator<SpecialEffect> System.Collections.Generic.IEnumerable<SpecialEffect>.GetEnumerator()
+            {
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return this;
             }
         }
 
-        public IEnumerable<SpecialEffect> SpecialEffects(Predicate<SpecialEffect> match)
+        public SpecialEffectEnumerator SpecialEffects()
         {
-            for (int i = 0; i < _rawSpecialEffectDataSize; i++)
-            {
-                SpecialEffect effect = _rawSpecialEffectData[i];
-                if (match(effect)) yield return effect;
-            }
+            return new SpecialEffectEnumerator(this, null);
+        }
+
+        public SpecialEffectEnumerator SpecialEffects(Predicate<SpecialEffect> match)
+        {
+            return new SpecialEffectEnumerator(this, match);
         }
 
         public bool ContainsSpecialEffect(Predicate<SpecialEffect> match)
