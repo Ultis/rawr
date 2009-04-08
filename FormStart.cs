@@ -78,25 +78,35 @@ namespace Rawr
 		private void DownloadDidYouKnows(object ignored)
 		{
 			string dyk = _webRequestWrapper.GetRandomDidYouKnow();
-			if (this.Visible)
-				this.Invoke(new WaitCallback(DisplayDidYouKnow), dyk);
+			try
+			{
+				if (this.Visible || this.Disposing || this.IsDisposed)
+					this.Invoke(new WaitCallback(DisplayDidYouKnow), dyk);
+			}
+			catch { }
 		}
 
 		private void DisplayDidYouKnow(object dyk)
 		{
-			labelDidYouKnow.Text = dyk.ToString();
+			if (this.Visible || this.Disposing || this.IsDisposed)
+				labelDidYouKnow.Text = dyk.ToString();
 		}
 
 		private void DownloadKnownIssues(object ignored)
 		{
 			string ki = _webRequestWrapper.GetKnownIssues();
-			if (this.Visible)
-				this.Invoke(new WaitCallback(DisplayKnownIssues), ki);
+			try
+			{
+				if (this.Visible || this.Disposing || this.IsDisposed)
+					this.Invoke(new WaitCallback(DisplayKnownIssues), ki);
+			}
+			catch { }
 		}
 
 		private void DisplayKnownIssues(object ki)
 		{
-			labelKnownIssues.Text = ki.ToString();
+			if (this.Visible || this.Disposing || this.IsDisposed)
+				labelKnownIssues.Text = ki.ToString();
 		}
 
 		private void panelDidYouKnowTab_Click(object sender, EventArgs e)

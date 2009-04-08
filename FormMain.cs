@@ -1103,25 +1103,80 @@ namespace Rawr
 			ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender;
 			string selectedTag = clickedMenuItem.Tag.ToString();
 
-			if (gearToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			if (gearToolStripMenuItem.DropDownItems.Contains(clickedMenuItem) ||
+				toolStripDropDownButtonSubSlotGear.DropDownItems.Contains(clickedMenuItem) ||
+				clickedMenuItem == gearToolStripMenuItem)
 			{
 				gearToolStripMenuItem.Tag = selectedTag;
-				gearToolStripMenuItem.Text = "Gear > " + clickedMenuItem.Text;
+				if (clickedMenuItem != gearToolStripMenuItem)
+				{
+					gearToolStripMenuItem.Text = "Gear > " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotGear.Text = "> " + clickedMenuItem.Text;
+				}
+
+				toolStripDropDownButtonSlot.Text = "Slot: Gear";
+				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
+				toolStripDropDownButtonSubSlotGear.Visible = true;
+				toolStripDropDownButtonSubSlotEnchants.Visible = toolStripDropDownButtonSubSlotGems.Visible =
+					toolStripDropDownButtonSubSlotBuffs.Visible = false;
 			}
-			else if (enchantsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			else if (enchantsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem) ||
+				toolStripDropDownButtonSubSlotEnchants.DropDownItems.Contains(clickedMenuItem) ||
+				clickedMenuItem == enchantsToolStripMenuItem)
 			{
 				enchantsToolStripMenuItem.Tag = selectedTag;
-				enchantsToolStripMenuItem.Text = "Enchants > " + clickedMenuItem.Text;
+				if (clickedMenuItem != enchantsToolStripMenuItem)
+				{
+					enchantsToolStripMenuItem.Text = "Enchants > " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotEnchants.Text = "> " + clickedMenuItem.Text;
+				}
+
+				toolStripDropDownButtonSlot.Text = "Slot: Enchants";
+				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
+				toolStripDropDownButtonSubSlotEnchants.Visible = true;
+				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotGems.Visible =
+					toolStripDropDownButtonSubSlotBuffs.Visible = false;
 			}
-			else if (gemsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			else if (gemsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem) ||
+				toolStripDropDownButtonSubSlotGems.DropDownItems.Contains(clickedMenuItem) ||
+				clickedMenuItem == gemsToolStripMenuItem)
 			{
 				gemsToolStripMenuItem.Tag = selectedTag;
-				gemsToolStripMenuItem.Text = "Gems > " + clickedMenuItem.Text;
+				if (clickedMenuItem != gemsToolStripMenuItem)
+				{
+					gemsToolStripMenuItem.Text = "Gems > " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotGems.Text = "> " + clickedMenuItem.Text;
+				}
+
+				toolStripDropDownButtonSlot.Text = "Slot: Gems";
+				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
+				toolStripDropDownButtonSubSlotGems.Visible = true;
+				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotEnchants.Visible =
+					toolStripDropDownButtonSubSlotBuffs.Visible = false;
 			}
-			else if (buffsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem))
+			else if (buffsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem) ||
+				toolStripDropDownButtonSubSlotBuffs.DropDownItems.Contains(clickedMenuItem) ||
+				clickedMenuItem == buffsToolStripMenuItem)
 			{
 				buffsToolStripMenuItem.Tag = selectedTag;
-				buffsToolStripMenuItem.Text = "Buffs > " + clickedMenuItem.Text;
+				if (clickedMenuItem != buffsToolStripMenuItem)
+				{
+					buffsToolStripMenuItem.Text = "Buffs > " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotBuffs.Text = "> " + clickedMenuItem.Text;
+				}
+
+				toolStripDropDownButtonSlot.Text = "Slot: Buffs";
+				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
+				toolStripDropDownButtonSubSlotBuffs.Visible = true;
+				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotEnchants.Visible =
+					toolStripDropDownButtonSubSlotGems.Visible = false;
+			}
+			else
+			{
+				toolStripDropDownButtonSlot.Text = "Slot: " + clickedMenuItem.Text;
+				toolStripDropDownButtonSlot.ShowDropDownArrow = true;
+				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotEnchants.Visible = 
+					toolStripDropDownButtonSubSlotGems.Visible = toolStripDropDownButtonSubSlotBuffs.Visible = false;
 			}
 
 			foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
@@ -1130,10 +1185,10 @@ namespace Rawr
 				if (menuItem != null)
 				{
 					menuItem.Checked = (string)menuItem.Tag == selectedTag;
-					if (menuItem.Checked)
-					{
-						toolStripDropDownButtonSlot.Text = "Slot: " + menuItem.Text;
-					}
+					//if (menuItem.Checked)
+					//{
+					//    toolStripDropDownButtonSlot.Text = "Slot: " + menuItem.Text;
+					//}
 				}
 			}
 			foreach (ToolStripMenuItem menuItem in gearToolStripMenuItem.DropDownItems)
@@ -1143,6 +1198,14 @@ namespace Rawr
 			foreach (ToolStripMenuItem menuItem in gemsToolStripMenuItem.DropDownItems)
 				menuItem.Checked = (string)menuItem.Tag == selectedTag;
 			foreach (ToolStripMenuItem menuItem in buffsToolStripMenuItem.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in toolStripDropDownButtonSubSlotGear.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in toolStripDropDownButtonSubSlotEnchants.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in toolStripDropDownButtonSubSlotGems.DropDownItems)
+				menuItem.Checked = (string)menuItem.Tag == selectedTag;
+			foreach (ToolStripMenuItem menuItem in toolStripDropDownButtonSubSlotBuffs.DropDownItems)
 				menuItem.Checked = (string)menuItem.Tag == selectedTag;
 
 			toolStripDropDownButtonSlot.DropDown.Close(ToolStripDropDownCloseReason.ItemClicked);
