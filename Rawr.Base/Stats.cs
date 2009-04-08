@@ -270,6 +270,8 @@ namespace Rawr
         HolyLightCrit,
         HolyShockCrit,
         Heal1Min,
+        Healed,
+        ManaReturn,
         SpellsManaReduction,
         #endregion
         #region Rawr.Retribution
@@ -1937,6 +1939,16 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.BonusManaGem] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana Return")]
+        [Category("Equipment Procs")]
+        public float ManaReturn
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaReturn]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaReturn] = value; }
+        }
+
+
         // 10% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Power (10 sec)")]
@@ -2399,6 +2411,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Heal1Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.Heal1Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healed")]
+        [Category("Equipment Procs")]
+        public float Healed
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Healed]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Healed] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3845,7 +3866,8 @@ namespace Rawr
 
         #region NoStackStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Potion Effect")]
+        [DisplayName("% Increased Mana Potion")]
+        [Percentage]
         [Category("Equipment Procs")]
         public float BonusManaPotion
         {

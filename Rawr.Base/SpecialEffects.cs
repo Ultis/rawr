@@ -33,6 +33,7 @@ namespace Rawr
                 }
                 else if (gemBonus == "Chance to restore mana on spellcast")
                 {
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaReturn = 600 }, 1f, 15f, .05f));
                     stats.ManaRestoreOnCast_5_15 = 600; // IED
 				}
 				else if (gemBonus == "2% Increased Armor Value from Items")
@@ -798,7 +799,7 @@ namespace Rawr
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
                 // Soul of the Dead
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { Mana = 900f }, 1f, 45f, .25f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaReturn = 900f }, 1f, 45f, .25f));
                 stats.ManaRestoreOnCrit_25_45 += 900f;
             }
             else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
@@ -827,6 +828,7 @@ namespace Rawr
                     // internal cooldown: 45 seconds
                     // 20% chance, so on average procs after 5 casts
                     // lets say 60 seconds
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = hot }, 1f, 45f, .2f));
                     stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
             }
@@ -1162,10 +1164,12 @@ namespace Rawr
             {
                 // Figurine - Sapphire Owl
                 stats.ManaRestore5min = 2340;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaReturn = 2340 }, 1f, 300f));
             }
             else if (line == "Instantly heal your current friendly target for 2710. (1 Min Cooldown)")
             {
                 // Living Ice Crystals
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = 2710 }, 1f, 60f));
                 stats.Heal1Min = 2710;
             }
         }

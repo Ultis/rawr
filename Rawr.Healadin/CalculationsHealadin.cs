@@ -254,61 +254,48 @@ namespace Rawr.Healadin
         {
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsHealadin calc = new CharacterCalculationsHealadin();
-            calc.BasicStats = stats;
+            calc.BasicStats = GetCharacterStats(character, additionalItem, false);
             PaladinTalents talents = character.PaladinTalents;
 
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
 
             const float base_mana = 4394;            
-            float fight_length = calcOpts.Length * 60;
-			float active_length = fight_length * calcOpts.Activity;
+            float fightLength = calcOpts.Length * 60;
+			float activeLength = fightLength * calcOpts.Activity;
 
-            float divine_pleas = (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
+            float divine_pleas = (float)Math.Ceiling((fightLength - 60f) / (60f * calcOpts.DivinePlea));
             float glyph_sow = (talents.GlyphOfSealOfWisdom ? .95f : 1f);
             float heal_multi = (talents.GlyphOfSealOfLight ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier)
-                * (1f - .5f * divine_pleas * 15f / fight_length) * (1f + talents.Divinity * .01f);
+                * (1f - .5f * divine_pleas * 15f / fightLength) * (1f + talents.Divinity * .01f);
 
 
             calc.ManaBase = stats.Mana;
             calc.ManaLayOnHands = 1950 * ((talents.GlyphOfDivinity ? 1 : 0) + (calcOpts.LoHSelf ? 1 : 0)) * (talents.GlyphOfDivinity ? 2f : 1f);
-            calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 120f - .25f) : 0);
+            calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fightLength / 120f - .25f) : 0);
             calc.ManaDivinePlea = stats.Mana * .25f * divine_pleas;
-            calc.ManaMp5 = fight_length * stats.Mp5 / 5;
+            calc.ManaMp5 = fightLength * stats.Mp5 / 5;
             calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
-            calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fight_length * calcOpts.Replenishment;
-            if (stats.ManaRestoreOnCast_10_45 > 0)
-            {
-                calc.ManaOther += (float)Math.Ceiling(fight_length / 60f - .25f) * stats.ManaRestoreOnCast_10_45;
-            }
-            if (stats.ManaRestoreOnCrit_25_45 > 0)
-            {
-                calc.ManaOther += (float)Math.Ceiling(fight_length / (45f + 6f / stats.SpellCrit)) * stats.ManaRestoreOnCrit_25_45;
-            }
-            if (stats.ManaRestore5min > 0)
-            {
-                calc.ManaOther += (float)Math.Ceiling((fight_length - 30f) / 300f) * stats.ManaRestore5min;
-			}
-			if (stats.GreatnessProc > 0)
+            calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fightLength * calcOpts.Replenishment;
+            calc.ManaOther += stats.ManaReturn;
+			if (stats.HighestStat > 0)
 			{
-				float intMultiple = (1f + (GetItemStats(character, additionalItem)/* + GetEnchantsStats(character)*/ + GetBuffsStats(character.ActiveBuffs)).BonusIntellectMultiplier)
+				float intMultiple = (1f + (GetItemStats(character, additionalItem) + GetBuffsStats(character.ActiveBuffs)).BonusIntellectMultiplier)
 					* (1 + .03f * talents.DivineIntellect);
-				float greatnessInt = stats.GreatnessProc * intMultiple;
+                float greatnessInt = stats.HighestStat * intMultiple;
 				float greatnessMana = greatnessInt * 15;
-				float greatnessProcs = (float)Math.Ceiling((fight_length - 15f) / 45f);
-				calc.ManaOther += stats.ManaRestoreFromMaxManaPerSecond * 15f * greatnessMana * calcOpts.Replenishment * greatnessProcs; // Replenishment
-				calc.ManaOther += (divine_pleas * 15f / fight_length) * greatnessMana * .25f * greatnessProcs; // Divine Plea
+                calc.ManaReplenishment += stats.ManaRestoreFromMaxManaPerSecond * fightLength * greatnessMana * calcOpts.Replenishment; // Replenishment
+                calc.ManaDivinePlea += divine_pleas * greatnessMana * .25f; // Divine Plea
 			}
             calc.TotalMana = calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion + 
                 calc.ManaReplenishment + calc.ManaLayOnHands;
 
             float benediction = 1f - talents.Benediction * .02f;
-            float ied = stats.ManaRestoreOnCast_5_15 * .035f;
 
             #region Maintaining JotP
             if (calcOpts.JotP && talents.JudgementsOfThePure > 0)
             {
-                float oldhaste = fight_length * (1f + stats.SpellHaste);
+                float oldhaste = fightLength * (1f + stats.SpellHaste);
                 stats.SpellHaste = ((1 + stats.SpellHaste) * (1 + talents.JudgementsOfThePure * .03f)) - 1;
 
 //              float seals_cast = (float)Math.Ceiling((fight_length - 60f) / 120f);
@@ -317,11 +304,11 @@ namespace Rawr.Healadin
 
                 float miss_chance = (float)Math.Max(0f, .09f - talents.EnlightenedJudgements * .02f - stats.PhysicalHit);
                 float average_casts = 1 / (1f - miss_chance);
-                float judgements_cast = (float)Math.Ceiling(fight_length / 60f);
+                float judgements_cast = (float)Math.Ceiling(fightLength / 60f);
                 calc.JotPCasts += judgements_cast * average_casts;
-                calc.JotPUsage += ((float)Math.Round(base_mana * .05f) - ied) * judgements_cast * average_casts;
+                calc.JotPUsage += (float)Math.Round(base_mana * .05f) * judgements_cast * average_casts;
 
-                float newhaste = fight_length * (1f + stats.SpellHaste) - (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste)) * calc.JotPCasts;
+                float newhaste = fightLength * (1f + stats.SpellHaste) - (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste)) * calc.JotPCasts;
                 calc.JotPHaste = 1f - oldhaste / newhaste;
             }
             #endregion
@@ -329,23 +316,20 @@ namespace Rawr.Healadin
             #region Maintaining BoL
             if (talents.BeaconOfLight > 0)
             {
-                calc.BoLCasts = (float)Math.Ceiling(fight_length * calcOpts.BoLUp / (talents.GlyphOfBeaconOfLight ? 90f : 60f));
-                calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(base_mana * .35f * benediction) - ied - stats.SpellsManaReduction);
+                calc.BoLCasts = (float)Math.Ceiling(fightLength * calcOpts.BoLUp / (talents.GlyphOfBeaconOfLight ? 90f : 60f));
+                calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(base_mana * .35f * benediction) - stats.SpellsManaReduction);
             }
             #endregion
 
-            #region Trinket Procs
-            if (stats.Heal1Min > 0) { calc.HealedOther += stats.Heal1Min * (float)Math.Ceiling((fight_length - 15f) / 60f); }
-            if (stats.BonusHoTOnDirectHeals > 0) { calc.HealedOther += stats.BonusHoTOnDirectHeals * 60f * (float)Math.Ceiling((fight_length - 15f) / 55f); }
-            #endregion
+            calc.HealedOther += stats.Healed;
 
             #region Flash of Light
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
             calc.FoLAvgHeal = (835.5f + (stats.SpellPower + stats.FlashOfLightSpellPower) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FlashOfLightMultiplier) * heal_multi;
             float fol_baseMana = (int)(base_mana * .07f);
             calc.FoLCrit = stats.SpellCrit + stats.FlashOfLightCrit + talents.HolyPower * .01f + (talents.GlyphOfFlashOfLight ? .05f : 0f);
-            calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied - stats.SpellsManaReduction;
-            float fol_dimana = fol_baseMana * glyph_sow * .5f - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied;
+            calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - stats.SpellsManaReduction;
+            float fol_dimana = fol_baseMana * glyph_sow * .5f - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit;
             float fol_heal = calc.FoLAvgHeal * ((1 - calc.FoLCrit) + 1.5f  * (1f + stats.BonusCritHealMultiplier) * calc.FoLCrit);
             calc.FoLCastTime = (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste));
             calc.FoLHPS = fol_heal / calc.FoLCastTime;
@@ -360,9 +344,9 @@ namespace Rawr.Healadin
             float hl_baseMana = (float)Math.Round(base_mana * .29f);
             calc.HLCrit = stats.SpellCrit + stats.HolyLightCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
             calc.HLCost = hl_baseMana * glyph_sow * (1f - stats.HolyLightPercentManaReduction)
-                - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HolyLightManaCostReduction - ied - stats.SpellsManaReduction;
+                - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HolyLightManaCostReduction - stats.SpellsManaReduction;
             float hl_dimana = hl_baseMana * glyph_sow * (1f - stats.HolyLightPercentManaReduction) * 0.5f
-                - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HolyLightManaCostReduction - ied;
+                - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HolyLightManaCostReduction;
             float hl_heal = calc.HLAvgHeal * ((1 - calc.HLCrit) + 1.5f * (1f + stats.BonusCritHealMultiplier) * calc.HLCrit);
             calc.HLCastTime = (2.5f - .5f / 3 * talents.LightsGrace) / (1f + stats.SpellHaste);
             calc.HLHPS = hl_heal / calc.HLCastTime;
@@ -376,7 +360,7 @@ namespace Rawr.Healadin
             calc.HSAvgHeal = (2500f + stats.SpellPower * hs_coef) * (1f + talents.HealingLight * .04f) * heal_multi;
             float hs_baseMana = (float)Math.Round(base_mana * .18f * benediction);
             calc.HSCrit = stats.SpellCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f + stats.HolyShockCrit;
-            calc.HSCost = hs_baseMana * glyph_sow - hs_baseMana * .12f * talents.Illumination * calc.HSCrit - ied - stats.SpellsManaReduction;
+            calc.HSCost = hs_baseMana * glyph_sow - hs_baseMana * .12f * talents.Illumination * calc.HSCrit - stats.SpellsManaReduction;
             float hs_heal = calc.HSAvgHeal * ((1 - calc.HSCrit) + 1.5f * (1f + stats.BonusCritHealMultiplier) * calc.HSCrit);
             calc.HSCastTime = (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste));
             calc.HSHPS = hs_heal / calc.HSCastTime;
@@ -387,24 +371,24 @@ namespace Rawr.Healadin
             #region Sacred Shield
             const float SSUptime = 1f;
             calc.SSAvgAbsorb = 500f + .75f * stats.SpellPower;
-            calc.SSCasts = (float)Math.Ceiling(fight_length / 30f) * SSUptime;
+            calc.SSCasts = (float)Math.Ceiling(fightLength / 30f) * SSUptime;
             float ss_baseMana = (float)Math.Round(.12f * base_mana) * benediction - stats.SpellsManaReduction;
             calc.SSUsage = calc.SSCasts * ss_baseMana;
-            calc.SSAbsorbed = (float)Math.Floor(fight_length / 6f) * calc.SSAvgAbsorb;
+            calc.SSAbsorbed = (float)Math.Floor(fightLength / 6f) * calc.SSAvgAbsorb;
             calc.SSHPM = calc.SSAbsorbed / calc.SSUsage;
             calc.SSHPS = calc.SSAbsorbed / (calc.SSCasts * calc.HSCastTime);
             #endregion
 
             if (talents.HolyShock > 0 && calcOpts.HolyShock > 0)
             {
-                calc.HSTime = (float)(Math.Floor(fight_length * calcOpts.HolyShock / (talents.GlyphOfHolyShock ? 5f : 6f)) * calc.HSCastTime);
+                calc.HSTime = (float)(Math.Floor(fightLength * calcOpts.HolyShock / (talents.GlyphOfHolyShock ? 5f : 6f)) * calc.HSCastTime);
                 calc.HSHealed = calc.HSTime * calc.HSHPS;
                 calc.HSUsage = calc.HSTime * hs_mps;
             }
             float df_casts = 0, df_manaCost = 0, df_manaSaved = 0, df_healing = 0;
             if (talents.DivineFavor > 0)
             {
-                df_casts = (float)Math.Ceiling((fight_length - .5f) / 120f);
+                df_casts = (float)Math.Ceiling((fightLength - .5f) / 120f);
                 df_manaCost = (float)Math.Round(base_mana * .03f) * df_casts * benediction - stats.SpellsManaReduction;
                 df_manaSaved = hl_baseMana * .6f * df_casts * (1f - calc.HLCrit);
                 df_healing = calc.HLAvgHeal * (1f - calc.HLCrit) * (1.5f * (1f + stats.BonusCritHealMultiplier) - 1f);
@@ -412,13 +396,13 @@ namespace Rawr.Healadin
             float di_time = 0, di_manausage = 0, di_healing = 0;
             if (talents.DivineIllumination > 0)
             {
-                di_time = (float)Math.Ceiling((fight_length - 1f) / 180f) * 15f * calcOpts.Activity;
+                di_time = (float)Math.Ceiling((fightLength - 1f) / 180f) * 15f * calcOpts.Activity;
                 di_manausage = di_time * hl_dimps;
                 di_healing = di_time * calc.HLHPS;
             }
 
             float healing_mana = calc.TotalMana - calc.BoLUsage - calc.JotPUsage - calc.HSUsage - calc.SSUsage - df_manaCost + df_manaSaved - di_manausage;
-            float healing_time = active_length - (calc.HSCastTime * (calc.BoLCasts + calc.JotPCasts + calc.SSCasts)) - calc.HSTime - di_time;
+            float healing_time = activeLength - (calc.HSCastTime * (calc.BoLCasts + calc.JotPCasts + calc.SSCasts)) - calc.HSTime - di_time;
             calc.HLTime = Math.Min(healing_time, Math.Max(0, (healing_mana - (healing_time * fol_mps)) / (hl_mps - fol_mps)));
             calc.FoLTime = healing_time - calc.HLTime;
             if (calc.HLTime == 0)
@@ -440,7 +424,7 @@ namespace Rawr.Healadin
             calc.TotalHealed += calc.SSAbsorbed + calc.HLGlyph + calc.HealedOther;
 
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
-            calc.AvgHPS = calc.TotalHealed / fight_length;
+            calc.AvgHPS = calc.TotalHealed / fightLength;
 
             calc.FightPoints = calc.AvgHPS * (1f - calcOpts.BurstScale);
             calc.BurstPoints = calc.HLHPS * calcOpts.BurstScale;
@@ -451,8 +435,14 @@ namespace Rawr.Healadin
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            return GetCharacterStats(character, additionalItem, true);
+        }
+
+        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
+        {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
+            float fightLength = calcOpts.Length * 60;
 
             Stats statsRace;
             if (character.Race == Character.CharacterRace.Draenei)
@@ -475,18 +465,46 @@ namespace Rawr.Healadin
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
+            Stats stats = statsBaseGear + statsBuffs + statsRace;
+            ConvertRatings(stats, talents);
+            if (computeAverageStats)
+            {
+                Stats statsAverage = new Stats();
 
-            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
-            statsTotal.Intellect *= (1 + statsTotal.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
-            statsTotal.SpellPower += 0.04f * statsTotal.Intellect * talents.HolyGuidance;
-            statsTotal.SpellCrit = .03336f + statsTotal.SpellCrit + statsTotal.Intellect / 16666.66709f
-                + statsTotal.CritRating / 4590.598679f + talents.SanctityOfBattle * .01f + talents.Conviction * .01f;
-            statsTotal.SpellHaste += statsTotal.HasteRating / 3278.998947f;
-            statsTotal.Mana = (statsTotal.Mana + statsTotal.Intellect * 15) * (1f + statsBaseGear.BonusManaMultiplier);
-            statsTotal.Health = statsTotal.Health + statsTotal.Stamina * 10f;
-            statsTotal.PhysicalHit += statsTotal.HitRating / 3278.998947f;
-            return statsTotal;
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (effect.Trigger == Trigger.Use)
+                    {
+                        statsAverage += effect.GetAverageStats();
+                    }
+                    else
+                    {
+                        float chance = 1f;
+                        if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) { chance = stats.SpellCrit; }
+                        statsAverage += effect.GetAverageStats(1.5f / calcOpts.Activity / (1f + stats.SpellHaste), chance);
+                    }
+                }
+                statsAverage.ManaReturn *= fightLength;
+                statsAverage.Healed *= fightLength;
+
+                stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
+                ConvertRatings(stats, talents);
+            }
+
+            return stats;
+        }
+
+        private void ConvertRatings(Stats stats, PaladinTalents talents)
+        {
+            stats.Stamina *= 1 + stats.BonusStaminaMultiplier;
+            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
+            stats.SpellPower += 0.04f * stats.Intellect * talents.HolyGuidance;
+            stats.SpellCrit = .03336f + stats.SpellCrit + stats.Intellect / 16666.66709f
+                + stats.CritRating / 4590.598679f + talents.SanctityOfBattle * .01f + talents.Conviction * .01f;
+            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
+            stats.Mana = (stats.Mana + stats.Intellect * 15) * (1f + stats.BonusManaMultiplier);
+            stats.Health = stats.Health + stats.Stamina * 10f;
+            stats.PhysicalHit += stats.HitRating / 3278.998947f;
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -542,7 +560,7 @@ namespace Rawr.Healadin
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
@@ -566,36 +584,54 @@ namespace Rawr.Healadin
                 HolyLightCrit = stats.HolyLightCrit,
                 HolyLightManaCostReduction = stats.HolyLightManaCostReduction,
                 HolyLightPercentManaReduction = stats.HolyLightPercentManaReduction,
-                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 // Gear Procs
-                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                ManaRestore5min = stats.ManaRestore5min,
-                GreatnessProc = stats.GreatnessProc,
-                Heal1Min = stats.Heal1Min,
-                BonusHoTOnDirectHeals = stats.BonusHoTOnDirectHeals,
                 SpellsManaReduction = stats.SpellsManaReduction
             };
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use
+                    || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    if (HasRelevantSpecialEffectStats(effect.Stats)) s.AddSpecialEffect(effect);
+                }
+            }
+            return s;
+        }
+
+        public bool HasRelevantSpecialEffectStats(Stats stats)
+        {
+            return (stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaReturn + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
             bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
                 + stats.HitRating + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
-                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + stats.ManaRestoreOnCrit_25_45
+                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + 
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
-                + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
-                + stats.HealingReceivedMultiplier + stats.ManaRestoreOnCast_5_15 + stats.BonusCritHealMultiplier + stats.ManaRestore5min
-                + stats.SpellsManaReduction) > 0;
+                + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
+                + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction) > 0;
             bool survivalStats = (stats.Stamina + stats.Health) > 0;
             bool ignoreStats = (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                 + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit + stats.DodgeRating + stats.ParryRating
                 + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue) > 0;
-            return (wantedStats || (survivalStats && !ignoreStats));
+            bool specialEffect = false;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use
+                    || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    specialEffect = HasRelevantSpecialEffectStats(effect.Stats);
+                    if (specialEffect) break;
+                }
+            }
+            return (wantedStats || ((survivalStats || specialEffect) && !ignoreStats));
         }
     }
 }

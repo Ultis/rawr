@@ -321,7 +321,7 @@ namespace Rawr.Retribution
             Stats stats = GetCharacterStats(character, additionalItem);
 
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
-            calc.BasicStats = stats;
+            calc.BasicStats = GetCharacterStats(character, additionalItem, false);
             CombatStats combats = new CombatStats(character, stats);
 
             calc.AttackSpeed = combats.AttackSpeed;
@@ -359,6 +359,11 @@ namespace Rawr.Retribution
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            return GetCharacterStats(character, additionalItem, true);
+        }
+
+        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
@@ -398,80 +403,87 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
-            Rotation rot;
-            float libramAP = 0, libramCrit = 0;
-
-            float berserkingAP = stats.BerserkingProc * 140f;
-
-            stats.AttackPower += berserkingAP + libramAP;
-            stats.CritRating += libramCrit;
-            stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
-
-            ConvertRatings(stats, talents, calcOpts.TargetLevel);
-
-            CombatStats combats = new CombatStats(character, stats);
-            if (calcOpts.SimulateRotation)
+            if (computeAverageStats)
             {
-                rot = new Simulator(combats);
-                RotationSolution sol = ((Simulator)rot).Solution;
+                Rotation rot;
+                float libramAP = 0, libramCrit = 0;
 
-                libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
-                libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength;
+                float berserkingAP = stats.BerserkingProc * 140f;
 
-            }
-            else
-            {
-                rot = new EffectiveCooldown(combats);
-                libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
-                libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
-            }
+                stats.AttackPower += berserkingAP + libramAP;
+                stats.CritRating += libramCrit;
+                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
-            Stats statsAverage = new Stats();
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use)
+                ConvertRatings(stats, talents, calcOpts.TargetLevel);
+
+                CombatStats combats = new CombatStats(character, stats);
+                if (calcOpts.SimulateRotation)
                 {
-                    statsAverage += effect.GetAverageStats();
-                }
-                else {
-                    float trigger = 0;
-                    if (effect.Trigger == Trigger.MeleeCrit)
-                    {
-                        trigger = 1f / rot.GetMeleeCritsPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.MeleeHit)
-                    {
-                        trigger = 1f / rot.GetMeleeAttacksPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.PhysicalCrit)
-                    {
-                        trigger = 1f / rot.GetPhysicalCritsPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.PhysicalHit)
-                    {
-                        trigger = 1f / rot.GetPhysicalAttacksPerSec();
-                    }
+                    rot = new Simulator(combats);
+                    RotationSolution sol = ((Simulator)rot).Solution;
 
-                    if (effect.MaxStack > 1)
+                    libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
+                    libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength;
+
+                }
+                else
+                {
+                    rot = new EffectiveCooldown(combats);
+                    libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
+                    libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
+                }
+
+                Stats statsAverage = new Stats();
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (effect.Trigger == Trigger.Use)
                     {
-                        float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
-                        statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
+                        statsAverage += effect.GetAverageStats();
                     }
                     else
                     {
-                        statsAverage += effect.GetAverageStats(trigger);
+                        float trigger = 0;
+                        if (effect.Trigger == Trigger.MeleeCrit)
+                        {
+                            trigger = 1f / rot.GetMeleeCritsPerSec();
+                        }
+                        else if (effect.Trigger == Trigger.MeleeHit)
+                        {
+                            trigger = 1f / rot.GetMeleeAttacksPerSec();
+                        }
+                        else if (effect.Trigger == Trigger.PhysicalCrit)
+                        {
+                            trigger = 1f / rot.GetPhysicalCritsPerSec();
+                        }
+                        else if (effect.Trigger == Trigger.PhysicalHit)
+                        {
+                            trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                        }
+
+                        if (effect.MaxStack > 1)
+                        {
+                            float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
+                            statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
+                        }
+                        else
+                        {
+                            statsAverage += effect.GetAverageStats(trigger);
+                        }
                     }
                 }
+
+                stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
+                stats.AttackPower += berserkingAP + libramAP;
+                stats.Strength += stats.HighestStat;
+                stats.CritRating += libramCrit;
+                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
+
+                ConvertRatings(stats, talents, calcOpts.TargetLevel);
             }
-
-            stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
-            stats.AttackPower += berserkingAP + libramAP;
-            stats.Strength += stats.HighestStat;
-            stats.CritRating += libramCrit;
-            stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
-
-            ConvertRatings(stats, talents, calcOpts.TargetLevel);
-
+            else
+            {
+                ConvertRatings(stats, talents, calcOpts.TargetLevel);
+            }
             return stats;
         }
 
