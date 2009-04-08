@@ -561,9 +561,8 @@ namespace Rawr
             {
                 stats.SpellDamageFor10SecOnHit_5 += 132;
             }
-            //Bandit's Insignia
             else if (line == "Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.")
-            {
+            {   //Bandit's Insignia
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880 }, 1f, 45f, 0.15f));
             }
             else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
@@ -657,273 +656,276 @@ namespace Rawr
                 line = line.Replace(".", "");
                 stats.RejuvenationHealBonus += (float)int.Parse(line);
             }
-            else //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
-                if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by "))
-                {
-                    line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);
-                    line = line.Replace(".", "");
-                    stats.LifebloomTickHealBonus += (float)int.Parse(line);
-                }
-                else if (line.StartsWith("Increases the amount healed by Healing Touch by "))
-                {
-                    line = line.Substring("Increases the amount healed by Healing Touch by ".Length);
-                    line = line.Replace(".", "");
-                    stats.HealingTouchFinalHealBonus += (float)int.Parse(line);
-                }
-                else if (line.StartsWith("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for "))
-                { //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.
-                    line = line.Substring("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for ".Length);
-                    line = line.Replace(" sec.", "");
-                    stats.BangleProc += (float)int.Parse(line);
-                }
-                else if (line.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec."))
-                {
-                    // Darkmoon Card: Blue Dragon
-                    stats.FullManaRegenFor15SecOnSpellcast += 2f;
-                }
-                else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
-                {
-                    line = line.Replace(".", "");
-                    line = line.Substring("Reduces the mana cost of Holy Light by ".Length);
-                    stats.HolyLightManaCostReduction += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (line.StartsWith("Increases spell power of Flash of Light by "))
-                {
-                    line = line.Replace(".", "");
-                    line = line.Substring("Increases spell power of Flash of Light by ".Length);
-                    stats.FlashOfLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (line.StartsWith("Increases spell power of Holy Light by "))
-                {
-                    line = line.Replace(".", "");
-                    line = line.Substring("Increases spell power of Holy Light by ".Length);
-                    stats.HolyLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
-                {
-                    line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
-                    float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
-                    line = line.Substring(line.IndexOf(" for") + " for ".Length);
-                    int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
+            else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
+            {
+                line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);
+                line = line.Replace(".", "");
+                stats.LifebloomTickHealBonus += (float)int.Parse(line);
+            }
+            else if (line.StartsWith("Increases the amount healed by Healing Touch by "))
+            {
+                line = line.Substring("Increases the amount healed by Healing Touch by ".Length);
+                line = line.Replace(".", "");
+                stats.HealingTouchFinalHealBonus += (float)int.Parse(line);
+            }
+            else if (line.StartsWith("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for "))
+            { //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.
+                line = line.Substring("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for ".Length);
+                line = line.Replace(" sec.", "");
+                stats.BangleProc += (float)int.Parse(line);
+            }
+            else if (line.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec."))
+            {
+                // Darkmoon Card: Blue Dragon
+                stats.FullManaRegenFor15SecOnSpellcast += 2f;
+            }
+            else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Reduces the mana cost of Holy Light by ".Length);
+                stats.HolyLightManaCostReduction += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else if (line.StartsWith("Increases spell power of Flash of Light by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Flash of Light by ".Length);
+                stats.FlashOfLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else if (line.StartsWith("Increases spell power of Holy Light by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Holy Light by ".Length);
+                stats.HolyLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
+            {
+                line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
+                float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
+                line = line.Substring(line.IndexOf(" for") + " for ".Length);
+                int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
 
-                    //switch (duration)
-                    //{
-                    //    case 10:
-                    //        if (name == "Band of the Eternal Defender")
-                    //        {
-                    //The buff is up about 1/6 the time, so 800/6 = 133 armor
-                    //TODO: Don't count this before talents since it's a buff.
-                    stats.AverageArmor += (float)Math.Round(value / 6f);
-                    //        }
-                    //        break;
-                    //}
-                }
-                else if (line.StartsWith("Increases your pet's critical strike chance by "))
+                //switch (duration)
+                //{
+                //    case 10:
+                //        if (name == "Band of the Eternal Defender")
+                //        {
+                //The buff is up about 1/6 the time, so 800/6 = 133 armor
+                //TODO: Don't count this before talents since it's a buff.
+                stats.AverageArmor += (float)Math.Round(value / 6f);
+                //        }
+                //        break;
+                //}
+            }
+            else if (line.StartsWith("Increases your pet's critical strike chance by "))
+            {
+                string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
+                if (critChance.EndsWith("%."))
                 {
-                    string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
-                    if (critChance.EndsWith("%."))
-                    {
-                        stats.BonusPetCritChance = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
-                    }
+                    stats.BonusPetCritChance = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
                 }
-                else if (line.StartsWith("Increases damage dealt by your pet by "))
+            }
+            else if (line.StartsWith("Increases damage dealt by your pet by "))
+            {
+                string critChance = line.Substring("Increases damage dealt by your pet by ".Length).Trim();
+                if (critChance.EndsWith("%."))
                 {
-                    string critChance = line.Substring("Increases damage dealt by your pet by ".Length).Trim();
-                    if (critChance.EndsWith("%."))
-                    {
-                        stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
-                    }
+                    stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
                 }
-                else if (line.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
+            }
+            else if (line.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
+            {
+                stats.ManacostReduceWithin15OnHealingCast += 450;
+            }
+            else if (line.StartsWith("Your healing spells have a chance to make your next heal cast within 15 sec cost 800 less mana."))
+            {
+                // Soul Preserver
+                stats.ManacostReduceWithin15OnHealingCast += 800;
+            }
+            else if (line.StartsWith("Your damaging and healing spells have a chance to increase your spell power by 512 for 10 sec."))
+            {
+                // Forge Ember
+                stats.SpellPowerFor10SecOnHit_10_45 += 512;
+                // This is a nasty trick for compatibility = when designing a healer, please use this version:
+                stats.SpellPowerFor10SecOnHeal_10_45 += 512;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 512 }, 10, 45, 0.1f));
+            }
+            else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 590 for 10 sec."))
+            {
+                // Sundial of the Exiled (NOT FOR HEALERS)
+                stats.SpellPowerFor10SecOnHit_10_45 += 590;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
+            }
+            else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
+            {
+                // Dying Curse
+                stats.SpellPowerFor10SecOnCast_15_45 += 765;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 765 }, 10, 45, 0.15f));
+            }
+            else if (line.StartsWith("Each time you cast a damaging or healing spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
+            {
+                // Spark of Life
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 176f }, 15f, 45f, .10f));
+                stats.ManaRestoreOnCast_10_45 += 176 * 3;
+            }
+            else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 100 mana per 5 for 15 sec."))
+            {
+                // Je'Tze's Bell
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 100f }, 15f, 45f, .10f));
+                stats.ManaRestoreOnCast_10_45 += 100 * 3;
+            }
+            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
+            {
+                // Memento of Tyrande
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 76f }, 15f, 45f, .10f));
+                stats.ManaRestoreOnCast_10_45 += 76 * 3;
+            }
+            else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
+            {
+                // Majestic Dragon Figurine
+                stats.ExtraSpiritWhileCasting += 180;
+            }
+            else if (line.StartsWith("Your spells have a chance to increase your haste rating by 505 for 10 secs."))
+            {
+                // Embrace of the Spider
+                stats.SpellHasteFor10SecOnCast_10_45 += 505;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 505 }, 10, 45, 0.1f));
+            }
+            else if (line.StartsWith("Your direct healing and heal over time spells have a chance to increase your haste rating by 505 for 10 secs."))
+            {
+                // The Egg of Mortal Essence
+                stats.SpellHasteFor10SecOnHeal_10_45 += 505;
+            }
+            else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
+            {
+                // Soul of the Dead
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { Mana = 900f }, 1f, 45f, .25f));
+                stats.ManaRestoreOnCrit_25_45 += 900f;
+            }
+            else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
+            {
+                // Pendulum of Telluric Currents
+                stats.PendulumOfTelluricCurrentsProc += 1;
+            }
+            else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
+            {
+                // Extract of Necromantic Power
+                stats.ExtractOfNecromanticPowerProc += 1;
+            }
+            else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 744 to 956 Shadow damage."))
+            {
+                // Darkmoon Card: Death
+                stats.DarkmoonCardDeathProc += 1;
+            }
+            else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
+            {
+                Regex r = new Regex("Your direct healing spells have a chance to place a heal over time on your target, healing (?<hot>\\d*) over (?<dur>\\d*) sec\\.");
+                Match m = r.Match(line);
+                if (m.Success)
                 {
-                    stats.ManacostReduceWithin15OnHealingCast += 450;
+                    float hot = int.Parse(m.Groups["hot"].Value);
+                    float dur = int.Parse(m.Groups["dur"].Value);
+                    // internal cooldown: 45 seconds
+                    // 20% chance, so on average procs after 5 casts
+                    // lets say 60 seconds
+                    stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
-                else if (line.StartsWith("Your healing spells have a chance to make your next heal cast within 15 sec cost 800 less mana."))
+            }
+            else if (line.StartsWith("Increases spell power of Chain Lightning and Lightning Bolt by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Chain Lightning and Lightning Bolt by ".Length);
+                stats.LightningSpellPower = float.Parse(line);
+            }
+            else if (line.StartsWith("Your Lightning Bolt spell has a chance to grant "))
+            {
+                Regex r = new Regex("Your Lightning Bolt spell has a chance to grant (?<haste>\\d*) haste rating for 10 sec.");
+                Match m = r.Match(line);
+                if (m.Success)
                 {
-                    // Soul Preserver
-                    stats.ManacostReduceWithin15OnHealingCast += 800;
+                    stats.LightningBoltHasteProc_15_45 += (float)int.Parse(m.Groups["haste"].Value);
                 }
-                else if (line.StartsWith("Your damaging and healing spells have a chance to increase your spell power by 512 for 10 sec."))
+            }
+            else if (line.StartsWith("Increases the damage dealt by your Lava Burst by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
+                stats.LavaBurstBonus = float.Parse(line);
+            }
+            else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec." ||
+                    line == "Your Crusader Strike ability also grants you 120 attack power for 10 sec.")
+            {
+                stats.APCrusaderStrike_10 = 120f;
+            }
+            else if (line == "Increases the spell power of your Consecration spell by 141.")
+            {
+                stats.ConsecrationSpellPower = 141f;
+            }
+            else if (line == "Increases the damage dealt by Crusader Strike by 115.5.")
+            {
+                stats.CrusaderStrikeDamage = 115.5f;
+            }
+            else if (line == "Increases the damage dealt by Crusader Strike by 116.")
+            {
+                stats.CrusaderStrikeDamage = 115.5f;
+            }
+            else if (line == "Increases the damage done by Divine Storm by 235. ")
+            {
+                stats.DivineStormDamage = 235f;
+            }
+            else if (line == "Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec.")
+            {
+                stats.DivineStormDamage = 81;
+            }
+            else if (line == "Causes your Divine Storm to deal an additional 81 damage.")
+            {
+                stats.DivineStormDamage = 81;
+            }
+            else if (line == "Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec.")
+            {
+                stats.CritJudgement_5 = 61f;
+            }
+            else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
+            {
+                stats.CrusaderStrikeMultiplier = .05f;
+            }
+            #region Added by Rawr.Enhance
+            else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
+            {
+                stats.TotemShockAttackPower += 110f * 10f / 45f; // Stonebreaker's Totem
+            }
+            else if (line == "Your Storm Strike ability also grants you 60 haste rating for 6 sec.")
+            {
+                stats.TotemSSHaste += 60f; // Totem of Dueling
+            }
+            else if (line == "Increases the attack power bonus on Windfury Weapon attacks by ")
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases the attack power bonus on Windfury Weapon attacks by ".Length);
+                stats.TotemWFAttackPower = float.Parse(line); // Totem of Astral Winds & Totem of Splintering
+            }
+            else if (line.StartsWith("Your Lava Lash ability also grants you "))
+            {
+                Regex r = new Regex("Your Lava Lash ability also grants you (?<attackpower>\\d*) attack power for 6 sec.");
+                Match m = r.Match(line);
+                if (m.Success) // XXX Gladiators Totem of Indomitability
                 {
-                    // Forge Ember
-                    stats.SpellPowerFor10SecOnHit_10_45 += 512;
-                    // This is a nasty trick for compatibility = when designing a healer, please use this version:
-                    stats.SpellPowerFor10SecOnHeal_10_45 += 512;
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 512 }, 10, 45, 0.1f));
+                    stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
                 }
-                else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 590 for 10 sec."))
+            }
+            else if (line.StartsWith("Your Shock spells grant "))
+            {
+                Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
+                Match m = r.Match(line);
+                if (m.Success) // XXX Gladiators Totem of Survival
                 {
-                    // Sundial of the Exiled (NOT FOR HEALERS)
-                    stats.SpellPowerFor10SecOnHit_10_45 += 590;
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
+                    stats.TotemShockSpellPower += (float)int.Parse(m.Groups["spellpower"].Value);
                 }
-                else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
-                {
-                    // Dying Curse
-                    stats.SpellPowerFor10SecOnCast_15_45 += 765;
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 765 }, 10, 45, 0.15f));
-                }
-                else if (line.StartsWith("Each time you cast a damaging or healing spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
-                {
-                    // Spark of Life
-                    stats.ManaRestoreOnCast_10_45 += 176 * 3;
-                }
-                else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 100 mana per 5 for 15 sec."))
-                {
-                    // Je'Tze's Bell
-                    stats.ManaRestoreOnCast_10_45 += 100 * 3;
-                }
-                else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
-                {
-                    // Memento of Tyrande
-                    stats.ManaRestoreOnCast_10_45 += 76 * 3;
-                }
-                else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
-                {
-                    // Majestic Dragon Figurine
-                    stats.ExtraSpiritWhileCasting += 180;
-                }
-                else if (line.StartsWith("Your spells have a chance to increase your haste rating by 505 for 10 secs."))
-                {
-                    // Embrace of the Spider
-                    stats.SpellHasteFor10SecOnCast_10_45 += 505;
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 505 }, 10, 45, 0.1f));
-                }
-                else if (line.StartsWith("Your direct healing and heal over time spells have a chance to increase your haste rating by 505 for 10 secs."))
-                {
-                    // The Egg of Mortal Essence
-                    stats.SpellHasteFor10SecOnHeal_10_45 += 505;
-                }
-                else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
-                {
-                    // Soul of the Dead
-                    stats.ManaRestoreOnCrit_25_45 += 900f;
-                }
-                else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
-                {
-                    // Pendulum of Telluric Currents
-                    stats.PendulumOfTelluricCurrentsProc += 1;
-                }
-                else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
-                {
-                    // Extract of Necromantic Power
-                    stats.ExtractOfNecromanticPowerProc += 1;
-                }
-                else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 744 to 956 Shadow damage."))
-                {
-                    // Darkmoon Card: Death
-                    stats.DarkmoonCardDeathProc += 1;
-                }
-                else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
-                {
-                    Regex r = new Regex("Your direct healing spells have a chance to place a heal over time on your target, healing (?<hot>\\d*) over (?<dur>\\d*) sec\\.");
-                    Match m = r.Match(line);
-                    if (m.Success)
-                    {
-                        float hot = int.Parse(m.Groups["hot"].Value);
-                        float dur = int.Parse(m.Groups["dur"].Value);
-                        // internal cooldown: 45 seconds
-                        // 20% chance, so on average procs after 5 casts
-                        // lets say 60 seconds
-                        stats.BonusHoTOnDirectHeals += hot / 60f;
-                    }
-                }
-                else if (line.StartsWith("Increases spell power of Chain Lightning and Lightning Bolt by "))
-                {
-                    line = line.Replace(".", "");
-                    line = line.Substring("Increases spell power of Chain Lightning and Lightning Bolt by ".Length);
-                    stats.LightningSpellPower = float.Parse(line);
-                }
-                else if (line.StartsWith("Your Lightning Bolt spell has a chance to grant "))
-                {
-                    Regex r = new Regex("Your Lightning Bolt spell has a chance to grant (?<haste>\\d*) haste rating for 10 sec.");
-                    Match m = r.Match(line);
-                    if (m.Success)
-                    {
-                        stats.LightningBoltHasteProc_15_45 += (float)int.Parse(m.Groups["haste"].Value);
-                    }
-                }
-                else if (line.StartsWith("Increases the damage dealt by your Lava Burst by "))
-                {
-                    line = line.Replace(".", "");
-                    line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
-                    stats.LavaBurstBonus = float.Parse(line);
-                }
-                else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec." ||
-                        line == "Your Crusader Strike ability also grants you 120 attack power for 10 sec.")
-                {
-                    stats.APCrusaderStrike_10 = 120f;
-                }
-                else if (line == "Increases the spell power of your Consecration spell by 141.")
-                {
-                    stats.ConsecrationSpellPower = 141f;
-                }
-                else if (line == "Increases the damage dealt by Crusader Strike by 115.5.")
-                {
-                    stats.CrusaderStrikeDamage = 115.5f;
-                }
-                else if (line == "Increases the damage dealt by Crusader Strike by 116.")
-                {
-                    stats.CrusaderStrikeDamage = 115.5f;
-                }
-                else if (line == "Increases the damage done by Divine Storm by 235. ")
-                {
-                    stats.DivineStormDamage = 235f;
-                }
-                else if (line == "Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec.")
-                {
-                    stats.DivineStormDamage = 81;
-                }
-                else if (line == "Causes your Divine Storm to deal an additional 81 damage.")
-                {
-                    stats.DivineStormDamage = 81;
-                }
-                else if (line == "Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec.")
-                {
-                    stats.CritJudgement_5 = 61f;
-                }
-                else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
-                {
-                    stats.CrusaderStrikeMultiplier = .05f;
-                }
-                #region Added by Rawr.Enhance
-                else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
-                {
-                    stats.TotemShockAttackPower += 110f * 10f / 45f; // Stonebreaker's Totem
-                }
-                else if (line == "Your Storm Strike ability also grants you 60 haste rating for 6 sec.")
-                {
-                    stats.TotemSSHaste += 60f; // Totem of Dueling
-                }
-                else if (line == "Increases the attack power bonus on Windfury Weapon attacks by ")
-                {
-                    line = line.Replace(".", "");
-                    line = line.Substring("Increases the attack power bonus on Windfury Weapon attacks by ".Length);
-                    stats.TotemWFAttackPower = float.Parse(line); // Totem of Astral Winds & Totem of Splintering
-                }
-                else if (line.StartsWith("Your Lava Lash ability also grants you "))
-                {
-                    Regex r = new Regex("Your Lava Lash ability also grants you (?<attackpower>\\d*) attack power for 6 sec.");
-                    Match m = r.Match(line);
-                    if (m.Success) // XXX Gladiators Totem of Indomitability
-                    {
-                        stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
-                    }
-                }
-                else if (line.StartsWith("Your Shock spells grant "))
-                {
-                    Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
-                    Match m = r.Match(line);
-                    if (m.Success) // XXX Gladiators Totem of Survival
-                    {
-                        stats.TotemShockSpellPower += (float)int.Parse(m.Groups["spellpower"].Value);
-                    }
-                }
-                #endregion
-                else if (line == "Reduces the mana cost of your spells by 42.")
-                {
-                    stats.SpellsManaReduction = 42f;
-                }
+            }
+            #endregion
+            else if (line == "Reduces the mana cost of your spells by 42.")
+            {
+                stats.SpellsManaReduction = 42f;
+            }
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)

@@ -455,7 +455,7 @@ namespace Rawr.Retribution
                     if (effect.MaxStack > 1)
                     {
                         float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
-                        statsAverage = effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
+                        statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
                     }
                     else
                     {
