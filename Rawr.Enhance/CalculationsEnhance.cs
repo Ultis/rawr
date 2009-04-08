@@ -576,14 +576,14 @@ namespace Rawr
             if (calcOpts.MainhandImbue == "Flametongue")
             {
                 float damageFTBase = 274 * unhastedMHSpeed / 4.0f;
-                float damageFTCoef = .16f * unhastedMHSpeed / 4.0f;
+                float damageFTCoef = 0.03811f * unhastedMHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
                 dpsFT += hitRollMultiplier * damageFT * hitsPerSMH * (1 + bonusFireDamage);
             }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
                 float damageFTBase = 274 * unhastedOHSpeed / 4.0f;
-                float damageFTCoef = .16f * unhastedOHSpeed / 4.0f;
+                float damageFTCoef = 0.03811f * unhastedOHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
                 dpsFT += hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
             } 
