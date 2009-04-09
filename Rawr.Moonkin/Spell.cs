@@ -115,8 +115,58 @@ namespace Rawr.Moonkin
     delegate float CalculateMP5(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
 
     // The proc effect class itself.
+    // NOTE: Adding constructor with special effect to allow efficient construction of the proc list in a loop.
     class ProcEffect
     {
+        public ProcEffect() { }
+        public ProcEffect(SpecialEffect effect)
+        {
+            this.Effect = effect;
+            Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+            {
+                if (Effect.MaxStack > 0)
+                    sp += Effect.Stats.SpellPower * Effect.MaxStack;
+                else
+                    sp += Effect.Stats.SpellPower;
+                sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
+                sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+            };
+            Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+            {
+                if (Effect.MaxStack > 0)
+                    sp -= Effect.Stats.SpellPower * Effect.MaxStack;
+                else
+                    sp -= Effect.Stats.SpellPower;
+                sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
+                sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+            };
+            UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+            {
+                float upTime = 0.0f;
+                switch (Effect.Trigger)
+                {
+                    case Trigger.Use:
+                        upTime = Effect.GetAverageUptime(0f, 1f);
+                        break;
+                    case Trigger.SpellHit:
+                    case Trigger.DamageSpellHit:
+                        upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, r.Solver.GetSpellHit(c));
+                        break;
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        upTime = Effect.GetAverageUptime(r.Duration / (r.CastCount - (r.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit);
+                        break;
+                    case Trigger.SpellCast:
+                    case Trigger.DamageSpellCast:
+                        upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
+                        break;
+                    default:
+                        break;
+                }
+                return upTime;
+            };
+        }
+        public SpecialEffect Effect { get; set; }
         public Activate Activate { get; set; }
         public Deactivate Deactivate { get; set; }
         public UpTime UpTime { get; set; }
@@ -741,7 +791,7 @@ namespace Rawr.Moonkin
         // Results data from the calculations, which will be sent to the UI.
         Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
 
-        private float GetSpellHit(CharacterCalculationsMoonkin calcs)
+        public float GetSpellHit(CharacterCalculationsMoonkin calcs)
         {
             float baseHit = 1.0f;
             switch (calcs.TargetLevel)
@@ -1014,46 +1064,7 @@ namespace Rawr.Moonkin
             // New trinket code
             foreach (SpecialEffect effect in calcs.BasicStats.SpecialEffects())
             {
-                procEffects.Add(new ProcEffect()
-                {
-                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp += effect.Stats.SpellPower;
-                        sc += StatConversion.GetSpellCritFromRating(effect.Stats.CritRating);
-                        sHa += StatConversion.GetSpellHasteFromRating(effect.Stats.HasteRating);
-                    },
-                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp -= effect.Stats.SpellPower;
-                        sc -= StatConversion.GetSpellCritFromRating(effect.Stats.CritRating);
-                        sHa -= StatConversion.GetSpellHasteFromRating(effect.Stats.HasteRating);
-                    },
-                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-                    {
-                        float upTime = 0.0f;
-                        switch (effect.Trigger)
-                        {
-                            case Trigger.Use:
-                                upTime = effect.GetAverageUptime(0f, 1f);
-                                break;
-                            case Trigger.SpellHit:
-                            case Trigger.DamageSpellHit:
-                                upTime = effect.GetAverageUptime(r.Duration / r.CastCount, GetSpellHit(c));
-                                break;
-                            case Trigger.DamageSpellCrit:
-                            case Trigger.SpellCrit:
-                                upTime = effect.GetAverageUptime(r.Duration / (r.CastCount - (r.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit);
-                                break;
-                            case Trigger.SpellCast:
-                            case Trigger.DamageSpellCast:
-                                upTime = effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
-                                break;
-                            default:
-                                throw new ArgumentException("Invalid trigger found while calculating trinket uptime");
-                        }
-                        return upTime;
-                    }
-                });
+                procEffects.Add(new ProcEffect(effect));
             }
             // Thunder Capacitor (2.5s cooldown after a proc, 5(!) charges/proc)
             if (calcs.BasicStats.ThunderCapacitorProc > 0)

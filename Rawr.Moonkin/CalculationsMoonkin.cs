@@ -956,7 +956,8 @@ namespace Rawr.Moonkin
                 {
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.SpellCritRating > 0 ||
-                        effect.Stats.SpellHasteRating > 0)
+                        effect.Stats.SpellHasteRating > 0 ||
+                        effect.Stats.HighestStat > 0)
                     {
                         s.AddSpecialEffect(effect);
                     }
@@ -987,7 +988,8 @@ namespace Rawr.Moonkin
                 {
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.SpellCritRating > 0 ||
-                        effect.Stats.SpellHasteRating > 0)
+                        effect.Stats.SpellHasteRating > 0 ||
+                        effect.Stats.HighestStat > 0)
                     {
                         return true;
                     }
