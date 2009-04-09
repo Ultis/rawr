@@ -430,7 +430,7 @@ namespace Rawr
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
-            attackPower += attackPower * unleashedRage * urUptime;
+//            attackPower += attackPower * unleashedRage * urUptime; not needed as its done via buffs
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
                     
             if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
@@ -495,7 +495,7 @@ namespace Rawr
 
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * unhastedMHSpeed / hastedMHSpeed) * meleeMultipliers;
             float dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * unhastedOHSpeed / hastedOHSpeed) * meleeMultipliers;
-            float dpsMelee = dpsMHMeleeTotal + character.ShamanTalents.DualWield == 1 ? dpsOHMeleeTotal : 0f;
+            float dpsMelee = dpsMHMeleeTotal + (character.ShamanTalents.DualWield == 1 ? dpsOHMeleeTotal : 0f);
                               
 
             //2: Stormstrike DPS
@@ -592,8 +592,21 @@ namespace Rawr
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
             {
-                float FSglyphdps = character.ShamanTalents.GlyphofFeralSpirit ? (attackPower * .3f) / 14f : 0f;
-                dpsDogs = 2 * ((375f + .3f * APDPS + FSglyphdps) * (45f / 180f)) * (1 + bonusPhysicalDamage);
+                float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
+                float dogsAP = .3f * attackPower + FSglyphAP;
+                float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + 0.065f;
+                float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
+                float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / bloodlustHaste);
+                float dogsBaseDPS = 375f + dogsAP / 14f;
+                
+                float dogsMeleeNormal = dogsBaseDPS * (1 - dogsCrit - glancingRate);
+                float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
+                float dogsMeleeGlances = dogsBaseDPS * glancingRate * .35f;
+                
+                float dogsTotalDPS = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
+                float dogsMultipliers = (1 - damageReduction) * (1 - dogsMissrate) * (1 + bonusPhysicalDamage);
+
+                dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
             }
             #endregion
 
