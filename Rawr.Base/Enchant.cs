@@ -518,7 +518,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
 
             Stats berserking = new Stats() { BerserkingProc = 1 };
-            berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400f }, 15f, 0f, -1f));
+            berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400f, BonusArmorMultiplier = -.05f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, berserking));
             
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { ExecutionerProc = 1 }));

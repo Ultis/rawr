@@ -41,6 +41,7 @@
             this.cmbTrigger = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.butOkay = new System.Windows.Forms.Button();
+            this.cmbPPM = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudChance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldown)).BeginInit();
@@ -69,17 +70,7 @@
             // nudChance
             // 
             this.nudChance.DecimalPlaces = 2;
-            this.nudChance.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.nudChance.Location = new System.Drawing.Point(85, 284);
-            this.nudChance.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nudChance.Name = "nudChance";
             this.nudChance.Size = new System.Drawing.Size(61, 20);
             this.nudChance.TabIndex = 18;
@@ -175,6 +166,19 @@
             this.butOkay.UseVisualStyleBackColor = true;
             this.butOkay.Click += new System.EventHandler(this.butOkay_Click);
             // 
+            // cmbPPM
+            // 
+            this.cmbPPM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPPM.FormattingEnabled = true;
+            this.cmbPPM.Items.AddRange(new object[] {
+            "%",
+            "PPM"});
+            this.cmbPPM.Location = new System.Drawing.Point(152, 283);
+            this.cmbPPM.Name = "cmbPPM";
+            this.cmbPPM.Size = new System.Drawing.Size(49, 21);
+            this.cmbPPM.TabIndex = 29;
+            this.cmbPPM.SelectedIndexChanged += new System.EventHandler(this.cmbPPM_SelectedIndexChanged);
+            // 
             // FormEditSpecialEffect
             // 
             this.AcceptButton = this.butOkay;
@@ -182,6 +186,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.butCancel;
             this.ClientSize = new System.Drawing.Size(253, 371);
+            this.Controls.Add(this.cmbPPM);
             this.Controls.Add(this.butOkay);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.cmbTrigger);
@@ -226,5 +231,6 @@
         private System.Windows.Forms.ComboBox cmbTrigger;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button butOkay;
+        private System.Windows.Forms.ComboBox cmbPPM;
     }
 }

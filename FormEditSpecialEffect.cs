@@ -15,6 +15,7 @@ namespace Rawr
         public Trigger Trigger { get; set; }
         public float Duration { get; set; }
         public float Cooldown { get; set; }
+        public bool UsesPPM { get; set; }
         public float Chance { get; set; }
         public int Stacks { get; set; }
 
@@ -33,8 +34,18 @@ namespace Rawr
             Trigger = trigger;
             Duration = duration;
             Cooldown = cooldown;
-            Chance = chance;
             Stacks = stacks;
+
+            if (chance < 0)
+            {
+                Chance = -chance;
+                UsesPPM = true;
+            }
+            else
+            {
+                Chance = chance * 100f;
+                UsesPPM = false;
+            }
             
             InitializeComponent();
 
@@ -46,6 +57,10 @@ namespace Rawr
             nudCooldown.DataBindings.Add("Value", this, "Cooldown");
             nudChance.DataBindings.Add("Value", this, "Chance");
             nudStacks.DataBindings.Add("Value", this, "Stacks");
+
+            if (UsesPPM) cmbPPM.SelectedIndex = 1;
+            else cmbPPM.SelectedIndex = 0;
+
             loading = false;
         }
 
@@ -62,5 +77,15 @@ namespace Rawr
                 Trigger = (Trigger)Enum.Parse(typeof(Trigger), cmbTrigger.Text);
             }
         }
+
+        private void cmbPPM_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                if (cmbPPM.Text == "PPM") UsesPPM = true;
+                else UsesPPM = false;
+            }
+        }
+
     }
 }

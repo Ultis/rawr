@@ -751,8 +751,17 @@ namespace Rawr
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 Item selectedItem = SelectedItem.Tag as Item;
+                float chance;
+                if (form.UsesPPM)
+                {
+                    chance = -form.Chance;
+                }
+                else
+                {
+                    chance = form.Chance / 100f;
+                }
                 selectedItem.Stats.AddSpecialEffect(new SpecialEffect(form.Trigger, form.Stats,
-                    form.Duration, form.Cooldown, form.Chance, form.Stacks));
+                    form.Duration, form.Cooldown, chance, form.Stacks));
                 UpdateSpecialEffects();
             }
             form.Dispose();
@@ -771,8 +780,15 @@ namespace Rawr
                     eff.Trigger = form.Trigger;
                     eff.Duration = form.Duration;
                     eff.Cooldown = form.Cooldown;
-                    eff.Chance = form.Chance;
                     eff.MaxStack = form.Stacks;
+                    if (form.UsesPPM)
+                    {
+                        eff.Chance = -form.Chance;
+                    }
+                    else
+                    {
+                        eff.Chance = form.Chance / 100f;
+                    }
                     UpdateSpecialEffects();
                 }
                 form.Dispose();
