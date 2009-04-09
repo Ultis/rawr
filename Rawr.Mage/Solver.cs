@@ -171,6 +171,7 @@ namespace Rawr.Mage
 
         private bool useIncrementalOptimizations;
         private bool useGlobalOptimizations;
+        private bool needsDisplayCalculations;
         private bool cancellationPending;
 
         internal bool CancellationPending
@@ -186,7 +187,7 @@ namespace Rawr.Mage
             cancellationPending = true;
         }
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations)
         {
             this.character = character;
             this.talents = character.MageTalents;
@@ -197,6 +198,7 @@ namespace Rawr.Mage
             this.armor = armor;
             this.useIncrementalOptimizations = useIncrementalOptimizations;
             this.useGlobalOptimizations = useGlobalOptimizations;
+            this.needsDisplayCalculations = needsDisplayCalculations;
             requiresMIP = segmentCooldowns || integralMana;
         }
 
@@ -307,9 +309,9 @@ namespace Rawr.Mage
             return total;
         }
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations)
         {
-            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations);
+            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
             return solver.GetCharacterCalculations(additionalItem, calculations);
         }
 
@@ -329,6 +331,7 @@ namespace Rawr.Mage
             calculationResult.CalculationOptions = calculationOptions;
             calculationResult.MageTalents = talents;
             calculationResult.ActiveBuffs = activeBuffs;
+            calculationResult.NeedsDisplayCalculations = needsDisplayCalculations;
 
             restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
             powerInfusionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PowerInfusionAvailable;

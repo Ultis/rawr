@@ -357,16 +357,16 @@ namespace Rawr.Mage
             if (computeIncrementalSet) useIncrementalOptimizations = false;
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations);
+                ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
             }
             else if (calculationOptions.AutomaticArmor && !character.DisableBuffAutoActivation)
             {
-                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations);
-                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations);
+                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
+                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
                 CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
                 if (calculationOptions.MeleeDps + calculationOptions.MeleeDot + calculationOptions.PhysicalDps + calculationOptions.PhysicalDot + calculationOptions.FrostDps + calculationOptions.FrostDot > 0)
                 {
-                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations);
+                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
@@ -374,7 +374,7 @@ namespace Rawr.Mage
             }
             else
             {
-                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations);
+                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
                 ret = calc;
             }
@@ -421,9 +421,9 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations)
         {
-            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations);
+            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
         }
 
         public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)

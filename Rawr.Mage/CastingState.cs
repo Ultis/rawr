@@ -439,157 +439,157 @@ namespace Rawr.Mage
                     c = GetSpell(SpellId.Fireball);
                     break;
                 case CycleId.FBPyro:
-                    c = new FBPyro(this);
+                    c = new FBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBLBPyro:
-                    c = new FBLBPyro(this);
+                    c = new FBLBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBLBPyro:
-                    c = new FFBLBPyro(this);
+                    c = new FFBLBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBScPyro:
-                    c = new FBScPyro(this);
+                    c = new FBScPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBPyro:
-                    c = new FFBPyro(this);
+                    c = new FFBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBScPyro:
-                    c = new FFBScPyro(this);
+                    c = new FFBScPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBScLBPyro:
-                    c = new FFBScLBPyro(this);
+                    c = new FFBScLBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrostfireBoltFOF:
                     c = GetSpell(SpellId.FrostfireBoltFOF);
                     break;
                 case CycleId.ABABarSc:
-                    c = new ABABarSc(this);
+                    c = new ABABarSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABarCSc:
-                    c = new ABABarCSc(this);
+                    c = new ABABarCSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABAMABarSc:
-                    c = new ABAMABarSc(this);
+                    c = new ABAMABarSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABarCSc:
-                    c = new AB3ABarCSc(this);
+                    c = new AB3ABarCSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AMABarSc:
-                    c = new AB3AMABarSc(this);
+                    c = new AB3AMABarSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3MBAMABarSc:
-                    c = new AB3MBAMABarSc(this);
+                    c = new AB3MBAMABarSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ArcaneBlastSpam:
                     c = GetSpell(SpellId.ArcaneBlast3);
                     break;
                 case CycleId.ABarAM:
-                    c = new ABarAM(this);
+                    c = new ABarAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABP:
                     c = new ABP(this);
                     break;
                 case CycleId.ABAM:
-                    c = new ABAM(this);
+                    c = new ABAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpamMBAM:
-                    c = new ABSpamMBAM(this);
+                    c = new ABSpamMBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam3C:
-                    c = new ABSpam3C(this);
+                    c = new ABSpam3C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam03C:
-                    c = new ABSpam03C(this);
+                    c = new ABSpam03C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABar3C:
-                    c = new AB2ABar3C(this);
+                    c = new AB2ABar3C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar2C:
-                    c = new ABABar2C(this);
+                    c = new ABABar2C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar2MBAM:
-                    c = new ABABar2MBAM(this);
+                    c = new ABABar2MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar1MBAM:
-                    c = new ABABar1MBAM(this);
+                    c = new ABABar1MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar3C:
-                    c = new ABABar3C(this);
+                    c = new ABABar3C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABar3MBAM:
-                    c = new AB3ABar3MBAM(this);
+                    c = new AB3ABar3MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AM:
-                    c = new AB3AM(this);
+                    c = new AB3AM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AM2MBAM:
-                    c = new AB3AM2MBAM(this);
+                    c = new AB3AM2MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABar2MBAM:
-                    c = new AB2ABar2MBAM(this);
+                    c = new AB2ABar2MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar0MBAM:
-                    c = new ABABar0MBAM(this);
+                    c = new ABABar0MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar:
                     c = new ABABar(this);
                     break;
                 case CycleId.ABSpam3MBAM:
-                    c = new ABSpam3MBAM(this);
+                    c = new ABSpam3MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABAMABar:
-                    c = new ABAMABar(this);
+                    c = new ABAMABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2AMABar:
-                    c = new AB2AMABar(this);
+                    c = new AB2AMABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AMABar:
-                    c = new AB3AMABar(this);
+                    c = new AB3AMABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AMABar2C:
-                    c = new AB3AMABar2C(this);
+                    c = new AB3AMABar2C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB32AMABar:
-                    c = new AB32AMABar(this);
+                    c = new AB32AMABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABar3C:
-                    c = new AB3ABar3C(this);
+                    c = new AB3ABar3C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar0C:
-                    c = new ABABar0C(this);
+                    c = new ABABar0C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABar1C:
-                    c = new ABABar1C(this);
+                    c = new ABABar1C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABarY:
-                    c = new ABABarY(this);
+                    c = new ABABarY(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABar:
-                    c = new AB2ABar(this);
+                    c = new AB2ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABar2C:
-                    c = new AB2ABar2C(this);
+                    c = new AB2ABar2C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABarMBAM:
-                    c = new AB2ABarMBAM(this);
+                    c = new AB2ABarMBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABar:
-                    c = new AB3ABar(this);
+                    c = new AB3ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABarX:
-                    c = new AB3ABarX(this);
+                    c = new AB3ABarX(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABarY:
-                    c = new AB3ABarY(this);
+                    c = new AB3ABarY(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBABar:
-                    c = new FBABar(this);
+                    c = new FBABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBABar:
-                    c = new FrBABar(this);
+                    c = new FrBABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBABar:
-                    c = new FFBABar(this);
+                    c = new FFBABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 /*case CycleId.ABAMP:
                     c = new ABAMP(this);
@@ -637,34 +637,34 @@ namespace Rawr.Mage
                     c = new FBFBlast(this);
                     break;
                 case CycleId.FrBFBIL:
-                    c = new FrBFBIL(this);
+                    c = new FrBFBIL(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBFB:
-                    c = new FrBFB(this);
+                    c = new FrBFB(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBScLBPyro:
-                    c = new FBScLBPyro(this);
+                    c = new FBScLBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FB2ABar:
-                    c = new FB2ABar(this);
+                    c = new FB2ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrB2ABar:
-                    c = new FrB2ABar(this);
+                    c = new FrB2ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ScLBPyro:
-                    c = new ScLBPyro(this);
+                    c = new ScLBPyro(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABarSlow:
-                    c = new ABABarSlow(this);
+                    c = new ABABarSlow(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBABarSlow:
-                    c = new FBABarSlow(this);
+                    c = new FBABarSlow(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBABarSlow:
-                    c = new FrBABarSlow(this);
+                    c = new FrBABarSlow(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.CustomSpellMix:
-                    c = new SpellCustomMix(this);
+                    c = new SpellCustomMix(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ArcaneMissiles:
                     c = GetSpell(SpellId.ArcaneMissiles);

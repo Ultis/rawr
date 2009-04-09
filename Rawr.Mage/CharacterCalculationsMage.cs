@@ -166,6 +166,8 @@ namespace Rawr.Mage
 
         public List<Buff> ActiveBuffs { get; set; }
 
+        public bool NeedsDisplayCalculations { get; set; }
+
         #region Base State Stats
         public float BaseSpellHit { get; set; }
         public float BaseArcaneHitRate { get; set; }
@@ -728,7 +730,7 @@ namespace Rawr.Mage
                 ret["Tps"] = "...";
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
-                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization);
+                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true);
                 SolverLogForm.Instance.EnableSolver(displaySolver);
                 CalculationOptions.SequenceReconstruction = null;
                 return ret;
