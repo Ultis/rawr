@@ -621,6 +621,10 @@ namespace Rawr
             stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 250 }, 15, 45, 0.5f));
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, stats));
 
+            Stats darkglow = new Stats();
+            darkglow.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 300 }, 1f, 60f, 0.35f));
+            defaultEnchants.Add(new Enchant(3728, "Darkglow Embroidery", Item.ItemSlot.Back, darkglow));
+
             //3.0.8 enchants
             defaultEnchants.Add(new Enchant(3850, "Major Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 40 }));
             defaultEnchants.Add(new Enchant(3849, "Titanium Plating", Item.ItemSlot.OffHand, new Stats() { BlockValue = 40 }));

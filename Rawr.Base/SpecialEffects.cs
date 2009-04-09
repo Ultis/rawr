@@ -33,7 +33,7 @@ namespace Rawr
                 }
                 else if (gemBonus == "Chance to restore mana on spellcast")
                 {
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaReturn = 600 }, 1f, 15f, .05f));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 600 }, 1f, 15f, .05f));
                     stats.ManaRestoreOnCast_5_15 = 600; // IED
 				}
 				else if (gemBonus == "2% Increased Armor Value from Items")
@@ -222,6 +222,11 @@ namespace Rawr
                 // Illustration of the Dragon Soul
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 20f }, 10f, 0f, 1f, 10));
             }
+            else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 25 spell power for the next 10 sec, stacking up to 5 times."))
+            {
+                // Eye of the Broodmother
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 25f }, 10f, 0f, 1f, 5));
+            }
             else if (line == "Increases attack power by 856 for 20 sec.")
             {   // Wrath Stone
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 856f }, 20f, 120f));
@@ -255,6 +260,11 @@ namespace Rawr
             {
                 // Anvil of Titans
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 1000f }, 10f, 45f, .1f));
+            }
+            else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec."))
+            {
+                // Pandora's Plea
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 850f }, 10f, 45f, .1f));
             }
             // Idol of the Raven Goddess (already added)
             else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
@@ -799,7 +809,7 @@ namespace Rawr
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
                 // Soul of the Dead
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaReturn = 900f }, 1f, 45f, .25f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaRestore = 900f }, 1f, 45f, .25f));
                 stats.ManaRestoreOnCrit_25_45 += 900f;
             }
             else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
@@ -1159,7 +1169,7 @@ namespace Rawr
             {
                 // Figurine - Sapphire Owl
                 stats.ManaRestore5min = 2340;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaReturn = 2340 }, 1f, 300f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = 2340 }, 1f, 300f));
             }
             else if (line == "Instantly heal your current friendly target for 2710. (1 Min Cooldown)")
             {

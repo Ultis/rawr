@@ -270,7 +270,7 @@ namespace Rawr
         HolyShockCrit,
         Heal1Min,
         Healed,
-        ManaReturn,
+        ManaRestore,
         SpellsManaReduction,
         #endregion
         #region Rawr.Retribution
@@ -1932,12 +1932,12 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Return")]
+        [DisplayName("Mana Restore")]
         [Category("Equipment Procs")]
-        public float ManaReturn
+        public float ManaRestore
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaReturn]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaReturn] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestore]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestore] = value; }
         }
 
 

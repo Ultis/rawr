@@ -277,7 +277,7 @@ namespace Rawr.Healadin
             calc.ManaMp5 = fightLength * stats.Mp5 / 5;
             calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
             calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fightLength * calcOpts.Replenishment;
-            calc.ManaOther += stats.ManaReturn;
+            calc.ManaOther += stats.ManaRestore;
 			if (stats.HighestStat > 0)
 			{
 				float intMultiple = (1f + (GetItemStats(character, additionalItem) + GetBuffsStats(character.ActiveBuffs)).BonusIntellectMultiplier)
@@ -481,10 +481,20 @@ namespace Rawr.Healadin
                     {
                         float chance = 1f;
                         if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) { chance = stats.SpellCrit; }
-                        statsAverage += effect.GetAverageStats(1.5f / calcOpts.Activity / (1f + stats.SpellHaste), chance);
+                        float trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
+
+                        if (effect.MaxStack > 1)
+                        {
+                            float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * chance * effect.MaxStack);
+                            statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
+                        }
+                        else
+                        {
+                            statsAverage += effect.GetAverageStats(trigger, chance);
+                        }
                     }
                 }
-                statsAverage.ManaReturn *= fightLength;
+                statsAverage.ManaRestore *= fightLength;
                 statsAverage.Healed *= fightLength;
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
@@ -606,7 +616,7 @@ namespace Rawr.Healadin
 
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
-            return (stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaReturn + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
+            return (stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
