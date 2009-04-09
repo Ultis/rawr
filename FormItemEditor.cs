@@ -147,6 +147,8 @@ namespace Rawr
                         }
 */
                     }
+                    UpdateSpecialEffects();
+
                     _loadingItem = false;
 				}
 			}
@@ -742,5 +744,76 @@ namespace Rawr
                 }
             }
         }
+
+        private void butAddSpecialEffect_Click(object sender, EventArgs e)
+        {
+            FormEditSpecialEffect form = new FormEditSpecialEffect();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                Item selectedItem = SelectedItem.Tag as Item;
+                selectedItem.Stats.AddSpecialEffect(new SpecialEffect(form.Trigger, form.Stats,
+                    form.Duration, form.Cooldown, form.Chance, form.Stacks));
+                UpdateSpecialEffects();
+            }
+            form.Dispose();
+        }
+
+        private void butEditSpecialEffect_Click(object sender, EventArgs e)
+        {
+            SpecialEffect eff = cmbSpecialEffects.SelectedItem as SpecialEffect;
+            if (eff != null && typeof(SpecialEffect) == eff.GetType())
+            {
+                FormEditSpecialEffect form = new FormEditSpecialEffect(eff.Stats, eff.Trigger, eff.Duration, eff.Cooldown, eff.Chance, eff.MaxStack);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Item selectedItem = SelectedItem.Tag as Item;
+                    eff.Stats = form.Stats;
+                    eff.Trigger = form.Trigger;
+                    eff.Duration = form.Duration;
+                    eff.Cooldown = form.Cooldown;
+                    eff.Chance = form.Chance;
+                    eff.MaxStack = form.Stacks;
+                    UpdateSpecialEffects();
+                }
+                form.Dispose();
+            }
+        }
+
+        private void butDeleteSpecialEffect_Click(object sender, EventArgs e)
+        {
+            SpecialEffect eff = cmbSpecialEffects.SelectedItem as SpecialEffect;
+            if (eff != null && typeof(SpecialEffect) == eff.GetType())
+            {
+                Item selectedItem = SelectedItem.Tag as Item;
+                selectedItem.Stats.RemoveSpecialEffect(eff);
+                UpdateSpecialEffects();
+            }
+        }
+
+        private void UpdateSpecialEffects()
+        {
+            Item selectedItem = SelectedItem.Tag as Item;
+            Stats stats = selectedItem.Stats;
+            if (stats.ContainsSpecialEffect())
+            {
+                List<SpecialEffect> dataSource = new List<SpecialEffect>();
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    dataSource.Add(effect);
+                }
+                cmbSpecialEffects.DataSource = dataSource;
+                cmbSpecialEffects.Enabled = true;
+                butEditSpecialEffect.Enabled = true;
+                butDeleteSpecialEffect.Enabled = true;
+            }
+            else
+            {
+                cmbSpecialEffects.DataSource = null;
+                cmbSpecialEffects.Enabled = false;
+                butEditSpecialEffect.Enabled = false;
+                butDeleteSpecialEffect.Enabled = false;
+            }
+        }
+
     }
 }

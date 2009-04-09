@@ -1072,11 +1072,6 @@ namespace Rawr
                 // Shifting Naaru Sliver
                 stats.SpellPowerFor15SecOnUse90Sec += 320;
             }
-            else if (line.StartsWith("Tap into the power of the skull, increasing haste rating by 175 for 20 sec."))
-            {
-                // The Skull of Gul'dan
-                stats.HasteRatingFor20SecOnUse2Min += 175;
-            }
             else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
             {
                 stats.Mp5OnCastFor20SecOnUse2Min += 21;

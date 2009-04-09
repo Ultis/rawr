@@ -4115,6 +4115,29 @@ namespace Rawr
             _rawSpecialEffectDataSize++;
         }
 
+
+        public void RemoveSpecialEffect(SpecialEffect specialEffect)
+        {
+            bool found = false;
+            for (int i = 0; i < _rawSpecialEffectDataSize; i++)
+            {
+                if (found)
+                {
+                    _rawSpecialEffectData[i - 1] = _rawSpecialEffectData[i];
+                }
+                else if (specialEffect == _rawSpecialEffectData[i])
+                {
+                    found = true;
+                }
+            }
+            if (found)
+            {
+                _rawSpecialEffectDataSize--;
+                _rawSpecialEffectData[_rawSpecialEffectDataSize] = null;
+            }
+        }
+
+
         public struct SpecialEffectEnumerator : IEnumerator<SpecialEffect>, IDisposable, System.Collections.IEnumerator, IEnumerable<SpecialEffect>
         {
             private Stats stats;
