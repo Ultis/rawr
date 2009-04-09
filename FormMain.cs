@@ -1323,6 +1323,11 @@ namespace Rawr
             this.GetWowheadUpgrades(e.Argument as Character, usePTRDataToolStripMenuItem.Checked);
         }
 
+        public bool IsUsingPTR()
+        {
+            return usePTRDataToolStripMenuItem.Checked;
+        }
+
         private void StartProcessing()
         {
             Cursor = Cursors.WaitCursor;
@@ -2100,5 +2105,10 @@ namespace Rawr
 		{
 			ShowStartPage();
 		}
+
+        private void toolStripDropDownButtonSort_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

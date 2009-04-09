@@ -323,10 +323,14 @@ namespace Rawr
 
 		void _menuItemWowhead_Click(object sender, EventArgs e)
 		{
-			//System.Diagnostics.Process.Start("http://www.wowhead.com/?item=" + _item.Id);
             string site = Properties.GeneralSettings.Default.Locale;
             if (site == "en")
-                site = "www";
+            {
+                if (FormMain.Instance.IsUsingPTR())
+                    site = "ptr";
+                else
+                    site = "www";
+            }
             Help.ShowHelp(null, "http://" + site + ".wowhead.com/?item=" + _item.Id);
 		}
 
