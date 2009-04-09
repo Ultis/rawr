@@ -238,11 +238,11 @@ namespace Rawr.ProtPaladin
                 case Ability.HolyVengeance:
                 case Ability.SealOfRighteousness:
                 case Ability.RetributionAura:
+            	case Ability.RighteousDefense:
                     abilityCritChance = 0.0f;
                     break;
                 case Ability.None:
                 case Ability.JudgementOfRighteousness:
-                case Ability.SealOfVengeance:
                 case Ability.JudgementOfVengeance:
                 case Ability.AvengersShield:
                 case Ability.HammerOfTheRighteous:
@@ -250,35 +250,22 @@ namespace Rawr.ProtPaladin
                 case Ability.HammerOfWrath:
                     abilityCritChance *= 1.0f;
                     break;
+                case Ability.HolyWrath:
+                case Ability.SealOfVengeance:
+                case Ability.HandOfReckoning:
                 case Ability.Exorcism:
                     if (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon")
                     {
                         // 100% chance the spell will crit, if it hits.
                         abilityCritChance = SpellHitChance(character, stats);
+                        break;
                     }
-                //case Ability.HandOfReckoning:
                     abilityCritChance = spellCritChance;
                     break;
             }
             return Math.Min(1.0f, abilityCritChance);
         }
-/*        
-        public static float BonusSpellCritPercentage(Character character, Stats stats, Ability ability)
-        {
-            // Grab base spell crit chance before adding ability-specific crit chance
-            float abilityCritChance = BonusCitPercentage(character, stats);
 
-            switch (ability)
-            {
-                case Ability.Exorcism:
-                case Ability.HolyVengeance:
-                    abilityCritChance = 0.0f;
-                    break;
-            }
-
-            return Math.Min(1.0f, abilityCritChance);
-        }
-*/
         public static float WeaponDamage(Character character, Stats stats, bool normalized)
         {
             float weaponDamage = 0.0f;
@@ -418,7 +405,7 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        public static bool IsResistable(Ability ability)
+        public static bool HasPartials(Ability ability)
         {   
             switch (ability)
             {
@@ -435,6 +422,25 @@ namespace Rawr.ProtPaladin
                 case Ability.HolyShield:
                 case Ability.RetributionAura:
                 case Ability.Consecration:
+                    return true;
+                default:
+                return false;
+            }
+        }
+
+        public static bool IsSpell(Ability ability)
+        {   
+            switch (ability)
+            {
+                case Ability.SealOfVengeance: 
+                case Ability.HolyVengeance:
+                case Ability.Exorcism:
+                case Ability.HammerOfWrath:
+                case Ability.HolyShield:
+                case Ability.RetributionAura:
+                case Ability.Consecration:
+                case Ability.HandOfReckoning:
+                case Ability.RighteousDefense:
                     return true;
                 default:
                 return false;

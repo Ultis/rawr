@@ -20,6 +20,9 @@ namespace Rawr.ProtPaladin
         HolyShield,
         RetributionAura,
         Consecration,
+        RighteousDefense,
+        HolyWrath,
+        HandOfReckoning,
     }
     
     public enum HitResult

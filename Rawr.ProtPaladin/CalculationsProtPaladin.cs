@@ -351,12 +351,12 @@ focus on Survival Points.",
             calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
             calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
+            calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.GlancingAttacks = am.Abilities[Ability.None].AttackTable.Glance;
             calculatedStats.GlancingReduction = Lookup.GlancingReduction(character);
             calculatedStats.BlockedAttacks = am.Abilities[Ability.None].AttackTable.Block;
-            calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
@@ -723,14 +723,7 @@ focus on Survival Points.",
 
                 statsItems.ArmorPenetrationRating += 120.0f * procUptime;
             }
-            
-//            //Average WeaponDamage = (Max+Min)/2
-//            
-//            if (character.MainHand == null) //unarmed
-//                statsItems.WeaponDamage =( 1f + 2f ) / 2f;
-//            else
-//                statsItems.WeaponDamage = (character.MainHand.MaxDamage + character.MainHand.MaxDamage) / 2f;
-            
+
             return statsItems;
         }
 
@@ -809,10 +802,7 @@ focus on Survival Points.",
             // Haste Trinkets
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
-//            if (character.MainHand == null)
             statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal, false);
-//            else 
-//                statsTotal.WeaponDamage += (statsTotal.AttackPower / 14f) * character.MainHand.Speed;// * Lookup.WeaponSpeed(character, statsTotal) );
             statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 
             return statsTotal;
@@ -857,13 +847,13 @@ focus on Survival Points.",
                         ComparisonCalculationProtPaladin calcHit = new ComparisonCalculationProtPaladin();
                         if (calculations != null)
                         {
-                            calcMiss.Name = "Miss";
-                            calcDodge.Name = "Dodge";
-                            calcParry.Name = "Parry";
-                            calcBlock.Name = "Block";
-                            calcCrit.Name = "Crit";
-                            calcCrush.Name = "Crush";
-                            calcHit.Name = "Hit";
+                            calcMiss.Name = "1 Miss";
+                            calcDodge.Name = "2 Dodge";
+                            calcParry.Name = "3 Parry";
+                            calcBlock.Name = "4 Block";
+                            calcCrit.Name = "5 Crit";
+                            calcCrush.Name = "6 Crush";
+                            calcHit.Name = "7 Hit";
 
                             calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
                             calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
@@ -885,21 +875,21 @@ focus on Survival Points.",
                         ComparisonCalculationProtPaladin calcHit = new ComparisonCalculationProtPaladin();
                         if (calculations != null)
                         {
-                            calcMiss.Name = "Miss";
-                            calcDodge.Name = "Dodge";
-                            calcParry.Name = "Parry";
-                            calcGlance.Name = "Glancing";
-                            calcBlock.Name = "Block";
-                            calcCrit.Name = "Crit";
-                            calcHit.Name = "Hit";
+                            calcMiss.Name = "1 Miss";
+                            calcDodge.Name = "2 Dodge";
+                            calcParry.Name = "3 Parry";
+                            calcGlance.Name = "4 Glancing";
+                            calcBlock.Name = "5 Block";
+                            calcCrit.Name = "6 Crit";
+                            calcHit.Name = "7 Hit";
 
-                            calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
-                            calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
-                            calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
+                            calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.MissedAttacks * 100.0f;
+                            calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.DodgedAttacks * 100.0f;
+                            calcParry.OverallPoints = calcParry.MitigationPoints = calculations.ParriedAttacks * 100.0f;
                             calcGlance.OverallPoints = calcGlance.MitigationPoints = calculations.GlancingAttacks * 100.0f;
                             calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.BlockedAttacks * 100.0f;
                             calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.Crit * 100.0f;
-                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
+                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.AvoidedAttacks + calculations.GlancingAttacks + calculations.BlockedAttacks + calculations.Crit)) * 100.0f;
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcGlance, calcBlock, calcCrit, calcHit };
                     }

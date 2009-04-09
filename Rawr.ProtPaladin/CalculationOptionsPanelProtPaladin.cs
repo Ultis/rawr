@@ -16,7 +16,20 @@ namespace Rawr.ProtPaladin
 		public CalculationOptionsPanelProtPaladin()
 		{
 			InitializeComponent();
-            armorBosses.Add(13100, ": Tier 7 Bosses"); // armorBosses.Add(13083, ":Wrath Bosses");
+			armorBosses.Add(3800, ": Shade of Aran");
+			armorBosses.Add(4700, ": Roar");
+			armorBosses.Add(5500, ": Netherspite");
+			armorBosses.Add(6100, ": Julianne, Curator");
+			armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
+			armorBosses.Add(6700, ": Maiden, Illhoof");
+			armorBosses.Add(7300, ": Strawman");
+			armorBosses.Add(7500, ": Attumen");
+			armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
+			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
+			armorBosses.Add(8200, ": Midnight");
+			armorBosses.Add(8800, ": Void Reaver");
+            armorBosses.Add(10900, ": 3.1 Wrath Bosses");
+            armorBosses.Add(13100, ": 3.08 Tier 7 Bosses"); // armorBosses.Add(13083, ":Wrath Bosses");
 		}
 
 		protected override void LoadCalculationOptions()

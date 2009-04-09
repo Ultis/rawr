@@ -51,7 +51,7 @@ namespace Rawr.ProtPaladin
             float tableSize = 0.0f;
 
             // Miss
-            Miss = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Miss));
+            Miss = Math.Min(1.0f - tableSize,  Lookup.AvoidanceChance(Character, Stats, HitResult.Miss));
             tableSize += Miss;
             // Dodge
             Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge));
@@ -84,45 +84,57 @@ namespace Rawr.ProtPaladin
         {
             float tableSize = 0.0f;
             float bonusHit = Lookup.HitChance(Character, Stats);
+            float SpellHitChance = Lookup.SpellHitChance(Character, Stats);
             float bonusExpertise = Lookup.BonusExpertisePercentage(Character, Stats);
 
             // Miss
-            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, 1.0f - bonusHit));
-//            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
-            tableSize += Miss;
-            // Avoidance
-            if (Lookup.IsAvoidable(Ability))
+            if (Lookup.IsSpell(Ability))
             {
-                // Dodge
-                Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge) - bonusExpertise));
-                tableSize += Dodge;
-                // Parry
-                Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry) - bonusExpertise));
-                tableSize += Parry;
+                Miss = Math.Min(1.0f - tableSize, 1.0f - SpellHitChance);// - bonusHit));
+                tableSize += Miss;
+                // Crit
+                Critical = Lookup.SpellCritChance(Character, Stats);
             }
-            // Glancing Blow
-            if (Ability == Ability.None)
+            else
             {
-                Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance)));
-                tableSize += Glance;
+               // Miss
+                Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, 1.0f - bonusHit));
+                //            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
+                tableSize += Miss;
+                // Avoidance
+                if (Lookup.IsAvoidable(Ability))
+                {
+                    // Dodge
+                    Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge) - bonusExpertise));
+                    tableSize += Dodge;
+                    // Parry
+                    Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry) - bonusExpertise));
+                    tableSize += Parry;
+                }
+                // Glancing Blow
+                if (Ability == Ability.None)
+                {
+                    Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance)));
+                    tableSize += Glance;
+                }
+                // Block
+                if (Ability == Ability.None)
+                {
+                    Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block)));
+                    tableSize += Block;
+                }
+                // Critical Hit
+                Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability));
+                tableSize += Critical;
             }
-            // Block
-            if (Ability == Ability.None)
-            {
-                Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block)));
-                tableSize += Block;
-            }
+            // Normal Hit
+            Hit = Math.Max(0.0f, 1.0f - tableSize);
             // Resist
-            if (Lookup.IsResistable(Ability))
+            if (Lookup.HasPartials(Ability))
             {
                 Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist)));
                 tableSize += Resist;
             }
-            // Critical Hit
-            Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability));
-            tableSize += Critical;
-            // Normal Hit
-            Hit = Math.Max(0.0f, 1.0f - tableSize);
         }
 
         public AttackTable(Character character, Stats stats)
@@ -131,40 +143,6 @@ namespace Rawr.ProtPaladin
         }
 
         public AttackTable(Character character, Stats stats, Ability ability)
-        {
-            Initialize(character, stats, ability);
-        }
-    }
-    public class SpellAttackTable : CombatTable
-    {
-        protected override void Calculate()
-        {
-            float tableSize = 0.0f;
-            float bonusHit = Lookup.SpellHitChance(Character, Stats);
-
-            // Miss
-            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
-            tableSize += Miss;
-            // Hit
-            Hit = Math.Max(0.0f, 1.0f - tableSize);
-//TODO: Clean up and refactor for spells
-//            // Resist
-//            if (Lookup.IsResistable(Ability))
-//            {
-//                Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist)));
-//                tableSize += Resist;
-//            }
-//            // Critical Hit
-//            Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability));
-//            tableSize += Critical;
-        }
-
-        public SpellAttackTable(Character character, Stats stats)
-        {
-            Initialize(character, stats, Ability.None);
-        }
-
-        public SpellAttackTable(Character character, Stats stats, Ability ability)
         {
             Initialize(character, stats, ability);
         }
