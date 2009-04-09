@@ -247,16 +247,19 @@ namespace Rawr
                     break;
             }
             float unleashedRage = 0f;
-            switch (character.ShamanTalents.UnleashedRage){
-                case 1:
-                    unleashedRage = .04f;
-                    break;
-                case 2:
-                    unleashedRage = .07f;
-                    break;
-                case 3:
-                    unleashedRage = .1f;
-                    break;
+            if (calculatedStats.BuffStats.BonusAttackPowerMultiplier != .1f)
+            {  // only apply unleashed rage talent if not already applied Unleashed Rage buff.
+                switch (character.ShamanTalents.UnleashedRage){
+                    case 1:
+                        unleashedRage = .04f;
+                        break;
+                    case 2:
+                        unleashedRage = .07f;
+                        break;
+                    case 3:
+                        unleashedRage = .1f;
+                        break;
+                }
             }
             //gear stuff
             string shattrathFaction = calcOpts.ShattrathFaction;
@@ -430,7 +433,7 @@ namespace Rawr
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
-//            attackPower += attackPower * unleashedRage * urUptime; not needed as its done via buffs
+            attackPower += attackPower * unleashedRage * urUptime; 
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
                     
             if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
