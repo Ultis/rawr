@@ -529,6 +529,19 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed)
+        {
+            return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed);
+        }
+
+        /// <summary>
         /// Computes average uptime of the effect given the frequency of triggers.
         /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
@@ -537,13 +550,26 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance)
         {
+            return GetAverageUptime(triggerInterval, triggerChance, 3f);
+        }
+
+        /// <summary>
+        /// Computes average uptime of the effect given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed)
+        {
             if (Cooldown > Duration)
             {
-                return Duration / (Cooldown + triggerInterval / triggerChance / Chance);
+                return Duration / (Cooldown + triggerInterval / triggerChance / GetChance(attackSpeed));
             }
             else if (Cooldown == 0.0f)
             {
-                return 1.0f - (float)Math.Pow(1.0 - triggerChance * Chance, Duration / triggerInterval);
+                return 1.0f - (float)Math.Pow(1.0 - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
             }
             else
             {
@@ -678,8 +704,23 @@ namespace Rawr
                 //= 1 - 1 / (1 + C * PT) * (1 - PEC)
 
                 //= 1 - 1 / (1 + C * PT) * (1 - PT) ^ (D - C)
-                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * Chance) * (float)Math.Pow(1 - triggerChance * Chance, (Duration - Cooldown) / triggerInterval);
+                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * GetChance(attackSpeed)) * (float)Math.Pow(1 - triggerChance * GetChance(attackSpeed), (Duration - Cooldown) / triggerInterval);
             }
+
+        }
+
+        public bool UsesPPM()
+        {
+            return Chance < 0;
+        }
+
+        public float GetChance(float attackspeed)
+        {
+            if (Chance < 0)
+            {
+                return -Chance / 60f * attackspeed;
+            }
+            else return Chance;
         }
 
         private string CooldownString
@@ -704,6 +745,15 @@ namespace Rawr
             {
                 int duration = (int)Duration;
                 return duration.ToString() + " Sec";
+            }
+        }
+
+        private string ChanceString
+        {
+            get
+            {
+                if (Chance < 0) return (-Chance).ToString("N1") + " PPM";
+                else return (Chance * 100).ToString("N0") + "%";
             }
         }
 
@@ -761,7 +811,7 @@ namespace Rawr
                 }
                 else
                 {
-                    return string.Format("{0} ({1} {2:F}%{3})", Stats.ToString(), DurationString, Chance * 100, TriggerString);
+                    return string.Format("{0} ({1} {2}{3})", Stats.ToString(), DurationString, ChanceString , TriggerString);
                 }
             }
             else
@@ -772,7 +822,7 @@ namespace Rawr
                 }
                 else
                 {
-                    return string.Format("{0} ({1} {2:F}%{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+                    return string.Format("{0} ({1} {2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
                 }
             }
         }

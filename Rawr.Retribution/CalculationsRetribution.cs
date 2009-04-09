@@ -408,9 +408,8 @@ namespace Rawr.Retribution
                 Rotation rot;
                 float libramAP = 0, libramCrit = 0;
 
-                float berserkingAP = stats.BerserkingProc * 140f;
 
-                stats.AttackPower += berserkingAP + libramAP;
+                stats.AttackPower += libramAP;
                 stats.CritRating += libramCrit;
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
@@ -467,13 +466,13 @@ namespace Rawr.Retribution
                         }
                         else
                         {
-                            statsAverage += effect.GetAverageStats(trigger);
+                            statsAverage += effect.GetAverageStats(trigger, 1f, combats.AttackSpeed);
                         }
                     }
                 }
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
-                stats.AttackPower += berserkingAP + libramAP;
+                stats.AttackPower += libramAP;
                 stats.Strength += stats.HighestStat;
                 stats.CritRating += libramCrit;
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
@@ -573,7 +572,7 @@ namespace Rawr.Retribution
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
-                stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit +
+                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
                 stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
@@ -616,7 +615,6 @@ namespace Rawr.Retribution
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
-                BerserkingProc = stats.BerserkingProc,
                 CritJudgement_5 = stats.CritJudgement_5,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 APCrusaderStrike_10 = stats.APCrusaderStrike_10,
@@ -656,7 +654,7 @@ namespace Rawr.Retribution
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
-                stats.JudgementCDReduction + stats.BerserkingProc + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
+                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier) > 0;
             bool maybeStats = (stats.Agility + stats.Strength +
