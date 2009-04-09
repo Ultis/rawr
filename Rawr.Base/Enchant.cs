@@ -612,7 +612,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3847, "Rune of the Stoneskin Gargoyle", Item.ItemSlot.TwoHand, new Stats() { Defense = 25.0f, BonusStaminaMultiplier = 0.02f }));
 
             // Engineering enchant
-            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (56 + 2.0f / 3.0f) }));
+            Stats hyper = new Stats();
+            hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 10f, 60f));
+            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, hyper));
 
             // Tailoring enchant
             Stats stats = new Stats();
@@ -627,6 +629,10 @@ namespace Rawr
 			//3.1 enchants
 			defaultEnchants.Add(new Enchant(3854, "Greater Spellpower (Staff)", Item.ItemSlot.TwoHand, new Stats() { SpellPower = 81 }));
 			defaultEnchants.Add(new Enchant(3855, "Spellpower (Staff)", Item.ItemSlot.TwoHand, new Stats() { SpellPower = 69 }));
+
+            Stats rockets = new Stats();
+            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1600f }, 1f, 45f));
+            defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", Item.ItemSlot.Hands, rockets));
             
             #region Enchants to Delete
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));

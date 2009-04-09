@@ -77,7 +77,6 @@ namespace Rawr
         InsectSwarmDmg,
         Intellect,
         InterruptProtection,
-        JudgementOfCommandAttackPowerBonus,
         LightningCapacitorProc,
         LightweaveEmbroideryProc,
         ThunderCapacitorProc,
@@ -305,6 +304,7 @@ namespace Rawr
 		DreadnaughtBonusRageProc,
         #endregion
         ArcaneDamage,
+        FireDamage
     }
 
     enum MultiplicativeStat : int
@@ -942,14 +942,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AttackPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.AttackPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        public float JudgementOfCommandAttackPowerBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.JudgementOfCommandAttackPowerBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.JudgementOfCommandAttackPowerBonus] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2429,6 +2421,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ArcaneDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.ArcaneDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Fire Damage")]
+        [Category("Equipment Procs")]
+        public float FireDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FireDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FireDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

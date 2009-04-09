@@ -20,12 +20,16 @@ namespace Rawr
 
         private bool loading;
 
-        public FormEditSpecialEffect() : this(new Stats(), Trigger.MeleeHit, 20f, 120f, 1f, 1) { }
+        public FormEditSpecialEffect()
+            : this(new Stats(), Trigger.MeleeHit, 20f, 120f, 1f, 1)
+        {
+            Text = "Add Special Effect";
+        }
 
         public FormEditSpecialEffect(Stats stats, Trigger trigger, float duration, float cooldown, float chance, int stacks)
         {
             loading = true;
-            Stats = stats;
+            Stats = stats.Clone();
             Trigger = trigger;
             Duration = duration;
             Cooldown = cooldown;

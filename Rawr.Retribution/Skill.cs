@@ -391,4 +391,20 @@ namespace Rawr.Retribution
 
     }
 
+    public class MagicDamage : Skill
+    {
+        private float amount;
+
+        public MagicDamage(CombatStats combats, float amount)
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false)
+        {
+            this.amount = amount;
+        }
+
+        public override float AbilityDamage()
+        {
+            return amount;
+        }
+    }
+
 }

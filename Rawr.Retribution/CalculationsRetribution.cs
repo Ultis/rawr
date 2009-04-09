@@ -339,7 +339,7 @@ namespace Rawr.Retribution
             {
                 rot = new EffectiveCooldown(combats);
             }
-            calc.OtherDPS = stats.ArcaneDamage;
+            calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage + stats.FireDamage).AverageDamage();
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
 
@@ -646,7 +646,7 @@ namespace Rawr.Retribution
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
             return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
-            + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat) > 0;
+            + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)

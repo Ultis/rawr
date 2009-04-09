@@ -74,7 +74,7 @@
             0,
             0,
             65536});
-            this.nudChance.Location = new System.Drawing.Point(75, 284);
+            this.nudChance.Location = new System.Drawing.Point(85, 284);
             this.nudChance.Maximum = new decimal(new int[] {
             1,
             0,
@@ -86,14 +86,14 @@
             // 
             // nudDuration
             // 
-            this.nudDuration.Location = new System.Drawing.Point(75, 232);
+            this.nudDuration.Location = new System.Drawing.Point(85, 232);
             this.nudDuration.Name = "nudDuration";
             this.nudDuration.Size = new System.Drawing.Size(61, 20);
             this.nudDuration.TabIndex = 19;
             // 
             // nudCooldown
             // 
-            this.nudCooldown.Location = new System.Drawing.Point(75, 258);
+            this.nudCooldown.Location = new System.Drawing.Point(85, 258);
             this.nudCooldown.Maximum = new decimal(new int[] {
             3600,
             0,
@@ -105,7 +105,7 @@
             // 
             // nudStacks
             // 
-            this.nudStacks.Location = new System.Drawing.Point(75, 310);
+            this.nudStacks.Location = new System.Drawing.Point(85, 310);
             this.nudStacks.Name = "nudStacks";
             this.nudStacks.Size = new System.Drawing.Size(61, 20);
             this.nudStacks.TabIndex = 21;
@@ -113,7 +113,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 234);
+            this.label1.Location = new System.Drawing.Point(29, 234);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(50, 13);
             this.label1.TabIndex = 22;
@@ -122,7 +122,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 260);
+            this.label2.Location = new System.Drawing.Point(22, 260);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 23;
@@ -131,7 +131,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 286);
+            this.label3.Location = new System.Drawing.Point(32, 286);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 13);
             this.label3.TabIndex = 24;
@@ -140,7 +140,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 312);
+            this.label4.Location = new System.Drawing.Point(36, 312);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 13);
             this.label4.TabIndex = 25;
@@ -150,7 +150,7 @@
             // 
             this.cmbTrigger.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTrigger.FormattingEnabled = true;
-            this.cmbTrigger.Location = new System.Drawing.Point(75, 205);
+            this.cmbTrigger.Location = new System.Drawing.Point(85, 205);
             this.cmbTrigger.Name = "cmbTrigger";
             this.cmbTrigger.Size = new System.Drawing.Size(106, 21);
             this.cmbTrigger.TabIndex = 26;
@@ -159,7 +159,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 207);
+            this.label5.Location = new System.Drawing.Point(36, 208);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(43, 13);
             this.label5.TabIndex = 27;

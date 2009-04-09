@@ -496,10 +496,11 @@ namespace Rawr.Healadin
 
         private void ConvertRatings(Stats stats, PaladinTalents talents)
         {
+            float intMulti = (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
             stats.Stamina *= 1 + stats.BonusStaminaMultiplier;
-            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
-            stats.SpellPower += 0.04f * stats.Intellect * talents.HolyGuidance;
-            stats.SpellCrit = .03336f + stats.SpellCrit + stats.Intellect / 16666.66709f
+            stats.Intellect *= intMulti;
+            stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat * intMulti) * talents.HolyGuidance;
+            stats.SpellCrit = .03336f + stats.SpellCrit + (stats.Intellect + stats.HighestStat * intMulti) / 16666.66709f
                 + stats.CritRating / 4590.598679f + talents.SanctityOfBattle * .01f + talents.Conviction * .01f;
             stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) - 1f;
             stats.Mana = (stats.Mana + stats.Intellect * 15) * (1f + stats.BonusManaMultiplier);
