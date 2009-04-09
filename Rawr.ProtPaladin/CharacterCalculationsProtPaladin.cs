@@ -89,6 +89,8 @@ namespace Rawr.ProtPaladin
         public float AvoidedAttacks { get; set; }
         public float DodgedAttacks { get; set; }
         public float ParriedAttacks { get; set; }
+        public float GlancingAttacks { get; set; }
+        public float GlancingReduction { get; set; }
         public float BlockedAttacks { get; set; }
         public float Hit { get; set; }
         public float SpellHit { get; set; }
@@ -187,6 +189,8 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine +
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
+            dictValues.Add("Glancing Attacks", string.Format("{0:0.00%}*{1:0.00%} Reduction" + Environment.NewLine + 
+                                "Against a Target of Level {2}", GlancingAttacks, 1.0f - GlancingReduction, TargetLevel));
             dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond) + "*" + ThreatModel);
             dictValues.Add("Threat/sec", string.Format("{0:0.0}", ThreatPerSecond) + "*" + ThreatModel);
             //dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat) + "*" + ThreatModel);
@@ -227,6 +231,8 @@ namespace Rawr.ProtPaladin
                 case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
                 case "% chance to Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
+                case "Defense Skill": return Defense;
+                case "Block Value": return BlockValue;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;

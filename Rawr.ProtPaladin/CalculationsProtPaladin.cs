@@ -153,6 +153,7 @@ namespace Rawr.ProtPaladin
                     "Offensive Stats:Expertise",
                     "Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
+                    "Offensive Stats:Glancing Attacks",
                     "Offensive Stats:Total Damage/sec",
                     "Offensive Stats:Threat/sec",
                     //"Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
@@ -206,6 +207,8 @@ focus on Survival Points.",
                     "% Chance to Avoid Attacks",
                     "% chance to Avoid + Block Attacks",
                     "% Chance to be Crit",
+                    "Defense Skill",
+                    "Block Value",
                     "% Chance to be Avoided", 
                     "Burst Time", 
                     "TankPoints", 
@@ -228,7 +231,8 @@ focus on Survival Points.",
                     _customChartNames = new string[] {
                     "Ability Damage",
                     "Ability Threat",
-                    "Combat Table",
+                    "Combat Table: Defensive Stats",
+                    "Combat Table: Offensive Stats",
                     "Item Budget",
                     };
                 return _customChartNames;
@@ -349,6 +353,9 @@ focus on Survival Points.",
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
+            calculatedStats.GlancingAttacks = am.Abilities[Ability.None].AttackTable.Glance;
+            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character);
+            calculatedStats.BlockedAttacks = am.Abilities[Ability.None].AttackTable.Block;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
@@ -717,12 +724,12 @@ focus on Survival Points.",
                 statsItems.ArmorPenetrationRating += 120.0f * procUptime;
             }
             
-            //Average WeaponDamage = (Max+Min)/2
-            
-            if (character.MainHand == null) //unarmed
-                statsItems.WeaponDamage =( 1f + 2f ) / 2f;
-            else
-                statsItems.WeaponDamage = (character.MainHand.MaxDamage + character.MainHand.MaxDamage) / 2f;
+//            //Average WeaponDamage = (Max+Min)/2
+//            
+//            if (character.MainHand == null) //unarmed
+//                statsItems.WeaponDamage =( 1f + 2f ) / 2f;
+//            else
+//                statsItems.WeaponDamage = (character.MainHand.MaxDamage + character.MainHand.MaxDamage) / 2f;
             
             return statsItems;
         }
@@ -802,7 +809,10 @@ focus on Survival Points.",
             // Haste Trinkets
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.WeaponDamage += ((statsTotal.AttackPower / 14f));// * Lookup.WeaponSpeed(character, statsTotal) );
+//            if (character.MainHand == null)
+            statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal, false);
+//            else 
+//                statsTotal.WeaponDamage += (statsTotal.AttackPower / 14f) * character.MainHand.Speed;// * Lookup.WeaponSpeed(character, statsTotal) );
             statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 
             return statsTotal;
@@ -836,7 +846,7 @@ focus on Survival Points.",
                         }
                         return comparisons;
                     }
-                case "Combat Table":
+                case "Combat Table: Defensive Stats":
                     {
                         ComparisonCalculationProtPaladin calcMiss = new ComparisonCalculationProtPaladin();
                         ComparisonCalculationProtPaladin calcDodge = new ComparisonCalculationProtPaladin();
@@ -863,6 +873,35 @@ focus on Survival Points.",
                             calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
+                    }
+                case "Combat Table: Offensive Stats":
+                    {
+                        ComparisonCalculationProtPaladin calcMiss = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcDodge = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcParry = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcGlance = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcBlock = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcCrit = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcHit = new ComparisonCalculationProtPaladin();
+                        if (calculations != null)
+                        {
+                            calcMiss.Name = "Miss";
+                            calcDodge.Name = "Dodge";
+                            calcParry.Name = "Parry";
+                            calcGlance.Name = "Glancing";
+                            calcBlock.Name = "Block";
+                            calcCrit.Name = "Crit";
+                            calcHit.Name = "Hit";
+
+                            calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
+                            calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
+                            calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
+                            calcGlance.OverallPoints = calcGlance.MitigationPoints = calculations.GlancingAttacks * 100.0f;
+                            calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.BlockedAttacks * 100.0f;
+                            calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.Crit * 100.0f;
+                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
+                        }
+                        return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcGlance, calcBlock, calcCrit, calcHit };
                     }
                 case "Item Budget":
                     CharacterCalculationsProtPaladin calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtPaladin;

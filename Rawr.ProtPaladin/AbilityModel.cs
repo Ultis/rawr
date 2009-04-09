@@ -28,9 +28,7 @@ namespace Rawr.ProtPaladin
         private void CalculateDamage()
         {
             float baseDamage        = 0.0f;
-            float critMultiplier    = 1.0f;
-            //bool IsSpell;
-            critMultiplier = (2.0f * (1.0f + Stats.BonusCritMultiplier));
+            float critMultiplier    = (2.0f * (1.0f + Stats.BonusCritMultiplier));
 
             switch (Ability)
             {
@@ -142,29 +140,27 @@ namespace Rawr.ProtPaladin
 					break;
             }
 
-            // All damage multipliers
-            baseDamage *= DamageMultiplier;
+            // All damage multipliers, 1HWS etc...
+            baseDamage *= DamageMultiplier; 
             // Average critical strike bonuses
-            baseDamage = (baseDamage * (1.0f - AttackTable.Critical)) + (baseDamage * critMultiplier * AttackTable.Critical);
-            // Average glancing blow reduction
-
-            // Average resist reduction
+            baseDamage *= (1.0f + critMultiplier * AttackTable.Critical);//(baseDamage * (1.0f - AttackTable.Critical)) + (baseDamage * critMultiplier * AttackTable.Critical);
+            
             if (IsSpell)
             {
-            	baseDamage *= (1.0f - (StatConversion.GetAverageResistance(Character.Level, Options.TargetLevel, 0, Stats.SpellPenetration) * AttackTable.Resist));
+                // Average resist reduction
+                baseDamage *= (1.0f - (StatConversion.GetAverageResistance(Character.Level, Options.TargetLevel, 0, Stats.SpellPenetration) * AttackTable.Resist));
+                // Missed attacks TODO: expand Ability Model to include a check for damage type, not only spell.
+                baseDamage *= (1.0f - AttackTable.AnyMiss);
             }
-            //baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Resist));
-            // Armor reduction
             else
             {
-            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
-            baseDamage *= (1.0f - ArmorReduction);
-            baseDamage *= (1.0f - AttackTable.AnyMiss);
+                // Average glancing blow reduction
+                baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
+                // Armor reduction
+                baseDamage *= (1.0f - ArmorReduction);
+                // Missed attacks
+                baseDamage *= (1.0f - AttackTable.AnyMiss);
             }
-
-            // Missed attacks
-
-
             Damage = baseDamage;
         }
 

@@ -57,8 +57,19 @@ namespace Rawr.ProtPaladin
                 case HitResult.Glance:
                     return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
 
+                case HitResult.Block:
+                    // Assuming 6.50% blocked attacks against a lvl 83 target.
+                    if ((calcOpts.TargetLevel - character.Level) == 3)
+                        return 0.065f;
+                    if ((calcOpts.TargetLevel - character.Level) == 2)
+                        return 0.054f;
+                    if ((calcOpts.TargetLevel - character.Level) == 1)
+                        return 0.052f;
+                    else
+                        return 0.05f;
+
                 case HitResult.Resist:
-                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
+                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);//TODO: Find correct value for % chance to get resists.
 
                 default:
                     return 0.0f;
@@ -270,26 +281,33 @@ namespace Rawr.ProtPaladin
 */
         public static float WeaponDamage(Character character, Stats stats, bool normalized)
         {
-            float weaponDamage = 1.0f;
-
-            if (character.MainHand != null)
+            float weaponDamage = 0.0f;
+            float normalizedSpeed = 2.4f;
+            float weaponSpeed     = 0.0f;
+            float weaponMinDamage = 0.0f;
+            float weaponMaxDamage = 0.0f;
+            
+            if (character.MainHand == null) // unarmed
             {
-                float weaponSpeed     = character.MainHand.Speed;
-                float weaponMinDamage = character.MainHand.MinDamage;
-                float weaponMaxDamage = character.MainHand.MaxDamage;
-                float normalizedSpeed = 1.0f;
+                weaponSpeed     = 2.0f;
+                weaponMinDamage = 1.0f;
+                weaponMaxDamage = 2.0f;
+            }
+            else
+            {
+                weaponSpeed     = character.MainHand.Speed;
+                weaponMinDamage = character.MainHand.MinDamage;
+                weaponMaxDamage = character.MainHand.MaxDamage;
+                
                 if (character.MainHand.Type == Item.ItemType.Dagger)
                     normalizedSpeed = 1.7f;
-                else
-                    normalizedSpeed = 2.4f;
-            
-                // Non-Normalized Hits
-                if (!normalized)
-                    weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f)) + stats.WeaponDamage;
-                // Normalized Hits
-                else
-                    weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * stats.AttackPower / 14.0f)) + stats.WeaponDamage;
             }
+            // Non-Normalized Hits
+            if (!normalized)
+                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f));// + stats.WeaponDamage;
+            // Normalized Hits
+            else
+                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * stats.AttackPower / 14.0f));// + stats.WeaponDamage;
 
             return weaponDamage;
         }
@@ -305,8 +323,12 @@ namespace Rawr.ProtPaladin
         public static float GlancingReduction(Character character)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return (Math.Min(0.91f, 1.3f - (0.05f * (calcOpts.TargetLevel - character.Level) * 5.0f)) +
-                    Math.Max(0.99f, 1.2f - (0.03f * (calcOpts.TargetLevel - character.Level) * 5.0f))) / 2;
+            // The character is a melee class, lowEnd is element of [0.01, 0.91]
+            float lowEnd = Math.Max(0.01f, Math.Min(0.91f, 1.3f - (0.05f * (float)(calcOpts.TargetLevel - character.Level) * 5.0f)));
+            // The character is a melee class, highEnd is element of [0.20, 0.99]
+            float highEnd = Math.Max(0.20f, Math.Min(0.99f, 1.2f - (0.03f * (float)(calcOpts.TargetLevel - character.Level) * 5.0f)));
+            
+            return (lowEnd + highEnd) / 2;
         }
 
         public static float ArmorReduction(Character character, Stats stats)

@@ -106,6 +106,12 @@ namespace Rawr.ProtPaladin
                 Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance)));
                 tableSize += Glance;
             }
+            // Block
+            if (Ability == Ability.None)
+            {
+                Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block)));
+                tableSize += Block;
+            }
             // Resist
             if (Lookup.IsResistable(Ability))
             {
