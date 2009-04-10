@@ -48,28 +48,30 @@ namespace Rawr
 			labelVersion.Text = version;
 			checkBoxShowAtLaunch.Checked = Properties.Recent.Default.ShowStartPage;
 
-			int recentCount = _formMain.ConfigRecentCharacters.Length;
+			string[] recentCharacters = _formMain.ConfigRecentCharacters.Clone() as string[];
+			Array.Reverse(recentCharacters);
+			int recentCount = recentCharacters.Length;
 			labelRecentCharacters.Visible = recentCount > 0;
 			linkLabelRecentCharacter1.Visible = recentCount > 0;
 			if (recentCount > 0)
-				linkLabelRecentCharacter1.Text = 
-					System.IO.Path.GetFileNameWithoutExtension(_formMain.ConfigRecentCharacters[0]);
+				linkLabelRecentCharacter1.Text =
+					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[0]);
 			linkLabelRecentCharacter2.Visible = recentCount > 1;
 			if (recentCount > 1)
 				linkLabelRecentCharacter2.Text =
-					System.IO.Path.GetFileNameWithoutExtension(_formMain.ConfigRecentCharacters[1]);
+					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[1]);
 			linkLabelRecentCharacter3.Visible = recentCount > 2;
 			if (recentCount > 2)
 				linkLabelRecentCharacter3.Text =
-					System.IO.Path.GetFileNameWithoutExtension(_formMain.ConfigRecentCharacters[2]);
+					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[2]);
 			linkLabelRecentCharacter4.Visible = recentCount > 3;
 			if (recentCount > 3)
 				linkLabelRecentCharacter4.Text =
-					System.IO.Path.GetFileNameWithoutExtension(_formMain.ConfigRecentCharacters[3]);
+					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[3]);
 			linkLabelRecentCharacter5.Visible = recentCount > 4;
 			if (recentCount > 4)
 				linkLabelRecentCharacter5.Text =
-					System.IO.Path.GetFileNameWithoutExtension(_formMain.ConfigRecentCharacters[4]);
+					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[4]);
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadDidYouKnows));
 			ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadKnownIssues));

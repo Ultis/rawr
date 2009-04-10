@@ -402,7 +402,7 @@ the Threat Scale defined on the Options tab.",
 			float chanceCritBleed = rawChanceCrit;
 			attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 			
-			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 77; //TODO: Find correct base agi values at 80
+			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 77;
 			
 			//Calculate avoidance, considering diminishing returns
 			float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating)); //stats.DefenseRating / 4.918498039f);
@@ -713,11 +713,11 @@ the Threat Scale defined on the Options tab.",
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
 			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
-				new Stats() { 
-                    Health = 7237f, 
+				new Stats() {
+					Health = 7417f, 
                     Strength = 86f, 
 					Agility = 87f,
-                    Stamina = 96f,
+					Stamina = 97f,
 					AttackPower = 120f,
                     NatureResistance = 10f,
                     Dodge = 0.04951f,
@@ -839,12 +839,13 @@ the Threat Scale defined on the Options tab.",
 			}
 
 			statsTotal.Stamina *= (1f + statsTotal.BonusStaminaMultiplier);
+			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
 			statsTotal.Strength *= (1f + statsTotal.BonusStrengthMultiplier);
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1 + statsTotal.BonusAttackPowerMultiplier));
-			statsTotal.Health += (float)Math.Floor(statsTotal.Stamina) * 10f;
+			statsTotal.Health += ((statsTotal.Stamina - 20) * 10f) + 20;
             statsTotal.Health *= (1f + statsTotal.BonusHealthMultiplier);
 			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
 			statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
