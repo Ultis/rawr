@@ -50,6 +50,17 @@ namespace Rawr.Healadin
             trkHS.Value = (int)(calcOpts.HolyShock * 100);
             lblHS.Text = trkHS.Value + "%";
 
+            trkSacredShield.Value = (int)(calcOpts.SSUptime * 100);
+            lblSacredShield.Text = trkSacredShield.Value + "%";
+
+            chkIoL.Checked = calcOpts.InfusionOfLight;
+            trkIoLRatio.Value = (int)(calcOpts.IoLHolyLight * 100f);
+            lblIoLHL.Text = trkIoLRatio.Value + "% HL";
+            lblIoLFoL.Text = (100 - trkIoLRatio.Value) + "% FoL";
+            trkIoLRatio.Enabled = calcOpts.InfusionOfLight;
+            lblIoLHL.Enabled = calcOpts.InfusionOfLight;
+            lblIoLFoL.Enabled = calcOpts.InfusionOfLight;
+
             loading = false;
         }
  
@@ -199,6 +210,42 @@ namespace Rawr.Healadin
             }
         }
 
+        private void chkIoL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.InfusionOfLight = chkIoL.Checked;
+                trkIoLRatio.Enabled = calcOpts.InfusionOfLight;
+                lblIoLHL.Enabled = calcOpts.InfusionOfLight;
+                lblIoLFoL.Enabled = calcOpts.InfusionOfLight;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkIoLRatio_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.IoLHolyLight = trkIoLRatio.Value / 100f;
+                lblIoLHL.Text = trkIoLRatio.Value + "% HL";
+                lblIoLFoL.Text = (100 - trkIoLRatio.Value) + "% FoL";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkSacredShield_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.SSUptime = trkSacredShield.Value / 100f;
+                lblSacredShield.Text = trkSacredShield.Value + "%";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -222,32 +269,16 @@ namespace Rawr.Healadin
         public float BoLUp = 1f;
         public float BoLEff = .2f;
         public float HolyShock = .15f;
-        public float BurstScale = .3f;
+        public float BurstScale = .4f;
         public float GHL_Targets = 1f;
+
+        public bool InfusionOfLight = false;
+        public float IoLHolyLight = .9f;
 
         public bool JotP = true;
         public bool LoHSelf = false;
 
-        public CalculationOptionsHealadin Clone()
-        {
-            CalculationOptionsHealadin clone = new CalculationOptionsHealadin();
-
-            clone.Length = Length;
-            clone.ManaAmt = ManaAmt;
-            clone.Activity = Activity;
-            clone.Replenishment = Replenishment;
-            clone.DivinePlea = DivinePlea;
-            clone.BoLUp = BoLUp;
-            clone.BoLEff = BoLEff;
-            clone.HolyShock = HolyShock;
-            clone.BurstScale = BurstScale;
-            clone.GHL_Targets = GHL_Targets;
-
-            clone.JotP = JotP;
-            clone.LoHSelf = LoHSelf;
-
-            return clone;
-        }
+        public float SSUptime = 1f;
 
 	}
 }

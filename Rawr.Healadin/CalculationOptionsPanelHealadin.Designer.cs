@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -60,6 +61,14 @@
             this.label19 = new System.Windows.Forms.Label();
             this.lblBurstScale = new System.Windows.Forms.Label();
             this.trkBurstScale = new System.Windows.Forms.TrackBar();
+            this.trkIoLRatio = new System.Windows.Forms.TrackBar();
+            this.chkIoL = new System.Windows.Forms.CheckBox();
+            this.trkSacredShield = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblSacredShield = new System.Windows.Forms.Label();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lblIoLFoL = new System.Windows.Forms.Label();
+            this.lblIoLHL = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -71,6 +80,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkBurstScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkIoLRatio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkSacredShield)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -81,7 +92,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(6, 22);
+            this.cmbLength.Location = new System.Drawing.Point(221, 131);
             this.cmbLength.Maximum = new decimal(new int[] {
             60,
             0,
@@ -93,7 +104,7 @@
             0,
             0});
             this.cmbLength.Name = "cmbLength";
-            this.cmbLength.Size = new System.Drawing.Size(112, 20);
+            this.cmbLength.Size = new System.Drawing.Size(76, 20);
             this.cmbLength.TabIndex = 20;
             this.cmbLength.Value = new decimal(new int[] {
             5,
@@ -105,7 +116,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 6);
+            this.label3.Location = new System.Drawing.Point(146, 133);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 13);
             this.label3.TabIndex = 21;
@@ -123,7 +134,7 @@
             this.groupBox2.Controls.Add(this.lblDivinePlea);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 240);
+            this.groupBox2.Location = new System.Drawing.Point(3, 206);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(294, 123);
             this.groupBox2.TabIndex = 22;
@@ -256,7 +267,7 @@
             // trkActivity
             // 
             this.trkActivity.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkActivity.Location = new System.Drawing.Point(3, 61);
+            this.trkActivity.Location = new System.Drawing.Point(151, 16);
             this.trkActivity.Maximum = 100;
             this.trkActivity.Minimum = 10;
             this.trkActivity.Name = "trkActivity";
@@ -269,7 +280,7 @@
             // lblActivity
             // 
             this.lblActivity.AutoSize = true;
-            this.lblActivity.Location = new System.Drawing.Point(107, 95);
+            this.lblActivity.Location = new System.Drawing.Point(255, 50);
             this.lblActivity.Name = "lblActivity";
             this.lblActivity.Size = new System.Drawing.Size(33, 13);
             this.lblActivity.TabIndex = 24;
@@ -278,7 +289,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 45);
+            this.label9.Location = new System.Drawing.Point(151, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 13);
             this.label9.TabIndex = 25;
@@ -293,7 +304,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.lblBoLUp);
             this.groupBox1.Controls.Add(this.trkBoLUp);
-            this.groupBox1.Location = new System.Drawing.Point(3, 369);
+            this.groupBox1.Location = new System.Drawing.Point(3, 335);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(294, 87);
             this.groupBox1.TabIndex = 28;
@@ -366,7 +377,7 @@
             // 
             this.trkHS.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trkHS.LargeChange = 10;
-            this.trkHS.Location = new System.Drawing.Point(3, 125);
+            this.trkHS.Location = new System.Drawing.Point(3, 80);
             this.trkHS.Maximum = 100;
             this.trkHS.Name = "trkHS";
             this.trkHS.Size = new System.Drawing.Size(137, 45);
@@ -377,7 +388,7 @@
             // 
             // lblHS
             // 
-            this.lblHS.Location = new System.Drawing.Point(107, 157);
+            this.lblHS.Location = new System.Drawing.Point(107, 112);
             this.lblHS.Name = "lblHS";
             this.lblHS.Size = new System.Drawing.Size(33, 13);
             this.lblHS.TabIndex = 34;
@@ -387,7 +398,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 109);
+            this.label7.Location = new System.Drawing.Point(3, 64);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 13);
             this.label7.TabIndex = 35;
@@ -397,7 +408,7 @@
             // chkJotP
             // 
             this.chkJotP.AutoSize = true;
-            this.chkJotP.Location = new System.Drawing.Point(153, 217);
+            this.chkJotP.Location = new System.Drawing.Point(151, 183);
             this.chkJotP.Name = "chkJotP";
             this.chkJotP.Size = new System.Drawing.Size(90, 17);
             this.chkJotP.TabIndex = 37;
@@ -408,11 +419,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(151, 193);
+            this.label12.Location = new System.Drawing.Point(148, 159);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(101, 13);
+            this.label12.Size = new System.Drawing.Size(67, 13);
             this.label12.TabIndex = 38;
-            this.label12.Text = "Glyph of HL targets:";
+            this.label12.Text = "GHL targets:";
             // 
             // nudGHL
             // 
@@ -422,21 +433,21 @@
             0,
             0,
             65536});
-            this.nudGHL.Location = new System.Drawing.Point(258, 191);
+            this.nudGHL.Location = new System.Drawing.Point(221, 157);
             this.nudGHL.Maximum = new decimal(new int[] {
             5,
             0,
             0,
             0});
             this.nudGHL.Name = "nudGHL";
-            this.nudGHL.Size = new System.Drawing.Size(37, 20);
+            this.nudGHL.Size = new System.Drawing.Size(76, 20);
             this.nudGHL.TabIndex = 39;
             this.nudGHL.ValueChanged += new System.EventHandler(this.nudGHL_ValueChanged);
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(3, 173);
+            this.label19.Location = new System.Drawing.Point(3, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(64, 13);
             this.label19.TabIndex = 44;
@@ -446,7 +457,7 @@
             // lblBurstScale
             // 
             this.lblBurstScale.AutoSize = true;
-            this.lblBurstScale.Location = new System.Drawing.Point(107, 221);
+            this.lblBurstScale.Location = new System.Drawing.Point(107, 48);
             this.lblBurstScale.Name = "lblBurstScale";
             this.lblBurstScale.Size = new System.Drawing.Size(33, 13);
             this.lblBurstScale.TabIndex = 43;
@@ -455,7 +466,7 @@
             // trkBurstScale
             // 
             this.trkBurstScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkBurstScale.Location = new System.Drawing.Point(3, 189);
+            this.trkBurstScale.Location = new System.Drawing.Point(3, 16);
             this.trkBurstScale.Maximum = 100;
             this.trkBurstScale.Name = "trkBurstScale";
             this.trkBurstScale.Size = new System.Drawing.Size(137, 45);
@@ -464,10 +475,90 @@
             this.trkBurstScale.Value = 90;
             this.trkBurstScale.Scroll += new System.EventHandler(this.trkBurstScale_Scroll);
             // 
+            // trkIoLRatio
+            // 
+            this.trkIoLRatio.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkIoLRatio.Location = new System.Drawing.Point(151, 80);
+            this.trkIoLRatio.Maximum = 100;
+            this.trkIoLRatio.Name = "trkIoLRatio";
+            this.trkIoLRatio.Size = new System.Drawing.Size(137, 45);
+            this.trkIoLRatio.TabIndex = 46;
+            this.trkIoLRatio.TickFrequency = 10;
+            this.toolTip.SetToolTip(this.trkIoLRatio, "Ratio of spells cast with Infusion of Light proc.");
+            this.trkIoLRatio.Value = 90;
+            this.trkIoLRatio.Scroll += new System.EventHandler(this.trkIoLRatio_Scroll);
+            // 
+            // chkIoL
+            // 
+            this.chkIoL.AutoSize = true;
+            this.chkIoL.Location = new System.Drawing.Point(151, 64);
+            this.chkIoL.Name = "chkIoL";
+            this.chkIoL.Size = new System.Drawing.Size(133, 17);
+            this.chkIoL.TabIndex = 48;
+            this.chkIoL.Text = "Model Infusion of Light";
+            this.chkIoL.UseVisualStyleBackColor = true;
+            this.chkIoL.CheckedChanged += new System.EventHandler(this.chkIoL_CheckedChanged);
+            // 
+            // trkSacredShield
+            // 
+            this.trkSacredShield.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkSacredShield.Location = new System.Drawing.Point(3, 144);
+            this.trkSacredShield.Maximum = 100;
+            this.trkSacredShield.Name = "trkSacredShield";
+            this.trkSacredShield.Size = new System.Drawing.Size(137, 45);
+            this.trkSacredShield.TabIndex = 49;
+            this.trkSacredShield.TickFrequency = 10;
+            this.trkSacredShield.Value = 90;
+            this.trkSacredShield.Scroll += new System.EventHandler(this.trkSacredShield_Scroll);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 128);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(112, 13);
+            this.label1.TabIndex = 50;
+            this.label1.Text = "Sacred Shield Uptime:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblSacredShield
+            // 
+            this.lblSacredShield.AutoSize = true;
+            this.lblSacredShield.Location = new System.Drawing.Point(107, 176);
+            this.lblSacredShield.Name = "lblSacredShield";
+            this.lblSacredShield.Size = new System.Drawing.Size(33, 13);
+            this.lblSacredShield.TabIndex = 51;
+            this.lblSacredShield.Text = "100%";
+            // 
+            // lblIoLFoL
+            // 
+            this.lblIoLFoL.AutoSize = true;
+            this.lblIoLFoL.Location = new System.Drawing.Point(151, 112);
+            this.lblIoLFoL.Name = "lblIoLFoL";
+            this.lblIoLFoL.Size = new System.Drawing.Size(25, 13);
+            this.lblIoLFoL.TabIndex = 52;
+            this.lblIoLFoL.Text = "FoL";
+            // 
+            // lblIoLHL
+            // 
+            this.lblIoLHL.Location = new System.Drawing.Point(230, 112);
+            this.lblIoLHL.Name = "lblIoLHL";
+            this.lblIoLHL.Size = new System.Drawing.Size(58, 13);
+            this.lblIoLHL.TabIndex = 53;
+            this.lblIoLHL.Text = "100% HL";
+            this.lblIoLHL.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblIoLHL);
+            this.Controls.Add(this.lblIoLFoL);
+            this.Controls.Add(this.lblSacredShield);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.trkSacredShield);
+            this.Controls.Add(this.chkIoL);
+            this.Controls.Add(this.trkIoLRatio);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.lblBurstScale);
             this.Controls.Add(this.trkBurstScale);
@@ -485,7 +576,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(300, 464);
+            this.Size = new System.Drawing.Size(300, 609);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -499,6 +590,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkBurstScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkIoLRatio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkSacredShield)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -538,5 +631,13 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label lblBurstScale;
         private System.Windows.Forms.TrackBar trkBurstScale;
+        private System.Windows.Forms.TrackBar trkIoLRatio;
+        private System.Windows.Forms.CheckBox chkIoL;
+        private System.Windows.Forms.TrackBar trkSacredShield;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblSacredShield;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Label lblIoLFoL;
+        private System.Windows.Forms.Label lblIoLHL;
     }
 }

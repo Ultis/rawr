@@ -267,6 +267,8 @@ namespace Rawr
         HolyLightSpellPower,
         HolyLightPercentManaReduction,
         HolyLightCrit,
+        SacredShieldICDReduction,
+        HolyShockHoTOnCrit,
         HolyShockCrit,
         Heal1Min,
         Healed,
@@ -2683,6 +2685,25 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("secs off Sacred Shield ICD")]
+        [Category("Healadin")]
+        public float SacredShieldICDReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% HoT on Holy Shock Crit")]
+        [Percentage]
+        [Category("Healadin")]
+        public float HolyShockHoTOnCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

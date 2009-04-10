@@ -2775,6 +2775,27 @@ namespace Rawr
                 SetName = "Aegis Battlegear",
                 SetThreshold = 4
             });
+
+            //Holy T8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { HolyShockHoTOnCrit = .15f },
+                SetName = "Aegis Regalia",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SacredShieldICDReduction = 2f },
+                SetName = "Aegis Regalia",
+                SetThreshold = 4
+            });
                       
 			#endregion
 
