@@ -42,7 +42,7 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             else if (variableType == VariableType.Wand)
             {
-                cycle = Calculations.BaseState.GetSpell(SpellId.Wand);
+                cycle = Calculations.Wand;
                 mps = cycle.ManaPerSecond;
                 tps = cycle.ThreatPerSecond;
             }

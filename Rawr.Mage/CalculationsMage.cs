@@ -799,22 +799,22 @@ namespace Rawr.Mage
             {
                 statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1f + calculationOptions.EffectSpiritBonus / 100f) - 1;
             }
-            Stats statsTotal = statsGearEnchantsBuffs + statsRace;
-            statsTotal.Strength = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-            statsTotal.Spirit = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
+            float strength = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            float agility = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            float intellect = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
+            float stamina = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            float spirit = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
+            Stats statsTotal = statsRace;
+            statsTotal.Accumulate(statsGearEnchantsBuffs);
+            statsTotal.Strength = strength;
+            statsTotal.Agility = agility;
+            statsTotal.Intellect = intellect;
+            statsTotal.Stamina = stamina;
+            statsTotal.Spirit = spirit;
 
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
-            statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
-            statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
-            statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
-
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect + statsGearEnchantsBuffs.Mana);
-            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
+            statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + 15f * statsTotal.Intellect);
+            statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
 
             if (character.Race == Character.CharacterRace.BloodElf)
             {

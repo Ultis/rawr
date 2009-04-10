@@ -19,7 +19,6 @@ namespace Rawr.Mage
     public enum SpellId
     {
         None,
-        Wand,
         [Description("Arcane Barrage (0)")]
         ArcaneBarrage,
         [Description("Arcane Barrage (1)")]
@@ -628,6 +627,7 @@ namespace Rawr.Mage
 
     public class Spell
     {
+        public SpellId SpellId;
         private SpellTemplate template;
 
         public SpellTemplate SpellTemplate { get { return template; } }

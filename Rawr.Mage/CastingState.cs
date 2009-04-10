@@ -223,9 +223,10 @@ namespace Rawr.Mage
                         maintainSnareState = (CastingState)MemberwiseClone();
                         //maintainSnareState.Spells = new Spell[SpellIdCount];
                         //maintainSnareState.Cycles = new Cycle[CycleIdCount];
-                        maintainSnareState.Spells = new Dictionary<int, Spell>();
-                        maintainSnareState.Cycles = new Dictionary<int, Cycle>();
-                        maintainSnareState.Spells[(int)SpellId.Wand] = Spells[(int)SpellId.Wand];
+                        //maintainSnareState.Spells = new Dictionary<int, Spell>();
+                        //maintainSnareState.Cycles = new Dictionary<int, Cycle>();
+                        maintainSnareState.Spells = new List<Spell>();
+                        maintainSnareState.Cycles = new List<Cycle>();
                         maintainSnareState.SnaredTime = 1.0f;
                     }
                 }
@@ -400,20 +401,24 @@ namespace Rawr.Mage
         //private Cycle[] Cycles = new Cycle[CycleIdCount];
         //private Spell[] Spells = new Spell[SpellIdCount];
 
-        private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>();
-        private Dictionary<int, Cycle> Cycles = new Dictionary<int, Cycle>();
+        //private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>(7);
+        //private Dictionary<int, Cycle> Cycles = new Dictionary<int, Cycle>(7);
 
-        public void SetSpell(SpellId spellId, Spell spell)
-        {
-            Spells[(int)spellId] = spell;
-        }
+        // typical sizes are below 10, so it is more efficient to just have a list
+        // and look through the entries already stored for a match
+        private List<Spell> Spells = new List<Spell>();
+        private List<Cycle> Cycles = new List<Cycle>();
 
         public Cycle GetCycle(CycleId cycleId)
         {
             //Cycle c = Cycles[(int)cycleId];
             //if (c != null) return c;
             Cycle c = null;
-            if (Cycles.TryGetValue((int)cycleId, out c)) return c;
+            //if (Cycles.TryGetValue((int)cycleId, out c)) return c;
+            foreach (Cycle cycle in Cycles)
+            {
+                if (cycle.CycleId == cycleId) return cycle;
+            }
 
             switch (cycleId)
             {
@@ -682,7 +687,8 @@ namespace Rawr.Mage
             if (c != null)
             {
                 c.CycleId = cycleId;
-                Cycles[(int)cycleId] = c;
+                //Cycles[(int)cycleId] = c;
+                Cycles.Add(c);
             }
 
             return c;
@@ -693,7 +699,11 @@ namespace Rawr.Mage
             //Spell s = Spells[(int)spellId];
             //if (s != null) return s;
             Spell s = null;
-            if (Spells.TryGetValue((int)spellId, out s)) return s;
+            //if (Spells.TryGetValue((int)spellId, out s)) return s;
+            foreach (Spell spell in Spells)
+            {
+                if (spell.SpellId == spellId) return spell;
+            }
 
             switch (spellId)
             {
@@ -862,7 +872,9 @@ namespace Rawr.Mage
             }
             if (s != null)
             {
-                Spells[(int)spellId] = s;
+                s.SpellId = spellId;
+                //Spells[(int)spellId] = s;
+                Spells.Add(s);
             }
 
             return s;

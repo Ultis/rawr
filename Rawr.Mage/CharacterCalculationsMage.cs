@@ -161,6 +161,8 @@ namespace Rawr.Mage
         public Cycle ConjureManaGem { get; set; }
         public int MaxConjureManaGem { get; set; }
 
+        public Spell Wand { get; set; }
+
         public float ChanceToDie { get; set; }
         public float MeanIncomingDps { get; set; }
 
@@ -816,7 +818,7 @@ namespace Rawr.Mage
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
             List<CycleId> cycleList = new List<CycleId>() { CycleId.ABSpamMBAM, CycleId.ABAM, CycleId.FBSc, CycleId.FBFBlast, CycleId.ABABar0C, CycleId.FBABar, CycleId.FrBABar, CycleId.FFBABar, CycleId.ABarAM, CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FBScLBPyro, CycleId.FB2ABar, CycleId.FrB2ABar, CycleId.ScLBPyro, CycleId.ABABarSlow, CycleId.FBABarSlow, CycleId.FrBABarSlow, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.ABABar1C, CycleId.ABSpam3C, CycleId.AB3ABar3C, CycleId.FrBFBIL, CycleId.AB2ABar2C, CycleId.ABSpam3MBAM, CycleId.ABSpam03C, CycleId.AB2ABar2MBAM, CycleId.ABABar0MBAM, CycleId.ABABar, CycleId.AB2ABar3C, CycleId.ABABar3C, CycleId.ABABar2C, CycleId.ABABar2MBAM, CycleId.ABABar1MBAM, CycleId.AB3ABar3MBAM, CycleId.AB3AM, CycleId.AB3AM2MBAM, CycleId.AB3AMABar, CycleId.AB3AMABar2C };
-            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.Wand, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
             foreach (CycleId cycle in cycleList)
             {
                 Cycle s = BaseState.GetCycle(cycle);
@@ -834,6 +836,10 @@ namespace Rawr.Mage
                 {
                     dictValues.Add(bs.Name, string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
                 }
+            }
+            if (Wand != null)
+            {
+                dictValues.Add(Wand.Name, string.Format(spellFormatString, Wand.DamagePerSecond, ((Cycle)Wand).ManaPerSecond, Wand.ThreatPerSecond, Wand.CastTime - BaseState.Latency, Wand.SpellModifier, Wand.CritRate * 100, Wand.HitRate * 100, Wand.CritBonus, Wand.MinHitDamage / Wand.HitProcs, Wand.MaxHitDamage / Wand.HitProcs, Wand.MinCritDamage / Wand.HitProcs, Wand.MaxCritDamage / Wand.HitProcs, ((Wand.DotDamage > 0) ? ("\n" + Wand.DotDamage.ToString("F") + " Dot") : ""), Wand.Cost));
             }
             bs = BaseState.GetSpell(SpellId.ArcaneBlast0);
             dictValues.Add("Arcane Blast(0)", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.ABCost));

@@ -83,6 +83,8 @@ namespace Rawr
 
         public void InvalidateCachedData()
         {
+            Stats.InvalidateSparseData();
+            SocketBonus.InvalidateSparseData();
             LastChange = DateTime.Now;
         }
 
@@ -1333,53 +1335,102 @@ namespace Rawr
 			cachedTotalStats = null;
 		}
 
-		public Stats GetTotalStats() { return GetTotalStats(null); }
-		public unsafe Stats GetTotalStats(Character character)
+        public Stats GetTotalStats() { return AccumulateTotalStats(null, null); }
+        public Stats GetTotalStats(Character character) { return AccumulateTotalStats(character, null); }
+        public unsafe Stats AccumulateTotalStats(Character character, Stats unsafeStatsAccumulator)
 		{
-			if (cachedTotalStats != null && Item.LastChange <= cachedTime) return cachedTotalStats; // TODO evaluate whether we should make a check for invalidation of gems or just invalidate all items when gems change
+            if (cachedTotalStats != null && Item.LastChange <= cachedTime)
+            {
+                if (unsafeStatsAccumulator != null)
+                {
+                    unsafeStatsAccumulator.AccumulateUnsafe(cachedTotalStats);
+                }
+                return cachedTotalStats;
+            }
 			bool volatileGem = false, volatileItem = false;
-			Stats totalItemStats = new Stats();
-			fixed (float* pRawAdditiveData = totalItemStats._rawAdditiveData, pRawMultiplicativeData = totalItemStats._rawMultiplicativeData, pRawNoStackData = totalItemStats._rawNoStackData)
-			{
-				totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-				totalItemStats.AccumulateUnsafe(Item.Stats);
-				bool eligibleForSocketBonus =	Item.GemMatchesSlot(Gem1, Item.SocketColor1) &&
-												Item.GemMatchesSlot(Gem2, Item.SocketColor2) &&
-												Item.GemMatchesSlot(Gem3, Item.SocketColor3);
-				if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem1.Stats);
-				volatileItem = volatileItem || volatileGem;
-				if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem2.Stats);
-				volatileItem = volatileItem || volatileGem;
-				if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem3.Stats);
-				volatileItem = volatileItem || volatileGem;
-				if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Item.SocketBonus);
-				bool eligibleForEnchant = false;
-				if (Enchant.Slot == Item.ItemSlot.OneHand)
-				{
-					eligibleForEnchant = (this.Slot == Item.ItemSlot.OneHand ||
-										(this.Slot == Item.ItemSlot.OffHand && 
-											this.Type != Item.ItemType.Shield && 
-											this.Type != Item.ItemType.None) ||
-										this.Slot == Item.ItemSlot.MainHand ||
-										this.Slot == Item.ItemSlot.TwoHand);
-				}
-				else if (Enchant.Slot == Item.ItemSlot.OffHand)
-				{
-					eligibleForEnchant = this.Type == Item.ItemType.Shield;
-				}
-				else
-				{
-					eligibleForEnchant = (Enchant.Slot == this.Slot);
-				}		
-				if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(Enchant.Stats);
-				if (!volatileItem)
-				{
-                    cachedTime = DateTime.Now;
-					cachedTotalStats = totalItemStats;
-					cachedTotalStats.GenerateSparseData();
-				}
-			}
-			return totalItemStats;
+            bool gem1 = false;
+            bool gem2 = false;
+            bool gem3 = false;
+            bool eligibleForSocketBonus = Item.GemMatchesSlot(Gem1, Item.SocketColor1) &&
+                                            Item.GemMatchesSlot(Gem2, Item.SocketColor2) &&
+                                            Item.GemMatchesSlot(Gem3, Item.SocketColor3);
+            if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) gem1 = true;
+            volatileItem = volatileItem || volatileGem;
+            if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) gem2 = true;
+            volatileItem = volatileItem || volatileGem;
+            if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) gem3 = true;
+            volatileItem = volatileItem || volatileGem;
+            if (volatileItem && unsafeStatsAccumulator != null)
+            {
+                unsafeStatsAccumulator.AccumulateUnsafe(Item.Stats, true);
+                if (gem1) unsafeStatsAccumulator.AccumulateUnsafe(Gem1.Stats, true);
+                if (gem2) unsafeStatsAccumulator.AccumulateUnsafe(Gem2.Stats, true);
+                if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(Gem3.Stats, true);
+                if (eligibleForSocketBonus) unsafeStatsAccumulator.AccumulateUnsafe(Item.SocketBonus, true);
+                bool eligibleForEnchant = false;
+                if (Enchant.Slot == Item.ItemSlot.OneHand)
+                {
+                    eligibleForEnchant = (this.Slot == Item.ItemSlot.OneHand ||
+                                        (this.Slot == Item.ItemSlot.OffHand &&
+                                            this.Type != Item.ItemType.Shield &&
+                                            this.Type != Item.ItemType.None) ||
+                                        this.Slot == Item.ItemSlot.MainHand ||
+                                        this.Slot == Item.ItemSlot.TwoHand);
+                }
+                else if (Enchant.Slot == Item.ItemSlot.OffHand)
+                {
+                    eligibleForEnchant = this.Type == Item.ItemType.Shield;
+                }
+                else
+                {
+                    eligibleForEnchant = (Enchant.Slot == this.Slot);
+                }
+                if (eligibleForEnchant) unsafeStatsAccumulator.AccumulateUnsafe(Enchant.Stats, true);
+                return null;
+            }
+            else
+            {
+                Stats totalItemStats = new Stats();
+                fixed (float* pRawAdditiveData = totalItemStats._rawAdditiveData, pRawMultiplicativeData = totalItemStats._rawMultiplicativeData, pRawNoStackData = totalItemStats._rawNoStackData)
+                {
+                    totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+                    totalItemStats.AccumulateUnsafe(Item.Stats, true);
+                    if (gem1) totalItemStats.AccumulateUnsafe(Gem1.Stats, true);
+                    if (gem2) totalItemStats.AccumulateUnsafe(Gem2.Stats, true);
+                    if (gem3) totalItemStats.AccumulateUnsafe(Gem3.Stats, true);
+                    if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Item.SocketBonus, true);
+                    bool eligibleForEnchant = false;
+                    if (Enchant.Slot == Item.ItemSlot.OneHand)
+                    {
+                        eligibleForEnchant = (this.Slot == Item.ItemSlot.OneHand ||
+                                            (this.Slot == Item.ItemSlot.OffHand &&
+                                                this.Type != Item.ItemType.Shield &&
+                                                this.Type != Item.ItemType.None) ||
+                                            this.Slot == Item.ItemSlot.MainHand ||
+                                            this.Slot == Item.ItemSlot.TwoHand);
+                    }
+                    else if (Enchant.Slot == Item.ItemSlot.OffHand)
+                    {
+                        eligibleForEnchant = this.Type == Item.ItemType.Shield;
+                    }
+                    else
+                    {
+                        eligibleForEnchant = (Enchant.Slot == this.Slot);
+                    }
+                    if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(Enchant.Stats, true);
+                    if (!volatileItem)
+                    {
+                        cachedTime = DateTime.Now;
+                        cachedTotalStats = totalItemStats;
+                        cachedTotalStats.GenerateSparseData();
+                        if (unsafeStatsAccumulator != null)
+                        {
+                            unsafeStatsAccumulator.AccumulateUnsafe(cachedTotalStats);
+                        }
+                    }
+                }
+                return totalItemStats;
+            }
 		}
 
 

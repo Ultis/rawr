@@ -874,7 +874,7 @@ namespace Rawr
                         ItemInstance item = character._item[slot];
                         if ((object)item != null)
                         {
-                            stats.AccumulateUnsafe(item.GetTotalStats(character));
+                            item.AccumulateTotalStats(character, stats);
                         }
                     }
                 }
@@ -952,7 +952,7 @@ namespace Rawr
             return stats;
         }*/
 
-        public virtual void AccumulateBuffsStats(Stats stats, IEnumerable<string> buffs)
+        public virtual void AccumulateBuffsStats(Stats stats, List<string> buffs)
         {
             foreach (string buffName in buffs)
                 if (!string.IsNullOrEmpty(buffName))
@@ -965,7 +965,7 @@ namespace Rawr
                 }
         }
 
-        public unsafe virtual void AccumulateBuffsStats(Stats stats, IEnumerable<Buff> buffs)
+        public unsafe virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
         {
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
@@ -979,14 +979,14 @@ namespace Rawr
             }
         }
 
-		public virtual Stats GetBuffsStats(IEnumerable<string> buffs)
+        public virtual Stats GetBuffsStats(List<string> buffs)
 		{
             Stats stats = new Stats();
             AccumulateBuffsStats(stats, buffs);
             return stats;
 		}
 
-        public virtual Stats GetBuffsStats(IEnumerable<Buff> buffs)
+        public virtual Stats GetBuffsStats(List<Buff> buffs)
         {
             Stats stats = new Stats();
             AccumulateBuffsStats(stats, buffs);

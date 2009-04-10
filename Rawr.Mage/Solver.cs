@@ -422,54 +422,58 @@ namespace Rawr.Mage
                 }
                 calculationResult.ManaGemEffectDuration = manaGemEffectDuration;
             }
-            calculationResult.HasteRatingEffects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            List<SpecialEffect> list = new List<SpecialEffect>();
+            foreach (SpecialEffect effect in baseStats.SpecialEffects())
             {
                 if (effect.Stats.HasteRating > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
                     {
-                        return true;
+                        list.Add(effect);
                     }
-                    if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
+                    else if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
                     {
-                        return true;
+                        list.Add(effect);
                     }
                 }
-                return false;
-            })).ToArray();
-            calculationResult.SpellPowerEffects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            }
+            calculationResult.HasteRatingEffects = list.ToArray();
+            list.Clear();
+            foreach (SpecialEffect effect in baseStats.SpecialEffects())
             {
                 if (effect.Stats.SpellPower > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss)
                     {
-                        return true;
+                        list.Add(effect);
                     }
                 }
-                return false;
-            })).ToArray();
-            calculationResult.ManaRestoreEffects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            }
+            calculationResult.SpellPowerEffects = list.ToArray();
+            list.Clear();
+            foreach (SpecialEffect effect in baseStats.SpecialEffects())
             {
                 if (effect.Stats.ManaRestore > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit)
                     {
-                        return true;
+                        list.Add(effect);
                     }
                 }
-                return false;
-            })).ToArray();
-            calculationResult.Mp5Effects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            }
+            calculationResult.ManaRestoreEffects = list.ToArray();
+            list.Clear();
+            foreach (SpecialEffect effect in baseStats.SpecialEffects())
             {
                 if (effect.Stats.Mp5 > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit)
                     {
-                        return true;
+                        list.Add(effect);
                     }
                 }
-                return false;
-            })).ToArray();
+            }
+            calculationResult.Mp5Effects = list.ToArray();
             #endregion
 
             if (armor == null)
@@ -521,12 +525,15 @@ namespace Rawr.Mage
             calculationResult.SubPoints[1] = EvaluateSurvivability(baseStats);
             calculationResult.OverallPoints = calculationResult.SubPoints[0] + calculationResult.SubPoints[1];
 
-            float threat = 0;
-            for (int i = 0; i < tpsList.Count; i++)
+            if (needsDisplayCalculations)
             {
-                threat += (float)(tpsList[i] * calculationResult.Solution[i]);
+                float threat = 0;
+                for (int i = 0; i < tpsList.Count; i++)
+                {
+                    threat += (float)(tpsList[i] * calculationResult.Solution[i]);
+                }
+                calculationResult.Tps = threat / calculationOptions.FightDuration;
             }
-            calculationResult.Tps = threat / calculationOptions.FightDuration;
 
             return calculationResult;
         }
@@ -1017,7 +1024,14 @@ namespace Rawr.Mage
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
             lp = new SolverLP(rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count) * segmentList.Count, calculationResult, segmentList.Count);
-            tpsList = new List<double>();
+            if (needsDisplayCalculations)
+            {
+                tpsList = new List<double>();
+            }
+            else
+            {
+                tpsList = null;
+            }
             double tps;
             if (needsSolutionVariables)
             {
@@ -1077,7 +1091,7 @@ namespace Rawr.Mage
                     lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
                     if (segment == 0) calculationResult.ColumnIdleRegen = column;
                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = calculationResult.BaseState });
-                    tpsList.Add(0.0);
+                    if (needsDisplayCalculations) tpsList.Add(0.0);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                     lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -1100,7 +1114,7 @@ namespace Rawr.Mage
                 {
                     int wandSegments = (restrictManaUse) ? segmentList.Count : 1;
                     Spell w = new WandTemplate(calculationResult, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed).GetSpell(calculationResult.BaseState);
-                    calculationResult.BaseState.SetSpell(SpellId.Wand, w);
+                    calculationResult.Wand = w;
                     Cycle wand = w;
                     manaRegen = wand.ManaPerSecond;
                     for (int segment = 0; segment < wandSegments; segment++)
@@ -1116,7 +1130,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowThreat, column, tps = wand.ThreatPerSecond);
                         lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
                         lp.SetCostUnsafe(column, minimizeTime ? -1 : wand.DamagePerSecond);
-                        tpsList.Add(tps);
+                        if (needsDisplayCalculations) tpsList.Add(tps);
                         if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                         if (restrictManaUse)
                         {
@@ -1233,7 +1247,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                         calculationResult.EvocationTps = tps;
                         lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                        tpsList.Add(tps);
+                        if (needsDisplayCalculations) tpsList.Add(tps);
                         if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                         if (restrictManaUse)
                         {
@@ -1272,7 +1286,7 @@ namespace Rawr.Mage
                                 //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
                                 lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                                 lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                tpsList.Add(tps);
+                                if (needsDisplayCalculations) tpsList.Add(tps);
                                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                 if (segmentCooldowns)
                                 {
@@ -1313,7 +1327,7 @@ namespace Rawr.Mage
                                 //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
                                 lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                                 lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                tpsList.Add(tps);
+                                if (needsDisplayCalculations) tpsList.Add(tps);
                                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                 if (restrictManaUse)
                                 {
@@ -1351,7 +1365,7 @@ namespace Rawr.Mage
                                 //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0 - calculationResult.EvocationDurationHero / 0.1);
                                 lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                                 lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                tpsList.Add(tps);
+                                if (needsDisplayCalculations) tpsList.Add(tps);
                                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                 if (restrictManaUse)
                                 {
@@ -1385,7 +1399,7 @@ namespace Rawr.Mage
                                 //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0);
                                 lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                                 lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                tpsList.Add(tps);
+                                if (needsDisplayCalculations) tpsList.Add(tps);
                                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                 if (restrictManaUse)
                                 {
@@ -1426,7 +1440,7 @@ namespace Rawr.Mage
                                 //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0 - calculationResult.EvocationDurationIVHero / 0.1);
                                 lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                                 lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                tpsList.Add(tps);
+                                if (needsDisplayCalculations) tpsList.Add(tps);
                                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                 if (segmentCooldowns)
                                 {
@@ -1468,7 +1482,7 @@ namespace Rawr.Mage
                                 //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0);
                                 lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                                 lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                tpsList.Add(tps);
+                                if (needsDisplayCalculations) tpsList.Add(tps);
                                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                 if (restrictManaUse)
                                 {
@@ -1515,7 +1529,7 @@ namespace Rawr.Mage
                         calculationResult.ManaPotionTps = tps;
                         //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
-                        tpsList.Add(tps);
+                        if (needsDisplayCalculations) tpsList.Add(tps);
                         /*if (segmentCooldowns && effectPotionAvailable)
                         {
                             for (int ss = 0; ss < segments; ss++)
@@ -1575,7 +1589,7 @@ namespace Rawr.Mage
                         calculationResult.ManaGemTps = tps;
                         //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
-                        tpsList.Add(tps);
+                        if (needsDisplayCalculations) tpsList.Add(tps);
                         if (segmentCooldowns && flameCapAvailable)
                         {
                             foreach (SegmentConstraint constraint in rowSegmentManaGem)
@@ -1695,7 +1709,7 @@ namespace Rawr.Mage
                             lp.SetElementUnsafe(rowDrumsOfBattle, column, 1.0);
                             if (state.FlameCap) lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0 / 40.0);
                             lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                            tpsList.Add(0.0);
+                            if (needsDisplayCalculations) tpsList.Add(0.0);
                             if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                             if (restrictManaUse)
                             {
@@ -1769,7 +1783,7 @@ namespace Rawr.Mage
                             lp.SetElementUnsafe(rowSummonWaterElementalCount, column, 1.0);
                             lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
                             lp.SetCostUnsafe(column, minimizeTime ? -1 : waterbolt.DamagePerSecond);
-                            tpsList.Add(0.0);
+                            if (needsDisplayCalculations) tpsList.Add(0.0);
                             lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                             if (restrictManaUse)
                             {
@@ -1806,7 +1820,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
                     lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                    tpsList.Add(0.0);
+                    if (needsDisplayCalculations) tpsList.Add(0.0);
                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + 0, column, 1.0);
                     if (restrictManaUse)
                     {
@@ -1841,7 +1855,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowAoe, column, calculationOptions.AoeDuration);
                     lp.SetElementUnsafe(rowCombustion, column, 1.0 / 180.0);
                     lp.SetElementUnsafe(rowDrumsOfBattle, column, calculationResult.BaseState.GlobalCooldown / 120.0);
-                    tpsList.Add(0.0);
+                    if (needsDisplayCalculations) tpsList.Add(0.0);
                 }
                 #endregion
                 #region After Fight Regen
@@ -1854,7 +1868,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.BaseState.ManaRegenDrinking);
                     lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                    tpsList.Add(0.0);
+                    if (needsDisplayCalculations) tpsList.Add(0.0);
                 }
                 #endregion
                 #region Mana Overflow
@@ -1867,7 +1881,7 @@ namespace Rawr.Mage
                         if (segment == 0) calculationResult.ColumnManaOverflow = column;
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
                         lp.SetElementUnsafe(rowManaRegen, column, 1.0);
-                        tpsList.Add(0.0);
+                        if (needsDisplayCalculations) tpsList.Add(0.0);
                         for (int ss = segment; ss < segmentList.Count - 1; ss++)
                         {
                             lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, 1.0);
@@ -1897,7 +1911,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowThreat, column, tps = spell.ThreatPerSecond);
                         lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
                         lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
-                        tpsList.Add(tps);
+                        if (needsDisplayCalculations) tpsList.Add(tps);
                         lp.SetElementUnsafe(rowManaGem, column, -3.0 / spell.CastTime); // one cast time gives 3 new gem uses
                         if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                         if (restrictManaUse)
@@ -2667,7 +2681,7 @@ namespace Rawr.Mage
             if (state.DrumsOfBattle && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerDrumsOfBattle, column, 1.0);
             if (state.WaterElemental) lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseState.GlobalCooldown));
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
-            tpsList.Add(cycle.ThreatPerSecond);
+            if (needsDisplayCalculations) tpsList.Add(cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond);
             lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond);
