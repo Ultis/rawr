@@ -9,20 +9,11 @@ namespace Rawr
 	[Serializable]
 	public class Item : IComparable<Item>
 	{
-		[XmlElement("Name")]
-		public string _name;
-
-		[XmlElement("Id")]
-		public int _id;
-
 		[XmlElement("ItemLevel")]
 		public int _itemLevel;
 
 		[XmlElement("IconPath")]
 		public string _iconPath;
-
-		[XmlElement("Slot")]
-		public ItemSlot _slot;
 
 		[XmlElement("Stats")]
 		public Stats _stats = new Stats();
@@ -103,33 +94,56 @@ namespace Rawr
             Invalid = true;
         }
 
-		[XmlIgnore]
+        private string _name;
+        [XmlIgnore]
 		public string Name
 		{
-			get {
+			get 
+            {
                 if (!Rawr.Properties.GeneralSettings.Default.Locale.Equals("en") && _localizedName != null)
+                {
                     return _localizedName;
+                }
                 else
+                {
                     return _name;
+                }
             }
-			set { _name = value; }
+			set
+            {
+                _name = value;
+                UpdateGemInformation();
+            }
 		}
-        [XmlIgnore]
+
+        [XmlElement("Name")]
         public string EnglishName
         {
             get
-            { return _name; }
-            set { _name = value; }
+            { 
+                return _name; 
+            }
+            set
+            { 
+                _name = value;
+                UpdateGemInformation();
+            }
         }
-        [XmlIgnore]
-		public int Id
+
+        private int _id;
+        public int Id
 		{
-			get { return _id; }
+			get 
+            {
+                return _id; 
+            }
 			set
 			{
 				_id = value;
+                UpdateGemInformation();
 			}
 		}
+
 		[XmlIgnore]
 		public int ItemLevel
 		{
@@ -145,21 +159,38 @@ namespace Rawr
 			get { return _iconPath; }
 			set { _iconPath = value; }
 		}
-		[XmlIgnore]
+
+        private ItemSlot _slot;
 		public ItemSlot Slot
 		{
-			get { return _slot; }
-			set { _slot = value; }
+			get 
+            { 
+                return _slot; 
+            }
+			set 
+            {
+                _slot = value;
+                UpdateGemInformation();
+            }
 		}
+
 		/// <summary>
 		/// String version of Slot, to facilitate databinding.
 		/// </summary>
 		[XmlIgnore]
 		public string SlotString
 		{
-			get { return _slot.ToString(); }
-			set { _slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+			get 
+            { 
+                return _slot.ToString(); 
+            }
+			set 
+            { 
+                _slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), value);
+                UpdateGemInformation();
+            }
 		}
+
 		[XmlIgnore]
 		public Stats Stats
 		{
@@ -527,30 +558,69 @@ namespace Rawr
 			}
 		}
 
+        private bool _isGem;
 		public bool IsGem
 		{
 			get
 			{
-				return Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
+				return _isGem;
 			}
 		}
 
+        private bool _isRedGem;
+        public bool IsRedGem
+        {
+            get
+            {
+                return _isRedGem;
+            }
+        }
+
+        private bool _isYellowGem;
+        public bool IsYellowGem
+        {
+            get
+            {
+                return _isYellowGem;
+            }
+        }
+
+        private bool _isBlueGem;
+        public bool IsBlueGem
+        {
+            get
+            {
+                return _isBlueGem;
+            }
+        }
+
+        private bool _isJewelersGem;
 		public bool IsJewelersGem
 		{
 			get
 			{
-				if (Slot != ItemSlot.Prismatic) return false;
-				return Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157;
+                return _isJewelersGem;
 			}
 		}
 
+        private bool _isStormjewel;
 		public bool IsStormjewel
 		{
 			get
 			{
-				return Name.EndsWith("Stormjewel");
+                return _isStormjewel;
 			}
 		}
+
+        private void UpdateGemInformation()
+        {
+            _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
+            _isStormjewel = _isGem && _name.EndsWith("Stormjewel");
+            _isJewelersGem = Slot == ItemSlot.Prismatic && (Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157);
+            _isRedGem = _isGem && Item.GemMatchesSlot(this, Item.ItemSlot.Red);
+            _isYellowGem = _isGem && Item.GemMatchesSlot(this, Item.ItemSlot.Yellow);
+            _isBlueGem = _isGem && Item.GemMatchesSlot(this, Item.ItemSlot.Blue);
+        }
 
 		public Item() { }
 		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, bool unique, Stats stats, Stats socketBonus, ItemSlot socketColor1, ItemSlot socketColor2, ItemSlot socketColor3, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
@@ -573,6 +643,7 @@ namespace Rawr
 			_speed = speed;
 			_requiredClasses = requiredClasses;
 			_unique = unique;
+            UpdateGemInformation();
 		}
 
 		public Item Clone()

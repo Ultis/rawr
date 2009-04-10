@@ -339,7 +339,7 @@ namespace Rawr.Mage
             if (CastingState.WaterElemental)
             {
                 float spellPower = CastingState.FrostSpellPower;
-                foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.SpellPower > 0 && e.MaxStack == 1))
+                foreach (SpecialEffect effect in CastingState.Calculations.SpellPowerEffects)
                 {
                     switch (effect.Trigger)
                     {
@@ -423,52 +423,45 @@ namespace Rawr.Mage
         {
             Stats baseStats = CastingState.BaseStats;
             manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
-            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.MaxStack == 1))
+            foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
             {
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
-                        }
+                        manaRegenPerSecond += effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
-                        }
+                        manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
-                        }
+                        manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
-                        }
+                        manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
+                        break;
+                }
+            }
+            foreach (SpecialEffect effect in CastingState.Calculations.Mp5Effects)
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.Use:
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
+                        break;
+                    case Trigger.DamageSpellCast:
+                    case Trigger.SpellCast:
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
+                        break;
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        break;
+                    case Trigger.DamageSpellHit:
+                    case Trigger.SpellHit:
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
                         break;
                 }
             }
@@ -487,52 +480,45 @@ namespace Rawr.Mage
             dict["Mana Tide"] += duration * CastingState.CalculationOptions.ManaTide * 0.24f * CastingState.BaseStats.Mana / CastingState.CalculationOptions.FightDuration;
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
-            foreach (SpecialEffect effect in CastingState.BaseStats.SpecialEffects(e => e.MaxStack == 1))
+            foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
             {
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
-                        }
+                        dict["Other"] += duration * effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
-                        }
+                        dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
-                        }
+                        dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        if (effect.Stats.ManaRestore > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
-                        }
-                        else if (effect.Stats.Mp5 > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
-                        }
+                        dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
+                        break;
+                }
+            }
+            foreach (SpecialEffect effect in CastingState.Calculations.Mp5Effects)
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.Use:
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
+                        break;
+                    case Trigger.DamageSpellCast:
+                    case Trigger.SpellCast:
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
+                        break;
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        break;
+                    case Trigger.DamageSpellHit:
+                    case Trigger.SpellHit:
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
                         break;
                 }
             }
@@ -923,10 +909,10 @@ namespace Rawr.Mage
             if (castingState.IcyVeins) InterruptProtection = 1;
 
             float channelReduction;
-            CastTime = template.CalculateCastTime(baseStats, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+            CastTime = template.CalculateCastTime(castingState.Calculations.HasteRatingEffects, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
             float spellPower = RawSpellDamage;
-            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.SpellPower > 0 && e.MaxStack == 1))
+            foreach (SpecialEffect effect in castingState.Calculations.SpellPowerEffects)
             {
                 switch (effect.Trigger)
                 {
@@ -1282,7 +1268,7 @@ namespace Rawr.Mage
                 return 1 - (float)Math.Pow(1 - procChance, buffDuration / triggerInterval);
         }
 
-        public float CalculateCastTime(Stats baseStats, CalculationOptionsMage calculationOptions, float castingSpeed, float spellHasteRating, float interruptProtection, float critRate, bool pom, float baseCastTime, out float channelReduction)
+        public float CalculateCastTime(SpecialEffect[] hasteEffects, CalculationOptionsMage calculationOptions, float castingSpeed, float spellHasteRating, float interruptProtection, float critRate, bool pom, float baseCastTime, out float channelReduction)
         {
             // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
             float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
@@ -1298,7 +1284,7 @@ namespace Rawr.Mage
             if (castTime < globalCooldown + calculationOptions.Latency) castTime = globalCooldown + calculationOptions.Latency;
             channelReduction = 0.0f;
 
-            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.HasteRating > 0 && e.MaxStack == 1))
+            foreach (SpecialEffect effect in hasteEffects)
             {
                 float procs = 0.0f;
                 switch (effect.Trigger)

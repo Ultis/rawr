@@ -168,6 +168,16 @@ namespace Rawr.Mage
 
         public bool NeedsDisplayCalculations { get; set; }
 
+        public SpecialEffect[] SpellPowerEffects { get; set; }
+        public SpecialEffect[] HasteRatingEffects { get; set; }
+        public SpecialEffect[] ManaRestoreEffects { get; set; }
+        public SpecialEffect[] Mp5Effects { get; set; }
+        public float Trinket1SpellPower { get; set; }
+        public float Trinket1HasteRating { get; set; }
+        public float Trinket2SpellPower { get; set; }
+        public float Trinket2HasteRating { get; set; }
+        public float ManaGemEffectSpellPower { get; set; }
+
         #region Base State Stats
         public float BaseSpellHit { get; set; }
         public float BaseArcaneHitRate { get; set; }

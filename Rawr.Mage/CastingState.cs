@@ -281,32 +281,17 @@ namespace Rawr.Mage
 
             if (trinket1)
             {
-                Stats t = character.Trinket1.Item.Stats;
-                foreach (SpecialEffect effect in t.SpecialEffects(e => e.Trigger == Trigger.Use))
-                {
-                    StateSpellPower += effect.Stats.SpellPower;
-                    SpellHasteRating += effect.Stats.HasteRating;
-                }
-                //StateSpellPower += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
-                //SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
+                StateSpellPower += calculations.Trinket1SpellPower;
+                SpellHasteRating += calculations.Trinket1HasteRating;
             }
             if (trinket2)
             {
-                Stats t = character.Trinket2.Item.Stats;
-                foreach (SpecialEffect effect in t.SpecialEffects(e => e.Trigger == Trigger.Use))
-                {
-                    StateSpellPower += effect.Stats.SpellPower;
-                    SpellHasteRating += effect.Stats.HasteRating;
-                }
-                //StateSpellPower += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
-                //SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
+                StateSpellPower += calculations.Trinket2SpellPower;
+                SpellHasteRating += calculations.Trinket2HasteRating;
             }
             if (manaGemEffect)
             {
-                foreach (SpecialEffect effect in BaseStats.SpecialEffects(e => e.Trigger == Trigger.ManaGem))
-                {
-                    StateSpellPower += effect.Stats.SpellPower;
-                }
+                StateSpellPower += calculations.ManaGemEffectSpellPower;
             }
             if (drums)
             {

@@ -890,6 +890,7 @@ namespace Rawr
         public void GenerateSparseData()
         {
             //List<float> data = new List<float>();
+            if (_sparseIndices != null) return;
             lock (_rawAdditiveData)
             {
                 if (_sparseIndices == null)
@@ -5088,6 +5089,7 @@ namespace Rawr
             clone._rawMultiplicativeData = (float[])clone._rawMultiplicativeData.Clone();
             clone._rawInverseMultiplicativeData = (float[])clone._rawInverseMultiplicativeData.Clone();
             clone._rawNoStackData = (float[])clone._rawNoStackData.Clone();
+            if (_rawSpecialEffectData != null) clone._rawSpecialEffectData = (SpecialEffect[])_rawSpecialEffectData.Clone();
             return clone;
         }
 

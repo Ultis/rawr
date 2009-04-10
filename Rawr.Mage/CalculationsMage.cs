@@ -414,7 +414,14 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetStateIndexes = cooldownList.ToArray();
             calculationOptions.IncrementalSetSpells = spellList.ToArray();
             calculationOptions.IncrementalSetSegments = segmentList.ToArray();
-            calculationOptions.IncrementalSetArmor = calculations.MageArmor;
+            if (calculationOptions.AutomaticArmor)
+            {
+                calculationOptions.IncrementalSetArmor = calculations.MageArmor;
+            }
+            else
+            {
+                calculationOptions.IncrementalSetArmor = null;
+            }
 
             List<Cooldown> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
             filteredCooldowns.Sort();
@@ -478,6 +485,7 @@ namespace Rawr.Mage
             {
                 if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
+                    effect.Stats.GenerateSparseData();
                     stats.Accumulate(effect.Stats, effect.MaxStack);
                 }
             }

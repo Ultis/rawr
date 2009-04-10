@@ -384,7 +384,7 @@ namespace Rawr.Mage
                 calculationResult.MaxManaPotionValue = 4400.0;
             }
 
-            #region Setup Trinkets
+            #region Effects Setup
             if (trinket1Available)
             {
                 Stats s = character.Trinket1.Item.Stats;
@@ -392,10 +392,12 @@ namespace Rawr.Mage
                 {
                     trinket1Duration = effect.Duration;
                     trinket1Cooldown = effect.Cooldown;
+                    calculationResult.Trinket1SpellPower += effect.Stats.SpellPower;
+                    calculationResult.Trinket1HasteRating += effect.Stats.HasteRating;
                 }
                 calculationResult.Trinket1Duration = trinket1Duration;
                 calculationResult.Trinket1Cooldown = trinket1Cooldown;
-                calculationResult.Trinket1Name = character.Trinket1.Item.Name;
+                if (needsDisplayCalculations) calculationResult.Trinket1Name = character.Trinket1.Item.Name;
             }
             if (trinket2Available)
             {
@@ -404,19 +406,70 @@ namespace Rawr.Mage
                 {
                     trinket2Duration = effect.Duration;
                     trinket2Cooldown = effect.Cooldown;
+                    calculationResult.Trinket2SpellPower += effect.Stats.SpellPower;
+                    calculationResult.Trinket2HasteRating += effect.Stats.HasteRating;
                 }
                 calculationResult.Trinket2Duration = trinket2Duration;
                 calculationResult.Trinket2Cooldown = trinket2Cooldown;
-                calculationResult.Trinket2Name = character.Trinket2.Item.Name;
+                if (needsDisplayCalculations) calculationResult.Trinket2Name = character.Trinket2.Item.Name;
             }
             if (manaGemEffectAvailable)
             {
                 foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Trigger == Trigger.ManaGem))
                 {
                     manaGemEffectDuration = effect.Duration;
+                    calculationResult.ManaGemEffectSpellPower += effect.Stats.SpellPower;
                 }
                 calculationResult.ManaGemEffectDuration = manaGemEffectDuration;
             }
+            calculationResult.HasteRatingEffects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            {
+                if (effect.Stats.HasteRating > 0 && effect.MaxStack == 1)
+                {
+                    if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
+                    {
+                        return true;
+                    }
+                    if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            })).ToArray();
+            calculationResult.SpellPowerEffects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            {
+                if (effect.Stats.SpellPower > 0 && effect.MaxStack == 1)
+                {
+                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            })).ToArray();
+            calculationResult.ManaRestoreEffects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            {
+                if (effect.Stats.ManaRestore > 0 && effect.MaxStack == 1)
+                {
+                    if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            })).ToArray();
+            calculationResult.Mp5Effects = new List<SpecialEffect>(baseStats.SpecialEffects(effect =>
+            {
+                if (effect.Stats.Mp5 > 0 && effect.MaxStack == 1)
+                {
+                    if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            })).ToArray();
             #endregion
 
             if (armor == null)

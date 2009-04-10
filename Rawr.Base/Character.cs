@@ -1164,9 +1164,9 @@ namespace Rawr //O O . .
                         Item gem = item.GetGem(gemIndex);
                         if (gem != null)
                         {
-                            if (Item.GemMatchesSlot(gem, Item.ItemSlot.Red)) redGemCount++;
-                            if (Item.GemMatchesSlot(gem, Item.ItemSlot.Yellow)) yellowGemCount++;
-                            if (Item.GemMatchesSlot(gem, Item.ItemSlot.Blue)) blueGemCount++;
+                            if (gem.IsRedGem) redGemCount++;
+                            if (gem.IsYellowGem) yellowGemCount++;
+                            if (gem.IsBlueGem) blueGemCount++;
                             if (gem.IsJewelersGem) jewelersGemCount++;
                             else if (gem.IsStormjewel) stormjewelCount++;
                             else if (gem.Unique) // needs else, it seems jewelers gems are marked as unique

@@ -106,7 +106,7 @@ namespace Rawr
 			}
 
 			Item item = new Item() { 
-				_id = int.Parse(id),
+				Id = int.Parse(id),
 				Name = name, 
 				Quality = (Item.ItemQuality)int.Parse(quality),
 				IconPath = string.Empty,
@@ -169,7 +169,7 @@ namespace Rawr
             // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
             int id = 0;
             foreach (XmlNode node in docItem.SelectNodes("wowhead/item")) { id = int.Parse(node.Attributes["id"].Value); }
-			Item item = new Item() { _id = id, Stats = new Stats() };
+			Item item = new Item() { Id = id, Stats = new Stats() };
 			string htmlTooltip = string.Empty;
 			string json1 = string.Empty;
 			string json2 = string.Empty;

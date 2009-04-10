@@ -892,7 +892,7 @@ namespace Rawr
 
                 Item item = new Item()
                 {
-					_id = id,
+					Id = id,
                     Name = name,
                     Quality = quality,
                     Type = type,
