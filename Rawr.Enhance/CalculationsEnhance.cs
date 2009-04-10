@@ -492,7 +492,7 @@ namespace Rawr
 
             float dpsOHMeleeNormal = adjustedOHDPS * (1 - chanceWhiteCrit - glancingRate);
             float dpsOHMeleeCrits = adjustedOHDPS * chanceWhiteCrit * critMultiplierMelee;
-            float dpsOHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
+            float dpsOHMeleeGlances = adjustedOHDPS * glancingRate * .35f;
 
             float meleeMultipliers = weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
 
@@ -600,7 +600,7 @@ namespace Rawr
                 float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / bloodlustHaste);
-                float dogsBaseDPS = 375f + dogsAP / 14f;
+                float dogsBaseDPS = 206f + dogsAP / 14f;
                 
                 float dogsMeleeNormal = dogsBaseDPS * (1 - dogsCrit - glancingRate);
                 float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
@@ -981,22 +981,26 @@ namespace Rawr
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect + stats.Expertise +
-				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
+            return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect + stats.Expertise +
+                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
                 stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating + stats.HasteRating +
-                stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + stats.Strength + 
-				stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating + stats.Spirit +
-				stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
+                stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + stats.Strength +
+                stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating + stats.Spirit +
+                stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
                 stats.BerserkingProc + stats.BonusSpellPowerMultiplier + stats.HasteRatingOnPhysicalAttack +
                 stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq +
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
-                stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
-                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusSpiritMultiplier + 
+                stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +
+                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusSpiritMultiplier +
                 stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusFlurryHaste +
                 stats.BonusLSDamage + stats.PhysicalCrit + stats.SpellPowerFor10SecOnHit_10_45 +
                 stats.PendulumOfTelluricCurrentsProc + stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit +
                 stats.SpellHit + stats.SpellHaste + stats.BonusPhysicalDamageMultiplier + stats.BonusLLSSDamage +
-                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0;
+                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0
+
+                &&
+
+                stats.TigersFuryCooldownReduction == 0;
         }
         #endregion
     }
