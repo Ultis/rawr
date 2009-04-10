@@ -616,10 +616,10 @@ namespace Rawr.Cat
 
 			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
 				new Stats() {
-					Health = 7237f,
+					Health = 7417f,
 					Strength = 86f,
 					Agility = 87f,
-					Stamina = 96f,
+					Stamina = 97f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
 					BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
@@ -708,7 +708,7 @@ namespace Rawr.Cat
 			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f+ statsTotal.BonusAttackPowerMultiplier));
-			statsTotal.Health += (float)Math.Floor(statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
+			statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
 			statsTotal.Armor += 2f * statsTotal.Agility;
 			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
