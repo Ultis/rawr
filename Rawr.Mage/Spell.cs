@@ -339,7 +339,7 @@ namespace Rawr.Mage
             if (CastingState.WaterElemental)
             {
                 float spellPower = CastingState.FrostSpellPower;
-                foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.SpellPower > 0))
+                foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.SpellPower > 0 && e.MaxStack == 1))
                 {
                     switch (effect.Trigger)
                     {
@@ -375,13 +375,12 @@ namespace Rawr.Mage
             }
             if (baseStats.LightningCapacitorProc > 0)
             {
-                Spell LightningBolt = CastingState.LightningBolt;
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
                 float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
                 float avgHitsToDischarge = 3f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = LightningBolt.AverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
+                float boltDps = CastingState.LightningBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                 //continuous model
@@ -389,13 +388,12 @@ namespace Rawr.Mage
             }
             if (baseStats.ThunderCapacitorProc > 0)
             {
-                Spell ThunderBolt = CastingState.ThunderBolt;
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
                 float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
                 float avgHitsToDischarge = 4f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = ThunderBolt.AverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
+                float boltDps = CastingState.ThunderBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                 //continuous model
@@ -403,22 +401,19 @@ namespace Rawr.Mage
             }
             if (baseStats.ShatteredSunAcumenProc > 0 && !CastingState.CalculationOptions.Aldor)
             {
-                Spell ArcaneBolt = CastingState.ArcaneBolt;
-                float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
+                float boltDps = CastingState.ArcaneBoltAverageDamage / (45f + CastTime / HitProcs / 0.1f);
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
             }
             if (baseStats.PendulumOfTelluricCurrentsProc > 0)
             {
-                Spell PendulumOfTelluricCurrents = CastingState.PendulumOfTelluricCurrents;
-                float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
+                float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
             }
             if (baseStats.LightweaveEmbroideryProc > 0)
             {
-                Spell LightweaveBolt = CastingState.LightweaveBolt;
-                float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
+                float boltDps = CastingState.LightweaveBoltAverageDamage / (45f + CastTime / HitProcs / 0.5f);
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
             }
@@ -427,12 +422,61 @@ namespace Rawr.Mage
         private void CalculateManaRegen()
         {
             Stats baseStats = CastingState.BaseStats;
-            manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + CastingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + CastingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + CastingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + CastingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.MaxStack == 1))
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.Use:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
+                        }
+                        break;
+                    case Trigger.DamageSpellCast:
+                    case Trigger.SpellCast:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
+                        }
+                        break;
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        }
+                        break;
+                    case Trigger.DamageSpellHit:
+                    case Trigger.SpellHit:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
+                        }
+                        break;
+                }
+            }
             if (CastingState.WaterElemental)
             {
                 manaRegenPerSecond += 0.002f * CastingState.BaseStats.Mana / 5.0f * CastingState.MageTalents.ImprovedWaterElemental;
             }
-            threatPerSecond += (baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
+            threatPerSecond += (baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
         }
 
         public virtual void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
@@ -443,7 +487,55 @@ namespace Rawr.Mage
             dict["Mana Tide"] += duration * CastingState.CalculationOptions.ManaTide * 0.24f * CastingState.BaseStats.Mana / CastingState.CalculationOptions.FightDuration;
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
-            dict["Other"] += duration * (CastingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + CastingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + CastingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + CastingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f));
+            foreach (SpecialEffect effect in CastingState.BaseStats.SpecialEffects(e => e.MaxStack == 1))
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.Use:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
+                        }
+                        break;
+                    case Trigger.DamageSpellCast:
+                    case Trigger.SpellCast:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
+                        }
+                        break;
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        }
+                        break;
+                    case Trigger.DamageSpellHit:
+                    case Trigger.SpellHit:
+                        if (effect.Stats.ManaRestore > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
+                        }
+                        else if (effect.Stats.Mp5 > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
+                        }
+                        break;
+                }
+            }
             if (CastingState.WaterElemental)
             {
                 dict["Water Elemental"] += duration * 0.002f * CastingState.BaseStats.Mana / 5.0f * CastingState.MageTalents.ImprovedWaterElemental;
@@ -465,71 +557,66 @@ namespace Rawr.Mage
             }
             if (CastingState.BaseStats.LightningCapacitorProc > 0)
             {
-                Spell LightningBolt = CastingState.LightningBolt;
-                if (!dict.TryGetValue(LightningBolt.Name, out contrib))
+                if (!dict.TryGetValue("Lightning Bolt", out contrib))
                 {
-                    contrib = new SpellContribution() { Name = LightningBolt.Name };
-                    dict[LightningBolt.Name] = contrib;
+                    contrib = new SpellContribution() { Name = "Lightning Bolt" };
+                    dict["Lightning Bolt"] = contrib;
                 }
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
                 float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
                 float avgHitsToDischarge = 3f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = LightningBolt.AverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
+                float boltDps = CastingState.LightningBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Hits += duration / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Damage += boltDps * duration;
             }
             if (CastingState.BaseStats.ThunderCapacitorProc > 0)
             {
-                Spell ThunderBolt = CastingState.ThunderBolt;
-                if (!dict.TryGetValue(ThunderBolt.Name, out contrib))
+                if (!dict.TryGetValue("Thunder Bolt", out contrib))
                 {
-                    contrib = new SpellContribution() { Name = ThunderBolt.Name };
-                    dict[ThunderBolt.Name] = contrib;
+                    contrib = new SpellContribution() { Name = "Thunder Bolt" };
+                    dict["Thunder Bolt"] = contrib;
                 }
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
                 float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
                 float avgHitsToDischarge = 4f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = ThunderBolt.AverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
+                float boltDps = CastingState.ThunderBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Hits += duration / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Damage += boltDps * duration;
             }
             if (CastingState.BaseStats.ShatteredSunAcumenProc > 0 && !CastingState.CalculationOptions.Aldor)
             {
-                Spell ArcaneBolt = CastingState.ArcaneBolt;
-                if (!dict.TryGetValue(ArcaneBolt.Name, out contrib))
+                if (!dict.TryGetValue("Arcane Bolt", out contrib))
                 {
-                    contrib = new SpellContribution() { Name = ArcaneBolt.Name };
-                    dict[ArcaneBolt.Name] = contrib;
+                    contrib = new SpellContribution() { Name = "Arcane Bolt" };
+                    dict["Arcane Bolt"] = contrib;
                 }
-                float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
+                float boltDps = CastingState.ArcaneBoltAverageDamage / (45f + CastTime / HitProcs / 0.1f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.1f);
                 contrib.Damage += boltDps * duration;
             }
             if (CastingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
             {
-                Spell PendulumOfTelluricCurrents = CastingState.PendulumOfTelluricCurrents;
-                if (!dict.TryGetValue(PendulumOfTelluricCurrents.Name, out contrib))
+                if (!dict.TryGetValue("Pendulum of Telluric Currents", out contrib))
                 {
-                    contrib = new SpellContribution() { Name = PendulumOfTelluricCurrents.Name };
-                    dict[PendulumOfTelluricCurrents.Name] = contrib;
+                    contrib = new SpellContribution() { Name = "Pendulum of Telluric Currents" };
+                    dict["Pendulum of Telluric Currents"] = contrib;
                 }
-                float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
+                float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Damage += boltDps * duration;
             }
             if (CastingState.BaseStats.LightweaveEmbroideryProc > 0)
             {
-                Spell LightweaveBolt = CastingState.LightweaveBolt;
-                if (!dict.TryGetValue(LightweaveBolt.Name, out contrib))
+                if (!dict.TryGetValue("Lightweave Bolt", out contrib))
                 {
-                    contrib = new SpellContribution() { Name = LightweaveBolt.Name };
-                    dict[LightweaveBolt.Name] = contrib;
+                    contrib = new SpellContribution() { Name = "Lightweave Bolt" };
+                    dict["Lightweave Bolt"] = contrib;
                 }
-                float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
+                float boltDps = CastingState.LightweaveBoltAverageDamage / (45f + CastTime / HitProcs / 0.5f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.5f);
                 contrib.Damage += boltDps * duration;
             }
@@ -839,7 +926,7 @@ namespace Rawr.Mage
             CastTime = template.CalculateCastTime(baseStats, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
             float spellPower = RawSpellDamage;
-            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.SpellPower > 0))
+            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.SpellPower > 0 && e.MaxStack == 1))
             {
                 switch (effect.Trigger)
                 {
@@ -1043,6 +1130,13 @@ namespace Rawr.Mage
             return spell;
         }
 
+        public virtual float GetEffectAverageDamage(CastingState castingState)
+        {
+            Spell spell = new Spell(this);
+            spell.Calculate(castingState);
+            return spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false);
+        }
+
         protected SpellTemplate() { }
         public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, 1, 1, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, 0) { }
         public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, hitProcs, castProcs, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, 0) { }
@@ -1204,7 +1298,7 @@ namespace Rawr.Mage
             if (castTime < globalCooldown + calculationOptions.Latency) castTime = globalCooldown + calculationOptions.Latency;
             channelReduction = 0.0f;
 
-            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.HasteRating > 0))
+            foreach (SpecialEffect effect in baseStats.SpecialEffects(e => e.Stats.HasteRating > 0 && e.MaxStack == 1))
             {
                 float procs = 0.0f;
                 switch (effect.Trigger)

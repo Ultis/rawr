@@ -430,7 +430,7 @@ namespace Rawr.Mage
         {
             Stats stats = new Stats();
             AccumulateItemStats(stats, character, additionalItem);
-            //AccumulateEnchantsStats(stats, character);
+
             activeBuffs = new List<Buff>();
             activeBuffs.AddRange(character.ActiveBuffs);
 
@@ -473,6 +473,14 @@ namespace Rawr.Mage
             }
 
             AccumulateBuffsStats(stats, activeBuffs);
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
+                {
+                    stats.Accumulate(effect.Stats, effect.MaxStack);
+                }
+            }
 
             return stats;
         }
@@ -2075,7 +2083,6 @@ namespace Rawr.Mage
                 LightningCapacitorProc = stats.LightningCapacitorProc,
                 //SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 //HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                ManaRestorePerCast = stats.ManaRestorePerCast,
                 ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 BonusManaGem = stats.BonusManaGem,
                 //SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
@@ -2097,7 +2104,7 @@ namespace Rawr.Mage
                 AldorRegaliaInterruptProtection = stats.AldorRegaliaInterruptProtection,
                 //SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
-                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
+                //ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 InterruptProtection = stats.InterruptProtection,
                 ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
                 FireResistanceBuff = stats.FireResistanceBuff,
@@ -2114,9 +2121,9 @@ namespace Rawr.Mage
                 SpellCrit = stats.SpellCrit,
                 SpellHaste = stats.SpellHaste,
                 //SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
-                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
+                //ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
                 //SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
+                //ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
@@ -2128,75 +2135,117 @@ namespace Rawr.Mage
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Stats.SpellPower > 0)
+                if (effect.MaxStack == 1)
                 {
-                    if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss)
+                    if (effect.Stats.SpellPower > 0)
+                    {
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss)
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                    }
+                    if (effect.Stats.HasteRating > 0)
+                    {
+                        if (effect.Trigger == Trigger.Use)
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                        if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                        if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                    }
+                    if (effect.Stats.ManaRestore > 0 || effect.Stats.Mp5 > 0)
+                    {
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit)
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                    }
+                    if (effect.Trigger == Trigger.ManaGem)
                     {
                         s.AddSpecialEffect(effect);
                         continue;
                     }
                 }
-                if (effect.Stats.HasteRating > 0)
+                else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
-                    if (effect.Trigger == Trigger.Use)
+                    if (HasMageStats(effect.Stats))
                     {
                         s.AddSpecialEffect(effect);
                         continue;
                     }
-                    if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
-                    {
-                        s.AddSpecialEffect(effect);
-                        continue;
-                    }
-                    if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
-                    {
-                        s.AddSpecialEffect(effect);
-                        continue;
-                    }
-                }
-                if (effect.Trigger == Trigger.ManaGem)
-                {
-                    s.AddSpecialEffect(effect);
-                    continue;
                 }
             }
             return s;
         }
 
+        private bool HasMageStats(Stats stats)
+        {
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.ManaRestoreFromBaseManaPerHit + stats.BonusManaGem + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.AldorRegaliaInterruptProtection + stats.ShatteredSunAcumenProc + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.CritBonusDamage + stats.LightweaveEmbroideryProc + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier;
+            return mageStats > 0;
+        }
+
         public override bool HasRelevantStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.ManaRestorePerCast + stats.BonusManaGem + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.HasteRatingFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellPowerFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestoreOnCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.SpellPowerFor10SecOnCast_15_45 + stats.ManaRestoreOnCast_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45 + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.SpellPowerFor20SecOnUse5Min + stats.CritBonusDamage + stats.LightweaveEmbroideryProc + stats.BonusDamageMultiplier + stats.SpellPowerFor10SecOnCast_10_45 + stats.SpellPowerFor15SecOnCast_50_45 + stats.BonusSpellPowerDemonicPactMultiplier;
+            bool mageStats = HasMageStats(stats);
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Stats.SpellPower > 0)
+                if (effect.MaxStack == 1)
                 {
-                    if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss)
+                    if (effect.Stats.SpellPower > 0)
+                    {
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss)
+                        {
+                            return true;
+                        }
+                    }
+                    if (effect.Stats.HasteRating > 0)
+                    {
+                        if (effect.Trigger == Trigger.Use)
+                        {
+                            return true;
+                        }
+                        if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
+                        {
+                            return true;
+                        }
+                        if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
+                        {
+                            return true;
+                        }
+                    }
+                    if (effect.Stats.ManaRestore > 0 || effect.Stats.Mp5 > 0)
+                    {
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit)
+                        {
+                            return true;
+                        }
+                    }
+                    if (effect.Trigger == Trigger.ManaGem)
                     {
                         return true;
                     }
                 }
-                if (effect.Stats.HasteRating > 0)
+                else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
-                    if (effect.Trigger == Trigger.Use)
+                    if (HasMageStats(effect.Stats))
                     {
                         return true;
                     }
-                    if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
-                    {
-                        return true;
-                    }
-                    if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
-                    {
-                        return true;
-                    }
-                }
-                if (effect.Trigger == Trigger.ManaGem)
-                {
-                    return true;
                 }
             }
-            return (mageStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
+            return (mageStats || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)

@@ -377,31 +377,31 @@ namespace Rawr.Mage
 
             if (BaseStats.LightningCapacitorProc > 0)
             {
-                LightningBolt = calculations.LightningBoltTemplate.GetSpell(this);
+                LightningBoltAverageDamage = calculations.LightningBoltTemplate.GetEffectAverageDamage(this);
             }
             if (BaseStats.ThunderCapacitorProc > 0)
             {
-                ThunderBolt = calculations.ThunderBoltTemplate.GetSpell(this);
+                ThunderBoltAverageDamage = calculations.ThunderBoltTemplate.GetEffectAverageDamage(this);
             }
             if (BaseStats.LightweaveEmbroideryProc > 0)
             {
-                LightweaveBolt = calculations.LightweaveBoltTemplate.GetSpell(this);
+                LightweaveBoltAverageDamage = calculations.LightweaveBoltTemplate.GetEffectAverageDamage(this);
             }
             if (BaseStats.ShatteredSunAcumenProc > 0 && !CalculationOptions.Aldor)
             {
-                ArcaneBolt = calculations.ArcaneBoltTemplate.GetSpell(this);
+                ArcaneBoltAverageDamage = calculations.ArcaneBoltTemplate.GetEffectAverageDamage(this);
             }
             if (BaseStats.PendulumOfTelluricCurrentsProc > 0)
             {
-                PendulumOfTelluricCurrents = calculations.PendulumOfTelluricCurrentsTemplate.GetSpell(this);
+                PendulumOfTelluricCurrentsAverageDamage = calculations.PendulumOfTelluricCurrentsTemplate.GetEffectAverageDamage(this);
             }
         }
 
-        public Spell ArcaneBolt { get; set; }
-        public Spell LightningBolt { get; set; }
-        public Spell ThunderBolt { get; set; }
-        public Spell LightweaveBolt { get; set; }
-        public Spell PendulumOfTelluricCurrents { get; set; }
+        public float ArcaneBoltAverageDamage { get; set; }
+        public float LightningBoltAverageDamage { get; set; }
+        public float ThunderBoltAverageDamage { get; set; }
+        public float LightweaveBoltAverageDamage { get; set; }
+        public float PendulumOfTelluricCurrentsAverageDamage { get; set; }
 
         //private static int CycleIdCount;
         //private static int SpellIdCount;

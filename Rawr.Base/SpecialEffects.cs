@@ -1095,18 +1095,9 @@ namespace Rawr
                     stats.ManaregenOver12SecOnUse5Min += 900;
                 // stats.Mp5 += 5f * 900f / 300f;
             }
-            // Mind Quickening Gem
-            else if (line.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec."))
-            {
-                stats.HasteRatingFor20SecOnUse5Min += 330;
-            }
             else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
             {
                 stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
-            }
-            else if (line.StartsWith("Removes all movement impairing effects and all effects which cause loss of control of your character."))
-            {
-                stats.PVPTrinket += 1f;
             }
 			else if (line.StartsWith("Your heals each cost "))
 			{

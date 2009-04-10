@@ -803,26 +803,54 @@ namespace Rawr
 
         public override string ToString()
         {
-            if (Cooldown == 0.0f)
+            if (MaxStack > 1)
             {
-                if (Chance == 1.0f)
+                if (Cooldown == 0.0f)
                 {
-                    return string.Format("{0} ({1}{3})", Stats.ToString(), DurationString, Chance * 100, TriggerString);
+                    if (Chance == 1.0f)
+                    {
+                        return string.Format("{4}x {0} ({1}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString, MaxStack);
+                    }
+                    else
+                    {
+                        return string.Format("{4}x {0} ({1} {2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString, MaxStack);
+                    }
                 }
                 else
                 {
-                    return string.Format("{0} ({1} {2}{3})", Stats.ToString(), DurationString, ChanceString , TriggerString);
+                    if (Chance == 1.0f)
+                    {
+                        return string.Format("{5}x {0} ({1}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString, MaxStack);
+                    }
+                    else
+                    {
+                        return string.Format("{5}x {0} ({1} {2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString, MaxStack);
+                    }
                 }
             }
             else
             {
-                if (Chance == 1.0f)
+                if (Cooldown == 0.0f)
                 {
-                    return string.Format("{0} ({1}{3}/{4})", Stats.ToString(), DurationString, Chance * 100, TriggerString, CooldownString);
+                    if (Chance == 1.0f)
+                    {
+                        return string.Format("{0} ({1}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString);
+                    }
+                    else
+                    {
+                        return string.Format("{0} ({1} {2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString);
+                    }
                 }
                 else
                 {
-                    return string.Format("{0} ({1} {2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
+                    if (Chance == 1.0f)
+                    {
+                        return string.Format("{0} ({1}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
+                    }
+                    else
+                    {
+                        return string.Format("{0} ({1} {2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
+                    }
                 }
             }
         }
@@ -4552,6 +4580,64 @@ namespace Rawr
                 for (int i = 0; i < _rawNoStackData.Length; i++)
                 {
                     if (add[i] > _rawNoStackData[i]) _rawNoStackData[i] = add[i];
+                }
+            }
+            if (data._rawSpecialEffectDataSize > 0)
+            {
+                EnsureSpecialEffectCapacity(_rawSpecialEffectDataSize + data._rawSpecialEffectDataSize);
+                Array.Copy(data._rawSpecialEffectData, 0, _rawSpecialEffectData, _rawSpecialEffectDataSize, data._rawSpecialEffectDataSize);
+                _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
+            }
+        }
+
+        public void Accumulate(Stats data, float weight)
+        {
+            if (data._sparseIndices != null)
+            {
+                int i = 0;
+                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawAdditiveData[index] += weight * data._rawAdditiveData[index];
+                }
+                for (int a = 0; a < data._sparseMultiplicativeCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawMultiplicativeData[index] = (1 + _rawMultiplicativeData[index]) * (1 + weight * data._rawMultiplicativeData[index]) - 1;
+                }
+                for (int a = 0; a < data._sparseInverseMultiplicativeCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - weight * data._rawInverseMultiplicativeData[index]);
+                }
+                for (int a = 0; a < data._sparseNoStackCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    float value = weight * data._rawNoStackData[index];
+                    if (value > _rawNoStackData[index]) _rawNoStackData[index] = value;
+                }
+            }
+            else
+            {
+                float[] add = data._rawAdditiveData;
+                for (int i = 0; i < _rawAdditiveData.Length; i++)
+                {
+                    _rawAdditiveData[i] += weight * add[i];
+                }
+                add = data._rawMultiplicativeData;
+                for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+                {
+                    _rawMultiplicativeData[i] = (1 + _rawMultiplicativeData[i]) * (1 + weight * add[i]) - 1;
+                }
+                add = data._rawInverseMultiplicativeData;
+                for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+                {
+                    _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - weight * add[i]);
+                }
+                add = data._rawNoStackData;
+                for (int i = 0; i < _rawNoStackData.Length; i++)
+                {
+                    if (weight * add[i] > _rawNoStackData[i]) _rawNoStackData[i] = weight * add[i];
                 }
             }
             if (data._rawSpecialEffectDataSize > 0)
