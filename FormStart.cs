@@ -14,6 +14,7 @@ namespace Rawr
 		private int _currentTab = 0;
 		private FormMain _formMain;
 		private WebRequestWrapper _webRequestWrapper = new WebRequestWrapper();
+		string[] _recentCharacters;
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
@@ -48,30 +49,30 @@ namespace Rawr
 			labelVersion.Text = version;
 			checkBoxShowAtLaunch.Checked = Properties.Recent.Default.ShowStartPage;
 
-			string[] recentCharacters = _formMain.ConfigRecentCharacters.Clone() as string[];
-			Array.Reverse(recentCharacters);
-			int recentCount = recentCharacters.Length;
+			_recentCharacters = _formMain.ConfigRecentCharacters.Clone() as string[];
+			Array.Reverse(_recentCharacters);
+			int recentCount = _recentCharacters.Length;
 			labelRecentCharacters.Visible = recentCount > 0;
 			linkLabelRecentCharacter1.Visible = recentCount > 0;
 			if (recentCount > 0)
 				linkLabelRecentCharacter1.Text =
-					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[0]);
+					System.IO.Path.GetFileNameWithoutExtension(_recentCharacters[0]);
 			linkLabelRecentCharacter2.Visible = recentCount > 1;
 			if (recentCount > 1)
 				linkLabelRecentCharacter2.Text =
-					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[1]);
+					System.IO.Path.GetFileNameWithoutExtension(_recentCharacters[1]);
 			linkLabelRecentCharacter3.Visible = recentCount > 2;
 			if (recentCount > 2)
 				linkLabelRecentCharacter3.Text =
-					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[2]);
+					System.IO.Path.GetFileNameWithoutExtension(_recentCharacters[2]);
 			linkLabelRecentCharacter4.Visible = recentCount > 3;
 			if (recentCount > 3)
 				linkLabelRecentCharacter4.Text =
-					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[3]);
+					System.IO.Path.GetFileNameWithoutExtension(_recentCharacters[3]);
 			linkLabelRecentCharacter5.Visible = recentCount > 4;
 			if (recentCount > 4)
 				linkLabelRecentCharacter5.Text =
-					System.IO.Path.GetFileNameWithoutExtension(recentCharacters[4]);
+					System.IO.Path.GetFileNameWithoutExtension(_recentCharacters[4]);
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadDidYouKnows));
 			ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadKnownIssues));
@@ -167,31 +168,31 @@ namespace Rawr
 
 		private void linkLabelRecentCharacter1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			_formMain.LoadSavedCharacter(_formMain.ConfigRecentCharacters[0]);
+			_formMain.LoadSavedCharacter(_recentCharacters[0]);
 			this.Close();
 		}
 
 		private void linkLabelRecentCharacter2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			_formMain.LoadSavedCharacter(_formMain.ConfigRecentCharacters[1]);
+			_formMain.LoadSavedCharacter(_recentCharacters[1]);
 			this.Close();
 		}
 
 		private void linkLabelRecentCharacter3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			_formMain.LoadSavedCharacter(_formMain.ConfigRecentCharacters[2]);
+			_formMain.LoadSavedCharacter(_recentCharacters[2]);
 			this.Close();
 		}
 
 		private void linkLabelRecentCharacter4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			_formMain.LoadSavedCharacter(_formMain.ConfigRecentCharacters[3]);
+			_formMain.LoadSavedCharacter(_recentCharacters[3]);
 			this.Close();
 		}
 
 		private void linkLabelRecentCharacter5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			_formMain.LoadSavedCharacter(_formMain.ConfigRecentCharacters[4]);
+			_formMain.LoadSavedCharacter(_recentCharacters[4]);
 			this.Close();
 		}
 
