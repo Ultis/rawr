@@ -2073,7 +2073,12 @@ namespace Rawr.Mage
             if (heroismAvailable)
             {
                 lp.SetRHSUnsafe(rowHeroism, 40.0);
-                lp.SetLHSUnsafe(rowHeroism, Math.Min(calculationOptions.FightDuration, 40.0)); // if heroism is marked as available then this implies that it has to be used, not only that it can be used
+                double minDuration = Math.Min(0.99 * calculationOptions.FightDuration * calculationOptions.DpsTime, 40.0);
+                if (moltenFuryAvailable && calculationOptions.HeroismControl == 3 && mflength < minDuration)
+                {
+                    minDuration = 0.99 * mflength;
+                }
+                lp.SetLHSUnsafe(rowHeroism, minDuration); // if heroism is marked as available then this implies that it has to be used, not only that it can be used
             }
             if (powerInfusionAvailable) lp.SetRHSUnsafe(rowPowerInfusion, calculationOptions.AverageCooldowns ? calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown * calculationOptions.FightDuration : pilength);
             if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);

@@ -1288,7 +1288,7 @@ namespace Rawr.Mage
                         Color manaFill = Color.FromArgb(50, Color.Blue);
                         float lastMana = mana;
                         float maxMana = calculations.BaseStats.Mana;
-                        float maxDps = 0;
+                        float maxDps = 100;
                         for (int i = 0; i < sequence.Count; i++)
                         {
                             int index = sequence[i].Index;
