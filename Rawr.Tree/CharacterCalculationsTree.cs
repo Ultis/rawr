@@ -77,6 +77,7 @@ namespace Rawr.Tree
             spell = new Lifebloom(this, BasicStats);
             dictValues.Add("Lifebloom Global CD", Math.Round(spell.CastTime, 2) + " sec*" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until Lifebloom (GotEM) gcd cap");
 
+            dictValues.Add("Result", Simulation.TotalTime - Simulation.TimeToOOM > 1.0 ? "OOM from tank HoTs" : Simulation.UnusedMana > 0 ? "Cast time limited" : "Mana limited");
             dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString() + "* " + Math.Round(Simulation.UnusedMana, 0).ToString() + " mana remaining at end of fight");
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
             dictValues.Add("HPS for primary heal", Math.Round(Simulation.HPSFromPrimary,2).ToString());

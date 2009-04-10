@@ -166,6 +166,7 @@ namespace Rawr.Tree
                         "Basic Stats:Global CD",
                         "Basic Stats:Lifebloom Global CD",
 
+                        "Simulation:Result",
                         "Simulation:Time until OOM",
                         "Simulation:Total healing done",
                         "Simulation:HPS for tank HoTs",
