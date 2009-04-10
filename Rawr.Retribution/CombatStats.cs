@@ -66,7 +66,7 @@ namespace Rawr.Retribution
             float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f));
             AvengingWrathMulti = 1f + ((awTimes * 20f) / fightLength) * .2f;
 
-            ArmorReduction = 1f - ArmorCalculations.GetDamageReduction(80, 10643, _stats.ArmorPenetration, _stats.ArmorPenetrationRating);
+            ArmorReduction = 1f - ArmorCalculations.GetDamageReduction(Character.Level, 10645f, Stats.ArmorPenetration, Stats.ArmorPenetrationRating);
             BaseWeaponSpeed = _character.MainHand == null ? 3.5f : _character.MainHand.Speed;
             float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
             AttackSpeed = BaseWeaponSpeed / ((1f + _stats.PhysicalHaste) * bloodlustHaste);

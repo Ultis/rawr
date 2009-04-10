@@ -805,6 +805,7 @@ namespace Rawr
             {
                 // The Egg of Mortal Essence
                 stats.SpellHasteFor10SecOnHeal_10_45 += 505;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HasteRating = 505f }, 10f, 45f, .1f));
             }
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {

@@ -96,11 +96,13 @@ namespace Rawr.Retribution
             float damage = AbilityDamage();
             if (DamageType == DamageType.Physical)
             {
-                damage *= Combats.ArmorReduction * (1f + Stats.BonusPhysicalDamageMultiplier);
+                damage *= Combats.ArmorReduction;
+                damage *= (1f + Stats.BonusPhysicalDamageMultiplier);
             }
             else // Holy Damage
             {
-                damage *= Combats.PartialResist * (1f + Stats.BonusHolyDamageMultiplier);
+                damage *= Combats.PartialResist;
+                damage *= (1f + Stats.BonusHolyDamageMultiplier);
             }
             damage *= 1f + Stats.BonusDamageMultiplier;
             damage *= 1f + .03f * Talents.Vengeance;
@@ -366,7 +368,7 @@ namespace Rawr.Retribution
             float toMiss = CombatStats.GetMissChance(Stats.PhysicalHit, CalcOpts.TargetLevel);
             float toDodge = CombatStats.GetDodgeChance(Stats.Expertise, CalcOpts.TargetLevel);
 
-            return AbilityDamage() *
+            return HitDamage() *
                 (glanceChance * glancingAmount +
                 Stats.PhysicalCrit * critBonus +
                 (1f - Stats.PhysicalCrit - glanceChance - toMiss - toDodge));
