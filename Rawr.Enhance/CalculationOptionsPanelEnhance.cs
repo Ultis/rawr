@@ -26,7 +26,6 @@ namespace Rawr
             CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             trackBarTargetArmor.Value = calcOpts.TargetArmor;
-            trackBarNumberOfFerociousInspirations.Value = calcOpts.NumberOfFerociousInspirations;
             trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime * 100);
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
@@ -34,7 +33,6 @@ namespace Rawr
             chbBaseStatOption.Checked = calcOpts.BaseStatOption;
 
             labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
-            labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
             labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 
             tbModuleNotes.Text = "The EnhSim export option exists for users that wish to have very detailed analysis of their stats. " +
@@ -58,13 +56,11 @@ namespace Rawr
             {
                 trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
                 labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
-                labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
                 labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
                 calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetArmor = trackBarTargetArmor.Value;
-                calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;
                 calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
                 calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
                 calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
@@ -109,6 +105,14 @@ namespace Rawr
                 Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
                 simExport.copyToClipboard();
             }
+        }
+
+        private void trackBarBloodlustUptime_Scroll(object sender, EventArgs e)
+        {
+            CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+            labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
+            calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
+            Character.OnCalculationsInvalidated();
         }
     }
 

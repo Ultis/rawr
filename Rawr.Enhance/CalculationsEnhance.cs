@@ -716,10 +716,6 @@ namespace Rawr
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-			if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
-				statsGearEnchantsBuffs.BonusDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusDamageMultiplier) * 
-					(float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
-
             int AK = character.ShamanTalents.AncestralKnowledge;
             float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
