@@ -172,6 +172,8 @@ namespace Rawr.Mage
         private bool useIncrementalOptimizations;
         private bool useGlobalOptimizations;
         private bool needsDisplayCalculations;
+        private bool needsSolutionVariables;
+
         private bool cancellationPending;
 
         internal bool CancellationPending
@@ -187,7 +189,7 @@ namespace Rawr.Mage
             cancellationPending = true;
         }
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
             this.character = character;
             this.talents = character.MageTalents;
@@ -199,7 +201,9 @@ namespace Rawr.Mage
             this.useIncrementalOptimizations = useIncrementalOptimizations;
             this.useGlobalOptimizations = useGlobalOptimizations;
             this.needsDisplayCalculations = needsDisplayCalculations;
-            requiresMIP = segmentCooldowns || integralMana;
+            this.requiresMIP = segmentCooldowns || integralMana;
+            if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
+            this.needsSolutionVariables = needsSolutionVariables;
         }
 
         private static bool IsItemActivatable(ItemInstance item)
@@ -309,9 +313,9 @@ namespace Rawr.Mage
             return total;
         }
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
-            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations);
+            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
             return solver.GetCharacterCalculations(additionalItem, calculations);
         }
 
@@ -962,7 +966,10 @@ namespace Rawr.Mage
             lp = new SolverLP(rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count) * segmentList.Count, calculationResult, segmentList.Count);
             tpsList = new List<double>();
             double tps;
-            calculationResult.SolutionVariable = solutionVariable = new List<SolutionVariable>();
+            if (needsSolutionVariables)
+            {
+                calculationResult.SolutionVariable = solutionVariable = new List<SolutionVariable>();
+            }
             calculationResult.SegmentList = segmentList;
 
             fixed (double* pRowScale = lp.ArraySet.rowScale, pColumnScale = lp.ArraySet.columnScale, pCost = lp.ArraySet._cost, pData = lp.ArraySet.SparseMatrixData, pValue = lp.ArraySet.SparseMatrixValue)
@@ -1016,7 +1023,7 @@ namespace Rawr.Mage
                     column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
                     if (segment == 0) calculationResult.ColumnIdleRegen = column;
-                    solutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = calculationResult.BaseState });
+                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = calculationResult.BaseState });
                     tpsList.Add(0.0);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                     lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
@@ -1048,7 +1055,7 @@ namespace Rawr.Mage
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnUpperBound(column, (wandSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
                         if (segment == 0) calculationResult.ColumnWand = column;
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = calculationResult.BaseState });
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = calculationResult.BaseState });
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                         lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -1161,7 +1168,7 @@ namespace Rawr.Mage
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
                         // base evocation
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState });
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
                         if (segment == 0) calculationResult.ColumnEvocation = column;
@@ -1199,7 +1206,7 @@ namespace Rawr.Mage
                             if (icyVeinsAvailable)
                             {
                                 // last tick of icy veins
-                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV });
+                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV });
                                 column = lp.AddColumnUnsafe();
                                 lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
                                 lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
@@ -1241,7 +1248,7 @@ namespace Rawr.Mage
                                     }
                                 }
                                 // remainder
-                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState });
+                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState });
                                 column = lp.AddColumnUnsafe();
                                 lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
                                 lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
@@ -1278,7 +1285,7 @@ namespace Rawr.Mage
                             if (heroismAvailable)
                             {
                                 // last tick of heroism
-                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoStateHero });
+                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoStateHero });
                                 column = lp.AddColumnUnsafe();
                                 lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
                                 lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenHero);
@@ -1313,7 +1320,7 @@ namespace Rawr.Mage
                                     }
                                 }
                                 // remainder
-                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoState });
+                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoState });
                                 column = lp.AddColumnUnsafe();
                                 lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
                                 lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenHero);
@@ -1350,7 +1357,7 @@ namespace Rawr.Mage
                             if (icyVeinsAvailable && heroismAvailable)
                             {
                                 // last tick of icy veins+heroism
-                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoStateIVHero });
+                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoStateIVHero });
                                 column = lp.AddColumnUnsafe();
                                 lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
                                 lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIVHero);
@@ -1395,7 +1402,7 @@ namespace Rawr.Mage
                                     }
                                 }
                                 // remainder
-                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoState });
+                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoState });
                                 column = lp.AddColumnUnsafe();
                                 lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
                                 lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIVHero);
@@ -1442,7 +1449,7 @@ namespace Rawr.Mage
                     manaRegen = -(1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue;
                     for (int segment = 0; segment < manaPotionSegments; segment++)
                     {
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment });
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
                         lp.SetColumnUpperBound(column, (manaPotionSegments > 1) ? 1.0 : calculationResult.MaxManaPotion);
@@ -1500,7 +1507,7 @@ namespace Rawr.Mage
                     double manaGemRegen = -(1 + characterStats.BonusManaGem) * calculationResult.ManaGemValue;
                     for (int segment = 0; segment < manaGemSegments; segment++)
                     {
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment });
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
                         lp.SetColumnUpperBound(column, (manaGemSegments > 1) ? 1.0 : calculationResult.MaxManaGem);
@@ -1623,7 +1630,7 @@ namespace Rawr.Mage
                         List<CastingState> states = (calculationOptions.FightDuration - calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration < segmentList[segment].TimeStart) ? mfDrumsStates : drumsStates;
                         foreach (CastingState state in states)
                         {
-                            solutionVariable.Add(new SolutionVariable() { Type = VariableType.DrumsOfBattle, Segment = segment, State = state });
+                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.DrumsOfBattle, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
                             lp.SetColumnUpperBound(column, calculationResult.BaseState.GlobalCooldown * ((drumsOfBattleSegments > 1) ? 1 : (1 + (int)((calculationOptions.FightDuration - 30) / 120))));
                             if (segment == 0 && state == states[0]) calculationResult.ColumnDrumsOfBattle = column;
@@ -1697,7 +1704,7 @@ namespace Rawr.Mage
                         foreach (CastingState state in states)
                         {
                             Spell waterbolt = calculationResult.WaterboltTemplate.GetSpell(state);
-                            solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state });
+                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
                             if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseState.GlobalCooldown);
                             if (segment == 0 && state == states[0]) calculationResult.ColumnSummonWaterElemental = column;
@@ -1737,7 +1744,7 @@ namespace Rawr.Mage
                 #region Drinking
                 if (drinkingEnabled)
                 {
-                    solutionVariable.Add(new SolutionVariable() { Type = VariableType.Drinking });
+                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Drinking });
                     calculationResult.ColumnDrinking = column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, maxDrinkingTime);
                     manaRegen = -calculationResult.BaseState.ManaRegenDrinking;
@@ -1761,7 +1768,7 @@ namespace Rawr.Mage
                 #region Time Extension
                 if (needsTimeExtension)
                 {
-                    solutionVariable.Add(new SolutionVariable() { Type = VariableType.TimeExtension });
+                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.TimeExtension });
                     calculationResult.ColumnTimeExtension = column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, calculationOptions.FightDuration);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -1787,7 +1794,7 @@ namespace Rawr.Mage
                 #region After Fight Regen
                 if (afterFightRegen)
                 {
-                    solutionVariable.Add(new SolutionVariable() { Type = VariableType.AfterFightRegen });
+                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.AfterFightRegen });
                     calculationResult.ColumnAfterFightRegen = column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, calculationOptions.FightDuration);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -1802,7 +1809,7 @@ namespace Rawr.Mage
                 {
                     for (int segment = 0; segment < segmentList.Count; segment++)
                     {
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment });
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment });
                         column = lp.AddColumnUnsafe();
                         if (segment == 0) calculationResult.ColumnManaOverflow = column;
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
@@ -1827,8 +1834,8 @@ namespace Rawr.Mage
                     for (int segment = 0; segment < conjureSegments; segment++)
                     {
                         column = lp.AddColumnUnsafe();
-                        lp.SetColumnUpperBound(column, spell.CastTime * ((conjureSegments > 1) ? 1 : calculationResult.MaxConjureManaGem));                        
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Cycle = spell, Segment = segment, State = calculationResult.BaseState });
+                        lp.SetColumnUpperBound(column, spell.CastTime * ((conjureSegments > 1) ? 1 : calculationResult.MaxConjureManaGem));
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Cycle = spell, Segment = segment, State = calculationResult.BaseState });
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                         lp.SetElementUnsafe(rowConjureManaGem, column, 1.0);
@@ -1880,7 +1887,7 @@ namespace Rawr.Mage
                                             segmentColumn[++lastSegment] = column;
                                         }
                                     }
-                                    solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
                                     SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c);
                                 }
                             }
@@ -1926,7 +1933,7 @@ namespace Rawr.Mage
                                     {
                                         placed.Add(c);
                                         column = lp.AddColumnUnsafe();
-                                        solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
+                                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
                                         SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c);
                                     }
                                 }

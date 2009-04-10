@@ -4755,8 +4755,6 @@ namespace Rawr.Mage
         public AB2ABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "AB2ABar2C";
 
@@ -4791,21 +4789,12 @@ namespace Rawr.Mage
             K1 = S0 * (1 - MB);
             K2 = S0 * MB + S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            chain1.AddSpell(AB1, castingState);
-            chain1.AddSpell(ABar2, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+            AddSpell(needsDisplayCalculations, ABar2, K1);
+            AddSpell(needsDisplayCalculations, MBAM2, K2);
+            AddSpell(needsDisplayCalculations, ABar, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(MBAM2, castingState);
-            chain2.AddSpell(ABar, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -4815,8 +4804,6 @@ namespace Rawr.Mage
         public AB2ABar2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "AB2ABar2MBAM";
 
@@ -4847,20 +4834,11 @@ namespace Rawr.Mage
             K1 = S0 * (1 - MB);
             K2 = S0 * MB + S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            chain1.AddSpell(AB1, castingState);
-            chain1.AddSpell(ABar2, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+            AddSpell(needsDisplayCalculations, ABar2, K1);
+            AddSpell(needsDisplayCalculations, MBAM2, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(MBAM2, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -4870,8 +4848,6 @@ namespace Rawr.Mage
         public AB2ABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "AB2ABar3C";
 
@@ -4905,22 +4881,13 @@ namespace Rawr.Mage
             K1 = S0 * (1 - MB);
             K2 = S0 * MB + S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            chain1.AddSpell(AB1, castingState);
-            chain1.AddSpell(ABar2, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+            AddSpell(needsDisplayCalculations, ABar2, K1);
+            AddSpell(needsDisplayCalculations, AB2, K2);
+            AddSpell(needsDisplayCalculations, MBAM3, K2);
+            AddSpell(needsDisplayCalculations, ABar, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(AB2, castingState);
-            chain2.AddSpell(MBAM3, castingState);
-            chain2.AddSpell(ABar, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -4930,8 +4897,6 @@ namespace Rawr.Mage
         public ABABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "ABABar3C";
 
@@ -4962,22 +4927,14 @@ namespace Rawr.Mage
             K1 = S0;
             K2 = S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime);
-            chain1.AddSpell(ABar1, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            AddSpell(needsDisplayCalculations, ABar1, K1);
+            AddSpell(needsDisplayCalculations, AB1, K2);
+            AddSpell(needsDisplayCalculations, AB2, K2);
+            AddSpell(needsDisplayCalculations, MBAM3, K2);
+            AddSpell(needsDisplayCalculations, ABar, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(AB2, castingState);
-            chain2.AddSpell(MBAM3, castingState);
-            chain2.AddSpell(ABar, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -4987,8 +4944,6 @@ namespace Rawr.Mage
         public ABABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "ABABar2C";
 
@@ -5018,21 +4973,13 @@ namespace Rawr.Mage
             K1 = S0;
             K2 = S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime);
-            chain1.AddSpell(ABar1, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            AddSpell(needsDisplayCalculations, ABar1, K1);
+            AddSpell(needsDisplayCalculations, AB1, K2);
+            AddSpell(needsDisplayCalculations, MBAM2, K2);
+            AddSpell(needsDisplayCalculations, ABar, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(MBAM2, castingState);
-            chain2.AddSpell(ABar, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -5042,8 +4989,6 @@ namespace Rawr.Mage
         public ABABar2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "ABABar2MBAM";
 
@@ -5071,20 +5016,12 @@ namespace Rawr.Mage
             K1 = S0;
             K2 = S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime);
-            chain1.AddSpell(ABar1, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            AddSpell(needsDisplayCalculations, ABar1, K1);
+            AddSpell(needsDisplayCalculations, AB1, K2);
+            AddSpell(needsDisplayCalculations, MBAM2, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(MBAM2, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -5094,8 +5031,6 @@ namespace Rawr.Mage
         public ABABar1MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "ABABar1MBAM";
 
@@ -5122,19 +5057,11 @@ namespace Rawr.Mage
             K1 = S0;
             K2 = S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime);
-            chain1.AddSpell(ABar1, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            AddSpell(needsDisplayCalculations, ABar1, K1);
+            AddSpell(needsDisplayCalculations, MBAM1, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(MBAM1, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }
@@ -5144,8 +5071,6 @@ namespace Rawr.Mage
         public AB3ABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            StaticCycle chain1;
-            StaticCycle chain2;
             float MB, K1, K2;
             Name = "AB3ABar3C";
 
@@ -5182,23 +5107,13 @@ namespace Rawr.Mage
             K1 = S0 * (1 - MB) * (1 - MB);
             K2 = S0 * (1 - (1 - MB) * (1 - MB)) + S1;
 
-            chain1 = new StaticCycle(5);
-            chain1.AddSpell(AB0, castingState);
-            chain1.AddSpell(AB1, castingState);
-            chain1.AddSpell(AB2, castingState);
-            chain1.AddSpell(ABar3, castingState);
-            chain1.Calculate(castingState);
+            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+            AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            AddSpell(needsDisplayCalculations, ABar3, K1);
+            AddSpell(needsDisplayCalculations, MBAM3, K2);
+            AddSpell(needsDisplayCalculations, ABar, K2);
 
-            chain2 = new StaticCycle(6);
-            chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(AB2, castingState);
-            chain2.AddSpell(MBAM3, castingState);
-            chain2.AddSpell(ABar, castingState);
-            chain2.Calculate(castingState);
-
-            AddCycle(needsDisplayCalculations, chain1, K1);
-            AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
     }

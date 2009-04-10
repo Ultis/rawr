@@ -44,6 +44,10 @@ namespace Rawr.Mage
         //private static double[] _beta;
         //private static double[] _betaBackup;
 
+        public int[] _flags;
+        public double[] _lb;
+        public double[] _ub;
+
         public int maxRows = 0;
         public int maxCols = 0;
         public int maxExtra = 0;

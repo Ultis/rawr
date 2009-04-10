@@ -730,7 +730,7 @@ namespace Rawr.Mage
                 ret["Tps"] = "...";
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
-                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true);
+                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
                 SolverLogForm.Instance.EnableSolver(displaySolver);
                 CalculationOptions.SequenceReconstruction = null;
                 return ret;

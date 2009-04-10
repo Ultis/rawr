@@ -348,20 +348,42 @@ namespace Rawr.Mage
         {
             if (_lb == null)
             {
-                _lb = new double[maxSize];
-                _ub = new double[maxSize];
-                _flags = new int[maxSize];
+                if (arraySet._lb != null && arraySet._lb.Length >= maxSize)
+                {
+                    _lb = arraySet._lb;
+                    _ub = arraySet._ub;
+                    _flags = arraySet._flags;
+                    Array.Clear(_lb, 0, _lb.Length);
+                    Array.Clear(_ub, 0, _lb.Length);
+                    Array.Clear(_flags, 0, _lb.Length);
+                    maxSize = _lb.Length;
+                }
+                else
+                {
+                    _lb = new double[maxSize];
+                    _ub = new double[maxSize];
+                    _flags = new int[maxSize];
+                    arraySet._lb = _lb;
+                    arraySet._ub = _ub;
+                    arraySet._flags = _flags;
+                }
             }
             else
             {
                 double[] newlb = new double[maxSize];
                 Array.Copy(_lb, newlb, _lb.Length);
-                _lb = newlb;
                 double[] newub = new double[maxSize];
                 Array.Copy(_ub, newub, _ub.Length);
-                _ub = newub;
                 int[] newflags = new int[maxSize];
                 Array.Copy(_flags, newflags, _flags.Length);
+                if (_lb == arraySet._lb)
+                {
+                    arraySet._lb = newlb;
+                    arraySet._ub = newub;
+                    arraySet._flags = newflags;
+                }
+                _lb = newlb;
+                _ub = newub;
                 _flags = newflags;
             }
         }
