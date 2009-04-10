@@ -81,5 +81,6 @@ namespace Rawr.ProtPaladin
         Melee,
         Ranged,
         Spell,
+        DOT,
     }
 }

@@ -399,6 +399,8 @@ namespace Rawr.ProtPaladin
             {
                 case Ability.None:
                 case Ability.HammerOfTheRighteous:
+              //case Ability.SealOfCommand:
+              //case Ability.SealOfBlood:
                     return true;
                 default:
                     return false;
@@ -422,6 +424,7 @@ namespace Rawr.ProtPaladin
                 case Ability.HolyShield:
                 case Ability.RetributionAura:
                 case Ability.Consecration:
+            	case Ability.HolyWrath:
                     return true;
                 default:
                 return false;
@@ -435,7 +438,7 @@ namespace Rawr.ProtPaladin
                 case Ability.SealOfVengeance: 
                 case Ability.HolyVengeance:
                 case Ability.Exorcism:
-                case Ability.HammerOfWrath:
+            	case Ability.HolyWrath:
                 case Ability.HolyShield:
                 case Ability.RetributionAura:
                 case Ability.Consecration:
@@ -452,6 +455,8 @@ namespace Rawr.ProtPaladin
             switch (ability)
             {
                 case Ability.None: return "Swing";
+                case Ability.HolyWrath: return "Holy Wrath";
+                case Ability.HandOfReckoning: return "Hand of Reckoning";
                 case Ability.ShieldOfRighteousness: return "Shield of Righteousness";
                 case Ability.HammerOfTheRighteous: return "Hammer of the Righteous";
                 case Ability.SealOfVengeance: return "Seal of Vengeance";

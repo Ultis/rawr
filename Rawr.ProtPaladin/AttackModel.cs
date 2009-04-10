@@ -149,6 +149,7 @@ namespace Rawr.ProtPaladin
             Abilities.Add(Ability.AvengersShield, character, stats);
             Abilities.Add(Ability.HolyShield, character, stats);
             Abilities.Add(Ability.RetributionAura, character, stats);
+            Abilities.Add(Ability.HolyWrath, character, stats);
             Abilities.Add(Ability.Consecration, character, stats);
 
             Calculate();
