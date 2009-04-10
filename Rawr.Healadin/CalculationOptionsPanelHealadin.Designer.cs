@@ -92,7 +92,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(221, 131);
+            this.cmbLength.Location = new System.Drawing.Point(221, 134);
             this.cmbLength.Maximum = new decimal(new int[] {
             60,
             0,
@@ -116,7 +116,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(146, 133);
+            this.label3.Location = new System.Drawing.Point(146, 136);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 13);
             this.label3.TabIndex = 21;
@@ -134,7 +134,7 @@
             this.groupBox2.Controls.Add(this.lblDivinePlea);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 206);
+            this.groupBox2.Location = new System.Drawing.Point(3, 209);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(294, 123);
             this.groupBox2.TabIndex = 22;
@@ -267,7 +267,7 @@
             // trkActivity
             // 
             this.trkActivity.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkActivity.Location = new System.Drawing.Point(151, 16);
+            this.trkActivity.Location = new System.Drawing.Point(151, 19);
             this.trkActivity.Maximum = 100;
             this.trkActivity.Minimum = 10;
             this.trkActivity.Name = "trkActivity";
@@ -280,7 +280,7 @@
             // lblActivity
             // 
             this.lblActivity.AutoSize = true;
-            this.lblActivity.Location = new System.Drawing.Point(255, 50);
+            this.lblActivity.Location = new System.Drawing.Point(255, 53);
             this.lblActivity.Name = "lblActivity";
             this.lblActivity.Size = new System.Drawing.Size(33, 13);
             this.lblActivity.TabIndex = 24;
@@ -289,7 +289,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(151, 0);
+            this.label9.Location = new System.Drawing.Point(151, 3);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 13);
             this.label9.TabIndex = 25;
@@ -304,7 +304,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.lblBoLUp);
             this.groupBox1.Controls.Add(this.trkBoLUp);
-            this.groupBox1.Location = new System.Drawing.Point(3, 335);
+            this.groupBox1.Location = new System.Drawing.Point(3, 338);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(294, 87);
             this.groupBox1.TabIndex = 28;
@@ -377,7 +377,7 @@
             // 
             this.trkHS.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trkHS.LargeChange = 10;
-            this.trkHS.Location = new System.Drawing.Point(3, 80);
+            this.trkHS.Location = new System.Drawing.Point(3, 83);
             this.trkHS.Maximum = 100;
             this.trkHS.Name = "trkHS";
             this.trkHS.Size = new System.Drawing.Size(137, 45);
@@ -388,7 +388,7 @@
             // 
             // lblHS
             // 
-            this.lblHS.Location = new System.Drawing.Point(107, 112);
+            this.lblHS.Location = new System.Drawing.Point(107, 115);
             this.lblHS.Name = "lblHS";
             this.lblHS.Size = new System.Drawing.Size(33, 13);
             this.lblHS.TabIndex = 34;
@@ -398,7 +398,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 64);
+            this.label7.Location = new System.Drawing.Point(3, 67);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 13);
             this.label7.TabIndex = 35;
@@ -408,7 +408,7 @@
             // chkJotP
             // 
             this.chkJotP.AutoSize = true;
-            this.chkJotP.Location = new System.Drawing.Point(151, 183);
+            this.chkJotP.Location = new System.Drawing.Point(151, 186);
             this.chkJotP.Name = "chkJotP";
             this.chkJotP.Size = new System.Drawing.Size(90, 17);
             this.chkJotP.TabIndex = 37;
@@ -419,7 +419,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(148, 159);
+            this.label12.Location = new System.Drawing.Point(148, 162);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(67, 13);
             this.label12.TabIndex = 38;
@@ -433,7 +433,7 @@
             0,
             0,
             65536});
-            this.nudGHL.Location = new System.Drawing.Point(221, 157);
+            this.nudGHL.Location = new System.Drawing.Point(221, 160);
             this.nudGHL.Maximum = new decimal(new int[] {
             5,
             0,
@@ -447,7 +447,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(3, 0);
+            this.label19.Location = new System.Drawing.Point(3, 3);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(64, 13);
             this.label19.TabIndex = 44;
@@ -457,7 +457,7 @@
             // lblBurstScale
             // 
             this.lblBurstScale.AutoSize = true;
-            this.lblBurstScale.Location = new System.Drawing.Point(107, 48);
+            this.lblBurstScale.Location = new System.Drawing.Point(107, 51);
             this.lblBurstScale.Name = "lblBurstScale";
             this.lblBurstScale.Size = new System.Drawing.Size(33, 13);
             this.lblBurstScale.TabIndex = 43;
@@ -466,7 +466,7 @@
             // trkBurstScale
             // 
             this.trkBurstScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkBurstScale.Location = new System.Drawing.Point(3, 16);
+            this.trkBurstScale.Location = new System.Drawing.Point(3, 19);
             this.trkBurstScale.Maximum = 100;
             this.trkBurstScale.Name = "trkBurstScale";
             this.trkBurstScale.Size = new System.Drawing.Size(137, 45);
@@ -478,7 +478,7 @@
             // trkIoLRatio
             // 
             this.trkIoLRatio.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkIoLRatio.Location = new System.Drawing.Point(151, 80);
+            this.trkIoLRatio.Location = new System.Drawing.Point(151, 83);
             this.trkIoLRatio.Maximum = 100;
             this.trkIoLRatio.Name = "trkIoLRatio";
             this.trkIoLRatio.Size = new System.Drawing.Size(137, 45);
@@ -491,7 +491,7 @@
             // chkIoL
             // 
             this.chkIoL.AutoSize = true;
-            this.chkIoL.Location = new System.Drawing.Point(151, 64);
+            this.chkIoL.Location = new System.Drawing.Point(151, 67);
             this.chkIoL.Name = "chkIoL";
             this.chkIoL.Size = new System.Drawing.Size(133, 17);
             this.chkIoL.TabIndex = 48;
@@ -502,7 +502,7 @@
             // trkSacredShield
             // 
             this.trkSacredShield.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkSacredShield.Location = new System.Drawing.Point(3, 144);
+            this.trkSacredShield.Location = new System.Drawing.Point(3, 147);
             this.trkSacredShield.Maximum = 100;
             this.trkSacredShield.Name = "trkSacredShield";
             this.trkSacredShield.Size = new System.Drawing.Size(137, 45);
@@ -514,7 +514,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 128);
+            this.label1.Location = new System.Drawing.Point(3, 131);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 13);
             this.label1.TabIndex = 50;
@@ -524,7 +524,7 @@
             // lblSacredShield
             // 
             this.lblSacredShield.AutoSize = true;
-            this.lblSacredShield.Location = new System.Drawing.Point(107, 176);
+            this.lblSacredShield.Location = new System.Drawing.Point(107, 179);
             this.lblSacredShield.Name = "lblSacredShield";
             this.lblSacredShield.Size = new System.Drawing.Size(33, 13);
             this.lblSacredShield.TabIndex = 51;
@@ -533,7 +533,7 @@
             // lblIoLFoL
             // 
             this.lblIoLFoL.AutoSize = true;
-            this.lblIoLFoL.Location = new System.Drawing.Point(151, 112);
+            this.lblIoLFoL.Location = new System.Drawing.Point(151, 115);
             this.lblIoLFoL.Name = "lblIoLFoL";
             this.lblIoLFoL.Size = new System.Drawing.Size(25, 13);
             this.lblIoLFoL.TabIndex = 52;
@@ -541,7 +541,7 @@
             // 
             // lblIoLHL
             // 
-            this.lblIoLHL.Location = new System.Drawing.Point(230, 112);
+            this.lblIoLHL.Location = new System.Drawing.Point(230, 115);
             this.lblIoLHL.Name = "lblIoLHL";
             this.lblIoLHL.Size = new System.Drawing.Size(58, 13);
             this.lblIoLHL.TabIndex = 53;
@@ -576,7 +576,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(300, 609);
+            this.Size = new System.Drawing.Size(300, 437);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

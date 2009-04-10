@@ -36,12 +36,9 @@ namespace Rawr.Healadin
 
         public float AverageCost()
         {
-            float critChance = ChanceToCrit();
-            float costReduce = CostReduction();
-            float costMulti = AbilityCostMultiplier();
-            return (BaseMana * (Talents.GlyphOfSealOfWisdom ? .95f : 1f) * (DivineIllumination ? 0.5f : 1f) - costReduce)
-                * costMulti
-                - BaseMana * .12f * Talents.Illumination * critChance;
+            return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
+                * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)))
+                - BaseMana * .12f * Talents.Illumination * ChanceToCrit();
         }
 
         public float AverageHealed()
