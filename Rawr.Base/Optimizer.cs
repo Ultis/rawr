@@ -1565,27 +1565,25 @@ namespace Rawr.Optimizer
                     mutation2 = locationList[mutationIndex2];
                     if (mutation1.Gem.Slot == mutation2.Gem.Slot) promising = false;
                     if (mutation1.Socket == mutation2.Socket) promising = false;
-                    if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket) && Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket)) promising = false;
-                    if (!Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket) || !Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket)) promising = false;
+
+                    int matchNow = 0;
+                    if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket)) matchNow++;
+                    if (Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket)) matchNow++;
+                    if (matchNow == 2) promising = false;
+                    int matchThen = 0;
+                    if (Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket)) matchThen++;
+                    if (Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket)) matchThen++;
+                    if (tries < 50)
+                    {
+                        if (matchThen <= matchNow) promising = false;
+                    }
+                    else
+                    {
+                        // allow 1 to 1 trade, because the other socket bonus might be better
+                        if (matchThen < matchNow || matchThen == 0) promising = false;
+                    }
                     tries++;
                 } while (tries < 100 && !promising);
-                if (!promising)
-                {
-                    tries = 0;
-                    do
-                    {
-                        promising = true;
-                        int mutationIndex1 = rand.Next(locationList.Count);
-                        int mutationIndex2 = rand.Next(locationList.Count);
-                        mutation1 = locationList[mutationIndex1];
-                        mutation2 = locationList[mutationIndex2];
-                        if (mutation1.Gem.Slot == mutation2.Gem.Slot) promising = false;
-                        if (mutation1.Socket == mutation2.Socket) promising = false;
-                        if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket) && Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket)) promising = false;
-                        if (!Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket) && !Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket) && (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket) || Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket))) promising = false;
-                        tries++;
-                    } while (tries < 100 && !promising);
-                }
 
                 if (promising)
                 {
