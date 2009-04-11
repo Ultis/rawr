@@ -345,10 +345,6 @@ namespace Rawr.Cat
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
 
-            // Calculate average extra CP being generated, this is used in GetRotationCalculations to handle overshoot of CP 
-            float extraCPFraction = chanceCrit * (1 + stats.BonusCPOnCrit);  // If miss is close to 0, this is approx CPPerCPG - 1f;
-
-
 			//StringBuilder rotations = new StringBuilder();
 			for (int roarCP = 1; roarCP < 6; roarCP++)
 				for (int useRake = 0; useRake < 2; useRake++)
@@ -358,7 +354,7 @@ namespace Rawr.Cat
 							{
 								CatRotationCalculator.CatRotationCalculation rotationCalculation =
 									rotationCalculator.GetRotationCalculations(
-                                    useRake == 1, useShred == 1, useRip == 1, useFerociousBite == 1, roarCP, extraCPFraction);
+									useRake == 1, useShred == 1, useRip == 1, useFerociousBite == 1, roarCP);
 								//rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
 								if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
 									rotationCalculationDPS = rotationCalculation;
@@ -369,7 +365,7 @@ namespace Rawr.Cat
 
 			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
 			calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
-                calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar, extraCPFraction);
+				calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar);
 			//calculatedStats.Rotations = rotations.ToString();
 			#endregion
 
