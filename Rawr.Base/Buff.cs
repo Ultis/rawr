@@ -450,6 +450,13 @@ namespace Rawr
                 Group = "Attack Power (%)",
                 Stats = { BonusAttackPowerMultiplier = 0.1f }
             });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Abomination's Might",
+                Source = "Blood Death Knight",
+                Group = "Attack Power (%)",
+                Stats = { BonusAttackPowerMultiplier = 0.1f }
+            });
             #endregion
 
             #region Damage (%)
