@@ -158,10 +158,9 @@ namespace Rawr.Enhance
 			}
 			catch { }
             MessageBox.Show("EnhSim config data copied to clipboard\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI, v1.6.5 or higher, to use it\n" +
-                "Or paste the config data into your EnhSim config file in a decent text editor!",
-                "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
-            
+                "Use the 'Copy from Clipboard' option in EnhSimGUI, v1.6.7 or higher, to use it\n" +
+                "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
+                "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
 
         private void addBuffs(Character character, StringBuilder sb)
@@ -192,39 +191,133 @@ namespace Rawr.Enhance
                     sb.AppendLine("physical_vulnerability_debuff   4.0/4.0");
                 else
                     sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
-
-
-
+                if (isBuffChecked(checkBoxes, "Windfury Totem"))
+                    if (isBuffChecked(checkBoxes, "Improved Windfury Totem"))
+                        sb.AppendLine("melee_haste_buff                20.0/20.0");
+                    else
+                        sb.AppendLine("melee_haste_buff                16.0/20.0");
+                else if (isBuffChecked(checkBoxes, "Improved Icy Talons"))
+                    sb.AppendLine("melee_haste_buff                20.0/20.0");
+                else
+                    sb.AppendLine("melee_haste_buff                0.0/20.0");
+                if (isBuffChecked(checkBoxes, "Leader of the Pack") || isBuffChecked(checkBoxes, "Rampage"))
+                    sb.AppendLine("melee_crit_chance_buff          5.0/5.0");
+                else
+                    sb.AppendLine("melee_crit_chance_buff          0.0/5.0");
+                if (isBuffChecked(checkBoxes, "Battle Shout"))
+                {
+                    if (isBuffChecked(checkBoxes, "Commanding Presence (Attack Power)"))
+                        sb.AppendLine("attack_power_buff_flat          685/688");
+                    else
+                        sb.AppendLine("attack_power_buff_flat          548/688");
+                }
+                else if (isBuffChecked(checkBoxes, "Blessing of Might"))
+                {
+                    if (isBuffChecked(checkBoxes, "Improved Blessing of Might"))
+                        sb.AppendLine("attack_power_buff_flat          687/688");
+                    else
+                        sb.AppendLine("attack_power_buff_flat          550/688");
+                }
+                else
+                    sb.AppendLine("attack_power_buff_flat          0/688");
+                if (isBuffChecked(checkBoxes, "Trueshot Aura") || isBuffChecked(checkBoxes, "Unleashed Rage") || isBuffChecked(checkBoxes, "Abomination's Might"))
+                    sb.AppendLine("attack_power_buff_multiplier    99.7/99.7");
+                else
+                    sb.AppendLine("attack_power_buff_multiplier    0.0/99.7");
+                if (isBuffChecked(checkBoxes, "Wrath of Air Totem"))
+                    sb.AppendLine("spell_haste_buff                5.0/5.0");
+                else
+                    sb.AppendLine("spell_haste_buff                0.0/5.0");
+                if (isBuffChecked(checkBoxes, "Elemental Oath") || isBuffChecked(checkBoxes, "Moonkin Form"))
+                    sb.AppendLine("spell_crit_chance_buff          5.0/5.0");
+                else
+                    sb.AppendLine("spell_crit_chance_buff          0.0/5.0");
+                if (isBuffChecked(checkBoxes, "Improved Scorch") || isBuffChecked(checkBoxes, "Winter's Chill") || isBuffChecked(checkBoxes, "Improved Shadow Bolt"))
+                    sb.AppendLine("spell_crit_chance_debuff        5.0/5.0");
+                else
+                    sb.AppendLine("spell_crit_chance_debuff        0.0/5.0");
+                if (isBuffChecked(checkBoxes, "Ebon Plaguebringer") || isBuffChecked(checkBoxes, "Earth and Moon") || isBuffChecked(checkBoxes, "Curse of the Elements"))
+                    sb.AppendLine("spell_damage_debuff             13.0/13.0");
+                else
+                    sb.AppendLine("spell_damage_debuff             0.0/13.0");
+                if (isBuffChecked(checkBoxes, "Flametongue Totem"))
+                {
+                    if (isBuffChecked(checkBoxes, "Enhancing Totems (Spell Power)"))
+                        sb.AppendLine("spellpower_buff                 165/280");
+                    else
+                        sb.AppendLine("spellpower_buff                 144/280");
+                }
+                else if (isBuffChecked(checkBoxes, "Totem of Wrath (Spell Power)"))
+                    sb.AppendLine("spellpower_buff                 280/280");
+                else
+                    sb.AppendLine("spellpower_buff                 0/280");
+                if (isBuffChecked(checkBoxes, "Improved Faerie Fire") || isBuffChecked(checkBoxes, "Misery"))
+                    sb.AppendLine("spell_hit_chance_debuff         3.0/3.0");
+                else
+                    sb.AppendLine("spell_hit_chance_debuff         0.0/3.0");
+                if (isBuffChecked(checkBoxes, "Improved Moonkin Form") || isBuffChecked(checkBoxes, "Swift Retribution"))
+                    sb.AppendLine("haste_buff                      3.0/3.0");
+                else
+                    sb.AppendLine("haste_buff                      0.0/3.0");
+                if (isBuffChecked(checkBoxes, "Ferocious Inspiration") || isBuffChecked(checkBoxes, "Sanctified Retribution"))
+                    sb.AppendLine("percentage_damage_increase      3.0/3.0");
+                else
+                    sb.AppendLine("percentage_damage_increase      0.0/3.0");
+                if (isBuffChecked(checkBoxes, "Heart of the Crusader") || isBuffChecked(checkBoxes, "Totem of Wrath") || isBuffChecked(checkBoxes, "Master Poisoner"))
+                    sb.AppendLine("crit_chance_debuff              3.0/3.0");
+                else
+                    sb.AppendLine("crit_chance_debuff              0.0/3.0");
+                if (isBuffChecked(checkBoxes, "Blessing of Kings"))
+                    sb.AppendLine("stat_multiplier                 10.0/10.0");
+                else
+                    sb.AppendLine("stat_multiplier                 0.0/10.0");
+                if (isBuffChecked(checkBoxes, "Mark of the Wild"))
+                    if (isBuffChecked(checkBoxes, "Improved Mark of the Wild"))
+                        sb.AppendLine("stat_add_buff                   51/52");
+                    else
+                        sb.AppendLine("stat_add_buff                   37/52");
+                else
+                    sb.AppendLine("stat_add_buff                   0/52");
                 if (isBuffChecked(checkBoxes, "Strength of Earth Totem") || isBuffChecked(checkBoxes, "Horn of Winter"))
                     if (isBuffChecked(checkBoxes, "Enhancing Totems (Agility/Strength)"))
-                        sb.AppendLine("agi_and_strength_buff              178/178");
+                        sb.AppendLine("agi_and_strength_buff           178/178");
                     else
-                        sb.AppendLine("agi_and_strength_buff              155/178");
+                        sb.AppendLine("agi_and_strength_buff           155/178");
                 else
-                    sb.AppendLine("agi_and_strength_buff              0/178");
+                    sb.AppendLine("agi_and_strength_buff           0/178");
+                if (isBuffChecked(checkBoxes, "Fel Intelligence (Intellect)"))
+                    if (isBuffChecked(checkBoxes, "Improved Felhunter"))
+                        sb.AppendLine("intellect_buff                  52/60");
+                    else
+                        sb.AppendLine("intellect_buff                  48/60");
+                else if (isBuffChecked(checkBoxes, "Arcane Intellect"))
+                    sb.AppendLine("intellect_buff                  60/60");
+                else
+                    sb.AppendLine("intellect_buff                  0/60");
             }
             else
             {
-                sb.AppendLine("armor_debuff_major              0.0/20.0");
-                sb.AppendLine("armor_debuff_minor              0.0/5.0");
-                sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
-                sb.AppendLine("melee_haste_buff                0.0/20.0");
-                sb.AppendLine("melee_crit_chance_buff	  	   0.0/5.0");
-                sb.AppendLine("attack_power_buff_flat		   0/688");
-                sb.AppendLine("attack_power_buff_multiplier	   0.0/99.7");
-                sb.AppendLine("spell_haste_buff		           0.0/5.0");
-                sb.AppendLine("spell_crit_chance_buff		   0.0/5.0");
-                sb.AppendLine("spell_crit_chance_debuff	       0.0/5.0");
-                sb.AppendLine("spell_damage_debuff		       0.0/13.0");
-                sb.AppendLine("spellpower_buff			       0/280");
-                sb.AppendLine("spell_hit_chance_debuff		   0.0/3.0");
-                sb.AppendLine("haste_buff			           0.0/3.0");
-                sb.AppendLine("percentage_damage_increase	   0.0/3.0");
-                sb.AppendLine("crit_chance_debuff		       0.0/3.0");
-                sb.AppendLine("stat_multiplier			       0.0/10.0");
-                sb.AppendLine("stat_add_buff			       0/52");
-                sb.AppendLine("agi_and_strength_buff	       0/178");
-                sb.AppendLine("intellect_buff			       0/60");
+                sb.AppendLine("armor_debuff_major              0.0/20.0");//acid spit, expose armor, sunder armor
+                sb.AppendLine("armor_debuff_minor              0.0/5.0"); //faerie fire, sting, curse of recklessness
+                sb.AppendLine("physical_vulnerability_debuff   0.0/4.0"); //%, bloody frenzy, savage combat
+                sb.AppendLine("melee_haste_buff                0.0/20.0");//%, improved icy talons, windfury totem
+                sb.AppendLine("melee_crit_chance_buff	  	   0.0/5.0"); //%, leader of the pack, rampage
+                sb.AppendLine("attack_power_buff_flat		   0/688");   //battle shout, blessing of might
+                sb.AppendLine("attack_power_buff_multiplier	   0.0/99.7");//BUFF UPTIME %, DISABLES UR, abominations might, trueshot aura, (unleashed rage)
+                sb.AppendLine("spell_haste_buff                0.0/5.0"); //%, wrath of air totem
+                sb.AppendLine("spell_crit_chance_buff          0.0/5.0"); //%, moonkin aura, elemental oath
+                sb.AppendLine("spell_crit_chance_debuff        0.0/5.0"); //%, improved scorch, winter's chill
+                sb.AppendLine("spell_damage_debuff             0.0/13.0");//%, ebon plaugebearer, earth and moon, curse of elements
+                sb.AppendLine("spellpower_buff                 0/280");   //flametongue totem, totem of wrath
+                sb.AppendLine("spell_hit_chance_debuff         0.0/3.0"); //%, improved faerie fire, misery
+                sb.AppendLine("haste_buff                      0.0/3.0"); //%, improved moonkin aura, swift retribution
+                sb.AppendLine("percentage_damage_increase      0.0/3.0"); //%, ferocious inspiration, sanctified retribution
+                
+                sb.AppendLine("crit_chance_debuff              0.0/3.0"); //%, heart of the crusader, totem of wrath, master poisoner
+                sb.AppendLine("stat_multiplier                 0.0/10.0");//%, blessing of kings
+                sb.AppendLine("stat_add_buff                   0/52");    //mark of the wild
+                sb.AppendLine("agi_and_strength_buff           0/178");   //strength of earth, horn of winter
+                sb.AppendLine("intellect_buff                  0/60");    //arcane intellect, fel intelligence
             }
         }
 
