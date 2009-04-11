@@ -1564,7 +1564,6 @@ namespace Rawr.Optimizer
                     mutation1 = locationList[mutationIndex1];
                     mutation2 = locationList[mutationIndex2];
                     if (mutation1.Gem.Slot == mutation2.Gem.Slot) promising = false;
-                    if (mutation1.Socket == mutation2.Socket) promising = false;
 
                     int matchNow = 0;
                     if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket)) matchNow++;
@@ -1575,11 +1574,13 @@ namespace Rawr.Optimizer
                     if (Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket)) matchThen++;
                     if (tries < 50)
                     {
+                        if (mutation1.Socket == mutation2.Socket) promising = false;
                         if (matchThen <= matchNow) promising = false;
                     }
                     else
                     {
                         // allow 1 to 1 trade, because the other socket bonus might be better
+                        if (mutation1.Socket == mutation2.Socket && mutation1.Gem.IsLimitedGem == mutation2.Gem.IsLimitedGem) promising = false;
                         if (matchThen < matchNow || matchThen == 0) promising = false;
                     }
                     tries++;

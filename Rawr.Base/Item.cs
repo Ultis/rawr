@@ -614,6 +614,14 @@ namespace Rawr
 			}
 		}
 
+        public bool IsLimitedGem
+        {
+            get
+            {
+                return _isGem && (_isStormjewel || _isJewelersGem || Unique);
+            }
+        }
+
         private void UpdateGemInformation()
         {
             _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
