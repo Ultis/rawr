@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Globalization;
 
@@ -32,7 +33,7 @@ namespace Rawr.Enhance
 
             removeUseProcEffects(character, stats);
 
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.AppendLine("##########################################");
             sb.AppendLine("### Rawr.Enhance Data Export to EnhSim ###");
             sb.AppendLine("##########################################");
@@ -144,83 +145,8 @@ namespace Rawr.Enhance
             sb.AppendLine("storm_earth_and_fire            " + character.ShamanTalents.StormEarthAndFire + "/3");
             sb.AppendLine("shamanism                       " + character.ShamanTalents.Shamanism + "/5");
             sb.AppendLine();
-            sb.AppendLine("#########");
-            sb.AppendLine("# Buffs #");
-            sb.AppendLine("#########");
-            sb.AppendLine();
-            int arp = (int) Math.Floor(buffs.ArmorPenetration * 100f);
-            switch (arp)
-            {
-                case 0:
-                    sb.AppendLine("armor_debuff_major              0/2129");
-                    sb.AppendLine("armor_debuff_minor              0/532");
-                    break;
-                case 5:
-                    sb.AppendLine("armor_debuff_major              0/2129");
-                    sb.AppendLine("armor_debuff_minor              532/532");
-                    break;
-                case 20:
-                    sb.AppendLine("armor_debuff_major              2129/2129");
-                    sb.AppendLine("armor_debuff_minor              0/532");
-                    break;
-                case 25:
-                    sb.AppendLine("armor_debuff_major              2129/2129");
-                    sb.AppendLine("armor_debuff_minor              532/532");
-                    break;
-            }
-            string buffvalue = (buffs.BonusPhysicalDamageMultiplier * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("physical_vunerability_debuff    " + buffvalue + "/4.0");
-            buffvalue = (buffs.PhysicalHaste * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("melee_haste_buff                " + buffvalue + "/23.6"); // includes improved moonkin aura, swift retribution
-            buffvalue = (buffs.PhysicalCrit * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("melee_crit_chance_buff          " + buffvalue + "/8.0");
-            buffvalue = buffs.AttackPower.ToString("F0", CultureInfo.InvariantCulture);
-            sb.AppendLine("attack_power_buff_flat          " + buffvalue + "/688");
-            buffvalue = (buffs.SpellHaste * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("spell_haste_buff                " + buffvalue + "/8.15"); // includes improved moonkin aura, swift retribution
-            buffvalue = (buffs.SpellCrit * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("spell_crit_chance_buff          " + buffvalue + "/13.0");
-            //                spell_crit_chance_debuff	0.0/10.0	//%, improved scorch, winter's chill now wrapped up into spell_crit_chance_buff
-            if (buffs.BonusFireDamageMultiplier >= 0.13f && buffs.BonusNatureDamageMultiplier >= 0.13f && buffs.BonusArcaneDamageMultiplier >= 0.13f
-                && buffs.BonusFrostDamageMultiplier >= 0.13f && buffs.BonusHolyDamageMultiplier >= 0.13f)
-            {
-                sb.AppendLine("spell_damage_debuff             13.0/13.0");
-            }
-            else
-            {
-                sb.AppendLine("spell_damage_debuff             0.0/13.0");
-            }
-            buffvalue = (buffs.SpellPower).ToString("F0", CultureInfo.InvariantCulture);
-            sb.AppendLine("spellpower_buff                 " + buffvalue + "/280");
-            float spellhit = buffs.SpellHit - (character.Race == Character.CharacterRace.Draenei ? 0.01f : 0f);
-            buffvalue = (spellhit * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("spell_hit_chance_debuff         " + buffvalue + "/3.0");
-            buffvalue = (buffs.BonusDamageMultiplier * 100).ToString("F1", CultureInfo.InvariantCulture);
-            sb.AppendLine("percentage_damage_increase      " + buffvalue + "/3.0");
-            if (buffs.BonusAgilityMultiplier == .1f && buffs.BonusStaminaMultiplier == .1f && buffs.BonusStrengthMultiplier == .1f &&
-                buffs.BonusIntellectMultiplier == .1f && buffs.BonusSpiritMultiplier == .1f)
-                sb.AppendLine("stat_multiplier                 10.0/10.0");
-            else
-                sb.AppendLine("stat_multiplier                 0.0/10.0");
- /*
-            if (buffs.Stamina == 37f)
-                sb.AppendLine("stat_add_buff                   37/52");
-            else if (buffs.Stamina == 51f)
-                sb.AppendLine("stat_add_buff                   51/52");
-            else
-                sb.AppendLine("stat_add_buff                   0/52");
-            if (buffs.Agility == buffs.Strength && buffs.Strength > 0)
-            {
-                buffvalue = buffs.Strength.ToString("F0", CultureInfo.InvariantCulture);
-                sb.AppendLine("agi_and_strength_buff           " + buffvalue + "/178");
-            }
-            else
-                sb.AppendLine("agi_and_strength_buff           0/178");
-            if (buffs.Intellect == 60f)
-                sb.AppendLine("intellect_buff                  60/60");
-            else
-                sb.AppendLine("intellect_buff                  0/60");
-*/            
+
+            addBuffs(character, sb);
             _configText = sb.ToString();
         }
 
@@ -231,11 +157,86 @@ namespace Rawr.Enhance
 				Clipboard.SetText(_configText);
 			}
 			catch { }
-            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\n" + 
-                "Use the Import Clipboard Config option in EnhSimGUI to use it\n" +
-                "Or paste the config data into your config file in a decent text editor!",
+            MessageBox.Show("EnhSim config data copied to clipboard\n" + 
+                "Use the 'Copy from Clipboard' option in EnhSimGUI, v1.6.5 or higher, to use it\n" +
+                "Or paste the config data into your EnhSim config file in a decent text editor!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
             
+        }
+
+        private void addBuffs(Character character, StringBuilder sb)
+        {
+            sb.AppendLine("#########");
+            sb.AppendLine("# Buffs #");
+            sb.AppendLine("#########");
+            sb.AppendLine();
+
+            // need to reference tickboxes on buffs form and see what is ticked for buffs.
+            TabControl tabs = Calculations.CalculationOptionsPanel.Parent.Parent as TabControl;
+            Control buffControl = tabs.TabPages[2].Controls[0];
+            Type buffControlType = buffControl.GetType();
+
+            if (buffControlType.FullName == "Rawr.BuffSelector")
+            {
+                PropertyInfo checkBoxesInfo = buffControlType.GetProperty("BuffCheckBoxes");
+                Dictionary<Buff, CheckBox> checkBoxes = checkBoxesInfo.GetValue(buffControl, null) as Dictionary<Buff, CheckBox>;
+                if (isBuffChecked(checkBoxes, "Acid Spit") || isBuffChecked(checkBoxes, "Expose Armor") || isBuffChecked(checkBoxes, "Sunder Armor"))
+                    sb.AppendLine("armor_debuff_major              20.0/20.0");
+                else
+                    sb.AppendLine("armor_debuff_major              0.0/20.0");
+                if (isBuffChecked(checkBoxes, "Curse of Recklessness") || isBuffChecked(checkBoxes, "Faerie Fire") || isBuffChecked(checkBoxes, "Sting"))
+                    sb.AppendLine("armor_debuff_minor              5.0/5.0");
+                else
+                    sb.AppendLine("armor_debuff_minor              0.0/5.0");
+                if (isBuffChecked(checkBoxes, "Blood Frenzy") || isBuffChecked(checkBoxes, "Savage Combat"))
+                    sb.AppendLine("physical_vulnerability_debuff   4.0/4.0");
+                else
+                    sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
+
+
+
+                if (isBuffChecked(checkBoxes, "Strength of Earth Totem") || isBuffChecked(checkBoxes, "Horn of Winter"))
+                    if (isBuffChecked(checkBoxes, "Enhancing Totems (Agility/Strength)"))
+                        sb.AppendLine("agi_and_strength_buff              178/178");
+                    else
+                        sb.AppendLine("agi_and_strength_buff              155/178");
+                else
+                    sb.AppendLine("agi_and_strength_buff              0/178");
+            }
+            else
+            {
+                sb.AppendLine("armor_debuff_major              0.0/20.0");
+                sb.AppendLine("armor_debuff_minor              0.0/5.0");
+                sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
+                sb.AppendLine("melee_haste_buff                0.0/20.0");
+                sb.AppendLine("melee_crit_chance_buff	  	   0.0/5.0");
+                sb.AppendLine("attack_power_buff_flat		   0/688");
+                sb.AppendLine("attack_power_buff_multiplier	   0.0/99.7");
+                sb.AppendLine("spell_haste_buff		           0.0/5.0");
+                sb.AppendLine("spell_crit_chance_buff		   0.0/5.0");
+                sb.AppendLine("spell_crit_chance_debuff	       0.0/5.0");
+                sb.AppendLine("spell_damage_debuff		       0.0/13.0");
+                sb.AppendLine("spellpower_buff			       0/280");
+                sb.AppendLine("spell_hit_chance_debuff		   0.0/3.0");
+                sb.AppendLine("haste_buff			           0.0/3.0");
+                sb.AppendLine("percentage_damage_increase	   0.0/3.0");
+                sb.AppendLine("crit_chance_debuff		       0.0/3.0");
+                sb.AppendLine("stat_multiplier			       0.0/10.0");
+                sb.AppendLine("stat_add_buff			       0/52");
+                sb.AppendLine("agi_and_strength_buff	       0/178");
+                sb.AppendLine("intellect_buff			       0/60");
+            }
+        }
+
+        private bool isBuffChecked(Dictionary<Buff, CheckBox> checkBoxes, string buffName)
+        {
+            foreach (CheckBox checkbox in checkBoxes.Values)
+            {
+                Buff buff = checkbox.Tag as Buff;
+                if (buff.Name.Equals(buffName))
+                    return checkbox.Checked;
+            }
+            return false;
         }
 
         private void addGlyphs(Character character, System.Text.StringBuilder sb)
@@ -471,7 +472,7 @@ namespace Rawr.Enhance
                     stats.SpellPower -= spellpowerBonus * 320;
                     return "fury_of_the_five_flights";
 	            case 40256:
-                    stats.ArmorPenetrationRating -= 612f / 5f;
+                    //stats.ArmorPenetrationRating -= 612f / 5f;
 		            return "grim_toll";
 	            case 39257:
                     stats.AttackPower -= 670f / 6f;

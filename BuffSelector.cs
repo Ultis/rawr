@@ -66,6 +66,11 @@ namespace Rawr
             }
             ScrollHook.hookRec(this);
         }
+
+        public Dictionary<Buff, CheckBox> BuffCheckBoxes
+        {
+            get { return CheckBoxes; }
+        }
         
         //i want to be free... from desolation and despair
 		Dictionary<string, GroupBox> GroupBoxes = new Dictionary<string, GroupBox>();
@@ -315,5 +320,5 @@ namespace Rawr
 					return parentBuff;
 			return null;
 		}
-	}
+    }
 }
