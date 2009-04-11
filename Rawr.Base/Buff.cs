@@ -726,14 +726,7 @@ namespace Rawr
                 Group = "Spell Power",
                 Stats = { SpellPower = 280f }
             });
-            defaultBuffs.Add(new Buff
-            {
-                Name = "Improved Divine Spirit",
-                Source = "Disc Priest",
-                Group = "Spell Power",
-                Stats = { SpellPower = 80f }
-            });
-            #endregion
+           #endregion
 
             #region Spell Sensitivity
             defaultBuffs.Add(new Buff
