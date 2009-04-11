@@ -149,9 +149,8 @@ namespace Rawr.Healadin
             dictValues.Add("HS Healing per mana", string.Format("{0} hpm", HS.HPM().ToString("N2")));
 
             dictValues.Add("SS Average Absorb", SS.ProcAbsorb().ToString("N0"));
-            dictValues.Add("SS Healing per sec", "-");
-            dictValues.Add("SS Healing per mana", "-");
-
+            dictValues.Add("SS Healing per sec", string.Format("{0} hps", SS.HPS().ToString("N0")));
+            dictValues.Add("SS Healing per mana", string.Format("{0} hpm", SS.HPM().ToString("N2")));
 
             return dictValues;
         }

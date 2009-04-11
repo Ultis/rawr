@@ -794,7 +794,7 @@ namespace Rawr
                     case Trigger.PhysicalHit:
                         return " on Physical Hit";
                     case Trigger.PhysicalCrit:
-                        return " on Physical Hit";
+                        return " on Physical Crit";
                     case Trigger.ManaGem:
                         return " on Mana Gem";
                     default:

@@ -84,6 +84,7 @@ namespace Rawr.Healadin
 
         public float CalculateHealing(CharacterCalculationsHealadin calc)
         {
+            #region Copying Stuff to Calc
             calc.HL = hl;
             calc.FoL = fol;
             calc.HS = hs;
@@ -104,6 +105,7 @@ namespace Rawr.Healadin
             calc.RotationHS = hs.Time();
             calc.HealedHS = hs.Healed();
             calc.UsageHS = hs.Usage();
+            #endregion
 
             #region Infusion of Light
             if (CalcOpts.InfusionOfLight)
@@ -124,25 +126,20 @@ namespace Rawr.Healadin
             #region Divine Illumination
             if (Talents.DivineIllumination > 0)
             {
-                float di_time = (float)Math.Ceiling((FightLength - 1f) / 180f) * 15f * CalcOpts.Activity;
-                Heal hl_di = new HolyLight(this) { DivineIllumination = true };
-                calc.RotationHL += di_time;
-                calc.UsageHL += di_time * hl_di.MPS();
-                calc.HealedHL += di_time * hl_di.HPS();
+                DivineIllumination di = new DivineIllumination(this);
+                calc.RotationHL += di.Time();
+                calc.UsageHL += di.Usage();
+                calc.HealedHL += di.Healed();
             }
             #endregion
 
             #region Divine Favor
             if (Talents.DivineFavor > 0)
             {
-                float df_casts = 0, df_manaCost = 0, df_manaSaved = 0;
-                Heal hl_df = new HolyLight(this) { ExtraCritChance = 1f };
-                df_casts = (float)Math.Ceiling((FightLength - .5f) / 120f);
-                df_manaCost = 130f * df_casts - Stats.SpellsManaReduction;
-                df_manaSaved = df_casts * (hl_df.AverageCost() - hl.AverageCost());
-                calc.HealedHL += hl_df.AverageHealed() * df_casts;
-                calc.UsageHL += df_manaCost - df_manaSaved;
-                calc.RotationHL += df_casts * hl_df.CastTime();
+                DivineFavor df = new DivineFavor(this);
+                calc.RotationHL += df.Time();
+                calc.UsageHL += df.Usage();
+                calc.HealedHL += df.Healed();
             }
             #endregion
 

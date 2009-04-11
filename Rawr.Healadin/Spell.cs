@@ -244,12 +244,12 @@ namespace Rawr.Healadin
             return (float)Math.Ceiling(Uptime / Duration);
         }
 
-        public float Time()
+        public virtual float Time()
         {
             return Casts() * 1.5f / (1f + Stats.SpellHaste);
         }
 
-        public float Usage()
+        public virtual float Usage()
         {
             return Casts() * Cost();
         }
@@ -279,6 +279,16 @@ namespace Rawr.Healadin
         public float TotalAborbed()
         {
             return Uptime / ICD() * ProcAbsorb();
+        }
+
+        public float HPM()
+        {
+            return ProcAbsorb() * Duration / ICD() / Cost(); 
+        }
+
+        public float HPS()
+        {
+            return TotalAborbed() / Time();
         }
 
     }
@@ -312,4 +322,64 @@ namespace Rawr.Healadin
 
     }
 
+    public class DivineIllumination : Spell
+    {
+
+        public HolyLight HL_DI { get; set; }
+
+        public DivineIllumination(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 180f;
+            Uptime = Rotation.FightLength;
+            BaseCost = 0f;
+            HL_DI = new HolyLight(rotation) { DivineIllumination = true };
+        }
+
+        public float Healed()
+        {
+            return HL_DI.HPS() * Time();
+        }
+
+        public override float Time()
+        {
+            return 15f * Casts() * Rotation.CalcOpts.Activity;
+        }
+
+        public override float Usage()
+        {
+            return Time() * HL_DI.MPS();
+        }
+
+    }
+
+    public class DivineFavor : Spell
+    {
+
+        public HolyLight HL_DF { get; set; }
+
+        public DivineFavor(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 120f;
+            Uptime = Rotation.FightLength;
+            BaseCost = 130f;
+            HL_DF = new HolyLight(rotation) { ExtraCritChance = 1f };
+        }
+
+        public float Healed()
+        {
+            return HL_DF.AverageHealed() * Casts();
+        }
+
+        public override float Time()
+        {
+            return HL_DF.CastTime() * Casts();
+        }
+
+        public override float Usage()
+        {
+            return Casts() * (Cost() + HL_DF.AverageCost());
+        }
+    }
 }
