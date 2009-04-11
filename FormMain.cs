@@ -648,7 +648,7 @@ namespace Rawr
 		{
             if (this.InvokeRequired)
             {
-                Invoke((EventHandler)ItemCache_ItemsChanged, sender, e);
+                BeginInvoke((EventHandler)ItemCache_ItemsChanged, sender, e);
                 //InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
             }
             else
