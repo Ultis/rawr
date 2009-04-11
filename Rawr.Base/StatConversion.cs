@@ -405,6 +405,35 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Returns a String version of the Table giving the chance to fall within a resistance slice cutoff.
+        /// Useful as part of a tooltip
+        /// </summary>
+        /// <param name="AttackerLevel">Level of the Attacker</param>
+        /// <param name="TargetLevel">Level of the Target</param>
+        /// <param name="TargetResistance">Targets Resistance</param>
+        /// <param name="AttackerSpellPenetration">Attackers Spell Penetration</param>
+        /// <returns>A string version of a Table giving the chance to fall within a resistance slice cutoff.</returns>
+        public static string GetResistanceTableString(int AttackerLevel, int TargetLevel,
+            float TargetResistance, float AttackerSpellPenetration)
+        {
+            int count;
+            string tipResist = string.Empty;
+            tipResist = Math.Round(StatConversion.GetAverageResistance(AttackerLevel, TargetLevel, TargetResistance, AttackerSpellPenetration) * 100.0f, 2).ToString() + "% average resistance \n";
+            tipResist += "% Resisted     Occurance";
+
+            float[] ResistTable = StatConversion.GetResistanceTable(AttackerLevel, TargetLevel, TargetResistance, AttackerSpellPenetration);
+            for (count = 0; count < 10; count++)
+            {
+                if (ResistTable[count] > 0)
+                {
+                    tipResist += "\n" + Math.Round(count * 10.0f, 1) + " % resisted   " + Math.Round(ResistTable[count] * 100.0f, 2) + "%";
+                }
+            }
+
+            return tipResist;
+        }
+
+        /// <summary>
         /// Returns the Minimum amount of Spell Damage will be resisted. (0.2 = Anything below 20% is always resisted)
         /// If this returns 0.0, that means you will always have a chance to take full damage from spells.
         /// If this returns 0.1, that means you will never take full damage from spells, and minumum you will take is 10% reduction.
