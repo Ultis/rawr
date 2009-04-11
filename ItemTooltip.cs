@@ -190,6 +190,7 @@ namespace Rawr
                                 initial = 2,
                                 step = 103,
                                 max = 218,
+                                end = 307
                             };
 
                             var yGrid = new
@@ -201,8 +202,6 @@ namespace Rawr
                             int xPos = xGrid.initial;
                             int yPos = yGrid.initial;
 
-                            int ypos_nextline = 0;
-
                             List<string> statsList = new List<string>();
 
                             foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
@@ -213,25 +212,13 @@ namespace Rawr
                                 string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
                                 statsList.Add(text);
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
-                                // once we write on a line store where the next line would be
-                                // (alternatively we could put the yPos update code below this at the top of the loop)
-                                ypos_nextline = yPos + yGrid.step;
-                                int steps = (int)Math.Ceiling(width / xGrid.step);
-                                xPos += steps * xGrid.step;
-                                if (xPos > xGrid.max)
+                                if (xPos + width > xGrid.end )
                                 {
                                     xPos = xGrid.initial;
                                     yPos += yGrid.step;
                                 }
-                            }
-                            foreach (SpecialEffect effect in relevantStats.SpecialEffects())
-                            {
-                                string text = effect.ToString();
-                                statsList.Add(text);
-                                float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
                                 // once we write on a line store where the next line would be
                                 // (alternatively we could put the yPos update code below this at the top of the loop)
-                                ypos_nextline = yPos + yGrid.step;
                                 int steps = (int)Math.Ceiling(width / xGrid.step);
                                 xPos += steps * xGrid.step;
                                 if (xPos > xGrid.max)
@@ -241,13 +228,17 @@ namespace Rawr
                                 }
                             }
 
-							if (_currentItem.DPS > 0)
-							{
-								float dps = (float)Math.Round(_currentItem.DPS * 100f) / 100f;
+                            if (_currentItem.DPS > 0)
+                            {
+                                float dps = (float)Math.Round(_currentItem.DPS * 100f) / 100f;
                                 string text = dps + " DPS";
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
+                                if (xPos + width > xGrid.end)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
                                 statsList.Add(text);
-                                ypos_nextline = yPos + yGrid.step;
                                 xPos += (int)Math.Ceiling(width / xGrid.step) * xGrid.step;
                                 if (xPos > xGrid.max)
                                 {
@@ -257,8 +248,12 @@ namespace Rawr
 
                                 text = _currentItem.Speed + " Speed";
                                 width = _dummyBitmap.MeasureString(_currentItem.Speed + " Speed", _fontStats).Width;
+                                if (xPos + width > xGrid.end)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
                                 statsList.Add(text);
-                                ypos_nextline = yPos + yGrid.step;
                                 xPos += (int)Math.Ceiling(width / xGrid.step) * xGrid.step;
                                 if (xPos > xGrid.max)
                                 {
@@ -266,8 +261,29 @@ namespace Rawr
                                     yPos += yGrid.step;
                                 }
                             }
+
+                            foreach (SpecialEffect effect in relevantStats.SpecialEffects())
+                            {
+                                string text = effect.ToString();
+                                statsList.Add(text);
+                                float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
+                                if (xPos + width > xGrid.end)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
+                                // once we write on a line store where the next line would be
+                                // (alternatively we could put the yPos update code below this at the top of the loop)
+                                int steps = (int)Math.Ceiling(width / xGrid.step);
+                                xPos += steps * xGrid.step;
+                                if (xPos > xGrid.max)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
+                            }
                             #endregion
-                            int statHeight = Math.Max(0, ypos_nextline - yGrid.step);
+                            int statHeight = (xPos > xGrid.initial) ? yPos : Math.Max(0, yPos - yGrid.step);
                             int extraLocation = 0;
 
                             string location = "Unknown source";
@@ -374,14 +390,17 @@ namespace Rawr
                             xPos = xGrid.initial;
                             yPos = yGrid.initial;
 
-                            ypos_nextline = 0;
                             foreach (string statText in statsList)
                             {
-                                g.DrawString(statText, _fontStats, SystemBrushes.InfoText, xPos, yPos);
                                 float width = g.MeasureString(statText, _fontStats).Width;
+                                if (xPos + width > xGrid.end)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
+                                g.DrawString(statText, _fontStats, SystemBrushes.InfoText, xPos, yPos);
                                 // once we write on a line store where the next line would be
                                 // (alternatively we could put the yPos update code below this at the top of the loop)
-                                ypos_nextline = yPos + yGrid.step;
                                 xPos += (int)Math.Ceiling(width / xGrid.step) * xGrid.step;
                                 if (xPos > xGrid.max)
                                 {
@@ -391,7 +410,10 @@ namespace Rawr
                             }
 
                             // this is the next clean/empty line after we wrote the stats
-                            yPos = Math.Max(yPos, ypos_nextline);
+                            if (xPos > xGrid.initial)
+                            {
+                                yPos += yGrid.step;
+                            }
 
                             if (hasSockets)
                             {
