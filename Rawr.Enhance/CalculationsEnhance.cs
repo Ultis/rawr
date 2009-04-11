@@ -785,7 +785,6 @@ namespace Rawr
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Flametongue Totem"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));

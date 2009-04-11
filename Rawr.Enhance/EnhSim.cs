@@ -671,7 +671,7 @@ namespace Rawr.Enhance
                                 bonusCount++;
                                 sb.AppendLine("set_bonus" + bonusCount + "                      naxx_melee_4");
                             }
-                            if (kvp.Value >= 2)
+                            else if (kvp.Value >= 2)
                             {
                                 bonusCount++;
                                 sb.AppendLine("set_bonus" + bonusCount + "                      naxx_melee_2");
@@ -683,7 +683,7 @@ namespace Rawr.Enhance
                                 bonusCount++;
                                 sb.AppendLine("set_bonus" + bonusCount + "                      ulduar_melee_4");
                             }
-                            if (kvp.Value >= 2)
+                            else if (kvp.Value >= 2)
                             {
                                 bonusCount++;
                                 sb.AppendLine("set_bonus" + bonusCount + "                      ulduar_melee_2");
