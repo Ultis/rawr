@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Healadin
 {
-    public abstract class Spell
+    public abstract class Heal
     {
         private Rotation _rotation;
         public Rotation Rotation
@@ -24,7 +24,7 @@ namespace Rawr.Healadin
         private PaladinTalents _talents;
         protected PaladinTalents Talents { get { return _talents; } }
 
-        public Spell(Rotation rotation)
+        public Heal(Rotation rotation)
         {
             Rotation = rotation;
         }
@@ -83,7 +83,7 @@ namespace Rawr.Healadin
         public abstract float BaseMana { get; }
     }
 
-    public class FlashOfLight : Spell
+    public class FlashOfLight : Heal
     {
         public FlashOfLight(Rotation rotation)
             : base(rotation)
@@ -110,7 +110,7 @@ namespace Rawr.Healadin
 
     }
 
-    public class HolyLight : Spell
+    public class HolyLight : Heal
     {
         public HolyLight(Rotation rotation)
             : base(rotation)
@@ -147,7 +147,7 @@ namespace Rawr.Healadin
 
     }
 
-    public class HolyShock : Spell
+    public class HolyShock : Heal
     {
         public HolyShock(Rotation rotation)
             : base(rotation)
@@ -172,6 +172,26 @@ namespace Rawr.Healadin
             return (2500f + Stats.SpellPower * hs_coef);
         }
 
+        public float Usage()
+        {
+            return Casts() * AverageCost();
+        }
+
+        public float Casts()
+        {
+            return Rotation.FightLength * Rotation.CalcOpts.HolyShock / Cooldown();
+        }
+
+        public float Time()
+        {
+            return Casts() * CastTime();
+        }
+
+        public float Healed()
+        {
+            return Casts() * AverageHealed();
+        }
+
         public float Cooldown()
         {
             return Talents.GlyphOfHolyShock ? 5f : 6f;
@@ -180,6 +200,114 @@ namespace Rawr.Healadin
         protected override float AbilityCritMultiplier()
         {
              return 1f + Stats.HolyShockHoTOnCrit;
+        }
+
+    }
+
+    public abstract class Spell
+    {
+
+        private Rotation _rotation;
+        public Rotation Rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                _rotation = value;
+                _stats = _rotation.Stats;
+                _talents = _rotation.Talents;
+            }
+        }
+
+        private Stats _stats;
+        protected Stats Stats { get { return _stats; } }
+
+        private PaladinTalents _talents;
+        protected PaladinTalents Talents { get { return _talents; } }
+
+        public Spell(Rotation rotation)
+        {
+            Rotation = rotation;
+        }
+
+        public float Uptime { get; set; }
+        public float Duration { get; set; }
+        public float BaseCost { get; set; }
+
+        public float Cost()
+        {
+            return (BaseCost - Stats.SpellsManaReduction) * (1f - .02f * Talents.Benediction);
+        }
+
+        public float Casts()
+        {
+            return (float)Math.Ceiling(Uptime / Duration);
+        }
+
+        public float Time()
+        {
+            return Casts() * 1.5f / (1f + Stats.SpellHaste);
+        }
+
+        public float Usage()
+        {
+            return Casts() * Cost();
+        }
+
+    }
+
+    public class SacredShield : Spell
+    {
+        public SacredShield(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 30f + Talents.DivineGuardian * 15f;
+            Uptime = Rotation.CalcOpts.Length * 60f * Rotation.CalcOpts.SSUptime;
+            BaseCost = 527f;         
+        }
+
+        public float ICD()
+        {
+            return 6f - Stats.SacredShieldICDReduction;
+        }
+
+        public float ProcAbsorb()
+        {
+            return (500f + .75f * Stats.SpellPower) * (1f + Talents.DivineGuardian * .1f);
+        }
+
+        public float TotalAborbed()
+        {
+            return Uptime / ICD() * ProcAbsorb();
+        }
+
+    }
+
+    public class BeaconOfLight : Spell
+    {
+        public BeaconOfLight(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 60f + (Talents.GlyphOfBeaconOfLight ? 30f : 0f);
+            Uptime = Rotation.CalcOpts.Length * 60f * Rotation.CalcOpts.BoLUp;
+            BaseCost = 1537f;
+        }
+
+        public float HealingDone(float procableHealing)
+        {
+            return procableHealing * Rotation.CalcOpts.BoLUp * Rotation.CalcOpts.BoLEff;
+        }
+
+    }
+
+    public class JudgementsOfThePure : Spell
+    {
+        public JudgementsOfThePure(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 60f;
+            Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
+            BaseCost = 219f;
         }
 
     }

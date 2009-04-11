@@ -126,6 +126,10 @@ namespace Rawr.Healadin
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
+					"Overall:Total Points",
+					"Overall:Fight Points",
+					"Overall:Burst Points",
+
 					"Basic Stats:Health",
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
@@ -134,48 +138,52 @@ namespace Rawr.Healadin
 					"Basic Stats:Mp5",
 					"Basic Stats:Spell Crit",
 					"Basic Stats:Spell Haste",
+
 					"Cycle Stats:Total Healed",
 					"Cycle Stats:Total Mana",
 					"Cycle Stats:Average Healing per sec",
 					"Cycle Stats:Average Healing per mana",
-					"Cycle Stats:Other Heals*From Trinket Procs",
-                    "Holy Light:HL Average Heal*Average non crit heal",
+
+                    "Rotation Info:Holy Light Time",
+                    "Rotation Info:Flash of Light Time",
+                    "Rotation Info:Holy Shock Time",
+                    "Rotation Info:Sacred Shield Time",
+                    "Rotation Info:Beacon of Light Time",
+                    "Rotation Info:Judgement Time",
+
+                    "Healing Breakdown:Holy Light Healed",
+                    "Healing Breakdown:Flash of Light Healed",
+                    "Healing Breakdown:Holy Shock Healed",
+                    "Healing Breakdown:Sacred Shield Healed",
+                    "Healing Breakdown:Beacon of Light Healed",
+                    "Healing Breakdown:Glyph of HL Healed",
+                    "Healing Breakdown:Other Healed*From trinekt procs",
+
+                    "Holy Light:HL Average Heal",
                     "Holy Light:HL Crit",
                     "Holy Light:HL Cast Time",
+                    "Holy Light:HL Averege Cost",
                     "Holy Light:HL Healing per sec",
                     "Holy Light:HL Healing per mana",
-                    "Holy Light:HL Rotation Time",
-                    "Holy Light:HL Healed",
-                    "Holy Light:HL Mana Usage",
-                    "Holy Light:Glyph of HL Healed",
-                    "Flash of Light:FoL Average Heal*Average non crit heal",
+
+                    "Flash of Light:FoL Average Heal",
                     "Flash of Light:FoL Crit",
                     "Flash of Light:FoL Cast Time",
+                    "Flash of Light:FoL Averege Cost",
                     "Flash of Light:FoL Healing per sec",
                     "Flash of Light:FoL Healing per mana",
-                    "Flash of Light:FoL Rotation Time",
-                    "Flash of Light:FoL Healed",
-                    "Flash of Light:FoL Mana Usage",
-                    "Holy Shock:HS Average Heal*Average non crit heal",
+
+                    "Holy Shock:HS Average Heal",
                     "Holy Shock:HS Crit",
                     "Holy Shock:HS Cast Time",
+                    "Holy Shock:HS Averege Cost",
                     "Holy Shock:HS Healing per sec",
                     "Holy Shock:HS Healing per mana",
-                    "Holy Shock:HS Rotation Time",
-                    "Holy Shock:HS Healed",
-                    "Holy Shock:HS Mana Usage",
+
                     "Sacred Shield:SS Average Absorb",
-                    "Sacred Shield:SS Casts",
                     "Sacred Shield:SS Healing per sec",
                     "Sacred Shield:SS Healing per mana",
-                    "Sacred Shield:SS Absorbed",
-                    "Sacred Shield:SS Mana Usage",
-                    "Beacon of Light:BoL Healed",
-                    "Beacon of Light:BoL Casts",
-                    "Beacon of Light:BoL Mana Usage",
-                    "Judgement:JotP Effective Haste*Effective haste after discounting GCDs used to keep the buff up",
-                    "Judgement:JotP Casts",
-                    "Judgement:JotP Mana Usage"
+
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -581,12 +589,12 @@ namespace Rawr.Healadin
                 ComparisonCalculationHealadin BoL = new ComparisonCalculationHealadin("Beacon of Light");
                 ComparisonCalculationHealadin SS = new ComparisonCalculationHealadin("Sacred Shield");
 
-                FoL.OverallPoints = FoL.ThroughputPoints = calc.FoLUsage;
-                HL.OverallPoints = HL.ThroughputPoints = calc.HLUsage;
-                HS.OverallPoints = HS.ThroughputPoints = calc.HSUsage;
-                JotP.OverallPoints = JotP.ThroughputPoints = calc.JotPUsage;
-                BoL.OverallPoints = BoL.ThroughputPoints = calc.BoLUsage;
-                SS.OverallPoints = SS.ThroughputPoints = calc.SSUsage;
+                FoL.OverallPoints = FoL.ThroughputPoints = calc.UsageFoL;
+                HL.OverallPoints = HL.ThroughputPoints = calc.UsageHL;
+                HS.OverallPoints = HS.ThroughputPoints = calc.UsageHS;
+                JotP.OverallPoints = JotP.ThroughputPoints = calc.UsageJotP;
+                BoL.OverallPoints = BoL.ThroughputPoints = calc.UsageBoL;
+                SS.OverallPoints = SS.ThroughputPoints = calc.UsageSS;
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL, SS };
             }

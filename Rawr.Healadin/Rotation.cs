@@ -43,14 +43,21 @@ namespace Rawr.Healadin
         private FlashOfLight fol;
         private HolyLight hl;
         private HolyShock hs;
+        private SacredShield ss;
+        private JudgementsOfThePure jotp;
+        private BeaconOfLight bol;
 
         public Rotation(Character character, Stats stats)
         {
             Character = character;
+            FightLength = CalcOpts.Length * 60f;
             Stats = stats;
             fol = new FlashOfLight(this);
             hl = new HolyLight(this);
             hs = new HolyShock(this);
+            ss = new SacredShield(this);
+            jotp = new JudgementsOfThePure(this);
+            bol = new BeaconOfLight(this);
         }
 
         public float ManaPool(CharacterCalculationsHealadin calc)
@@ -77,72 +84,51 @@ namespace Rawr.Healadin
 
         public float CalculateHealing(CharacterCalculationsHealadin calc)
         {
-            FightLength = CalcOpts.Length * 60f;
-            CopyStats(calc);
+            calc.HL = hl;
+            calc.FoL = fol;
+            calc.HS = hs;
+            calc.SS = ss;
+            calc.JotP = jotp;
+            calc.BoL = bol;
 
-            float gcd = 1.5f / (1f + Stats.SpellHaste);
-            float benediction = 1f - .02f * Talents.Benediction;
+            calc.RotationJotP = jotp.Time();
+            calc.UsageJotP = jotp.Usage();
 
-            #region Judgements of the Pure
-            if (Talents.JudgementsOfThePure > 0 && CalcOpts.JotP)
-            {
-                float miss_chance = (float)Math.Max(0f, .09f - Talents.EnlightenedJudgements * .02f - Stats.PhysicalHit);
-                float average_casts = 1 / (1f - miss_chance);
-                float judgements_cast = (float)Math.Ceiling(FightLength / 60f);
+            calc.RotationSS = ss.Time();
+            calc.UsageSS = ss.Usage();
+            calc.HealedSS = ss.TotalAborbed();
 
-                calc.JotPCasts = judgements_cast * average_casts;
-                calc.JotPUsage = 219f * judgements_cast * average_casts;
-            }
-            #endregion
+            calc.RotationBoL = bol.Time();
+            calc.UsageBoL = bol.Usage();
 
-            #region Beacon of Light
-            if (Talents.BeaconOfLight > 0)
-            {
-                calc.BoLCasts = (float)Math.Ceiling(FightLength * CalcOpts.BoLUp / (Talents.GlyphOfBeaconOfLight ? 90f : 60f));
-                calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(1536f * benediction) - Stats.SpellsManaReduction);
-            }
-            #endregion
-
-            #region Holy Shock
-            float hs_casts = FightLength * CalcOpts.HolyShock / hs.Cooldown();
-            calc.HSTime = hs_casts * hs.CastTime();
-            calc.HSUsage = hs_casts * hs.AverageCost();
-            calc.HSHealed = hs_casts * hs.AverageHealed();
-            #endregion
-
-            #region Sacred Shield
-            calc.SSAvgAbsorb = (500f + .75f * Stats.SpellPower) * (1f + Talents.DivineGuardian * .1f);
-            calc.SSCasts = (float)Math.Ceiling(FightLength / (30f * (1f + Talents.DivineGuardian * .5f)) * CalcOpts.SSUptime);
-            calc.SSUsage = calc.SSCasts * 527f * benediction - Stats.SpellsManaReduction;
-            calc.SSAbsorbed = (float)Math.Floor(FightLength * CalcOpts.SSUptime / (6f - Stats.SacredShieldICDReduction)) * calc.SSAvgAbsorb;
-            calc.SSHPM = calc.SSAbsorbed / calc.SSUsage;
-            calc.SSHPS = calc.SSAbsorbed / (calc.SSCasts * gcd);
-            #endregion
+            calc.RotationHS = hs.Time();
+            calc.HealedHS = hs.Healed();
+            calc.UsageHS = hs.Usage();
 
             #region Infusion of Light
             if (CalcOpts.InfusionOfLight)
             {
-                Spell hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
-                float iol_hlcasts = hs_casts * CalcOpts.IoLHolyLight;
-                calc.HLUsage += iol_hlcasts * hl_iol.AverageCost();
-                calc.HLTime += iol_hlcasts * hl_iol.CastTime();
-                calc.HLHealed += iol_hlcasts * hl_iol.AverageHealed();
+                Heal hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
+                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight;
+                calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
+                calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
+                calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
 
-                float iol_folcasts = hs_casts * (1f - CalcOpts.IoLHolyLight);
-                calc.FoLUsage += iol_folcasts * fol.AverageCost();
-                calc.FoLTime += iol_folcasts * fol.CastTime();
-                calc.FoLHealed += iol_folcasts * fol.AverageHealed();
+                float iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight);
+                calc.UsageFoL += iol_folcasts * fol.AverageCost();
+                calc.RotationFoL += iol_folcasts * fol.CastTime();
+                calc.HealedFoL += iol_folcasts * fol.AverageHealed();
             }
             #endregion
 
             #region Divine Illumination
             if (Talents.DivineIllumination > 0)
             {
-                float di_time = 0;
-                Spell hl_di = new HolyLight(this) { DivineIllumination = true };
-                calc.HLTime += di_time = (float)Math.Ceiling((FightLength - 1f) / 180f) * 15f;
-                calc.HLUsage += di_time * hl_di.MPS() * CalcOpts.Activity;
-                calc.HLHealed += di_time * hl_di.HPS() * CalcOpts.Activity;
+                float di_time = (float)Math.Ceiling((FightLength - 1f) / 180f) * 15f * CalcOpts.Activity;
+                Heal hl_di = new HolyLight(this) { DivineIllumination = true };
+                calc.RotationHL += di_time;
+                calc.UsageHL += di_time * hl_di.MPS();
+                calc.HealedHL += di_time * hl_di.HPS();
             }
             #endregion
 
@@ -150,45 +136,47 @@ namespace Rawr.Healadin
             if (Talents.DivineFavor > 0)
             {
                 float df_casts = 0, df_manaCost = 0, df_manaSaved = 0;
-                Spell hl_df = new HolyLight(this) { ExtraCritChance = 1f };
+                Heal hl_df = new HolyLight(this) { ExtraCritChance = 1f };
                 df_casts = (float)Math.Ceiling((FightLength - .5f) / 120f);
-                df_manaCost = 130f * df_casts * benediction - Stats.SpellsManaReduction;
+                df_manaCost = 130f * df_casts - Stats.SpellsManaReduction;
                 df_manaSaved = df_casts * (hl_df.AverageCost() - hl.AverageCost());
-                calc.HLHealed += hl_df.AverageHealed() * df_casts;
-                calc.HLUsage += df_manaCost - df_manaSaved;
-                calc.HLTime += df_casts * hl_df.CastTime();
+                calc.HealedHL += hl_df.AverageHealed() * df_casts;
+                calc.UsageHL += df_manaCost - df_manaSaved;
+                calc.RotationHL += df_casts * hl_df.CastTime();
             }
             #endregion
 
             float remainingMana = calc.TotalMana = ManaPool(calc);
-            remainingMana -= calc.JotPUsage + calc.BoLUsage + calc.HSUsage + calc.HLUsage + calc.FoLUsage + calc.SSUsage;
+            remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
 
             float remainingTime = FightLength * CalcOpts.Activity;
-            remainingTime -= (calc.JotPCasts + calc.BoLCasts + calc.SSCasts) * gcd + calc.HSTime + calc.HLTime + calc.FoLTime;
+            remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationHL + calc.RotationHL;
 
 
-            calc.HLTime = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
-            calc.FoLTime = remainingTime - calc.HLTime;
-            if (calc.HLTime == 0)
+            float hl_time = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
+            float fol_time = remainingTime - hl_time;
+            if (hl_time == 0)
             {
-                calc.FoLTime = Math.Min(remainingTime, remainingMana / fol.MPS());
+                fol_time = Math.Min(remainingTime, remainingMana / fol.MPS());
             }
 
-            calc.HLHealed += hl.HPS() * calc.HLTime;
-            calc.HLUsage += hl.MPS() * calc.HLTime;
+            calc.HealedHL += hl.HPS() * hl_time;
+            calc.UsageHL += hl.MPS() * hl_time;
+            calc.RotationHL += hl_time;
 
-            calc.FoLHealed += fol.HPS() * calc.FoLTime;
-            calc.FoLUsage += fol.MPS() * calc.FoLTime;
+            calc.RotationFoL += fol_time;
+            calc.UsageFoL += fol.MPS() * fol_time;
+            calc.HealedFoL += fol.HPS() * fol_time;
 
-            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed;
+            calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS;
 
             if (Talents.BeaconOfLight > 0)
             {
-                calc.TotalHealed += calc.BoLHealed = calc.TotalHealed * CalcOpts.BoLUp * CalcOpts.BoLEff;
+                calc.TotalHealed += calc.HealedBoL = bol.HealingDone(calc.TotalHealed);
             }
 
-            calc.TotalHealed += calc.HLGlyph = calc.HLHealed * (Talents.GlyphOfHolyLight ? .1f * CalcOpts.GHL_Targets : 0f);
-            calc.TotalHealed += calc.SSAbsorbed;
+            calc.TotalHealed += calc.HealedGHL = calc.HealedHL * (Talents.GlyphOfHolyLight ? .1f * CalcOpts.GHL_Targets : 0f);
+            calc.TotalHealed += calc.HealedSS;
             calc.TotalHealed += calc.HealedOther = Stats.Healed;
 
             calc.AvgHPS = calc.TotalHealed / FightLength;
@@ -200,29 +188,6 @@ namespace Rawr.Healadin
             return calc.FightPoints + calc.BurstPoints;
         }
 
-        public void CopyStats(CharacterCalculationsHealadin calc)
-        {
-            calc.HSAvgHeal = hs.AverageHealed();
-            calc.HSCastTime = hs.CastTime();
-            calc.HSCost = hs.AverageCost();
-            calc.HSCrit = hs.ChanceToCrit();
-            calc.HSHPM = hs.HPM();
-            calc.HSHPS = hs.HPS();
-
-            calc.HLAvgHeal = hl.AverageHealed();
-            calc.HLCastTime = hl.CastTime();
-            calc.HLCost = hl.AverageCost();
-            calc.HLCrit = hl.ChanceToCrit();
-            calc.HLHPM = hl.HPM();
-            calc.HLHPS = hl.HPS();
-
-            calc.FoLAvgHeal = fol.AverageHealed();
-            calc.FoLCastTime = fol.CastTime();
-            calc.FoLCost = fol.AverageCost();
-            calc.FoLCrit = fol.ChanceToCrit();
-            calc.FoLHPM = fol.HPM();
-            calc.FoLHPS = fol.HPS();
-        }
 
     }
 }
