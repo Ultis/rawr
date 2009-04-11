@@ -70,6 +70,7 @@ namespace Rawr.Mage
         [Description("Living Bomb")]
         LivingBomb,
         ArcaneBlast3NoCC,
+        ArcaneBlastRaw,
         [Description("Arcane Blast (0)")]
         ArcaneBlast0,
         ArcaneBlast0NoCC,
@@ -776,13 +777,6 @@ namespace Rawr.Mage
         public float RawSpellDamage;
         public float AverageDamage;
 
-        public bool ManualClearcasting = false;
-        public bool ClearcastingAveraged;
-        public bool ClearcastingActive;
-        public bool ClearcastingProccing;
-        public bool ForceHit;
-        public bool ForceMiss;
-
         public float InterruptProtection;
 
         public float Cooldown { get { return template.Cooldown; } }
@@ -865,11 +859,14 @@ namespace Rawr.Mage
                     SpellModifier *= (1 + 0.06f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
                 }
             }
+        }
 
-            if (ManualClearcasting && !ClearcastingAveraged)
+        public void CalculateManualClearcasting(bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
+        {
+            if (manualClearcasting && !clearcastingAveraged)
             {
                 CritRate -= 0.15f * 0.02f * castingState.MageTalents.ArcaneConcentration * castingState.MageTalents.ArcanePotency; // replace averaged arcane potency with actual % chance
-                if (ClearcastingActive) CritRate += 0.15f * castingState.MageTalents.ArcanePotency;
+                if (clearcastingActive) CritRate += 0.15f * castingState.MageTalents.ArcanePotency;
             }
         }
 
@@ -883,15 +880,15 @@ namespace Rawr.Mage
 
         public void CalculateDerivedStats(CastingState castingState)
         {
-            CalculateDerivedStats(castingState, false, false, true, false);
+            CalculateDerivedStats(castingState, false, false, true, false, false, false);
         }
 
         public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot)
         {
-            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, false);
+            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, false, false, false);
         }
 
-        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round)
+        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round, bool forceHit, bool forceMiss)
         {
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
@@ -945,9 +942,9 @@ namespace Rawr.Mage
             if (baseStats.ShatteredSunAcumenProc > 0 && calculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
 
             SpammedDot = spammedDot;
-            if (!ForceMiss)
+            if (!forceMiss)
             {
-                AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, spellPower, spammedDot);
+                AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, spellPower, spammedDot, forceHit);
 
                 DamagePerSecond = AverageDamage / CastTime;
                 ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
@@ -975,14 +972,14 @@ namespace Rawr.Mage
             }*/
         }
 
-        public float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot)
+        public float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit)
         {
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + spellPower * SpellDamageCoefficient;
-            float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate - castingState.ResilienceCritRateReduction);
-            float resistMultiplier = (ForceHit ? 1.0f : HitRate) * PartialResistFactor;
+            float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
+            float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             int targets = 1;
             if (AreaEffect) targets = calculationOptions.AoeTargets;
-            float averageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (ForceHit ? 1.0f : HitRate);
+            float averageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (forceHit ? 1.0f : HitRate);
             if (AreaEffect && averageDamage > AoeDamageCap) averageDamage = AoeDamageCap;
             averageDamage = averageDamage * critMultiplier * PartialResistFactor;
             if (BasePeriodicDamage > 0.0f)
@@ -1004,20 +1001,42 @@ namespace Rawr.Mage
             float cost;
             if (round)
             {
-                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
             }
             else
             {
-                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
 
-            if (!ManualClearcasting || ClearcastingAveraged)
+            cost *= (1 - 0.02f * mageTalents.ArcaneConcentration);
+
+            // from what I know MOE works on base cost
+            // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
+            cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements;
+            return cost;
+        }
+
+        public void CalculateManualClearcastingCost(MageTalents mageTalents, bool round, bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
+        {
+            float cost;
+            if (round)
+            {
+                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+            }
+            else
+            {
+                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+            }
+
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+
+            if (!manualClearcasting || clearcastingAveraged)
             {
                 cost *= (1 - 0.02f * mageTalents.ArcaneConcentration);
             }
-            else if (ClearcastingActive)
+            else if (clearcastingActive)
             {
                 cost = 0;
             }
@@ -1025,7 +1044,7 @@ namespace Rawr.Mage
             // from what I know MOE works on base cost
             // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
             cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements;
-            return cost;
+            CostPerSecond = cost / CastTime;
         }
 
         public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
@@ -1120,7 +1139,7 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            return spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false);
+            return spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false);
         }
 
         protected SpellTemplate() { }
@@ -1469,7 +1488,7 @@ namespace Rawr.Mage
             spell.CritProcs = spell.HitProcs * spell.CritRate;
             spell.TargetProcs = spell.HitProcs;
 
-            spell.AverageDamage = spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false);
+            spell.AverageDamage = spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false);
 
             spell.DamagePerSecond = spell.AverageDamage / speed;
             spell.ThreatPerSecond = spell.DamagePerSecond * ThreatMultiplier;
@@ -1536,11 +1555,10 @@ namespace Rawr.Mage
         public virtual Spell GetSpell(CastingState castingState, bool clearcastingActive)
         {
             Spell spell = new Spell(this);
-            spell.ManualClearcasting = true;
-            spell.ClearcastingActive = clearcastingActive;
-            spell.ClearcastingAveraged = false;
             spell.Calculate(castingState);
+            spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.CalculateDerivedStats(castingState);
+            spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, false, clearcastingActive);
             return spell;
         }
 
@@ -1679,19 +1697,15 @@ namespace Rawr.Mage
         public Spell GetSpell(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom, bool averageFingersOfFrost)
         {
             Spell spell = new Spell(this);
-            if (manualClearcasting)
-            {
-                spell.ManualClearcasting = true;
-                spell.ClearcastingActive = clearcastingActive;
-                spell.ClearcastingAveraged = false;
-            }
             spell.Calculate(castingState);
+            if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
             }
             spell.CalculateDerivedStats(castingState, false, pom, false);
+            if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, false, clearcastingActive);
             return spell;
         }
 
@@ -2137,34 +2151,22 @@ namespace Rawr.Mage
         public Spell GetSpell(CastingState castingState, int debuff, bool manualClearcasting, bool clearcastingActive, bool pom)
         {
             Spell spell = new Spell(this);
-            if (manualClearcasting)
-            {
-                spell.ManualClearcasting = true;
-                spell.ClearcastingActive = clearcastingActive;
-                spell.ClearcastingAveraged = false;
-            }
             spell.Calculate(castingState);
+            if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            spell.CalculateDerivedStats(castingState, false, pom, false, true);
+            spell.CalculateDerivedStats(castingState, false, pom, false, true, false, false);
+            if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, false, clearcastingActive);
             return spell;
         }
 
         public Spell GetSpell(CastingState castingState, int debuff, bool forceHit)
         {
             Spell spell = new Spell(this);
-            if (forceHit)
-            {
-                spell.ForceHit = true;
-            }
-            else
-            {
-                spell.ForceMiss = true;
-            }
             spell.Calculate(castingState);
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            spell.CalculateDerivedStats(castingState, false, false, false, true);
+            spell.CalculateDerivedStats(castingState, false, false, false, true, forceHit, !forceHit);
             return spell;
         }
 
@@ -2175,8 +2177,36 @@ namespace Rawr.Mage
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += 2.00f * debuff;
-            spell.CalculateDerivedStats(castingState, false, false, false, true);
+            spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
             return spell;
+        }
+
+        public override Spell GetSpell(CastingState castingState)
+        {
+            Spell spell = new Spell(this);
+            spell.Calculate(castingState);
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
+            return spell;
+        }
+
+        public void AddToCycle(MageTalents mageTalents, Cycle cycle, Spell rawSpell, float weight0, float weight1, float weight2, float weight3)
+        {
+            float weight = weight0 + weight1 + weight2 + weight3;
+            cycle.CastTime += weight * rawSpell.CastTime;
+            cycle.CastProcs += weight * rawSpell.CastProcs;
+            cycle.Ticks += weight * rawSpell.Ticks;
+            cycle.HitProcs += weight * rawSpell.HitProcs;
+            cycle.CritProcs += weight * rawSpell.CritProcs;
+            cycle.TargetProcs += weight * rawSpell.TargetProcs;
+
+            double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
+            cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)));
+            cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
+
+            float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3);
+            cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
+            cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
         }
 
         private float arcaneBlastDamageMultiplier;
@@ -2316,16 +2346,15 @@ namespace Rawr.Mage
         public Spell GetSpell(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff, float ticks)
         {
             Spell spell = new Spell(this);
-            spell.ManualClearcasting = true;
-            spell.ClearcastingActive = clearcastingActive;
-            spell.ClearcastingAveraged = clearcastingAveraged;
-            spell.ClearcastingProccing = clearcastingProccing;
+            //spell.ClearcastingProccing = clearcastingProccing;
             spell.Calculate(castingState);
+            spell.CalculateManualClearcasting(true, clearcastingAveraged, clearcastingActive);
             spell.BaseCastTime = ticks;
             if (barrage) spell.BaseCastTime *= 0.5f;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime) * (1 + arcaneBlastDamageMultiplier * arcaneBlastDebuff);
             spell.SpellModifier *= ticks / 5.0f;
             spell.CalculateDerivedStats(castingState);
+            spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, clearcastingAveraged, clearcastingActive);
             return spell;
         }
 
@@ -2872,9 +2901,6 @@ namespace Rawr.Mage
             float K1, K2;
             Name = "AB3AM";
 
-            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
             Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
 
@@ -2882,9 +2908,20 @@ namespace Rawr.Mage
             K1 = (1 - MB) * (1 - MB) * (1 - MB);
             K2 = 1 - (1 - MB) * (1 - MB) * (1 - MB);
 
-            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
-            AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+                AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+                AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
+            }
             AddSpell(needsDisplayCalculations, AM3, K1);
             AddSpell(needsDisplayCalculations, MBAM3, K2);
 
@@ -4576,7 +4613,6 @@ namespace Rawr.Mage
         public ABSpam3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            Spell AB3;
             float MB, K1, K2, K3, K4, K5, S0, S1;
             Name = "ABSpam3C";
 
@@ -4597,14 +4633,10 @@ namespace Rawr.Mage
             // S0 = MB / (MB + (1-MB)*(1-MB)*(1-MB)*(1-MB))
             // S1 = (1-MB)*(1-MB)*(1-MB)*(1-MB) / (MB + (1-MB)*(1-MB)*(1-MB)*(1-MB))
 
-            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-            AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             //Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            //Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
             //Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
@@ -4616,12 +4648,24 @@ namespace Rawr.Mage
             K4 = S1 * MB;
             K5 = S1 * (1 - MB);
 
-            AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
-            AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
-            AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB3, K2 + 2 * K4 + K5);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+            }
             AddSpell(needsDisplayCalculations, MBAM3, K1 + K2 + K4);
             AddSpell(needsDisplayCalculations, ABar, K1 + K2 + K4);
-            AddSpell(needsDisplayCalculations, AB3, K2 + 2 * K4 + K5);
 
             Calculate();
         }
@@ -4632,7 +4676,6 @@ namespace Rawr.Mage
         public ABSpam03C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            Spell AB3;
             float MB, K1, K2, K3, K4, K5, K6, S0, S1;
             Name = "ABSpam03C";
 
@@ -4653,13 +4696,9 @@ namespace Rawr.Mage
             // S0 = MB / (MB + (1-MB)*(1-MB)*(1-MB)*(1-MB))
             // S1 = (1-MB)*(1-MB)*(1-MB)*(1-MB) / (MB + (1-MB)*(1-MB)*(1-MB)*(1-MB))
 
-            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-            AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            //Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
@@ -4672,14 +4711,26 @@ namespace Rawr.Mage
             K4 = S1 * MB;
             K5 = S1 * (1 - MB);
 
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB3, K2 + 2 * K4 + K5);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+            }
             AddSpell(needsDisplayCalculations, MBAM, K6);
             if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime, K6);
-            AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
-            AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
-            AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
             AddSpell(needsDisplayCalculations, MBAM3, K1 + K2 + K4);
             AddSpell(needsDisplayCalculations, ABar, K1 + K2 + K4 + K6);
-            AddSpell(needsDisplayCalculations, AB3, K2 + 2 * K4 + K5);
 
             Calculate();
         }
@@ -4690,7 +4741,6 @@ namespace Rawr.Mage
         public ABSpam3MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            Spell AB3;
             float MB, K1, K2, K3, K4, K5, S0, S1;
             Name = "ABSpam3MBAM";
 
@@ -4711,10 +4761,6 @@ namespace Rawr.Mage
             // S0 = MB / (MB + (1-MB)*(1-MB)*(1-MB))
             // S1 = (1-MB)*(1-MB)*(1-MB) / (MB + (1-MB)*(1-MB)*(1-MB))
 
-            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-            AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
@@ -4726,11 +4772,23 @@ namespace Rawr.Mage
             K4 = S1 * MB;
             K5 = S1 * (1 - MB);
 
-            AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
-            AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
-            AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                AddSpell(needsDisplayCalculations, AB3, K2 + 2 * K4 + K5);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+            }
             AddSpell(needsDisplayCalculations, MBAM3, K1 + K2 + K4);
-            AddSpell(needsDisplayCalculations, AB3, K2 + 2 * K4 + K5);
 
             Calculate();
         }
@@ -5078,9 +5136,6 @@ namespace Rawr.Mage
             // S0 = (1-MB) / [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
             // S1 = [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB)] / [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
 
-            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             //Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
@@ -5093,9 +5148,20 @@ namespace Rawr.Mage
             K1 = S0 * (1 - MB) * (1 - MB);
             K2 = S0 * (1 - (1 - MB) * (1 - MB)) + S1;
 
-            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
-            AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+                AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+                AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
+            }
             AddSpell(needsDisplayCalculations, ABar3, K1);
             AddSpell(needsDisplayCalculations, MBAM3, K2);
             AddSpell(needsDisplayCalculations, ABar, K2);
@@ -5127,9 +5193,6 @@ namespace Rawr.Mage
             // S0 = 1 / (1 + (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB)))
             // S1 = 1 - S0
 
-            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
 
@@ -5139,9 +5202,20 @@ namespace Rawr.Mage
             K1 = S0 * (1 - MB) * (1 - MB);
             K2 = S0 * (1 - (1 - MB) * (1 - MB)) + S1;
 
-            AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            AddSpell(needsDisplayCalculations, AB1, K1 + K2);
-            AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                AddSpell(needsDisplayCalculations, AB0, K1 + K2);
+                AddSpell(needsDisplayCalculations, AB1, K1 + K2);
+                AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
+            }
             AddSpell(needsDisplayCalculations, ABar3, K1);
             AddSpell(needsDisplayCalculations, MBAM3, K2);
 

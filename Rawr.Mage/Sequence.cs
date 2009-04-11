@@ -1049,7 +1049,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.WaterElemental) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental, VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseState.GlobalCooldown);
+            GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental, VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseGlobalCooldown);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1089,7 +1089,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.DrumsOfBattle) list.Add(item);
             }
-            List<SequenceGroup> groups = GroupCooldown(list, 30, 120, false, false, Cooldown.DrumsOfBattle, VariableType.DrumsOfBattle, SequenceItem.Calculations.BaseState.GlobalCooldown);
+            List<SequenceGroup> groups = GroupCooldown(list, 30, 120, false, false, Cooldown.DrumsOfBattle, VariableType.DrumsOfBattle, SequenceItem.Calculations.BaseGlobalCooldown);
         }
 
         private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, Cooldown type)

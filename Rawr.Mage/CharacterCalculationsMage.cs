@@ -244,6 +244,9 @@ namespace Rawr.Mage
         public float CritDamageReduction { get; set; }
         public float Dodge { get; set; }
 
+        public float BaseCastingSpeed { get; set; }
+        public float BaseGlobalCooldown { get; set; }
+
         public double IncomingDamageAmpMelee { get; set; }
         public double IncomingDamageAmpPhysical { get; set; }
         public double IncomingDamageAmpArcane { get; set; }
@@ -1002,7 +1005,7 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Drinking:
                             ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen);
@@ -1057,8 +1060,8 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
-                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             Spell waterbolt = WaterboltTemplate.GetSpell(SolutionVariable[i].State);
                             SpellContribution contrib;
                             if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
@@ -1125,11 +1128,11 @@ namespace Rawr.Mage
                 }
                 if (drums > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", drums / BaseState.GlobalCooldown));
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", drums / BaseGlobalCooldown));
                 }
                 if (we > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F}x", "Summon Water Elemental", we / BaseState.GlobalCooldown));
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Summon Water Elemental", we / BaseGlobalCooldown));
                 }
                 if (cmg > 0)
                 {

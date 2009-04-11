@@ -503,317 +503,235 @@ namespace Rawr.Mage
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)
         {
-            Stats statsRace;
+            float statsRaceHealth;
+            float statsRaceMana;
+            float statsRaceStrength;
+            float statsRaceAgility;
+            float statsRaceStamina;
+            float statsRaceIntellect;
+            float statsRaceSpirit;
             switch (calculationOptions.PlayerLevel)
             {
                 case 70:
+                    statsRaceHealth = 3213f;
+                    statsRaceMana = 1961f;
                     switch (character.Race)
                     {
                         case Character.CharacterRace.BloodElf:
-                            statsRace = new Stats()
-                            {
-                                Health = 3213f,
-                                Mana = 1961f,
-                                Strength = 28f,
-                                Agility = 42f,
-                                Stamina = 49f,
-                                Intellect = 149f,
-                                Spirit = 144,
-                            };
+                            statsRaceStrength = 28f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 49f;
+                            statsRaceIntellect = 149f;
+                            statsRaceSpirit = 144;
                             break;
                         case Character.CharacterRace.Draenei:
-                            statsRace = new Stats()
-                            {
-                                Health = 3213f,
-                                Mana = 1961f,
-                                Strength = 28f,
-                                Agility = 42f,
-                                Stamina = 50f,
-                                Intellect = 152f,
-                                Spirit = 147,
-                            };
-                            break;
-                        case Character.CharacterRace.Gnome:
-                            statsRace = new Stats()
-                            {
-                                Health = 3213f,
-                                Mana = 1961f,
-                                Strength = 28f,
-                                Agility = 42f,
-                                Stamina = 50f,
-                                Intellect = 154f,
-                                Spirit = 145,
-                            };
+                            statsRaceStrength = 28f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 50f;
+                            statsRaceIntellect = 152f;
+                            statsRaceSpirit = 147;
                             break;
                         case Character.CharacterRace.Human:
-                            statsRace = new Stats()
-                            {
-                                Health = 3213f,
-                                Mana = 1961f,
-                                Strength = 28f,
-                                Agility = 42f,
-                                Stamina = 51f,
-                                Intellect = 151f,
-                                Spirit = 145,
-                            };
+                            statsRaceStrength = 28f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 51f;
+                            statsRaceIntellect = 151f;
+                            statsRaceSpirit = 145;
                             break;
                         case Character.CharacterRace.Troll:
-                            statsRace = new Stats()
-                            {
-                                Health = 3213f,
-                                Mana = 1961f,
-                                Strength = 28f,
-                                Agility = 42f,
-                                Stamina = 52f,
-                                Intellect = 147f,
-                                Spirit = 146,
-                            };
+                            statsRaceStrength = 28f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 52f;
+                            statsRaceIntellect = 147f;
+                            statsRaceSpirit = 146;
                             break;
                         case Character.CharacterRace.Undead:
-                            statsRace = new Stats()
-                            {
-                                Health = 3213f,
-                                Mana = 1961f,
-                                Strength = 28f,
-                                Agility = 42f,
-                                Stamina = 52f,
-                                Intellect = 149f,
-                                Spirit = 150,
-                            };
+                            statsRaceStrength = 28f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 52f;
+                            statsRaceIntellect = 149f;
+                            statsRaceSpirit = 150;
                             break;
+                        case Character.CharacterRace.Gnome:
                         default:
-                            statsRace = new Stats();
+                            statsRaceStrength = 28f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 50f;
+                            statsRaceIntellect = 154f;
+                            statsRaceSpirit = 145;
                             break;
                     }
                     break;
                 case 71:
-                    statsRace = new Stats()
-                    {
-                        Health = 3308f,
-                        Mana = 2063f,
-                        Strength = 28f,
-                        Agility = 42f,
-                        Stamina = 51f,
-                        Intellect = 157f,
-                        Spirit = 148f,
-                    };
+                    statsRaceHealth = 3308f;
+                    statsRaceMana = 2063f;
+                    statsRaceStrength = 28f;
+                    statsRaceAgility = 42f;
+                    statsRaceStamina = 51f;
+                    statsRaceIntellect = 157f;
+                    statsRaceSpirit = 148f;
                     break;
                 case 72:
-                    statsRace = new Stats()
-                    {
-                        Health = 3406f,
-                        Mana = 2166f,
-                        Strength = 28f,
-                        Agility = 43f,
-                        Stamina = 52f,
-                        Intellect = 160f,
-                        Spirit = 151f,
-                    };
+                    statsRaceHealth = 3406f;
+                    statsRaceMana = 2166f;
+                    statsRaceStrength = 28f;
+                    statsRaceAgility = 43f;
+                    statsRaceStamina = 52f;
+                    statsRaceIntellect = 160f;
+                    statsRaceSpirit = 151f;
                     break;
                 case 73:
-                    statsRace = new Stats()
-                    {
-                        Health = 3505f,
-                        Mana = 2269f,
-                        Strength = 28f,
-                        Agility = 43f,
-                        Stamina = 53f,
-                        Intellect = 163f,
-                        Spirit = 154f,
-                    };
+                    statsRaceHealth = 3505f;
+                    statsRaceMana = 2269f;
+                    statsRaceStrength = 28f;
+                    statsRaceAgility = 43f;
+                    statsRaceStamina = 53f;
+                    statsRaceIntellect = 163f;
+                    statsRaceSpirit = 154f;
                     break;
                 case 74:
-                    statsRace = new Stats()
-                    {
-                        Health = 3623f,
-                        Mana = 2372f,
-                        Strength = 29f,
-                        Agility = 44f,
-                        Stamina = 53f,
-                        Intellect = 166f,
-                        Spirit = 156f,
-                    };
+                    statsRaceHealth = 3623f;
+                    statsRaceMana = 2372f;
+                    statsRaceStrength = 29f;
+                    statsRaceAgility = 44f;
+                    statsRaceStamina = 53f;
+                    statsRaceIntellect = 166f;
+                    statsRaceSpirit = 156f;
                     break;
                 case 75:
-                    statsRace = new Stats()
-                    {
-                        Health = 3726f,
-                        Mana = 2474f,
-                        Strength = 29f,
-                        Agility = 44f,
-                        Stamina = 54f,
-                        Intellect = 169f,
-                        Spirit = 159f,
-                    };
+                    statsRaceHealth = 3726f;
+                    statsRaceMana = 2474f;
+                    statsRaceStrength = 29f;
+                    statsRaceAgility = 44f;
+                    statsRaceStamina = 54f;
+                    statsRaceIntellect = 169f;
+                    statsRaceSpirit = 159f;
                     break;
                 case 76:
-                    statsRace = new Stats()
-                    {
-                        Health = 3830f,
-                        Mana = 2577f,
-                        Strength = 29f,
-                        Agility = 44f,
-                        Stamina = 55f,
-                        Intellect = 172f,
-                        Spirit = 162f,
-                    };
+                    statsRaceHealth = 3830f;
+                    statsRaceMana = 2577f;
+                    statsRaceStrength = 29f;
+                    statsRaceAgility = 44f;
+                    statsRaceStamina = 55f;
+                    statsRaceIntellect = 172f;
+                    statsRaceSpirit = 162f;
                     break;
                 case 77:
-                    statsRace = new Stats()
-                    {
-                        Health = 3937f,
-                        Mana = 2680f,
-                        Strength = 30f,
-                        Agility = 45f,
-                        Stamina = 56f,
-                        Intellect = 175f,
-                        Spirit = 165f,
-                    };
+                    statsRaceHealth = 3937f;
+                    statsRaceMana = 2680f;
+                    statsRaceStrength = 30f;
+                    statsRaceAgility = 45f;
+                    statsRaceStamina = 56f;
+                    statsRaceIntellect = 175f;
+                    statsRaceSpirit = 165f;
                     break;
                 case 78:
-                    statsRace = new Stats()
-                    {
-                        Health = 4063f,
-                        Mana = 2783f,
-                        Strength = 30f,
-                        Agility = 45f,
-                        Stamina = 56f,
-                        Intellect = 178f,
-                        Spirit = 168f,
-                    };
+                    statsRaceHealth = 4063f;
+                    statsRaceMana = 2783f;
+                    statsRaceStrength = 30f;
+                    statsRaceAgility = 45f;
+                    statsRaceStamina = 56f;
+                    statsRaceIntellect = 178f;
+                    statsRaceSpirit = 168f;
                     break;
                 case 79:
-                    statsRace = new Stats()
-                    {
-                        Health = 4172f,
-                        Mana = 2885f,
-                        Strength = 30f,
-                        Agility = 46f,
-                        Stamina = 57f,
-                        Intellect = 181f,
-                        Spirit = 171f,
-                    };
+                    statsRaceHealth = 4172f;
+                    statsRaceMana = 2885f;
+                    statsRaceStrength = 30f;
+                    statsRaceAgility = 46f;
+                    statsRaceStamina = 57f;
+                    statsRaceIntellect = 181f;
+                    statsRaceSpirit = 171f;
                     break;
                 case 80:
+                default:
+                    statsRaceHealth = 6783f;
+                    statsRaceMana = 2988f;
                     switch (character.Race)
                     {
                         case Character.CharacterRace.BloodElf:
-                            statsRace = new Stats()
-                            {
-                                Health = 6783f,
-                                Mana = 2988f,
-                                Strength = 33f,
-                                Agility = 45f,
-                                Stamina = 57f,
-                                Intellect = 185f,
-                                Spirit = 173f,
-                            };
+                            statsRaceStrength = 33f;
+                            statsRaceAgility = 45f;
+                            statsRaceStamina = 57f;
+                            statsRaceIntellect = 185f;
+                            statsRaceSpirit = 173f;
                             break;
                         case Character.CharacterRace.Draenei:
-                            statsRace = new Stats()
-                            {
-                                Health = 6783f,
-                                Mana = 2988f,
-                                Strength = 37f,
-                                Agility = 40f,
-                                Stamina = 58f,
-                                Intellect = 182f,
-                                Spirit = 176f,
-                            };
+                            statsRaceStrength = 37f;
+                            statsRaceAgility = 40f;
+                            statsRaceStamina = 58f;
+                            statsRaceIntellect = 182f;
+                            statsRaceSpirit = 176f;
                             break;
                         case Character.CharacterRace.Human:
-                            statsRace = new Stats()
-                            {
-                                Health = 6783f,
-                                Mana = 2988f,
-                                Strength = 36f,
-                                Agility = 43f,
-                                Stamina = 59f,
-                                Intellect = 181f,
-                                Spirit = 174f,
-                            };
+                            statsRaceStrength = 36f;
+                            statsRaceAgility = 43f;
+                            statsRaceStamina = 59f;
+                            statsRaceIntellect = 181f;
+                            statsRaceSpirit = 174f;
                             break;
                         case Character.CharacterRace.Troll:
-                            statsRace = new Stats()
-                            {
-                                Health = 6783f,
-                                Mana = 2988f,
-                                Strength = 37f,
-                                Agility = 45f,
-                                Stamina = 60f,
-                                Intellect = 177f,
-                                Spirit = 175f,
-                            };
+                            statsRaceStrength = 37f;
+                            statsRaceAgility = 45f;
+                            statsRaceStamina = 60f;
+                            statsRaceIntellect = 177f;
+                            statsRaceSpirit = 175f;
                             break;
                         case Character.CharacterRace.Undead:
-                            statsRace = new Stats()
-                            {
-                                Health = 6783f,
-                                Mana = 2988f,
-                                Strength = 35f,
-                                Agility = 41f,
-                                Stamina = 60f,
-                                Intellect = 179f,
-                                Spirit = 179f,
-                            };
+                            statsRaceStrength = 35f;
+                            statsRaceAgility = 41f;
+                            statsRaceStamina = 60f;
+                            statsRaceIntellect = 179f;
+                            statsRaceSpirit = 179f;
                             break;
                         case Character.CharacterRace.Gnome:
                         default:
-                            statsRace = new Stats()
-                            {
-                                Health = 6783f,
-                                Mana = 2988f,
-                                Strength = 31f,
-                                Agility = 46f,
-                                Stamina = 58f,
-                                Intellect = 184f,
-                                Spirit = 174f,
-                            };
+                            statsRaceStrength = 31f;
+                            statsRaceAgility = 46f;
+                            statsRaceStamina = 58f;
+                            statsRaceIntellect = 184f;
+                            statsRaceSpirit = 174f;
                             break;
                     }
                     break;
-                default:
-                    statsRace = new Stats();
-                    break;
             }
+            float statsRaceBonusIntellectMultiplier;
             if (character.Race == Character.CharacterRace.Gnome)
             {
-                statsRace.BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1.0f;
+                statsRaceBonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1.0f;
             }
             else
             {
-                statsRace.BonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind;
+                statsRaceBonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind;
             }
+            float statsRaceBonusSpiritMultiplier = 0.0f;
             if (character.Race == Character.CharacterRace.Human)
             {
-                statsRace.BonusSpiritMultiplier = 0.03f;
+                statsRaceBonusSpiritMultiplier = 0.03f;
             }
         
-            Stats statsGearEnchantsBuffs = rawStats;
+            Stats statsTotal = rawStats;
+            if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0) // we'll need raw stats to calculate evocation stats
+            {
+                statsTotal = rawStats.Clone();
+            }
 
             if (character.MageTalents.StudentOfTheMind > 0)
             {
-                statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1.01f + 0.03f * character.MageTalents.StudentOfTheMind) - 1;
+                statsTotal.BonusSpiritMultiplier = (1 + statsTotal.BonusSpiritMultiplier) * (1.01f + 0.03f * character.MageTalents.StudentOfTheMind) - 1;
             }
             if (calculationOptions.EffectSpiritBonus > 0)
             {
-                statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1f + calculationOptions.EffectSpiritBonus / 100f) - 1;
+                statsTotal.BonusSpiritMultiplier = (1 + statsTotal.BonusSpiritMultiplier) * (1f + calculationOptions.EffectSpiritBonus / 100f) - 1;
             }
-            float strength = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-            float agility = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-            float intellect = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-            float stamina = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-            float spirit = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
-            Stats statsTotal = statsRace;
-            statsTotal.Accumulate(statsGearEnchantsBuffs);
-            statsTotal.Strength = strength;
-            statsTotal.Agility = agility;
-            statsTotal.Intellect = intellect;
-            statsTotal.Stamina = stamina;
-            statsTotal.Spirit = spirit;
+            statsTotal.Strength = (float)Math.Floor(0.00001 + statsRaceStrength * (1 + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(0.00001 + statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor(0.00001 + statsRaceAgility * (1 + statsTotal.BonusAgilityMultiplier)) + (float)Math.Floor(0.00001 + statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(0.00001 + Math.Floor(statsRaceIntellect * (1 + statsRaceBonusIntellectMultiplier)) * (1 + statsTotal.BonusIntellectMultiplier)) + (float)Math.Floor(0.00001 + statsTotal.Intellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(0.00001 + statsRaceStamina * (1 + statsTotal.BonusStaminaMultiplier)) + (float)Math.Floor(0.00001 + statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(0.00001 + Math.Floor(statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier)) * (1 + statsTotal.BonusSpiritMultiplier)) + (float)Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTotal.BonusSpiritMultiplier));
 
-            statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + 15f * statsTotal.Intellect);
+            statsTotal.Health = (float)Math.Round(((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect);
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
 
             if (character.Race == Character.CharacterRace.BloodElf)

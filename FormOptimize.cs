@@ -232,40 +232,40 @@ namespace Rawr
         void _optimizer_OptimizeCharacterCompleted(object sender, OptimizeCharacterCompletedEventArgs e)
 		{
             buttonCancel.DialogResult = DialogResult.Cancel;
-			if (e.Cancelled)
-			{
-				labelMax.Text = string.Empty;
-				buttonOptimize.Text = "Optimize";
-				buttonCancel.Text = "Close";
-				buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-					trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-					checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
-					comboBoxCalculationToOptimize.Enabled = true;
-				foreach (Control ctrl in groupBoxRequirements.Controls)
-					ctrl.Enabled = true;
-				progressBarAlt.Value = progressBarMain.Value = 0;
-			}
-			else
-			{
-				progressBarAlt.Value = progressBarMain.Value = 100;
-				Character bestCharacter = e.OptimizedCharacter;
-				if (bestCharacter == null)
-				{
-					labelMax.Text = string.Empty;
-					buttonOptimize.Text = "Optimize";
-					buttonCancel.Text = "Close";
-					buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-						trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-						checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
-						comboBoxCalculationToOptimize.Enabled = true;
-					foreach (Control ctrl in groupBoxRequirements.Controls)
-						ctrl.Enabled = true;
-					progressBarAlt.Value = progressBarMain.Value = 0;
-					MessageBox.Show(this,"Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results");
-				}
+            if (e.Cancelled)
+            {
+                labelMax.Text = string.Empty;
+                buttonOptimize.Text = "Optimize";
+                buttonCancel.Text = "Close";
+                buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+                    trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+                    checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+                    comboBoxCalculationToOptimize.Enabled = true;
+                foreach (Control ctrl in groupBoxRequirements.Controls)
+                    ctrl.Enabled = true;
+                progressBarAlt.Value = progressBarMain.Value = 0;
+            }
+            else
+            {
+                progressBarAlt.Value = progressBarMain.Value = 100;
+                Character bestCharacter = e.OptimizedCharacter;
+                if (bestCharacter == null)
+                {
+                    labelMax.Text = string.Empty;
+                    buttonOptimize.Text = "Optimize";
+                    buttonCancel.Text = "Close";
+                    buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+                        trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+                        checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+                        comboBoxCalculationToOptimize.Enabled = true;
+                    foreach (Control ctrl in groupBoxRequirements.Controls)
+                        ctrl.Enabled = true;
+                    progressBarAlt.Value = progressBarMain.Value = 0;
+                    MessageBox.Show(this, "Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results");
+                }
 
                 if (_character != null)
-				{
+                {
                     OptimizerResults results = new OptimizerResults(_character, bestCharacter, checkBoxOptimizeTalents.Checked);
                     string msg = e.OptimizedCharacterValue >= 0 ?
                         string.Format("The Optimizer found a gearset with a score of {0}. (Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
@@ -289,22 +289,20 @@ namespace Rawr
                             FormMain.Instance.TalentPicker.Talents = _character.CurrentTalents;
                         }
                         Close();
+                        return;
                     }
-				}
-				else
-				{
-					labelMax.Text = string.Empty;
-					buttonOptimize.Text = "Optimize";
-					buttonCancel.Text = "Close";
-					buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
-						trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-						checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
-						comboBoxCalculationToOptimize.Enabled = true;
-					foreach (Control ctrl in groupBoxRequirements.Controls)
-						ctrl.Enabled = true;
-					progressBarAlt.Value = progressBarMain.Value = 0;
-				}
-			}
+                }
+                labelMax.Text = string.Empty;
+                buttonOptimize.Text = "Optimize";
+                buttonCancel.Text = "Close";
+                buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
+                    trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
+                    checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+                    comboBoxCalculationToOptimize.Enabled = true;
+                foreach (Control ctrl in groupBoxRequirements.Controls)
+                    ctrl.Enabled = true;
+                progressBarAlt.Value = progressBarMain.Value = 0;
+            }
 		}
 
         void _optimizer_ComputeUpgradesProgressChanged(object sender, ComputeUpgradesProgressChangedEventArgs e)

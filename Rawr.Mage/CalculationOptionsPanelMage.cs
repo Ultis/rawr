@@ -126,16 +126,12 @@ namespace Rawr.Mage
             string armor = "Molten Armor";
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            List<Buff> ignore;
-            Stats rawStats = calculations.GetRawStats(Character, null, calculationOptions, new List<Buff>(), armor, out ignore);
-            Stats characterStats = calculations.GetCharacterStats(Character, null, rawStats, calculationOptions);
-            CharacterCalculationsMage calculationResult = new CharacterCalculationsMage();
-            calculationResult.Calculations = calculations;
-            calculationResult.BaseStats = characterStats;
-            calculationResult.Character = Character;
-            calculationResult.CalculationOptions = calculationOptions;
-            CastingState baseState = new CastingState(calculationResult, armor, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
-            CastingState apState = new CastingState(calculationResult, armor, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
+            Stats rawStats;
+            Stats baseStats;
+            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
+            CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
+            CastingState apState = new CastingState(calculationResult, Cooldown.ArcanePower, false);
 
             StringBuilder sb = new StringBuilder();
 

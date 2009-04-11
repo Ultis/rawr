@@ -696,7 +696,7 @@ namespace Rawr.Mage
             {
                 resolution = lowResolution;
                 // drums
-                if (calculationOptions.DrumsOfBattle && !ValidateIntegralConsumableOverall(VariableType.DrumsOfBattle, calculationResult.BaseState.GlobalCooldown)) return false;
+                if (calculationOptions.DrumsOfBattle && !ValidateIntegralConsumableOverall(VariableType.DrumsOfBattle, calculationResult.BaseGlobalCooldown)) return false;
                 // drums
                 if (calculationOptions.DrumsOfBattle && !ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true, 30.0, rowSegmentDrumsOfBattle, VariableType.None)) return false;
                 // make sure all cooldowns are tightly packed and not fragmented
@@ -708,7 +708,7 @@ namespace Rawr.Mage
                 // pi
                 if (powerInfusionAvailable && !ValidateCooldown(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
-                if (waterElementalAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseState.GlobalCooldown)) return false;
+                if (waterElementalAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseGlobalCooldown)) return false;
                 if (waterElementalAvailable && !ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // combustion
                 if (combustionAvailable && !ValidateCooldown(Cooldown.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
@@ -2280,8 +2280,8 @@ namespace Rawr.Mage
                                     // VERY VERY special case, experimental
                                     // this IV has room to move around a bit and placing it at the very start
                                     // in many cases causes bad coldsnap interaction with WE, so nudge it a bit
-                                    coldsnapTimeMax += calculationResult.BaseState.GlobalCooldown;
-                                    lastIVstart += calculationResult.BaseState.GlobalCooldown;
+                                    coldsnapTimeMax += calculationResult.BaseGlobalCooldown;
+                                    lastIVstart += calculationResult.BaseGlobalCooldown;
                                 }
                                 ivStart.Add(lastIVstart);
                                 e1 = e2;
@@ -2580,7 +2580,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        branchlp.SetConstraintRHS(row, -calculationResult.BaseState.GlobalCooldown);
+                        branchlp.SetConstraintRHS(row, -calculationResult.BaseGlobalCooldown);
                     }
                     branchlp.ForceRecalculation(true);
                     HeapPush(branchlp);
@@ -3148,7 +3148,7 @@ namespace Rawr.Mage
                     {
                         if (SegmentContainsVariable(firstActivationSegment, VariableType.SummonWaterElemental))
                         {
-                            buffer = calculationResult.BaseState.GlobalCooldown;
+                            buffer = calculationResult.BaseGlobalCooldown;
                             // it is possible to force effect to the start of segment if we eliminate summoning
                             branchlp = lp.Clone();
                             if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", force to start of segment by eliminating summoning");

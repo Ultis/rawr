@@ -33,9 +33,9 @@ namespace Rawr.Mage
     {
         public CharacterCalculationsMage Calculations { get; private set; }
 
-        public CalculationOptionsMage CalculationOptions { get; private set; }
-        public MageTalents MageTalents { get; private set; }
-        public Stats BaseStats { get; private set; }
+        public CalculationOptionsMage CalculationOptions { get { return Calculations.CalculationOptions; } }
+        public MageTalents MageTalents { get { return Calculations.MageTalents; } }
+        public Stats BaseStats { get { return Calculations.BaseStats; } }
 
         public float SpellHit { get { return Calculations.BaseSpellHit; } }
         public float ArcaneHitRate { get { return Calculations.BaseArcaneHitRate; } }
@@ -55,7 +55,6 @@ namespace Rawr.Mage
         public float HolyThreatMultiplier { get { return Calculations.HolyThreatMultiplier; } }
 
         public float CastingSpeed { get; set; }
-        public float GlobalCooldown { get; set; }
 
         public float StateSpellPower { get; set; }
 
@@ -110,8 +109,8 @@ namespace Rawr.Mage
         public float FrostFireCritRate { get { return Combustion ? 3 / CombustionDuration : StateCritRate + Calculations.BaseFrostFireCritRate; } }
         public float HolyCritRate { get { return StateCritRate + Calculations.BaseHolyCritRate; } }
 
-        public float ResilienceCritDamageReduction { get; set; }
-        public float ResilienceCritRateReduction { get; set; }
+        //public float ResilienceCritDamageReduction { get; set; }
+        //public float ResilienceCritRateReduction { get; set; }
 
         public float Latency
         {
@@ -144,7 +143,6 @@ namespace Rawr.Mage
         public bool WaterElemental { get { return GetCooldown(Cooldown.WaterElemental); } }
         public bool PowerInfusion { get { return GetCooldown(Cooldown.PowerInfusion); } }
         public bool Frozen { get; set; }
-        public string MageArmor { get; set; }
 
         public Cooldown Cooldown { get; set; }
 
@@ -247,18 +245,18 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = new CastingState(Calculations, MageArmor, ArcanePower, MoltenFury, IcyVeins, Heroism, PotionOfWildMagic, PotionOfSpeed, FlameCap, Trinket1, Trinket2, Combustion, DrumsOfBattle, WaterElemental, ManaGemEffect, PowerInfusion, true);
+                        frozenState = new CastingState(Calculations, Cooldown, true);
                     }
                 }
                 return frozenState;
             }
         }
 
-        public CastingState(CharacterCalculationsMage calculations, string armor, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, bool powerInfusion, bool frozen)
+        public CastingState(CharacterCalculationsMage calculations, Cooldown cooldown, bool frozen)
         {
-            MageTalents = calculations.MageTalents;
-            BaseStats = calculations.BaseStats; // == characterStats
-            CalculationOptions = calculations.CalculationOptions;
+            //MageTalents = calculations.MageTalents;
+            //BaseStats = calculations.BaseStats; // == characterStats
+            //CalculationOptions = calculations.CalculationOptions;
             Character character = calculations.Character;
             this.Calculations = calculations;
 
@@ -270,31 +268,33 @@ namespace Rawr.Mage
             float stateCritRating = 0.0f;
             SpellHasteRating = BaseStats.HasteRating;
 
-            if (potionOfWildMagic)
+            Cooldown = cooldown;
+
+            if (PotionOfWildMagic)
             {
                 StateSpellPower += 200;
                 stateCritRating += 200;
             }
-            if (potionOfSpeed)
+            if (PotionOfSpeed)
             {
                 SpellHasteRating += 500;
             }
 
-            if (trinket1)
+            if (Trinket1)
             {
                 StateSpellPower += calculations.Trinket1SpellPower;
                 SpellHasteRating += calculations.Trinket1HasteRating;
             }
-            if (trinket2)
+            if (Trinket2)
             {
                 StateSpellPower += calculations.Trinket2SpellPower;
                 SpellHasteRating += calculations.Trinket2HasteRating;
             }
-            if (manaGemEffect)
+            if (ManaGemEffect)
             {
                 StateSpellPower += calculations.ManaGemEffectSpellPower;
             }
-            if (drums)
+            if (DrumsOfBattle)
             {
                 SpellHasteRating += 80;
             }
@@ -304,7 +304,7 @@ namespace Rawr.Mage
             StateCritRate = stateCritRating / 1400f * levelScalingFactor;
             if (frozen) StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
 
-            if (combustion)
+            if (Combustion)
             {
                 CombustionDuration = ComputeCombustion(calculations.BaseFireCritRate + StateCritRate);
             }
@@ -312,82 +312,41 @@ namespace Rawr.Mage
             // spell calculations
 
             Frozen = frozen;
-            MageArmor = armor;
 
-            Cooldown c = Cooldown.None;
-            if (arcanePower) c |= Cooldown.ArcanePower;
-            if (moltenFury) c |= Cooldown.MoltenFury;
-            if (icyVeins) c |= Cooldown.IcyVeins;
-            if (heroism) c |= Cooldown.Heroism;
-            if (potionOfWildMagic) c |= Cooldown.PotionOfWildMagic;
-            if (potionOfSpeed) c |= Cooldown.PotionOfSpeed;
-            if (flameCap) c |= Cooldown.FlameCap;
-            if (trinket1) c |= Cooldown.Trinket1;
-            if (trinket2) c |= Cooldown.Trinket2;
-            if (combustion) c |= Cooldown.Combustion;
-            if (drums) c |= Cooldown.DrumsOfBattle;
-            if (waterElemental) c |= Cooldown.WaterElemental;
-            if (manaGemEffect) c |= Cooldown.ManaGemEffect;
-            if (powerInfusion) c |= Cooldown.PowerInfusion;
-            Cooldown = c;
-
-            if (icyVeins)
+            if (IcyVeins)
             {
                 CastingSpeed *= 1.2f;
             }
-            if (heroism)
+            if (Heroism)
             {
                 CastingSpeed *= 1.3f;
             }
-            else if (powerInfusion)
+            else if (PowerInfusion)
             {
                 CastingSpeed *= 1.2f;
             }
             CastingSpeed *= (1f + BaseStats.SpellHaste);
             CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);
 
-            GlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / CastingSpeed);
-
             StateSpellModifier = 1.0f;
-            if (arcanePower)
+            if (ArcanePower)
             {
                 StateSpellModifier *= 1.2f;
             }
-            if (moltenFury)
+            if (MoltenFury)
             {
                 StateSpellModifier *= (1 + 0.06f * MageTalents.MoltenFury);
             }
 
-            ResilienceCritDamageReduction = 1;
-            ResilienceCritRateReduction = 0;
-
-            if (BaseStats.LightningCapacitorProc > 0)
-            {
-                LightningBoltAverageDamage = calculations.LightningBoltTemplate.GetEffectAverageDamage(this);
-            }
-            if (BaseStats.ThunderCapacitorProc > 0)
-            {
-                ThunderBoltAverageDamage = calculations.ThunderBoltTemplate.GetEffectAverageDamage(this);
-            }
-            if (BaseStats.LightweaveEmbroideryProc > 0)
-            {
-                LightweaveBoltAverageDamage = calculations.LightweaveBoltTemplate.GetEffectAverageDamage(this);
-            }
-            if (BaseStats.ShatteredSunAcumenProc > 0 && !CalculationOptions.Aldor)
-            {
-                ArcaneBoltAverageDamage = calculations.ArcaneBoltTemplate.GetEffectAverageDamage(this);
-            }
-            if (BaseStats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                PendulumOfTelluricCurrentsAverageDamage = calculations.PendulumOfTelluricCurrentsTemplate.GetEffectAverageDamage(this);
-            }
+            //ResilienceCritDamageReduction = 1;
+            //ResilienceCritRateReduction = 0;
         }
 
-        public float ArcaneBoltAverageDamage { get; set; }
-        public float LightningBoltAverageDamage { get; set; }
-        public float ThunderBoltAverageDamage { get; set; }
-        public float LightweaveBoltAverageDamage { get; set; }
-        public float PendulumOfTelluricCurrentsAverageDamage { get; set; }
+        public float ArcaneBoltAverageDamage { get { return Calculations.ArcaneBoltTemplate.GetEffectAverageDamage(this); } }
+        public float LightningBoltAverageDamage { get { return Calculations.LightningBoltTemplate.GetEffectAverageDamage(this); } }
+        public float ThunderBoltAverageDamage { get { return Calculations.ThunderBoltTemplate.GetEffectAverageDamage(this); } }
+        public float LightweaveBoltAverageDamage { get { return Calculations.LightweaveBoltTemplate.GetEffectAverageDamage(this); } }
+        public float PendulumOfTelluricCurrentsAverageDamage { get { return Calculations.PendulumOfTelluricCurrentsTemplate.GetEffectAverageDamage(this); } }
 
         //private static int CycleIdCount;
         //private static int SpellIdCount;
@@ -784,6 +743,9 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ArcaneBlast3NoCC:
                     s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true, false, false);
+                    break;
+                case SpellId.ArcaneBlastRaw:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this);
                     break;
                 case SpellId.ArcaneBlast0:
                     s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0);
