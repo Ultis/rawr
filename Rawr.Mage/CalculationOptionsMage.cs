@@ -79,6 +79,7 @@ namespace Rawr.Mage
         public float SnaredTime { get; set; }
         public bool Mode31 { get; set; }
         public float WarlockSpellPower { get; set; }
+        public float[] TalentScore { get; set; }
 
         [XmlIgnore]
         public Cooldown[] IncrementalSetStateIndexes;

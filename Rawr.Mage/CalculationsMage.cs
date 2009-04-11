@@ -1959,6 +1959,7 @@ namespace Rawr.Mage
                     "Fire Nondps Talents",
                     "Frost Nondps Talents",
                     "Partially Modeled Talents",
+                    "Talent Score",
 					};
                 return _optimizableCalculationLabels;
             }

@@ -1205,6 +1205,8 @@ namespace Rawr.Mage
                     return FrostNondpsTalents;
                 case "Partially Modeled Talents":
                     return PartiallyModeledTalents;
+                case "Talent Score":
+                    return TalentScore;
             }
             return 0;
         }
@@ -1238,6 +1240,23 @@ namespace Rawr.Mage
             get
             {
                 return MageTalents.ArcaneSubtlety + MageTalents.MagicAttunement + MageTalents.ArcaneShielding + MageTalents.ImprovedCounterspell + MageTalents.ImprovedBlink + MageTalents.PresenceOfMind + MageTalents.IncantersAbsorption + MageTalents.Slow + MageTalents.ImprovedFireBlast + MageTalents.BurningDetermination + MageTalents.FlameThrowing + MageTalents.Impact + MageTalents.BurningSoul + MageTalents.MoltenShields + MageTalents.BlastWave + MageTalents.BlazingSpeed + MageTalents.FieryPayback + MageTalents.DragonsBreath + MageTalents.Firestarter + MageTalents.Frostbite + MageTalents.FrostWarding + MageTalents.Permafrost + MageTalents.ImprovedBlizzard + MageTalents.ArcticReach + MageTalents.ImprovedConeOfCold + MageTalents.IceBarrier + MageTalents.ShatteredBarrier + MageTalents.DeepFreeze;
+            }
+        }
+
+        public float TalentScore
+        {
+            get
+            {
+                if (CalculationOptions.TalentScore == null || CalculationOptions.TalentScore.Length != MageTalents.Data.Length)
+                {
+                    return 0.0f;
+                }
+                float score = 0f;
+                for (int i = 0; i < MageTalents.Data.Length; i++)
+                {
+                    score += MageTalents.Data[i] * CalculationOptions.TalentScore[i];
+                }
+                return score;
             }
         }
 

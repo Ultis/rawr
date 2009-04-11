@@ -111,6 +111,12 @@
     <Compile Include="CooldownRestrictionsForm.Designer.cs">
       <DependentUpon>CooldownRestrictionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TalentScoreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TalentScoreForm.Designer.cs">
+      <DependentUpon>TalentScoreForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomSpellMixForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +166,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CooldownRestrictionsForm.resx">
       <DependentUpon>CooldownRestrictionsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TalentScoreForm.resx">
+      <DependentUpon>TalentScoreForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomSpellMixForm.resx">

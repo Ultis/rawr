@@ -281,5 +281,16 @@ namespace Rawr.Mage
             Properties.Settings.Default.Save();
             ArrayPool.MaximumPoolSize = (int)numericUpDownMaxThreads.Value;
         }
+
+        private void buttonEditTalentScores_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            if (calculationOptions.TalentScore == null || calculationOptions.TalentScore.Length != Character.MageTalents.Data.Length)
+            {
+                calculationOptions.TalentScore = new float[Character.MageTalents.Data.Length];
+            }
+            TalentScoreForm form = new TalentScoreForm(calculationOptions.TalentScore);
+            form.ShowDialog(this);
+        }
 	}
 }

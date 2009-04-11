@@ -1202,7 +1202,7 @@ namespace Rawr
 		    {
 		        if (_enchantCached == null || _enchantCached.Id != EnchantId)
 		        {
-		            _enchantCached = Enchant.FindEnchant(EnchantId, Item.Slot, null);
+		            _enchantCached = Enchant.FindEnchant(EnchantId, Item != null ? Item.Slot : Item.ItemSlot.None, null);
 		        }
 		        return _enchantCached;
 		    }
