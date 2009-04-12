@@ -12,6 +12,7 @@ namespace Rawr.Cat
 		public bool MaintainMangle { get; set; }
 		public bool GlyphOfShred { get; set; }
 		public float AttackSpeed { get; set; }
+		public float ChanceCrit { get; set; }
 		public bool OmenOfClarity { get; set; }
 		public float AvoidedAttacks { get; set; }
 		public float CPGEnergyCostMultiplier { get; set; }
@@ -37,9 +38,12 @@ namespace Rawr.Cat
 		public float BiteEnergy { get; set; }
 		public float RoarEnergy { get; set; }
 
+		//private float[] _chanceExactCP = new float[5];
+		private float[] _chanceExtraCP = new float[5];
+
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
 			float ripDuration, float rakeDuration, float savageRoarBonusDuration, float berserkDuration, float attackSpeed, 
-			bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float cpgEnergyCostMultiplier, float clearcastOnBleedChance,
+			bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float chanceCrit, float cpgEnergyCostMultiplier, float clearcastOnBleedChance,
 			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteDamage, 
 			float mangleEnergy, float shredEnergy, float rakeEnergy, float ripEnergy, float biteEnergy, float roarEnergy)
 		{
@@ -51,6 +55,7 @@ namespace Rawr.Cat
 			OmenOfClarity = omenOfClarity;
 			GlyphOfShred = glyphOfShred;
 			AvoidedAttacks = avoidedAttacks;
+			ChanceCrit = chanceCrit;
 			CPGEnergyCostMultiplier = cpgEnergyCostMultiplier;
 			ClearcastOnBleedChance = clearcastOnBleedChance;
 
@@ -73,6 +78,27 @@ namespace Rawr.Cat
 			RipEnergy = ripEnergy;
 			BiteEnergy = biteEnergy;
 			RoarEnergy = roarEnergy;
+
+			float c = chanceCrit, h = (1f - chanceCrit);
+			_chanceExtraCP[0] = c;
+			_chanceExtraCP[1] = c*h;
+			_chanceExtraCP[2] = c*c+c*h*h;
+			_chanceExtraCP[3] = 2*c*c*h+c*h*h*h;
+			_chanceExtraCP[4] = c*c*c+3*c*c*h*h+c*h*h*h*h;
+
+			//_chanceExactCP[0] = h;
+			//_chanceExactCP[1] = c+h*h;
+			//_chanceExactCP[2] = 2*c*h+h*h*h;
+			//_chanceExactCP[3] = c*c+3*c*h*h+h*h*h*h;
+			//_chanceExactCP[4] = 3*c*c*h+4*c*h*h*h+h*h*h*h*h;
+
+			//float total0 = _chanceExactCP[0] + _chanceExtraCP[0];
+			//float total1 = _chanceExactCP[1] + _chanceExtraCP[1];
+			//float total2 = _chanceExactCP[2] + _chanceExtraCP[2];
+			//float total3 = _chanceExactCP[3] + _chanceExtraCP[3];
+			//float total4 = _chanceExactCP[4] + _chanceExtraCP[4];
+
+			//ToString();
 		}
 
 		public CatRotationCalculation GetRotationCalculations(bool useRake, bool useShred, bool useRip, bool useFerociousBite, int roarCP)
@@ -133,10 +159,12 @@ namespace Rawr.Cat
 			#endregion
 
 			#region Savage Roar
-			float roarDuration = 9f + 5f * roarCP + SavageRoarBonusDuration;
+			float averageRoarCP = ((float)roarCP + 1f) * _chanceExtraCP[roarCP - 1]
+				+ ((float)roarCP) * (1f - _chanceExtraCP[roarCP - 1]);
+			float roarDuration = 9f + 5f * Math.Min(5f, averageRoarCP) + SavageRoarBonusDuration;
 			float roarCount = Duration / roarDuration;
 			float roarTotalEnergy = roarCount * RoarEnergy;
-			float roarCPRequired = roarCount * roarCP;
+			float roarCPRequired = roarCount * averageRoarCP;
 			if (totalCPAvailable < roarCPRequired)
 			{
 				float cpToGenerate = roarCPRequired - totalCPAvailable;
