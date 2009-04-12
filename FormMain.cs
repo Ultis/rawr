@@ -310,10 +310,8 @@ namespace Rawr
                 }
             }
             this.Text = sb.ToString();
-            if (Calculations.GetCharacterCalculations(Character) != null)
-                toolStripStatusLabel.Text = Calculations.GetCharacterCalculations(Character).GetStatusString();
-            else
-                toolStripStatusLabel.Text = sb.ToString();
+            CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character);
+            toolStripStatusLabel.Text = (calcs == null ? sb.ToString() : calcs.GetStatusString());
         }
 
 		void _character_AvailableItemsChanged(object sender, EventArgs e)

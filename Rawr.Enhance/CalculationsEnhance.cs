@@ -1371,7 +1371,7 @@ namespace Rawr
 
         public override string GetStatusString()
         {
-            return String.Format("Enhance Model : {0} DPS Points, {1} Survivability Points, {2} Overall Points",
+            return String.Format("Enhance Model : DPS Points {0}, Survivability Points {1}, Overall Points {2}",
                 DPSPoints.ToString("F2", CultureInfo.InvariantCulture),
                 SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture),
                 OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
