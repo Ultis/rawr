@@ -276,7 +276,8 @@ namespace Rawr
 		void _character_ClassChanged(object sender, EventArgs e)
 		{
 			_unsavedChanges = true;
-			string oldModel = (string)comboBoxModel.SelectedValue;
+            this.Cursor = Cursors.WaitCursor;
+            string oldModel = (string)comboBoxModel.SelectedValue;
 			if (string.IsNullOrEmpty(oldModel)) oldModel = ConfigModel;
 			comboBoxModel.Items.Clear();
 			List<string> items = new List<string>();
@@ -290,6 +291,7 @@ namespace Rawr
 			comboBoxModel.Items.AddRange(items.ToArray());
 			if (items.Contains(oldModel)) comboBoxModel.SelectedIndex = items.IndexOf(oldModel);
 			else if (comboBoxModel.Items.Count > 0) comboBoxModel.SelectedIndex = 0;
+            this.Cursor = Cursors.Default;
 		}
 
         private void SetTitle()
@@ -1646,14 +1648,18 @@ namespace Rawr
 
 		private void comboBoxModel_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			LoadModel((string)comboBoxModel.SelectedItem);
+            this.Cursor = Cursors.WaitCursor;
+            LoadModel((string)comboBoxModel.SelectedItem);
+            this.Cursor = Cursors.Default;
 		}
 
 		private void comboBoxClass_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter && _character != null)
 			{
-				Character.Class = (Character.CharacterClass)Enum.Parse(typeof(Character.CharacterClass), comboBoxClass.Text);
+                this.Cursor = Cursors.WaitCursor;
+                Character.Class = (Character.CharacterClass)Enum.Parse(typeof(Character.CharacterClass), comboBoxClass.Text);
+                this.Cursor = Cursors.Default;
 			}
 		}
 
