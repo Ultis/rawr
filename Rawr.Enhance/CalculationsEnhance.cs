@@ -1342,7 +1342,7 @@ namespace Rawr
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             
             dictValues.Add("Enhance Version", typeof(CalculationsEnhance).Assembly.GetName().Version.ToString());
-			
+
 			return dictValues;
 		}
 
@@ -1368,6 +1368,14 @@ namespace Rawr
 			}
 			return 0f;
 		}
+
+        public override string GetStatusString()
+        {
+            return String.Format("Enhance Model : {0} DPS Points, {1} Survivability Points, {2} Overall Points",
+                DPSPoints.ToString("F2", CultureInfo.InvariantCulture),
+                SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture),
+                OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
+        }
     }
 
     #region Comparison Calcs

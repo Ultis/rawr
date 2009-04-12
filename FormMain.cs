@@ -310,6 +310,10 @@ namespace Rawr
                 }
             }
             this.Text = sb.ToString();
+            if (Calculations.GetCharacterCalculations(Character) != null)
+                toolStripStatusLabel.Text = Calculations.GetCharacterCalculations(Character).GetStatusString();
+            else
+                toolStripStatusLabel.Text = sb.ToString();
         }
 
 		void _character_AvailableItemsChanged(object sender, EventArgs e)
@@ -607,7 +611,6 @@ namespace Rawr
             ItemCache.OnItemsChanged();
             _loadingCharacter = false;
             Character = Character; //Reload the character
-
 			_unsavedChanges = unsavedChanges;
 		}
 
