@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
+using System.Windows.Forms;
 using Rawr.Enhance;
 
 namespace Rawr
@@ -334,6 +335,7 @@ namespace Rawr
             stats.SpellPower += character.ShamanTalents.MentalQuickness * .1f * (stats.AttackPower - initialAP);
             #endregion
 
+
             ////////////////////////////
             // Main calculation Block //
             ////////////////////////////
@@ -596,11 +598,14 @@ namespace Rawr
             if (character.ShamanTalents.FeralSpirit == 1)
             {
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
-                float dogsAP = .3f * attackPower + FSglyphAP;
+                float soeBuff = IsBuffChecked("Strength of Earth Totem") ? 155f : 0f;
+                float enhTotems = IsBuffChecked("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
+                float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 and assume SoE totem giving 178 str buff
+                float dogsAP = (dogsStr * 2 -20) + .31f * attackPower + FSglyphAP;
                 float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / bloodlustHaste);
-                float dogsBaseDPS = 206f + dogsAP / 14f;
+                float dogsBaseDPS = 206.17f + dogsAP / 14f;
                 
                 float dogsMeleeNormal = dogsBaseDPS * (1 - dogsCrit - glancingRate);
                 float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
@@ -781,6 +786,26 @@ namespace Rawr
             return stats;
         }
         #endregion
+
+        private bool IsBuffChecked(string buffName)
+        {
+            TabControl tabs = Calculations.CalculationOptionsPanel.Parent.Parent as TabControl;
+            Control buffControl = tabs.TabPages[2].Controls[0];
+            Type buffControlType = buffControl.GetType();
+
+            if (buffControlType.FullName == "Rawr.BuffSelector")
+            {
+                PropertyInfo checkBoxesInfo = buffControlType.GetProperty("BuffCheckBoxes");
+                Dictionary<Buff, CheckBox> checkBoxes = checkBoxesInfo.GetValue(buffControl, null) as Dictionary<Buff, CheckBox>;
+                foreach (CheckBox checkbox in checkBoxes.Values)
+                {
+                    Buff buff = checkbox.Tag as Buff;
+                    if (buff.Name.Equals(buffName))
+                        return checkbox.Checked;
+                }
+            }
+            return false;
+        }
 
         public override void SetDefaults(Character character)
         {

@@ -312,7 +312,6 @@ namespace Rawr.Enhance
                 sb.AppendLine("spell_hit_chance_debuff         0.0/3.0"); //%, improved faerie fire, misery
                 sb.AppendLine("haste_buff                      0.0/3.0"); //%, improved moonkin aura, swift retribution
                 sb.AppendLine("percentage_damage_increase      0.0/3.0"); //%, ferocious inspiration, sanctified retribution
-                
                 sb.AppendLine("crit_chance_debuff              0.0/3.0"); //%, heart of the crusader, totem of wrath, master poisoner
                 sb.AppendLine("stat_multiplier                 0.0/10.0");//%, blessing of kings
                 sb.AppendLine("stat_add_buff                   0/52");    //mark of the wild
