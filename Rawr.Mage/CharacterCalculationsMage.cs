@@ -745,6 +745,7 @@ namespace Rawr.Mage
                 ret["Tps"] = "...";
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
+                ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
                 displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
                 SolverLogForm.Instance.EnableSolver(displaySolver);
                 CalculationOptions.SequenceReconstruction = null;
@@ -855,6 +856,7 @@ namespace Rawr.Mage
             dictValues.Add("Score", String.Format("{0:F}", OverallPoints));
             dictValues.Add("Dps", String.Format("{0:F}", DpsRating));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));
+            dictValues.Add("Status", String.Format("Score: {0:F}, Dps: {1:F}, Survivability: {2:F}", OverallPoints, DpsRating, SurvivabilityRating));
             dictValues.Add("Sequence", computeReconstruction ? ReconstructSequence() : "...");
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);

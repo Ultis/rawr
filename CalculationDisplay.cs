@@ -108,15 +108,19 @@ namespace Rawr
 			{
 				string[] valueSplit = kvp.Value.Split('*');
 				string value = valueSplit[0];
-                if (valueSplit.Length > 1)
+                ExtendedToolTipLabel label;
+                if (ValueLabels.TryGetValue(kvp.Key, out label))
                 {
-                    ValueLabels[kvp.Key].Text = value + " *";
-                    ValueLabels[kvp.Key].ToolTipText = valueSplit[1];
-                }
-                else
-                {
-                    ValueLabels[kvp.Key].Text = value;
-                    ValueLabels[kvp.Key].ToolTipText = "";
+                    if (valueSplit.Length > 1)
+                    {
+                        label.Text = value + " *";
+                        label.ToolTipText = valueSplit[1];
+                    }
+                    else
+                    {
+                        label.Text = value;
+                        label.ToolTipText = "";
+                    }
                 }
 			}
 		}

@@ -312,8 +312,6 @@ namespace Rawr
                 }
             }
             this.Text = sb.ToString();
-            CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character);
-            toolStripStatusLabel.Text = (calcs == null ? sb.ToString() : calcs.GetStatusString());
         }
 
 		void _character_AvailableItemsChanged(object sender, EventArgs e)
@@ -363,7 +361,7 @@ namespace Rawr
             AsyncCalculationResult result = (AsyncCalculationResult)arg;
             if (result.DisplayCalculationValues != null && result.Calculations == _calculatedStats)
             {
-                calculationDisplay1.SetCalculations(result.DisplayCalculationValues);
+                UpdateDisplayCalculationValues(result.DisplayCalculationValues);
                 // refresh chart if it's custom chart
                 foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
                 {
@@ -424,7 +422,7 @@ namespace Rawr
 			_calculatedStats = calcs;
 
 			FormItemSelection.CurrentCalculations = calcs;
-            calculationDisplay1.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
+            UpdateDisplayCalculationValues(calcs.GetCharacterDisplayCalculationValues());
             LoadComparisonData();
             if (calcs.RequiresAsynchronousDisplayCalculation)
             {
@@ -434,8 +432,18 @@ namespace Rawr
 
 			this.Cursor = Cursors.Default;
 			//and the ground below grew colder / as they put you down inside
-            SetTitle();
 		}
+
+        public void UpdateDisplayCalculationValues(Dictionary<string, string> displayCalculationValues)
+        {
+            calculationDisplay1.SetCalculations(displayCalculationValues);
+            string status;
+            if (!displayCalculationValues.TryGetValue("Status", out status))
+            {
+                status = "Rawr version " + typeof(Calculations).Assembly.GetName().Version.ToString();
+            }
+            toolStripStatusLabel.Text = status;
+        }
 
 		public void LoadModel(string displayName)
 		{

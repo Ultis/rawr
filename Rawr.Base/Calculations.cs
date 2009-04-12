@@ -1312,14 +1312,6 @@ namespace Rawr
         }
 
         /// <summary>
-        /// The Status string to appear on the status bar
-        /// </summary>
-        public virtual string GetStatusString()
-        {
-            return "Rawr version " + typeof(Calculations).Assembly.GetName().Version.ToString();
-        }
-
-        /// <summary>
         /// Same as GetCharacterDisplayCalculationValues, but used for long calculations.
         /// </summary>
         public virtual Dictionary<string, string> GetAsynchronousCharacterDisplayCalculationValues()
