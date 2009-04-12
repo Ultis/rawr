@@ -27,6 +27,7 @@ namespace Rawr
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             trackBarTargetArmor.Value = calcOpts.TargetArmor;
             trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime * 100);
+            cmbLength.Value = (decimal) calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
 
@@ -58,6 +59,7 @@ namespace Rawr
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
                 calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetArmor = trackBarTargetArmor.Value;
+                calcOpts.FightLength = (float)cmbLength.Value;
                 calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
                 calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
                 calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
@@ -106,10 +108,23 @@ namespace Rawr
 
         private void trackBarBloodlustUptime_Scroll(object sender, EventArgs e)
         {
-            CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-            labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
-            calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
-            Character.OnCalculationsInvalidated();
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
+                calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cmbLength_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.FightLength = (float)cmbLength.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
     }
 
@@ -136,6 +151,7 @@ namespace Rawr
 		public string ShattrathFaction = "Aldor";
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
+        public float FightLength = 5.0f;
         
     }
 }

@@ -195,8 +195,6 @@ namespace Rawr
             //_cachedCharacter = character;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             int targetLevel = calcOpts.TargetLevel;
-            float targetArmor = calcOpts.TargetArmor;
-            float bloodlustUptime = calcOpts.BloodlustUptime;
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -206,12 +204,12 @@ namespace Rawr
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
-            
+
+            // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
+            stats += getSpecialEffectStats(character, stats);
+
             //Set up some talent variables
             float initialAP = stats.AttackPower;
-            int TS = character.ShamanTalents.ThunderingStrikes;
-            int DWS = character.ShamanTalents.DualWieldSpecialization;
-            float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
@@ -229,12 +227,8 @@ namespace Rawr
                     windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
             }
-            float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + stats.BonusFlurryHaste;
-            float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
             float critMultiplierMelee = 2f + stats.BonusCritMultiplier;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury + stats.BonusSpellCritMultiplier;
-            float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon * (1 + stats.BonusMWFreq);
-            int stormstrikeSpeed = 8;
             float weaponMastery = 1f;
             switch (character.ShamanTalents.WeaponMastery){
                 case 1:
@@ -250,7 +244,8 @@ namespace Rawr
             float unleashedRage = 0f;
             if (calculatedStats.BuffStats.BonusAttackPowerMultiplier != .1f)
             {  // only apply unleashed rage talent if not already applied Unleashed Rage buff.
-                switch (character.ShamanTalents.UnleashedRage){
+                switch (character.ShamanTalents.UnleashedRage)
+                {
                     case 1:
                         unleashedRage = .04f;
                         break;
@@ -262,33 +257,20 @@ namespace Rawr
                         break;
                 }
             }
-            //gear stuff
-            string shattrathFaction = calcOpts.ShattrathFaction;
-            if (stats.ShatteredSunMightProc > 0)
-            {
-                switch (shattrathFaction)
-                {
-                    case "Aldor":
-                        stats.AttackPower += 39.13f;
-                        break;
-                }
-            }
 
-            float spellCritModifier = stats.SpellCrit;
+
+            //gear stuff
+            if (stats.ShatteredSunMightProc > 0 && calcOpts.ShattrathFaction == "Aldor")
+                stats.AttackPower += 39.13f;
+
             if (calcOpts.MainhandImbue == "Flametongue")
-            {
-                spellCritModifier += character.ShamanTalents.GlyphofFlametongueWeapon ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
-            }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
-            {
-                spellCritModifier += character.ShamanTalents.GlyphofFlametongueWeapon ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
-            }
             
             //totem procs
             stats.HasteRating += stats.LightningBoltHasteProc_15_45 * 10f / 55f; // exact copy of Elemental usage for totem (relic)
-            stats.HasteRating += stats.TotemSSHaste * 6f / stormstrikeSpeed;
+            stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
 
@@ -341,103 +323,22 @@ namespace Rawr
             ////////////////////////////
 
 			#region Damage Model
-            float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
-            float attackPower = stats.AttackPower;
-            float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating);
-            float expertiseBonus = 0.0025f * (stats.Expertise + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating));
-            float glancingRate = 0.24f;
+            CombatStats cs = new CombatStats(character, stats); // calculate the combat stats using modified stats
+            float attackPower = stats.AttackPower + (stats.AttackPower * unleashedRage * cs.URUptime);
 
-            float meleeCritModifier = stats.PhysicalCrit;
-            float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * TS;
-            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
-            float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
-            float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
-            float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
-
-            float hitBonusSpell = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating);
-            float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float baseSpellCrit = StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + .01f * TS;
-            float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
+            float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
+            float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) - 1f;
             float bonusLSDamage = stats.BonusLSDamage; // 2 piece T7 set bonus
-            float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
-            float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, character.Class);
-            float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
-            float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
-            float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
-            float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
+            #endregion
 
-            float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
-            float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
-
-            //XXX: Only MH WF for now
-            float chanceToProcWFPerHit = .2f + (character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
-            float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
-
-            //The Swing Loop
-            //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
-            //It's also where we'll figure out GCD interference when we model that.
-            //--------------
-            float flurryUptime = 1f;
-            float edUptime = 0f;
-            float urUptime = 0f;
-            float bloodlustHaste = 1 + (bloodlustUptime * stats.Bloodlust);
-            float hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
-            float hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
-            float hitsPerSMHSS = (1f - chanceYellowMiss) / stormstrikeSpeed;
-            float hitsPerSOHSS = character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMiss) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
-            float hitsPerSLL = (1f - chanceYellowMiss) / 6f;
-            float swingsPerSMHMelee = 0f;
-            float swingsPerSOHMelee = 0f;
-            float wfProcsPerSecond = 0f;
-            float mwProcsPerSecond = 0f;
-            float secondsToFiveStack = 10f;
-            float averageMeleeCritChance = chanceYellowCrit;
-            float earthShocksPerS = (1f - chanceSpellMiss) / shockSpeed;
-            float couldCritSwingsPerSecond = 0f;
-            float hitsPerSOH = 0f;
-            float hitsPerSMH = 0f;
-            float hitsPerSWF = 0f;
-            for (int i = 0; i < 5; i++)
-            {
-                float bonusHaste = (1f + (flurryUptime * flurryHasteBonus)) * bloodlustHaste;
-                hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
-                hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
-                swingsPerSMHMelee = 1f / hastedMHSpeed;
-                swingsPerSOHMelee = 1f / hastedOHSpeed;
-                //Flat Windfury Society
-                float hitsThatProcWFPerS = (1f - chanceWhiteMiss) * swingsPerSMHMelee + hitsPerSMHSS;
-                float windfuryTimeToFirstHit = hastedMHSpeed - (3 % hastedMHSpeed);
-                //later -- //windfuryTimeToFirstHit = hasted
-                wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * hitsThatProcWFPerS));
-                hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMiss);
-
-                //Due to attack table, a white swing has the same chance to crit as a yellow hit
-                couldCritSwingsPerSecond = swingsPerSMHMelee + swingsPerSOHMelee + hitsPerSMHSS + hitsPerSOHSS + hitsPerSLL + hitsPerSWF;
-                float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
-                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);
-
-                hitsPerSMH = swingsPerSMHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSWF + hitsPerSMHSS;
-                if (character.ShamanTalents.DualWield == 1)
-                    hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSOHSS + hitsPerSLL;
-                mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH + (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
-                secondsToFiveStack /* oh but i want it now! */ = 5 / mwProcsPerSecond;
-
-                float couldCritSpellsPerS = (earthShocksPerS + 1 / secondsToFiveStack) * (1f - chanceSpellMiss);
-                edUptime = 1f - (float)Math.Pow(1-chanceSpellCrit, 10 * couldCritSpellsPerS);
-                
-                averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
-            }
-            urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
-            attackPower += attackPower * unleashedRage * urUptime; 
-            float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
-                    
+            #region Old Enchants
+            /*                   
             if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
             {
                 if (character.MainHandEnchant != null)
@@ -450,7 +351,7 @@ namespace Rawr
                         float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
                         chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
                         attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
-                        baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
+                        basecs.HastedMHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
                     if (character.MainHandEnchant.Id == 3789) // Berserker Enchant
                     {
@@ -469,7 +370,7 @@ namespace Rawr
                         float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
                         chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
                         attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
-                        baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
+                        basecs.HastedOHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
                     if (character.OffHandEnchant.Id == 3789) // Berserker Enchant
                     {
@@ -479,7 +380,9 @@ namespace Rawr
                     }
                 }
             }
-           
+ */
+            #endregion
+
             #endregion
 
             #region Individual DPS
@@ -488,39 +391,39 @@ namespace Rawr
             float adjustedMHDPS = (wdpsMH + APDPS);
             float adjustedOHDPS = (wdpsOH + APDPS) * .5f;
 
-            float dpsMHMeleeNormal = adjustedMHDPS * (1 - chanceWhiteCrit - glancingRate);
-            float dpsMHMeleeCrits = adjustedMHDPS * chanceWhiteCrit * critMultiplierMelee;
-            float dpsMHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
+            float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitPercentage;
+            float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitPercentage;
+            float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitPercentage;
 
-            float dpsOHMeleeNormal = adjustedOHDPS * (1 - chanceWhiteCrit - glancingRate);
-            float dpsOHMeleeCrits = adjustedOHDPS * chanceWhiteCrit * critMultiplierMelee;
-            float dpsOHMeleeGlances = adjustedOHDPS * glancingRate * .35f;
+            float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitPercentage;
+            float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitPercentage;
+            float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitPercentage;
 
-            float meleeMultipliers = weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
+            float meleeMultipliers = weaponMastery * cs.DamageReduction * cs.ChanceWhiteHit * (1 + bonusPhysicalDamage);
 
-            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * unhastedMHSpeed / hastedMHSpeed) * meleeMultipliers;
-            float dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * unhastedOHSpeed / hastedOHSpeed) * meleeMultipliers;
+            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
+            float dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
             float dpsMelee = dpsMHMeleeTotal + (character.ShamanTalents.DualWield == 1 ? dpsOHMeleeTotal : 0f);
                               
 
             //2: Stormstrike DPS
-            float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
-            float damageOHSwing = adjustedOHDPS * unhastedOHSpeed;
+            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
+            float damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1)
             {
-                float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
-                float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
+                float dpsMHSS = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * cs.HitsPerSMHSS;
+                float dpsOHSS = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSOHSS;
                 if (character.ShamanTalents.DualWield == 0)
                     dpsOHSS = 0f;
-                dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
+                dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * cs.DamageReduction * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
             }
 
             //3: Lavalash DPS
             float dpsLL = 0f;
             if (character.ShamanTalents.LavaLash == 1)
             {
-                dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL
+                dpsLL = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSLL
                       * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
                 {  // 25% bonus dmg if FT imbue in OH
@@ -537,7 +440,8 @@ namespace Rawr
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellDamage);
-            float hitRollMultiplier = (1 - chanceSpellMiss) + chanceSpellCrit * (critMultiplierSpell - 1);
+            float hitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
+            float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
             float dpsES = (hitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage);
 
             //5: Lightning Bolt DPS
@@ -545,8 +449,8 @@ namespace Rawr
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
             float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
-            float lbhitRollMultiplier = (1 - chanceSpellMiss) + (chanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
-            float dpsLB = (lbhitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
+            float lbhitRollMultiplier = cs.ChanceSpellHit + (cs.ChanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
+            float dpsLB = (lbhitRollMultiplier * damageLB / cs.SecondsToFiveStack) * (1 + bonusNatureDamage);
             if (character.ShamanTalents.GlyphofLightningBolt)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             if (stats.PendulumOfTelluricCurrentsProc > 0)
@@ -556,17 +460,17 @@ namespace Rawr
             float dpsWF = 0f;
             if (calcOpts.MainhandImbue == "Windfury")
             {
-                float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * unhastedMHSpeed);
-                dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF
-                        * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusPhysicalDamage);
+                float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * cs.UnhastedMHSpeed);
+                dpsWF = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * cs.HitsPerSWF
+                        * cs.DamageReduction * cs.ChanceYellowHit * (1 + bonusPhysicalDamage);
             }
 
             //7: Lightning Shield DPS
-            float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
+            float staticShockProcsPerS = (cs.HitsPerSMH + cs.HitsPerSOH) * staticShockChance;
             float damageLSBase = 380;
             float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
-            float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage);
+            float dpsLS = cs.ChanceSpellHit * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage);
             if (character.ShamanTalents.GlyphofLightningShield)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
@@ -580,39 +484,41 @@ namespace Rawr
             float dpsFT = 0f;
             if (calcOpts.MainhandImbue == "Flametongue")
             {
-                float damageFTBase = 274 * unhastedMHSpeed / 4.0f;
-                float damageFTCoef = 0.03811f * unhastedMHSpeed;
+                float damageFTBase = 274 * cs.UnhastedMHSpeed / 4.0f;
+                float damageFTCoef = 0.03811f * cs.UnhastedMHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT += hitRollMultiplier * damageFT * hitsPerSMH * (1 + bonusFireDamage);
+                dpsFT += hitRollMultiplier * damageFT * cs.HitsPerSMH * (1 + bonusFireDamage);
             }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
-                float damageFTBase = 274 * unhastedOHSpeed / 4.0f;
-                float damageFTCoef = 0.03811f * unhastedOHSpeed;
+                float damageFTBase = 274 * cs.UnhastedOHSpeed / 4.0f;
+                float damageFTCoef = 0.03811f * cs.UnhastedOHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT += hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
+                dpsFT += hitRollMultiplier * damageFT * cs.HitsPerSOH * (1 + bonusFireDamage);
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
             {
+                float glancingRate = 0.24f;
+                float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating);
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
                 float soeBuff = IsBuffChecked("Strength of Earth Totem") ? 155f : 0f;
                 float enhTotems = IsBuffChecked("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 and assume SoE totem giving 178 str buff
                 float dogsAP = (dogsStr * 2 -20) + .31f * attackPower + FSglyphAP;
-                float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + 0.065f;
+                float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * character.ShamanTalents.DualWieldSpecialization) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
-                float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / bloodlustHaste);
+                float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
                 float dogsBaseDPS = 206.17f + dogsAP / 14f;
                 
                 float dogsMeleeNormal = dogsBaseDPS * (1 - dogsCrit - glancingRate);
                 float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
-                float dogsMeleeGlances = dogsBaseDPS * glancingRate * .35f;
+                float dogsMeleeGlances = dogsBaseDPS * cs.GlancingHitPercentage;
                 
                 float dogsTotalDPS = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
-                float dogsMultipliers = (1 - damageReduction) * (1 - dogsMissrate) * (1 + bonusPhysicalDamage);
+                float dogsMultipliers = cs.DamageReduction * (1 - dogsMissrate) * (1 + bonusPhysicalDamage);
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
             }
@@ -621,24 +527,23 @@ namespace Rawr
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
-			calculatedStats.AvoidedAttacks = chanceWhiteMiss * 100f;
-			calculatedStats.DodgedAttacks = chanceDodge * 100f;
+			calculatedStats.AvoidedAttacks = (1 - cs.ChanceWhiteHit) * 100f;
+			calculatedStats.DodgedAttacks = cs.ChanceDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
-            calculatedStats.YellowHit = (float)Math.Floor((1 - chanceYellowMiss) * 10000f) / 100f;
-            calculatedStats.SpellHit = (float)Math.Floor((1 - chanceSpellMiss) * 10000f) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor((1 - chanceWhiteMiss) * 10000f) / 100f; 
-            calculatedStats.MeleeCrit = (float)Math.Floor(chanceWhiteCrit * 10000f) / 100f;
-            calculatedStats.YellowCrit = (float)Math.Floor(chanceYellowCrit * 10000f) / 100f;
-            calculatedStats.SpellCrit = (float)Math.Floor(chanceSpellCrit * 10000f) / 100f;
-            calculatedStats.AttackSpeed = unhastedOHSpeed / (1f + .3f) / (1f + .2f) / (1f + hasteBonus);
-			calculatedStats.ArmorMitigation = damageReduction * 100f;
-            calculatedStats.AvMHSpeed = hastedMHSpeed;
-            calculatedStats.AvOHSpeed = hastedOHSpeed;
-            calculatedStats.EDUptime = edUptime * 100f;
-            calculatedStats.URUptime = urUptime  * 100f;
-            calculatedStats.FlurryUptime = flurryUptime * 100f;
-            calculatedStats.SecondsTo5Stack = secondsToFiveStack;
-            calculatedStats.TotalExpertise = (float) Math.Floor(expertiseBonus * 400f + 0.0001);
+            calculatedStats.YellowHit = (float)Math.Floor(cs.ChanceYellowHit * 10000f) / 100f;
+            calculatedStats.SpellHit = (float)Math.Floor(cs.ChanceSpellHit * 10000f) / 100f;
+            calculatedStats.WhiteHit = (float)Math.Floor(cs.ChanceWhiteHit * 10000f) / 100f; 
+            calculatedStats.MeleeCrit = (float)Math.Floor(cs.ChanceWhiteCrit * 10000f) / 100f;
+            calculatedStats.YellowCrit = (float)Math.Floor(cs.ChanceYellowCrit * 10000f) / 100f;
+            calculatedStats.SpellCrit = (float)Math.Floor(cs.ChanceSpellCrit * 10000f) / 100f;
+			calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
+            calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
+            calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
+            calculatedStats.EDUptime = cs.EDUptime * 100f;
+            calculatedStats.URUptime = cs.URUptime  * 100f;
+            calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
+            calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
+            calculatedStats.TotalExpertise = (float) Math.Floor(cs.ExpertiseBonus * 400f + 0.0001);
             
             calculatedStats.SwingDamage = dpsMelee;
             calculatedStats.Stormstrike = dpsSS;
@@ -653,7 +558,7 @@ namespace Rawr
 
 			return calculatedStats;
         }
-        #endregion 
+
 
         #region Get Race Stats
         private Stats GetRaceStats(Character character)
@@ -787,6 +692,62 @@ namespace Rawr
         }
         #endregion
 
+        #region Special Effects
+        private Stats getSpecialEffectStats(Character character, Stats stats)
+        {
+            Stats statsAverage = new Stats();
+            CombatStats cs = new CombatStats(character, stats);
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use)
+                {
+                    statsAverage += effect.GetAverageStats();
+                }
+                else
+                {
+                    float trigger = 0;
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.MeleeCrit :
+                        case Trigger.PhysicalCrit :
+                            trigger = 1f / cs.GetMeleeCritsPerSec();
+                            break;
+                        case Trigger.MeleeHit :
+                        case Trigger.PhysicalHit :
+                            trigger = 1f / cs.GetMeleeAttacksPerSec();
+                            break;
+                        case Trigger.DamageSpellCast :
+                        case Trigger.SpellCast :
+                             trigger = 1f / cs.GetSpellCastsPerSec();
+                            break;
+                       case Trigger.DamageSpellHit :
+                        case Trigger.SpellHit :
+                            trigger = 1f / cs.GetSpellAttacksPerSec();
+                            break;
+                        case Trigger.DamageSpellCrit :
+                        case Trigger.SpellCrit :
+                            trigger = 1f / cs.GetSpellCritsPerSec();
+                            break;
+                        case Trigger.SpellMiss :
+                            trigger = 1f / cs.GetSpellMissesPerSec();
+                            break;
+                    }
+
+                    if (effect.MaxStack > 1)
+                    {
+                        float timeToMax = (float)Math.Min(cs.FightLength, effect.GetChance(cs.AttackSpeed) * trigger * effect.MaxStack);
+                        statsAverage += effect.Stats * (effect.MaxStack * ((cs.FightLength - .5f * timeToMax) / cs.FightLength));
+                    }
+                    else
+                    {
+                        statsAverage += effect.GetAverageStats(trigger, 1f, cs.AttackSpeed);
+                    }
+                }
+            }
+            return statsAverage;
+        }
+        #endregion
+        
         private bool IsBuffChecked(string buffName)
         {
             TabControl tabs = Calculations.CalculationOptionsPanel.Parent.Parent as TabControl;
@@ -935,7 +896,7 @@ namespace Rawr
 
 		public override Stats GetRelevantStats(Stats stats)
 		{
-			return new Stats()
+			Stats s = new Stats()
 				{
 					Agility = stats.Agility,
 					Strength = stats.Strength,
@@ -997,10 +958,36 @@ namespace Rawr
                     SpellHaste = stats.SpellHaste,
                     SpellCrit = stats.SpellCrit
 				};
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger != Trigger.ManaGem || effect.Trigger != Trigger.HealingSpellCast || effect.Trigger != Trigger.HealingSpellCrit ||
+                    effect.Trigger != Trigger.HealingSpellHit)
+                {
+                    if (relevantStats(effect.Stats))
+                        s.AddSpecialEffect(effect);
+                }
+            }
+            return s;
 		}
 
 		public override bool HasRelevantStats(Stats stats)
 		{
+            if (relevantStats(stats))
+                return true;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger != Trigger.ManaGem || effect.Trigger != Trigger.HealingSpellCast || effect.Trigger != Trigger.HealingSpellCrit ||
+                    effect.Trigger != Trigger.HealingSpellHit)
+                {
+                    if (relevantStats(effect.Stats))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private bool relevantStats(Stats stats)
+        {
             return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect + stats.Expertise +
                 stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
                 stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating + stats.HasteRating +
@@ -1152,13 +1139,6 @@ namespace Rawr
             get { return _spellHit; }
             set { _spellHit = value; }
         }
-
-		private float _attackSpeed;
-		public float AttackSpeed
-		{
-			get { return _attackSpeed; }
-			set { _attackSpeed = value; }
-		}
 
 		private float _armorMitigation;
 		public float ArmorMitigation

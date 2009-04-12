@@ -49,11 +49,14 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -68,6 +71,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label12);
+            this.tabPage1.Controls.Add(this.cmbLength);
             this.tabPage1.Controls.Add(this.chbMagmaSearing);
             this.tabPage1.Controls.Add(this.chbBaseStatOption);
             this.tabPage1.Controls.Add(this.labelTargetArmorDescription);
@@ -280,7 +285,7 @@
             "83"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(74, 13);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(59, 21);
             this.comboBoxTargetLevel.TabIndex = 21;
             // 
             // label1
@@ -325,6 +330,44 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(139, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(69, 13);
+            this.label12.TabIndex = 36;
+            this.label12.Text = "Fight Length:";
+            // 
+            // cmbLength
+            // 
+            this.cmbLength.DecimalPlaces = 1;
+            this.cmbLength.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.cmbLength.Location = new System.Drawing.Point(214, 14);
+            this.cmbLength.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.cmbLength.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cmbLength.Name = "cmbLength";
+            this.cmbLength.Size = new System.Drawing.Size(44, 20);
+            this.cmbLength.TabIndex = 35;
+            this.cmbLength.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.cmbLength.ValueChanged += new System.EventHandler(this.cmbLength_ValueChanged);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -340,6 +383,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -367,6 +411,8 @@
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
         private System.Windows.Forms.CheckBox chbMagmaSearing;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown cmbLength;
 
     }
 }
