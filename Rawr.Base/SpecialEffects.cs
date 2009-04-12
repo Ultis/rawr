@@ -822,6 +822,7 @@ namespace Rawr
             {
                 // Extract of Necromantic Power
                 stats.ExtractOfNecromanticPowerProc += 1;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { ShadowDamage = 1050f }, 1f, 45f, .1f));
             }
             else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 744 to 956 Shadow damage."))
             {

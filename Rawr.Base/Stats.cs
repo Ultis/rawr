@@ -306,7 +306,8 @@ namespace Rawr
 		DreadnaughtBonusRageProc,
         #endregion
         ArcaneDamage,
-        FireDamage
+        FireDamage,
+        ShadowDamage,
     }
 
     enum MultiplicativeStat : int
@@ -434,6 +435,7 @@ namespace Rawr
         PhysicalHit,
         PhysicalCrit,
         ManaGem,
+        DoTTick,
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
@@ -2552,6 +2554,15 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.ArcaneDamage] = value; }
         }
 
+        // Bandit's Insignia
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Arcane Damage")]
+        [Category("Equipment Effects")]
+        public float ShadowDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShadowDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShadowDamage] = value; }
+        }
 
         // Hand Mounted Pyro Rocket
         [System.ComponentModel.DefaultValueAttribute(0f)]
