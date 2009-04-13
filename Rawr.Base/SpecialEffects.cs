@@ -818,6 +818,7 @@ namespace Rawr
             {
                 // Pendulum of Telluric Currents
                 stats.PendulumOfTelluricCurrentsProc += 1;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { ShadowDamage = 1460 }, 1f, 45f, .1f));
             }
             else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
             {

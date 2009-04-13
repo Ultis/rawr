@@ -275,11 +275,6 @@ namespace Rawr
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
 
-            stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
-            stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
-            stats.HasteRating += stats.SpellHasteFor10SecOnCast_10_45 * 10f / 45f;
-            stats.SpellPower += stats.SpellPowerFor10SecOnCast_15_45 * 10f / 45f;
-            stats.SpellPower += stats.SpellPowerFor10SecOnHit_10_45 * 10f / 45f;
             // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
             stats.SpellPower += character.ShamanTalents.MentalQuickness * .1f * (stats.AttackPower - initialAP);
             #endregion
@@ -420,8 +415,6 @@ namespace Rawr
             float dpsLB = (lbhitRollMultiplier * damageLB / cs.SecondsToFiveStack) * (1 + bonusNatureDamage);
             if (character.ShamanTalents.GlyphofLightningBolt)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
-            if (stats.PendulumOfTelluricCurrentsProc > 0)
-                dpsLB += (1168f + 1752f) / 2f / 45f; // need to put the bonus dmg somewhere this seems as good a place as any, not great place though :(
             
             //6: Windfury DPS
             float dpsWF = 0f;
@@ -856,12 +849,6 @@ namespace Rawr
                     BonusFlurryHaste = stats.BonusFlurryHaste,
                     BonusMWFreq = stats.BonusMWFreq,
                     BonusLLSSDamage = stats.BonusLLSSDamage,
-                    HasteRatingOnPhysicalAttack = stats.HasteRatingOnPhysicalAttack,
-                    HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                    SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                    SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
-                    SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
-                    PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                     PhysicalHit = stats.PhysicalHit,
                     PhysicalHaste = stats.PhysicalHaste,
                     PhysicalCrit = stats.PhysicalCrit,
@@ -899,22 +886,22 @@ namespace Rawr
 
         private bool relevantStats(Stats stats)
         {
-            return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect + stats.Expertise +
-                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-                stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating + stats.HasteRating +
-                stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + stats.Strength +
-                stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating + stats.Spirit +
-                stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
-                stats.BerserkingProc + stats.BonusSpellPowerMultiplier + stats.HasteRatingOnPhysicalAttack +
-                stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq +
+            return (stats.Agility + stats.Intellect + stats.Stamina + stats.Strength + stats.Spirit +
+                stats.AttackPower + stats.SpellPower + stats.Mana + stats.WeaponDamage +
+                stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.CritMeleeRating + 
+                stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating + 
+                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + 
+                stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
+                stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
+                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier +
+                stats.ExposeWeakness + stats.Bloodlust +
+                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
+                stats.SpellCrit + stats.SpellHaste + stats.SpellHit + 
+                stats.ShatteredSunMightProc + stats.MongooseProc + stats.BerserkingProc + stats.GreatnessProc +
+                stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +
-                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusSpiritMultiplier +
-                stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusFlurryHaste +
-                stats.BonusLSDamage + stats.PhysicalCrit + stats.SpellPowerFor10SecOnHit_10_45 +
-                stats.PendulumOfTelluricCurrentsProc + stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit +
-                stats.SpellHit + stats.SpellHaste + stats.BonusPhysicalDamageMultiplier + stats.BonusLLSSDamage +
-                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0
+                stats.BonusLSDamage + stats.BonusLLSSDamage) > 0
 
                 &&
 

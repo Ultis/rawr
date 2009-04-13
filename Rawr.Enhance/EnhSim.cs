@@ -511,8 +511,7 @@ namespace Rawr.Enhance
             switch (trinket.Id)
             {
 	            case 28830:
-                    stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45;
-		            return "dragonspine_trophy";
+                    return "dragonspine_trophy";
 	            case 32419:
                     // no effect added in SpecialEffects class
 		            return "ashtongue_talisman";
@@ -575,26 +574,20 @@ namespace Rawr.Enhance
                     stats.SpellPower -= spellpowerBonus * 1000f / 7f;
 		            return "mirror_of_truth";
 	            case 32483:
-                    // stats.HasteRatingFor20SecOnUse2Min += 175;
-		            return "the_skull_of_guldan";
+                    return "the_skull_of_guldan";
 	            case 37390:
-                    stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45;
                     return "meteorite_whetstone";
 	            case 39229:
-                    // stats.SpellHasteFor10SecOnCast_10_45 -= 505;
-		            return "embrace_of_the_spider";
+                    return "embrace_of_the_spider";
 	            case 40255:
-                    // stats.SpellPowerFor10SecOnCast_15_45 -= 765;
-		            return "dying_curse";
+                    return "dying_curse";
 	            case 40432:
                     stats.SpellPower -= 200;
 		            return "illustration_of_the_dragon_soul";
 	            case 40682:
-                    // stats.SpellPowerFor10SecOnHit_10_45 -= 590;
-		            return "sundial_of_the_exiled";
+                    return "sundial_of_the_exiled";
 	            case 37660:
-                    // stats.SpellPowerFor10SecOnHit_10_45 -= 512;
-		            return "forge_ember";
+                    return "forge_ember";
 	            case 37723:
                     stats.ArmorPenetrationRating -= 291;
 		            return "incisor_fragment";
