@@ -380,6 +380,7 @@ namespace Rawr.Healadin
         public override float Usage()
         {
             return Casts() * (Cost() + HL_DF.AverageCost());
-        }
+        }
+
     }
 }

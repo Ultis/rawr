@@ -49,6 +49,7 @@ namespace Rawr.Retribution
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
+            dictValues.Add("Status", string.Format("DPS: {0:0}", DPSPoints));
             dictValues.Add("Health", BasicStats.Health.ToString("N0"));
             dictValues.Add("Strength", BasicStats.Strength.ToString("N0"));
             dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, (BasicStats.Agility / 6250f)));

@@ -126,10 +126,6 @@ namespace Rawr.Healadin
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Overall:Total Points",
-					"Overall:Fight Points",
-					"Overall:Burst Points",
-
 					"Basic Stats:Health",
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
