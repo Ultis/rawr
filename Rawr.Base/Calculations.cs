@@ -578,7 +578,7 @@ namespace Rawr
 			}
 
 			CharacterCalculationsBase characterStatsWithSlotEmpty;
-			if (useCache)
+            if (useCache && _cachedCharacterStatsWithSlotEmpty != null)
 				characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
 			else
 			{
