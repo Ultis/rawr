@@ -255,7 +255,7 @@ namespace Rawr
             else if (line.StartsWith("Chance on melee and ranged critical strike to increase your attack power by 1234 for 10 sec."))
             {
                 // Pyrite Infuser
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = 1234 }, 10f, 30f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = 1234 }, 10f, 50f, .1f));
             }
             else if (line.StartsWith("Chance on melee or ranged hit to increase your attack power by 1000 for 10 secs."))
             {
@@ -883,7 +883,7 @@ namespace Rawr
             {
                 stats.CrusaderStrikeDamage = 115.5f;
             }
-            else if (line == "Increases the damage done by Divine Storm by 235. ")
+            else if (line == "Increases the damage done by Divine Storm by 235.")
             {
                 stats.DivineStormDamage = 235f;
             }

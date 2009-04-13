@@ -3359,6 +3359,7 @@ namespace Rawr
         [Percentage]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Mana")]
         public float BonusManaMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaMultiplier]; }
@@ -3368,6 +3369,7 @@ namespace Rawr
         [Percentage]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Crit Heal")]
         public float BonusCritHealMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCritHealMultiplier]; }
