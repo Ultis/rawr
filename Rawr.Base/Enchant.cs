@@ -620,10 +620,18 @@ namespace Rawr
             hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 10f, 60f));
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, hyper));
 
+            Stats pyroRocket = new Stats();
+            pyroRocket.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1150f }, 1f, 60f));
+            defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", Item.ItemSlot.Hands, pyroRocket));
+
             // Tailoring enchant
             Stats stats = new Stats();
             stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 250 }, 15, 45, 0.5f));
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, stats));
+
+            Stats stats = new Stats();
+            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { AttackPower = 300 }, 15, 45, 0.5f));
+            defaultEnchants.Add(new Enchant(3730, "Swordguard Embroidery", Item.ItemSlot.Back, stats));
 
             Stats darkglow = new Stats();
             darkglow.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 300 }, 1f, 60f, 0.35f));
