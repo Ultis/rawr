@@ -497,11 +497,15 @@ namespace Rawr.Warlock
             return stats;
         }
 
+        public Stats GetBuffStats(Character character)
+        {
+            return GetBuffsStats(character.ActiveBuffs);
+        }
+
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsTalents = new Stats()
@@ -510,8 +514,6 @@ namespace Rawr.Warlock
                 BonusHealthMultiplier = character.WarlockTalents.FelVitality * 0.01f,
                 BonusManaMultiplier = character.WarlockTalents.FelVitality * 0.01f,
                 BonusSpellPowerMultiplier = character.WarlockTalents.Malediction * 0.03f,
-//Demonic Resilience
-//Demonic Knowledge
                 BonusCritChance = character.WarlockTalents.DemonicTactics * 0.02f + character.WarlockTalents.Backlash * 0.01f,
             };
 

@@ -98,7 +98,8 @@ namespace Rawr.Warlock
             if (Pet == "Felguard") critCoefSpecial = 2;
             critCoefMelee = 2;
 
-            //petStats += GetBuffsStats(character.ActiveBuffs);
+            Stats petStats2 = (new CalculationsWarlock()).GetBuffStats(character);
+            petStats += petStats2;
         }
 
         private void calcSpecialDPS()
