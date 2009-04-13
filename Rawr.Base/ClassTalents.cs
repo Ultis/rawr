@@ -1636,69 +1636,69 @@ Grants the Warlock's summoned demon Empowerment.
 @"Increases your summoned demons critical strike chance equal to 30% of your critical strike chance.",})]
 		public int ImprovedDemonicTactics { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(50, "Summon Felguard", 1, 1, 2, 9, -1, new string[] {
+		[TalentData(51, "Summon Felguard", 1, 1, 2, 9, -1, new string[] {
 @"80% Base Mana, 10 sec cast,
 Reagents: Soul Shard
 Summons a Felguard under the command of the Warlock.",})]
-		public int SummonFelguard { get { return _data[50]; } set { _data[50] = value; } }
+		public int SummonFelguard { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(51, "Nemesis", 3, 1, 3, 9, -1, new string[] {
+		[TalentData(52, "Nemesis", 3, 1, 3, 9, -1, new string[] {
 @"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 10%.",
 @"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 20%.",
 @"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 30%.",})]
-		public int Nemesis { get { return _data[51]; } set { _data[51] = value; } }
+		public int Nemesis { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(52, "Demonic Pact", 5, 1, 2, 10, -1, new string[] {
+		[TalentData(53, "Demonic Pact", 5, 1, 2, 10, -1, new string[] {
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",})]
-		public int DemonicPact { get { return _data[52]; } set { _data[52] = value; } }
+		public int DemonicPact { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(53, "Metamorphosis", 1, 1, 2, 11, -1, new string[] {
+		[TalentData(54, "Metamorphosis", 1, 1, 2, 11, -1, new string[] {
 @"Instant. You transform into a Demon for 30 sec. This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%. You gain some unique demon abilities in addition to your normal abilities.",})]
-		public int Metamorphosis { get { return _data[53]; } set { _data[53] = value; } }
+		public int Metamorphosis { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(54, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new string[] {
+		[TalentData(55, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new string[] {
 @"Increases the damage done by your Shadow Bolt spell by 1%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 1%. Effect lasts 30 sec.",
 @"Increases the damage done by your Shadow Bolt spell by 2%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 2%. Effect lasts 30 sec.",
 @"Increases the damage done by your Shadow Bolt spell by 3%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 3%. Effect lasts 30 sec.",
 @"Increases the damage done by your Shadow Bolt spell by 4%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 4%. Effect lasts 30 sec.",
 @"Increases the damage done by your Shadow Bolt spell by 5%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",})]
-		public int ImprovedShadowBolt { get { return _data[54]; } set { _data[54] = value; } }
+		public int ImprovedShadowBolt { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(55, "Bane", 5, 2, 3, 1, -1, new string[] {
+		[TalentData(56, "Bane", 5, 2, 3, 1, -1, new string[] {
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.1 sec and your Soul Fire spell by 0.4 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.2 sec and your Soul Fire spell by 0.8 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.3 sec and your Soul Fire spell by 1.2 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.4 sec and your Soul Fire spell by 1.6 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.5 sec and your Soul Fire spell by 2.0 sec.",})]
-		public int Bane { get { return _data[55]; } set { _data[55] = value; } }
+		public int Bane { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(56, "Aftermath", 2, 2, 1, 2, -1, new string[] {
+		[TalentData(57, "Aftermath", 2, 2, 1, 2, -1, new string[] {
 @"Increases the periodic damage done by your Immolate by 3%, and your Conflagrate has a 50% chance to daze the target for 5 sec.",
 @"Increases the periodic damage done by your Immolate by 6%, and your Conflagrate has a 100% chance to daze the target for 5 sec.",})]
-		public int Aftermath { get { return _data[56]; } set { _data[56] = value; } }
+		public int Aftermath { get { return _data[57]; } set { _data[57] = value; } }
 
-        [TalentData(57, "Molten Skin", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(58, "Molten Skin", 3, 2, 2, 2, -1, new string[] {
 @"Reduces all damage taken by 2%.",
 @"Reduces all damage taken by 4%.",
 @"Reduces all damage taken by 6%.",})]
-        public int MoltenSkin { get { return _data[57]; } set { _data[57] = value; } }
+        public int MoltenSkin { get { return _data[58]; } set { _data[58] = value; } }
 
-        [TalentData(58, "Cataclysm", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(59, "Cataclysm", 3, 2, 3, 2, -1, new string[] {
 @"Reduces the Mana cost of your Destruction spells by 4%.",
 @"Reduces the Mana cost of your Destruction spells by 7%.",
 @"Reduces the Mana cost of your Destruction spells by 10%.",})]
-		public int Cataclysm { get { return _data[58]; } set { _data[58] = value; } }
+		public int Cataclysm { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(59, "Demonic Power", 2, 2, 1, 3, -1, new string[] {
+		[TalentData(60, "Demonic Power", 2, 2, 1, 3, -1, new string[] {
 @"Reduces the cooldown of your Succubus' Lash of Pain spell by 3 sec, and reduces the casting time of your Imp's Firebolt spell by 0.25 sec",
 @"Reduces the cooldown of your Succubus' Lash of Pain spell by 6 sec, and reduces the casting time of your Imp's Firebolt spell by 0.50 sec",})]
-		public int DemonicPower { get { return _data[59]; } set { _data[59] = value; } }
+		public int DemonicPower { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(60, "Shadowburn", 1, 2, 2, 3, -1, new string[] {
+		[TalentData(61, "Shadowburn", 1, 2, 2, 3, -1, new string[] {
 @"27% Base Mana,20 yd range,
 Instant cast,15 sec cooldown,
 Reagents: Soul Shard
@@ -1714,61 +1714,61 @@ Instantly blasts the target for 87 to 99 Shadow damage. If the target dies withi
 		 Rank 8: 20% Base Mana, 597 - 665 Damage
    		 Rank 9: 20% Base  Mana, 662 - 738 Damage
 		 Rank 10: 20% Base  Mana, 775 - 865 Damage",})]
-public int Shadowburn { get { return _data[60]; } set { _data[60] = value; } }
+public int Shadowburn { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(61, "Ruin", 5, 2, 3, 3, -1, new string[] {
+		[TalentData(62, "Ruin", 5, 2, 3, 3, -1, new string[] {
 @"Increases the critical strike damage bonus of your Destruction spells by 20%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 40%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 60%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 80%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 100%.",})]
-		public int Ruin { get { return _data[61]; } set { _data[61] = value; } }
+		public int Ruin { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(62, "Intensity", 2, 2, 1, 4, -1, new string[] {
+		[TalentData(63, "Intensity", 2, 2, 1, 4, -1, new string[] {
 @"Reduces the pushback suffered from damaging attacks while casting or channeling any Destruction spell by 35%.",
 @"Reduces the pushback suffered from damaging attacks while casting or channeling any Destruction spell by 70%.",})]
-		public int Intensity { get { return _data[62]; } set { _data[62] = value; } }
+		public int Intensity { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(63, "Destructive Reach", 2, 2, 2, 4, -1, new string[] {
+		[TalentData(64, "Destructive Reach", 2, 2, 2, 4, -1, new string[] {
 @"Increases the range of your Destruction spells by 10% and reduces threat caused by Destruction spells by 5%.",
 @"Increases the range of your Destruction spells by 20% and reduces threat caused by Destruction spells by 10%.",})]
-		public int DestructiveReach { get { return _data[63]; } set { _data[63] = value; } }
+		public int DestructiveReach { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(64, "Improved Searing Pain", 3, 2, 4, 4, -1, new string[] {
+		[TalentData(65, "Improved Searing Pain", 3, 2, 4, 4, -1, new string[] {
 @"Increases the critical strike chance of your Searing Pain spell by 4%.",
 @"Increases the critical strike chance of your Searing Pain spell by 7%.",
 @"Increases the critical strike chance of your Searing Pain spell by 10%.",})]
-		public int ImprovedSearingPain { get { return _data[64]; } set { _data[64] = value; } }
+		public int ImprovedSearingPain { get { return _data[65]; } set { _data[65] = value; } }
 
-                [TalentData(65, "Backlash", 3, 2, 1, 5, 62, new string[] {
+                [TalentData(66, "Backlash", 3, 2, 1, 5, 62, new string[] {
 @"Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 2% and gives you a 16% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 3% and gives you a 25% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",})]
-        public int Backlash { get { return _data[65]; } set { _data[65] = value; } }
+        public int Backlash { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(66, "Improved Immolate", 3, 2, 2, 5, -1, new string[] {
+		[TalentData(67, "Improved Immolate", 3, 2, 2, 5, -1, new string[] {
 @"Increases the damage of your Immolate spell by 10%.",
 @"Increases the damage of your Immolate spell by 20%.",
 @"Increases the damage of your Immolate spell by 30%.",})]
-		public int ImprovedImmolate { get { return _data[66]; } set { _data[66] = value; } }
+		public int ImprovedImmolate { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(67, "Devastation", 1, 2, 3, 5, 61, new string[] {
+		[TalentData(68, "Devastation", 1, 2, 3, 5, 61, new string[] {
 @"Increases the critical strike chance of your Destruction spells by 5%.",})]
-		public int Devastation { get { return _data[67]; } set { _data[67] = value; } }
+		public int Devastation { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(68, "Nether Protection", 3, 2, 1, 6, -1, new string[] {
+		[TalentData(69, "Nether Protection", 3, 2, 1, 6, -1, new string[] {
 @"After being hit with a spell, you have a 10% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",
 @"After being hit with a spell, you have a 20% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",
 @"After being hit with a spell, you have a 30% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",})]
-		public int NetherProtection { get { return _data[68]; } set { _data[68] = value; } }
+		public int NetherProtection { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(69, "Emberstorm", 5, 2, 3, 6, -1, new string[] {
+		[TalentData(70, "Emberstorm", 5, 2, 3, 6, -1, new string[] {
 @"Increases the damage done by your Fire spells by 3% and reduces the cast time of your Incinerate spell by 0.05 sec.",
 @"Increases the damage done by your Fire spells by 6% and reduces the cast time of your Incinerate spell by 0.10 sec.",
 @"Increases the damage done by your Fire spells by 9% and reduces the cast time of your Incinerate spell by 0.15 sec.",
 @"Increases the damage done by your Fire spells by 12% and reduces the cast time of your Incinerate spell by 0.20 sec.",
 @"Increases the damage done by your Fire spells by 15% and reduces the cast time of your Incinerate spell by 0.25 sec.",})]
-		public int Emberstorm { get { return _data[69]; } set { _data[69] = value; } }
+		public int Emberstorm { get { return _data[70]; } set { _data[70] = value; } }
 
 		[TalentData(71, "Conflagrate", 1, 2, 2, 7, 66, new string[] {
 @"16% Base Mana,30 yd range,
