@@ -23,12 +23,9 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.BaseStats;
-            float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + 
-                                  StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * character.ShamanTalents.ThunderingStrikes;
-            float chanceCrit = 100f * Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + stats.PhysicalCrit) + .00005f); //fudge factor for rounding
-            float baseSpellCrit = StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) +
-                                  StatConversion.GetSpellCritFromIntellect(stats.Intellect) + .01f * character.ShamanTalents.ThunderingStrikes;
-            float chanceSpellCrit = 100f * Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseSpellCrit + stats.SpellCrit) + .00005f); //fudge factor for rounding
+            CombatStats cs = new CombatStats(character, stats);
+            float chanceCrit = cs.ChanceWhiteCrit * 100f;
+            float chanceSpellCrit = cs.ChanceSpellCrit * 100f;
 
             removeUseProcEffects(character, stats);
 
@@ -170,7 +167,7 @@ namespace Rawr.Enhance
 			}
 			catch { }
             MessageBox.Show("EnhSim config data copied to clipboard\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI, v1.6.7 or higher, to use it\n" +
+                "Use the 'Copy from Clipboard' option in EnhSimGUI, v1.6.8 or higher, to use it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
@@ -400,10 +397,10 @@ namespace Rawr.Enhance
             // the meta gem, enchants, trinkets and totems
             _trinket1name = adjustTrinketStats(character, character.Trinket1, stats);
             _trinket2name = adjustTrinketStats(character, character.Trinket2, stats);
-            _totemname = adjustTotemStats(character, character.Ranged, stats);
-            _mhEnchant = adjustWeaponEnchantStats(character, character.MainHandEnchant, stats);
-            _ohEnchant = adjustWeaponEnchantStats(character, character.OffHandEnchant, stats);
-            _metagem = adjustMetaGemStats(character, character.Head, stats);
+            _totemname = getTotemName(character, character.Ranged, stats);
+            _mhEnchant = getWeaponEnchantName(character, character.MainHandEnchant, stats);
+            _ohEnchant = getWeaponEnchantName(character, character.OffHandEnchant, stats);
+            _metagem = getMetaGemName(character, character.Head, stats);
            
             // having removed all the stuff added by on use/procs we need to take the ceiling values as 100+2.66 would have been floored to 102
             // if we take 2.66 from 102 we get 101.33 which is too low.
@@ -414,41 +411,34 @@ namespace Rawr.Enhance
             stats.ArmorPenetrationRating = (float)Math.Ceiling(stats.ArmorPenetrationRating);
         }
 
-        private String adjustMetaGemStats(Character character, ItemInstance head, Stats stats)
+        private String getMetaGemName(Character character, ItemInstance head, Stats stats)
         {
-            if (head != null)
-            {
-                float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
-                switch (head.Gem1Id)
-                {
-                    case 32409:
-                        return "relentless_earthstorm_diamond";
-                    case 32410:
-                        return "thundering_skyfire_diamond";
-                    case 34220:
-                        return "chaotic_skyfire_diamond";
-                    case 41285:
-                        return "chaotic_skyflare_diamond";
-                    case 41333:
-                        return "ember_skyflare_diamond";
-                    case 41398:
-                        return "relentless_earthsiege_diamond";
-                    default:
-                        return "-";
-                }
-            }
-            else
-            {
+            if (head == null)
                 return "-";
+            switch (head.Gem1Id)
+            {
+                case 32409:
+                    return "relentless_earthstorm_diamond";
+                case 32410:
+                    return "thundering_skyfire_diamond";
+                case 34220:
+                    return "chaotic_skyfire_diamond";
+                case 41285:
+                    return "chaotic_skyflare_diamond";
+                case 41333:
+                    return "ember_skyflare_diamond";
+                case 41398:
+                    return "relentless_earthsiege_diamond";
+                default:
+                    return "-";
             }
         }
 
-        private String adjustWeaponEnchantStats(Character character, Enchant enchant, Stats stats)
+        private String getWeaponEnchantName(Character character, Enchant enchant, Stats stats)
         {
             if (enchant == null)
                 return "-";
             // check weapon enchant return enchant name for EnhSim
-            float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
             switch (enchant.Id)
             {
                 case 2673:
@@ -466,11 +456,10 @@ namespace Rawr.Enhance
             }
         }
 
-        private String adjustTotemStats(Character character, ItemInstance totem, Stats stats)
+        private String getTotemName(Character character, ItemInstance totem, Stats stats)
         {
             if (totem == null)
                 return "-";
-            float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
             switch (totem.Id)
             {
                 case 33507:
@@ -525,7 +514,6 @@ namespace Rawr.Enhance
 	            case 28830:
                     return "dragonspine_trophy";
 	            case 32419:
-                    // no effect added in SpecialEffects class
 		            return "ashtongue_talisman";
 	            case 32505:
                     stats.ArmorPenetrationRating -= 42f / 5f;
@@ -563,7 +551,6 @@ namespace Rawr.Enhance
                     stats.SpellPower -= spellpowerBonus * 320f / 6f;
 		            return "shadowsong_panther";
 	            case 34427:
-                    // no effect added in SpecialEffects class
 		            return "blackened_naaru_silver";
 	            case 31856:
                     stats.AttackPower -= 120; 
@@ -575,7 +562,6 @@ namespace Rawr.Enhance
                     stats.SpellPower -= spellpowerBonus * 320;
                     return "fury_of_the_five_flights";
 	            case 40256:
-                    //stats.ArmorPenetrationRating -= 612f / 5f;
 		            return "grim_toll";
 	            case 39257:
                     stats.AttackPower -= 670f / 6f;
@@ -627,16 +613,12 @@ namespace Rawr.Enhance
                     stats.HasteRating -= 208f / 6f;
 		            return "rune_of_finite_variation";
 	            case 40371:
-                    // no effect added in SpecialEffects class
 		            return "bandits_insignia";
 	            case 44253:
-                    // stats.GreatnessProc -= 1;
 		            return "darkmoon_card_greatness";
 	            case 37264:
-                    // stats.PendulumOfTelluricCurrentsProc -= 1;
 		            return "pendulum_of_telluric_currents";
 	            case 37064:
-                    // no effect added in SpecialEffects class
 		            return "vestige_of_haldor";
 	            case 42395:
                     stats.SpellPower -= 292f / 15f;

@@ -345,7 +345,7 @@ namespace Rawr
  */
             #endregion
 
-            #endregion
+        #endregion
 
             #region Individual DPS
             //1: Melee DPS
@@ -1246,8 +1246,7 @@ namespace Rawr
                 SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture),
                 OverallPoints.ToString("F2", CultureInfo.InvariantCulture)));
 
-
-			return dictValues;
+            return dictValues;
 		}
 
         private String dpsOutputFormat(float dps, float totaldps)
