@@ -13,7 +13,6 @@ namespace Rawr.Enhance
         private ShamanTalents _talents = new ShamanTalents();
 
         private float glancingRate = 0.24f;
-        private float attackSpeed = 3.0f;
         private float bloodlustHaste = 0f;
         private float chanceDodge = 0f;
         private float expertiseBonus = 0f;
@@ -24,6 +23,7 @@ namespace Rawr.Enhance
         private float chanceYellowCrit = 0f;
         private float chanceSpellCrit = 0f;
         private float chanceWhiteCrit = 0f;
+        private float chanceMeleeHit = 0f;
 
         private float unhastedMHSpeed = 0f;
         private float hastedMHSpeed = 0f;
@@ -59,7 +59,6 @@ namespace Rawr.Enhance
         }
 
         public float FightLength { get { return _calcOpts.FightLength * 60f; } }
-        public float AttackSpeed { get { return attackSpeed; } }
         public float BloodlustHaste { get { return bloodlustHaste; } }
         public float ChanceDodge { get { return chanceDodge; } }
         public float ExpertiseBonus { get { return expertiseBonus; } }
@@ -74,6 +73,7 @@ namespace Rawr.Enhance
         public float ChanceSpellCrit { get { return chanceSpellCrit; } }
         public float ChanceWhiteCrit { get { return chanceWhiteCrit; } }
         public float ChanceYellowCrit { get { return chanceYellowCrit; } }
+        public float ChanceMeleeHit { get { return chanceMeleeHit; } }
 
         public float UnhastedMHSpeed { get { return unhastedMHSpeed; } }
         public float HastedMHSpeed { get { return hastedMHSpeed; } }
@@ -199,13 +199,13 @@ namespace Rawr.Enhance
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (_character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
 
             // set output variables
-            attackSpeed = hastedMHSpeed;
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
             meleeCritsPerSec = meleeAttacksPerSec * chanceWhiteCrit;
             spellAttacksPerSec = 1 / secondsToFiveStack + 1 / shockSpeed;
             spellCritsPerSec = spellAttacksPerSec * ChanceSpellCrit;
             spellCastsPerSec = spellAttacksPerSec;
             spellMissesPerSec = spellAttacksPerSec * chanceSpellMiss;
+            chanceMeleeHit = meleeAttacksPerSec / (swingsPerSMHMelee + swingsPerSOHMelee + 2f * wfProcsPerSecond + .25f + 1f/6f);
         }
 
         public float GetMeleeCritsPerSec()

@@ -206,8 +206,10 @@ namespace Rawr
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
-            stats += getSpecialEffectStats(character, stats);
-
+            StatsSpecialEffects specialEffects = new StatsSpecialEffects(character, stats);
+            stats += specialEffects.getSpecialEffects();
+            if (stats.GreatnessProc > 0)
+                specialEffects.GreatnessProc();
             //Set up some talent variables
             float initialAP = stats.AttackPower;
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
@@ -258,7 +260,6 @@ namespace Rawr
                 }
             }
 
-
             //gear stuff
             if (stats.ShatteredSunMightProc > 0 && calcOpts.ShattrathFaction == "Aldor")
                 stats.AttackPower += 39.13f;
@@ -274,40 +275,6 @@ namespace Rawr
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
 
-            //trinket procs
-            if (stats.GreatnessProc > 0)
-            {
-                float expectedAgi = (float)Math.Floor(stats.Agility * (1 + stats.BonusAgilityMultiplier));
-                float expectedStr = (float)Math.Floor(stats.Strength * (1 + stats.BonusStrengthMultiplier));
-                float expectedInt = (float)Math.Floor(stats.Intellect * (1 + stats.BonusIntellectMultiplier));
-                // Highest stat
-                if (expectedAgi > expectedStr)
-                {
-                    if (expectedAgi > expectedInt)
-                    {
-                        stats.Agility += stats.GreatnessProc * 15f / 47f;  // proc calc lifted from Rawr.Cat odd that its 47sec CD??
-                        stats.AttackPower += stats.GreatnessProc * 15f / 47f;
-                    }
-                    else
-                    {
-                        stats.Intellect += stats.GreatnessProc * 15f / 47f;
-                        stats.AttackPower += AddAPFromStrAgiInt(character, 0, 0, stats.GreatnessProc * 15f / 47f);
-                    }
-                }
-                else
-                {
-                    if (expectedAgi > expectedInt)
-                    {
-                        stats.Strength += stats.GreatnessProc * 15f / 47f;
-                        stats.AttackPower += stats.GreatnessProc * 15f / 47f;
-                    }
-                    else
-                    {
-                        stats.Intellect += stats.GreatnessProc * 15f / 47f;
-                        stats.AttackPower += AddAPFromStrAgiInt(character, 0, 0, stats.GreatnessProc * 15f / 47f);
-                    }
-                }
-            }
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
             stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
             stats.HasteRating += stats.SpellHasteFor10SecOnCast_10_45 * 10f / 45f;
@@ -689,62 +656,6 @@ namespace Rawr
             stats.AttackPower = (float)Math.Floor(stats.AttackPower * (1f + stats.BonusAttackPowerMultiplier));
             stats.SpellPower = (float)Math.Floor(stats.SpellPower + (stats.AttackPower * .1f * MQ * (1f + stats.BonusSpellPowerMultiplier)));
             return stats;
-        }
-        #endregion
-
-        #region Special Effects
-        private Stats getSpecialEffectStats(Character character, Stats stats)
-        {
-            Stats statsAverage = new Stats();
-            CombatStats cs = new CombatStats(character, stats);
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use)
-                {
-                    statsAverage += effect.GetAverageStats();
-                }
-                else
-                {
-                    float trigger = 0;
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.MeleeCrit :
-                        case Trigger.PhysicalCrit :
-                            trigger = 1f / cs.GetMeleeCritsPerSec();
-                            break;
-                        case Trigger.MeleeHit :
-                        case Trigger.PhysicalHit :
-                            trigger = 1f / cs.GetMeleeAttacksPerSec();
-                            break;
-                        case Trigger.DamageSpellCast :
-                        case Trigger.SpellCast :
-                             trigger = 1f / cs.GetSpellCastsPerSec();
-                            break;
-                       case Trigger.DamageSpellHit :
-                        case Trigger.SpellHit :
-                            trigger = 1f / cs.GetSpellAttacksPerSec();
-                            break;
-                        case Trigger.DamageSpellCrit :
-                        case Trigger.SpellCrit :
-                            trigger = 1f / cs.GetSpellCritsPerSec();
-                            break;
-                        case Trigger.SpellMiss :
-                            trigger = 1f / cs.GetSpellMissesPerSec();
-                            break;
-                    }
-
-                    if (effect.MaxStack > 1)
-                    {
-                        float timeToMax = (float)Math.Min(cs.FightLength, effect.GetChance(cs.AttackSpeed) * trigger * effect.MaxStack);
-                        statsAverage += effect.Stats * (effect.MaxStack * ((cs.FightLength - .5f * timeToMax) / cs.FightLength));
-                    }
-                    else
-                    {
-                        statsAverage += effect.GetAverageStats(trigger, 1f, cs.AttackSpeed);
-                    }
-                }
-            }
-            return statsAverage;
         }
         #endregion
         
