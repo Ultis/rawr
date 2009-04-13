@@ -108,18 +108,10 @@
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Paladin</Class>
-    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000</Spec>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000.0000000000000000001010001000000100</Spec>
     <Tree1>0</Tree1>
     <Tree2>0</Tree2>
     <Tree3>0</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Retribution</Name>
-    <Class>Paladin</Class>
-    <Spec>000000000000000000000000005510013000000000000000000052320502033310302133231331.0000000000000000001010001000000100</Spec>
-    <Tree1>0</Tree1>
-    <Tree2>15</Tree2>
-    <Tree3>54</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Holy: Sanctity of Battle</Name>
@@ -144,5 +136,21 @@
     <Tree1>52</Tree1>
     <Tree2>14</Tree2>
     <Tree3>5</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Holy: Divine Guardian</Name>
+    <Class>Paladin</Class>
+    <Spec>503501520021300531025012515032013120000000000000000020000000000000000000000000.0000000000000100100000000001001010</Spec>
+    <Tree1>52</Tree1>
+    <Tree2>17</Tree2>
+    <Tree3>2</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Retribution</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000005510013020000000000000000052320502033310302133231331.0000000000000000001010001000000100</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>17</Tree2>
+    <Tree3>54</Tree3>
   </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>
