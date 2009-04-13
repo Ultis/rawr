@@ -1938,7 +1938,7 @@ namespace Rawr
                 SetThreshold = 2
             });
             // Resto druid tier 4/5/6 sets
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add( buff = new Buff()
             {
                 Name = "Malorne Raiment 2 Piece",
                 Group = "Set Bonuses",
@@ -1947,6 +1947,7 @@ namespace Rawr
                 SetName = "Malorne Raiment",
                 SetThreshold = 2
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { ManaRestore = 120f }, 0f, 0f, 0.05f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nordrassil Raiment 2 Piece",

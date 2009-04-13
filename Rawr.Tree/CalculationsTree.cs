@@ -308,11 +308,40 @@ namespace Rawr.Tree
 
         private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastFraction, float HealFraction, float CritsFraction, out float Healing)
         {
+            #region New_SpecialEffect_Handling
+
+            Stats resultNew = new Stats();
+            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use)
+                {
+                  resultNew += effect.GetAverageStats(0.0f, 1.0f);   // 0 cooldown, 100% chance to use
+                }
+                else if (effect.Trigger == Trigger.SpellCast ||  effect.Trigger == Trigger.SpellHit
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    resultNew += effect.GetAverageStats(1.0f/CastFraction);
+                }
+                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit )
+                {
+                    resultNew += effect.GetAverageStats(1.0f / CastFraction, 1.0f / CritsFraction);
+                }
+                else
+                {
+                        // Trigger isn't relevant. Physical Hit, Damage Spell etc.
+                        //int i = 0;
+                }
+            }
+            #endregion
+
+            #region Custom_SpecialEffect_Handling
             SpecialEffects effects = new SpecialEffects(stats);
             Stats result = effects.estimateAll(FightDuration, CastFraction, HealFraction, CritsFraction, out Healing);
+            #endregion
 
             return new Stats()
             {
+                // TODO: Switch to resultNew
                 Spirit = result.Spirit,
                 HasteRating = result.HasteRating,
                 SpellPower = result.SpellPower,
@@ -935,7 +964,8 @@ namespace Rawr.Tree
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return SpecialEffects.GetRelevantStats(stats) + new Stats()
+            Stats s = new Stats()
+//            return SpecialEffects.GetRelevantStats(stats) + new Stats()
             {
                 #region Base Stats
                 //Stamina = stats.Stamina,
@@ -973,11 +1003,56 @@ namespace Rawr.Tree
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 #endregion
             };
+
+            
+            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || 
+                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    if (HasRelevantSpecialEffectStats(effect.Stats))
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                    else
+                    {
+                        // Trigger seems relevant, but effect not. Sounds weird, probably DPS bonus on Use or general SpellCast ...
+                    }
+
+                }
+            }
+            return s;
+        }
+
+        public bool HasRelevantSpecialEffectStats(Stats stats)
+        {
+            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            if (SpecialEffects.HasRelevantStats(stats)) return true;
+            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    if (HasRelevantSpecialEffectStats(effect.Stats))
+                      return true;
+                    else
+                    {
+                        // Trigger seems relevant, but effect not. Sounds weird, probably DPS bonus on Use or general SpellCast ...
+                    }
+
+                }
+            }
+
+            if (SpecialEffects.HasRelevantStats(stats))
+            {
+                // Should already have been caught, means we missing a relevant trigger or not setup as a special effect
+                return true;
+            }
 
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
