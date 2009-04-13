@@ -145,6 +145,11 @@ namespace Rawr.Healadin
             return (5166f + (Stats.HolyLightSpellPower + Stats.SpellPower) * hl_coef);
         }
 
+        public float GlyphOfHolyLight(float hlHealed)
+        {
+            return hlHealed * (Talents.GlyphOfHolyLight ? .1f * Rotation.CalcOpts.GHL_Targets : 0f);
+        }
+
     }
 
     public class HolyShock : Heal
@@ -244,9 +249,14 @@ namespace Rawr.Healadin
             return (float)Math.Ceiling(Uptime / Duration);
         }
 
+        public float CastTime()
+        {
+            return 1.5f / (1f + Stats.SpellHaste);
+        }
+
         public virtual float Time()
         {
-            return Casts() * 1.5f / (1f + Stats.SpellHaste);
+            return Casts() * CastTime();
         }
 
         public virtual float Usage()

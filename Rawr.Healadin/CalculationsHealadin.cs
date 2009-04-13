@@ -268,16 +268,19 @@ namespace Rawr.Healadin
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            Stats stats = GetCharacterStats(character, additionalItem);
-            CharacterCalculationsHealadin calc = new CharacterCalculationsHealadin();
-            calc.BasicStats = GetCharacterStats(character, additionalItem, false);
+            Stats stats;
+            CharacterCalculationsHealadin calc = null;
             PaladinTalents talents = character.PaladinTalents;
 
-			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
-            if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
+            for (int i = 0; i < 5; i++)
+            {
+                stats = GetCharacterStats(character, additionalItem, true, calc);
+                calc = new CharacterCalculationsHealadin();
 
-            Rotation rot = new Rotation(character, stats);
-            calc.OverallPoints = rot.CalculateHealing(calc);
+                Rotation rot = new Rotation(character, stats);
+                calc.OverallPoints = rot.CalculateHealing(calc);
+            }
+            calc.BasicStats = GetCharacterStats(character, additionalItem, false, null);
 
             return calc;
             #region Old
@@ -456,10 +459,10 @@ namespace Rawr.Healadin
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            return GetCharacterStats(character, additionalItem, true);
+            return GetCharacterStats(character, additionalItem, true, null);
         }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
+        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats, CharacterCalculationsHealadin calc)
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
@@ -500,18 +503,36 @@ namespace Rawr.Healadin
                     }
                     else
                     {
-                        float chance = 1f;
-                        if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) { chance = stats.SpellCrit; }
-                        float trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
+                        float trigger = 0;
+                        if (calc == null)
+                        {
+                            trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
+                            if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) { trigger *= stats.SpellCrit; }
+                        }
+                        else
+                        {
+                            if (effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
+                            {
+                                trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
+                            }
+                            else if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
+                            {
+                                trigger = 1f / Rotation.GetHealingCritsPerSec(calc);
+                            }
+                            else
+                            {
+                                trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
+                            }
+                        }
 
                         if (effect.MaxStack > 1)
                         {
-                            float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * chance * effect.MaxStack);
+                            float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack);
                             statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
                         }
                         else
                         {
-                            statsAverage += effect.GetAverageStats(trigger, chance);
+                            statsAverage += effect.GetAverageStats(trigger);
                         }
                     }
                 }

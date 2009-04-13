@@ -209,7 +209,8 @@ namespace Rawr
 			{ //Darkmoon Card: Greatness
                 stats.GreatnessProc = 300;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
 			}
             else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 16 attack power for the next 10 sec., stacking up to 20 times."))
             {

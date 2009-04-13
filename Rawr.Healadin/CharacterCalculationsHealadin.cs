@@ -38,6 +38,8 @@ namespace Rawr.Healadin
         public float TotalHealed { get; set; }
         public float TotalMana { get; set; }
 
+        public float FightLength { get; set; }
+
         public FlashOfLight FoL { get; set; }
         public HolyLight HL { get; set; }
         public HolyShock HS { get; set; }

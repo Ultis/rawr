@@ -82,9 +82,34 @@ namespace Rawr.Healadin
                 calc.ManaReplenishment + calc.ManaLayOnHands;
         }
 
+        public static float GetHealingCastsPerSec(CharacterCalculationsHealadin calc)
+        {
+            return (calc.RotationHL / calc.HL.CastTime()
+                + calc.RotationFoL / calc.FoL.CastTime()
+                + calc.RotationHS / calc.HS.CastTime()) / calc.FightLength;
+        }
+
+        public static float GetSpellCastsPerSec(CharacterCalculationsHealadin calc)
+        {
+            return GetHealingCastsPerSec(calc)
+                + (calc.RotationBoL / calc.BoL.CastTime()
+                + calc.RotationJotP / calc.JotP.CastTime()
+                + calc.RotationSS / calc.SS.CastTime()) / calc.FightLength;
+        }
+
+        public static float GetSpellCritsPerSec(CharacterCalculationsHealadin calc) { return GetHealingCritsPerSec(calc); }
+        public static float GetHealingCritsPerSec(CharacterCalculationsHealadin calc)
+        {
+            return (calc.RotationHL / calc.HL.CastTime() * calc.HL.ChanceToCrit()
+                + calc.RotationFoL / calc.FoL.CastTime() * calc.FoL.ChanceToCrit()
+                + calc.RotationHS / calc.HS.CastTime() * calc.HS.ChanceToCrit()) / calc.FightLength;
+        }
+
         public float CalculateHealing(CharacterCalculationsHealadin calc)
         {
             #region Copying Stuff to Calc
+            calc.FightLength = FightLength;
+
             calc.HL = hl;
             calc.FoL = fol;
             calc.HS = hs;
@@ -147,7 +172,7 @@ namespace Rawr.Healadin
             remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
 
             float remainingTime = FightLength * CalcOpts.Activity;
-            remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationHL + calc.RotationHL;
+            remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
 
 
             float hl_time = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
@@ -172,7 +197,7 @@ namespace Rawr.Healadin
                 calc.TotalHealed += calc.HealedBoL = bol.HealingDone(calc.TotalHealed);
             }
 
-            calc.TotalHealed += calc.HealedGHL = calc.HealedHL * (Talents.GlyphOfHolyLight ? .1f * CalcOpts.GHL_Targets : 0f);
+            calc.TotalHealed += calc.HealedGHL = hl.GlyphOfHolyLight(calc.HealedHL);
             calc.TotalHealed += calc.HealedSS;
             calc.TotalHealed += calc.HealedOther = Stats.Healed;
 
