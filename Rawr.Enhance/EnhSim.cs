@@ -23,7 +23,6 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.BaseStats;
-            Stats buffs = calcs.BuffStats;
             float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * character.ShamanTalents.ThunderingStrikes;
             float chanceCrit = 100f * Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + stats.PhysicalCrit) + .00005f); //fudge factor for rounding
@@ -104,7 +103,20 @@ namespace Rawr.Enhance
             sb.AppendLine(getSetBonuses(character));
             sb.AppendLine("metagem                         " + _metagem);
             sb.AppendLine();
-
+            string handEnchant = character.HandsEnchant == null ? string.Empty : character.HandsEnchant.Name;
+            if (handEnchant == "Hyperspeed Accelerators")
+                sb.AppendLine("gloves_enchant                  hyperspeed_accelerators");
+            else if (handEnchant == "Hand-Mounted Pyro Rocket")
+                sb.AppendLine("gloves_enchant                  hand_mounted_pyro_rocket");
+            else
+                sb.AppendLine("gloves_enchant                  -");
+            string backEnchant = character.BackEnchant == null ? string.Empty : character.BackEnchant.Name;
+            if (backEnchant == "Lightweave Embroidery")
+                sb.AppendLine("cloak_enchant                   lightweave_embroidery");
+            else if (handEnchant == "Swordguard Embroidery")
+                sb.AppendLine("cloak_enchant                   swordguard_embroidery");
+            else
+                sb.AppendLine("cloak_enchant                   -");
             addGlyphs(character, sb);
             sb.AppendLine();
             sb.AppendLine("glyph_minor1                    -");
