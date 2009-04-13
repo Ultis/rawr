@@ -94,7 +94,7 @@ namespace Rawr.Healadin
 
         protected override float AbilityCritChance()
         {
-            return Talents.GlyphOfFlashOfLight ? .05f : 0f + Stats.FlashOfLightCrit;
+            return (Talents.GlyphOfFlashOfLight ? .05f : 0f) + Stats.FlashOfLightCrit;
         }
 
         protected override float AbilityHealedMultiplier()

@@ -440,7 +440,14 @@ namespace Rawr
             string status;
             if (!displayCalculationValues.TryGetValue("Status", out status))
             {
-                status = "Rawr version " + typeof(Calculations).Assembly.GetName().Version.ToString();
+                int i = 0;
+                status = "Overall: " + Math.Round(_calculatedStats.OverallPoints);
+                foreach (KeyValuePair<string, Color> kvp in Calculations.SubPointNameColors)
+                {
+                    status += ", " + kvp.Key + ": " + Math.Round(_calculatedStats.SubPoints[i]);
+                    i++;
+                }
+                //status = "Rawr version " + typeof(Calculations).Assembly.GetName().Version.ToString();
             }
             toolStripStatusLabel.Text = status;
         }
