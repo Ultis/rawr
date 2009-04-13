@@ -647,9 +647,9 @@ namespace Rawr
                 Name = "Mana Spring Totem",
                 Source = "Shaman",
                 Group = "Mana Regeneration",
-                Stats = { Mp5 = 85 },
+                Stats = { Mp5 = 91 },
                 Improvements = { 
-					new Buff { Name = "Restorative Totems", Source = "Resto Shaman", Stats = { Mp5 = (float)Math.Floor(85f * 0.25f) } }
+					new Buff { Name = "Restorative Totems", Source = "Resto Shaman", Stats = { Mp5 = (float)Math.Floor(91f * 0.20f) } }
 				}
             });
             defaultBuffs.Add(new Buff

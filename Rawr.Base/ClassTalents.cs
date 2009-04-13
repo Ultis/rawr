@@ -3941,12 +3941,10 @@ Increases the critical effect chance of your Healing Wave, Lesser Healing Wave a
 @"Increases your target's armor value by 25% for 15 sec after getting a critical effect from one of your healing spells.",})]
         public int AncestralHealing { get { return _data[62]; } set { _data[62] = value; } }
 
-        [TalentData(63, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 4%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 8%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 12%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 16%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 20%.",})]
+        [TalentData(63, "Restorative Totems", 3, 2, 2, 4, -1, new string[] {
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 7%, and the effect of your Healing Stream Totem by 15%.",
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 12%, and the effect of your Healing Stream Totem by 30%.",
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 20%, and the effect of your Healing Stream Totem by 45%.",})]
 		public int RestorativeTotems { get { return _data[63]; } set { _data[63] = value; } }
 
 		[TalentData(64, "Tidal Mastery", 5, 2, 3, 4, -1, new string[] {
