@@ -1942,7 +1942,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             if (castingState.MageTalents.GlyphOfLivingBomb)
             {
-                spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, spell.CritRate)) * (castingState.FireCritBonus - 1));
+                spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus - 1));
             }
             spell.CalculateDerivedStats(castingState, false, false, false);
             return spell;
