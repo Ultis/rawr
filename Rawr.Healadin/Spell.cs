@@ -46,7 +46,7 @@ namespace Rawr.Healadin
             return BaseHealed() * (1f - ChanceToCrit()) + CritHealed() * ChanceToCrit();
         }
 
-        public float CritHealed() { return BaseHealed() * 1.5f * (1f + Stats.BonusCritMultiplier) * AbilityCritMultiplier(); }
+        public float CritHealed() { return BaseHealed() * 1.5f * (1f + Stats.BonusCritHealMultiplier) * AbilityCritMultiplier(); }
 
         public float BaseHealed()
         {
