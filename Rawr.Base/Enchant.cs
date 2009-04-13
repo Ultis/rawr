@@ -626,7 +626,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, stats));
 
             stats = new Stats();
-            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { AttackPower = 300 }, 15, 45, 0.5f));
+            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 300 }, 15, 45, 0.25f));
             defaultEnchants.Add(new Enchant(3730, "Swordguard Embroidery", Item.ItemSlot.Back, stats));
 
             Stats darkglow = new Stats();
