@@ -81,6 +81,17 @@ namespace Rawr.Healadin
 
         public abstract float BaseCastTime { get; }
         public abstract float BaseMana { get; }
+
+        public override string ToString()
+        {
+            return string.Format("Average Heal: {0}\nAverage Cost: {1}\nHPS: {2}\nHPM: {3}\nCast Time: {4} sec\nCrit Chance: {5}%",
+                AverageHealed().ToString("N0"),
+                AverageCost().ToString("N0"),
+                HPS().ToString("N0"),
+                HPM().ToString("N2"),
+                CastTime().ToString("N2"),
+                (ChanceToCrit() * 100).ToString("N2"));
+        }
     }
 
     public class FlashOfLight : Heal
@@ -286,9 +297,14 @@ namespace Rawr.Healadin
             return (500f + .75f * Stats.SpellPower) * (1f + Talents.DivineGuardian * .1f);
         }
 
-        public float TotalAborbed()
+        public float TotalAborb()
         {
             return Uptime / ICD() * ProcAbsorb();
+        }
+
+        public float CastAborb()
+        {
+            return Duration / ICD() * ProcAbsorb();
         }
 
         public float HPM()
@@ -298,7 +314,17 @@ namespace Rawr.Healadin
 
         public float HPS()
         {
-            return TotalAborbed() / Time();
+            return TotalAborb() / Time();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Proc Absorb: {0}\nCast Absorb: {1}\nAverage Cost: {2}\nHPS: {3}\nHPM: {4}\n",
+                ProcAbsorb().ToString("N0"),
+                CastAborb().ToString("N0"),
+                Cost().ToString("N0"),
+                HPS().ToString("N0"),
+                HPM().ToString("N2"));
         }
 
     }

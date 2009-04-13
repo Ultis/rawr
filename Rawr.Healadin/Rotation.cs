@@ -122,7 +122,7 @@ namespace Rawr.Healadin
 
             calc.RotationSS = ss.Time();
             calc.UsageSS = ss.Usage();
-            calc.HealedSS = ss.TotalAborbed();
+            calc.HealedSS = ss.TotalAborb();
 
             calc.RotationBoL = bol.Time();
             calc.UsageBoL = bol.Usage();
@@ -136,12 +136,12 @@ namespace Rawr.Healadin
             if (CalcOpts.InfusionOfLight)
             {
                 Heal hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
-                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight;
+                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
                 calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
                 calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
                 calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
 
-                float iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight);
+                float iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
                 calc.UsageFoL += iol_folcasts * fol.AverageCost();
                 calc.RotationFoL += iol_folcasts * fol.CastTime();
                 calc.HealedFoL += iol_folcasts * fol.AverageHealed();

@@ -117,6 +117,15 @@ namespace Rawr.Retribution
 
         public virtual float AbilityCritChance() { return 0; }
 
+        public override string ToString()
+        {
+            return string.Format("Average Damage: {0}\nAverage Hit: {1}\nCrit Chance: {2}%\nAvoid Chance: {3}%",
+                AverageDamage().ToString("N0"),
+                HitDamage().ToString("N0"),
+                Math.Round(ChanceToCrit() * 100, 2),
+                Math.Round((1f - ChanceToLand()) * 100, 2));
+        }
+
     }
 
     public class JudgementOfBlood : Skill
@@ -282,6 +291,11 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower);
+        }
+
+        public override float AbilityCritChance()
+        {
+            return -1f;
         }
 
         public override float AverageDamage()

@@ -153,32 +153,12 @@ namespace Rawr.Healadin
                     "Healing Breakdown:Sacred Shield Healed",
                     "Healing Breakdown:Beacon of Light Healed",
                     "Healing Breakdown:Glyph of HL Healed",
-                    "Healing Breakdown:Other Healed*From trinekt procs",
+                    "Healing Breakdown:Other Healed*From trinket procs",
 
-                    "Holy Light:HL Average Heal",
-                    "Holy Light:HL Crit",
-                    "Holy Light:HL Cast Time",
-                    "Holy Light:HL Averege Cost",
-                    "Holy Light:HL Healing per sec",
-                    "Holy Light:HL Healing per mana",
-
-                    "Flash of Light:FoL Average Heal",
-                    "Flash of Light:FoL Crit",
-                    "Flash of Light:FoL Cast Time",
-                    "Flash of Light:FoL Averege Cost",
-                    "Flash of Light:FoL Healing per sec",
-                    "Flash of Light:FoL Healing per mana",
-
-                    "Holy Shock:HS Average Heal",
-                    "Holy Shock:HS Crit",
-                    "Holy Shock:HS Cast Time",
-                    "Holy Shock:HS Averege Cost",
-                    "Holy Shock:HS Healing per sec",
-                    "Holy Shock:HS Healing per mana",
-
-                    "Sacred Shield:SS Average Absorb",
-                    "Sacred Shield:SS Healing per sec",
-                    "Sacred Shield:SS Healing per mana",
+                    "Spell Information:Holy Light",
+					"Spell Information:Flash of Light",
+					"Spell Information:Holy Shock",
+					"Spell Information:Sacred Shield",
 
 				};
                 return _characterDisplayCalculationLabels;

@@ -61,6 +61,15 @@ namespace Rawr.Retribution
         {
             calc.WhiteDPS = white.WhiteDPS();
             SetAbilityDPS(calc);
+
+            calc.WhiteSkill = white;
+            calc.SealSkill = seal;
+            calc.JudgementSkill = judge;
+            calc.DivineStormSkill = ds;
+            calc.CrusaderStrikeSkill = cs;
+            calc.ConsecrationSkill = cons;
+            calc.ExorcismSkill = exo;
+            calc.HammerOfWrathSkill = how;
             
             calc.DPSPoints =
                 calc.WhiteDPS +
