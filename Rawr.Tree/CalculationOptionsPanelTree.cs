@@ -67,6 +67,7 @@ namespace Rawr.Tree
             tbWildGrowth.Value = calcOpts.WildGrowthPerMinute;
             lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
 
+            /*
             chbGlyphHT.Checked = calcOpts.glyphOfHealingTouch;
             chbGlyphRegrowth.Checked = calcOpts.glyphOfRegrowth;
             chbGlyphRejuvenation.Checked = calcOpts.glyphOfRejuvenation;
@@ -74,6 +75,8 @@ namespace Rawr.Tree
             chbGlyphLifebloom.Checked = calcOpts.glyphOfLifebloom;
             chbGlyphInnervate.Checked = calcOpts.glyphOfInnervate;
 
+             */
+             
             cbNewManaRegen.Checked = calcOpts.newManaRegen;
             cbInnervate.Checked = calcOpts.Innervates > 0;
             tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
@@ -86,7 +89,7 @@ namespace Rawr.Tree
             loading = false;
 
             //Enable/Disable Glyph Checkboxes
-            chbSomeGlyph_CheckedChanged(null, null);
+//            chbSomeGlyph_CheckedChanged(null, null);
         }
 
         private void chbSomeGlyph_CheckedChanged(object sender, EventArgs e)
@@ -243,6 +246,8 @@ namespace Rawr.Tree
             calcOpts.PenalizeEverything = cbApplyMore.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+       
     }
 
     [Serializable]

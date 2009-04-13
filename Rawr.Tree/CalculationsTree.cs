@@ -431,7 +431,7 @@ namespace Rawr.Tree
             //                          add the out of FSR effect (effectively 4.5 to 5 times regen based on talents) and            
             //                          saves ManaFromInnervate for display in mp5 tooltip 
             float manaFromInnervate = spiritRegenPlusMDF * (5 - stats.SpellCombatManaRegeneration) * 4; // (Adds 400% + moves out of FSR), 20 seconds = 4 * mp5, 
-            if (calcOpts.glyphOfInnervate)
+            if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate) //(calcOpts.glyphOfInnervate)
                 manaFromInnervate *= (calcOpts.Innervates + 0.2f);      // Only works for 1 innervate in the fight
             else
                 manaFromInnervate *= calcOpts.Innervates;

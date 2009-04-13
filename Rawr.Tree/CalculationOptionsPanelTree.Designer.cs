@@ -59,6 +59,7 @@
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.chbGlyphInnervate = new System.Windows.Forms.CheckBox();
@@ -454,6 +455,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label2);
             this.tabPage3.Controls.Add(this.groupBox10);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -462,6 +464,16 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Glyphs";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoEllipsis = true;
+            this.label2.Location = new System.Drawing.Point(6, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(262, 43);
+            this.label2.TabIndex = 56;
+            this.label2.Text = "Select Glyphs from the Talents Tab.                              Modelled Glyphs:" +
+                "";
             // 
             // groupBox10
             // 
@@ -477,7 +489,7 @@
             this.groupBox10.Controls.Add(this.extendedToolTipLabel9);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel7);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel6);
-            this.groupBox10.Location = new System.Drawing.Point(6, 6);
+            this.groupBox10.Location = new System.Drawing.Point(6, 99);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(277, 135);
             this.groupBox10.TabIndex = 0;
@@ -497,6 +509,9 @@
             // chbGlyphInnervate
             // 
             this.chbGlyphInnervate.AutoSize = true;
+            this.chbGlyphInnervate.Checked = true;
+            this.chbGlyphInnervate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbGlyphInnervate.Enabled = false;
             this.chbGlyphInnervate.Location = new System.Drawing.Point(256, 115);
             this.chbGlyphInnervate.Name = "chbGlyphInnervate";
             this.chbGlyphInnervate.Size = new System.Drawing.Size(15, 14);
@@ -518,6 +533,7 @@
             // chbGlyphSwiftmend
             // 
             this.chbGlyphSwiftmend.AutoSize = true;
+            this.chbGlyphSwiftmend.Enabled = false;
             this.chbGlyphSwiftmend.Location = new System.Drawing.Point(256, 95);
             this.chbGlyphSwiftmend.Name = "chbGlyphSwiftmend";
             this.chbGlyphSwiftmend.Size = new System.Drawing.Size(15, 14);
@@ -529,6 +545,7 @@
             // chbGlyphRejuvenation
             // 
             this.chbGlyphRejuvenation.AutoSize = true;
+            this.chbGlyphRejuvenation.Enabled = false;
             this.chbGlyphRejuvenation.Location = new System.Drawing.Point(256, 55);
             this.chbGlyphRejuvenation.Name = "chbGlyphRejuvenation";
             this.chbGlyphRejuvenation.Size = new System.Drawing.Size(15, 14);
@@ -540,6 +557,7 @@
             // chbGlyphRegrowth
             // 
             this.chbGlyphRegrowth.AutoSize = true;
+            this.chbGlyphRegrowth.Enabled = false;
             this.chbGlyphRegrowth.Location = new System.Drawing.Point(256, 35);
             this.chbGlyphRegrowth.Name = "chbGlyphRegrowth";
             this.chbGlyphRegrowth.Size = new System.Drawing.Size(15, 14);
@@ -551,6 +569,9 @@
             // chbGlyphLifebloom
             // 
             this.chbGlyphLifebloom.AutoSize = true;
+            this.chbGlyphLifebloom.Checked = true;
+            this.chbGlyphLifebloom.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbGlyphLifebloom.Enabled = false;
             this.chbGlyphLifebloom.Location = new System.Drawing.Point(256, 75);
             this.chbGlyphLifebloom.Name = "chbGlyphLifebloom";
             this.chbGlyphLifebloom.Size = new System.Drawing.Size(15, 14);
@@ -562,6 +583,9 @@
             // chbGlyphHT
             // 
             this.chbGlyphHT.AutoSize = true;
+            this.chbGlyphHT.Checked = true;
+            this.chbGlyphHT.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbGlyphHT.Enabled = false;
             this.chbGlyphHT.Location = new System.Drawing.Point(256, 15);
             this.chbGlyphHT.Name = "chbGlyphHT";
             this.chbGlyphHT.Size = new System.Drawing.Size(15, 14);
@@ -715,5 +739,6 @@
         private System.Windows.Forms.TrackBar tbOOMPenalty;
         private System.Windows.Forms.Label lblOOMPenalty;
         private System.Windows.Forms.CheckBox cbApplyMore;
+        private System.Windows.Forms.Label label2;
     }
 }

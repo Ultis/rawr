@@ -181,7 +181,7 @@ namespace Rawr.Tree
             #endregion
 
             #region Glyph of Healing Touch
-            if (calcOpts.glyphOfHealingTouch)
+            if (calcs.LocalCharacter.DruidTalents.GlyphOfHealingTouch) //(calcOpts.glyphOfHealingTouch)
             {
                 castTimeBeforeHaste -= 1.5f;
                 manaCost *= 1 - 0.25f;
@@ -453,7 +453,7 @@ namespace Rawr.Tree
             idolDHBonus = calculatedStats.LifebloomFinalHealBonus;
             #endregion
 
-            if (calcOpts.glyphOfLifebloom)
+            if (calcs.LocalCharacter.DruidTalents.GlyphOfLifebloom) //(calcOpts.glyphOfLifebloom)
                 periodicTicks += 1;
 
             manaCost *= (1-calculatedStats.LifebloomCostReduction);
