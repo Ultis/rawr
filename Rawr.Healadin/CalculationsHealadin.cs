@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Rawr.Healadin
@@ -12,6 +12,10 @@ namespace Rawr.Healadin
         {
             _subPointNameColorsMana = new Dictionary<string, System.Drawing.Color>();
             _subPointNameColorsMana.Add("Mana", System.Drawing.Color.FromArgb(0, 0, 255));
+
+
+            _subPointNameColorsTime = new Dictionary<string, System.Drawing.Color>();
+            _subPointNameColorsTime.Add("Seconds", System.Drawing.Color.Green);
 
             _subPointNameColorsRating = new Dictionary<string, System.Drawing.Color>();
             _subPointNameColorsRating.Add("Fight Healing", System.Drawing.Color.Red);
@@ -174,6 +178,8 @@ namespace Rawr.Healadin
                     _customChartNames = new string[] {
                     "Mana Pool Breakdown",
                     "Mana Usage Breakdown",
+                    "Healing Breakdown",
+                    "Rotation Breakdown",
 					};
                 return _customChartNames;
             }
@@ -181,6 +187,7 @@ namespace Rawr.Healadin
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColorsMana = null;
         private Dictionary<string, System.Drawing.Color> _subPointNameColorsRating = null;
+        private Dictionary<string, System.Drawing.Color> _subPointNameColorsTime = null;
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
@@ -421,6 +428,49 @@ namespace Rawr.Healadin
                 JotP.OverallPoints = JotP.ThroughputPoints = calc.UsageJotP;
                 BoL.OverallPoints = BoL.ThroughputPoints = calc.UsageBoL;
                 SS.OverallPoints = SS.ThroughputPoints = calc.UsageSS;
+
+                return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL, SS };
+            }
+            else if (chartName == "Healing Breakdown")
+            {
+                CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
+                if (calc == null) calc = new CharacterCalculationsHealadin();
+
+                ComparisonCalculationHealadin FoL = new ComparisonCalculationHealadin("Flash of Light");
+                ComparisonCalculationHealadin HL = new ComparisonCalculationHealadin("Holy Light");
+                ComparisonCalculationHealadin HS = new ComparisonCalculationHealadin("Holy Shock");
+                ComparisonCalculationHealadin GHL = new ComparisonCalculationHealadin("Glyph of Holy Light");
+                ComparisonCalculationHealadin BoL = new ComparisonCalculationHealadin("Beacon of Light");
+                ComparisonCalculationHealadin SS = new ComparisonCalculationHealadin("Sacred Shield");
+
+                FoL.OverallPoints = FoL.ThroughputPoints = calc.HealedFoL / calc.FightLength;
+                HL.OverallPoints = HL.ThroughputPoints = calc.HealedHL / calc.FightLength;
+                HS.OverallPoints = HS.ThroughputPoints = calc.HealedHS / calc.FightLength;
+                GHL.OverallPoints = GHL.ThroughputPoints = calc.HealedGHL / calc.FightLength;
+                BoL.OverallPoints = BoL.ThroughputPoints = calc.HealedBoL / calc.FightLength;
+                SS.OverallPoints = SS.ThroughputPoints = calc.HealedSS / calc.FightLength;
+
+                return new ComparisonCalculationBase[] { FoL, HL, HS, GHL, BoL, SS };
+            }
+            else if (chartName == "Rotation Breakdown")
+            {
+                _subPointNameColors = _subPointNameColorsTime;
+                CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
+                if (calc == null) calc = new CharacterCalculationsHealadin();
+
+                ComparisonCalculationHealadin FoL = new ComparisonCalculationHealadin("Flash of Light");
+                ComparisonCalculationHealadin HL = new ComparisonCalculationHealadin("Holy Light");
+                ComparisonCalculationHealadin HS = new ComparisonCalculationHealadin("Holy Shock");
+                ComparisonCalculationHealadin JotP = new ComparisonCalculationHealadin("Judgements and Seals");
+                ComparisonCalculationHealadin BoL = new ComparisonCalculationHealadin("Beacon of Light");
+                ComparisonCalculationHealadin SS = new ComparisonCalculationHealadin("Sacred Shield");
+
+                FoL.OverallPoints = FoL.ThroughputPoints = calc.RotationFoL;
+                HL.OverallPoints = HL.ThroughputPoints = calc.RotationHL;
+                HS.OverallPoints = HS.ThroughputPoints = calc.RotationHS;
+                JotP.OverallPoints = JotP.ThroughputPoints = calc.RotationJotP;
+                BoL.OverallPoints = BoL.ThroughputPoints = calc.RotationBoL;
+                SS.OverallPoints = SS.ThroughputPoints = calc.RotationSS;
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL, SS };
             }
