@@ -2,48 +2,99 @@
 <ArrayOfSavedTalentSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SavedTalentSpec>
     <Name>Untalented</Name>
-    <Class>Druid</Class>
-    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Untalented</Name>
-    <Class>Priest</Class>
-    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Untalented</Name>
-    <Class>Mage</Class>
-    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Untalented</Name>
     <Class>Warlock</Class>
     <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Rogue</Class>
     <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Hunter</Class>
     <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Druid</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000000.000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Priest</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Mage</Class>
+    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Shaman</Class>
-    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Warrior</Class>
-    <Spec>0000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Spec>0000000000000000000000000000000000000000000000000000000000000000000000000000000000000.000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
-    <Name>Full Cat 80</Name>
+    <Name>Untalented</Name>
+    <Class>DeathKnight</Class>
+    <Spec>0000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Cat</Name>
     <Class>Druid</Class>
-    <Spec>00000000000000000000000000005522021323220100531000303135100550301200000000000000000</Spec>
+    <Spec>000000000000000000000000000050320213232201005312003031351120450301200000000000000000.011010000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>54</Tree2>
+    <Tree3>17</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Bear</Name>
+    <Class>Druid</Class>
+    <Spec>000000000000000000000000000050323213032201035312030321351120350001000000000000000000.000001110000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>60</Tree2>
+    <Tree3>11</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>0/53/18 (Frostfire)</Name>
@@ -69,11 +120,6 @@
     <Name>18/53/0 (Fireball)</Name>
     <Class>Mage</Class>
     <Spec>23000503110003000000000000000000550320123033300531203003510000000000000000000000000000.1000000100000010</Spec>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Untalented</Name>
-    <Class>Shaman</Class>
-    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>0/16/54 - Resto (LHW) - 1 Free Point</Name>
@@ -104,14 +150,6 @@
     <Name>5/54/12 Prot: SotP + 2/5 Reckoning</Name>
     <Class>Paladin</Class>
     <Spec>050000000000000000000000000500513520312231333312321502300002000000000000000000</Spec>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Untalented</Name>
-    <Class>Paladin</Class>
-    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000.0000000000000000001010001000000100</Spec>
-    <Tree1>0</Tree1>
-    <Tree2>0</Tree2>
-    <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Holy: Sanctity of Battle</Name>
