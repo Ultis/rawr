@@ -1480,7 +1480,7 @@ namespace Rawr
 				{
 					try
 					{
-                        Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale);
+                        Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTRDataToolStripMenuItem.Checked ? "ptr" : "www");
 					}
 					catch (Exception ex)
 					{

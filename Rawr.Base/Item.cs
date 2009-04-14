@@ -979,13 +979,14 @@ namespace Rawr
 
 		public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, "en"); }
-        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale)
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, locale, "www"); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale, string wowheadSite)
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
 			if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
-				Item newItem = useWowhead ? Wowhead.GetItem(id, false) : Armory.GetItem(id);
+				Item newItem = useWowhead ? Wowhead.GetItem(wowheadSite, id.ToString(), false) : Armory.GetItem(id);
                 if (newItem != null)
                 {
                     if (!locale.Equals("en"))

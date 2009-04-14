@@ -185,6 +185,7 @@ namespace Rawr
 
 		public static void ProcessEquipLine(string line, Stats stats, bool isArmory)
 		{
+            Match match;
 			if (line.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))
 			{
 				//stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
@@ -218,10 +219,10 @@ namespace Rawr
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 16f }, 10f, 0f, 1f, 20));
                 //stats.AttackPower += 320; //Fury of the Five Flights = 320ap
             }
-            else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 20 spell power for the next 10 sec, stacking up to 10 times."))
+            else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times.")).Success)
             {
-                // Illustration of the Dragon Soul
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 20f }, 10f, 0f, 1f, 10));
+                // Illustration of the Dragon Soul and similar
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["maxStack"].Value)));
             }
             else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 25 spell power for the next 10 sec, stacking up to 5 times."))
             {
@@ -1040,11 +1041,6 @@ namespace Rawr
                         break;
                 }
                 // we don't have a stat for this case so do the average
-                if (!added_to_special_stats)
-                {
-                    float average_spell_power = spell_power / (cooldown_sec / uptime);
-                    stats.SpellPower += average_spell_power;
-                }
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = spell_power }, uptime, cooldown_sec));
             }
             else if (line.StartsWith("Increases your Spirit by "))

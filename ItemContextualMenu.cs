@@ -308,7 +308,7 @@ namespace Rawr
 		void _menuItemRefreshWowhead_Click(object sender, EventArgs e)
 		{
 			//ItemCache.DeleteItem(_item);
-			Item newItem = Wowhead.GetItem(_item.Id);
+			Item newItem = Wowhead.GetItem(FormMain.Instance.usePTRDataToolStripMenuItem.Checked ? "ptr" : "www", _item.Id.ToString(), false);
 			if (newItem == null)
 			{
 				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
