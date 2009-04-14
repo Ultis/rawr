@@ -1908,9 +1908,9 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
 		public int Brambles { get { return _data[5]; } set { _data[5] = value; } }
 
 		[TalentData(6, "Nature's Grace", 3, 0, 2, 3, 3, new string[] {
-@"All spell criticals have a 33% chance to grace you with a blessing of nature, reducing the casting time of your next spell by 0.5 sec.",
-@"All spell criticals have a 66% chance to grace you with a blessing of nature, reducing the casting time of your next spell by 0.5 sec.",
-@"All spell criticals have a 100% chance to grace you with a blessing of nature, reducing the casting time of your next spell by 0.5 sec.",})]
+@"All spell criticals have a 33% chance to grace you with a blessing of nature, increasing your spell casting time by 20% for 3 sec.",
+@"All spell criticals have a 66% chance to grace you with a blessing of nature, increasing your spell casting time by 20% for 3 sec.",
+@"All spell criticals have a 100% chance to grace you with a blessing of nature, increasing your spell casting time by 20% for 3 sec.",})]
 		public int NaturesGrace { get { return _data[6]; } set { _data[6] = value; } }
 
 		[TalentData(7, "Nature's Splendor", 1, 0, 3, 3, 3, new string[] {
@@ -1931,9 +1931,9 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
 		public int Vengeance { get { return _data[9]; } set { _data[9] = value; } }
 
 		[TalentData(10, "Celestial Focus", 3, 0, 3, 4, -1, new string[] {
-@"Gives your Starfire spells a 5% chance to stun the target for 3 sec and increases your total spell haste by 1%.",
-@"Gives your Starfire spells a 10% chance to stun the target for 3 sec and increases your total spell haste by 2%.",
-@"Gives your Starfire spells a 15% chance to stun the target for 3 sec and increases your total spell haste by 3%.",})]
+@"Reduces the pushback suffered from damaging attacks while casting Starfire, Hibernate, and Hurricane by 23% and increases your total spell haste by 1%.",
+@"Reduces the pushback suffered from damaging attacks while casting Starfire, Hibernate, and Hurricane by 46% and increases your total spell haste by 2%.",
+@"Reduces the pushback suffered from damaging attacks while casting Starfire, Hibernate, and Hurricane by 70% and increases your total spell haste by 3%.",})]
 		public int CelestialFocus { get { return _data[10]; } set { _data[10] = value; } }
 
 		[TalentData(11, "Lunar Guidance", 3, 0, 1, 5, -1, new string[] {
@@ -2013,9 +2013,9 @@ The act of shapeshifting frees the caster of Polymorph and Movement Impairing ef
 		public int WrathOfCenarius { get { return _data[21]; } set { _data[21] = value; } }
 
 		[TalentData(22, "Eclipse", 3, 0, 1, 9, -1, new string[] {
-@"When you critically hit with Starfire, you have a 33% chance of increasing damage done by Wrath by 10%. When you critically hit with Wrath, you have a 20% chance of increasing your critical strike chance with Starfire by 15%. Effect lasts 15 sec and has a 30 sec cooldown.",
-@"When you critically hit with Starfire, you have a 66% chance of increasing damage done by Wrath by 10%. When you critically hit with Wrath, you have a 40% chance of increasing your critical strike chance with Starfire by 15%. Effect lasts 15 sec and has a 30 sec cooldown.",
-@"When you critically hit with Starfire, you have a 100% chance of increasing damage done by Wrath by 10%. When you critically hit with Wrath, you have a 60% chance of increasing your critical strike chance with Starfire by 15%. Effect lasts 15 sec and has a 30 sec cooldown.",})]
+@"When you critically hit with Starfire, you have a 33% chance of increasing damage done by Wrath by 30%. When you critically hit with Wrath, you have a 20% chance of increasing your critical strike chance with Starfire by 30%. Effect lasts 15 sec and has a 30 sec cooldown.",
+@"When you critically hit with Starfire, you have a 66% chance of increasing damage done by Wrath by 30%. When you critically hit with Wrath, you have a 40% chance of increasing your critical strike chance with Starfire by 30%. Effect lasts 15 sec and has a 30 sec cooldown.",
+@"When you critically hit with Starfire, you have a 100% chance of increasing damage done by Wrath by 30%. When you critically hit with Wrath, you have a 60% chance of increasing your critical strike chance with Starfire by 30%. Effect lasts 15 sec and has a 30 sec cooldown.",})]
 		public int Eclipse { get { return _data[22]; } set { _data[22] = value; } }
 
 		[TalentData(23, "Typhoon", 1, 0, 2, 9, 17, new string[] {
@@ -2263,9 +2263,9 @@ Clears the effect of Fear and makes you immune to Fear for the duration.",})]
 		public int NaturalShapeshifter { get { return _data[63]; } set { _data[63] = value; } }
 
 		[TalentData(64, "Intensity", 3, 2, 1, 3, -1, new string[] {
-@"Allows 10% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 4 rage.",
-@"Allows 20% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 7 rage.",
-@"Allows 30% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 10 rage.",})]
+@"Allows 17% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 4 rage.",
+@"Allows 33% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 7 rage.",
+@"Allows 50% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 10 rage.",})]
 		public int Intensity { get { return _data[64]; } set { _data[64] = value; } }
 
 		[TalentData(65, "Omen of Clarity", 1, 2, 2, 3, -1, new string[] {
