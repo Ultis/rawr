@@ -12,7 +12,7 @@ namespace Rawr.Cat
 		public bool MaintainMangle { get; set; }
 		public bool GlyphOfShred { get; set; }
 		public float AttackSpeed { get; set; }
-		public float ChanceCrit { get; set; }
+		public float ChanceExtraCPPerHit { get; set; }
 		public bool OmenOfClarity { get; set; }
 		public float AvoidedAttacks { get; set; }
 		public float CPGEnergyCostMultiplier { get; set; }
@@ -43,7 +43,7 @@ namespace Rawr.Cat
 
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
 			float ripDuration, float rakeDuration, float savageRoarBonusDuration, float berserkDuration, float attackSpeed, 
-			bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float chanceCrit, float cpgEnergyCostMultiplier, float clearcastOnBleedChance,
+			bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float chanceExtraCPPerHit, float cpgEnergyCostMultiplier, float clearcastOnBleedChance,
 			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteDamage, 
 			float mangleEnergy, float shredEnergy, float rakeEnergy, float ripEnergy, float biteEnergy, float roarEnergy)
 		{
@@ -55,7 +55,7 @@ namespace Rawr.Cat
 			OmenOfClarity = omenOfClarity;
 			GlyphOfShred = glyphOfShred;
 			AvoidedAttacks = avoidedAttacks;
-			ChanceCrit = chanceCrit;
+			ChanceExtraCPPerHit = chanceExtraCPPerHit;
 			CPGEnergyCostMultiplier = cpgEnergyCostMultiplier;
 			ClearcastOnBleedChance = clearcastOnBleedChance;
 
@@ -79,7 +79,7 @@ namespace Rawr.Cat
 			BiteEnergy = biteEnergy;
 			RoarEnergy = roarEnergy;
 
-			float c = chanceCrit, h = (1f - chanceCrit);
+			float c = chanceExtraCPPerHit, h = (1f - chanceExtraCPPerHit);
 			_chanceExtraCP[0] = c;
 			_chanceExtraCP[1] = c*h;
 			_chanceExtraCP[2] = c*c+c*h*h;
@@ -179,65 +179,66 @@ namespace Rawr.Cat
 
 			#region Damage Finishers
 			float ripDuration = GlyphOfShred && useShred ? RipDuration + 6 : RipDuration;
+			float averageFinisherCP = 5f + _chanceExtraCP[4];
 			float ripCount = 0f;
 			float biteCount = 0f;
 			if (useRip && !useFerociousBite)
 			{
 				#region Rip
-				float ripCyclesFromAvailableCP = totalCPAvailable / 5f;
+				float ripCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
 				ripCount += ripCyclesFromAvailableCP;
 				totalCPAvailable = 0;
 				totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
 
-				float ripCycleEnergy = (5f / CPPerCPG) * cpgEnergy + RipEnergy;
+				float ripCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RipEnergy;
 				float ripCycleCountMax = Duration / ripDuration;
 				float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
 				
 				ripCount += ripCycleCount;
-				cpgCount += (5f / CPPerCPG) * ripCycleCount;
+				cpgCount += (averageFinisherCP / CPPerCPG) * ripCycleCount;
 				totalEnergyAvailable -= ripCycleEnergy * ripCycleCount;
 				#endregion
 			}
 			else if (!useRip && useFerociousBite)
 			{
 				#region Ferocious Bite
-				float biteCyclesFromAvailableCP = totalCPAvailable / 5f;
+				float biteCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
 				biteCount += biteCyclesFromAvailableCP;
 				totalCPAvailable = 0;
 				totalEnergyAvailable -= BiteEnergy * biteCyclesFromAvailableCP;
 
-				float biteCycleEnergy = (5f / CPPerCPG) * cpgEnergy + BiteEnergy;
+				float biteCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + BiteEnergy;
 				float biteCycleCount = totalEnergyAvailable / biteCycleEnergy;
 
 				biteCount += biteCycleCount;
-				cpgCount += biteCycleCount * (5f / CPPerCPG);
+				cpgCount += biteCycleCount * (averageFinisherCP / CPPerCPG);
 				totalEnergyAvailable = 0f;
 				#endregion
 			}
 			else if (useRip && useFerociousBite)
 			{
 				#region Rip & Ferocious Bite
-				float ripCyclesFromAvailableCP = totalCPAvailable / 5f;
+				float ripCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
 				ripCount += ripCyclesFromAvailableCP;
 				totalCPAvailable = 0;
 				totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
 
-				float ripCycleEnergy = (5f / CPPerCPG) * cpgEnergy + RipEnergy;
+				float ripCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RipEnergy;
 				float ripCycleCountMax = Duration / ripDuration;
 				float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
 
 				ripCount += ripCycleCount;
-				cpgCount += ripCycleCount * (5f / CPPerCPG);
+				cpgCount += ripCycleCount * (averageFinisherCP / CPPerCPG);
 				totalEnergyAvailable -= ripCycleEnergy * ripCycleCount;
 
 				if (ripCycleCount > 0 && totalEnergyAvailable / ripCycleCount > BiteEnergy)
 				{
 					float energyAvailablePerRipCycle = totalEnergyAvailable / ripCycleCount;
 					float biteCycleCP = CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy);
-					float biteDamageMultiplier = (1f + biteCycleCP) / 6f; //A 1pt Bite does 2/6 of full dmaage, 2pt does 3/6, 3pt does 4/6, 4pt does 5/6, 5pt does 6/6
+					float biteDamageMultiplier = Math.Min(5f, (1f + biteCycleCP) / 6f); //A 1pt Bite does 2/6 of full dmaage, 2pt does 3/6, 3pt does 4/6, 4pt does 5/6, 5pt does 6/6
 
 					biteCount += ripCycleCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
-					cpgEnergy += ripCycleCount * (biteCycleCP / CPPerCPG);
+					cpgCount += ripCycleCount * (biteCycleCP / CPPerCPG);
 					totalEnergyAvailable = 0f;
 				}
 				#endregion

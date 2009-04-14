@@ -290,7 +290,7 @@ namespace Rawr.Cat
 
 			float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
 
-			float cpPerCPG = (chanceHit + chanceCrit * (1 + stats.BonusCPOnCrit)) / chanceNonAvoided;
+			float cpPerCPG = (chanceHit + chanceCrit * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
 			#endregion
@@ -339,7 +339,7 @@ namespace Rawr.Cat
 				maintainMangle, (character.DruidTalents.GlyphOfMangle ? 18f : 12f) + timeToReapplyDebuffs, 
 				12f + stats.BonusRipDuration + timeToReapplyDebuffs, 9f + timeToReapplyDebuffs, stats.BonusSavageRoarDuration,
 				character.DruidTalents.Berserk > 0 ? (character.DruidTalents.GlyphOfBerserk ? 20f : 15f) : 0f, attackSpeed, 
-				character.DruidTalents.OmenOfClarity > 0, character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCrit, 
+				character.DruidTalents.OmenOfClarity > 0, character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCrit * stats.BonusCPOnCrit, 
 				cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
