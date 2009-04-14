@@ -77,7 +77,6 @@ namespace Rawr.Mage
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
         public float SnaredTime { get; set; }
-        public bool Mode31 { get; set; }
         public float WarlockSpellPower { get; set; }
         public float[] TalentScore { get; set; }
 

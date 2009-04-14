@@ -208,12 +208,11 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.buttonEditTalentScores = new System.Windows.Forms.Button();
             this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label108 = new System.Windows.Forms.Label();
             this.numericUpDownDisplayAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownComparisonAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
-            this.label104 = new System.Windows.Forms.Label();
-            this.checkBoxMode31 = new System.Windows.Forms.CheckBox();
             this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
             this.label102 = new System.Windows.Forms.Label();
             this.checkBoxEnableHastedEvocation = new System.Windows.Forms.CheckBox();
@@ -248,7 +247,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonEditTalentScores = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -2124,8 +2122,6 @@
             this.tabPage4.Controls.Add(this.label108);
             this.tabPage4.Controls.Add(this.numericUpDownDisplayAdvancedConstraintsLevel);
             this.tabPage4.Controls.Add(this.numericUpDownComparisonAdvancedConstraintsLevel);
-            this.tabPage4.Controls.Add(this.label104);
-            this.tabPage4.Controls.Add(this.checkBoxMode31);
             this.tabPage4.Controls.Add(this.buttonAdvancedSolverLog);
             this.tabPage4.Controls.Add(this.label102);
             this.tabPage4.Controls.Add(this.checkBoxEnableHastedEvocation);
@@ -2166,6 +2162,16 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // buttonEditTalentScores
+            // 
+            this.buttonEditTalentScores.Location = new System.Drawing.Point(3, 476);
+            this.buttonEditTalentScores.Name = "buttonEditTalentScores";
+            this.buttonEditTalentScores.Size = new System.Drawing.Size(197, 23);
+            this.buttonEditTalentScores.TabIndex = 200;
+            this.buttonEditTalentScores.Text = "Edit Talent Scores";
+            this.buttonEditTalentScores.UseVisualStyleBackColor = true;
+            this.buttonEditTalentScores.Click += new System.EventHandler(this.buttonEditTalentScores_Click);
             // 
             // numericUpDownMaxThreads
             // 
@@ -2226,26 +2232,6 @@
             this.numericUpDownComparisonAdvancedConstraintsLevel.Name = "numericUpDownComparisonAdvancedConstraintsLevel";
             this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
             this.numericUpDownComparisonAdvancedConstraintsLevel.TabIndex = 196;
-            // 
-            // label104
-            // 
-            this.label104.AutoSize = true;
-            this.label104.Location = new System.Drawing.Point(0, 87);
-            this.label104.Name = "label104";
-            this.label104.Size = new System.Drawing.Size(52, 13);
-            this.label104.TabIndex = 195;
-            this.label104.Text = "3.1 Mode";
-            this.toolTipMage.SetToolTip(this.label104, "Changes mechanics to 3.1 mode.");
-            // 
-            // checkBoxMode31
-            // 
-            this.checkBoxMode31.AutoSize = true;
-            this.checkBoxMode31.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "Mode31", true));
-            this.checkBoxMode31.Location = new System.Drawing.Point(185, 87);
-            this.checkBoxMode31.Name = "checkBoxMode31";
-            this.checkBoxMode31.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMode31.TabIndex = 194;
-            this.checkBoxMode31.UseVisualStyleBackColor = true;
             // 
             // buttonAdvancedSolverLog
             // 
@@ -2593,16 +2579,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // buttonEditTalentScores
-            // 
-            this.buttonEditTalentScores.Location = new System.Drawing.Point(3, 476);
-            this.buttonEditTalentScores.Name = "buttonEditTalentScores";
-            this.buttonEditTalentScores.Size = new System.Drawing.Size(197, 23);
-            this.buttonEditTalentScores.TabIndex = 200;
-            this.buttonEditTalentScores.Text = "Edit Talent Scores";
-            this.buttonEditTalentScores.UseVisualStyleBackColor = true;
-            this.buttonEditTalentScores.Click += new System.EventHandler(this.buttonEditTalentScores_Click);
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2835,8 +2811,6 @@
         private System.Windows.Forms.Label label103;
         private System.Windows.Forms.CheckBox checkBoxPowerInfusion;
         private System.Windows.Forms.Button buttonAdvancedSolverLog;
-        private System.Windows.Forms.Label label104;
-        private System.Windows.Forms.CheckBox checkBoxMode31;
         private System.Windows.Forms.NumericUpDown numericUpDownComparisonAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownDisplayAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxThreads;

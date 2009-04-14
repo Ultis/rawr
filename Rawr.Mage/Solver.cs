@@ -583,127 +583,63 @@ namespace Rawr.Mage
             float spellCritPerInt = 0f;
             float spellCritBase = 0f;
             float baseRegen = 0f;
-            if (calculationOptions.Mode31)
+            switch (playerLevel)
             {
-                switch (playerLevel)
-                {
-                    case 70:
-                        spellCritPerInt = 0.0125f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005596f;
-                        break;
-                    case 71:
-                        spellCritPerInt = 0.0116f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005316f;
-                        break;
-                    case 72:
-                        spellCritPerInt = 0.0108f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005049f;
-                        break;
-                    case 73:
-                        spellCritPerInt = 0.0101f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004796f;
-                        break;
-                    case 74:
-                        spellCritPerInt = 0.0093f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004555f;
-                        break;
-                    case 75:
-                        spellCritPerInt = 0.0087f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004327f;
-                        break;
-                    case 76:
-                        spellCritPerInt = 0.0081f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004110f;
-                        break;
-                    case 77:
-                        spellCritPerInt = 0.0075f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003903f;
-                        break;
-                    case 78:
-                        spellCritPerInt = 0.007f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003708f;
-                        break;
-                    case 79:
-                        spellCritPerInt = 0.0065f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003522f;
-                        break;
-                    case 80:
-                        spellCritPerInt = 0.006f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003345f;
-                        break;
-                }
-            }
-            else
-            {
-                switch (playerLevel)
-                {
-                    case 70:
-                        spellCritPerInt = 0.0125f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.009327f;
-                        break;
-                    case 71:
-                        spellCritPerInt = 0.0116f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.008859f;
-                        break;
-                    case 72:
-                        spellCritPerInt = 0.0108f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.008415f;
-                        break;
-                    case 73:
-                        spellCritPerInt = 0.0101f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.007993f;
-                        break;
-                    case 74:
-                        spellCritPerInt = 0.0093f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.007592f;
-                        break;
-                    case 75:
-                        spellCritPerInt = 0.0087f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.007211f;
-                        break;
-                    case 76:
-                        spellCritPerInt = 0.0081f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.006849f;
-                        break;
-                    case 77:
-                        spellCritPerInt = 0.0075f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.006506f;
-                        break;
-                    case 78:
-                        spellCritPerInt = 0.007f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.006179f;
-                        break;
-                    case 79:
-                        spellCritPerInt = 0.0065f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005869f;
-                        break;
-                    case 80:
-                        spellCritPerInt = 0.006f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005575f;
-                        break;
-                }
+                case 70:
+                    spellCritPerInt = 0.0125f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.005596f;
+                    break;
+                case 71:
+                    spellCritPerInt = 0.0116f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.005316f;
+                    break;
+                case 72:
+                    spellCritPerInt = 0.0108f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.005049f;
+                    break;
+                case 73:
+                    spellCritPerInt = 0.0101f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.004796f;
+                    break;
+                case 74:
+                    spellCritPerInt = 0.0093f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.004555f;
+                    break;
+                case 75:
+                    spellCritPerInt = 0.0087f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.004327f;
+                    break;
+                case 76:
+                    spellCritPerInt = 0.0081f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.004110f;
+                    break;
+                case 77:
+                    spellCritPerInt = 0.0075f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.003903f;
+                    break;
+                case 78:
+                    spellCritPerInt = 0.007f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.003708f;
+                    break;
+                case 79:
+                    spellCritPerInt = 0.0065f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.003522f;
+                    break;
+                case 80:
+                    spellCritPerInt = 0.006f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.003345f;
+                    break;
             }
             float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * talents.ArcaneInstability + 0.15f * 0.02f * talents.ArcaneConcentration * talents.ArcanePotency + baseStats.CritRating / 1400f * calculationOptions.LevelScalingFactor + baseStats.SpellCrit + talents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * talents.Pyromaniac;
 
@@ -1201,11 +1137,7 @@ namespace Rawr.Mage
                         evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
                         evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
                         Stats evocationStats = calculations.GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                        float spiritFactor = 0.005575f;
-                        if (calculationOptions.Mode31)
-                        {
-                            spiritFactor = 0.003345f;
-                        }
+                        float spiritFactor = 0.003345f;
                         double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * spiritFactor * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - baseStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + evocationStats.ManaRestoreFromMaxManaPerSecond * evocationStats.Mana);
                         double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
                         if (evocationRegen > calculationResult.EvocationRegen)

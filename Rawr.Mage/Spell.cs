@@ -1567,10 +1567,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
-            if (calculations.CalculationOptions.Mode31)
-            {
-                BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
-            }
+            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
             BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact + 0.02f * calculations.MageTalents.FirePower) / (1 + 0.02f * calculations.MageTalents.FirePower);
         }
     }
@@ -1738,10 +1735,7 @@ namespace Rawr.Mage
             {
                 BaseDirectDamageModifier *= 1.05f;
             }
-            if (calculations.CalculationOptions.Mode31)
-            {
-                BaseCritRate += 0.01f * calculations.MageTalents.WintersChill;
-            }
+            BaseCritRate += 0.01f * calculations.MageTalents.WintersChill;
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFrostbolt;
             BaseCritRate += 0.02f * calculations.MageTalents.EmpoweredFrostbolt;
             BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
@@ -1799,10 +1793,7 @@ namespace Rawr.Mage
                 BasePeriodicDamage = 0.0f;
                 BaseCritRate += 0.05f;
             }
-            if (calculations.CalculationOptions.Mode31)
-            {
-                BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
-            }
+            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
             DotDuration = 8;
             BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFireball;
@@ -1860,10 +1851,7 @@ namespace Rawr.Mage
                 BaseCritRate += 0.02f;
                 BaseDirectDamageModifier *= 1.02f;
             }
-            if (calculations.CalculationOptions.Mode31)
-            {
-                BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
-            }
+            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
             tormentFactor = 0.04f * calculations.MageTalents.TormentTheWeak;
             BaseSpellModifier *= (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
@@ -2518,7 +2506,6 @@ namespace Rawr.Mage
             : base("Blizzard", true, false, true, 30, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 4, 1)
         {
             Calculate(calculations);
-            if (!calculations.CalculationOptions.Mode31) CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + calculations.MageTalents.IceShards / 3.0f + 0.25f * calculations.MageTalents.SpellPower + calculations.BaseStats.CritBonusDamage)); // special case because it is not affected by Burnout
             if (calculations.MageTalents.ImprovedBlizzard > 0)
             {
                 float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);

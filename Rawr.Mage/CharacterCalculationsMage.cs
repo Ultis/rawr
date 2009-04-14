@@ -891,11 +891,7 @@ namespace Rawr.Mage
             ManaSources["Other"] = 0.0f;
             ManaUsage["Overflow"] = 0.0f;
             ManaUsage["Summon Water Elemental"] = 0.0f;
-            float spiritFactor = 0.005575f;
-            if (CalculationOptions.Mode31)
-            {
-                spiritFactor = 0.003345f;
-            }
+            float spiritFactor = 0.003345f;
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)

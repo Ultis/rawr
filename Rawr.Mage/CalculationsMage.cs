@@ -750,26 +750,12 @@ namespace Rawr.Mage
             }
             if (statsTotal.MageMageArmor > 0)
             {
-                if (calculationOptions.Mode31)
-                {
-                    statsTotal.SpellCombatManaRegeneration += 0.5f + (character.MageTalents.GlyphOfMageArmor ? 0.2f : 0.0f);
-                }
-                else
-                {
-                    statsTotal.SpellCombatManaRegeneration += 0.3f + (character.MageTalents.GlyphOfMageArmor ? 0.2f : 0.0f);
-                }
+                statsTotal.SpellCombatManaRegeneration += 0.5f + (character.MageTalents.GlyphOfMageArmor ? 0.2f : 0.0f);
                 statsTotal.AllResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + character.MageTalents.ArcaneShielding * 0.25f);
             }
             if (statsTotal.MageMoltenArmor > 0)
             {
-                if (calculationOptions.Mode31)
-                {
-                    statsTotal.CritRating += (0.35f + (character.MageTalents.GlyphOfMoltenArmor ? 0.2f : 0.0f)) * statsTotal.Spirit;
-                }
-                else
-                {
-                    statsTotal.SpellCrit += 0.03f + (character.MageTalents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
-                }
+                statsTotal.CritRating += (0.35f + (character.MageTalents.GlyphOfMoltenArmor ? 0.2f : 0.0f)) * statsTotal.Spirit;
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
@@ -780,37 +766,29 @@ namespace Rawr.Mage
                 statsTotal.BonusManaGem += 0.4f;
             }
 
-            if (calculationOptions.Mode31)
+            switch (character.MageTalents.ArcaneMeditation)
             {
-                switch (character.MageTalents.ArcaneMeditation)
-                {
-                    case 1:
-                        statsTotal.SpellCombatManaRegeneration += 0.17f;
-                        break;
-                    case 2:
-                        statsTotal.SpellCombatManaRegeneration += 0.33f;
-                        break;
-                    case 3:
-                        statsTotal.SpellCombatManaRegeneration += 0.5f;
-                        break;
-                }
-                switch (character.MageTalents.Pyromaniac)
-                {
-                    case 1:
-                        statsTotal.SpellCombatManaRegeneration += 0.17f;
-                        break;
-                    case 2:
-                        statsTotal.SpellCombatManaRegeneration += 0.33f;
-                        break;
-                    case 3:
-                        statsTotal.SpellCombatManaRegeneration += 0.5f;
-                        break;
-                }
+                case 1:
+                    statsTotal.SpellCombatManaRegeneration += 0.17f;
+                    break;
+                case 2:
+                    statsTotal.SpellCombatManaRegeneration += 0.33f;
+                    break;
+                case 3:
+                    statsTotal.SpellCombatManaRegeneration += 0.5f;
+                    break;
             }
-            else
+            switch (character.MageTalents.Pyromaniac)
             {
-                statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.ArcaneMeditation;
-                statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.Pyromaniac;
+                case 1:
+                    statsTotal.SpellCombatManaRegeneration += 0.17f;
+                    break;
+                case 2:
+                    statsTotal.SpellCombatManaRegeneration += 0.33f;
+                    break;
+                case 3:
+                    statsTotal.SpellCombatManaRegeneration += 0.5f;
+                    break;
             }
 
             if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;
