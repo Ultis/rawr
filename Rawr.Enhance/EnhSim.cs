@@ -24,9 +24,7 @@ namespace Rawr.Enhance
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.BaseStats;
             CombatStats cs = new CombatStats(character, stats);
-            float chanceCrit = cs.ChanceWhiteCrit * 100f;
-            float chanceSpellCrit = cs.ChanceSpellCrit * 100f;
-
+            
             removeUseProcEffects(character, stats);
 
             StringBuilder sb = new StringBuilder();
@@ -44,6 +42,7 @@ namespace Rawr.Enhance
             sb.AppendLine("oh_speed                        " + OHSpeed.ToString());
             sb.AppendLine("mh_dps                          " + wdpsMH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
+            float chanceCrit = cs.ChanceWhiteCrit * 100f;
             sb.AppendLine("mh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             float hitBonus = StatConversion.GetHitFromRating(stats.HitRating) * 100f;
@@ -61,6 +60,7 @@ namespace Rawr.Enhance
             sb.AppendLine("int                             " + stats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spi                             " + stats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spellpower                      " + stats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
+            float chanceSpellCrit = cs.ChanceSpellCrit * 100f;
             sb.AppendLine("spell_crit                      " + chanceSpellCrit.ToString("F2", CultureInfo.InvariantCulture));
             hitBonus = StatConversion.GetSpellHitFromRating(stats.HitRating) * 100f;
             sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));

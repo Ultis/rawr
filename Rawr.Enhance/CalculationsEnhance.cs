@@ -504,8 +504,8 @@ namespace Rawr
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
             calculatedStats.TotalExpertise = (float) Math.Floor(cs.ExpertiseBonus * 400f + 0.0001);
-            
-            calculatedStats.SwingDamage = dpsMelee;
+
+            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.ChanceWhiteHit, cs.ChanceDodge, cs.GlancingRate, cs.ChanceWhiteCrit);
             calculatedStats.Stormstrike = dpsSS;
             calculatedStats.LavaLash = dpsLL;
             calculatedStats.EarthShock = dpsES;
@@ -909,7 +909,6 @@ namespace Rawr
         }
         #endregion
     }
-        
 
     #region Char Calcs Get/Set
     public class CharacterCalculationsEnhance : CharacterCalculationsBase
@@ -1094,8 +1093,8 @@ namespace Rawr
 			set { _meleeDamage = value; }
 		}
 
-        private float _swingDamage;
-        public float SwingDamage
+        private DPSAnalysis _swingDamage;
+        public DPSAnalysis SwingDamage
         {
             get { return _swingDamage; }
             set { _swingDamage = value; }
@@ -1249,6 +1248,13 @@ namespace Rawr
             return dictValues;
 		}
 
+        private String dpsOutputFormat(DPSAnalysis dpsStat, float totaldps)
+        {
+            float percent = dpsStat.dps / totaldps * 100f;
+            return string.Format("{0}\r\n{1}% of total dps",
+                dpsStat, percent.ToString("F2", CultureInfo.InvariantCulture));
+        }
+        
         private String dpsOutputFormat(float dps, float totaldps)
         {
             float percent = dps / totaldps * 100f;

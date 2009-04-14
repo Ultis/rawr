@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Rawr.Enhance
@@ -58,6 +59,7 @@ namespace Rawr.Enhance
             UpdateCalcs();
         }
 
+        public float GlancingRate { get { return glancingRate; } }
         public float FightLength { get { return _calcOpts.FightLength * 60f; } }
         public float BloodlustHaste { get { return bloodlustHaste; } }
         public float ChanceDodge { get { return chanceDodge; } }
@@ -238,4 +240,54 @@ namespace Rawr.Enhance
             return spellMissesPerSec;
         }
     }
+
+    #region DPSAnalysis
+
+    public class DPSAnalysis
+    {
+        float _dps = 0f;
+        float _miss = -1f;
+        float _dodge = -1f;
+        float _glancing = -1f;
+        float _hit = -1f;
+        float _crit = -1f;
+
+        public DPSAnalysis(float dps, float miss, float dodge, float glancing, float crit)
+        {
+            _dps = dps;
+            _miss = miss;
+            _dodge = dodge;
+            _glancing = glancing;
+            _crit = crit;
+            _hit = 1f;
+            if (miss > 0) 
+                _hit -= miss;
+            if (dodge > 0)
+                _hit -= dodge;
+            if (glancing > 0)
+                _hit -= glancing;
+            if (crit > 0)
+                _hit -= crit;
+        }
+
+        public float dps { get { return _dps; } }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(_dps.ToString("F2", CultureInfo.InvariantCulture) + "*");
+            if (_miss >= 0)
+                sb.AppendLine("Miss " + (100f * _miss).ToString("F2", CultureInfo.InvariantCulture) + "%");
+            if (_dodge >= 0)
+                sb.AppendLine("Dodge " + (100f * _dodge).ToString("F2", CultureInfo.InvariantCulture) + "%");
+            if (_glancing >= 0)
+                sb.AppendLine("Glancing " + (100f * _glancing).ToString("F2", CultureInfo.InvariantCulture) + "%");
+            if (_hit >= 0)
+                sb.AppendLine("Hit " + (100f * _hit).ToString("F2", CultureInfo.InvariantCulture) + "%");
+            if (_crit >= 0)
+                sb.AppendLine("Crit " + (100f * _crit).ToString("F2", CultureInfo.InvariantCulture) + "%");
+            return sb.ToString();
+        }
+    }
+    #endregion
 }
