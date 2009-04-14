@@ -1,8 +1,30 @@
-Rawr v2.2.0b6
+Rawr v2.2.0.7
 ------------
- Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
+Welcome to Rawr 2.2.0.7.
    
 Recent Changes:
+v2.2.0.7
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
+ - There have been many many changes since 2.1.9. For a full list of changes check the ReadMe.txt. The following are the most important changes and some recent changes since 2.2.0.b6.
+ - Gemming Revamp! Rawr will now automatically handle gems, just as you'd expect. See Help > Gemmings for details.
+ - Multithreading! Rawr will now better utilize your processor, resulting in a 40% to 100% speed boost for rendering most charts, and optimizing.
+ - Special Effects Revamp! Rawr now uses a new system for describing special effects that most trinkets have. You can edit the effects in the item editor. The old custom stats are still in because not all models have transitioned to the new system, but we will be phasing them out in new versions.
+ - Talent Optimizer! You can now use optimizer to optimize talents. Not all models have talent optimization constraints available, so in those cases it might be of limited value since it will otherwise tend to skip nonmodeled but otherwise important talents.
+ - Glyphs are now part of talent specs! Glyphs now get saved together with the talent spec and there is a glyph chart available now for all models.
+ - Default buffs/glyphs! When loading character from armory the models can now automatically enable common buffs and glyphs.
+ - NOTE: Rawr 2.2 is not backwards compatible. Please do not copy data files from previous versions of Rawr. Your existing character files should load into Rawr 2.2 just fine, except you'll have to reselect enchants on your gear and glyphs.
+ - Rawr.Healadin: More 3.1 changes.
+ - Rawr.EnhSham: More 3.1 changes. Updated EnhSim export.
+ - Rawr.Retribution: More 3.1 changes.
+ - Rawr.Mage: More 3.1 changes. Performance Improvements.
+ - Rawr.ProtPaladin: More 3.1 changes and fixes.
+ - Rawr.Cat: More 3.1 changes. Updated combo point model.
+ - Rawr.Bear: More 3.1 changes.
+ - Rawr.Warlock: More 3.1 changes.
+ - Rawr.Tree: More 3.1 changes.
+ - Rawr.RestoSham: More 3.1 changes.
+ - Rawr.TankDK and Rawr.Hunter are not updated for 3.1
+ 
 v2.2.0b6
  - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b6. Thanks!
  - Start Page! There's now a start page when you launch Rawr, which helps you get started. We're still filling in some of the content on this page, but we're looking for lots of feedback on how you like it, and what else you might want on it.

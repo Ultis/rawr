@@ -279,7 +279,7 @@ namespace Rawr
 		public string GetRandomDidYouKnow()
 		{
 			string html = DownloadText("http://rawr.codeplex.com/Wiki/View.aspx?title=DidYouKnow");
-			if (html == null || !html.Contains("-------<br />") || !html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Astrylian\">Astrylian</a>")) return string.Empty;
+            if (html == null || !html.Contains("-------<br />") || !(html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Astrylian\">Astrylian</a>") || html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Kavan\">Kavan</a>"))) return string.Empty;
 			html = html.Substring(html.IndexOf("-------<br />") + 13);
 			if (!html.Contains("<br />-------")) return string.Empty;
 			html = html.Substring(0, html.IndexOf("<br />-------"));
@@ -298,7 +298,7 @@ namespace Rawr
 		public string GetKnownIssues()
 		{
 			string html = DownloadText("http://rawr.codeplex.com/Wiki/View.aspx?title=KnownIssues");
-			if (html == null || !html.Contains("-------<br />") || !html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Astrylian\">Astrylian</a>")) return string.Empty;
+            if (html == null || !html.Contains("-------<br />") || !(html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Astrylian\">Astrylian</a>") || html.Contains("&nbsp;by&nbsp;<a id=\"ctl00_ctl00_MasterContent_Content_wikiEditByLink\" href=\"http://www.codeplex.com/site/users/view/Kavan\">Kavan</a>"))) return string.Empty;
 			html = html.Substring(html.IndexOf("-------<br />") + 13);
 			if (!html.Contains("<br />-------")) return string.Empty;
 			html = html.Substring(0, html.IndexOf("<br />-------"));
