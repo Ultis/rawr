@@ -4969,11 +4969,11 @@ Instantly attack the target causing [AP*50/100] damage. In addition, the next 5 
 		public int FuriousAttacks { get { return _data[51]; } set { _data[51] = value; } }
 
 		[TalentData(52, "Improved Berserker Stance", 5, 1, 4, 8, -1, new string[] {
-            @"Increases attack power by 4% and reduces threat caused by 2% while in Berserker Stance.",
-            @"Increases attack power by 8% and reduces threat caused by 4% while in Berserker Stance.",
-            @"Increases attack power by 12% and reduces threat caused by 6% while in Berserker Stance.",
-            @"Increases attack power by 16% and reduces threat caused by 8% while in Berserker Stance.",
-            @"Increases attack power by 20% and reduces threat caused by 10% while in Berserker Stance.",})]
+            @"Increases strength by 4% and reduces threat caused by 2% while in Berserker Stance.",
+            @"Increases strength by 8% and reduces threat caused by 4% while in Berserker Stance.",
+            @"Increases strength by 12% and reduces threat caused by 6% while in Berserker Stance.",
+            @"Increases strength by 16% and reduces threat caused by 8% while in Berserker Stance.",
+            @"Increases strength by 20% and reduces threat caused by 10% while in Berserker Stance.",})]
 		public int ImprovedBerserkerStance { get { return _data[52]; } set { _data[52] = value; } }
 
 		[TalentData(53, "Heroic Fury", 1, 1, 1, 9, -1, new string[] {
