@@ -392,84 +392,89 @@ Instantly heals the caster for 263 to 325.
 		public int SpiritualHealing { get { return _data[43]; } set { _data[43] = value; } }
 
 		[TalentData(44, "Holy Concentration", 3, 1, 1, 7, -1, new string[] {
-@"Gives you a 10% chance to enter a Clearcasting state after casting any critical Flash Heal, Binding Heal, or Greater Heal spell.  The Clearcasting state reduces the mana cost of your next Flash Heal, Binding Heal, or Greater Heal spell by 100%.",
-@"Gives you a 20% chance to enter a Clearcasting state after casting any critical Flash Heal, Binding Heal, or Greater Heal spell.  The Clearcasting state reduces the mana cost of your next Flash Heal, Binding Heal, or Greater Heal spell by 100%.",
-@"Gives you a 30% chance to enter a Clearcasting state after casting any critical Flash Heal, Binding Heal, or Greater Heal spell.  The Clearcasting state reduces the mana cost of your next Flash Heal, Binding Heal, or Greater Heal spell by 100%.",})]
+@"Your mana regeneration from spirit is increased by 16% for 8 sec after you critically heal with Flash Heal, Greater Heal, Binding Heal or Renew.",
+@"Your mana regeneration from spirit is increased by 32% for 8 sec after you critically heal with Flash Heal, Greater Heal, Binding Heal or Renew.",
+@"Your mana regeneration from spirit is increased by 50% for 8 sec after you critically heal with Flash Heal, Greater Heal, Binding Heal or Renew.",})]
 		public int HolyConcentration { get { return _data[44]; } set { _data[44] = value; } }
 
 		[TalentData(45, "Lightwell", 1, 1, 2, 7, 40, new string[] {
-@"733 Mana,40 yd range,
+@"734 Mana,40 yd range,
 0.5 sec cast,3 min cooldown,
 Creates a Holy Lightwell.  Members of your raid or party can click the Lightwell to restore 801 health over 6 sec. Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.
 
 			 Trainable Ranks Listed Below:
-			 Rank 2: 295 Mana, 1164 Health
-			 Rank 3: 365 Mana, 1599 Health
-			 Rank 4: 445 Mana, 2361 Health
+			 Rank 2: 734 Mana, 1164 Health
+			 Rank 3: 734 Mana, 1599 Health
+			 Rank 4: 656 Mana, 2361 Health
 			 Rank 5: 656 Mana, 3915 Health
 			 Rank 6: 656 Mana, 4620 Health",})]
 		public int Lightwell { get { return _data[45]; } set { _data[45] = value; } }
 
 		[TalentData(46, "Blessed Resilience", 3, 1, 3, 7, -1, new string[] {
-@"Critical hits made against you have a 20% chance to prevent you from being critically hit again for 6 sec.",
-@"Critical hits made against you have a 40% chance to prevent you from being critically hit again for 6 sec.",
-@"Critical hits made against you have a 60% chance to prevent you from being critically hit again for 6 sec.",})]
+@"Increases the effectiveness of your healing spells by 1%, and critical hits made against you have a 20% chance to prevent you from being critically hit again for 6 sec.",
+@"Increases the effectiveness of your healing spells by 2%, and critical hits made against you have a 40% chance to prevent you from being critically hit again for 6 sec.",
+@"Increases the effectiveness of your healing spells by 3%, and critical hits made against you have a 60% chance to prevent you from being critically hit again for 6 sec.",})]
 		public int BlessedResilience { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Empowered Healing", 5, 1, 2, 8, -1, new string[] {
+        [TalentData(47, "Body and Soul", 2, 1, 1, 8, -1, new string[] {
+@"When you cast Power Word: Shield, you increase the target's movement speed by 30% for 4 sec, and you have a 50% chance when you cast Abolish Disease on yourself to also cleanse 1 poison effect in addition to diseases.",
+@"When you cast Power Word: Shield, you increase the target's movement speed by 60% for 4 sec, and you have a 100% chance when you cast Abolish Disease on yourself to also cleanse 1 poison effect in addition to diseases.",})]
+        public int BodyandSoul { get { return _data[47]; } set { _data[47] = value; } }
+        
+        [TalentData(48, "Empowered Healing", 5, 1, 2, 8, -1, new string[] {
 @"Your Greater Heal spell gains an additional 8% and your Flash Heal and Binding Heal gain an additional 4% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 16% and your Flash Heal and Binding Heal gain an additional 8% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 24% and your Flash Heal and Binding Heal gain an additional 12% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 32% and your Flash Heal and Binding Heal gain an additional 16% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 40% and your Flash Heal and Binding Heal gain an additional 20% of your bonus healing effects.",})]
-		public int EmpoweredHealing { get { return _data[47]; } set { _data[47] = value; } }
+		public int EmpoweredHealing { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(48, "Serendipity", 3, 1, 3, 8, -1, new string[] {
-@"If your Greater Heal or Flash Heal spells heal your target over maximum health, you are instantly refunded 8% of the spell's mana cost.",
-@"If your Greater Heal or Flash Heal spells heal your target over maximum health, you are instantly refunded 17% of the spell's mana cost.",
-@"If your Greater Heal or Flash Heal spells heal your target over maximum health, you are instantly refunded 25% of the spell's mana cost.",})]
-		public int Serendipity { get { return _data[48]; } set { _data[48] = value; } }
+		[TalentData(49, "Serendipity", 3, 1, 3, 8, -1, new string[] {
+@"When you heal with Binding Heal or Flash Heal, the cast time of your next Greater Heal or Prayer of Healing spell is reduced by 4%. Stacks up to 3 times. Lasts 20 sec.",
+@"When you heal with Binding Heal or Flash Heal, the cast time of your next Greater Heal or Prayer of Healing spell is reduced by 8%. Stacks up to 3 times. Lasts 20 sec.",
+@"When you heal with Binding Heal or Flash Heal, the cast time of your next Greater Heal or Prayer of Healing spell is reduced by 12%. Stacks up to 3 times. Lasts 20 sec.",})]
+		public int Serendipity { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(49, "Improved Holy Concentration", 3, 1, 1, 9, 44, new string[] {
-@"Increases the chance you'll enter Holy Concentration by 5%, and also increases your spell haste by 10% for the next 2 Greater Heal, Flash Heal or Binding Heal spells after you gain Holy Concentration. Lasts 20 sec.",
-@"Increases the chance you'll enter Holy Concentration by 10%, and also increases your spell haste by 20% for the next 2 Greater Heal, Flash Heal or Binding Heal spells after you gain Holy Concentration. Lasts 20 sec.",
-@"Increases the chance you'll enter Holy Concentration by 15%, and also increases your spell haste by 30% for the next 2 Greater Heal, Flash Heal or Binding Heal spells after you gain Holy Concentration. Lasts 20 sec.",})]
-		public int ImprovedHolyConcentration { get { return _data[49]; } set { _data[49] = value; } }
+		[TalentData(50, "Empowered Renew", 3, 1, 1, 9, -1, new string[] {
+@"Your Renew spell gains an additional 5% of your bonus healing effects, and your Renew will instantly heal the target for 5% of the total periodic effect.",
+@"Your Renew spell gains an additional 10% of your bonus healing effects, and your Renew will instantly heal the target for 10% of the total periodic effect.",
+@"Your Renew spell gains an additional 15% of your bonus healing effects, and your Renew will instantly heal the target for 15% of the total periodic effect.",})]
+		public int EmpoweredRenew { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(50, "Circle of Healing", 1, 1, 2, 9, -1, new string[] {
+		[TalentData(51, "Circle of Healing", 1, 1, 2, 9, -1, new string[] {
 @"927 Mana,40 yd range,
 Instant cast,
-Heals up to 5 friendly party or raid members within 15 yards of the target for 250 to 274.
+Heals up to 5 friendly party or raid members within 15 yards of the target for 343 to 379.
 
 			 Trainable Ranks Listed Below:
-			 Rank 2: 425 Mana, 292 to 323 Healing
-			 Rank 3: 460 Mana, 332 to 367 Healing
-			 Rank 4: 505 Mana, 376 to 415 Healing
-			 Rank 5: 550 Mana, 416 to 459 Healing
-			 Rank 6: 760 Mana, 597 to 659 Healing
-			 Rank 7: 890 Mana, 684 to 756 Healing
+			 Rank 2: 927 Mana, 403 to 445 Healing
+			 Rank 3: 927 Mana, 458 to 506 Healing
+			 Rank 4: 927 Mana, 518 to 572 Healing
+			 Rank 5: 811 Mana, 572 to 632 Healing
+			 Rank 6: 811 Mana, 825 to 911 Healing
+			 Rank 7: 811 Mana, 958 to 1058 Healing
 			",})]
-		public int CircleOfHealing { get { return _data[50]; } set { _data[50] = value; } }
+		public int CircleOfHealing { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(51, "Test of Faith", 3, 1, 3, 9, -1, new string[] {
-@"Increases healing by 2% and spell critical effect chance by 2% on friendly targets at or below 50% health.",
-@"Increases healing by 4% and spell critical effect chance by 4% on friendly targets at or below 50% health.",
-@"Increases healing by 6% and spell critical effect chance by 6% on friendly targets at or below 50% health.",})]
-		public int TestOfFaith { get { return _data[51]; } set { _data[51] = value; } }
+		[TalentData(52, "Test of Faith", 3, 1, 3, 9, -1, new string[] {
+@"Increases healing by 4% on friendly targets at or below 50% health.",
+@"Increases healing by 8% on friendly targets at or below 50% health.",
+@"Increases healing by 12% on friendly targets at or below 50% health.",})]
+		public int TestOfFaith { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(52, "Divine Providence", 5, 1, 2, 10, -1, new string[] {
+		[TalentData(53, "Divine Providence", 5, 1, 2, 10, -1, new string[] {
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing, Divine Hymn and Prayer of Mending by 2% and reduces the cooldown of your Prayer of Mending by 6%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing, Divine Hymn and Prayer of Mending by 4% and reduces the cooldown of your Prayer of Mending by 12%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing, Divine Hymn and Prayer of Mending by 6% and reduces the cooldown of your Prayer of Mending by 18%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing, Divine Hymn and Prayer of Mending by 8% and reduces the cooldown of your Prayer of Mending by 24%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing, Divine Hymn and Prayer of Mending by 10% and reduces the cooldown of your Prayer of Mending by 30%.",})]
-		public int DivineProvidence { get { return _data[52]; } set { _data[52] = value; } }
+		public int DivineProvidence { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(53, "Guardian Spirit", 1, 1, 2, 11, -1, new string[] {
+		[TalentData(54, "Guardian Spirit", 1, 1, 2, 11, -1, new string[] {
 @"231 Mana,40 yd range,
 Instant cast,3 min cooldown,
 Calls upon a guardian spirit to watch over the friendly target. The spirit increases the healing received by the target by 40%, and also prevents the target from dying by sacrificing itself. This sacrifice terminates the effect but heals the target of 50% of their maximum health. Lasts 10 sec.",})]
-		public int GuardianSpirit { get { return _data[53]; } set { _data[53] = value; } }
+		public int GuardianSpirit { get { return _data[54]; } set { _data[54] = value; } }
 
 		[TalentData(54, "Spirit Tap", 3, 2, 1, 1, -1, new string[] {
 @"Gives you a 33% chance to gain a 100% bonus to your Spirit after killing a target that yields experience or honor.  For the duration, your Mana will regenerate at a 50% rate while casting. Lasts 15 sec.",

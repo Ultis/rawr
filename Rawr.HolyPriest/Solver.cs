@@ -121,10 +121,13 @@ namespace Rawr.HolyPriest
 
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
-            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
+//            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
+//                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
+            // improved holy concentration removed in patch 3.1
+            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f)
                 * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
             float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
-            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f;
+            float ihchaste = 0f; // character.PriestTalents.ImprovedHolyConcentration * 0.1f; // improved holy concentration removed in patch 3.1
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
             float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
@@ -132,7 +135,8 @@ namespace Rawr.HolyPriest
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
 
             // Test of Faith gives 2-6% extra crit on targets below 50%.
-            simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
+            // this is no longer true in patch 3.1
+            //simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
 
             // Add on Renewed Hope crit for Disc Maintank Rotation.
             if (Rotation == 7)
@@ -553,17 +557,21 @@ namespace Rawr.HolyPriest
 
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
-            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
+//            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
+//                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
+            // improved holy concentration removed in patch 3.1
+            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f)
                 * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
             float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
-            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f;
+//            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f; // improved holy concentration removed in patch 3.1
             float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
             float raptureconst = CalculationsHolyPriest.GetRaptureConst(character) * simstats.Mana / baseMana * character.PriestTalents.Rapture / 5f * calculationOptions.Rapture / 100f;
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
             float divineaegis = character.PriestTalents.DivineAegis * 0.1f;
 
             // Test of Faith gives 2-6% extra crit on targets below 50%.
-            simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
+            // no longer true in patch 3.1
+            //simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
 
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float solbhchance = 1f - (float)Math.Pow(1f - solchance, 2);
