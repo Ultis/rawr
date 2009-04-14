@@ -122,49 +122,73 @@ namespace Rawr.Moonkin
         public ProcEffect(SpecialEffect effect)
         {
             this.Effect = effect;
-            Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+            // Currently only shadow damage procs use special effects system
+            if (effect.Stats.ShadowDamage > 0)
             {
-                if (Effect.MaxStack > 0)
-                    sp += Effect.Stats.SpellPower * Effect.MaxStack;
-                else
-                    sp += Effect.Stats.SpellPower;
-                sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
-                sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
-            };
-            Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-            {
-                if (Effect.MaxStack > 0)
-                    sp -= Effect.Stats.SpellPower * Effect.MaxStack;
-                else
-                    sp -= Effect.Stats.SpellPower;
-                sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
-                sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
-            };
-            UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-            {
-                float upTime = 0.0f;
-                switch (Effect.Trigger)
+                CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
-                    case Trigger.Use:
-                        upTime = Effect.GetAverageUptime(0f, 1f);
-                        break;
-                    case Trigger.SpellHit:
-                    case Trigger.DamageSpellHit:
-                        upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, r.Solver.GetSpellHit(c));
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        upTime = Effect.GetAverageUptime(r.Duration / (r.CastCount - (r.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit);
-                        break;
-                    case Trigger.SpellCast:
-                    case Trigger.DamageSpellCast:
-                        upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
-                        break;
-                    default:
-                        break;
-                }
-                return upTime;
-            };
+                    switch (Effect.Trigger)
+                    {
+                        case Trigger.DoTTick:       // Extract
+                            float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                            return effect.GetAverageStats(r.Duration / r.DotTicks).ShadowDamage * specialDamageModifier;
+                        case Trigger.SpellHit:      // Pendulum
+                            specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                            return effect.GetAverageStats(r.Duration / r.CastCount).ShadowDamage * specialDamageModifier;
+                        case Trigger.DamageDone:    // DMC: Death
+                            specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                            return effect.GetAverageStats(r.Duration / (r.CastCount + r.DotTicks)).ShadowDamage * specialDamageModifier;
+                        default:
+                            return 0.0f;
+                    }
+                };
+            }
+            else
+            {
+                Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                {
+                    if (Effect.MaxStack > 0)
+                        sp += Effect.Stats.SpellPower * Effect.MaxStack;
+                    else
+                        sp += Effect.Stats.SpellPower;
+                    sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
+                    sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+                };
+                Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                {
+                    if (Effect.MaxStack > 0)
+                        sp -= Effect.Stats.SpellPower * Effect.MaxStack;
+                    else
+                        sp -= Effect.Stats.SpellPower;
+                    sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
+                    sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+                };
+                UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                {
+                    float upTime = 0.0f;
+                    switch (Effect.Trigger)
+                    {
+                        case Trigger.Use:
+                            upTime = Effect.GetAverageUptime(0f, 1f);
+                            break;
+                        case Trigger.SpellHit:
+                        case Trigger.DamageSpellHit:
+                            upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, r.Solver.GetSpellHit(c));
+                            break;
+                        case Trigger.DamageSpellCrit:
+                        case Trigger.SpellCrit:
+                            upTime = Effect.GetAverageUptime(r.Duration / (r.CastCount - (r.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit);
+                            break;
+                        case Trigger.SpellCast:
+                        case Trigger.DamageSpellCast:
+                            upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
+                            break;
+                        default:
+                            break;
+                    }
+                    return upTime;
+                };
+            }
         }
         public SpecialEffect Effect { get; set; }
         public Activate Activate { get; set; }
@@ -1097,7 +1121,7 @@ namespace Rawr.Moonkin
                         return averageDamage / timeBetweenProcs;
                     }
                 });
-            }*/
+            }
             // Pendulum of Telluric Currents (15% chance on spell hit, 45s internal cooldown)
             if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
             {
@@ -1143,7 +1167,7 @@ namespace Rawr.Moonkin
                         return averageDamage / timeBetweenProcs;
                     }
                 });
-            }
+            }*/
             // Je'Tze's Bell (10% chance of 100 mp5 for 15 sec)
             if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
             {

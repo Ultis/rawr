@@ -952,12 +952,15 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellCast ||
                     effect.Trigger == Trigger.SpellCrit ||
                     effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.SpellMiss)
+                    effect.Trigger == Trigger.SpellMiss ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
                 {
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.SpellCritRating > 0 ||
                         effect.Stats.SpellHasteRating > 0 ||
-                        effect.Stats.HighestStat > 0)
+                        effect.Stats.HighestStat > 0 ||
+                        effect.Stats.ShadowDamage > 0)
                     {
                         s.AddSpecialEffect(effect);
                     }
@@ -984,12 +987,15 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellCast ||
                     effect.Trigger == Trigger.SpellCrit ||
                     effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.SpellMiss)
+                    effect.Trigger == Trigger.SpellMiss ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
                 {
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.SpellCritRating > 0 ||
                         effect.Stats.SpellHasteRating > 0 ||
-                        effect.Stats.HighestStat > 0)
+                        effect.Stats.HighestStat > 0 ||
+                        effect.Stats.ShadowDamage > 0)
                     {
                         return true;
                     }

@@ -436,6 +436,7 @@ namespace Rawr
         PhysicalCrit,
         ManaGem,
         DoTTick,
+        DamageDone
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]

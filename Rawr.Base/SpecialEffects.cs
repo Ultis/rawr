@@ -827,10 +827,11 @@ namespace Rawr
                 stats.ExtractOfNecromanticPowerProc += 1;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { ShadowDamage = 1050f }, 1f, 45f, .1f));
             }
-            else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 744 to 956 Shadow damage."))
+            else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage."))
             {
                 // Darkmoon Card: Death
                 stats.DarkmoonCardDeathProc += 1;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { ShadowDamage = 2000f }, 1f, 45f, .35f));
             }
             else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
             {
