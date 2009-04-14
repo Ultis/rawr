@@ -353,13 +353,13 @@ namespace Rawr
             float adjustedMHDPS = (wdpsMH + APDPS);
             float adjustedOHDPS = (wdpsOH + APDPS) * .5f;
 
-            float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitPercentage;
-            float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitPercentage;
-            float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitPercentage;
+            float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifier;
+            float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifier;
+            float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
 
-            float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitPercentage;
-            float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitPercentage;
-            float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitPercentage;
+            float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifier;
+            float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitModifier;
+            float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitModifier;
 
             float meleeMultipliers = weaponMastery * cs.DamageReduction * cs.ChanceWhiteHit * (1 + bonusPhysicalDamage);
 
@@ -467,20 +467,25 @@ namespace Rawr
                 float soeBuff = IsBuffChecked("Strength of Earth Totem") ? 155f : 0f;
                 float enhTotems = IsBuffChecked("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 and assume SoE totem giving 178 str buff
-                float dogsAP = (dogsStr * 2 -20) + .31f * attackPower + FSglyphAP;
+                float dogsAP = (dogsStr * 2 - 20) + .31f * attackPower + FSglyphAP;
                 float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * character.ShamanTalents.DualWieldSpecialization) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
                 float dogsBaseDPS = 206.17f + dogsAP / 14f;
-                
-                float dogsMeleeNormal = dogsBaseDPS * (1 - dogsCrit - glancingRate);
+
+                float dogsMeleeNormal = dogsBaseDPS * (1 - dogsMissrate - dogsCrit - glancingRate);
                 float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
-                float dogsMeleeGlances = dogsBaseDPS * cs.GlancingHitPercentage;
-                
+                float dogsMeleeGlances = dogsBaseDPS * cs.GlancingHitModifier;
+
                 float dogsTotalDPS = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
                 float dogsMultipliers = cs.DamageReduction * (1 - dogsMissrate) * (1 + bonusPhysicalDamage);
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
+                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, glancingRate, dogsCrit);
+            }
+            else
+            {
+                calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0);
             }
             #endregion
 
@@ -506,15 +511,14 @@ namespace Rawr
             calculatedStats.TotalExpertise = (float) Math.Floor(cs.ExpertiseBonus * 400f + 0.0001);
 
             calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.ChanceWhiteHit, cs.ChanceDodge, cs.GlancingRate, cs.ChanceWhiteCrit);
-            calculatedStats.Stormstrike = dpsSS;
-            calculatedStats.LavaLash = dpsLL;
-            calculatedStats.EarthShock = dpsES;
-            calculatedStats.LightningBolt = dpsLB;
-            calculatedStats.WindfuryAttack = dpsWF;
-            calculatedStats.LightningShield = dpsLS;
-            calculatedStats.SearingMagma = dpsST;
-            calculatedStats.FlameTongueAttack = dpsFT;
-            calculatedStats.SpiritWolf = dpsDogs;
+            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
+            calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
+            calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+            calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+            calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
+            calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+            calculatedStats.SearingMagma = new DPSAnalysis(dpsST, 1 - cs.ChanceYellowHit, -1, -1, cs.ChanceYellowCrit);
+            calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceWhiteHit, -1, -1, cs.ChanceWhiteCrit);
 
 			return calculatedStats;
         }
@@ -1100,64 +1104,64 @@ namespace Rawr
             set { _swingDamage = value; }
         }
 
-        private float _windfuryAttack;
-        public float WindfuryAttack
+        private DPSAnalysis _windfuryAttack;
+        public DPSAnalysis WindfuryAttack
         {
             get { return _windfuryAttack; }
             set { _windfuryAttack = value; }
         }
 
-        private float _flametongueAttack;
-        public float FlameTongueAttack
+        private DPSAnalysis _flametongueAttack;
+        public DPSAnalysis FlameTongueAttack
         {
             get { return _flametongueAttack; }
             set { _flametongueAttack = value; }
         }
 
-        private float _lightningBolt;
-        public float LightningBolt
+        private DPSAnalysis _lightningBolt;
+        public DPSAnalysis LightningBolt
         {
             get { return _lightningBolt; }
             set { _lightningBolt = value; }
         }
 
-        private float _earthShock;
-        public float EarthShock
+        private DPSAnalysis _earthShock;
+        public DPSAnalysis EarthShock
         {
             get { return _earthShock; }
             set { _earthShock = value; }
         }
 
-        private float _searingMagma;
-        public float SearingMagma
+        private DPSAnalysis _searingMagma;
+        public DPSAnalysis SearingMagma
         {
             get { return _searingMagma; }
             set { _searingMagma = value; }
         }
 
-        private float _stormstrike;
-        public float Stormstrike
+        private DPSAnalysis _stormstrike;
+        public DPSAnalysis Stormstrike
         {
             get { return _stormstrike; }
             set { _stormstrike = value; }
         }
 
-        private float _spiritWolf;
-        public float SpiritWolf
+        private DPSAnalysis _spiritWolf;
+        public DPSAnalysis SpiritWolf
         {
             get { return _spiritWolf; }
             set { _spiritWolf = value; }
         }
 
-        private float _lightningShield;
-        public float LightningShield
+        private DPSAnalysis _lightningShield;
+        public DPSAnalysis LightningShield
         {
             get { return _lightningShield; }
             set { _lightningShield = value; }
         }
 
-        private float _lavaLash;
-        public float LavaLash
+        private DPSAnalysis _lavaLash;
+        public DPSAnalysis LavaLash
         {
             get { return _lavaLash; }
             set { _lavaLash = value; }

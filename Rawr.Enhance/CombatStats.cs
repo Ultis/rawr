@@ -65,9 +65,9 @@ namespace Rawr.Enhance
         public float ChanceDodge { get { return chanceDodge; } }
         public float ExpertiseBonus { get { return expertiseBonus; } }
 
-        public float NormalHitPercentage { get { return 1 - chanceWhiteCrit - glancingRate; } }
-        public float CritHitPercentage { get { return chanceWhiteCrit * (2f + _stats.BonusCritMultiplier); } }
-        public float GlancingHitPercentage { get { return glancingRate * .35f; } }
+        public float NormalHitModifier { get { return 1 - chanceWhiteCrit - glancingRate; } }
+        public float CritHitModifier { get { return chanceWhiteCrit * (2f + _stats.BonusCritMultiplier); } }
+        public float GlancingHitModifier { get { return glancingRate * .35f; } }
 
         public float ChanceSpellHit { get { return 1 - chanceSpellMiss; } }
         public float ChanceWhiteHit { get { return 1 - chanceWhiteMiss; } }
