@@ -534,15 +534,18 @@ namespace Rawr.Optimizer
                 List<Enchant> removeEnchants = new List<Enchant>();
                 foreach (Enchant enchant2 in filteredList)
                 {
-                    ArrayUtils.CompareResult compare = enchant.Stats.CompareTo(enchant2.Stats);
-                    if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
+                    if (enchant.Slot == enchant2.Slot)
                     {
-                        removeEnchants.Add(enchant2);
-                    }
-                    else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
-                    {
-                        addEnchant = false;
-                        break;
+                        ArrayUtils.CompareResult compare = enchant.Stats.CompareTo(enchant2.Stats);
+                        if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
+                        {
+                            removeEnchants.Add(enchant2);
+                        }
+                        else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
+                        {
+                            addEnchant = false;
+                            break;
+                        }
                     }
                 }
                 foreach (Enchant removeEnchant in removeEnchants)
