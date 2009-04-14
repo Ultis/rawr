@@ -74,6 +74,7 @@
             this.lhwBox = new System.Windows.Forms.GroupBox();
             this.chBox = new System.Windows.Forms.GroupBox();
             this.hwBox = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.GeneralPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -518,6 +519,7 @@
             // 
             // GlyphsPage
             // 
+            this.GlyphsPage.Controls.Add(this.label4);
             this.GlyphsPage.Controls.Add(this.groupBox3);
             this.GlyphsPage.Controls.Add(this.groupBox2);
             this.GlyphsPage.Location = new System.Drawing.Point(4, 22);
@@ -611,6 +613,16 @@
             this.hwBox.TabStop = false;
             this.hwBox.Text = "Healing Wave Totems";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(15, 205);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(237, 39);
+            this.label4.TabIndex = 32;
+            this.label4.Text = "THIS PAGE SHOULD NOT BE USED TO EDIT \r\nGLYPHS, ALL THESE BOXES HAVE BEEN \r\nDISABL" +
+                "ED.";
+            // 
             // CalculationOptionsPanelRestoSham
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -627,6 +639,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.GlyphsPage.ResumeLayout(false);
+            this.GlyphsPage.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -691,6 +704,7 @@
         private System.Windows.Forms.ComboBox cboHealingStyle;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label4;
 
     }
 }

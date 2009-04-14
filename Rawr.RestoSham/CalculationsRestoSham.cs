@@ -276,7 +276,7 @@ namespace Rawr.RestoSham
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             calcStats.TotalManaPool = (((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
-                ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) * (options.ManaTideEveryCD ? 1 : 0)) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+                ((options.ManaTidePlus ? .04f : 0))))) * (character.ShamanTalents.GlyphofManaTideTotem ? 1 : 0)) * (options.ManaTideEveryCD ? 1 : 0)) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f));
             calcStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
@@ -288,7 +288,7 @@ namespace Rawr.RestoSham
             #region Water Shield and Mana Calculations
             float WSC = (float)Math.Max((1.6 * (1 - (calcStats.SpellHaste))), 1.1f);
             float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (options.TotemWS1 ? 27 : 0);
-            float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
+            float Orbs = 4;
             #endregion
             #region Totem Stats
             float TotemHW1 = (options.TotemHW1 ? 88 : 0);  // +88 Healing to HW
@@ -309,7 +309,7 @@ namespace Rawr.RestoSham
             float ELWHPS = 0;
             if (character.ActiveBuffsContains("Earthliving Weapon"))
                 ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * (1f + ((character.ShamanTalents.Purification) * .02f));
-            float ExtraELW = (options.TankHeal ? 0 : 1) + (options.ELWGlyph ? .5f : 0);
+            float ExtraELW = (options.TankHeal ? 0 : 1) + (character.ShamanTalents.GlyphofEarthlivingWeapon ? .5f : 0);
             #endregion
             #region Earth Shield Calculations
             float ESTimer = 24 + (character.ShamanTalents.ImprovedEarthShield * 4);
@@ -332,7 +332,7 @@ namespace Rawr.RestoSham
             #endregion
             #region Chain Heal Calculations
             float TankCH = (options.TankHeal ? 1 : (1.75f + (options.GlyphCH ? .125f : 0)));
-            float CHMana = (((835 - ((TotemCH1 + TotemCH3) + (preserve * (options.TankHeal ? 1 : (3f + (options.GlyphCH ? 1f : 0)))))) * 
+            float CHMana = (((835 - ((TotemCH1 + TotemCH3) + (preserve * (options.TankHeal ? 1 : (3f + (character.ShamanTalents.GlyphofChainHeal ? 1f : 0)))))) * 
                 (1f - ((character.ShamanTalents.TidalFocus) * .01f))));
             float CHCast = (float)Math.Max(((2.6 - stats.CHCTDecrease) * (1 - (calcStats.SpellHaste))), 1.1f);
             float CHHeal = ((((((1130 + TotemCH2 + TotemCH4) + (Healing * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) *
@@ -347,7 +347,7 @@ namespace Rawr.RestoSham
                 (character.ShamanTalents.ImprovedWaterShield * .2f));
             float LHWHeal = ((((((1720 + (1.88f * (TotemLHW1 * (1 + (.02f * character.ShamanTalents.TidalWaves)))) + ((Healing * (1 + (.02f * 
                 character.ShamanTalents.TidalWaves)))) * (1.5f / 3.5f))) * (1f + ((character.ShamanTalents.Purification) * .02f))))
-                * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) 
+                * ((character.ShamanTalents.GlyphofLesserHealingWave ? (options.TankHeal ? 1.2f : 1) : 1))) 
                 );
             float LHWHPS = LHWHeal / LHWCast;
             float LHWMPS = LHWMana / LHWCast;
@@ -370,7 +370,7 @@ namespace Rawr.RestoSham
                 (character.ShamanTalents.ImprovedWaterShield * .2f));
             float LHWTCHeal = ((((((1720 + (1.88f * (TotemLHW1 * (1 + (.02f * character.ShamanTalents.TidalWaves)))) + ((Healing * (1 + (.02f *
                 character.ShamanTalents.TidalWaves)))) * (1.5f / 3.5f))) * (1f + (character.ShamanTalents.Purification * .02f))))
-                * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))));
+                * ((character.ShamanTalents.GlyphofLesserHealingWave ? (options.TankHeal ? 1.2f : 1) : 1))));
             float LHWTCHPS = LHWTCHeal / LHWTCCast;
             float LHWTCMPS = LHWTCMana / LHWTCCast;
             #endregion
@@ -593,7 +593,7 @@ namespace Rawr.RestoSham
             // Fight options:
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
-            float OrbRegen = (options.WaterShield3 ? 130 : 100);
+            float OrbRegen = (character.ShamanTalents.GlyphofWaterMastery ? 130 : 100);
             statsTotal.Mp5 += ((options.WaterShield ? OrbRegen : 0)) + (options.TotemWS1 ? 2 : 0) + (options.WaterShield ? (100f * statsTotal.WaterShieldIncrease) : 0);
 
             return statsTotal;
