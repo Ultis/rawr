@@ -4279,7 +4279,7 @@ The target becomes a Beacon of Light to all targets within a 40 yard radius. Any
 @"Reduces the duration of all Stun effects by an additional 30% and reduces the chance your spells will be dispelled by an additional 30%.",})]
 		public int Stoicism { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Guardian's Favor", 2, 1, 2, 2, -1, new string[] {
+		[TalentData(29, "Guardians Favor", 2, 1, 2, 2, -1, new string[] {
 @"Reduces the cooldown of your Hand of Protection by 60 sec and increases the duration of your Hand of Freedom by 2 sec.",
 @"Reduces the cooldown of your Hand of Protection by 120 sec and increases the duration of your Hand of Freedom by 4 sec.",})]
 		public int GuardiansFavor { get { return _data[29]; } set { _data[29] = value; } }
