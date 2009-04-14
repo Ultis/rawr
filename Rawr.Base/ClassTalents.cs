@@ -1732,7 +1732,7 @@ public int Shadowburn { get { return _data[61]; } set { _data[61] = value; } }
 @"Increases the critical strike chance of your Searing Pain spell by 10%.",})]
 		public int ImprovedSearingPain { get { return _data[65]; } set { _data[65] = value; } }
 
-                [TalentData(66, "Backlash", 3, 2, 1, 5, 62, new string[] {
+                [TalentData(66, "Backlash", 3, 2, 1, 5, 63, new string[] {
 @"Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 2% and gives you a 16% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 3% and gives you a 25% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",})]
@@ -1744,7 +1744,7 @@ public int Shadowburn { get { return _data[61]; } set { _data[61] = value; } }
 @"Increases the damage of your Immolate spell by 30%.",})]
 		public int ImprovedImmolate { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Devastation", 1, 2, 3, 5, 61, new string[] {
+		[TalentData(68, "Devastation", 1, 2, 3, 5, 62, new string[] {
 @"Increases the critical strike chance of your Destruction spells by 5%.",})]
 		public int Devastation { get { return _data[68]; } set { _data[68] = value; } }
 
@@ -1762,7 +1762,7 @@ public int Shadowburn { get { return _data[61]; } set { _data[61] = value; } }
 @"Increases the damage done by your Fire spells by 15% and reduces the cast time of your Incinerate spell by 0.25 sec.",})]
 		public int Emberstorm { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Conflagrate", 1, 2, 2, 7, 66, new string[] {
+		[TalentData(71, "Conflagrate", 1, 2, 2, 7, 67, new string[] {
 @"16% Base Mana,30 yd range,
 Instant Cast,10 sec cooldown,
 Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 15 sec of your Immolate or 8 sec of your Shadowflame."})]
