@@ -146,7 +146,7 @@ namespace Rawr.ProtPaladin
                     "Offensive Stats:Spell Power",
                     "Offensive Stats:Hit",
                     "Offensive Stats:Spell Hit",
-                    "Offensive Stats:Haste",
+                    "Offensive Stats:Physical Haste",
                     "Offensive Stats:Armor Penetration",
                     "Offensive Stats:Crit",
                     "Offensive Stats:Spell Crit",
@@ -348,7 +348,8 @@ focus on Survival Points.",
             calculatedStats.Crit = Lookup.CritChance(character, stats);
             calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats);
             calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);            
-            calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
+            calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(character, stats);
+            calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(character, stats);
             calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
@@ -710,7 +711,7 @@ focus on Survival Points.",
                 float procUptime = procDuration * procPerSecond;
 
                 statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / ProtPaladin.HasteRatingToHaste) * procUptime;
+                statsItems.HasteRating += (2.0f / ProtPaladin.HasteRatingToPhysicalHaste) * procUptime;
             }
 
             //Executioner
@@ -799,6 +800,7 @@ focus on Survival Points.",
             statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;           
             statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;//TODO: check PhysicalHaste
+            //statsTotal.PhysicalHaste = 
             // Haste Trinkets
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
@@ -1264,6 +1266,7 @@ focus on Survival Points.",
                 stats.PhysicalCrit +
                 stats.SpellCrit +
                 stats.PhysicalHaste +
+                stats.SpellHaste +
                 stats.AttackPower +
                 stats.SpellPower +
                 stats.CritRating +
@@ -1378,7 +1381,8 @@ focus on Survival Points.",
         public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
         public static readonly float HitRatingToSpellHit = 1.0f / 26.23199272f;
         public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
-        public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
+        public static readonly float HasteRatingToSpellHaste = 1.0f / 32.78998947f;
+        public static readonly float HasteRatingToPhysicalHaste = 1.0f / 25.22306882f;    // 3.1 Hybrid haste buff
         public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
         public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
         public static readonly float DefenseRatingToDefense = 1.0f / 4.918498039f;
@@ -1391,6 +1395,6 @@ focus on Survival Points.",
         public static readonly float ParryRatingToParry = 1.0f / 49.18498611f;
         public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
         public static readonly float ResilienceRatingToCritReduction = 1.0f / 81.97497559f;
-        public static readonly float ArPToArmorPenetration = 1.0f / 15.395298f;
+        public static readonly float ArPToArmorPenetration = 1.0f / 12.3162384f;
     }
 }

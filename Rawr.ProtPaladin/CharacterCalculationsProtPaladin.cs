@@ -97,7 +97,8 @@ namespace Rawr.ProtPaladin
         public float Crit { get; set; }
         public float SpellCrit { get; set; }
         public float Expertise { get; set; }
-        public float Haste { get; set; }
+        public float PhysicalHaste { get; set; }
+        public float SpellHaste { get; set; }
         public float ArmorPenetration { get; set; }
         public float WeaponSpeed { get; set; }
         public float TotalDamagePerSecond { get; set; }
@@ -167,7 +168,7 @@ namespace Rawr.ProtPaladin
             dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString();
 
-            dictValues.Add("Weapon Speed", string.Format("{0:0.00}*{1:0.00%} Haste", WeaponSpeed, Haste));
+            dictValues.Add("Weapon Speed", string.Format("{0:0.00}*{1:0.00%} Haste", WeaponSpeed, PhysicalHaste));
             dictValues.Add("Attack Power", string.Format("{0}", BasicStats.AttackPower));
             dictValues.Add("Spell Power", string.Format("{0}", BasicStats.SpellPower));
             dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}", Hit, BasicStats.HitRating, TargetLevel));
@@ -177,7 +178,7 @@ namespace Rawr.ProtPaladin
                 string.Format("{0:0.00}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.",
                                          BasicStats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + BasicStats.Expertise,
                                 BasicStats.ExpertiseRating, Expertise));
-            dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", Haste, BasicStats.HasteRating));
+            dictValues.Add("Physical Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", PhysicalHaste, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration",
                 string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}",
                                 ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));

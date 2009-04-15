@@ -83,17 +83,18 @@ namespace Rawr.ProtPaladin
         protected override void Calculate()
         {
             float tableSize = 0.0f;
-            float bonusHit = Lookup.HitChance(Character, Stats);
+            float bonusHit = Lookup.HitChance(Character, Stats);//TODO: already split spells from melee here, no need to run through melee attack table if it's a spell.
             float SpellHitChance = Lookup.SpellHitChance(Character, Stats);
             float bonusExpertise = Lookup.BonusExpertisePercentage(Character, Stats);
 
-            // Miss
             if (Lookup.IsSpell(Ability))
             {
+                // Miss
                 Miss = Math.Min(1.0f - tableSize, 1.0f - SpellHitChance);// - bonusHit));
                 tableSize += Miss;
                 // Crit
                 Critical = Lookup.SpellCritChance(Character, Stats);
+                tableSize += Critical;
             }
             else
             {
@@ -118,22 +119,24 @@ namespace Rawr.ProtPaladin
                     tableSize += Glance;
                 }
                 // Block
-                if (Ability == Ability.None)
+                if (Ability == Ability.None || Ability == Ability.HammerOfTheRighteous)
                 {
                     Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block)));
                     tableSize += Block;
                 }
                 // Critical Hit
                 Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability));
-                tableSize += Critical;
+                tableSize += Critical;//FIXME: Tablesize must not change when critchance is negative (boss)
             }
+
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
-            // Resist
+
+            // Partial Resist TODO: Partial Resists don't belong in the combat table, they're not an avoidance type but a damage multiplier.
             if (Lookup.HasPartials(Ability))
             {
                 Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist)));
-                tableSize += Resist;
+                //tableSize += Resist;
             }
         }
 

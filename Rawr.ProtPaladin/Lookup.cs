@@ -69,7 +69,7 @@ namespace Rawr.ProtPaladin
                         return 0.05f;
 
                 case HitResult.Resist:
-                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);//TODO: Find correct value for % chance to get resists.
+                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);//TODO: Find correct value for % chance to get partial resists.
 
                 default:
                     return 0.0f;
@@ -147,10 +147,16 @@ namespace Rawr.ProtPaladin
                     * ProtPaladin.ExpertiseToDodgeParryReduction) / 100.0f;
         }
 
-        public static float BonusHastePercentage(Character character, Stats stats)
+        public static float BonusPhysicalHastePercentage(Character character, Stats stats)
         {
-            return ((stats.HasteRating * ProtPaladin.HasteRatingToHaste) / 100.0f) + stats.PhysicalHaste;
+            return ((stats.HasteRating * ProtPaladin.HasteRatingToPhysicalHaste) / 100.0f) + stats.PhysicalHaste;
         }
+
+        public static float BonusSpellHastePercentage(Character character, Stats stats)
+        {
+            return ((stats.HasteRating * ProtPaladin.HasteRatingToSpellHaste) / 100.0f) + stats.SpellHaste;
+        }
+
 
         public static float HitChance(Character character, Stats stats)
         {
@@ -239,7 +245,7 @@ namespace Rawr.ProtPaladin
                 case Ability.SealOfRighteousness:
                 case Ability.RetributionAura:
             	case Ability.RighteousDefense:
-                    abilityCritChance = 0.0f;
+                    abilityCritChance = 0.0f;// can't crit
                     break;
                 case Ability.None:
                 case Ability.JudgementOfRighteousness:
@@ -248,7 +254,7 @@ namespace Rawr.ProtPaladin
                 case Ability.HammerOfTheRighteous:
                 case Ability.ShieldOfRighteousness:
                 case Ability.HammerOfWrath:
-                    abilityCritChance *= 1.0f;
+                    abilityCritChance *= 1.0f;// crit chance = melee
                     break;
                 case Ability.HolyWrath:
                 case Ability.SealOfVengeance:
@@ -260,7 +266,7 @@ namespace Rawr.ProtPaladin
                         abilityCritChance = SpellHitChance(character, stats);
                         break;
                     }
-                    abilityCritChance = spellCritChance;
+                    abilityCritChance = spellCritChance;// crit chance = spell
                     break;
             }
             return Math.Min(1.0f, abilityCritChance);
@@ -302,9 +308,9 @@ namespace Rawr.ProtPaladin
         public static float WeaponSpeed(Character character, Stats stats)
         {
             if (character.MainHand != null)
-                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusHastePercentage(character, stats)));
+                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusPhysicalHastePercentage(character, stats)));
             else
-                return 2.0f;
+                return Math.Max(1.0f, 2.0f/ (1.0f + BonusPhysicalHastePercentage(character, stats)));
         }
 
         public static float GlancingReduction(Character character)
@@ -393,6 +399,40 @@ namespace Rawr.ProtPaladin
             return (baseAvoid + modifiedAvoid) / 100.0f;
         }
 
+        // Combination nCk
+        public static float NComb(float n, float k)
+        {
+            float result = 1;
+
+            for (float i = Math.Max(k,n-k) + 1; i <= n; ++i)
+                result *= i;
+
+            for (float i = 2; i <= Math.Min(k,n-k); ++i)
+                result /= i;
+
+            return result;
+        }
+
+        public static float GetConsecrationTickChances(float Ticks, float TickDamage, float Miss)
+        {                                      // 10+0 ticks
+            float[] ConsecrationTable = new float[11];// Debug Array
+            float p = 1.0f - Miss;
+            int n = (int)Math.Floor(Ticks); // Number of possible ticks, backwards compatible to Ticks as time.
+            int k;
+            float Damage = 0.0f;
+
+            for (k = n; k > -1 ; k--)
+            {   // The probability P(X=k) that k out of n possible ticks hit :
+                float ProbabilityOfTicks = NComb(n, k) * (float)Math.Pow(p, k) * (float)Math.Pow((1 - p), (n-k));
+                // The damage those ticks deal
+                Damage += TickDamage * ProbabilityOfTicks * k;
+                
+                ConsecrationTable[k] += ProbabilityOfTicks;// Debug Array
+            }
+            // Total average damage over all probabilities
+            return Damage;
+        }
+
         public static bool IsAvoidable(Ability ability)
         {
             switch (ability)
@@ -431,6 +471,22 @@ namespace Rawr.ProtPaladin
             }
         }
 
+        public static bool CanCrit(Ability ability)
+        {   
+            switch (ability)
+            {
+                case Ability.Consecration:
+                case Ability.HolyShield:
+                case Ability.HolyVengeance:
+                case Ability.SealOfRighteousness:
+                case Ability.RetributionAura:
+                case Ability.RighteousDefense:
+                    return false;
+                default:
+                return true;
+            }
+        }
+
         public static bool IsSpell(Ability ability)
         {   
             switch (ability)
@@ -444,6 +500,7 @@ namespace Rawr.ProtPaladin
                 case Ability.Consecration:
                 case Ability.HandOfReckoning:
                 case Ability.RighteousDefense:
+                //case Ability.SealOfRighteousness:
                     return true;
                 default:
                 return false;
