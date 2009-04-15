@@ -515,9 +515,11 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3794, "Inscription of Dominance", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 23, Resilience = 15 }));
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
-            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
+			Stats mongoose = new Stats() { MongooseProc = 1f };
+			mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120f, PhysicalHaste = 0.02f }, 15f, 0f, -1.5f));
+			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, mongoose));
 
-            Stats berserking = new Stats() { BerserkingProc = 1 };
+            Stats berserking = new Stats() { BerserkingProc = 1f };
             berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400f, BonusArmorMultiplier = -.05f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, berserking));
             

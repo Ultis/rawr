@@ -372,29 +372,19 @@ the Threat Scale defined on the Options tab.",
 			
 			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
-			if (stats.MongooseProc + stats.TerrorProc > 0)
-			{
 				//Add stats for Mongoose/Terror
 
-				if (stats.TerrorProc > 0)
-				{
-					float terrorAgi = (1 - (float)Math.Pow(chanceAvoided, 3f)) * stats.TerrorProc * 2f / 3f * (1 + stats.BonusAgilityMultiplier);
-					stats.Agility += terrorAgi;
-					stats.Armor += terrorAgi * 2;
-				}
-
-				if (stats.MongooseProc > 0)
-				{
-					float whiteAttacksPerSecond = (1f - chanceAvoided) / attackSpeed;
-					float yellowAttacksPerSecond = (1f - chanceAvoided) / 1.5f; //TODO: Calculate this
-					float timeBetweenMongooseProcs = 24f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-					float mongooseUptime = 15f / timeBetweenMongooseProcs;
-					float mongooseAgi = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-					stats.Agility += mongooseAgi;
-					stats.Armor += mongooseAgi * 2;
-					stats.PhysicalHaste *= 1f + (0.02f * mongooseUptime);
-				}
-			}
+				//if (stats.MongooseProc > 0)
+				//{
+				//    float whiteAttacksPerSecond = (1f - chanceAvoided) / attackSpeed;
+				//    float yellowAttacksPerSecond = (1f - chanceAvoided) / 1.5f; //TODO: Calculate this
+				//    float timeBetweenMongooseProcs = 24f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+				//    float mongooseUptime = 15f / timeBetweenMongooseProcs;
+				//    float mongooseAgi = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+				//    stats.Agility += mongooseAgi;
+				//    stats.Armor += mongooseAgi * 2;
+				//    stats.PhysicalHaste *= 1f + (0.02f * mongooseUptime);
+				//}
 			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(stats.CritRating) + 
 				StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				stats.PhysicalCrit - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
@@ -824,22 +814,6 @@ the Threat Scale defined on the Options tab.",
 			
 			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
-            // Inserted by Trolando
-            if (statsTotal.GreatnessProc > 0)
-            {
-                float expectedAgi = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
-                float expectedStr = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
-                // Highest stat
-                if (expectedAgi > expectedStr)
-                {
-                    statsTotal.Agility += statsTotal.GreatnessProc * 15f / 48f;
-                }
-                else
-                {
-                    statsTotal.Strength += statsTotal.GreatnessProc * 15f / 48f;
-                }
-            }
-
             Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
 			statsWeapon.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
 			statsWeapon.AttackPower += statsWeapon.Strength * 2;
@@ -853,10 +827,11 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.Stamina *= (1f + statsTotal.BonusStaminaMultiplier);
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
 			statsTotal.Strength *= (1f + statsTotal.BonusStrengthMultiplier);
+			statsTotal.Agility += statsTotal.HighestStat;
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
-			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1 + statsTotal.BonusAttackPowerMultiplier));
+			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.Health += ((statsTotal.Stamina - 20) * 10f) + 20;
             statsTotal.Health *= (1f + statsTotal.BonusHealthMultiplier);
 			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
@@ -868,83 +843,59 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
             // Haste trinket (Meteorite Whetstone)
-            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10f / 45f;
+            //statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10f / 45f;
 
-			return statsTotal;
-			/*
-			statsItems.Agility += statsEnchants.Agility;
-			statsItems.DefenseRating += statsEnchants.DefenseRating;
-			statsItems.DodgeRating += statsEnchants.DodgeRating;
-			statsItems.Resilience += statsEnchants.Resilience;
-			statsItems.Stamina += statsEnchants.Stamina;
+			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+			float hasteBonus = StatConversion.GetHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
+			float meleeHitInterval = 1f / (1f / attackSpeed + 1f / 1.5f);
 
-			statsBuffs.Health += statsEnchants.Health;
-			statsBuffs.Armor += statsEnchants.Armor;
-
-			float agiBase = (float)Math.Floor(statsRace.Agility * (1+ statsRace.BonusAgilityMultiplier));
-            float agiBonus = (float) Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsRace.BonusAgilityMultiplier));
-            
-			float strBase = (float) Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float strBonus = (float) Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            
-			float staBase = (float) Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier) * 1.25f);
-            float staBonus = (statsItems.Stamina + statsBuffs.Stamina) * (1 + statsRace.BonusStaminaMultiplier) * 1.25f;
-            float staHotW = (statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier) * 1.25f + staBonus) * 0.2f;
-			staBonus = (float)Math.Round(Math.Floor(staBonus) + staHotW);
-
-			Stats statsTotal = new Stats();
-			statsTotal.Stamina = staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier));
-			statsTotal.DefenseRating = statsRace.DefenseRating + statsItems.DefenseRating + statsBuffs.DefenseRating;
-			statsTotal.DodgeRating = statsRace.DodgeRating + statsItems.DodgeRating + statsBuffs.DodgeRating;
-			statsTotal.Resilience = statsRace.Resilience + statsItems.Resilience + statsBuffs.Resilience;
-			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsItems.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-			statsTotal.Miss = statsRace.Miss + statsItems.Miss + statsBuffs.Miss;
-			statsTotal.CrushChanceReduction = statsBuffs.CrushChanceReduction;
-            statsTotal.NatureResistance = statsEnchants.NatureResistance + statsRace.NatureResistance + statsItems.NatureResistance + statsBuffs.NatureResistance +
-				statsEnchants.NatureResistanceBuff + statsRace.NatureResistanceBuff + statsItems.NatureResistanceBuff + statsBuffs.NatureResistanceBuff;
-			statsTotal.FireResistance = statsEnchants.FireResistance + statsRace.FireResistance + statsItems.FireResistance + statsBuffs.FireResistance +
-				statsEnchants.FireResistanceBuff + statsRace.FireResistanceBuff + statsItems.FireResistanceBuff + statsBuffs.FireResistanceBuff;
-			statsTotal.FrostResistance = statsEnchants.FrostResistance + statsRace.FrostResistance + statsItems.FrostResistance + statsBuffs.FrostResistance +
-				statsEnchants.FrostResistanceBuff + statsRace.FrostResistanceBuff + statsItems.FrostResistanceBuff + statsBuffs.FrostResistanceBuff;
-			statsTotal.ShadowResistance = statsEnchants.ShadowResistance + statsRace.ShadowResistance + statsItems.ShadowResistance + statsBuffs.ShadowResistance +
-				statsEnchants.ShadowResistanceBuff + statsRace.ShadowResistanceBuff + statsItems.ShadowResistanceBuff + statsBuffs.ShadowResistanceBuff;
-			statsTotal.ArcaneResistance = statsEnchants.ArcaneResistance + statsRace.ArcaneResistance + statsItems.ArcaneResistance + statsBuffs.ArcaneResistance +
-				statsEnchants.ArcaneResistanceBuff + statsRace.ArcaneResistanceBuff + statsItems.ArcaneResistanceBuff + statsBuffs.ArcaneResistanceBuff;
-            statsTotal.AllResist = statsEnchants.AllResist + statsRace.AllResist + statsItems.AllResist + statsBuffs.AllResist;
-
-
+			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);//stats.HitRating / 32.78998947f / 100f;
+			float expertiseBonus = (StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating) + statsTotal.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float chanceDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
+			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
+			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
+			if (calcOpts.TargetLevel < 83) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonus);
+			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
+				StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+				statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			
 
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
-            statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.Agility = agiBase + (float)Math.Floor((agiBase * statsBuffs.BonusAgilityMultiplier) + agiBonus * (1 + statsBuffs.BonusAgilityMultiplier));
-            statsTotal.Strength = strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier));
+			//TODO: TEMPORARY! Remove this once we have ability-specific procs working!
+			if (statsTotal.TerrorProc > 0)
+			{
+				float terrorAgi = (1 - (float)Math.Pow(chanceAvoided, 3f)) * statsTotal.TerrorProc * 2f / 3f * (1f + statsTotal.BonusAgilityMultiplier);
+				statsTotal.Agility += terrorAgi;
+				statsTotal.Armor += terrorAgi * 2;
+			}
 
- 
-            statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.AttackPower = (float) Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower  + (statsTotal.Strength * 2)) * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
-            statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
-            statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
-
-            statsTotal.Armor = (float) Math.Round(((statsItems.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
-
-            statsTotal.TerrorProc = statsGearEnchantsBuffs.TerrorProc;
-            statsTotal.BonusSwipeDamageMultiplier = statsGearEnchantsBuffs.BonusSwipeDamageMultiplier;
-            statsTotal.BonusLacerateDamage = statsGearEnchantsBuffs.BonusLacerateDamage;
-            statsTotal.BonusMangleBearDamage = statsGearEnchantsBuffs.BonusMangleBearDamage;
-            statsTotal.BonusMangleBearThreat = statsGearEnchantsBuffs.BonusMangleBearThreat;
-            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
-            statsTotal.BonusSwipeDamageMultiplier = statsGearEnchantsBuffs.BonusSwipeDamageMultiplier;
-            statsTotal.BloodlustProc = statsGearEnchantsBuffs.BloodlustProc;
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+			{
+				switch (effect.Trigger)
+				{
+					case Trigger.Use:
+						statsTotal += effect.GetAverageStats(0f, 1f, 2.5f);
+						break;
+					case Trigger.MeleeHit:
+					case Trigger.PhysicalHit:
+						statsTotal += effect.GetAverageStats(meleeHitInterval, 1f, 2.5f);
+						break;
+					case Trigger.MeleeCrit:
+					case Trigger.PhysicalCrit:
+						statsTotal += effect.GetAverageStats(meleeHitInterval, chanceCrit, 2.5f);
+						break;
+					case Trigger.DoTTick:
+						statsTotal += effect.GetAverageStats(3f, 1f, 2.5f);
+						break;
+					case Trigger.DamageDone:
+						statsTotal += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 2.5f);
+						break;
+				}
+			}
             
-			return statsTotal;*/
+			return statsTotal;
 		}
 
 		/// <summary>
@@ -1303,7 +1254,7 @@ the Threat Scale defined on the Options tab.",
 
 		public override Stats GetRelevantStats(Stats stats)
 		{
-			return new Stats()
+			Stats s = new Stats()
 			{
 				Armor = stats.Armor,
 				BonusArmor = stats.BonusArmor,
@@ -1332,7 +1283,7 @@ the Threat Scale defined on the Options tab.",
 				FireResistanceBuff = stats.FireResistanceBuff,
 				FrostResistanceBuff = stats.FrostResistanceBuff,
 				ShadowResistanceBuff = stats.ShadowResistanceBuff,
-				MongooseProc = stats.MongooseProc,
+				HighestStat = stats.HighestStat,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1355,26 +1306,49 @@ the Threat Scale defined on the Options tab.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
-                GreatnessProc = stats.GreatnessProc
 			};
+			foreach (SpecialEffect effect in stats.SpecialEffects())
+			{
+				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+					|| effect.Trigger == Trigger.DamageDone)
+				{
+					if (HasRelevantStats(effect.Stats))
+					{
+						s.AddSpecialEffect(effect);
+					}
+				}
+			}
+			return s;
 		}
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
+			bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +
-				stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.MongooseProc
+				stats.ArmorPenetrationRating + stats.PhysicalHaste
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
-				 + stats.BonusRipDuration + stats.GreatnessProc + stats.PhysicalHit
+				 + stats.BonusRipDuration + stats.HighestStat + stats.PhysicalHit
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
                  + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating) != 0;
+
+			foreach (SpecialEffect effect in stats.SpecialEffects())
+			{
+				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+				{
+					relevant |= HasRelevantStats(effect.Stats);
+					if (relevant) break;
+				}
+			}
+			return relevant;
 		}
 		#endregion
 

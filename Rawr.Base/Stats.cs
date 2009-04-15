@@ -724,7 +724,7 @@ namespace Rawr
             }
             else if (Cooldown == 0.0f)
             {
-                return 1.0f - (float)Math.Pow(1.0 - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
+                return 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
             }
             else
             {
@@ -859,7 +859,7 @@ namespace Rawr
                 //= 1 - 1 / (1 + C * PT) * (1 - PEC)
 
                 //= 1 - 1 / (1 + C * PT) * (1 - PT) ^ (D - C)
-                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * GetChance(attackSpeed)) * (float)Math.Pow(1 - triggerChance * GetChance(attackSpeed), (Duration - Cooldown) / triggerInterval);
+                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * GetChance(attackSpeed)) * (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), (Duration - Cooldown) / triggerInterval);
             }
 
         }
