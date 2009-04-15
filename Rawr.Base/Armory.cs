@@ -5,6 +5,7 @@ using System.Net;
 using System.IO;
 using System.Xml;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Rawr
 {
@@ -167,8 +168,9 @@ namespace Rawr
                 
                 character.Class = charClass;
 
-				string talentCode = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
-					.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+				XmlNode activeTalentGroup = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
+					.SelectSingleNode("page/characterInfo/talentGroups/talentGroup[@active='1']");
+                string talentCode = activeTalentGroup.SelectSingleNode("talentSpec").Attributes["value"].Value;
 				switch (charClass)
 				{
 					case Character.CharacterClass.Warrior:
@@ -223,6 +225,26 @@ namespace Rawr
 					default:
 						break;
 				}
+                TalentsBase talents = character.CurrentTalents;
+                Dictionary<string, PropertyInfo> glyphProperty = new Dictionary<string, PropertyInfo>();
+                foreach (PropertyInfo pi in talents.GetType().GetProperties())
+                {
+                    GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                    if (glyphDatas.Length > 0)
+                    {
+                        GlyphDataAttribute glyphData = glyphDatas[0];
+                        glyphProperty[glyphData.Name] = pi;
+                    }
+                }
+
+                foreach (XmlNode glyph in activeTalentGroup.SelectNodes("glyphs/glyph/@name"))
+                {
+                    PropertyInfo pi;
+                    if (glyphProperty.TryGetValue(glyph.Value, out pi))
+                    {
+                        pi.SetValue(talents, true, null);
+                    }
+                }
 
 				InitializeAvailableItemList(character);
                 ApplyRacialandProfessionBuffs(docCharacter, character);

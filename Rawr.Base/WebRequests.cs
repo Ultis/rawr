@@ -314,7 +314,7 @@ namespace Rawr
 
 		public XmlDocument DownloadCharacterTalentTree(string characterName, Character.CharacterRegion region, string realm)
 		{
-			//http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}
+			//http://{0}.wowarmory.com/character-talents.xml?r={1}&cn={2}
 			string domain = _domains[region];
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
@@ -327,7 +327,7 @@ namespace Rawr
 
 		public XmlDocument DownloadCharacterSheet(string characterName, Character.CharacterRegion region, string realm)
 		{
-			//http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}
+			//http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}
 			string domain = _domains[region];
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
@@ -685,7 +685,7 @@ namespace Rawr
                         returnDocument.LoadXml(xml.Replace("&",""));
                         if (returnDocument == null || returnDocument.DocumentElement == null
                                     || !returnDocument.DocumentElement.HasChildNodes
-                                    || !returnDocument.DocumentElement.ChildNodes[0].HasChildNodes)
+                                    /*|| !returnDocument.DocumentElement.ChildNodes[0].HasChildNodes*/) // this check is no longer valid
                         {
                             //document returned no data we care about.
                             returnDocument = null;

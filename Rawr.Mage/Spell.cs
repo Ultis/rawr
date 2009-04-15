@@ -345,18 +345,18 @@ namespace Rawr.Mage
                     {
                         case Trigger.DamageSpellCrit:
                         case Trigger.SpellCrit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                             break;
                         case Trigger.DamageSpellHit:
                         case Trigger.SpellHit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                             break;
                         case Trigger.SpellMiss:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks);
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                             break;
                         case Trigger.DamageSpellCast:
                         case Trigger.SpellCast:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks);
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                             break;
                     }
                 }
@@ -411,12 +411,6 @@ namespace Rawr.Mage
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
             }
-            if (baseStats.LightweaveEmbroideryProc > 0)
-            {
-                float boltDps = CastingState.LightweaveBoltAverageDamage / (45f + CastTime / HitProcs / 0.5f);
-                effectDamagePerSecond += boltDps;
-                effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
-            }
         }
 
         private void CalculateManaRegen()
@@ -449,19 +443,19 @@ namespace Rawr.Mage
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                 }
             }
@@ -506,19 +500,19 @@ namespace Rawr.Mage
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f);
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f);
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
+                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                 }
             }
@@ -593,17 +587,6 @@ namespace Rawr.Mage
                 }
                 float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
-                contrib.Damage += boltDps * duration;
-            }
-            if (CastingState.BaseStats.LightweaveEmbroideryProc > 0)
-            {
-                if (!dict.TryGetValue("Lightweave Bolt", out contrib))
-                {
-                    contrib = new SpellContribution() { Name = "Lightweave Bolt" };
-                    dict["Lightweave Bolt"] = contrib;
-                }
-                float boltDps = CastingState.LightweaveBoltAverageDamage / (45f + CastTime / HitProcs / 0.5f);
-                contrib.Hits += duration / (45f + CastTime / HitProcs / 0.5f);
                 contrib.Damage += boltDps * duration;
             }
         }
@@ -915,18 +898,18 @@ namespace Rawr.Mage
                 {
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks);
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks);
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
                         break;
                     case Trigger.SpellMiss:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks);
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks);
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
                         break;
                 }
             }

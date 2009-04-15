@@ -684,7 +684,7 @@ namespace Rawr.Optimizer
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
                 if (optimizedCharacter != null)
                 {
-                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter));
+                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false));
                 }
                 else
                 {

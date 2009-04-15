@@ -345,7 +345,6 @@ namespace Rawr.Mage
         public float ArcaneBoltAverageDamage { get { return Calculations.ArcaneBoltTemplate.GetEffectAverageDamage(this); } }
         public float LightningBoltAverageDamage { get { return Calculations.LightningBoltTemplate.GetEffectAverageDamage(this); } }
         public float ThunderBoltAverageDamage { get { return Calculations.ThunderBoltTemplate.GetEffectAverageDamage(this); } }
-        public float LightweaveBoltAverageDamage { get { return Calculations.LightweaveBoltTemplate.GetEffectAverageDamage(this); } }
         public float PendulumOfTelluricCurrentsAverageDamage { get { return Calculations.PendulumOfTelluricCurrentsTemplate.GetEffectAverageDamage(this); } }
 
         //private static int CycleIdCount;

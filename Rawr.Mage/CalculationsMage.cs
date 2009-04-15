@@ -279,33 +279,6 @@ namespace Rawr.Mage
             character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
-            if (character.MageTalents.EmpoweredFire > 0)
-            {
-                if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3)
-                {
-                    character.MageTalents.GlyphOfFrostfire = true;
-                    character.MageTalents.GlyphOfMoltenArmor = true;
-                    character.MageTalents.GlyphOfLivingBomb = true;
-                }
-                else
-                {
-                    character.MageTalents.GlyphOfFireball = true;
-                    character.MageTalents.GlyphOfMoltenArmor = true;
-                    character.MageTalents.GlyphOfLivingBomb = true;
-                }
-            }
-            else if (character.MageTalents.EmpoweredFrostbolt > 0)
-            {
-                character.MageTalents.GlyphOfFrostbolt = true;
-                character.MageTalents.GlyphOfMoltenArmor = true;
-                character.MageTalents.GlyphOfIceLance = true;
-            }
-            else if (character.MageTalents.ArcaneEmpowerment > 0)
-            {
-                character.MageTalents.GlyphOfArcaneMissiles = true;
-                character.MageTalents.GlyphOfMoltenArmor = true;
-                character.MageTalents.GlyphOfArcaneBlast = true;
-            }
         }
 
         public override string GetCharacterStatsString(Character character)
@@ -2063,7 +2036,6 @@ namespace Rawr.Mage
                 //ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
-                LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
                 //SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
 				CritBonusDamage = stats.CritBonusDamage,
 				BonusDamageMultiplier = stats.BonusDamageMultiplier,
@@ -2128,7 +2100,7 @@ namespace Rawr.Mage
 
         private bool HasMageStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.ManaRestoreFromBaseManaPerHit + stats.BonusManaGem + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.AldorRegaliaInterruptProtection + stats.ShatteredSunAcumenProc + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.CritBonusDamage + stats.LightweaveEmbroideryProc + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier;
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.ManaRestoreFromBaseManaPerHit + stats.BonusManaGem + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.AldorRegaliaInterruptProtection + stats.ShatteredSunAcumenProc + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier;
             return mageStats > 0;
         }
 
