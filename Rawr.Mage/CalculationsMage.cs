@@ -487,6 +487,38 @@ namespace Rawr.Mage
                 {
                     effect.Stats.GenerateSparseData();
                     stats.Accumulate(effect.Stats, effect.MaxStack);
+                }                
+            }
+            for (Character.CharacterSlot i = 0; i < (Character.CharacterSlot)Character.OptimizableSlotCount; i++)
+            {
+                if (i != Character.CharacterSlot.Trinket1 && i != Character.CharacterSlot.Trinket2)
+                {
+                    ItemInstance item = character[i];
+                    if (item != null)
+                    {
+                        if (item.Item != null)
+                        {
+                            foreach (SpecialEffect effect in item.Item.Stats.SpecialEffects())
+                            {
+                                if (effect.Trigger == Trigger.Use)
+                                {
+                                    effect.Stats.GenerateSparseData();
+                                    stats.Accumulate(effect.Stats, effect.GetAverageUptime(0, 1, 3, calculationOptions.FightDuration));
+                                }
+                            }
+                        }
+                        if (item.Enchant != null)
+                        {
+                            foreach (SpecialEffect effect in item.Enchant.Stats.SpecialEffects())
+                            {
+                                if (effect.Trigger == Trigger.Use)
+                                {
+                                    effect.Stats.GenerateSparseData();
+                                    stats.Accumulate(effect.Stats, effect.GetAverageUptime(0, 1, 3, calculationOptions.FightDuration));
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

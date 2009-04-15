@@ -547,6 +547,20 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+        }
+
+        /// <summary>
         /// Computes average uptime of the effect given the frequency of triggers.
         /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
@@ -555,7 +569,7 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance)
         {
-            return GetAverageUptime(triggerInterval, triggerChance, 3f);
+            return GetAverageUptime(triggerInterval, triggerChance, 3f, 0f);
         }
 
         /// <summary>
@@ -568,9 +582,145 @@ namespace Rawr
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed)
         {
+            return GetAverageUptime(triggerInterval, triggerChance, attackSpeed, 0f);
+        }
+
+        /// <summary>
+        /// Computes average uptime of the effect given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
             if (Cooldown > Duration)
             {
-                return Duration / (Cooldown + triggerInterval / triggerChance / GetChance(attackSpeed));
+                // fight duration is used only in this case, for the cooldown < duration case the other approximations are good enough
+                if (fightDuration == 0f)
+                {
+                    return Duration / (Cooldown + triggerInterval / triggerChance / GetChance(attackSpeed));
+                }
+                else
+                {
+                    // activeTime(T) := average time the effect is up given we are out of cooldown and there is T time left
+                    // activeTime(T) = 0 if T <= 0
+                    // activeTime(T) = chance * (min(duration, T) + activeTime(T - cooldown)) + (1 - chance) * activeTime(T - interval)
+                    // activeTime[T] = chance * (min(D, T) + activeTime[T - C]) + (1 - chance) * activeTime[T - 1]
+
+                    // activeTime[0] = 0
+                    // activeTime[1] = p
+                    // activeTime[2] = p * 2 + (1 - p) * activeTime[1]
+                    // activeTime[3] = p * 3 + (1 - p) * activeTime[2]
+                    // ...
+                    // activeTime[D] = p * D + (1 - p) * activeTime[D - 1]
+
+                    // H[0] = 0
+                    // H[n] = n * p + (1 - p) * H[n - 1]
+                    // H[n] = 1 - 1/p + n + (1 - p)^n * (1/p - 1)
+                    //      = n + (1 - p)/p * ((1 - p)^n - 1)
+                    // activeTime[n] = n - (1 - p)/p * (1 - (1 - p)^n)
+                    // activeTime[D] = D - (1 - p)/p * (1 - (1 - p)^D)
+
+                    // activeTime[D + 1] = p * D + (1 - p) * activeTime[D]
+                    // activeTime[D + 2] = p * D + (1 - p) * (p * D + (1 - p) * activeTime[D])
+                    //                   = p * D + p * (1 - p) * D + (1 - p) ^ 2 * activeTime[D]
+                    //                   = p * (2 - p) * D + (1 - p) ^ 2 * activeTime[D]
+                    // activeTime[D + 3] = p * D + (1 - p) * [p * (2 - p) * D + (1 - p) ^ 2 * activeTime[D]]
+                    //                   = p * D * (1 + (1 - p) * (2 - p)) + (1 - p) ^ 3 * activeTime[D]
+                    // activeTime[D + 4] = p * D * (1 + (1 - p) * (1 + (1 - p) * (2 - p))) + (1 - p) ^ 4 * activeTime[D]
+
+                    // K[1] = 1
+                    // K[n] = 1 + (1 - p) * K[n - 1]
+                    // K[n] = 1/p + (1-p)^(n-1) * (p - 1) / p
+                    //      = (1 - (1-p) ^ n) / p
+
+                    // activeTime[D + n] = p * D * (1 - (1-p) ^ n) / p + (1 - p) ^ n * activeTime[D]
+                    //                   = D + (1 - p) ^ n * (activeTime[D] - D)
+                    //                   = D - (1 - p) ^ n * (1 - p)/p * (1 - (1 - p)^D)
+
+                    // activeTime[C] = activeTime[D + C - D] = D + (1 - p) ^ (C - D) * (activeTime[D] - D)
+                    //               = D - (1 - p) ^ (C - D) * (1 - p)/p * (1 - (1 - p)^D)
+
+                    // activeTime[C + 1] = p * (D + activeTime[1]) + (1 - p) * activeTime[C]
+                    //                   = p * D + p * activeTime[1] + (1 - p) * activeTime[C]
+                    // activeTime[C + 2] = p * D + p * activeTime[2] + (1 - p) * (p * D + p * activeTime[1] + (1 - p) * activeTime[C])
+                    //                   = p * D * K[2] + p * activeTime[2] + (1 - p) * p * activeTime[1] + (1 - p) ^ 2 * activeTime[C]
+
+                    // activeTime[2] - p * 2 = (1 - p) * activeTime[1]
+                    // activeTime[C + 2] = p * D * K[2] + p * activeTime[2] + p * (activeTime[2] - p * 2) + (1 - p) ^ 2 * activeTime[C]
+                    //                   = p * D * K[2] + 2 * p * activeTime[2] - 2 * p ^ 2 + (1 - p) ^ 2 * activeTime[C]
+                    // activeTime[C + 3] = p * D * K[3] + p * activeTime[3] + (1 - p) * (2 * p * activeTime[2] - 2 * p ^ 2 + (1 - p) ^ 2 * activeTime[C])
+                    //                   = p * D * K[3] + p * activeTime[3] + 2 * p * (activeTime[3] - 3 * p) - 2 * p ^ 2 * (1 - p) + (1 - p) ^ 3 * activeTime[C]
+                    //                   = p * D * K[3] + 3 * p * activeTime[3] - 3 * 2 * p ^ 2 - 2 * p ^ 2 * (1 - p) + (1 - p) ^ 3 * activeTime[C]
+                    //                   = p * D * K[3] + 3 * p * activeTime[3] - 2 * p ^ 2 * (4 - p) + (1 - p) ^ 3 * activeTime[C]
+
+                    // activeTime[C + 1] = p * D + p * p + (1 - p) * activeTime[C]
+                    // activeTime[C + 2] = p * D * K[2] + 2 * (p * (2 - p) - (1 - p) * (1 - (1 - p)^2)) + (1 - p) ^ 2 * activeTime[C]
+
+                    // activeTime[C + n] = p * D * K[n] + p * H[n] + (1 - p) * (p * H[n - 1] + (1 - p) * (p * H[n - 2] + ...))
+                    // p * H[n] = p * (n + (1 - p)/p * ((1 - p)^n - 1)) = p * n - (1 - p) * (1 - (1 - p)^n)
+                    // sum_i=0..n p * (1 - p)^(i - 1) * H[i]
+                    // p * (1 - p) ^ (i - 1) * H[i] = p * i * (1 - p) ^ (i - 1) - (1 - p) ^ i * (1 - (1 - p)^i)
+                    // sum_i=0..n p * (1 - p)^(i - 1) * H[i] = p * n * (1 - p) ^ (n - 1) - (1 - p) ^ n * (1 - (1 - p)^n)    +    p * (n - 1) * (1 - p) ^ (n - 2) - (1 - p) ^ (n - 1) * (1 - (1 - p)^(n - 1)) + ...
+                    // - (1 - p) ^ n * (1 - (1 - p)^n) + (1 - p) ^ (n - 1) * (p * n - 1 + (1 - p)^(n - 1)))
+
+                    // activeTime[C + 4] = p * D * K[4] + p * activeTime[4] + (1 - p) * (3 * p * activeTime[3] - 2 * p ^ 2 * (4 - p)) + (1 - p) ^ 4 * activeTime[C]
+                    // p * activeTime[4] + (1 - p) * (3 * p * activeTime[3] - 2 * p ^ 2 * (4 - p)) = 
+                    // p * activeTime[4] + 3 * p * (1 - p) * activeTime[3] - 2 * p ^ 2 * (4 - p) * (1 - p) =
+                    // p * activeTime[4] + 3 * p * (activeTime[4] - 4 * p) - 2 * p ^ 2 * (4 - p) * (1 - p) =
+                    // 4 * p * activeTime[4] - p ^ 2 * (3 * 4 + (1 - p) * (3 * 2 + (1 - p) * (2 * 1 + (1 - p) * 1 * 0)))
+
+                    // R[0] = 0
+                    // R[n] = n * (n - 1) + (1 - p) * R[n - 1]
+                    // R[n] = 2*p^(-2) * ((1 - p)^n - 1 - n)  +  2*p^(-3) * (1 - (1-p)^n)  +  n*(n + 1)/p
+                    //      = [p^2*n*(n + 1) + 2*p*((1 - p)^n - 1 - n) + 2* (1 - (1-p)^n)] / p^3
+                    //      = [p^2*n*(n + 1) - 2*p*n - 2*p*(1 - (1 - p)^n) + 2* (1 - (1-p)^n)] / p^3
+                    //      = [p*n*(p*n + p - 2) + 2*(1 - (1-p)^n) * (1 - p)] / p^3
+
+                    // S[n] := n * p * H[n] - p ^ 2 * R[n] =
+                    // n * (p * n - (1 - p) * (1 - (1 - p)^n)) - [n*(p*n + p - 2) + 2/p*(1 - (1-p)^n) * (1 - p)]
+                    // p * n^2 - n*(p*n + p - 2) - (2/p * (1 - p) + n * (1 - p)) * (1 - (1 - p)^n)
+                    // n * (2 - p) - (2/p + n) * (1 - p) * (1 - (1 - p)^n)
+
+                    // activeTime[C + n] = p * D * K[n] + n * (2 - p) - (2/p + n) * (1 - p) * (1 - (1 - p)^n) + (1 - p) ^ n * activeTime[C]
+                    //                   = (D - (2/p + n) * (1 - p)) * (1 - (1-p) ^ n) + n * (2 - p) + (1 - p) ^ n * activeTime[C]
+                    //                   = 
+                    // activeTime[C + n] = p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C]
+
+                    // activeTime[k*C+n] = p * (D + activeTime[(k-1)*C+n]) + (1 - p) * activeTime[k*C+n-1]
+
+                    // p * T * D / (p * C + 1)
+
+                    // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
+                    //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
+                    if (fightDuration <= Duration)
+                    {
+                        double n = fightDuration / triggerInterval;
+                        double p = triggerChance * GetChance(attackSpeed);
+                        return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
+                    }
+                    else if (fightDuration <= Cooldown)
+                    {
+                        double D = Duration / triggerInterval;
+                        double n = fightDuration / triggerInterval - D;
+                        double p = triggerChance * GetChance(attackSpeed);
+                        return (float)((D - Math.Pow(1 - p, n) * (1 - p) / p * (1 - Math.Pow(1 - p, D))) / (fightDuration / triggerInterval));
+                    }
+                    else
+                    {
+                        float p = triggerChance * GetChance(attackSpeed);
+                        // just an approximation for now, accurate symbolic solution on todo list
+                        float t = fightDuration - triggerInterval / p;
+                        float cc = Cooldown + triggerInterval / p;
+                        float total = (float)Math.Floor(t / cc) * Duration;
+                        t -= (float)Math.Floor(t / cc) * cc;
+                        total += Math.Min(t, Duration);
+                        return total / fightDuration;
+                    }
+                }
             }
             else if (Cooldown == 0.0f)
             {
