@@ -1,8 +1,20 @@
-Rawr v2.2.0.7
+Rawr v2.2.0.8
 ------------
-Welcome to Rawr 2.2.0.7.
+Welcome to Rawr 2.2.0.8.
    
 Recent Changes:
+v2.2.0.8
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
+ - Fix for armory parsing, glyph parsing
+ - Fix for optimizer enchant filtering
+ - Talent tree updates in some models
+ - Rawr.DPSWarr: Update Improved Berserker Stance to Str instead of AP.
+ - Rawr.Moonkin: More support for special effects.
+ - Rawr.EnhSham: Display enhancements.
+ - Rawr.RestoSham: Updates for new glyph system.
+ - Rawr.Bear: Fix for lacerate always being able to crit.
+ - Rawr.Cat: Added special effects handling.
+
 v2.2.0.7
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
  - There have been many many changes since 2.1.9. For a full list of changes check the ReadMe.txt. The following are the most important changes and some recent changes since 2.2.0.b6.
