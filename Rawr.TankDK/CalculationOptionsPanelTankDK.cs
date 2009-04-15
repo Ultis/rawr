@@ -77,7 +77,7 @@ namespace Rawr.TankDK
     public class CalculationOptionsTankDK : ICalculationOptionBase
     {
         public int TargetLevel = 83;
-        public float ThreatWeight = 0.25f;
+        public float ThreatWeight = 0.05f;
         public float SurvivalWeight = 1.10f;
 
         public string GetXml()

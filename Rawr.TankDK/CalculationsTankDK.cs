@@ -328,7 +328,7 @@ namespace Rawr.TankDK
 
             float levelDifference = (targetLevel - characterLevel) * 0.2f;
 
-            float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 60.0f : 0.0f;
+            float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
 
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
             calcs.BasicStats = stats;
@@ -340,11 +340,11 @@ namespace Rawr.TankDK
 
             float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * (1.0f / 73.52941176f) + stats.Defense * 0.04f;
             float missNonDR = stats.Miss * 100f - levelDifference + stats.Defense * 0.04f;
-            float parryNonDR = stats.Parry * 100f - levelDifference + uaUptime * 5.0f + stats.Defense * 0.04f;
+            float parryNonDR = stats.Parry * 100f - levelDifference + stats.Defense * 0.04f;
 
             float dodgePreDR = (stats.Agility - baseAgi) * (1.0f/73.52941176f) + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); 
             float missPreDR = (defSkill * 0.04f);
-            float parryRatingFromStr = stats.Strength * 0.25f * (1.0f + uaUptime * 0.10f);
+            float parryRatingFromStr = stats.Strength * 0.25f * (1.0f + uaUptime * 0.25f);
             float parryPreDR = (defSkill * 0.04f) + (stats.ParryRating + parryRatingFromStr) / 49.18498611f;
 
             float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
@@ -372,41 +372,43 @@ namespace Rawr.TankDK
             calcs.DefenseRating = stats.DefenseRating;
             calcs.DefenseRatingNeeded = (calcs.Crit / 0.04f) * 4.918498039f;
 
-            float critImpact = 1.0f;
 
-            float critHitBare = 100.0f - (dodgeNonDR + missNonDR + parryNonDR) + (5.0f + levelDifference) * critImpact;
-            //float critHitBare = 100.0f + (5.0f + levelDifference) * critImpact;
-            float critHitAvoidance = currentAvoidance + attackerCrit * critImpact;
+            float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f) * (1.0f - character.DeathKnightTalents.FrostAura * 0.01f) *
+                                (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime);
 
-            float armor = stats.Armor * (1.0f + uaUptime * 0.25f);
+//***** Survival Rating *****
+            float armor = stats.Armor;
             // Armor Damage Reduction is capped at 75%
             float armor_dr = Math.Min(0.75f, armor / (armor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
 
-            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
-            float ibfDR = (0.2f + (stats.Defense + defSkill)/140.0f * 0.15f) * ibfUptime;
-            //float ibfDR = (0.2f) * ibfUptime;
-
-            float bsDR = 0.0f;
-            if (character.DeathKnightTalents.BoneShield > 0)
-            {
-                float bsUptime = ((10.0f * (100.0f - currentAvoidance) + 60.0f * currentAvoidance)) / (60.0f * 100.0f);
-                bsDR = 0.2f * bsUptime;
-            }
-            
-            float complete_dr = (1.0f - armor_dr) * (1.0f - ibfDR) * (1.0f - bsDR);
             calcs.ArmorDamageReduction = armor_dr;
 
             float hp = calcs.BasicStats.Health;
 
-            //calcs.Survival = hp / (complete_dr * (critHitBare / 100.0f));
-            calcs.Survival = hp / (complete_dr * (1.0f + attackerCrit/100.0f));
+            calcs.Survival = hp / (talent_dr * (1.0f - armor_dr) * (1.0f + attackerCrit / 100.0f));
             calcs.SurvivalWeight = opts.SurvivalWeight;
 
+
+//***** Mitigation Rating *****
+            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
+            float ibfDR = (0.2f + (stats.Defense + defSkill) / 140.0f * 0.15f) * ibfUptime; //TODO: 3.1
+
+            float bsDR = 0.0f;
+            if (character.DeathKnightTalents.BoneShield > 0)
+            {
+                float bsUptime = ((8.0f * (100.0f - currentAvoidance) + 60.0f * currentAvoidance)) / (120.0f * 100.0f);
+                bsDR = 0.2f * bsUptime;
+            }
+
+            float complete_dr = (1.0f - armor_dr) * (1.0f - ibfDR) * (1.0f - bsDR) * talent_dr;
+
+
+            float critImpact = 1.0f;
+            float critHitAvoidance = currentAvoidance + attackerCrit * critImpact;
+
             calcs.Mitigation = 10000.0f / (complete_dr * (critHitAvoidance / 100.0f));
-            //calcs.Mitigation = hp / (complete_dr * (critHitAvoidance / 100.0f)) -calcs.Survival;
+            
 
-
-            calcs.Mitigation = Math.Max(0.0f, calcs.Mitigation);
 
             // ***** THREAT *****
 
@@ -451,15 +453,14 @@ namespace Rawr.TankDK
                 physCrits += stats.CritRating / 4591f;
                 physCrits += stats.Agility / 6250f;
                 physCrits += .01f * (float)(character.DeathKnightTalents.DarkConviction
-                    + character.DeathKnightTalents.EbonPlaguebringer
-                    + character.DeathKnightTalents.Annihilation);
+                    + character.DeathKnightTalents.EbonPlaguebringer);
 
                 float weaponDmg = (character.MainHand.Item.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
 
                 // Haste trinket (Meteorite Whetstone)
                 calcs.BasicStats.HasteRating += calcs.BasicStats.HasteRatingOnPhysicalAttack * 10 / 45;
                 float totalStaticHaste = 1.0f + (calcs.BasicStats.HasteRating / 32.78998947f / 100.0f);
-                totalStaticHaste *= 1.0f + (character.DeathKnightTalents.IcyTalons * 0.04f);
+                totalStaticHaste *= 1.0f + (character.DeathKnightTalents.IcyTalons * 0.04f + character.DeathKnightTalents.ImprovedIcyTalons * 0.05f);
 
                 calcs.Threat = weaponDmg / (character.MainHand.Speed / totalStaticHaste);
 
@@ -530,14 +531,13 @@ namespace Rawr.TankDK
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead + talents.VeteranOfTheThirdWar) + .02f * (float)(talents.ShadowOfDeath),
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
-                BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
-                Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,
-                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
-                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
+                BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
+                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,
+                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
+                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
                 Dodge = 0.01f * talents.Anticipation,
-                Parry = 0.02f * talents.BladeBarrier,
                 Miss = 0.01f * talents.FrigidDreadplate,
 
             };
