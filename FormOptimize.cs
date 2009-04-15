@@ -271,7 +271,7 @@ namespace Rawr
                         string.Format("The Optimizer found a gearset with a score of {0}. (Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
                             e.OptimizedCharacterValue, e.CurrentCharacterValue) :
                         "The Optimizer was not able to meet all the requirements. Would you like to equip the gear that is closest to meeting them?";
-                    if (MessageBox.Show(this, results.ToString() + msg, "Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(this, msg + "\r\n\r\n" + results.ToString(), "Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         //Loading new items while IsLoading==true causes properties to be reset to their previously cached values, 
                         //so load all the items beforehand, then put them into the character all at once.

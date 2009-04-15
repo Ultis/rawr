@@ -399,7 +399,7 @@ the Threat Scale defined on the Options tab.",
 				StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				stats.PhysicalCrit - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
-			float chanceCritBleed = rawChanceCrit;
+			float chanceCritBleed = (character.DruidTalents.PrimalGore > 0 ? rawChanceCrit : 0f);
 			attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 			
 			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 77;
@@ -427,7 +427,7 @@ the Threat Scale defined on the Options tab.",
 
 			float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
 			float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / attackSpeed;
-			float lacerateTicksPerSecond = 1f / 3f;
+			float lacerateTicksPerSecond = (character.DruidTalents.PrimalGore > 0 ? 1f : 0f) / 3f;
 			float totalAttacksPerSecond = autoSpecialAttacksPerSecond + lacerateTicksPerSecond;
 			float averageSDAttackCritChance = (chanceCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond) + chanceCritBleed * (lacerateTicksPerSecond / totalAttacksPerSecond));
 			float playerAttackSpeed = 1f / totalAttacksPerSecond;

@@ -1988,7 +1988,7 @@ namespace Rawr
 
 		private string GetChartDataCSV()
 		{
-			StringBuilder sb = new StringBuilder("Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,Overall");
+			StringBuilder sb = new StringBuilder("Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,ItemId,GemmedId,Overall");
 			foreach (string subPointName in Calculations.SubPointNameColors.Keys)
 			{
 				sb.AppendFormat(",{0}", subPointName);
@@ -2000,7 +2000,7 @@ namespace Rawr
 				Item item = comparisonCalculation.Item;
 				if (itemInstance != null)
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
 						itemInstance.Item.Name.Replace(',', ';'),
 						comparisonCalculation.Equipped,
 						itemInstance.Slot,
@@ -2009,6 +2009,8 @@ namespace Rawr
 						itemInstance.Gem3 != null ? itemInstance.Gem3.Name : null,
 						itemInstance.Enchant.Name,
 						itemInstance.Item.LocationInfo.Description.Split(',')[0],
+						itemInstance.Id,
+						itemInstance.GemmedId,
 						comparisonCalculation.OverallPoints);
 					foreach (float subPoint in comparisonCalculation.SubPoints)
 						sb.AppendFormat(",{0}", subPoint);
@@ -2016,7 +2018,7 @@ namespace Rawr
 				}
 				else if (item != null)
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
 						item.Name.Replace(',', ';'),
 						comparisonCalculation.Equipped,
 						item.Slot,
@@ -2025,6 +2027,8 @@ namespace Rawr
 						null,
 						null,
 						item.LocationInfo.Description.Split(',')[0],
+						item.Id,
+						null,
 						comparisonCalculation.OverallPoints);
 					foreach (float subPoint in comparisonCalculation.SubPoints)
 						sb.AppendFormat(",{0}", subPoint);
@@ -2032,9 +2036,11 @@ namespace Rawr
 				}
 				else
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
 						comparisonCalculation.Name.Replace(',', ';'),
 						comparisonCalculation.Equipped,
+						null,
+						null,
 						null,
 						null,
 						null,

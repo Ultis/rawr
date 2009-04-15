@@ -20,7 +20,6 @@ namespace Rawr
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("List of optimiser changes");
             sb.AppendLine();
             reportItemDifferences(sb);
             sb.AppendLine();
@@ -51,14 +50,14 @@ namespace Rawr
                         string gem1name = before.Gem1 == null ? "" : "with " + before.Gem1.Name;
                         string gem2name = before.Gem2 == null ? "" : ", " + before.Gem2.Name;
                         string gem3name = before.Gem3 == null ? "" : ", " + before.Gem3.Name;
-                        string enchantname = before.Enchant == null ? "" : ", enchant: " + before.Enchant.Name;
+                        string enchantname = before.Enchant == null ? "" : ", " + before.Enchant.Name;
                         sb.AppendFormat("{0}: Changed {1} {2}{3}{4}{5}", slot, itemname, gem1name, gem2name, gem3name, enchantname);
                         sb.AppendLine();
                         itemname = (after.Item ?? noItem).Name;
                         gem1name = after.Gem1 == null ? "" : "with " + after.Gem1.Name;
                         gem2name = after.Gem2 == null ? "" : ", " + after.Gem2.Name;
                         gem3name = after.Gem3 == null ? "" : ", " + after.Gem3.Name;
-                        enchantname = after.Enchant == null ? "" : ", enchant: " + after.Enchant.Name;
+                        enchantname = after.Enchant == null ? "" : ", " + after.Enchant.Name;
                         sb.AppendFormat("               to {0} {1}{2}{3}{4}", itemname, gem1name, gem2name, gem3name, enchantname);
                         sb.AppendLine();
                         changes++;

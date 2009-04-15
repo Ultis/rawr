@@ -227,14 +227,14 @@ namespace Rawr
 
 		private string GetChartDataCSV()
 		{
-			StringBuilder sb = new StringBuilder("Item Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,Overall Upgrade");
+			StringBuilder sb = new StringBuilder("Item Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,ItemId,GemmedId,Overall Upgrade");
 			sb.AppendLine();
 			foreach (ComparisonCalculationUpgrades upgrade in comparisonGraph1.ItemCalculations)
 			{
 				ItemInstance item = upgrade.ItemInstance;
 				if (item != null)
 				{
-					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+					sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
 						item.Item.Name.Replace(',',';'),
 						upgrade.Equipped,
 						item.Slot,
@@ -243,6 +243,8 @@ namespace Rawr
 						item.Gem3 != null ? item.Gem3.Name : null,
 						item.Enchant.Name,
 						item.Item.LocationInfo.Description.Split(',')[0],
+						item.Id,
+						item.GemmedId,
 						upgrade.OverallPoints);
 					sb.AppendLine();
 				}
