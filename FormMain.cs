@@ -1466,6 +1466,7 @@ namespace Rawr
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
+            _character.InvalidateItemInstances();
 		}
 
 		public void UpdateItemCacheWowhead()
@@ -1492,7 +1493,8 @@ namespace Rawr
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
-		}
+            _character.InvalidateItemInstances();
+        }
 
 		public void GetArmoryUpgrades(Character currentCharacter)
 		{
