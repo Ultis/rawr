@@ -341,8 +341,6 @@ namespace Rawr.HolyPriest
             float avgcritcast = crittable / sr.Count;
 
             float periodicRegenOutFSR = StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
-            if (calculationOptions.NewManaRegen)
-                periodicRegenOutFSR *= 0.6f;
 
             // Add up all mana gains.
             float regen = 0, tmpregen = 0;
@@ -575,7 +573,7 @@ namespace Rawr.HolyPriest
 
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float solbhchance = 1f - (float)Math.Pow(1f - solchance, 2);
-            float solcohchance = 1f - (float)Math.Pow(1f - solchance, (stats.GLYPH_CircleOfHealing > 0) ? 6 : 5);
+            float solcohchance = 1f - (float)Math.Pow(1f - solchance, character.PriestTalents.GlyphofCircleOfHealing ? 6 : 5);
             float solpohhnchance = 1f - (float)Math.Pow(1f - solchance, 5);
             float solpromchance = 1f - (float)Math.Pow(1f - solchance, (calculationOptions.ProMCast == 0)?0:(calculationOptions.ProMTicks / calculationOptions.ProMCast));
 
@@ -722,7 +720,7 @@ namespace Rawr.HolyPriest
                 TimeUsed += pws.GlobalCooldown * calculationOptions.PWSCast;
                 BaseTimeUsed += 1.5f * calculationOptions.PWSCast;
                 AbsorbHeal += pws.AvgTotHeal * calculationOptions.PWSCast;
-                float pwsglyphheal = pws.AvgTotHeal * 0.2f * healmultiplier * ((stats.GLYPH_PowerWordShield > 0) ? 0.2f : 0.0f);
+                float pwsglyphheal = pws.AvgTotHeal * 0.2f * healmultiplier * ((character.PriestTalents.GlyphofPowerWordShield) ? 0.2f : 0.0f);
                 OtherHeal += pwsglyphheal * (1f - simstats.SpellCrit) + pwsglyphheal * 1.5f * simstats.SpellCrit;
             }
 
@@ -782,8 +780,6 @@ namespace Rawr.HolyPriest
                 float mp1use = ManaUsed / calculationOptions.FightLengthSeconds;
 
                 float periodicRegenOutFSR = StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
-                if (calculationOptions.NewManaRegen)
-                    periodicRegenOutFSR *= 0.6f;
 
                 // Add up all mana gains.
                 float regen = 0, tmpregen = 0;

@@ -70,7 +70,7 @@ namespace Rawr.HolyPriest
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            float ResilienceCap = 15f, ResilienceFromRating = StatConversion.GetResilienceFromRating(1);
+            float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetResilienceFromRating(1);
             float Resilience = StatConversion.GetResilienceFromRating(BasicStats.Resilience);
             dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.\r\n{3}", 
                 BasicStats.Resilience.ToString(), 
@@ -90,13 +90,13 @@ namespace Rawr.HolyPriest
                 RegenInFSR.ToString("0"),
                 RegenOutFSR.ToString("0"),
                 (BasicStats.Mp5 + RegenOutFSR).ToString("0")));
-            dictValues.Add("Spell Crit", string.Format("{0}%*{1}% from Intellect\r\n{2}% from {5} Crit rating\r\n{3}% Class Base\r\n{4}% from Buffs",
-                (BasicStats.SpellCrit * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), 1.24f, (BasicStats.SpellCrit * 100f - 1.24f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), BasicStats.CritRating));
+            dictValues.Add("Spell Crit", string.Format("{0}%*{1}% from Intellect\r\n{2}% from {6} Crit rating\r\n{3}% from Focused Will\r\n{4}% Class Base\r\n{5}% from Buffs",
+                (BasicStats.SpellCrit * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), character.PriestTalents.FocusedWill.ToString("0"), 1.24f, (BasicStats.SpellCrit * 100f - 1.24f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - character.PriestTalents.FocusedWill * 1f).ToString("0.00"), BasicStats.CritRating));
             dictValues.Add("Healing Crit", string.Format("{0}%*{1} ({1}%) points in Holy Specialization\r\n{2} ({3}%) points in Renewed Hope",
                 ((BasicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f).ToString("0.00"),
                 character.PriestTalents.HolySpecialization, character.PriestTalents.RenewedHope, character.PriestTalents.RenewedHope * 2));
-            dictValues.Add("Spell Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown", 
-                (BasicStats.SpellHaste * 100f).ToString("0.00"), (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+            dictValues.Add("Spell Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({6}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown", 
+                (BasicStats.SpellHaste * 100f).ToString("0.00"), (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString(), (character.PriestTalents.Enlightenment * 2).ToString("0"), (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f - character.PriestTalents.Enlightenment * 2f).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00"), character.PriestTalents.Enlightenment));
             dictValues.Add("Armor", string.Format("{0}*{1}% Damage Reduction.",
                 (BasicStats.Armor + BasicStats.BonusArmor).ToString("0"),
                 (StatConversion.GetArmorDamageReduction(80, (BasicStats.Armor + BasicStats.BonusArmor), 0f, 0f, 0f) * 100f).ToString("0.00")));

@@ -89,7 +89,7 @@ namespace Rawr
 		}
 	}
 
-	public class PriestTalents : TalentsBase, ICloneable
+	public partial class PriestTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[82];
 		public override int[] Data { get { return _data; } }public PriestTalents() { }
@@ -187,18 +187,18 @@ When activated, reduces the Mana cost of your next spell by 100% and increases i
 @"Reduces the casting time of your Mana Burn spell by 1.0 sec.",})]
 		public int ImprovedManaBurn { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Mental Strength", 5, 0, 2, 5, -1, new string[] {
+        [TalentData(12, "Reflective Shield", 2, 0, 1, 5, -1, new string[] {
+@"Causes 22% of the damage you absorb with Power Word: Shield to reflect back at the attacker.  This damage causes no threat.",
+@"Causes 45% of the damage you absorb with Power Word: Shield to reflect back at the attacker.  This damage causes no threat.",})]
+        public int ReflectiveShield { get { return _data[12]; } set { _data[12] = value; } }
+        
+        [TalentData(13, "Mental Strength", 5, 0, 2, 5, -1, new string[] {
 @"Increases your total Intellect by 3%.",
 @"Increases your total Intellect by 6%.",
 @"Increases your total Intellect by 9%.",
 @"Increases your total Intellect by 12%.",
 @"Increases your total Intellect by 15%.",})]
-		public int MentalStrength { get { return _data[12]; } set { _data[12] = value; } }
-
-		[TalentData(13, "Reflective Shield", 2, 0, 1, 5, -1, new string[] {
-@"Causes 22% of the damage you absorb with Power Word: Shield to reflect back at the attacker.  This damage causes no threat.",
-@"Causes 45% of the damage you absorb with Power Word: Shield to reflect back at the attacker.  This damage causes no threat.",})]
-		public int ReflectiveShield { get { return _data[13]; } set { _data[13] = value; } }
+		public int MentalStrength { get { return _data[13]; } set { _data[13] = value; } }
 
 		[TalentData(14, "Soul Warding", 1, 0, 3, 5, 6, new string[] {
 @"Reduces the cooldown of your Power Word: Shield ability by 4 sec, and reduces the mana cost of your Power Word: Shield by 30%.",})]
@@ -221,7 +221,7 @@ When activated, reduces the Mana cost of your next spell by 100% and increases i
 @"Increases your spell critical effect chance by 3%, and after taking a critical hit you gain the Focused Will effect, reducing all damage taken by 4% and increasing healing effects on you by 5%.  Stacks up to 3 times.  Lasts 8 sec.",})]
 		public int FocusedWill { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Power Infusion", 1, 0, 2, 7, 12, new string[] {
+		[TalentData(18, "Power Infusion", 1, 0, 2, 7, 13, new string[] {
 @"419 Mana,30 yd range,
 Instant cast,2 min cooldown,
 Infuses the target with power, increasing spell casting speed by 20% and reducing the mana cost of all spells by 20%. Lasts 15 sec.",})]

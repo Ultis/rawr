@@ -56,7 +56,6 @@
             this.lblTestOfFaith = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.cbNewMana = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.numFightLength = new System.Windows.Forms.NumericUpDown();
@@ -389,17 +388,6 @@
             this.cmbManaAmt.TabIndex = 45;
             this.cmbManaAmt.ValueMember = "2400";
             this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
-            // 
-            // cbNewMana
-            // 
-            this.cbNewMana.AutoSize = true;
-            this.cbNewMana.Location = new System.Drawing.Point(138, 26);
-            this.cbNewMana.Name = "cbNewMana";
-            this.cbNewMana.Size = new System.Drawing.Size(121, 17);
-            this.cbNewMana.TabIndex = 47;
-            this.cbNewMana.Text = "3.1 Regen Changes";
-            this.cbNewMana.UseVisualStyleBackColor = true;
-            this.cbNewMana.CheckedChanged += new System.EventHandler(this.cbNewMana_CheckedChanged);
             // 
             // tabControl1
             // 
@@ -779,7 +767,6 @@
             this.tabPage2.Controls.Add(this.trkReplenishment);
             this.tabPage2.Controls.Add(this.trkSerendipity);
             this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.cbNewMana);
             this.tabPage2.Controls.Add(this.trkActivity);
             this.tabPage2.Controls.Add(this.lblActivity);
             this.tabPage2.Controls.Add(this.cmbManaAmt);
@@ -855,7 +842,6 @@
         private System.Windows.Forms.TrackBar trkTestOfFaith;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cmbManaAmt;
-        private System.Windows.Forms.CheckBox cbNewMana;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;

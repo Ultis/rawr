@@ -162,6 +162,70 @@ namespace Rawr.HolyPriest
             }
         }
 
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Tree of Life Aura"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Vampiric Touch"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mana Spring Totem"));
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Restorative Totems"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Moonkin Form"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spellpower)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Shadow Protection"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Spell Power Food"));
+
+/*            character.ActiveBuffs.Add(Buff.GetBuffByName("Horn of Winter"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Battle Shout"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Icy Talons"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Agility Food"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));*/
+
+        }
+
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Circle of Healing");
+                _relevantGlyphs.Add("Glyph of Flash Heal");
+                _relevantGlyphs.Add("Glyph of Guardian Spirit");
+                _relevantGlyphs.Add("Glyph of Holy Nova");
+                _relevantGlyphs.Add("Glyph of Lightwell");
+                _relevantGlyphs.Add("Glyph of Mass Dispel");
+                _relevantGlyphs.Add("Glyph of Penance");
+                _relevantGlyphs.Add("Glyph of Power Word: Shield");
+                _relevantGlyphs.Add("Glyph of Prayer of Healing");
+                _relevantGlyphs.Add("Glyph of Renew");
+                _relevantGlyphs.Add("Glyph of Fading");
+
+            }
+            return _relevantGlyphs;
+        }
+
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 
         private string _currentChartName = null;
@@ -337,11 +401,6 @@ namespace Rawr.HolyPriest
             calculatedStats.Character = character;
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
-            if (calculationOptions.NewManaRegen)
-            {
-                calculatedStats.SpiritRegen *= 0.6f;
-                stats.SpellCombatManaRegeneration *= 5f / 3f;
-            }
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
@@ -514,12 +573,13 @@ namespace Rawr.HolyPriest
 
             Stats statsTalents = new Stats()
             {
-                BonusStaminaMultiplier = character.PriestTalents.Enlightenment * 0.01f,
-                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.01f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
+                BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
+                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
                 SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
-                SpellHaste = character.PriestTalents.Enlightenment * 0.01f,
-                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
+                SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
+                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
+                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
             };
 
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
@@ -531,7 +591,7 @@ namespace Rawr.HolyPriest
                 + GetInnerFireSpellPowerBonus(character));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
-            statsTotal.Health += statsTotal.Stamina * 10f;
+            statsTotal.Health += (statsTotal.Stamina - 20f) * 10f + 20f;
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                 + 0.0124f;
@@ -805,16 +865,6 @@ namespace Rawr.HolyPriest
                 ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
 
-                GLYPH_CircleOfHealing =  stats.GLYPH_CircleOfHealing,
-                GLYPH_Dispel = stats.GLYPH_Dispel,
-                GLYPH_FlashHeal = stats.GLYPH_FlashHeal,
-                GLYPH_PowerWordShield = stats.GLYPH_PowerWordShield,
-                GLYPH_PrayerOfHealing = stats.GLYPH_PrayerOfHealing,
-                GLYPH_Renew = stats.GLYPH_Renew,
-                GLYPH_HolyNova = stats.GLYPH_HolyNova,
-                GLYPH_Lightwell = stats.GLYPH_Lightwell,
-                GLYPH_MassDispel = stats.GLYPH_MassDispel,
-
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Agility = stats.Agility,
@@ -866,10 +916,6 @@ namespace Rawr.HolyPriest
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
                 + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45
                 + stats.ManaRestoreOnCast_10_45
-
-                + stats.GLYPH_CircleOfHealing + stats.GLYPH_Dispel + stats.GLYPH_FlashHeal
-                + stats.GLYPH_PowerWordShield + stats.GLYPH_PrayerOfHealing + stats.GLYPH_Renew
-                + stats.GLYPH_HolyNova + stats.GLYPH_Lightwell + stats.GLYPH_MassDispel
             ) > 0;
 
             bool Maybe = (

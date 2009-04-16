@@ -31,8 +31,6 @@ namespace Rawr.HolyPriest
 
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
-            cbNewMana.Checked = calcOpts.NewManaRegen;
-
             trkActivity.Value = (int)calcOpts.FSRRatio;
             lblActivity.Text = trkActivity.Value + "% of fight spent in FSR.";
 
@@ -196,16 +194,6 @@ namespace Rawr.HolyPriest
             }
         }
 
-        private void cbNewMana_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.NewManaRegen = cbNewMana.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void numFlashHealCast_ValueChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -364,7 +352,6 @@ namespace Rawr.HolyPriest
         public int ManaPot = 4;
         public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public int Rotation = 0;
-        public bool NewManaRegen = false;
         public float FSRRatio = 93f;
         public float FightLengthSeconds = 300f;
         public float Serendipity = 75f;

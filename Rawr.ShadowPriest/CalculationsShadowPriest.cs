@@ -586,12 +586,13 @@ namespace Rawr.ShadowPriest
 
             Stats statsTalents = new Stats()
             {
-                BonusStaminaMultiplier = character.PriestTalents.Enlightenment * 0.01f,
-                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.01f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
+                BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
+                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
                 SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
-                SpellHaste = character.PriestTalents.Enlightenment * 0.01f,
-                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
+                SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
+                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
+                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
             };
 
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
@@ -602,7 +603,7 @@ namespace Rawr.ShadowPriest
             statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
                 + GetInnerFireSpellPowerBonus(character));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
-            statsTotal.Health += statsTotal.Stamina * 10f;
+            statsTotal.Health += (statsTotal.Stamina - 20f) * 10f + 20f;
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                 + 0.0124f;
@@ -681,10 +682,6 @@ namespace Rawr.ShadowPriest
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
 
-                GLYPH_Shadow = stats.GLYPH_Shadow,
-                GLYPH_ShadowWordDeath = stats.GLYPH_ShadowWordDeath,
-                GLYPH_ShadowWordPain = stats.GLYPH_ShadowWordPain,
-
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Agility = stats.Agility,
@@ -725,8 +722,6 @@ namespace Rawr.ShadowPriest
                 + stats.SpellHasteFor10SecOnCast_10_45 + stats.TimbalsProc
                 + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc
                 + stats.BonusSpellCritMultiplier
-
-                + stats.GLYPH_Shadow + stats.GLYPH_ShadowWordDeath + stats.GLYPH_ShadowWordPain
             ) > 0;
 
             bool Maybe = (
