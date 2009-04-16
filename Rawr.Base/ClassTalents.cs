@@ -2330,13 +2330,13 @@ When activated, your next Nature spell with a casting time less than 10 sec. bec
 @"Your Healing Touch spell gains an additional 40% of your bonus healing effects.",})]
 		public int EmpoweredTouch { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Improved Regrowth", 5, 2, 3, 6, 68, new string[] {
-@"Increases the critical effect chance of your Regrowth spell by 10%.",
-@"Increases the critical effect chance of your Regrowth spell by 20%.",
-@"Increases the critical effect chance of your Regrowth spell by 30%.",
-@"Increases the critical effect chance of your Regrowth spell by 40%.",
-@"Increases the critical effect chance of your Regrowth spell by 50%.",})]
-		public int ImprovedRegrowth { get { return _data[73]; } set { _data[73] = value; } }
+		[TalentData(73, "Nature's Bounty", 5, 2, 3, 6, 68, new string[] {
+@"Increases the critical effect chance of your Regrowth and Nourish spells by 5%.",
+@"Increases the critical effect chance of your Regrowth and Nourish spells by 10%.",
+@"Increases the critical effect chance of your Regrowth and Nourish spells by 15%.",
+@"Increases the critical effect chance of your Regrowth and Nourish spells by 20%.",
+@"Increases the critical effect chance of your Regrowth and Nourish spells by 25%.",})]
+		public int NaturesBounty { get { return _data[73]; } set { _data[73] = value; } }
 
 		[TalentData(74, "Living Spirit", 3, 2, 1, 7, -1, new string[] {
 @"Increases your total Spirit by 5%.",
@@ -2370,11 +2370,11 @@ Consumes a Rejuvenation or Regrowth effect on a friendly target to instantly hea
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 100% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",})]
 		public int LivingSeed { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Replenish", 3, 2, 1, 9, -1, new string[] {
-@"Your Rejuvenation spell has a 5% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",
-@"Your Rejuvenation spell has a 10% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",
-@"Your Rejuvenation spell has a 15% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",})]
-		public int Replenish { get { return _data[79]; } set { _data[79] = value; } }
+		[TalentData(79, "Revitalize", 3, 2, 1, 9, -1, new string[] {
+@"Your Rejuvenation and Wild Growth spells have a 5% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",
+@"Your Rejuvenation and Wild Growth spells have a 10% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",
+@"Your Rejuvenation and Wild Growth spells have a 15% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",})]
+		public int Revitalize { get { return _data[79]; } set { _data[79] = value; } }
 
 		[TalentData(80, "Tree of Life", 1, 2, 2, 9, 77, new string[] {
 @"979 Mana,

@@ -295,13 +295,13 @@ namespace Rawr.Moonkin
                     character.DruidTalents.GiftOfNature = int.Parse(talentCode.Substring(69, 1));
                     character.DruidTalents.ImprovedTranquility = int.Parse(talentCode.Substring(70, 1));
                     character.DruidTalents.EmpoweredTouch = int.Parse(talentCode.Substring(71, 1));
-                    character.DruidTalents.ImprovedRegrowth = int.Parse(talentCode.Substring(72, 1));
+                    character.DruidTalents.NaturesBounty = int.Parse(talentCode.Substring(72, 1));
                     character.DruidTalents.LivingSpirit = int.Parse(talentCode.Substring(73, 1));
                     character.DruidTalents.Swiftmend = int.Parse(talentCode.Substring(74, 1));
                     character.DruidTalents.NaturalPerfection = int.Parse(talentCode.Substring(75, 1));
                     character.DruidTalents.EmpoweredRejuvenation = int.Parse(talentCode.Substring(76, 1));
                     character.DruidTalents.LivingSeed = int.Parse(talentCode.Substring(77, 1));
-                    character.DruidTalents.Replenish = int.Parse(talentCode.Substring(78, 1));
+                    character.DruidTalents.Revitalize = int.Parse(talentCode.Substring(78, 1));
                     character.DruidTalents.TreeOfLife = int.Parse(talentCode.Substring(79, 1));
                     character.DruidTalents.ImprovedTreeOfLife = int.Parse(talentCode.Substring(80, 1));
                     character.DruidTalents.GiftOfTheEarthmother = int.Parse(talentCode.Substring(81, 1));

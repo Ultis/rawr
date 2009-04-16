@@ -303,7 +303,7 @@ namespace Rawr.Tree
                 manaCost * 0.03f * druidTalents.Moonglow +
                 manaCost * 0.2f * druidTalents.TreeOfLife;
 
-            critPercent += 10f * druidTalents.ImprovedRegrowth;
+            critPercent += 5f * druidTalents.NaturesBounty;
             //Living Seed
             critModifier += 0.1f * druidTalents.LivingSeed;
 
@@ -639,6 +639,7 @@ namespace Rawr.Tree
             manaCost *= (1 - druidTalents.TranquilSpirit * 0.02f);
 
 			critPercent += 2f * druidTalents.NaturesMajesty;
+            critPercent += 5f * druidTalents.NaturesBounty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             //if (calcOpts.useLivingSeedAsCritMultiplicator)
