@@ -690,9 +690,10 @@ namespace Rawr
 
 		void defaultGemControlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            this.Cursor = Cursors.WaitCursor;
             FormGemmingTemplates GemControl = new FormGemmingTemplates();
             GemControl.ShowDialog(this);
+            this.Cursor = Cursors.Default;
             if (GemControl.DialogResult.Equals(DialogResult.OK))
             {
                 GemmingTemplate.SaveTemplates();
