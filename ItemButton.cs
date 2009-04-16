@@ -50,14 +50,14 @@ namespace Rawr
             {
                 int tipX = this.Width;
                 if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
-                    tipX = -249;
+                    tipX = -309;
                 ItemToolTip.Instance.Show(SelectedItemInstance, this, new Point(tipX, 0));
             }
 			else if (SelectedItem != null)
 			{
 				int tipX = this.Width;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
-					tipX = -249;
+					tipX = -309;
 				ItemToolTip.Instance.Show(SelectedItem, this, new Point(tipX, 0));
 			}
 		}
