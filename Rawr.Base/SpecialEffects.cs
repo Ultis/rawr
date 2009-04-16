@@ -1016,7 +1016,6 @@ namespace Rawr
                 // Vengeance of the Illidari (tooltip lies!)
                 if (id == 28040) { cooldown_min = 1; cooldown_sec = 90.0f; }
                 // try to add it to the normal rawr stats
-                bool added_to_special_stats = false;
                 switch (integral_uptime)
                 {
                     case 20:
@@ -1024,11 +1023,9 @@ namespace Rawr
                         {
                             case 5:
                                 stats.SpellPowerFor20SecOnUse5Min += spell_power;
-                                added_to_special_stats = true;
                                 break;
                             case 2:
                                 stats.SpellPowerFor20SecOnUse2Min += spell_power;
-                                added_to_special_stats = true;
                                 break;
                         }
                         break;
@@ -1037,7 +1034,6 @@ namespace Rawr
                         if (id == 28040)
                         {
                             stats.SpellPowerFor15SecOnUse90Sec += spell_power;
-                            added_to_special_stats = true;
                         }
                         break;
                 }
