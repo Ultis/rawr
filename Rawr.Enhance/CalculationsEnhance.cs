@@ -402,17 +402,17 @@ namespace Rawr
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellDamage);
-            float hitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
+            float spellHitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
-            float dpsES = (hitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage);
+            float dpsES = (spellHitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage);
 
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
             float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
-            float lbhitRollMultiplier = cs.ChanceSpellHit + (cs.ChanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
-            float dpsLB = (lbhitRollMultiplier * damageLB / cs.SecondsToFiveStack) * (1 + bonusNatureDamage);
+            float lbHitRollMultiplier = cs.ChanceSpellHit + (cs.ChanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
+            float dpsLB = (lbHitRollMultiplier * damageLB / cs.SecondsToFiveStack) * (1 + bonusNatureDamage);
             if (character.ShamanTalents.GlyphofLightningBolt)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             
@@ -434,11 +434,11 @@ namespace Rawr
             if (character.ShamanTalents.GlyphofLightningShield)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
-            //8: Searing Totem DPS
-            float damageSTBase = calcOpts.Magma ? 371f : 105f;
-            float damageSTCoef = calcOpts.Magma ? .1f : .1667f;
-            float damageST = (damageSTBase + damageSTCoef * spellDamage) * callofFlameBonus;
-            float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusFireDamage);
+            //8: Searing/Magma Totem DPS
+            float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
+            float damageSTMTCoef = calcOpts.Magma ? .1f : .1667f;
+            float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellDamage) * callofFlameBonus;
+            float dpsSTMT = (spellHitRollMultiplier * damageSTMT / 2) * (1 + bonusFireDamage);
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
@@ -447,14 +447,14 @@ namespace Rawr
                 float damageFTBase = 274 * cs.UnhastedMHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedMHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT += hitRollMultiplier * damageFT * cs.HitsPerSMH * (1 + bonusFireDamage);
+                dpsFT += spellHitRollMultiplier * damageFT * cs.HitsPerSMH * (1 + bonusFireDamage);
             }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
                 float damageFTBase = 274 * cs.UnhastedOHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedOHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT += hitRollMultiplier * damageFT * cs.HitsPerSOH * (1 + bonusFireDamage);
+                dpsFT += spellHitRollMultiplier * damageFT * cs.HitsPerSOH * (1 + bonusFireDamage);
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
@@ -489,7 +489,7 @@ namespace Rawr
             }
             #endregion
 
-            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
+            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsSTMT + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			calculatedStats.AvoidedAttacks = (1 - cs.ChanceWhiteHit) * 100f;
@@ -517,8 +517,8 @@ namespace Rawr
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
             calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
-            calculatedStats.SearingMagma = new DPSAnalysis(dpsST, 1 - cs.ChanceYellowHit, -1, -1, cs.ChanceYellowCrit);
-            calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceWhiteHit, -1, -1, cs.ChanceWhiteCrit);
+            calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.ChanceYellowHit, -1, -1, cs.ChanceYellowCrit);
+            calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
 
 			return calculatedStats;
         }
