@@ -286,7 +286,7 @@ namespace Rawr
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
 				htmlTooltip = htmlTooltip.Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-					.Replace("Heroes' ", "");
+					.Replace("Heroes' ", "").Replace("Conqueror's ", "");
 				item.SetName = htmlTooltip;
 			}
 			//if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";
