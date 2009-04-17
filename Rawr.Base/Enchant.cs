@@ -445,6 +445,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3844, "Exceptional Spirit", Item.ItemSlot.OneHand, new Stats() { Spirit = 45 }));
             defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
             defaultEnchants.Add(new Enchant(1147, "Major Spirit", Item.ItemSlot.Wrist, new Stats() { Spirit = 18 }));
+            defaultEnchants.Add(new Enchant(3872, "Sanctified Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 50, Spirit = 20 }));
             defaultEnchants.Add(new Enchant(2748, "Runic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
             defaultEnchants.Add(new Enchant(2747, "Mystic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
             defaultEnchants.Add(new Enchant(3719, "Brilliant Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 50, Spirit = 20 }));
