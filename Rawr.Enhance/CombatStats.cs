@@ -260,10 +260,10 @@ namespace Rawr.Enhance
             _glancing = glancing;
             _crit = crit;
             _hit = 1f;
-            if (miss > 0) 
-                _hit -= miss;
+            if (miss > 0)
+                _hit -= miss;  // only need to subtract miss from hit as at this point miss includes dodge
             if (dodge > 0)
-                _hit -= dodge;
+                _miss -= dodge;  // so if we have dodge then the true miss is less dodge
             if (glancing > 0)
                 _hit -= glancing;
             if (crit > 0)
@@ -277,15 +277,15 @@ namespace Rawr.Enhance
             StringBuilder sb = new StringBuilder();
             sb.Append(_dps.ToString("F2", CultureInfo.InvariantCulture) + "*");
             if (_miss >= 0)
-                sb.AppendLine("Miss " + (100f * _miss).ToString("F2", CultureInfo.InvariantCulture) + "%");
+                sb.AppendLine("Miss            " + (100f * _miss).ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (_dodge >= 0)
-                sb.AppendLine("Dodge " + (100f * _dodge).ToString("F2", CultureInfo.InvariantCulture) + "%");
+                sb.AppendLine("Dodge        " + (100f * _dodge).ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (_glancing >= 0)
-                sb.AppendLine("Glancing " + (100f * _glancing).ToString("F2", CultureInfo.InvariantCulture) + "%");
+                sb.AppendLine("Glancing     " + (100f * _glancing).ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (_hit >= 0)
-                sb.AppendLine("Hit " + (100f * _hit).ToString("F2", CultureInfo.InvariantCulture) + "%");
+                sb.AppendLine("Normal Hit  " + (100f * _hit).ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (_crit >= 0)
-                sb.AppendLine("Crit " + (100f * _crit).ToString("F2", CultureInfo.InvariantCulture) + "%");
+                sb.AppendLine("Crit Hit       " + (100f * _crit).ToString("F2", CultureInfo.InvariantCulture) + "%");
             return sb.ToString();
         }
     }
