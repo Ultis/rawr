@@ -18,17 +18,15 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-            labelVersionHistory.Text = @"v2.2.0.8
+            labelVersionHistory.Text = @"v2.2.0.9
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
- - Fix for armory parsing, glyph parsing
- - Fix for optimizer enchant filtering
- - Talent tree updates in some models
- - Rawr.DPSWarr: Update Improved Berserker Stance to Str instead of AP.
- - Rawr.Moonkin: More support for special effects.
- - Rawr.EnhSham: Display enhancements.
- - Rawr.RestoSham: Updates for new glyph system.
- - Rawr.Bear: Fix for lacerate always being able to crit.
- - Rawr.Cat: Added special effects handling.";
+ - All talent trees and tooltips updated to 3.1
+ - Option to display gem names in tooltips
+ - Fix for tooltip rendering
+ - Rawr.ProtPaladin: calculation fixes
+ - Rawr.TankDK: updated for 3.1
+ - Rawr.HolyPriest, Rawr.ShadowPriest: glyph updates
+ - Rawr.Tree: Nature's Bounty, Revitalize";
 			labelVersionHistory.Height = 560;
 
 			this.DoubleBuffered = true;

@@ -1,8 +1,18 @@
-Rawr v2.2.0.8
+Rawr v2.2.0.9
 ------------
-Welcome to Rawr 2.2.0.8.
+Welcome to Rawr 2.2.0.9.
    
 Recent Changes:
+v2.2.0.9
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
+ - All talent trees and tooltips updated to 3.1
+ - Option to display gem names in tooltips
+ - Fix for tooltip rendering
+ - Rawr.ProtPaladin: calculation fixes
+ - Rawr.TankDK: updated for 3.1
+ - Rawr.HolyPriest, Rawr.ShadowPriest: glyph updates
+ - Rawr.Tree: Nature's Bounty, Revitalize
+  
 v2.2.0.8
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
  - Fix for armory parsing, glyph parsing
