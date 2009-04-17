@@ -235,6 +235,8 @@ namespace Rawr.ProtPaladin
                 case "Defense Skill": return Defense;
                 case "Block Value": return BlockValue;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
+                case "% Hit Chance": return Hit * 100.0f;
+                case "% Spell Hit Chance": return SpellHit * 100.0f;
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;
                 case "Nature Survival": return NatureSurvivalPoints;

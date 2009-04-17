@@ -209,7 +209,6 @@ focus on Survival Points.",
                     "% Chance to be Crit",
                     "Defense Skill",
                     "Block Value",
-                    "% Chance to be Avoided", 
                     "Burst Time", 
                     "TankPoints", 
                     "Nature Survival",
@@ -217,6 +216,9 @@ focus on Survival Points.",
                     "Frost Survival",
                     "Shadow Survival",
                     "Arcane Survival",
+                    "% Hit Chance",
+                    "% Spell Hit Chance",
+                    "% Chance to be Avoided",
                     };
                 return _optimizableCalculationLabels;
             }
