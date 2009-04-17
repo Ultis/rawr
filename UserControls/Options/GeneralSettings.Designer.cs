@@ -39,6 +39,7 @@
             this.rbFrench = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.chbBuffSource = new System.Windows.Forms.CheckBox();
+            this.chbGemNames = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,10 +101,17 @@
             this.chbBuffSource.Name = "chbBuffSource";
             this.chbBuffSource.UseVisualStyleBackColor = true;
             // 
+            // chbGemNames
+            // 
+            resources.ApplyResources(this.chbGemNames, "chbGemNames");
+            this.chbGemNames.Name = "chbGemNames";
+            this.chbGemNames.UseVisualStyleBackColor = true;
+            // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chbGemNames);
             this.Controls.Add(this.chbBuffSource);
             this.Controls.Add(this.rbEnglish);
             this.Controls.Add(this.rbFrench);
@@ -130,6 +138,7 @@
         private System.Windows.Forms.RadioButton rbRussian;
         private System.Windows.Forms.RadioButton rbGerman;
         private System.Windows.Forms.CheckBox chbBuffSource;
+        private System.Windows.Forms.CheckBox chbGemNames;
 
 
 	}

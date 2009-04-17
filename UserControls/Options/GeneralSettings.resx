@@ -128,10 +128,40 @@
     <value>6, 13</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="chbBuffSource.AutoSize" type="System.Boolean, mscorlib">
+  <data name="chbGemNames.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="chbGemNames.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chbGemNames.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 53</value>
+  </data>
+  <data name="chbGemNames.Size" type="System.Drawing.Size, System.Drawing">
+    <value>172, 17</value>
+  </data>
+  <data name="chbGemNames.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="chbGemNames.Text" xml:space="preserve">
+    <value>Display Gem Names in Tooltips</value>
+  </data>
+  <data name="&gt;&gt;chbGemNames.Name" xml:space="preserve">
+    <value>chbGemNames</value>
+  </data>
+  <data name="&gt;&gt;chbGemNames.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chbGemNames.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chbGemNames.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="chbBuffSource.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="chbBuffSource.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -157,7 +187,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;chbBuffSource.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="rbEnglish.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -166,7 +196,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbEnglish.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 67</value>
+    <value>6, 89</value>
   </data>
   <data name="rbEnglish.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 17</value>
@@ -187,7 +217,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbEnglish.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="rbFrench.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -196,7 +226,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbFrench.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 111</value>
+    <value>6, 133</value>
   </data>
   <data name="rbFrench.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 17</value>
@@ -217,7 +247,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbFrench.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="rbSpanish.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -226,7 +256,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbSpanish.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 134</value>
+    <value>6, 156</value>
   </data>
   <data name="rbSpanish.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 17</value>
@@ -247,7 +277,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbSpanish.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="rbRussian.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -256,7 +286,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbRussian.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 157</value>
+    <value>6, 179</value>
   </data>
   <data name="rbRussian.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 17</value>
@@ -277,7 +307,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbRussian.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="rbGerman.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -286,7 +316,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbGerman.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 88</value>
+    <value>6, 110</value>
   </data>
   <data name="rbGerman.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 17</value>
@@ -307,7 +337,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbGerman.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -316,7 +346,7 @@
     <value>NoControl</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 51</value>
+    <value>3, 73</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>42, 13</value>
@@ -337,7 +367,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="checkBoxUseMultithreading.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -364,7 +394,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxUseMultithreading.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
     <value>243, 313</value>

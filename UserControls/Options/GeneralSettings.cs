@@ -19,6 +19,7 @@ namespace Rawr.UserControls.Options
 			//if this happens, then the users settings will be cleared.
             checkBoxUseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
             chbBuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
+            chbGemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
 
@@ -53,6 +54,7 @@ namespace Rawr.UserControls.Options
             string title = string.Empty;
 			Rawr.Properties.GeneralSettings.Default.UseMultithreading = checkBoxUseMultithreading.Checked;
             Rawr.Properties.GeneralSettings.Default.DisplayBuffSource = chbBuffSource.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayGemNames = chbGemNames.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
 			Rawr.Properties.GeneralSettings.Default.Save();
             switch(_locale)

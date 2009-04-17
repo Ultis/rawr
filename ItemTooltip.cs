@@ -309,6 +309,18 @@ namespace Rawr
                                 SizeF gem_info_size = _dummyBitmap.MeasureString("Matches:", _fontStats);
                                 gemInfoSize = (int)gem_info_size.Height;
                             }
+                            int gemNamesSize = 0;
+                            if (Rawr.Properties.GeneralSettings.Default.DisplayGemNames && !CurrentItem.IsGem && hasSockets)
+                            {
+                                SizeF gem_name_size = _dummyBitmap.MeasureString("Name of Gem", _fontStats);
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    Item gem = null;
+                                    if (CurrentItemInstance != null) gem = (i == 0 ? CurrentItemInstance.Gem1 : (i == 1 ? CurrentItemInstance.Gem2 : CurrentItemInstance.Gem3));
+                                    if (gem != null)
+                                        gemNamesSize += (int)gem_name_size.Height;
+                                } 
+                            }
 
                             int numTinyItems = 0;
                             int tinyItemSize = 18;
@@ -324,7 +336,7 @@ namespace Rawr
                                 }
                             }
 
-                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + enchantSize + gemInfoSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
+                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + enchantSize + gemInfoSize + gemNamesSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -417,6 +429,7 @@ namespace Rawr
 
                             if (hasSockets)
                             {
+                                int gemNameHeight = 0;
                                 for (int i = 0; i < 3; i++)
                                 {
                                     Item.ItemSlot slotColor = (i == 0
@@ -508,6 +521,12 @@ namespace Rawr
                                                 g.FillRectangle(solidBrush, rectGemBorder);
                                                 solidBrush.Dispose();
                                             }
+                                            if (Rawr.Properties.GeneralSettings.Default.DisplayGemNames && !CurrentItem.IsGem)
+                                            {
+                                                SizeF gemNameSize = g.MeasureString(gem.Name, _fontStats);
+                                                g.DrawString(gem.Name, _fontStats, SystemBrushes.InfoText, 2, 63 + statHeight + i * ((int)gemNameSize.Height));
+                                                gemNameHeight += (int)gemNameSize.Height;
+                                            }
                                         }
                                     }
                                 }
@@ -523,11 +542,11 @@ namespace Rawr
                                     (CurrentItem.SocketBonus.ToString().Length == 0
                                          ? "None"
                                          : CurrentItem.SocketBonus.ToString()),
-                                    _fontStats, brushBonus, 2, 63 + statHeight);
+                                    _fontStats, brushBonus, 2, 63 + statHeight + gemNameHeight);
 
                                 // update cursor position (the magic number 63 comes from right above)
                                 SizeF socket_info_size = g.MeasureString("Socket Bonus:", _fontStats);
-                                yPos = 63 + statHeight + ((int)socket_info_size.Height);
+                                yPos = 63 + statHeight + gemNameHeight + ((int)socket_info_size.Height);
                             }
                             // draw information about gem color (for dummies like me)
                             if (CurrentItem.IsGem)

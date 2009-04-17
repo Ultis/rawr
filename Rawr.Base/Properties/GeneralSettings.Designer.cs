@@ -70,5 +70,17 @@ namespace Rawr.Properties {
                 this["DisplayBuffSource"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayGemNames {
+            get {
+                return ((bool)(this["DisplayGemNames"]));
+            }
+            set {
+                this["DisplayGemNames"] = value;
+            }
+        }
     }
 }
