@@ -408,13 +408,14 @@ namespace Rawr
 		public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
 
 		/// <summary>
-		/// List<Item.ItemType> containing all of the ItemTypes relevant to this model. Typically this
+        /// List&lt;Item.ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
 		/// means all types of armor/weapons that the intended class is able to use, but may also
 		/// be trimmed down further if some aren't typically used. Item.ItemType.None should almost
 		/// always be included, because that type includes items with no proficiancy requirement, such
 		/// as rings, necklaces, cloaks, held in off hand items, etc.
-		/// 
-		/// EXAMPLE:
+		/// </summary>
+		/// <example>
+        /// <![CDATA[
 		/// relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 		/// {
 		///     Item.ItemType.None,
@@ -423,7 +424,8 @@ namespace Rawr
 		///     Item.ItemType.Staff,
 		///     Item.ItemType.TwoHandMace
 		/// });
-		/// </summary>
+        /// ]]>
+        /// </example>
 		public abstract List<Item.ItemType> RelevantItemTypes { get; }
 
 		/// <summary>

@@ -254,7 +254,9 @@ namespace Rawr.Optimizer
                 int itemId = int.Parse(keyMap.Key);
                 item = ItemCache.FindItemById(itemId);
 
-                if (item != null)
+                // disallow non-equippable items, this can happen for example when loading from character profiler
+
+                if (item != null && model.RelevantItemTypes.Contains(item.Type))
                 {
                     int slot = (int)Character.GetCharacterSlotByItemSlot(item.Slot);
                     if (slot < 0 || slot >= slotCount) continue;
