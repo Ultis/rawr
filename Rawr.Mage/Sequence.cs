@@ -250,6 +250,21 @@ namespace Rawr.Mage.SequenceReconstruction
                             {
                                 if (sequence[k].Group.Count == 0 && (minbuffer > eps || (overflowBuffer > eps && sequence[k].Mps > 0 && !sequence[k].CastingState.ManaGemEffect) || (threatBuffer > eps && sequence[k].Tps < maxTps)))
                                 {
+                                    // if we're not fixing cooldown constraints then make sure not to break threat limits by moving stuff around
+                                    if (minbuffer < eps && sequence[k].Tps > maxTps)
+                                    {
+                                        // threat + duration * tps <= maxTps * t + maxTps * duration
+                                        // duration <= (maxTps * t - threat) / (tps - maxTps)
+                                        double maxSplit = (maxTps * t - threat) / (sequence[k].Tps - maxTps);
+                                        if (maxSplit < eps)
+                                        {
+                                            continue;
+                                        }
+                                        if (maxSplit < buffer)
+                                        {
+                                            buffer = maxSplit;
+                                        }
+                                    }
                                     if (minbuffer > eps && sequence[k].Duration > minbuffer + eps)
                                     {
                                         SplitAt(k, minbuffer);
@@ -788,6 +803,19 @@ namespace Rawr.Mage.SequenceReconstruction
                 sequence.Insert(index, sequence[index].Clone());
                 sequence[index].Duration = time;
                 sequence[index + 1].Duration = d - time;
+                if (sequence[index].Group.Count == 0)
+                {
+                    SequenceGroup newSuperGroup = new SequenceGroup();
+                    newSuperGroup.Add(sequence[index]);
+                    sequence[index].SuperGroup = newSuperGroup;
+                    newSuperGroup = new SequenceGroup();
+                    newSuperGroup.Add(sequence[index + 1]);
+                    sequence[index + 1].SuperGroup = newSuperGroup;
+                }
+                else
+                {
+                    sequence[index].SuperGroup.Item.Insert(sequence[index].SuperGroup.Item.IndexOf(sequence[index + 1]), sequence[index]);
+                }
             }
         }
 
@@ -2156,8 +2184,8 @@ namespace Rawr.Mage.SequenceReconstruction
             double nextGem = 0;
             double nextPot = 0;
             double nextEvo = 0;
-            double maxTps = 5000.0;
-            if (SequenceItem.Calculations.CalculationOptions.TpsLimit != 5000.0 && SequenceItem.Calculations.CalculationOptions.TpsLimit > 0.0)
+            double maxTps = 50000.0;
+            if (SequenceItem.Calculations.CalculationOptions.TpsLimit > 0.0)
             {
                 maxTps = SequenceItem.Calculations.CalculationOptions.TpsLimit;
             }

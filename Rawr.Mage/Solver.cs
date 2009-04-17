@@ -391,7 +391,7 @@ namespace Rawr.Mage
             calculationResult.ActiveBuffs = activeBuffs;
             calculationResult.NeedsDisplayCalculations = needsDisplayCalculations;
 
-            restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
+            restrictThreat = segmentCooldowns && calculationOptions.TpsLimit > 0f;
             powerInfusionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PowerInfusionAvailable;
             heroismAvailable = !calculationOptions.DisableCooldowns && calculationOptions.HeroismAvailable;
             arcanePowerAvailable = !calculationOptions.DisableCooldowns && (talents.ArcanePower == 1);
@@ -2294,7 +2294,7 @@ namespace Rawr.Mage
             if (drumsOfBattleAvailable && heroismAvailable) rowHeroismDrumsOfBattle = rowCount++;
             //if (drumsOfBattleAvailable && icyVeinsAvailable) rowIcyVeinsDrumsOfBattle = rowCount++;
             //if (drumsOfBattleAvailable && arcanePowerAvailable) rowArcanePowerDrumsOfBattle = rowCount++;
-            if (calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f) rowThreat = rowCount++;
+            if (calculationOptions.TpsLimit > 0f) rowThreat = rowCount++;
             if (drumsOfBattleAvailable) rowDrumsOfBattle = rowCount++;
             if (needsTimeExtension) rowTimeExtension = rowCount++;
             if (afterFightRegen) rowAfterFightRegenMana = rowCount++;
