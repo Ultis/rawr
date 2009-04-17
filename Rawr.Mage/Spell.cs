@@ -459,10 +459,6 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            if (CastingState.WaterElemental)
-            {
-                manaRegenPerSecond += 0.002f * CastingState.BaseStats.Mana / 5.0f * CastingState.MageTalents.ImprovedWaterElemental;
-            }
             threatPerSecond += (baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
         }
 
@@ -515,10 +511,6 @@ namespace Rawr.Mage
                         dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
                         break;
                 }
-            }
-            if (CastingState.WaterElemental)
-            {
-                dict["Water Elemental"] += duration * 0.002f * CastingState.BaseStats.Mana / 5.0f * CastingState.MageTalents.ImprovedWaterElemental;
             }
         }
 
@@ -1165,7 +1157,7 @@ namespace Rawr.Mage
             BaseDotDamageModifier = 1.0f;
             BaseCostModifier = 1.0f;
             BaseCostAmplifier = 1.0f;
-            BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ElementalPrecision);
+            BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.Precision);
             if (mageTalents.FrostChanneling > 0) BaseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
             if (MagicSchool == MagicSchool.Arcane) BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;

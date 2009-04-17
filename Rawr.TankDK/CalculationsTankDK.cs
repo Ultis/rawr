@@ -373,7 +373,7 @@ namespace Rawr.TankDK
             calcs.DefenseRatingNeeded = (calcs.Crit / 0.04f) * 4.918498039f;
 
 
-            float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f) * (1.0f - character.DeathKnightTalents.FrostAura * 0.01f) *
+            float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f)/* * (1.0f - character.DeathKnightTalents.FrostAura * 0.01f)*/ *
                                 (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime);
 
 //***** Survival Rating *****
@@ -531,7 +531,7 @@ namespace Rawr.TankDK
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,

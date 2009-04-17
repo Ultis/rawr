@@ -21,6 +21,7 @@ namespace Rawr
 
         public const string CONTENT_XML = "application/xml";
         public const string CONTENT_JPG = "image/jpeg";
+        public const string CONTENT_GIF = "image/gif";
 
 		private class DownloadRequest
 		{
@@ -69,7 +70,8 @@ namespace Rawr
 			string ItemWowheadURI { get; }
             string ItemWowheadUpgradeURI { get; }
             string TalentIconURI { get; }
-			string ItemInfoURI { get; }
+            string ArmoryTalentIconURI { get; }
+            string ItemInfoURI { get; }
             string ItemSearchURI { get; }
         }
 
@@ -86,6 +88,11 @@ namespace Rawr
             public int MaxHttpRequests
             {
                 get { return Rawr.Properties.NetworkSettings.Default.MaxHttpRequests; }
+            }
+
+            public string ArmoryTalentIconURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ArmoryTalentIconURI; }
             }
 
             public bool UseDefaultProxySettings
@@ -422,25 +429,36 @@ namespace Rawr
 		/// <param name="talentTree">name of the talent tree</param>
 		/// <param name="talentName">name of the talent</param>
 		/// <returns>The full path to the downloaded icon.  Null is returned if no icon could be downloaded</returns>
-		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree) { return DownloadTalentIcon(charClass, talentTree, "background"); }
-		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName)
+		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree) { return DownloadTalentIcon(charClass, talentTree, "background", null); }
+		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName, string icon)
 		{
 			//foreach (string illegalCharacter in new string[] { " ", "'" })
 			talentTree = talentTree.Replace(" ", "");
 			talentName = talentName.Replace(" ", "");
             talentName = talentName.Replace(":", "");
-			string imageName = talentName + ".jpg";
-			string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName);
+            string fullPathToSave;
 
-			if (!String.IsNullOrEmpty(talentTree) && !String.IsNullOrEmpty(talentName))
-			{
-				//0 = class, 1=tree, 2=talentname - all lowercase
-				//@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
-				//http://www.worldofwarcraft.com/shared/global/talents//wrath/druid/images/balance/brambles.jpg
-				string uri = string.Format(NetworkSettingsProvider.TalentIconURI, charClass.ToString().ToLower(),
-                                                talentTree.ToLower(), talentName.ToLower());
-				DownloadFile(uri, fullPathToSave, CONTENT_JPG);
-			}
+            if (icon != null)
+            {
+                string imageName = icon;
+                fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName.Replace("/", "_"));
+                string uri = string.Format(NetworkSettingsProvider.ArmoryTalentIconURI, icon);
+                DownloadFile(uri, fullPathToSave, CONTENT_GIF);
+            }
+            else
+            {
+                string imageName = talentName + ".gif";
+                fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName);
+                if (!String.IsNullOrEmpty(talentTree) && !String.IsNullOrEmpty(talentName))
+                {
+                    //0 = class, 1=tree, 2=talentname - all lowercase
+                    //@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
+                    //http://www.worldofwarcraft.com/shared/global/talents//wrath/druid/images/balance/brambles.jpg
+                    string uri = string.Format(NetworkSettingsProvider.TalentIconURI, charClass.ToString().ToLower(),
+                                                    talentTree.ToLower(), talentName.ToLower());
+                    DownloadFile(uri, fullPathToSave, CONTENT_JPG);
+                }
+            }
 			if (!File.Exists(fullPathToSave))
 			{
 				fullPathToSave = null;

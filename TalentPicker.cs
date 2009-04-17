@@ -202,7 +202,7 @@ namespace Rawr
                             case 1: currentTree = talentTree2; break;
                             default: currentTree = talentTree3; break;
                         }
-                        TalentItem item = new TalentItem(currentTree, talentData.Name, talentData.Row - 1, talentData.Column - 1, talentData.Index, LineWrapDescription(talentData.Description),
+                        TalentItem item = new TalentItem(currentTree, talentData.Name, talentData.Row - 1, talentData.Column - 1, talentData.Index, LineWrapDescription(talentData.Description), talentData.Icon,
                             (int)pi.GetValue(Talents, null), talentData.MaxPoints, talentData.Prerequisite >= 0 ? _talentPickerItems[talentData.Prerequisite] : null);
                         _talentPickerItems[talentData.Index] = item;
                         currentTree.AddTalent(item);

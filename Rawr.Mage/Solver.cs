@@ -414,7 +414,7 @@ namespace Rawr.Mage
             calculationResult.ArcanePowerDuration = 15.0 + (talents.GlyphOfArcanePower ? 3.0 : 0.0);
             calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
             calculationResult.WaterElementalCooldown = (180.0 - (talents.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
-            calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.ImprovedWaterElemental;
+            calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.EnduringWinter;
             calculationResult.PowerInfusionDuration = 15.0;
             calculationResult.PowerInfusionCooldown = 120.0;
             if (calculationOptions.PlayerLevel < 77)
@@ -547,7 +547,7 @@ namespace Rawr.Mage
 
         private void CalculateBaseStateStats(Stats baseStats)
         {
-            calculationResult.BaseSpellHit = baseStats.HitRating * calculationOptions.LevelScalingFactor / 800f + baseStats.SpellHit + 0.01f * talents.ElementalPrecision;
+            calculationResult.BaseSpellHit = baseStats.HitRating * calculationOptions.LevelScalingFactor / 800f + baseStats.SpellHit + 0.01f * talents.Precision;
 
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;

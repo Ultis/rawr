@@ -294,5 +294,17 @@ namespace Rawr.Properties {
                 return ((string)(this["ItemWowheadUpgradeURI"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}")]
+        public string ArmoryTalentIconURI {
+            get {
+                return ((string)(this["ArmoryTalentIconURI"]));
+            }
+            set {
+                this["ArmoryTalentIconURI"] = value;
+            }
+        }
     }
 }

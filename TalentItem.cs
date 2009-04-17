@@ -52,6 +52,7 @@ namespace Rawr
             set { _col = value; }
         }
 
+        private string _iconName;
         private string[] _description = new string[] { "" };
         public string[] Description { get { return _description; } set { _description = value; } }
 
@@ -125,7 +126,7 @@ namespace Rawr
         }
 
         private Image _icon;
-        private void UpdateIcon() { _icon = ItemIcons.GetTalentIcon(_talentTree.CharacterClass, _talentTree.TreeName, _talentName + (_currentRank == 0 ? "-off" : "")); }
+        private void UpdateIcon() { _icon = ItemIcons.GetTalentIcon(_talentTree.CharacterClass, _talentTree.TreeName, _talentName + (_currentRank == 0 ? "-off" : ""), (_currentRank == 0 ? "grey/" : "") + _iconName + ".gif"); }
 
         private Image _overlay;
         private void UpdateOverlay()
@@ -135,10 +136,10 @@ namespace Rawr
             else _overlay = Properties.Resources.icon_over_green;
         }
 
-        public TalentItem(TalentTree talentTree, string talentName, int row, int col, int index, string[] description, int currentRank, int maxRank)
-            : this(talentTree, talentName, row, col, index, description, currentRank, maxRank, null) { }
+        public TalentItem(TalentTree talentTree, string talentName, int row, int col, int index, string[] description, string icon, int currentRank, int maxRank)
+            : this(talentTree, talentName, row, col, index, description, icon, currentRank, maxRank, null) { }
 
-        public TalentItem(TalentTree talentTree, string talentName, int row, int col, int index, string[] description, int currentRank, int maxRank, TalentItem prereq)
+        public TalentItem(TalentTree talentTree, string talentName, int row, int col, int index, string[] description, string icon, int currentRank, int maxRank, TalentItem prereq)
         {
             _talentTree = talentTree;
             _talentName = talentName;
@@ -146,6 +147,7 @@ namespace Rawr
             _col = col;
             _index = index;
             _description = description;
+            _iconName = icon;
             _maxRank = maxRank;
             _currentRank = currentRank > maxRank ? maxRank : currentRank;
             Prereq = prereq;

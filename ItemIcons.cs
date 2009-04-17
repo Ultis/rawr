@@ -209,7 +209,7 @@ namespace Rawr
             return returnImage;
         }
 
-		public static Image GetTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName)
+		public static Image GetTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName, string icon)
 		{
 			Image returnImage = null;
 			string key = string.Format("{0}-{1}-{2}", charClass, talentTree, talentName);
@@ -225,7 +225,7 @@ namespace Rawr
 				{
 					if (!string.IsNullOrEmpty(talentTree) && !string.IsNullOrEmpty(talentName))
 					{
-						pathToIcon = wrapper.DownloadTalentIcon(charClass, talentTree, talentName);
+						pathToIcon = wrapper.DownloadTalentIcon(charClass, talentTree, talentName, icon);
 						//just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
 					}
 

@@ -80,5 +80,8 @@
     <Setting Name="ItemWowheadUpgradeURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://{0}.wowhead.com/?items&amp;filter={1}</Value>
     </Setting>
+    <Setting Name="ArmoryTalentIconURI" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1316,9 +1316,9 @@ namespace Rawr.DPSDK
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 BonusArmorMultiplier = .03f * (float)(talents.Toughness),
-                BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
+                BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
                 BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker)
