@@ -134,7 +134,7 @@ namespace Rawr.Enhance
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + _stats.PhysicalHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + _stats.PhysicalHaste);
 
-            //XXX: Only MH WF for now
+            // Only MH WF for now
             float chanceToProcWFPerHit = .2f + (_character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
             float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
 
@@ -176,11 +176,24 @@ namespace Rawr.Enhance
                 swingsPerSOHMelee = 1f / hastedOHSpeed;
                 //Flat Windfury Society
                 float hitsThatProcWFPerS = (1f - chanceWhiteMiss) * swingsPerSMHMelee + hitsPerSMHSS;
+
+                // old WF model
+                
                 float windfuryTimeToFirstHit = hastedMHSpeed - (3 % hastedMHSpeed);
                 //later -- //windfuryTimeToFirstHit = hasted
                 wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * hitsThatProcWFPerS));
+                
+                // new WF model 
+                /*
+                float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * FightLength;
+                float maxIneligibleSeconds = maxExpectedWFPerFight * 3f;
+                float minExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - maxIneligibleSeconds);
+                float minIneligibleSeconds = minExpectedWFPerFight * 3f;
+                float xx = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - minIneligibleSeconds);
+                wfProcsPerSecond = maxExpectedWFPerFight / FightLength;
+                */
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMiss);
-
+                
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
                 couldCritSwingsPerSecond = swingsPerSMHMelee + swingsPerSOHMelee + hitsPerSMHSS + hitsPerSOHSS + hitsPerSLL + hitsPerSWF;
                 float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;

@@ -395,11 +395,23 @@ namespace Rawr.Enhance
             // this routine needs to remove the effects of meta gems, enchants, trinkets and totems
             // Rawr adds in average proc effects whereas EnhSim uses the raw data and the name of
             // the meta gem, enchants, trinkets and totems
-            _trinket1name = adjustTrinketStats(character, character.Trinket1, stats);
-            _trinket2name = adjustTrinketStats(character, character.Trinket2, stats);
-            _totemname = getTotemName(character, character.Ranged, stats);
-            _mhEnchant = getWeaponEnchantName(character, character.MainHandEnchant, stats);
-            _ohEnchant = getWeaponEnchantName(character, character.OffHandEnchant, stats);
+            if (character.Trinket1 != null)
+            {
+                _trinket1name = character.Trinket1.Id.ToString();
+                adjustTrinketStats(character, character.Trinket1, stats);
+            } 
+            else
+                _trinket1name = "-";
+            if (character.Trinket2 != null)
+            {
+                _trinket2name = character.Trinket2.Id.ToString();
+                adjustTrinketStats(character, character.Trinket2, stats);
+            }
+            else
+                _trinket2name = "-";
+            _totemname = character.Ranged == null ? "-" : character.Ranged.Id.ToString();
+            _mhEnchant = character.MainHandEnchant == null ? "-" : character.MainHandEnchant.Id.ToString();
+            _ohEnchant = character.OffHandEnchant == null ? "-" : character.OffHandEnchant.Id.ToString();
             _metagem = getMetaGemName(character, character.Head, stats);
            
             // having removed all the stuff added by on use/procs we need to take the ceiling values as 100+2.66 would have been floored to 102
@@ -415,216 +427,90 @@ namespace Rawr.Enhance
         {
             if (head == null)
                 return "-";
-            switch (head.Gem1Id)
-            {
-                case 32409:
-                    return "relentless_earthstorm_diamond";
-                case 32410:
-                    return "thundering_skyfire_diamond";
-                case 34220:
-                    return "chaotic_skyfire_diamond";
-                case 41285:
-                    return "chaotic_skyflare_diamond";
-                case 41333:
-                    return "ember_skyflare_diamond";
-                case 41398:
-                    return "relentless_earthsiege_diamond";
-                default:
-                    return "-";
-            }
+            return head.Gem1Id == 0 ? "-" : head.Gem1Id.ToString();
         }
 
-        private String getWeaponEnchantName(Character character, Enchant enchant, Stats stats)
+        private void adjustTrinketStats(Character character, ItemInstance trinket, Stats stats)
         {
-            if (enchant == null)
-                return "-";
-            // check weapon enchant return enchant name for EnhSim
-            switch (enchant.Id)
-            {
-                case 2673:
-                    return "mongoose";
-                case 3225:
-                    return "executioner";
-                case 1900:
-                    return "crusader";
-                case 3273:
-                    return "deathfrost";
-                case 3789:
-                    return "berserking";
-                default:
-                    return "-";
-            }
-        }
-
-        private String getTotemName(Character character, ItemInstance totem, Stats stats)
-        {
-            if (totem == null)
-                return "-";
-            switch (totem.Id)
-            {
-                case 33507:
-                    return "stonebreakers_totem";
-                case 27815:
-                    return "totem_of_the_astral_winds";
-                case 40710:
-                    return "totem_of_splintering";
-                case 32330:
-                    return "totem_of_ancestral_guidance";
-                case 28248:
-                    return "totem_of_the_void";
-                case 33506:
-                    return "skycall_totem";
-                case 40267:
-                    // increase spellpower of CL & LB by 165
-                    return "totem_of_hex";
-                case 40322:
-                    return "totem_of_dueling";
-                case 40708:
-                    return "totem_of_the_elemental_plane";
-                case 42607:
-                    // LL ability grants +120 AP for 6 sec
-                    return "deadly_gladiators_totem_of_indomitability";
-                case 42606:
-                    // LL ability grants +106 AP for 6 sec
-                    return "hateful_gladiators_totem_of_indomitability";
-                case 42593:
-                    // LL ability grants +94 AP for 6 sec
-                    return "savage_gladiators_totem_of_indomitability";
-                case 42602:
-                    // Shocks grants +70 spellpower for 6 sec
-                    return "deadly_gladiators_totem_of_survival";
-                case 42601:
-                    // Shocks grants +62 spellpower for 6 sec
-                    return "hateful_gladiators_totem_of_survival";
-                case 42594:
-                    // Shocks grants +52 spellpower for 6 sec
-                    return "savage_gladiators_totem_of_survival";
-                default:
-                    return "-";
-            }
-        }
-
-        private String adjustTrinketStats(Character character, ItemInstance trinket, Stats stats)
-        {
-            if (trinket == null)
-                return "-";
             float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
             switch (trinket.Id)
             {
-	            case 28830:
-                    return "dragonspine_trophy";
-	            case 32419:
-		            return "ashtongue_talisman";
 	            case 32505:
-                    stats.ArmorPenetrationRating -= 42f / 5f;
-		            return "madness_of_the_betrayer";
+                    stats.ArmorPenetrationRating -= 42f / 5f; // "madness_of_the_betrayer";
+                    break;
 	            case 28034:
                     stats.AttackPower -= 300f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 300f / 6f;
-		            return "hourglass_of_the_unraveller";
-	            case 30627:
+                    stats.SpellPower -= spellpowerBonus * 300f / 6f; // "hourglass_of_the_unraveller";
+                    break;
+                case 30627:
                     stats.AttackPower -= 340f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 340f / 6f;
-		            return "tsunami_talisman";
-	            case 34472:
+                    stats.SpellPower -= spellpowerBonus * 340f / 6f; // "tsunami_talisman";
+                    break;
+                case 34472:
                     stats.AttackPower -= 90f;
-                    stats.SpellPower -= spellpowerBonus * 90f;
-		            return "shard_of_contempt";
-	            case 33831:
+                    stats.SpellPower -= spellpowerBonus * 90f; // "shard_of_contempt";  // checked
+                    break;
+                case 33831:
                     stats.AttackPower -= 360f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 360f / 6f;
-		            return "berserkers_call";
-	            case 29383:
+                    stats.SpellPower -= spellpowerBonus * 360f / 6f; // "berserkers_call";
+                    break;
+                case 29383:
                     stats.AttackPower -= 278f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 278f / 6f;
-		            return "bloodlust_brooch";
-	            case 28288:
-                    stats.HasteRating -= 260f / 12f;
-		            return "abacus_of_violent_odds";
-	            case 32658:
+                    stats.SpellPower -= spellpowerBonus * 278f / 6f; // "bloodlust_brooch";
+                    break;
+                case 28288:
+                    stats.HasteRating -= 260f / 12f; //  "abacus_of_violent_odds";
+                    break;
+                case 32658:
                     stats.CritRating -= ((150f / 6f) / 25f) * 45.90598679f;
                     stats.AttackPower -= (150f / 6f) * 1.03f;
-                    stats.SpellPower -= spellpowerBonus * (150f / 6f) * 1.03f;
-		            return "badge_of_tenacity";
-	            case 35702:
+                    stats.SpellPower -= spellpowerBonus * (150f / 6f) * 1.03f; // "badge_of_tenacity";
+                    break;
+                case 35702:
                     stats.AttackPower -= 320f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 320f / 6f;
-		            return "shadowsong_panther";
-	            case 34427:
-		            return "blackened_naaru_silver";
-	            case 31856:
+                    stats.SpellPower -= spellpowerBonus * 320f / 6f; // "shadowsong_panther";
+                    break;
+                case 31856:
                     stats.AttackPower -= 120; 
                     stats.SpellPower -= spellpowerBonus * 120;
-                    stats.SpellPower -= 80;
-		            return "darkmoon_card_crusade";
-	            case 40431:
-                    stats.AttackPower -= 320;
-                    stats.SpellPower -= spellpowerBonus * 320;
-                    return "fury_of_the_five_flights";
-	            case 40256:
-		            return "grim_toll";
-	            case 39257:
+                    stats.SpellPower -= 80; // "darkmoon_card_crusade";
+                    break;
+                case 39257:
                     stats.AttackPower -= 670f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 670f / 6f;
-		            return "loathebs_shadow";
-	            case 40684:
-                    stats.AttackPower -= 1000f / 7f;
-                    stats.SpellPower -= spellpowerBonus * 1000f / 7f;
-		            return "mirror_of_truth";
-	            case 32483:
-                    return "the_skull_of_guldan";
-	            case 37390:
-                    return "meteorite_whetstone";
-	            case 39229:
-                    return "embrace_of_the_spider";
-	            case 40255:
-                    return "dying_curse";
-	            case 40432:
-                    stats.SpellPower -= 200;
-		            return "illustration_of_the_dragon_soul";
-	            case 40682:
-                    return "sundial_of_the_exiled";
-	            case 37660:
-                    return "forge_ember";
-	            case 37723:
-                    stats.ArmorPenetrationRating -= 291;
-		            return "incisor_fragment";
-	            case 37873:
-                    stats.SpellPower -= 346f / 6f;
-		            return "mark_of_the_war_prisoner";
-	            case 37166:
+                    stats.SpellPower -= spellpowerBonus * 670f / 6f; // "loathebs_shadow";
+                    break;
+                case 40432:
+                    stats.SpellPower -= 200; // "illustration_of_the_dragon_soul";
+                    break;
+                case 37723:
+                    stats.ArmorPenetrationRating -= 291; // "incisor_fragment";
+                    break;
+                case 37873:
+                    stats.SpellPower -= 346f / 6f; // "mark_of_the_war_prisoner";
+                    break;
+                case 37166:
                     stats.AttackPower -= 670f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 670f / 6f;
-		            return "sphere_of_red_dragons_blood";
-	            case 36972:
-                    stats.HasteRating -= 256f / 6f;
-		            return "tome_of_arcane_phenomena";
-	            case 40531:
-                    stats.HasteRating -= 491f / 6f;
-		            return "mark_of_norgannon";
-	            case 44014:
+                    stats.SpellPower -= spellpowerBonus * 670f / 6f; // "sphere_of_red_dragons_blood";
+                    break;
+                case 36972:
+                    stats.HasteRating -= 256f / 6f; // "tome_of_arcane_phenomena";
+                    break;
+                case 40531:
+                    stats.HasteRating -= 491f / 6f; // "mark_of_norgannon";
+                    break;
+                case 44014:
                     stats.AttackPower -= 54f;
-                    stats.SpellPower -= spellpowerBonus * 54f;
-		            return "fezziks_pocketwatch";
-	            case 43836:
-                    stats.HasteRating -= 212f / 6f;
-		            return "thorny_rose_brooch";
-	            case 38764:
-                    stats.HasteRating -= 208f / 6f;
-		            return "rune_of_finite_variation";
-	            case 40371:
-		            return "bandits_insignia";
-	            case 44253:
-		            return "darkmoon_card_greatness";
-	            case 37264:
-		            return "pendulum_of_telluric_currents";
-	            case 37064:
-		            return "vestige_of_haldor";
-	            case 42395:
-                    stats.SpellPower -= 292f / 15f;
-                    return "twilight_serpent";
-                default:
-                    return "-";
+                    stats.SpellPower -= spellpowerBonus * 54f; // "fezziks_pocketwatch";
+                    break;
+                case 43836:
+                    stats.HasteRating -= 212f / 6f; // "thorny_rose_brooch";
+                    break;
+                case 38764:
+                    stats.HasteRating -= 208f / 6f; // "rune_of_finite_variation";
+                    break;
+                case 42395:
+                    stats.SpellPower -= 292f / 15f; // "twilight_serpent";
+                    break;
             }
         }
 
