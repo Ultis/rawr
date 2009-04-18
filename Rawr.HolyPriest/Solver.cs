@@ -30,7 +30,7 @@ namespace Rawr.HolyPriest
         public float ProcInterval(float ProcChance, float ProcDelay, float ProcCooldown)
         {
             float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
-            float EffCooldown = ProcCooldown + ProcDelay * 0.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / ProcDelay / ProcActual;
+            float EffCooldown = ProcCooldown + ProcDelay * 0.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) * ProcDelay / ProcActual;
             return EffCooldown;
         }
 
@@ -131,7 +131,6 @@ namespace Rawr.HolyPriest
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
             float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
-            float raptureconst = CalculationsHolyPriest.GetRaptureConst(character) * simstats.Mana / baseMana * character.PriestTalents.Rapture / 5f * calculationOptions.Rapture / 100f;
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
 
             // Test of Faith gives 2-6% extra crit on targets below 50%.
@@ -258,7 +257,7 @@ namespace Rawr.HolyPriest
             foreach (Spell s in sr)
                 ActionList += "\r\n- " + s.Name;
 
-            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, rapturetot = 0, serendipitytot = 0, metareductiontot = 0;
+            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, metareductiontot = 0;
             for (int x = 0; x < sr.Count; x++)
             {
                 float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
@@ -270,7 +269,6 @@ namespace Rawr.HolyPriest
                     solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
                     mcost = sr[x].ManaCost;
                     mcost -= mcost * hcchance;
-                    serendipitytot += mcost * serendipityconst;
                     mcost -= simstats.ManaGainOnGreaterHealOverheal * calculationOptions.Serendipity / 100f;
                     castctr++;
                     crittable += sr[x].CritChance;
@@ -285,7 +283,6 @@ namespace Rawr.HolyPriest
                     mcost -= mcost * hcchance;
                     mcost -= mcost * solctr;
                     solctr = 0;
-                    serendipitytot += mcost * serendipityconst;
                     castctr++;
                     crittable += sr[x].CritChance;
                 }
@@ -333,7 +330,6 @@ namespace Rawr.HolyPriest
                 cyclelen += clen;
                 healamount += heal + rheal + absorb;
                 manacost += mcost;
-                rapturetot += (rheal + absorb) * raptureconst;
                 metareductiontot += metaSpellCostReduction;
             }
 
@@ -400,7 +396,14 @@ namespace Rawr.HolyPriest
                     tmpregen = simstats.ManaRestoreOnCast_10_45 / ProcInterval(0.1f, avgcastlen, 45f);
                     if (tmpregen > 0f)
                     {
-                        ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
+                        if (simstats.ManaRestoreOnCast_10_45 == 300)
+                            ManaSources.Add(new ManaSource("Je'Tze's Bell", tmpregen));
+                        else if (simstats.ManaRestoreOnCast_10_45 == 528)
+                            ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
+                        else if (simstats.ManaRestoreOnCast_10_45 == 228)
+                            ManaSources.Add(new ManaSource("Memento of Tyrande", tmpregen));
+                        else
+                            ManaSources.Add(new ManaSource("MP5 Proc Trinket", tmpregen));
                         regen += tmpregen;
                     }
                 }
@@ -408,10 +411,6 @@ namespace Rawr.HolyPriest
                 float trinketmp5 = 0;
                 if (simstats.Mp5OnCastFor20SecOnUse2Min > 0)
                     trinketmp5 += (20f / avgcastlen) * 21f / 2f * 20f / 120f;
-                /* Memento wrapped into ManaRestoreOnCast_10_45, Trolando
-                if (simstats.MementoProc > 0)
-                    trinketmp5 += simstats.MementoProc * 3f * 5f / (45f + 15f * (1f - (float)Math.Pow(1f - 0.1f, 15f / avgcastlen)));
-                 */
                 if (simstats.ManacostReduceWithin15OnHealingCast > 0)
                     trinketmp5 += simstats.ManacostReduceWithin15OnHealingCast * (1f - (float)Math.Pow(1f - 0.02f, castctr)) * 5f / cyclelen;
                 if (simstats.ManaregenFor8SecOnUse5Min > 0)
@@ -427,26 +426,13 @@ namespace Rawr.HolyPriest
             }
 
             // External and Other mana sources.
-            tmpregen = simstats.Mana * 0.0025f * calculationOptions.Replenishment / 100f;
+            tmpregen = simstats.Mana * simstats.ManaRestoreFromMaxManaPerSecond * calculationOptions.Replenishment / 100f;
             if (tmpregen > 0f)
             {
                 ManaSources.Add(new ManaSource("Replenishment", tmpregen));
                 regen += tmpregen;
             }
 
-            if (rapturetot > 0f)
-            {
-                tmpregen = rapturetot / cyclelen;
-                ManaSources.Add(new ManaSource("Rapture", tmpregen));
-                regen += tmpregen;
-
-            }
-            if (serendipitytot > 0f)
-            {
-                tmpregen = serendipitytot / cyclelen;
-                ManaSources.Add(new ManaSource("Serendipity", tmpregen));
-                regen += tmpregen;
-            }
             if (metareductiontot > 0f)
             {
                 tmpregen = metareductiontot / cyclelen;
@@ -563,7 +549,6 @@ namespace Rawr.HolyPriest
             float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
 //            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f; // improved holy concentration removed in patch 3.1
             float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
-            float raptureconst = CalculationsHolyPriest.GetRaptureConst(character) * simstats.Mana / baseMana * character.PriestTalents.Rapture / 5f * calculationOptions.Rapture / 100f;
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
             float divineaegis = character.PriestTalents.DivineAegis * 0.1f;
 
@@ -588,7 +573,6 @@ namespace Rawr.HolyPriest
             float DirectHeal = 0f;
             float OtherHeal = 0f;
             float AbsorbHeal = 0f;
-            float SerendipityBase = 0f;
             float CritCounter = 0f;
 
             FlashHeal fh = new FlashHeal(simstats, character);
@@ -624,7 +608,6 @@ namespace Rawr.HolyPriest
                     calculationOptions.FlashHealCast,
                     (FreeFlashes > 0f) ? String.Format(", {0} Surge of Lights", FreeFlashes.ToString("0")) : String.Empty);
                 float Cost = fh.ManaCost * (calculationOptions.FlashHealCast - FreeFlashes);
-                SerendipityBase += Cost;
                 ManaUsed += Cost;
                 TimeUsed += fh.CastTime * calculationOptions.FlashHealCast;
                 BaseTimeUsed += fh.BaseCastTime * calculationOptions.FlashHealCast;
@@ -652,7 +635,6 @@ namespace Rawr.HolyPriest
                 TotalCasts += calculationOptions.GreaterHealCast;
                 ActionList += String.Format("\r\n- {0} Greater Heal", calculationOptions.GreaterHealCast);
                 float Cost = gh.ManaCost * calculationOptions.GreaterHealCast;
-                SerendipityBase += Cost;
                 ManaUsed += Cost;
                 TimeUsed += gh.CastTime * calculationOptions.GreaterHealCast;
                 BaseTimeUsed += gh.BaseCastTime * calculationOptions.GreaterHealCast;
@@ -824,6 +806,8 @@ namespace Rawr.HolyPriest
                             ManaSources.Add(new ManaSource("Je'Tze's Bell", tmpregen));
                         else if (simstats.ManaRestoreOnCast_10_45 == 528)
                             ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
+                        else if (simstats.ManaRestoreOnCast_10_45 == 228)
+                            ManaSources.Add(new ManaSource("Memento of Tyrande", tmpregen));
                         else
                             ManaSources.Add(new ManaSource("MP5 Proc Trinket", tmpregen));
                         regen += tmpregen;
@@ -831,25 +815,13 @@ namespace Rawr.HolyPriest
                 }
 
                 // External and Other mana sources.
-                tmpregen = simstats.Mana * 0.0025f * calculationOptions.Replenishment / 100f;
+                tmpregen = simstats.Mana * simstats.ManaRestoreFromMaxManaPerSecond * calculationOptions.Replenishment / 100f;
                 if (tmpregen > 0f)
                 {
                     ManaSources.Add(new ManaSource("Replenishment", tmpregen));
                     regen += tmpregen;
                 }
 
-                if (raptureconst > 0f)
-                {
-                    tmpregen = (AbsorbHeal + DirectHeal) * raptureconst / calculationOptions.FightLengthSeconds;
-                    ManaSources.Add(new ManaSource("Rapture", tmpregen));
-                    regen += tmpregen;
-                }
-                if (serendipityconst > 0f)
-                {
-                    tmpregen = SerendipityBase * serendipityconst / calculationOptions.FightLengthSeconds;
-                    ManaSources.Add(new ManaSource("Serendipity", tmpregen));
-                    regen += tmpregen;
-                }
                 if (metaSpellCostReduction > 0f)
                 {
                     tmpregen = (metaSpellCostReduction * TotalCasts) / calculationOptions.FightLengthSeconds;
