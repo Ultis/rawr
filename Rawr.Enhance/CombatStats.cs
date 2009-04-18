@@ -136,7 +136,7 @@ namespace Rawr.Enhance
 
             // Only MH WF for now
             float chanceToProcWFPerHit = .2f + (_character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
-            float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
+            // float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
 
             //The Swing Loop
             //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
@@ -150,7 +150,8 @@ namespace Rawr.Enhance
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
-            bloodlustHaste = 1 + (_calcOpts.BloodlustUptime * _stats.Bloodlust);
+            float bloodlustUptime = 40f / FightLength;
+            bloodlustHaste = 1 + (bloodlustUptime * _stats.Bloodlust);
             hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
             hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
             hitsPerSMHSS = (1f - chanceYellowMiss) / stormstrikeSpeed;

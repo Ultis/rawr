@@ -30,6 +30,8 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label12 = new System.Windows.Forms.Label();
+            this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
             this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
@@ -39,24 +41,18 @@
             this.label3 = new System.Windows.Forms.Label();
             this.radioButtonScryer = new System.Windows.Forms.RadioButton();
             this.radioButtonAldor = new System.Windows.Forms.RadioButton();
-            this.labelBloodlustUptime = new System.Windows.Forms.Label();
-            this.trackBarBloodlustUptime = new System.Windows.Forms.TrackBar();
             this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
-            this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -82,10 +78,7 @@
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.radioButtonScryer);
             this.tabPage1.Controls.Add(this.radioButtonAldor);
-            this.tabPage1.Controls.Add(this.labelBloodlustUptime);
-            this.tabPage1.Controls.Add(this.trackBarBloodlustUptime);
             this.tabPage1.Controls.Add(this.trackBarTargetArmor);
-            this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.comboBoxTargetLevel);
             this.tabPage1.Controls.Add(this.label1);
@@ -97,10 +90,48 @@
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(139, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(69, 13);
+            this.label12.TabIndex = 36;
+            this.label12.Text = "Fight Length:";
+            // 
+            // cmbLength
+            // 
+            this.cmbLength.DecimalPlaces = 1;
+            this.cmbLength.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.cmbLength.Location = new System.Drawing.Point(214, 14);
+            this.cmbLength.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.cmbLength.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cmbLength.Name = "cmbLength";
+            this.cmbLength.Size = new System.Drawing.Size(44, 20);
+            this.cmbLength.TabIndex = 35;
+            this.cmbLength.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.cmbLength.ValueChanged += new System.EventHandler(this.cmbLength_ValueChanged);
+            // 
             // chbMagmaSearing
             // 
             this.chbMagmaSearing.AutoSize = true;
-            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 285);
+            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 234);
             this.chbMagmaSearing.Name = "chbMagmaSearing";
             this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
             this.chbMagmaSearing.TabIndex = 30;
@@ -111,7 +142,7 @@
             // chbBaseStatOption
             // 
             this.chbBaseStatOption.AutoSize = true;
-            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 262);
+            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 211);
             this.chbBaseStatOption.Name = "chbBaseStatOption";
             this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
             this.chbBaseStatOption.TabIndex = 29;
@@ -123,7 +154,7 @@
             // 
             this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 124);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 73);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
             this.labelTargetArmorDescription.Size = new System.Drawing.Size(192, 40);
             this.labelTargetArmorDescription.TabIndex = 34;
@@ -140,7 +171,7 @@
             this.comboBoxOffhandImbue.Items.AddRange(new object[] {
             "Windfury",
             "Flametongue"});
-            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 226);
+            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 175);
             this.comboBoxOffhandImbue.Name = "comboBoxOffhandImbue";
             this.comboBoxOffhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxOffhandImbue.TabIndex = 28;
@@ -154,7 +185,7 @@
             this.comboBoxMainhandImbue.Items.AddRange(new object[] {
             "Windfury",
             "Flametongue"});
-            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 199);
+            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 148);
             this.comboBoxMainhandImbue.Name = "comboBoxMainhandImbue";
             this.comboBoxMainhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxMainhandImbue.TabIndex = 27;
@@ -162,7 +193,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(4, 229);
+            this.label8.Location = new System.Drawing.Point(4, 178);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 31;
@@ -171,7 +202,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 202);
+            this.label3.Location = new System.Drawing.Point(4, 151);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 30;
@@ -183,7 +214,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonScryer.AutoSize = true;
             this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonScryer.Location = new System.Drawing.Point(74, 170);
+            this.radioButtonScryer.Location = new System.Drawing.Point(74, 119);
             this.radioButtonScryer.Name = "radioButtonScryer";
             this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
             this.radioButtonScryer.TabIndex = 26;
@@ -191,6 +222,7 @@
             this.radioButtonScryer.Text = "Scryer";
             this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.radioButtonScryer.UseVisualStyleBackColor = true;
+            this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.radioButtonScryer_CheckedChanged);
             // 
             // radioButtonAldor
             // 
@@ -199,7 +231,7 @@
             this.radioButtonAldor.AutoSize = true;
             this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.radioButtonAldor.Checked = true;
-            this.radioButtonAldor.Location = new System.Drawing.Point(6, 170);
+            this.radioButtonAldor.Location = new System.Drawing.Point(6, 119);
             this.radioButtonAldor.Name = "radioButtonAldor";
             this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
             this.radioButtonAldor.TabIndex = 25;
@@ -208,32 +240,7 @@
             this.radioButtonAldor.Text = "Aldor";
             this.radioButtonAldor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.radioButtonAldor.UseVisualStyleBackColor = true;
-            // 
-            // labelBloodlustUptime
-            // 
-            this.labelBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBloodlustUptime.AutoSize = true;
-            this.labelBloodlustUptime.Location = new System.Drawing.Point(71, 72);
-            this.labelBloodlustUptime.Name = "labelBloodlustUptime";
-            this.labelBloodlustUptime.Size = new System.Drawing.Size(27, 13);
-            this.labelBloodlustUptime.TabIndex = 12;
-            this.labelBloodlustUptime.Text = "15%";
-            // 
-            // trackBarBloodlustUptime
-            // 
-            this.trackBarBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarBloodlustUptime.Location = new System.Drawing.Point(74, 40);
-            this.trackBarBloodlustUptime.Maximum = 100;
-            this.trackBarBloodlustUptime.Minimum = 5;
-            this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
-            this.trackBarBloodlustUptime.Size = new System.Drawing.Size(184, 45);
-            this.trackBarBloodlustUptime.TabIndex = 22;
-            this.trackBarBloodlustUptime.TickFrequency = 5;
-            this.trackBarBloodlustUptime.Value = 15;
-            this.trackBarBloodlustUptime.Scroll += new System.EventHandler(this.trackBarBloodlustUptime_Scroll);
+            this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.radioButtonAldor_CheckedChanged);
             // 
             // trackBarTargetArmor
             // 
@@ -242,7 +249,7 @@
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.Enabled = false;
             this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 91);
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 40);
             this.trackBarTargetArmor.Maximum = 15000;
             this.trackBarTargetArmor.Minimum = 3000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
@@ -252,20 +259,10 @@
             this.trackBarTargetArmor.TickFrequency = 300;
             this.trackBarTargetArmor.Value = 10645;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 43);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(54, 26);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Bloodlust\r\nUptime %:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 91);
+            this.label2.Location = new System.Drawing.Point(-1, 40);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 17;
@@ -330,44 +327,6 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(139, 16);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(69, 13);
-            this.label12.TabIndex = 36;
-            this.label12.Text = "Fight Length:";
-            // 
-            // cmbLength
-            // 
-            this.cmbLength.DecimalPlaces = 1;
-            this.cmbLength.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.cmbLength.Location = new System.Drawing.Point(214, 14);
-            this.cmbLength.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.cmbLength.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbLength.Name = "cmbLength";
-            this.cmbLength.Size = new System.Drawing.Size(44, 20);
-            this.cmbLength.TabIndex = 35;
-            this.cmbLength.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.cmbLength.ValueChanged += new System.EventHandler(this.cmbLength_ValueChanged);
-            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -379,11 +338,10 @@
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -399,10 +357,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RadioButton radioButtonScryer;
         private System.Windows.Forms.RadioButton radioButtonAldor;
-        private System.Windows.Forms.Label labelBloodlustUptime;
-        private System.Windows.Forms.TrackBar trackBarBloodlustUptime;
         private System.Windows.Forms.TrackBar trackBarTargetArmor;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTargetLevel;
         private System.Windows.Forms.Label label1;
