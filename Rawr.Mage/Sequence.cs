@@ -803,18 +803,21 @@ namespace Rawr.Mage.SequenceReconstruction
                 sequence.Insert(index, sequence[index].Clone());
                 sequence[index].Duration = time;
                 sequence[index + 1].Duration = d - time;
-                if (sequence[index].Group.Count == 0)
+                if (sequence[index + 1].SuperGroup != null)
                 {
-                    SequenceGroup newSuperGroup = new SequenceGroup();
-                    newSuperGroup.Add(sequence[index]);
-                    sequence[index].SuperGroup = newSuperGroup;
-                    newSuperGroup = new SequenceGroup();
-                    newSuperGroup.Add(sequence[index + 1]);
-                    sequence[index + 1].SuperGroup = newSuperGroup;
-                }
-                else
-                {
-                    sequence[index].SuperGroup.Item.Insert(sequence[index].SuperGroup.Item.IndexOf(sequence[index + 1]), sequence[index]);
+                    if (sequence[index].Group.Count == 0)
+                    {
+                        SequenceGroup newSuperGroup = new SequenceGroup();
+                        newSuperGroup.Add(sequence[index]);
+                        sequence[index].SuperGroup = newSuperGroup;
+                        newSuperGroup = new SequenceGroup();
+                        newSuperGroup.Add(sequence[index + 1]);
+                        sequence[index + 1].SuperGroup = newSuperGroup;
+                    }
+                    else
+                    {
+                        sequence[index].SuperGroup.Item.Insert(sequence[index].SuperGroup.Item.IndexOf(sequence[index + 1]), sequence[index]);
+                    }
                 }
             }
         }
