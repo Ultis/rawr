@@ -9,7 +9,7 @@ namespace Rawr.ProtPaladin
         protected Character Character;
         protected CalculationOptionsProtPaladin Options;
         protected Stats Stats;
-        protected Ability Ability;
+        protected Ability Ability;//TODO: expand the Ability Class to include DamageType(School) and AttackType
 
         public float Miss { get; protected set; }
         public float Dodge { get; protected set; }
@@ -70,6 +70,8 @@ namespace Rawr.ProtPaladin
             tableSize += Critical;
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
+            // Partial Resists don't belong in the combat table
+            Resist = 1.0f - StatConversion.GetResistanceTable(Options.TargetLevel, Character.Level, Stats.AllResist + Stats.FrostResistance, 0.0f)[0];
         }
 
         public DefendTable(Character character, Stats stats)
@@ -77,7 +79,41 @@ namespace Rawr.ProtPaladin
             Initialize(character, stats, Ability.None);
         }
     }
+/*
+    public class ResistTable : CombatTable
+    {
+        protected override void Calculate()
+        {
+            float tableSize = 0.0f;
 
+            // Miss
+            Miss = Math.Min(1.0f - tableSize,  Lookup.AvoidanceChance(Character, Stats, HitResult.Miss));
+            tableSize += Miss;
+            // Dodge
+            Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge));
+            tableSize += Dodge;
+            // Parry
+            Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry));
+            tableSize += Parry;
+            // Block
+            if (Character.OffHand != null && Character.OffHand.Type == Item.ItemType.Shield)
+            {
+                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block));
+                tableSize += Block;
+            }
+            // Critical Hit
+            Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats));
+            tableSize += Critical;
+            // Normal Hit
+            Hit = Math.Max(0.0f, 1.0f - tableSize);
+        }
+
+        public ResistTable(Character character, Stats stats)
+        {
+            Initialize(character, stats, Ability.None);
+        }
+    }
+*/
     public class AttackTable : CombatTable
     {
         protected override void Calculate()
@@ -136,7 +172,6 @@ namespace Rawr.ProtPaladin
             if (Lookup.HasPartials(Ability))
             {
                 Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist)));
-                //tableSize += Resist;
             }
         }
 

@@ -28,8 +28,8 @@ namespace Rawr.ProtPaladin
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
 			armorBosses.Add(8800, ": Void Reaver");
-            armorBosses.Add(10900, ": 3.1 Wrath Bosses");
-            armorBosses.Add(13100, ": 3.08 Tier 7 Bosses"); // armorBosses.Add(13083, ":Wrath Bosses");
+            armorBosses.Add(10643, ": Wrath Bosses in 3.1");
+            armorBosses.Add(13100, ": Tier 7 Bosses in 3.08");
 		}
 
 		protected override void LoadCalculationOptions()
@@ -314,7 +314,7 @@ namespace Rawr.ProtPaladin
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 13100;
+		public int TargetArmor = 10643;
 		public int BossAttackValue = 25000;
         public float BossAttackSpeed = 2.0f;
         public bool UseParryHaste = false;

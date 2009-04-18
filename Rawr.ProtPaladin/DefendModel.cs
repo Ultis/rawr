@@ -21,6 +21,7 @@ namespace Rawr.ProtPaladin
         public float DamagePerSecond { get; set; }
         public float GuaranteedReduction { get; set; }
         public float Mitigation { get; set; }
+        public float[] ResistanceTable { get; set; }
         public float TankPoints { get; set; }
         public float EffectiveHealth { get; set; }
         public float BurstTime { get; set; }

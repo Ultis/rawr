@@ -69,7 +69,11 @@ namespace Rawr.ProtPaladin
                         return 0.05f;
 
                 case HitResult.Resist:
-                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);//TODO: Find correct value for % chance to get partial resists.
+                    // Patial resists don't belong in the combat table, they are a damage multiplier (reduction)
+                    // The Chance to get any Partial Resist
+                    float partialChance = 1.0f - StatConversion.GetResistanceTable(character.Level, calcOpts.TargetLevel, 0.0f, stats.SpellPenetration)[0];
+                    
+                    return partialChance;
 
                 default:
                     return 0.0f;
@@ -356,7 +360,8 @@ namespace Rawr.ProtPaladin
                 resistScale = 400.0f;
             else
                 // This number is still being tested by many and may be slightly higher
-                resistScale = 500.0f;
+                // update: it seems 515 is a more realistic value
+                resistScale = 515.0f;
 
             return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
         }

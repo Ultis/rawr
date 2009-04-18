@@ -29,11 +29,12 @@ namespace Rawr.ProtPaladin
         private void CalculateDamage()
         {
             float baseDamage        = 0.0f;
-            float critMultiplier = 0.0f;//    = (2.0f * (1.0f + Stats.BonusCritMultiplier));//TODO: wtf is this for >.< crit fom buffs is already taken care of!?
+            float critMultiplier = 0.0f;
             float duration = 0.0f;
             float AP = Stats.AttackPower;
             float SP = Stats.SpellPower;
 
+            #region Ability Base Damage
             switch (Ability)
             {
                 // White Damage
@@ -60,14 +61,14 @@ namespace Rawr.ProtPaladin
                 // Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
                 // While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
                 case Ability.SealOfVengeance:
-                    baseDamage = (1.0f + 0.02f * SP);
+                    baseDamage = (1.0f + 0.013f * SP);// changed from 0.02f   it seemed a bit high
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
                         (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
                     critMultiplier = 1.5f;
                     break;
                 // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
                 case Ability.JudgementOfVengeance:
-                    baseDamage = (1.0f + 0.28f * SP + 0.175f * AP) * 1.5f;
+                    baseDamage = (0.22f * SP + 0.14f * AP) * (1.0f + 0.5f);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Talents.GlyphOfJudgement)
                     {
@@ -155,35 +156,60 @@ namespace Rawr.ProtPaladin
                     critMultiplier = 0.0f;
                     break;
             }
+            #endregion
 
-            // All damage multipliers, 1HWS, Armor etc...
+            // All damage multipliers, 1HWS, Armor etc...do we need to split buff/debuff ?
             baseDamage *= DamageMultiplier;
 
-            // Average critical strike bonuses
-            if (Lookup.CanCrit(Ability))
+            #region Miss Chance, Avoidance Chance
+            if (Lookup.IsSpell(Ability))
             {
-            //switch (AttackType)
-            //{
-            //    case (AttackType.Melee):
-            //        critMultiplier = 2.0f;
-            //    case (AttackType.Spell):
-            //        critMultiplier = 1.5f;
-            //    case (AttackType.Ranged):
-            //        critMultiplier = 1.5f;
-            //    case (AttackType.DOT):
-            //        critMultiplier = 0.0f;
-            //}
-            baseDamage *= (1.0f + critMultiplier * AttackTable.Critical);
+                // Probability calculation, since each tick can be resisted individually.
+                if (Ability == Ability.Consecration)
+                {
+                    baseDamage = Lookup.GetConsecrationTickChances(duration, baseDamage, AttackTable.Miss);
+                }
+                // Missed spell attacks TODO: expand Ability Model to include a check for damage type, not only spell.
+                else
+                baseDamage *= (1.0f - AttackTable.Miss);
             }
-            //else
-            //    baseDamage *= 1.0f;
+            else
+            {
+                
+                // Missed attacks
+                if (Lookup.IsAvoidable(Ability))
+                    baseDamage *= (1.0f - AttackTable.AnyMiss);
+                else
+                    baseDamage *= (1.0f - AttackTable.Miss);
+            }
+            #endregion
 
+            #region Partial Resists
             // Partial Resists
             if (Lookup.HasPartials(Ability))
             {
-                float partialDamageResisted = StatConversion.GetAverageResistance(Character.Level, Options.TargetLevel, 0, Stats.SpellPenetration) * AttackTable.Resist;
-                baseDamage *= (1.0f - partialDamageResisted);
+                // Magical Damage Resisted when a partial happens, averaged over all slices. DIRTY
+                //float averagePartialReduction = StatConversion.GetAverageResistance(Character.Level, Options.TargetLevel, 0, Stats.SpellPenetration);
                 
+                // Detailed table of Partial slices. CLEAN
+                float[] partialChanceTable = StatConversion.GetResistanceTable(Character.Level, Options.TargetLevel, 0.0f, Stats.SpellPenetration);
+                
+                // Here goes nothing, Damage averaged over the different partial slices that can happen.
+                float partialDamage = 0.0f;
+                
+                for (int i = 0; i < 11; i++)
+                {
+                    partialDamage += partialChanceTable[i] * (1.0f - 0.1f * (float)i) * baseDamage;
+                }
+                // Chance a Patial happens. ANY PARTIAL
+                //float partialChance = Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist);
+                // Rough average over all hits that fall into partial chance. DIRTY
+                //float partialDamage1 = partialChance * (1.0f - averagePartialReduction) * baseDamage;
+                // Those hits that don't have a chance to get a partial. CLEAN
+                //float restDamage1 = (1.0f - partialChance) * baseDamage;
+                
+                baseDamage = partialDamage;
+
                   // Magic damage, Spell resist
                   //   if (!DamageType.Physical)
                   //    {
@@ -221,27 +247,28 @@ namespace Rawr.ProtPaladin
                   //
                   //    int RemainingDamage = damage - resist;
             }
+            #endregion
 
-            if (Lookup.IsSpell(Ability))
+            #region Critical Damage
+            // Average critical strike bonuses
+            if (Lookup.CanCrit(Ability))
             {
-                // Probability calculation, since each tick can be resisted individually.
-                if (Ability == Ability.Consecration)
-                {
-                    baseDamage = Lookup.GetConsecrationTickChances(duration, baseDamage, AttackTable.Miss);
-                }
-                // Missed spell attacks TODO: expand Ability Model to include a check for damage type, not only spell.
-                else
-                baseDamage *= (1.0f - AttackTable.Miss);
+            //switch (AttackType)
+            //{
+            //    case (AttackType.Melee):
+            //        critMultiplier = 2.0f;
+            //    case (AttackType.Spell):
+            //        critMultiplier = 1.5f;
+            //    case (AttackType.Ranged):
+            //        critMultiplier = 1.5f;
+            //    case (AttackType.DOT):
+            //        critMultiplier = 0.0f;
+            //}
+            baseDamage *= (1.0f + critMultiplier * AttackTable.Critical);
             }
-            else
-            {
-                
-                // Missed attacks
-                if (Lookup.IsAvoidable(Ability))
-                    baseDamage *= (1.0f - AttackTable.AnyMiss);
-                else
-                    baseDamage *= (1.0f - AttackTable.Miss);
-            }
+            //else
+            //    baseDamage *= 1.0f;
+            #endregion
 
             // Final Damage the Ability deals
             Damage = baseDamage;

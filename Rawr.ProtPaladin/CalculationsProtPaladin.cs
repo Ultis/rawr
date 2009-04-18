@@ -235,6 +235,7 @@ focus on Survival Points.",
                     "Ability Threat",
                     "Combat Table: Defensive Stats",
                     "Combat Table: Offensive Stats",
+                    "Combat Table: Spell Resistance",
                     "Item Budget",
                     };
                 return _customChartNames;
@@ -334,6 +335,7 @@ focus on Survival Points.",
             calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
+            calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calcOpts.TargetLevel, character.Level, stats.AllResist + stats.FrostResistance, 0.0f);
             calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane));
             calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
             calculatedStats.FrostReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
@@ -801,8 +803,7 @@ focus on Survival Points.",
             statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;           
             statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;//TODO: check PhysicalHaste
-            //statsTotal.PhysicalHaste = 
+            statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;
             // Haste Trinkets
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
@@ -818,6 +819,7 @@ focus on Survival Points.",
 
             switch (chartName)
             {
+                #region Ability Damage/Threat
                 case "Ability Damage":
                 case "Ability Threat":
                     {
@@ -840,6 +842,8 @@ focus on Survival Points.",
                         }
                         return comparisons;
                     }
+                #endregion
+                #region Combat Table: Defensive Stats
                 case "Combat Table: Defensive Stats":
                     {
                         ComparisonCalculationProtPaladin calcMiss = new ComparisonCalculationProtPaladin();
@@ -851,13 +855,13 @@ focus on Survival Points.",
                         ComparisonCalculationProtPaladin calcHit = new ComparisonCalculationProtPaladin();
                         if (calculations != null)
                         {
-                            calcMiss.Name = "1 Miss";
+                            calcMiss.Name  = "1 Miss";
                             calcDodge.Name = "2 Dodge";
                             calcParry.Name = "3 Parry";
                             calcBlock.Name = "4 Block";
-                            calcCrit.Name = "5 Crit";
+                            calcCrit.Name  = "5 Crit";
                             calcCrush.Name = "6 Crush";
-                            calcHit.Name = "7 Hit";
+                            calcHit.Name   = "7 Hit";
 
                             calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
                             calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
@@ -868,6 +872,8 @@ focus on Survival Points.",
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
                     }
+                #endregion
+                #region Combat Table: Offensive Stats
                 case "Combat Table: Offensive Stats":
                     {
                         ComparisonCalculationProtPaladin calcMiss = new ComparisonCalculationProtPaladin();
@@ -879,13 +885,13 @@ focus on Survival Points.",
                         ComparisonCalculationProtPaladin calcHit = new ComparisonCalculationProtPaladin();
                         if (calculations != null)
                         {
-                            calcMiss.Name = "1 Miss";
-                            calcDodge.Name = "2 Dodge";
-                            calcParry.Name = "3 Parry";
+                            calcMiss.Name   = "1 Miss";
+                            calcDodge.Name  = "2 Dodge";
+                            calcParry.Name  = "3 Parry";
                             calcGlance.Name = "4 Glancing";
-                            calcBlock.Name = "5 Block";
-                            calcCrit.Name = "6 Crit";
-                            calcHit.Name = "7 Hit";
+                            calcBlock.Name  = "5 Block";
+                            calcCrit.Name   = "6 Crit";
+                            calcHit.Name    = "7 Hit";
 
                             calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.MissedAttacks * 100.0f;
                             calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.DodgedAttacks * 100.0f;
@@ -897,6 +903,8 @@ focus on Survival Points.",
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcGlance, calcBlock, calcCrit, calcHit };
                     }
+                #endregion
+                #region Item Budget
                 case "Item Budget":
                     CharacterCalculationsProtPaladin calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtPaladin;
@@ -1099,6 +1107,51 @@ focus on Survival Points.",
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
 					};
+                #endregion 
+                #region Spell Resistance
+                case "Combat Table: Spell Resistance":
+                    {
+                        ComparisonCalculationProtPaladin calcSpellRes0   = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes10  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes20  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes30  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes40  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes50  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes60  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes70  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes80  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes90  = new ComparisonCalculationProtPaladin();
+                        ComparisonCalculationProtPaladin calcSpellRes100 = new ComparisonCalculationProtPaladin();
+                        
+                        if (calculations != null)
+                        {
+                            calcSpellRes0.Name   = "0.00";
+                            calcSpellRes10.Name  = "0.10";
+                            calcSpellRes20.Name  = "0.20";
+                            calcSpellRes30.Name  = "0.30";
+                            calcSpellRes40.Name  = "0.40";
+                            calcSpellRes50.Name  = "0.50";
+                            calcSpellRes60.Name  = "0.60";
+                            calcSpellRes70.Name  = "0.70";
+                            calcSpellRes80.Name  = "0.80";
+                            calcSpellRes90.Name  = "0.90";
+                            calcSpellRes100.Name = "1.00";
+
+                            calcSpellRes0.OverallPoints   = calcSpellRes0.MitigationPoints = calculations.ResistanceTable[0] * 100.0f;
+                            calcSpellRes10.OverallPoints  = calcSpellRes10.MitigationPoints = calculations.ResistanceTable[1] * 100.0f;
+                            calcSpellRes20.OverallPoints  = calcSpellRes20.MitigationPoints = calculations.ResistanceTable[2] * 100.0f;
+                            calcSpellRes30.OverallPoints  = calcSpellRes30.MitigationPoints = calculations.ResistanceTable[3] * 100.0f;
+                            calcSpellRes40.OverallPoints  = calcSpellRes40.MitigationPoints = calculations.ResistanceTable[4] * 100.0f;
+                            calcSpellRes50.OverallPoints  = calcSpellRes50.MitigationPoints = calculations.ResistanceTable[5] * 100.0f;
+                            calcSpellRes60.OverallPoints  = calcSpellRes60.MitigationPoints = calculations.ResistanceTable[6] * 100.0f;
+                            calcSpellRes70.OverallPoints  = calcSpellRes70.MitigationPoints = calculations.ResistanceTable[7] * 100.0f;
+                            calcSpellRes80.OverallPoints  = calcSpellRes80.MitigationPoints = calculations.ResistanceTable[8] * 100.0f;
+                            calcSpellRes90.OverallPoints  = calcSpellRes90.MitigationPoints = calculations.ResistanceTable[9] * 100.0f;
+                            calcSpellRes100.OverallPoints = calcSpellRes100.MitigationPoints = calculations.ResistanceTable[10] * 100.0f;
+                        }
+                        return new ComparisonCalculationBase[] { calcSpellRes0, calcSpellRes10, calcSpellRes20, calcSpellRes30, calcSpellRes40, calcSpellRes50, calcSpellRes60, calcSpellRes70, calcSpellRes80, calcSpellRes90, calcSpellRes100 };
+                    }
+                #endregion
                 default:
                     return new ComparisonCalculationBase[0];
             }
@@ -1285,6 +1338,7 @@ focus on Survival Points.",
                 stats.ThreatIncreaseMultiplier +
                 stats.BonusArmorMultiplier +
                 stats.BonusAttackPowerMultiplier +
+                stats.BonusDamageMultiplier +
                 stats.BonusHolyDamageMultiplier +
                 stats.BaseArmorMultiplier +
                 stats.DamageTakenMultiplier +

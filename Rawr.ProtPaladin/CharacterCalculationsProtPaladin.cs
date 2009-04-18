@@ -73,6 +73,7 @@ namespace Rawr.ProtPaladin
         public float DamageTakenPerBlock { get; set; }
 
         // Magic Defensive Stats
+        public float[] ResistanceTable { get; set; }
         public float NatureReduction { get; set; }
         public float FrostReduction { get; set; }
         public float FireReduction { get; set; }
@@ -186,7 +187,7 @@ namespace Rawr.ProtPaladin
                                                  Crit, BasicStats.CritRating, TargetLevel));
             dictValues.Add("Spell Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
                                                        SpellCrit, BasicStats.CritRating, TargetLevel));
-            dictValues.Add("Weapon Damage", string.Format("{0:0.00}*As average damage per {1}", BasicStats.WeaponDamage, Lookup.Name(Ability.None)));
+            dictValues.Add("Weapon Damage", string.Format("{0:0.00}*As average damage per {1}" + Environment.NewLine + "Before Armor", BasicStats.WeaponDamage, Lookup.Name(Ability.None)));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine +
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
