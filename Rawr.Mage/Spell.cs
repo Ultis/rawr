@@ -294,6 +294,8 @@ namespace Rawr.Mage
             }
         }
 
+        public float DpsPerSpellPower;
+
         public bool AffectedByFlameCap;
         public bool ProvidesSnare;
         public bool ProvidesScorch;
@@ -313,6 +315,7 @@ namespace Rawr.Mage
         public float HitProcs;
         public float Ticks;
         public float CastProcs;
+        public float NukeProcs;
         public float CritProcs;
         public float CastTime;
         public float TargetProcs;
@@ -336,41 +339,37 @@ namespace Rawr.Mage
         private void CalculateEffectDamage()
         {
             Stats baseStats = CastingState.BaseStats;
+            float spellPower = 0;
+            foreach (SpecialEffect effect in CastingState.Calculations.SpellPowerEffects)
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                        break;
+                    case Trigger.DamageSpellHit:
+                    case Trigger.SpellHit:
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                        break;
+                    case Trigger.SpellMiss:
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                        break;
+                    case Trigger.DamageSpellCast:
+                    case Trigger.SpellCast:
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                        break;
+                    case Trigger.MageNukeCast:
+                        if (NukeProcs > 0) spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                        break;
+                }
+            }
+            if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            effectDamagePerSecond += spellPower * DpsPerSpellPower;
+            //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???
             if (CastingState.WaterElemental)
             {
-                float spellPower = CastingState.FrostSpellPower;
-                foreach (SpecialEffect effect in CastingState.Calculations.SpellPowerEffects)
-                {
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.DamageSpellCrit:
-                        case Trigger.SpellCrit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                        case Trigger.DamageSpellHit:
-                        case Trigger.SpellHit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                        case Trigger.SpellMiss:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                        case Trigger.DamageSpellCast:
-                        case Trigger.SpellCast:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                    }
-                }
-                //if (baseStats.SpellPowerFor15SecOnCast_50_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCast_50_45 * 15f / (45f + CastTime / CastProcs / 0.5f);
-                //if (baseStats.SpellDamageFor10SecOnHit_5 > 0) spellPower += baseStats.SpellDamageFor10SecOnHit_5 * Spell.ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
-                //if (baseStats.SpellPowerFor6SecOnCrit > 0) spellPower += baseStats.SpellPowerFor6SecOnCrit * Spell.ProcBuffUp(CritProcs / Ticks, 6, CastTime / Ticks);
-                //if (baseStats.SpellPowerFor10SecOnHit_10_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
-                //if (baseStats.SpellPowerFor10SecOnCast_15_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
-                //if (baseStats.SpellPowerFor10SecOnCast_10_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
-                //if (baseStats.SpellPowerFor10SecOnResist > 0) spellPower += baseStats.SpellPowerFor10SecOnResist * Spell.ProcBuffUp(1 - HitProcs / Ticks, 10, CastTime / Ticks);
-                //if (baseStats.SpellPowerFor15SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / CritProcs / 0.2f);
-                //if (baseStats.SpellPowerFor10SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / CritProcs / 0.2f);
-                if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
-                waterbolt = CastingState.Calculations.WaterboltTemplate.GetSpell(CastingState, spellPower);
+                waterbolt = CastingState.Calculations.WaterboltTemplate.GetSpell(CastingState, CastingState.FrostSpellPower + spellPower);
                 effectDamagePerSecond += waterbolt.DamagePerSecond;
             }
             if (baseStats.LightningCapacitorProc > 0)
@@ -601,6 +600,56 @@ namespace Rawr.Mage
         }
     }
 
+    public class AoeSpell : Spell
+    {
+        public AoeSpell(SpellTemplate template) : base(template) { }
+
+        public override void Calculate(CastingState castingState)
+        {
+            base.Calculate(castingState);
+            // do not count debuffs for aoe effects, can't assume it will be up on all
+            // do not include molten fury (molten fury relates to boss), instead amplify all by average
+            if (castingState.MoltenFury)
+            {
+                SpellModifier /= (1 + 0.06f * castingState.MageTalents.MoltenFury);
+            }
+            if (castingState.MageTalents.MoltenFury > 0)
+            {
+                SpellModifier *= (1 + 0.06f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
+            }
+        }
+
+        public override void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round, bool forceHit, bool forceMiss)
+        {
+            base.CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, round, forceHit, forceMiss);
+            TargetProcs *= castingState.CalculationOptions.AoeTargets;
+        }
+
+        public override float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit, out float damagePerSpellPower)
+        {
+            damagePerSpellPower = 0; // do we really need this for aoe?
+            float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + spellPower * SpellDamageCoefficient;
+            float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
+            float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
+            int targets = calculationOptions.AoeTargets;
+            float averageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (forceHit ? 1.0f : HitRate);
+            if (averageDamage > AoeDamageCap) averageDamage = AoeDamageCap;
+            averageDamage = averageDamage * critMultiplier * PartialResistFactor;
+            if (BasePeriodicDamage > 0.0f)
+            {
+                if (spammedDot)
+                {
+                    averageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * spellPower) * SpellModifier * DotDamageModifier * resistMultiplier * CastTime / DotDuration;
+                }
+                else
+                {
+                    averageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * spellPower) * SpellModifier * DotDamageModifier * resistMultiplier;
+                }
+            }
+            return averageDamage;
+        }
+    }
+
     public class Spell
     {
         public SpellId SpellId;
@@ -622,6 +671,7 @@ namespace Rawr.Mage
         public bool Channeled { get { return template.Channeled; } }
         public float Ticks { get { return template.Ticks; } }
         public float CastProcs { get { return template.CastProcs; } }
+        public float NukeProcs { get { return template.NukeProcs; } }
 
         public bool SpammedDot { get; set; }
 
@@ -701,6 +751,7 @@ namespace Rawr.Mage
                 CastTime = spell.CastTime;
                 HitProcs = spell.HitProcs;
                 CastProcs = spell.CastProcs;
+                NukeProcs = spell.NukeProcs;
                 CritProcs = spell.CritProcs;
                 TargetProcs = spell.TargetProcs;
                 damagePerSecond = spell.DamagePerSecond;
@@ -709,6 +760,7 @@ namespace Rawr.Mage
                 AffectedByFlameCap = spell.AffectedByFlameCap;
                 OO5SR = spell.OO5SR;
                 AreaEffect = spell.AreaEffect;
+                DpsPerSpellPower = spell.DpsPerSpellPower;
                 if (AreaEffect) AoeSpell = spell;
             }
 
@@ -751,6 +803,7 @@ namespace Rawr.Mage
         public float PartialResistFactor { get { return template.PartialResistFactor; } }
         public float RawSpellDamage;
         public float AverageDamage;
+        public float DpsPerSpellPower;
 
         public float InterruptProtection;
 
@@ -820,20 +873,6 @@ namespace Rawr.Mage
                     RawSpellDamage = castingState.HolySpellPower;
                     break;
             }
-
-            // do not count debuffs for aoe effects, can't assume it will be up on all
-            // do not include molten fury (molten fury relates to boss), instead amplify all by average
-            if (AreaEffect)
-            {
-                if (castingState.MoltenFury)
-                {
-                    SpellModifier /= (1 + 0.06f * castingState.MageTalents.MoltenFury);
-                }
-                if (castingState.MageTalents.MoltenFury > 0)
-                {
-                    SpellModifier *= (1 + 0.06f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
-                }
-            }
         }
 
         public void CalculateManualClearcasting(bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
@@ -863,7 +902,7 @@ namespace Rawr.Mage
             CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, false, false, false);
         }
 
-        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round, bool forceHit, bool forceMiss)
+        public virtual void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round, bool forceHit, bool forceMiss)
         {
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
@@ -875,7 +914,6 @@ namespace Rawr.Mage
             HitProcs = Ticks * HitRate;
             CritProcs = HitProcs * CritRate;
             TargetProcs = HitProcs;
-            if (AreaEffect) TargetProcs *= castingState.CalculationOptions.AoeTargets;
 
             if (Instant) InterruptProtection = 1;
             if (castingState.IcyVeins) InterruptProtection = 1;
@@ -883,39 +921,17 @@ namespace Rawr.Mage
             float channelReduction;
             CastTime = template.CalculateCastTime(castingState.Calculations.HasteRatingEffects, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
-            float spellPower = RawSpellDamage;
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in castingState.Calculations.SpellPowerEffects)
-                {
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.DamageSpellCrit:
-                        case Trigger.SpellCrit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                            break;
-                        case Trigger.DamageSpellHit:
-                        case Trigger.SpellHit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                            break;
-                        case Trigger.SpellMiss:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                            break;
-                        case Trigger.DamageSpellCast:
-                        case Trigger.SpellCast:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                            break;
-                    }
-                }
-                if (baseStats.ShatteredSunAcumenProc > 0 && calculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
-
                 SpammedDot = spammedDot;
                 if (!forceMiss)
                 {
-                    AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, spellPower, spammedDot, forceHit);
+                    float damagePerSpellPower;
+                    AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, RawSpellDamage, spammedDot, forceHit, out damagePerSpellPower);
 
                     DamagePerSecond = AverageDamage / CastTime;
                     ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+                    DpsPerSpellPower = damagePerSpellPower / CastTime;
                 }
             }
             CastTime *= (1 - channelReduction);
@@ -927,28 +943,26 @@ namespace Rawr.Mage
             }
         }
 
-        public float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit)
+        public virtual float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit, out float damagePerSpellPower)
         {
-            float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + spellPower * SpellDamageCoefficient;
+            float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
-            int targets = 1;
-            if (AreaEffect) targets = calculationOptions.AoeTargets;
-            float averageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (forceHit ? 1.0f : HitRate);
-            if (AreaEffect && averageDamage > AoeDamageCap) averageDamage = AoeDamageCap;
-            averageDamage = averageDamage * critMultiplier * PartialResistFactor;
+            float commonMultiplier = SpellModifier * resistMultiplier;
+            float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
+            float averageDamage = baseAverage * nukeMultiplier;
+            damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
             if (BasePeriodicDamage > 0.0f)
             {
+                float dotFactor = commonMultiplier * DotDamageModifier;
                 if (spammedDot)
                 {
-                    averageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * spellPower) * SpellModifier * DotDamageModifier * resistMultiplier * CastTime / DotDuration;
+                    dotFactor *= CastTime / DotDuration;
                 }
-                else
-                {
-                    averageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * spellPower) * SpellModifier * DotDamageModifier * resistMultiplier;
-                }
+                averageDamage += BasePeriodicDamage * dotFactor;
+                damagePerSpellPower += DotDamageCoefficient * dotFactor;
             }
-            return averageDamage;
+            return averageDamage + damagePerSpellPower * spellPower;
         }
 
         private float CalculateCost(MageTalents mageTalents, bool round)
@@ -1048,6 +1062,7 @@ namespace Rawr.Mage
         public float DotDamageCoefficient;
         public float DotDuration;
         public float CastProcs;
+        public float NukeProcs;
         public float HitRate;
         public float AoeDamageCap;
 
@@ -1081,20 +1096,30 @@ namespace Rawr.Mage
             BaseMana[80] = 3268;
         }
 
-
         public virtual Spell GetSpell(CastingState castingState)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
-            spell.CalculateDerivedStats(castingState);
-            return spell;
+            if (AreaEffect)
+            {
+                AoeSpell spell = new AoeSpell(this);
+                spell.Calculate(castingState);
+                spell.CalculateDerivedStats(castingState);
+                return spell;
+            }
+            else
+            {
+                Spell spell = new Spell(this);
+                spell.Calculate(castingState);
+                spell.CalculateDerivedStats(castingState);
+                return spell;
+            }
         }
 
         public virtual float GetEffectAverageDamage(CastingState castingState)
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            return spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false);
+            float damagePerSpellPower;
+            return spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false, out damagePerSpellPower);
         }
 
         protected SpellTemplate() { }
@@ -1443,7 +1468,8 @@ namespace Rawr.Mage
             spell.CritProcs = spell.HitProcs * spell.CritRate;
             spell.TargetProcs = spell.HitProcs;
 
-            spell.AverageDamage = spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false);
+            float damagePerSpellPower;
+            spell.AverageDamage = spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false, out damagePerSpellPower);
 
             spell.DamagePerSecond = spell.AverageDamage / speed;
             spell.ThreatPerSecond = spell.DamagePerSecond * ThreatMultiplier;
@@ -1699,6 +1725,7 @@ namespace Rawr.Mage
             float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
+            NukeProcs = 1;
         }
     }
 
@@ -1756,6 +1783,7 @@ namespace Rawr.Mage
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier);
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
             BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact + 0.02f * calculations.MageTalents.FirePower) / (1 + 0.02f * calculations.MageTalents.FirePower);
+            NukeProcs = 1;
         }
     }
 
@@ -1813,6 +1841,7 @@ namespace Rawr.Mage
             DotDuration = 9;
             float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
+            NukeProcs = 1;
         }
     }
 
@@ -2138,6 +2167,7 @@ namespace Rawr.Mage
             float weight = weight0 + weight1 + weight2 + weight3;
             cycle.CastTime += weight * rawSpell.CastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
+            cycle.NukeProcs += weight * rawSpell.NukeProcs;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
             cycle.CritProcs += weight * rawSpell.CritProcs;
@@ -2148,6 +2178,7 @@ namespace Rawr.Mage
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
 
             float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3);
+            cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
             cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
             cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
         }
@@ -2170,6 +2201,7 @@ namespace Rawr.Mage
             tormentTheWeak = 0.04f * mageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
             BaseCritRate += 0.02f * mageTalents.Incineration;
+            NukeProcs = 1;
         }
     }
 
@@ -2540,9 +2572,6 @@ namespace Rawr.Mage
             }
         }
 
-        public float AverageDamage;
-        public float AverageThreat;
-        public float Cost;
         public bool recalc5SR;
 
         private List<Spell> spellList;
@@ -2576,13 +2605,15 @@ namespace Rawr.Mage
             }
             Ticks += spell.Ticks;
             CastTime += spell.CastTime;
+            NukeProcs += spell.NukeProcs;
             HitProcs += spell.HitProcs;
             CastProcs += spell.CastProcs;
             CritProcs += spell.CritProcs;
             TargetProcs += spell.TargetProcs;
-            AverageDamage += spell.DamagePerSecond * spell.CastTime;
-            AverageThreat += spell.ThreatPerSecond * spell.CastTime;
-            Cost += spell.CostPerSecond * spell.CastTime;
+            damagePerSecond += spell.DamagePerSecond * spell.CastTime;
+            threatPerSecond += spell.ThreatPerSecond * spell.CastTime;
+            costPerSecond += spell.CostPerSecond * spell.CastTime;
+            DpsPerSpellPower += spell.DpsPerSpellPower * spell.CastTime;
             AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
             spellList.Add(spell);
         }
@@ -2601,9 +2632,10 @@ namespace Rawr.Mage
         {
             //CastTime = fsr.Duration;
 
-            costPerSecond = Cost / CastTime;
-            damagePerSecond = AverageDamage / CastTime;
-            threatPerSecond = AverageThreat / CastTime;
+            costPerSecond /= CastTime;
+            damagePerSecond /= CastTime;
+            threatPerSecond /= CastTime;
+            DpsPerSpellPower /= CastTime;
             this.CastingState = castingState;            
 
             if (recalc5SR)
@@ -2661,6 +2693,7 @@ namespace Rawr.Mage
             }
             CastTime += weight * cycle.CastTime;
             CastProcs += weight * cycle.CastProcs;
+            NukeProcs += weight * cycle.NukeProcs;
             Ticks += weight * cycle.Ticks;
             HitProcs += weight * cycle.HitProcs;
             CritProcs += weight * cycle.CritProcs;
@@ -2668,6 +2701,7 @@ namespace Rawr.Mage
             costPerSecond += weight * cycle.CastTime * cycle.costPerSecond;
             damagePerSecond += weight * cycle.CastTime * cycle.damagePerSecond;
             threatPerSecond += weight * cycle.CastTime * cycle.threatPerSecond;
+            DpsPerSpellPower += weight * cycle.CastTime * cycle.DpsPerSpellPower;
         }
 
         protected void AddSpell(bool needsDisplayCalculations, Spell spell, float weight)
@@ -2679,6 +2713,7 @@ namespace Rawr.Mage
             }
             CastTime += weight * spell.CastTime;
             CastProcs += weight * spell.CastProcs;
+            NukeProcs += weight * spell.NukeProcs;
             Ticks += weight * spell.Ticks;
             HitProcs += weight * spell.HitProcs;
             CritProcs += weight * spell.CritProcs;
@@ -2686,6 +2721,7 @@ namespace Rawr.Mage
             costPerSecond += weight * spell.CastTime * spell.CostPerSecond;
             damagePerSecond += weight * spell.CastTime * spell.DamagePerSecond;
             threatPerSecond += weight * spell.CastTime * spell.ThreatPerSecond;
+            DpsPerSpellPower += weight * spell.CastTime * spell.DpsPerSpellPower;
         }
 
         protected void AddPause(float duration, float weight)
@@ -2698,6 +2734,7 @@ namespace Rawr.Mage
             costPerSecond /= CastTime;
             damagePerSecond /= CastTime;
             threatPerSecond /= CastTime;
+            DpsPerSpellPower /= CastTime;
         }
 
         public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)

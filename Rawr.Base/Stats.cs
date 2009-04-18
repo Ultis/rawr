@@ -582,6 +582,10 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
+            if (triggerChance == 0f)
+            {
+                return 0f;
+            }
             if (Cooldown > Duration)
             {
                 // fight duration is used only in this case, for the cooldown < duration case the other approximations are good enough
@@ -936,6 +940,8 @@ namespace Rawr
                         return " on Physical Crit";
                     case Trigger.ManaGem:
                         return " on Mana Gem";
+                    case Trigger.MageNukeCast:
+                        return " on Mage Nuke Cast";
                     default:
                         return " " + Trigger.ToString();
                 }
