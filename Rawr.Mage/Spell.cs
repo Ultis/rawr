@@ -884,67 +884,47 @@ namespace Rawr.Mage
             CastTime = template.CalculateCastTime(castingState.Calculations.HasteRatingEffects, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
             float spellPower = RawSpellDamage;
-            foreach (SpecialEffect effect in castingState.Calculations.SpellPowerEffects)
+            if (Ticks > 0)
             {
-                switch (effect.Trigger)
+                foreach (SpecialEffect effect in castingState.Calculations.SpellPowerEffects)
                 {
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                        break;
-                    case Trigger.SpellMiss:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
-                        break;
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.DamageSpellCrit:
+                        case Trigger.SpellCrit:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
+                            break;
+                        case Trigger.DamageSpellHit:
+                        case Trigger.SpellHit:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
+                            break;
+                        case Trigger.SpellMiss:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
+                            break;
+                        case Trigger.DamageSpellCast:
+                        case Trigger.SpellCast:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, BaseCastTime, calculationOptions.FightDuration);
+                            break;
+                    }
                 }
-            }
-            //if (baseStats.SpellPowerFor15SecOnCast_50_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCast_50_45 * 15f / (45f + CastTime / CastProcs / 0.5f);
-            //if (baseStats.SpellDamageFor10SecOnHit_5 > 0) spellPower += baseStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
-            //if (baseStats.SpellPowerFor6SecOnCrit > 0) spellPower += baseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(CritProcs / Ticks, 6, CastTime / Ticks);
-            //if (baseStats.SpellPowerFor10SecOnHit_10_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
-            //if (baseStats.SpellPowerFor10SecOnCast_15_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
-            //if (baseStats.SpellPowerFor10SecOnCast_10_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
-            //if (baseStats.SpellPowerFor10SecOnResist > 0) spellPower += baseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - HitProcs / Ticks, 10, CastTime / Ticks);
-            //if (baseStats.SpellPowerFor15SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / CritProcs / 0.2f);
-            //if (baseStats.SpellPowerFor10SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / CritProcs / 0.2f);
-            if (baseStats.ShatteredSunAcumenProc > 0 && calculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
+                if (baseStats.ShatteredSunAcumenProc > 0 && calculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
 
-            SpammedDot = spammedDot;
-            if (!forceMiss)
-            {
-                AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, spellPower, spammedDot, forceHit);
+                SpammedDot = spammedDot;
+                if (!forceMiss)
+                {
+                    AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, spellPower, spammedDot, forceHit);
 
-                DamagePerSecond = AverageDamage / CastTime;
-                ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+                    DamagePerSecond = AverageDamage / CastTime;
+                    ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+                }
             }
             CastTime *= (1 - channelReduction);
             CostPerSecond = CalculateCost(mageTalents, round) / CastTime;
-
-            /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
-            float OO5SR = 0;
-            if (!FSRCalc.TryGetCachedOO5SR(Name, casttimeHash, out OO5SR))
-            {
-                FSRCalc fsr = new FSRCalc();
-                fsr.AddSpell(CastTime - castingState.Latency, castingState.Latency, Channeled);
-                OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance, Name, casttimeHash);
-            }*/
 
             if (outOfFiveSecondRule)
             {
                 OO5SR = 1;
             }
-
-            /*if (Cost > 0)
-            {
-                OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
-            }*/
         }
 
         public float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit)

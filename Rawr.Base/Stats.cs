@@ -421,7 +421,8 @@ namespace Rawr
         PhysicalCrit,
         ManaGem,
         DoTTick,
-        DamageDone
+        DamageDone,
+        MageNukeCast,
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]

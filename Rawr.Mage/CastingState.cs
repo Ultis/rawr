@@ -127,21 +127,21 @@ namespace Rawr.Mage
             return (cooldown & Cooldown) == cooldown;
         }
 
-        public bool Evocation { get { return GetCooldown(Cooldown.Evocation); } }
-        public bool ArcanePower { get { return GetCooldown(Cooldown.ArcanePower); } }
-        public bool IcyVeins { get { return GetCooldown(Cooldown.IcyVeins); } }
-        public bool MoltenFury { get { return GetCooldown(Cooldown.MoltenFury); } }
-        public bool Heroism { get { return GetCooldown(Cooldown.Heroism); } }
-        public bool PotionOfWildMagic { get { return GetCooldown(Cooldown.PotionOfWildMagic); } }
-        public bool PotionOfSpeed { get { return GetCooldown(Cooldown.PotionOfSpeed); } }
-        public bool FlameCap { get { return GetCooldown(Cooldown.FlameCap); } }
-        public bool Trinket1 { get { return GetCooldown(Cooldown.Trinket1); } }
-        public bool Trinket2 { get { return GetCooldown(Cooldown.Trinket2); } }
-        public bool ManaGemEffect { get { return GetCooldown(Cooldown.ManaGemEffect); } }
-        public bool DrumsOfBattle { get { return GetCooldown(Cooldown.DrumsOfBattle); } }
-        public bool Combustion { get { return GetCooldown(Cooldown.Combustion); } }
-        public bool WaterElemental { get { return GetCooldown(Cooldown.WaterElemental); } }
-        public bool PowerInfusion { get { return GetCooldown(Cooldown.PowerInfusion); } }
+        public bool Evocation { get { return (Cooldown & Cooldown.Evocation) != 0; } }
+        public bool ArcanePower { get { return (Cooldown & Cooldown.ArcanePower) != 0; } }
+        public bool IcyVeins { get { return (Cooldown & Cooldown.IcyVeins) != 0; } }
+        public bool MoltenFury { get { return (Cooldown & Cooldown.MoltenFury) != 0; } }
+        public bool Heroism { get { return (Cooldown & Cooldown.Heroism) != 0; } }
+        public bool PotionOfWildMagic { get { return (Cooldown & Cooldown.PotionOfWildMagic) != 0; } }
+        public bool PotionOfSpeed { get { return (Cooldown & Cooldown.PotionOfSpeed) != 0; } }
+        public bool FlameCap { get { return (Cooldown & Cooldown.FlameCap) != 0; } }
+        public bool Trinket1 { get { return (Cooldown & Cooldown.Trinket1) != 0; } }
+        public bool Trinket2 { get { return (Cooldown & Cooldown.Trinket2) != 0; } }
+        public bool ManaGemEffect { get { return (Cooldown & Cooldown.ManaGemEffect) != 0; } }
+        public bool DrumsOfBattle { get { return (Cooldown & Cooldown.DrumsOfBattle) != 0; } }
+        public bool Combustion { get { return (Cooldown & Cooldown.Combustion) != 0; } }
+        public bool WaterElemental { get { return (Cooldown & Cooldown.WaterElemental) != 0; } }
+        public bool PowerInfusion { get { return (Cooldown & Cooldown.PowerInfusion) != 0; } }
         public bool Frozen { get; set; }
 
         public Cooldown Cooldown { get; set; }
