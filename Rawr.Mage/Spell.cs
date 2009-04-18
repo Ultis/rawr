@@ -813,7 +813,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+                return (float)Math.Floor((BaseCost * CostAmplifier - castingState.BaseStats.SpellsManaReduction) * CostModifier);
             }
         }
 
@@ -821,7 +821,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+                return (float)Math.Floor((Math.Round(BaseCost * CostAmplifier) - castingState.BaseStats.SpellsManaReduction) * CostModifier);
             }
         }
 
@@ -970,11 +970,11 @@ namespace Rawr.Mage
             float cost;
             if (round)
             {
-                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+                cost = (float)Math.Floor((Math.Round(BaseCost * CostAmplifier) - castingState.BaseStats.SpellsManaReduction) * CostModifier);
             }
             else
             {
-                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+                cost = (float)Math.Floor((BaseCost * CostAmplifier - castingState.BaseStats.SpellsManaReduction) * CostModifier);
             }
 
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
@@ -992,11 +992,11 @@ namespace Rawr.Mage
             float cost;
             if (round)
             {
-                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+                cost = (float)Math.Floor((Math.Round(BaseCost * CostAmplifier) - castingState.BaseStats.SpellsManaReduction) * CostModifier);
             }
             else
             {
-                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+                cost = (float)Math.Floor((BaseCost * CostAmplifier - castingState.BaseStats.SpellsManaReduction) * CostModifier);
             }
 
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
@@ -2162,8 +2162,9 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public void AddToCycle(MageTalents mageTalents, Cycle cycle, Spell rawSpell, float weight0, float weight1, float weight2, float weight3)
+        public void AddToCycle(CharacterCalculationsMage calculations, Cycle cycle, Spell rawSpell, float weight0, float weight1, float weight2, float weight3)
         {
+            MageTalents mageTalents = calculations.MageTalents;
             float weight = weight0 + weight1 + weight2 + weight3;
             cycle.CastTime += weight * rawSpell.CastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
@@ -2173,7 +2174,7 @@ namespace Rawr.Mage
             cycle.CritProcs += weight * rawSpell.CritProcs;
             cycle.TargetProcs += weight * rawSpell.TargetProcs;
 
-            double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
+            double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier) - calculations.BaseStats.SpellsManaReduction;
             cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
 
@@ -2899,7 +2900,7 @@ namespace Rawr.Mage
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
             }
             AddSpell(needsDisplayCalculations, AM3, K1);
             AddSpell(needsDisplayCalculations, MBAM3, K2);
@@ -4641,7 +4642,7 @@ namespace Rawr.Mage
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
             AddSpell(needsDisplayCalculations, MBAM3, K1 + K2 + K4);
             AddSpell(needsDisplayCalculations, ABar, K1 + K2 + K4);
@@ -4704,7 +4705,7 @@ namespace Rawr.Mage
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
             AddSpell(needsDisplayCalculations, MBAM, K6);
             if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime, K6);
@@ -4765,7 +4766,7 @@ namespace Rawr.Mage
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
             AddSpell(needsDisplayCalculations, MBAM3, K1 + K2 + K4);
 
@@ -5139,7 +5140,7 @@ namespace Rawr.Mage
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
             }
             AddSpell(needsDisplayCalculations, ABar3, K1);
             AddSpell(needsDisplayCalculations, MBAM3, K2);
@@ -5193,7 +5194,7 @@ namespace Rawr.Mage
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.MageTalents, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2, K1 + K2, K1 + K2, 0);
             }
             AddSpell(needsDisplayCalculations, ABar3, K1);
             AddSpell(needsDisplayCalculations, MBAM3, K2);
