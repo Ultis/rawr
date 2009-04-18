@@ -950,7 +950,7 @@ namespace Rawr
 				if (IsJewelersGem)
 				{
 					volatileRequirements = true;
-					if (character == null || !character.EnforceGemRequirements) return true;
+					if (character == null) return true;
 					meetsRequirements = character.JewelersGemCount <= 3;
 				}
 				else if (IsStormjewel)
