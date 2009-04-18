@@ -907,7 +907,7 @@ namespace Rawr
                     stats.SpellPower += 4;
                     break;
                 case "2908":
-                    stats.CritRating += 6;
+                    stats.HitRating += 4;
                     break;
                 case "2927":
                     stats.Strength += 4;
