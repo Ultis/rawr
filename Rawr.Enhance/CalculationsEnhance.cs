@@ -200,7 +200,7 @@ namespace Rawr
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             calculatedStats.BasicStats = stats;
-            calculatedStats.BaseStats = ApplyTalents(character, statsRace + statsBaseGear);
+            calculatedStats.BaseStats = stats.Clone();
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);

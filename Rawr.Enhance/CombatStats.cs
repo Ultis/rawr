@@ -178,10 +178,11 @@ namespace Rawr.Enhance
                 float hitsThatProcWFPerS = (1f - chanceWhiteMiss) * swingsPerSMHMelee + hitsPerSMHSS;
 
                 // old WF model - aka Flat Windfury Society
+                /* 
                 float windfuryTimeToFirstHit = hastedMHSpeed - (3 % hastedMHSpeed);
                 //later -- //windfuryTimeToFirstHit = hasted
                 wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * hitsThatProcWFPerS));
-
+                */
                 // new WF model - slighly curved Windfury Society
                 // /*
                 float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * FightLength;
