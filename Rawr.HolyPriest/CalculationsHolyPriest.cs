@@ -172,7 +172,7 @@ namespace Rawr.HolyPriest
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Restorative Totems"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Moonkin Form"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spellpower)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
