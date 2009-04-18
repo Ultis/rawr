@@ -109,7 +109,7 @@ namespace Rawr.Enhance
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
             float chanceCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
-            chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
+            chanceWhiteMiss = Math.Max(0f, 0.27f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
             chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
             chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
@@ -174,24 +174,21 @@ namespace Rawr.Enhance
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
                 swingsPerSOHMelee = 1f / hastedOHSpeed;
-                //Flat Windfury Society
+                
                 float hitsThatProcWFPerS = (1f - chanceWhiteMiss) * swingsPerSMHMelee + hitsPerSMHSS;
 
-                // old WF model
-                
+                // old WF model - aka Flat Windfury Society
                 float windfuryTimeToFirstHit = hastedMHSpeed - (3 % hastedMHSpeed);
                 //later -- //windfuryTimeToFirstHit = hasted
                 wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * hitsThatProcWFPerS));
-                
-                // new WF model 
-                /*
+
+                // new WF model - slighly curved Windfury Society
+                // /*
                 float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * FightLength;
-                float maxIneligibleSeconds = maxExpectedWFPerFight * 3f;
-                float minExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - maxIneligibleSeconds);
-                float minIneligibleSeconds = minExpectedWFPerFight * 3f;
-                float xx = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - minIneligibleSeconds);
-                wfProcsPerSecond = maxExpectedWFPerFight / FightLength;
-                */
+                float ineligibleSeconds = maxExpectedWFPerFight * (3f - hastedMHSpeed);
+                float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - ineligibleSeconds);
+                wfProcsPerSecond = expectedWFPerFight / FightLength;
+                // */
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMiss);
                 
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
