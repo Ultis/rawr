@@ -94,8 +94,8 @@ namespace Rawr.Enhance
         public float EDUptime { get { return edUptime; } }
         public float FlurryUptime { get { return flurryUptime; } }
       
-        public float DamageReduction { 
-            get { return 1 - ArmorCalculations.GetDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, _stats.ArmorPenetrationRating); } 
+        public float DamageReduction {
+            get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
         }
 
         public void UpdateCalcs()

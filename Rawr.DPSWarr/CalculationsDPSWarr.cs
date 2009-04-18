@@ -126,7 +126,7 @@ namespace Rawr.DPSWarr {
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.buffedMhCrit, combatFactors.MhCrit*100);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.buffedOhCrit, combatFactors.OhCrit*100);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.buffedArmorPenetration, combatFactors.EffectiveBossArmor);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.buffedArmorPenetration, combatFactors.DamageReduction * 100f);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.damageReduc, combatFactors.DamageReduction);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteRage, whiteAttacks.whiteRageGen());

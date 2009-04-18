@@ -35,7 +35,7 @@ namespace Rawr.DPSWarr
 
         public static readonly DisplayValue buffedMhCrit = new DisplayValue("Buffed Stats", "Base MH Crit");
         public static readonly DisplayValue buffedOhCrit = new DisplayValue("Buffed Stats", "Base OH Crit");
-        public static readonly DisplayValue buffedArmorPenetration = new DisplayValue("Buffed Stats", "Effective Boss Armor");
+        public static readonly DisplayValue buffedArmorPenetration = new DisplayValue("Buffed Stats", "Boss Armor Reduction %");
         public static readonly DisplayValue damageReduc = new DisplayValue("Buffed Stats", "Effective Damage Dealt");
         
         //Fury Dps Moves

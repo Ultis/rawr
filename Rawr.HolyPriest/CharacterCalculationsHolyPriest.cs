@@ -101,6 +101,7 @@ namespace Rawr.HolyPriest
                 (BasicStats.Armor + BasicStats.BonusArmor).ToString("0"),
                 (StatConversion.GetArmorDamageReduction(80, (BasicStats.Armor + BasicStats.BonusArmor), 0f, 0f, 0f) * 100f).ToString("0.00")));
 
+
             float[] Resistances = {
                 0,
                 BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff,
@@ -143,14 +144,7 @@ namespace Rawr.HolyPriest
                 string ResistanceName = (MaxResist == AvgResist) ? "All" : ResistanceNames[MaxResistIndex];
                 ResistanceString = string.Format("{0} : {1}", ResistanceName, MaxResist.ToString("0")) + ResistanceString;
                 ResistanceString += string.Format("\r\n\r\nResist ({0}):", ResistanceName);
-                ResistanceString += string.Format("\r\nAvg. : {0}%", (StatConversion.GetAverageResistance(character.Level + 3, character.Level, MaxResist, 0) * 100f).ToString("0.00"));
-                float[] ResistTable = StatConversion.GetResistanceTable(character.Level + 3, character.Level, MaxResist, 0);
-                for (int x = 0; x < 11; x++)
-                {
-                    if (ResistTable[x] <= 0f)
-                        continue;
-                    ResistanceString += string.Format("\r\n{0}% : {1}%", (x * 10).ToString("00"), (ResistTable[x] * 100f).ToString("0.00"));
-                }
+                ResistanceString += string.Format("\r\n{0}", StatConversion.GetResistanceTableString(character.Level + 3, character.Level, MaxResist, 0));
             }
 
             dictValues.Add("Resistance", ResistanceString);

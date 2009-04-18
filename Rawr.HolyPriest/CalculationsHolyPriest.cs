@@ -200,6 +200,7 @@ namespace Rawr.HolyPriest
                 _relevantGlyphs.Add("Glyph of Power Word: Shield");
                 _relevantGlyphs.Add("Glyph of Prayer of Healing");
                 _relevantGlyphs.Add("Glyph of Renew");
+                _relevantGlyphs.Add("Glyph of Inner Fire");
                 _relevantGlyphs.Add("Glyph of Fading");
 
             }
@@ -406,7 +407,7 @@ namespace Rawr.HolyPriest
 
         public static float GetInnerFireArmorBonus(Character character)
         {
-            float ArmorBonus = 2440;
+            float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
 
             return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }

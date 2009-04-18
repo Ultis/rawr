@@ -228,8 +228,10 @@ namespace Rawr.Cat
 			//float armorReductionPercent = (1f - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
 			//float reducedArmor = (float)targetArmor * (armorReductionPercent);
 			//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
-			float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, calcOpts.TargetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+			//float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, calcOpts.TargetArmor,
+			//	stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
+                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
 
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);

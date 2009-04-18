@@ -321,8 +321,8 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.ToSpellCrit = stats.SpellCrit;
 
 			int targetArmor = calcOpts.TargetArmor;
-			float targetReduction = 1f - ArmorCalculations.GetDamageReduction(80, targetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+			float targetReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
 
 			//float targetArmor = Math.Max(0, calcOpts.TargetArmor - stats.ArmorPenetration);
 			//float targetReduction = 1f - targetArmor / (targetArmor + 400f + 85f * (5.5f * targetLevel - 265.5f));

@@ -12,13 +12,8 @@ namespace Rawr
     // float GetPhysicalGlancing(int LevelDelta)
     // float[??] GetPhysicalCombatTable(int LevelDelta, float Hit, float Expertise, float Block)
     // float GetPhysicalMitigation(int TargetLevel)
-    // Magical Combat:
-    // float GetSpellMiss(int LevelDelta, bool PvP)
-    // float GetAverageSpellResist(int LevelDelta, float Resistance)
-    // float[11] GetSpellResistTable(int LevelDelta, float Resistance)
-    // float GetMinimumSpellResist(int LevelDelta, float Resistance)
 
-
+/*
 	public static class ArmorCalculations
 	{
 		//Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
@@ -32,7 +27,7 @@ namespace Rawr
 			return damageReduction;
 		}
 	}
-
+*/
     public static class StatConversion
     {   // Class only works for Level 80 Characters
         // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
@@ -92,9 +87,10 @@ namespace Rawr
         #region NPC Constants
 
         // NPC Constants
-        public const float BOSS_ARMOR = 10643f;
-        public const float ARMOR_PER_LEVEL = 467.5f;
-        public const float ARMOR_DEDUCTION = 22167.5f;
+        public const float NPC_BOSS_ARMOR = 10643f;
+        public const float NPC_82_ARMOR = 10338f;
+        public const float NPC_81_ARMOR = 10034f;
+        public const float NPC_80_ARMOR = 9729f;
 
         #endregion
 
@@ -304,11 +300,13 @@ namespace Rawr
 
         #region Functions for More complex things.
 
-        // Found by Rallik, http://elitistjerks.com/f31/t29453-combat_ratings_level_80_a/p16/#post1170842
+        // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
+        // Ghostcrawler vs theorycraft.
         /// <summary>
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
         /// </summary>
         /// <param name="AttackerLevel">Level of Attacker</param>
+        /// <param name="TargetLevel">Level of Target</param>
         /// <param name="TargetArmor">Armor of Target</param>
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire)</param>
         /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc)</param>
@@ -317,13 +315,12 @@ namespace Rawr
         public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
             float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
         {
-            ArmorIgnoreBuffs = 1f - (1f - ArmorIgnoreBuffs) * (1f - GetArmorPenetrationFromRating(ArmorPenetrationRating));
-            float HalfArmorValue = AttackerLevel * ARMOR_PER_LEVEL - ARMOR_DEDUCTION;
-            float InnerReduction = TargetArmor / (HalfArmorValue + TargetArmor) * ArmorIgnoreBuffs * ArmorIgnoreDebuffs;
-            float DamageTaken = HalfArmorValue /
-                (HalfArmorValue + TargetArmor * (1f - (ArmorIgnoreBuffs + ArmorIgnoreDebuffs) + InnerReduction));
+            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
+            TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
+            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
+            TargetArmor -= ArPCap * GetArmorPenetrationFromRating(ArmorPenetrationRating);
 
-            return 1f - DamageTaken;
+            return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
         }
 
 
@@ -493,7 +490,7 @@ namespace Rawr
                 ct.Miss = bDualWield ? 0.27f : 0.08f;
                 ct.Dodge = 0.065f;
                 ct.Parry = 0.14f;
-                ct.Crit = -0.036f;
+                ct.Crit = -0.048f;
             }
             else if (DeltaLevel == -2)
                 ct.Miss = 0.054f;

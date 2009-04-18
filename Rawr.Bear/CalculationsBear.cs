@@ -506,8 +506,8 @@ the Threat Scale defined on the Options tab.",
 			//float armorPenetrationPercent = stats.ArmorPenetration + stats.ArmorPenetrationRating / 1539.529991f;
 			//float reducedArmor = targetArmor * (1f - armorPenetrationPercent);
 			//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
-			float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);

@@ -21,11 +21,12 @@ namespace Rawr.DPSWarr {
 
         public float DamageReduction {
             get {
-				return 1f - ArmorCalculations.GetDamageReduction(80, _calcOpts.TargetArmor,
-				_stats.ArmorPenetration, _stats.ArmorPenetrationRating);
+				return 1f - StatConversion.GetArmorDamageReduction(80, _calcOpts.TargetArmor,
+				_stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating);
                 //return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
             }
         }
+        /*
 		public float EffectiveBossArmor {
 			get {
 				float armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
@@ -38,7 +39,7 @@ namespace Rawr.DPSWarr {
 				//totalArmor *= 1 - (_stats.ArmorPenetrationRating * WarriorConversions.ArPToArmorPenetration / 100f);
 				//return totalArmor;
 			}
-		} 
+		} */
         public float AvgMhWeaponDmg { get { return CalcAverageWeaponDamage(MainHand, _stats); } }
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MainHand, _stats); } }
         public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OffHand, _stats)*(0.5f+_talents.DualWieldSpecialization*0.025f); } }

@@ -16,8 +16,8 @@ namespace Rawr.ProtWarr
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
 			int targetArmor = calcOpts.TargetArmor;
-			float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating); 
+			float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
 			return damageReduction;
 			
 			//// Armor Penetration Rating multiplier needs to go into CalculationsProtWarr

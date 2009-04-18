@@ -466,8 +466,8 @@ namespace Rawr.DPSDK
                 ////mitigation = 1f - targetArmor / (targetArmor + 400f + 85f * (5.5f * (float)calcOpts.TargetLevel - 265.5f));
                 //mitigation = 1f - (targetArmor / ((467.5f * (float)calcOpts.TargetLevel) + targetArmor - 22167.5f));
 
-				mitigation = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+				mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
 				
 				calcs.EnemyMitigation = 1f - mitigation;
                 //calcs.EffectiveArmor = reducedArmor;
@@ -1010,8 +1010,8 @@ namespace Rawr.DPSDK
                     //dpsGhoul *= 1f + statsBuffs.BonusPhysicalDamageMultiplier; 
                     // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
 					int targetArmor = calcOpts.BossArmor;
-					float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-						stats.ArmorPenetration, stats.ArmorPenetrationRating);
+					float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+						stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
 					
 					dpsGhoul *= modArmor;
                     dpsGhoul *= 1f - .0065f;

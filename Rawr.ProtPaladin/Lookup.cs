@@ -16,8 +16,8 @@ namespace Rawr.ProtPaladin
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
 			int targetArmor = calcOpts.TargetArmor;
-			float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating); 
+			float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
 			return damageReduction;
         }
 
