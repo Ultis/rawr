@@ -45,7 +45,7 @@ namespace Rawr.Retribution
 
         public virtual float AverageDamage()
         {
-            return HitDamage() * ((1f - CritChance()) + CritChance() * CritBonus()) * ChanceToLand();
+            return HitDamage() * ((1f - CritChance()) + CritChance() * CritBonus()) * ChanceToLand() * Targets();
         }
 
         public float CritChance()
@@ -116,6 +116,7 @@ namespace Rawr.Retribution
         public abstract float AbilityDamage();
 
         public virtual float AbilityCritChance() { return 0; }
+        public virtual float Targets() { return 1f; }
 
         public override string ToString()
         {
@@ -243,6 +244,11 @@ namespace Rawr.Retribution
             return Stats.DivineStormCrit;
         }
 
+        public override float Targets()
+        {
+            return (float)Math.Min(Combats.CalcOpts.Targets, 3);
+        }
+
     }
 
     public class HammerOfWrath : Skill
@@ -290,7 +296,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower);
+            return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower) * (Talents.GlyphOfConsecration ? 10f : 8f);
         }
 
         public override float AbilityCritChance()
@@ -298,11 +304,9 @@ namespace Rawr.Retribution
             return -1f;
         }
 
-        public override float AverageDamage()
+        public override float Targets()
         {
-            return HitDamage()
-                * (Talents.GlyphOfConsecration ? 10f : 8f)
-                * Combats.GetSpellAvoid();
+            return Combats.CalcOpts.Targets;
         }
 
     }

@@ -62,16 +62,19 @@
             this.butUnlimitedDown = new System.Windows.Forms.Button();
             this.butUnlimitedUp = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
-            this.trkTime20 = new System.Windows.Forms.TrackBar();
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
-            this.lblTime20 = new System.Windows.Forms.Label();
             this.labelsTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.cmbSeal = new System.Windows.Forms.ComboBox();
             this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.nudStackTrinket = new System.Windows.Forms.NumericUpDown();
+            this.nudTimeUnder20 = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.nudTargets = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
@@ -86,10 +89,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudJudge20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudJudge)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudStackTrinket)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTimeUnder20)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargets)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMobType
@@ -102,16 +106,16 @@
             "Humanoid",
             "Elemental",
             "Other"});
-            this.cmbMobType.Location = new System.Drawing.Point(156, 19);
+            this.cmbMobType.Location = new System.Drawing.Point(150, 29);
             this.cmbMobType.Name = "cmbMobType";
             this.cmbMobType.Size = new System.Drawing.Size(114, 21);
-            this.cmbMobType.TabIndex = 2;
+            this.cmbMobType.TabIndex = 4;
             this.cmbMobType.SelectedIndexChanged += new System.EventHandler(this.cmbMobType_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(153, 3);
+            this.label1.Location = new System.Drawing.Point(86, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 3;
@@ -120,10 +124,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(153, 88);
+            this.label2.Location = new System.Drawing.Point(74, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 13);
-            this.label2.TabIndex = 4;
+            this.label2.TabIndex = 7;
             this.label2.Text = "Target Level:";
             // 
             // groupBox2
@@ -156,7 +160,7 @@
             this.groupBox2.Controls.Add(this.listUnlimitedPriority);
             this.groupBox2.Controls.Add(this.butUnlimitedDown);
             this.groupBox2.Controls.Add(this.butUnlimitedUp);
-            this.groupBox2.Location = new System.Drawing.Point(6, 110);
+            this.groupBox2.Location = new System.Drawing.Point(3, 187);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(225, 339);
             this.groupBox2.TabIndex = 6;
@@ -169,7 +173,7 @@
             this.lblWait.Location = new System.Drawing.Point(168, 101);
             this.lblWait.Name = "lblWait";
             this.lblWait.Size = new System.Drawing.Size(36, 13);
-            this.lblWait.TabIndex = 60;
+            this.lblWait.TabIndex = 21;
             this.lblWait.Text = "Wait*:";
             this.labelsTooltip.SetToolTip(this.lblWait, "Amount of time you will be willing to wait to use an ability of higher priority.");
             // 
@@ -189,7 +193,7 @@
             0});
             this.nudWait.Name = "nudWait";
             this.nudWait.Size = new System.Drawing.Size(48, 20);
-            this.nudWait.TabIndex = 59;
+            this.nudWait.TabIndex = 22;
             this.nudWait.ValueChanged += new System.EventHandler(this.nudWait_ValueChanged);
             // 
             // nudHoW20
@@ -598,7 +602,7 @@
             this.radRotSim.Location = new System.Drawing.Point(7, 20);
             this.radRotSim.Name = "radRotSim";
             this.radRotSim.Size = new System.Drawing.Size(97, 17);
-            this.radRotSim.TabIndex = 36;
+            this.radRotSim.TabIndex = 15;
             this.radRotSim.TabStop = true;
             this.radRotSim.Text = "FCFS Simulator";
             this.radRotSim.UseVisualStyleBackColor = true;
@@ -620,7 +624,7 @@
             0});
             this.nudDelay.Name = "nudDelay";
             this.nudDelay.Size = new System.Drawing.Size(48, 20);
-            this.nudDelay.TabIndex = 34;
+            this.nudDelay.TabIndex = 20;
             this.nudDelay.ValueChanged += new System.EventHandler(this.nudDelay_ValueChanged);
             // 
             // lblDelay
@@ -629,7 +633,7 @@
             this.lblDelay.Location = new System.Drawing.Point(168, 62);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(41, 13);
-            this.lblDelay.TabIndex = 33;
+            this.lblDelay.TabIndex = 19;
             this.lblDelay.Text = "Delay*:";
             this.labelsTooltip.SetToolTip(this.lblDelay, "Amount of time inbetween each ability use due to lag.");
             // 
@@ -646,7 +650,7 @@
             this.listUnlimitedPriority.Location = new System.Drawing.Point(6, 43);
             this.listUnlimitedPriority.Name = "listUnlimitedPriority";
             this.listUnlimitedPriority.Size = new System.Drawing.Size(120, 94);
-            this.listUnlimitedPriority.TabIndex = 32;
+            this.listUnlimitedPriority.TabIndex = 16;
             this.listUnlimitedPriority.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listUnlimitedPriority_ItemCheck);
             // 
             // butUnlimitedDown
@@ -654,7 +658,7 @@
             this.butUnlimitedDown.Location = new System.Drawing.Point(132, 72);
             this.butUnlimitedDown.Name = "butUnlimitedDown";
             this.butUnlimitedDown.Size = new System.Drawing.Size(23, 23);
-            this.butUnlimitedDown.TabIndex = 5;
+            this.butUnlimitedDown.TabIndex = 18;
             this.butUnlimitedDown.Text = "-";
             this.butUnlimitedDown.UseVisualStyleBackColor = true;
             this.butUnlimitedDown.Click += new System.EventHandler(this.butUnlimitedDown_Click);
@@ -664,7 +668,7 @@
             this.butUnlimitedUp.Location = new System.Drawing.Point(132, 43);
             this.butUnlimitedUp.Name = "butUnlimitedUp";
             this.butUnlimitedUp.Size = new System.Drawing.Size(23, 23);
-            this.butUnlimitedUp.TabIndex = 4;
+            this.butUnlimitedUp.TabIndex = 17;
             this.butUnlimitedUp.Text = "+";
             this.butUnlimitedUp.UseVisualStyleBackColor = true;
             this.butUnlimitedUp.Click += new System.EventHandler(this.butUnlimitedUp_Click);
@@ -672,32 +676,20 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 43);
+            this.label11.Location = new System.Drawing.Point(56, 111);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(88, 13);
-            this.label11.TabIndex = 29;
+            this.label11.TabIndex = 9;
             this.label11.Text = "Below 20% Time:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // trkTime20
-            // 
-            this.trkTime20.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkTime20.Location = new System.Drawing.Point(3, 59);
-            this.trkTime20.Maximum = 100;
-            this.trkTime20.Name = "trkTime20";
-            this.trkTime20.Size = new System.Drawing.Size(137, 45);
-            this.trkTime20.TabIndex = 28;
-            this.trkTime20.TickFrequency = 10;
-            this.trkTime20.Value = 90;
-            this.trkTime20.Scroll += new System.EventHandler(this.trkTime20_Scroll);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 3);
+            this.label12.Location = new System.Drawing.Point(74, 5);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(69, 13);
-            this.label12.TabIndex = 27;
+            this.label12.TabIndex = 1;
             this.label12.Text = "Fight Length:";
             // 
             // cmbLength
@@ -708,7 +700,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(6, 19);
+            this.cmbLength.Location = new System.Drawing.Point(150, 3);
             this.cmbLength.Maximum = new decimal(new int[] {
             60,
             0,
@@ -720,8 +712,8 @@
             0,
             0});
             this.cmbLength.Name = "cmbLength";
-            this.cmbLength.Size = new System.Drawing.Size(112, 20);
-            this.cmbLength.TabIndex = 26;
+            this.cmbLength.Size = new System.Drawing.Size(60, 20);
+            this.cmbLength.TabIndex = 2;
             this.cmbLength.Value = new decimal(new int[] {
             5,
             0,
@@ -729,26 +721,18 @@
             0});
             this.cmbLength.ValueChanged += new System.EventHandler(this.cmbLength_ValueChanged);
             // 
-            // lblTime20
-            // 
-            this.lblTime20.AutoSize = true;
-            this.lblTime20.Location = new System.Drawing.Point(107, 91);
-            this.lblTime20.Name = "lblTime20";
-            this.lblTime20.Size = new System.Drawing.Size(33, 13);
-            this.lblTime20.TabIndex = 30;
-            this.lblTime20.Text = "100%";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(153, 43);
+            this.label3.Location = new System.Drawing.Point(113, 59);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(31, 13);
-            this.label3.TabIndex = 32;
+            this.label3.TabIndex = 5;
             this.label3.Text = "Seal:";
             // 
             // cmbSeal
             // 
+            this.cmbSeal.AccessibleName = "";
             this.cmbSeal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSeal.FormattingEnabled = true;
             this.cmbSeal.Items.AddRange(new object[] {
@@ -757,15 +741,15 @@
             "Righteousness",
             "Vengeance",
             "None"});
-            this.cmbSeal.Location = new System.Drawing.Point(156, 59);
+            this.cmbSeal.Location = new System.Drawing.Point(150, 56);
             this.cmbSeal.Name = "cmbSeal";
             this.cmbSeal.Size = new System.Drawing.Size(114, 21);
-            this.cmbSeal.TabIndex = 31;
+            this.cmbSeal.TabIndex = 6;
             this.cmbSeal.SelectedIndexChanged += new System.EventHandler(this.cmbSeal_SelectedIndexChanged);
             // 
             // nudTargetLevel
             // 
-            this.nudTargetLevel.Location = new System.Drawing.Point(229, 86);
+            this.nudTargetLevel.Location = new System.Drawing.Point(150, 83);
             this.nudTargetLevel.Maximum = new decimal(new int[] {
             83,
             0,
@@ -777,8 +761,8 @@
             0,
             0});
             this.nudTargetLevel.Name = "nudTargetLevel";
-            this.nudTargetLevel.Size = new System.Drawing.Size(42, 20);
-            this.nudTargetLevel.TabIndex = 33;
+            this.nudTargetLevel.Size = new System.Drawing.Size(60, 20);
+            this.nudTargetLevel.TabIndex = 8;
             this.nudTargetLevel.Value = new decimal(new int[] {
             80,
             0,
@@ -789,38 +773,112 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 458);
+            this.label4.Location = new System.Drawing.Point(31, 137);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(113, 13);
-            this.label4.TabIndex = 34;
+            this.label4.TabIndex = 11;
             this.label4.Text = "Stacked trinkets reset:";
             // 
             // nudStackTrinket
             // 
-            this.nudStackTrinket.Location = new System.Drawing.Point(124, 456);
+            this.nudStackTrinket.Location = new System.Drawing.Point(150, 135);
             this.nudStackTrinket.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
             this.nudStackTrinket.Name = "nudStackTrinket";
-            this.nudStackTrinket.Size = new System.Drawing.Size(40, 20);
-            this.nudStackTrinket.TabIndex = 35;
+            this.nudStackTrinket.Size = new System.Drawing.Size(60, 20);
+            this.nudStackTrinket.TabIndex = 12;
             this.nudStackTrinket.ValueChanged += new System.EventHandler(this.nudStackTrinket_ValueChanged);
+            // 
+            // nudTimeUnder20
+            // 
+            this.nudTimeUnder20.Location = new System.Drawing.Point(150, 109);
+            this.nudTimeUnder20.Name = "nudTimeUnder20";
+            this.nudTimeUnder20.Size = new System.Drawing.Size(60, 20);
+            this.nudTimeUnder20.TabIndex = 10;
+            this.nudTimeUnder20.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            this.nudTimeUnder20.ValueChanged += new System.EventHandler(this.nudTimeUnder20_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(216, 111);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(15, 13);
+            this.label5.TabIndex = 37;
+            this.label5.Text = "%";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(216, 137);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.TabIndex = 38;
+            this.label6.Text = "times";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // nudTargets
+            // 
+            this.nudTargets.DecimalPlaces = 1;
+            this.nudTargets.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.nudTargets.Location = new System.Drawing.Point(150, 161);
+            this.nudTargets.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nudTargets.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudTargets.Name = "nudTargets";
+            this.nudTargets.Size = new System.Drawing.Size(60, 20);
+            this.nudTargets.TabIndex = 14;
+            this.nudTargets.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nudTargets.ValueChanged += new System.EventHandler(this.nudTargets_ValueChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(97, 163);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(46, 13);
+            this.label7.TabIndex = 13;
+            this.label7.Text = "Targets:";
             // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.nudTargets);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.nudTimeUnder20);
             this.Controls.Add(this.nudStackTrinket);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.nudTargetLevel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbSeal);
-            this.Controls.Add(this.lblTime20);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.trkTime20);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.cmbLength);
             this.Controls.Add(this.groupBox2);
@@ -844,10 +902,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudJudge20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudJudge)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudStackTrinket)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTimeUnder20)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargets)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -860,10 +919,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TrackBar trkTime20;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown cmbLength;
-        private System.Windows.Forms.Label lblTime20;
         private System.Windows.Forms.Button butUnlimitedDown;
         private System.Windows.Forms.Button butUnlimitedUp;
         private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
@@ -898,6 +955,11 @@
         private System.Windows.Forms.NumericUpDown nudTargetLevel;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown nudStackTrinket;
+        private System.Windows.Forms.NumericUpDown nudTimeUnder20;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown nudTargets;
+        private System.Windows.Forms.Label label7;
 
     }
 }

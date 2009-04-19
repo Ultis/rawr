@@ -85,10 +85,6 @@ namespace Rawr.Healadin
             character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Tree of Life Aura"));
-
-            character.PaladinTalents.GlyphOfHolyLight = true;
-            character.PaladinTalents.GlyphOfDivinity = true;
-            character.PaladinTalents.GlyphOfSealOfWisdom = true;
         }
 
         private static List<string> _relevantGlyphs;

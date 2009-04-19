@@ -31,8 +31,8 @@ namespace Rawr.Retribution
             cmbSeal.SelectedIndex = (int)calcOpts.Seal;
             cmbLength.Value = (decimal)calcOpts.FightLength;
 
-            trkTime20.Value = (int)(calcOpts.TimeUnder20 * 100);
-            lblTime20.Text = trkTime20.Value + "%";
+            nudTimeUnder20.Value = (decimal)(calcOpts.TimeUnder20 * 100);
+            nudTargets.Value = (decimal)calcOpts.Targets;
 
             nudDelay.Value = (decimal)calcOpts.Delay;
             nudWait.Value = (decimal)calcOpts.Wait;
@@ -76,17 +76,6 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.FightLength = (float)cmbLength.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trkTime20_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.TimeUnder20 = trkTime20.Value / 100f;
-                lblTime20.Text = trkTime20.Value + "%";
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -408,6 +397,26 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudTargets_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.Targets = (int)nudTargets.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudTimeUnder20_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.TimeUnder20 = (float)nudTimeUnder20.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -430,6 +439,7 @@ namespace Rawr.Retribution
         public float TimeUnder20 = .18f;
         public float Delay = .05f;
         public float Wait = .05f;
+        public int Targets = 1;
 
         public int StackTrinketReset = 0;
 
@@ -499,6 +509,7 @@ namespace Rawr.Retribution
             clone.TimeUnder20 = TimeUnder20;
             clone.Delay = Delay;
             clone.SimulateRotation = SimulateRotation;
+            clone.Targets = Targets;
 
             clone.JudgeCD = JudgeCD;
             clone.CSCD = CSCD;
@@ -518,6 +529,7 @@ namespace Rawr.Retribution
 
             return clone;
         }
+
 
     }
 }
