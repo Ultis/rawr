@@ -60,13 +60,15 @@ namespace Rawr.Retribution
         {
             float fightLength = _calcOpts.FightLength * 60f;
 
-            float bloodlustUptime = ((float)Math.Floor(fightLength / 300f) * 40f + (float)Math.Min(fightLength % 300f, 40f)) / fightLength;
+            float bloodlustUptime = ((float)Math.Floor(fightLength / 300f) * 40f + (float)Math.Min(fightLength % 600f, 40f)) / fightLength;
             float bloodlustHaste = 1f + (bloodlustUptime * .3f);
 
-            float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f));
-            AvengingWrathMulti = 1f + ((awTimes * 20f) / fightLength) * .2f;
+            float awUptime = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f)) * 20f / fightLength;
+            AvengingWrathMulti = 1f + awUptime * .2f;
 
-            ArmorReduction = 1f - StatConversion.GetArmorDamageReduction(Character.Level, StatConversion.NPC_BOSS_ARMOR, Stats.ArmorPenetration, 0f, Stats.ArmorPenetrationRating);
+            float dr = StatConversion.GetArmorDamageReduction(Character.Level, StatConversion.NPC_BOSS_ARMOR, Stats.ArmorPenetration, 0f, Stats.ArmorPenetrationRating);
+            ArmorReduction = 1f - dr * ((1 - awUptime) + .25f * _talents.SanctifiedWrath * awUptime);
+
             BaseWeaponSpeed = _character.MainHand == null ? 3.5f : _character.MainHand.Speed;
             float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
             AttackSpeed = BaseWeaponSpeed / ((1f + _stats.PhysicalHaste) * bloodlustHaste);

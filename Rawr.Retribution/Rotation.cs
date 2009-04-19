@@ -207,29 +207,35 @@ namespace Rawr.Retribution
         public override float GetMeleeAttacksPerSec()
         {
             return white.ChanceToLand() / Combats.AttackSpeed
-                + (cs.ChanceToLand() / _calcOpts.CSCD + ds.ChanceToLand() / _calcOpts.DSCD) * (1f - _calcOpts.TimeUnder20)
-                + (cs.ChanceToLand() / _calcOpts.CSCD20 + ds.ChanceToLand() / _calcOpts.DSCD20) * _calcOpts.TimeUnder20;
+                + (cs.ChanceToLand() / _calcOpts.CSCD * cs.Targets()
+                + ds.ChanceToLand() / _calcOpts.DSCD * ds.Targets()) * (1f - _calcOpts.TimeUnder20)
+                + (cs.ChanceToLand() / _calcOpts.CSCD20 * cs.Targets()
+                + ds.ChanceToLand() / _calcOpts.DSCD20 * ds.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetMeleeCritsPerSec()
         {
             return white.ChanceToCrit() / Combats.AttackSpeed
-                + (judge.ChanceToCrit() / _calcOpts.CSCD + ds.ChanceToCrit() / _calcOpts.DSCD) * (1f - _calcOpts.TimeUnder20)
-                + (judge.ChanceToCrit() / _calcOpts.CSCD20 + ds.ChanceToCrit() / _calcOpts.DSCD20) * _calcOpts.TimeUnder20;
+                + (judge.ChanceToCrit() / _calcOpts.CSCD * cs.Targets()
+                + ds.ChanceToCrit() / _calcOpts.DSCD * ds.Targets()) * (1f - _calcOpts.TimeUnder20)
+                + (judge.ChanceToCrit() / _calcOpts.CSCD20 * cs.Targets()
+                + ds.ChanceToCrit() / _calcOpts.DSCD20 * ds.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetPhysicalAttacksPerSec()
         {
             return GetMeleeAttacksPerSec()
-                + (judge.ChanceToLand() / _calcOpts.JudgeCD) * (1f - _calcOpts.TimeUnder20)
-                + (judge.ChanceToLand() / _calcOpts.JudgeCD20 + how.ChanceToLand() / _calcOpts.HoWCD20) * _calcOpts.TimeUnder20;
+                + (judge.ChanceToLand() / _calcOpts.JudgeCD * judge.Targets()) * (1f - _calcOpts.TimeUnder20)
+                + (judge.ChanceToLand() / _calcOpts.JudgeCD20 * judge.Targets()
+                + how.ChanceToLand() / _calcOpts.HoWCD20 * how.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetPhysicalCritsPerSec()
         {
             return GetMeleeAttacksPerSec()
-                + (judge.ChanceToCrit() / _calcOpts.JudgeCD) * (1f - _calcOpts.TimeUnder20)
-                + (judge.ChanceToCrit() / _calcOpts.JudgeCD20 + how.ChanceToCrit() / _calcOpts.HoWCD20) * _calcOpts.TimeUnder20;
+                + (judge.ChanceToCrit() / _calcOpts.JudgeCD * judge.Targets()) * (1f - _calcOpts.TimeUnder20)
+                + (judge.ChanceToCrit() / _calcOpts.JudgeCD20 * judge.Targets()
+                + how.ChanceToCrit() / _calcOpts.HoWCD20 * how.Targets()) * _calcOpts.TimeUnder20;
         }
 
     }

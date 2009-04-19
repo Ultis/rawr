@@ -456,12 +456,12 @@ namespace Rawr.Retribution
 
                         if (effect.MaxStack > 1)
                         {
-                            float timeToMax = (float)Math.Min(fightLength, effect.GetChance(combats.AttackSpeed) * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
+                            float timeToMax = (float)Math.Min(fightLength, effect.GetChance(combats.BaseWeaponSpeed) * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
                             statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
                         }
                         else
                         {
-                            statsAverage += effect.GetAverageStats(trigger, 1f, combats.AttackSpeed);
+                            statsAverage += effect.GetAverageStats(trigger, 1f, combats.BaseWeaponSpeed);
                         }
                     }
                 }
