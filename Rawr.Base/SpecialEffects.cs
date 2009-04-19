@@ -204,7 +204,8 @@ namespace Rawr
 			}
 			else if (line.StartsWith("Chance on hit to increase your attack power by 230"))
 			{ //Special handling for Shard of Contempt due to higher uptime
-				stats.AttackPower += 90f;
+				// stats.AttackPower += 90f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 230f }, 20f, 45f, .1f));
 			}
 			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
 			{ //Darkmoon Card: Greatness
