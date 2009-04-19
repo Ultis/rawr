@@ -340,31 +340,34 @@ namespace Rawr.Mage
         {
             Stats baseStats = CastingState.BaseStats;
             float spellPower = 0;
-            foreach (SpecialEffect effect in CastingState.Calculations.SpellPowerEffects)
+            if (Ticks > 0)
             {
-                switch (effect.Trigger)
+                foreach (SpecialEffect effect in CastingState.Calculations.SpellPowerEffects)
                 {
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                        break;
-                    case Trigger.SpellMiss:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                        break;
-                    case Trigger.MageNukeCast:
-                        if (NukeProcs > 0) spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
-                        break;
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.DamageSpellCrit:
+                        case Trigger.SpellCrit:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                            break;
+                        case Trigger.DamageSpellHit:
+                        case Trigger.SpellHit:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                            break;
+                        case Trigger.SpellMiss:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                            break;
+                        case Trigger.DamageSpellCast:
+                        case Trigger.SpellCast:
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                            break;
+                        case Trigger.MageNukeCast:
+                            if (NukeProcs > 0) spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                            break;
+                    }
                 }
+                if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
             }
-            if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
             //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???
             if (CastingState.WaterElemental)
