@@ -94,6 +94,7 @@
           <ItemType>Idol</ItemType>
           <ItemType>Staff</ItemType>
           <ItemType>TwoHandMace</ItemType>
+          <ItemType>Polearm</ItemType>
         </ArrayOfItemType>
       </value>
     </item>
