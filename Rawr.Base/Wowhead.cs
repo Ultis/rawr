@@ -840,6 +840,9 @@ namespace Rawr
             switch (socketbonus)
             {
                 #region Hugeass switch to deal with all the socket bonuses. You dont want to see this. Really!
+                case "430":
+                    stats.SpellPower += 9;
+                    break;
                 case "2770":
                     stats.SpellPower += 7;
                     break;
@@ -1058,6 +1061,36 @@ namespace Rawr
                     break;
                 case "3821":
                     stats.Resilience += 8;
+                    break;
+                case "440":
+                    stats.SpellPower += 9;
+                    break;
+                case "2767":
+                    stats.HitRating += 8;
+                    break;
+                case "3857":
+                    stats.DefenseRating += 6;
+                    break;
+                case "2871":
+                    stats.DodgeRating += 4;
+                    break;
+                case "3871":
+                    stats.ParryRating += 6;
+                    break;
+                case "3304":
+                    stats.DodgeRating += 8;
+                    break;
+                case "2314":
+                    stats.SpellPower += 9;
+                    break;
+                case "2844":
+                    stats.HitRating += 8;
+                    break;
+                case "1597":
+                    stats.AttackPower += 32;
+                    break;
+                case "1589":
+                    stats.AttackPower += 16;
                     break;
                 default:
                     if (!_unhandledSocketBonus.Contains(socketbonus))
