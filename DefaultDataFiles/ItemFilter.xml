@@ -118,8 +118,32 @@
   </RelevantItemTypes>
   <RegexList>
     <ItemFilterRegex>
-      <Name>Burning Crusade</Name>
-      <Pattern>Sunwell|Yrma|Theremis|Tydormu|Black Temple|Hyjal|Veynna Dawnstar|Tempest Keep|Serpentshrine Cavern|Zul'Aman|G'eras|Anwehu|Badge of Justice|Asuur|Karazhan|Gruul's Lair|Magtheridon's Lair|Old Hillsbrad Foothills|Blood Furnace|Slave Pens|Arcatraz|Underbog|Shattered Halls|Hellfire Ramparts|Magisters' Terrace|Auchenai Crypts|Shadow Labyrinth|Sethekk Halls|Steamvault|Mana-Tombs|Botanica|Mechanar|Black Morass|Spirit Shard|Forgotten Vanquisher</Pattern>
+      <Name>Ulduar</Name>
+      <Pattern>(?&lt;! Heroic )Ulduar</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <Name>Heroic Ulduar</Name>
+      <Pattern>Heroic Ulduar</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <Name>Emblem of Conquest</Name>
+      <Pattern>Emblem of Conquest</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -131,7 +155,7 @@
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Crafted</Name>
-      <Pattern>Created</Pattern>
+      <Pattern>Created|(?&lt;!Bop )Crafted</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -143,7 +167,7 @@
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>PVP</Name>
-      <Pattern>Points|Griz Gutshank|Hall of Legends|Champions' Hall|Argex Irongut</Pattern>
+      <Pattern>Points|Griz Gutshank|Hall of Legends|Champions' Hall|Argex Irongut|Mark of Honor</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -214,7 +238,7 @@
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
-      <Name>Badges</Name>
+      <Name>Emblem of Heroism</Name>
       <Pattern>Emblem of Heroism</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
@@ -226,7 +250,7 @@
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
-      <Name>Heroic Badges</Name>
+      <Name>Emblem of Valor</Name>
       <Pattern>Emblem of Valor|Brasael</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
@@ -259,7 +283,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Jewelcrafting</Name>
@@ -271,7 +295,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Inscription</Name>
@@ -287,7 +311,7 @@
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Faction</Name>
-      <Pattern>Friendly|Honored|Revered|Exalted</Pattern>
+      <Pattern>Friendly|Honored|Revered|Exalted|Duchess Mynx|Archmage Alvareaux|Cielstrasza|Tanak|Geen|Veteran Crusader Aliocha Segard|Lillehoff</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -324,6 +348,18 @@
     <ItemFilterRegex>
       <Name>Classic</Name>
       <Pattern>Zul'Gurub|Ahn'Qiraj</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>false</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <Name>Burning Crusade</Name>
+      <Pattern>Sunwell|Yrma|Theremis|Tydormu|Black Temple|Hyjal|Veynna Dawnstar|Tempest Keep|Serpentshrine Cavern|Zul'Aman|G'eras|Anwehu|Badge of Justice|Asuur|Karazhan|Gruul's Lair|Magtheridon's Lair|Old Hillsbrad Foothills|Blood Furnace|Slave Pens|Arcatraz|Underbog|Shattered Halls|Hellfire Ramparts|Magisters' Terrace|Auchenai Crypts|Shadow Labyrinth|Sethekk Halls|Steamvault|Mana-Tombs|Botanica|Mechanar|Black Morass|Spirit Shard|Forgotten Vanquisher</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>

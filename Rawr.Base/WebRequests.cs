@@ -395,12 +395,23 @@ namespace Rawr
 			return doc;
 		}
 
+
         public XmlDocument DownloadUpgradesWowhead(string site, string filter)
         {
             XmlDocument doc = null;
             if (!string.IsNullOrEmpty(site) && !string.IsNullOrEmpty(filter))
             {
                 doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadUpgradeURI, site, filter), true);
+            }
+            return doc;
+        }
+
+        public XmlDocument DownloadItemHtmlWowhead(string id)
+        {
+            XmlDocument doc = null;
+            if (!string.IsNullOrEmpty(id))
+            {
+                doc = DownloadXml(string.Format("http://www.wowhead.com/?item={0}", id), true);
             }
             return doc;
         }

@@ -156,6 +156,33 @@ namespace Rawr
             return item;
 		}
 
+        private class TokenDropInfo
+        {
+            public string Boss;
+            public string Area;
+            public bool Heroic;
+            public string Name;
+        }
+
+        static Dictionary<string, TokenDropInfo> _tokenDropMap = new Dictionary<string, TokenDropInfo>();
+        static Dictionary<string, string> _pvpTokenMap = new Dictionary<string, string>();
+        static Dictionary<string, string> _vendorTokenMap = new Dictionary<string, string>();
+
+        static Wowhead()
+        {
+            _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor";
+            _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor";
+            _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor";
+            _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor";
+            _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor";
+            _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
+
+            _vendorTokenMap["44990"] = "Champion's Seal";
+            _vendorTokenMap["40752"] = "Emblem of Heroism";
+            _vendorTokenMap["40753"] = "Emblem of Valor";
+            _vendorTokenMap["45624"] = "Emblem of Conquest";
+        }
+
         public static Item GetItem(int id) { return GetItem("www", id.ToString(), true); }
         public static Item GetItem(int id, bool filter) { return GetItem("www", id.ToString(), filter); }
         public static Item GetItem(int id, bool filter, string locale) { return GetItem(locale, id.ToString(), filter); }
@@ -213,9 +240,25 @@ namespace Rawr
 				}
 			}
 			if (item.Slot == Item.ItemSlot.None) return null;
-			if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
-			if (!string.IsNullOrEmpty(sourcemore))
-			{
+			//if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
+            if (!string.IsNullOrEmpty(source) && !string.IsNullOrEmpty(sourcemore))
+            {
+                string[] sourceKeys = source.Split(',');
+                sourcemore.Trim('{', '}');
+                string[] sourcemoreKeys = sourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+                // most mobs that have a vendor bought alternative will give more information through the vendor than the mob
+                // this is specially case for vault of archavon drops
+                source = sourceKeys[0];
+                sourcemore = sourcemoreKeys[0];
+
+                int vendorIndex = Array.IndexOf(sourceKeys, "5");
+                if (vendorIndex >= 0)
+                {
+                    source = sourceKeys[vendorIndex];
+                    sourcemore = sourcemoreKeys[vendorIndex];
+                }
+
 				string n = string.Empty;
 				if (sourcemore.Contains("n:'"))
 				{
@@ -229,17 +272,223 @@ namespace Rawr
 					n = n.Replace("\\'", "'");
 				}
 
-				foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
-				{
-					if (!string.IsNullOrEmpty(keyval))
-					{
-						string[] keyvalsplit = keyval.Split(':');
-						string key = keyvalsplit[0];
-						string val = keyvalsplit[1];
-						ProcessKeyValue(item, key, val);
-					}
-				}
-				if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);            
+                if (source == "5")
+                {
+                    // if we only have vendor information then we will want to download the normal html page and scrape the currency information
+                    // and in case it is a token link it to the boss/zone where the token drops
+
+                    string tokenId = null;
+                    int tokenCount = 1;
+                    int cost = 0;
+                    try
+                    {
+                        XmlDocument rawHtmlDoc = wrw.DownloadItemHtmlWowhead(query);
+                        if (rawHtmlDoc != null)
+                        {
+                            int startpos = rawHtmlDoc.InnerXml.IndexOf("new Listview({template: 'npc', id: 'sold-by'");
+                            if (startpos > 1)
+                            {
+                                int endpos = rawHtmlDoc.InnerXml.IndexOf(";", startpos);
+                                string text = rawHtmlDoc.InnerXml.Substring(startpos, endpos - startpos);
+                                // we are looking for something like cost:[0,0,0,[[40633,1]]]
+
+                                int costIndex = text.IndexOf("cost:[");
+                                if (costIndex >= 0)
+                                {
+                                    // get the cost
+                                    cost = int.Parse(text.Substring(costIndex + 6, text.IndexOfAny(new char[] {',', ']'}, costIndex) - costIndex - 6));
+                                    // get the token and count out
+                                    int tokenIndex = text.IndexOf("[[", costIndex);
+                                    if (tokenIndex >= 0)
+                                    {
+                                        int tokenEnd = text.IndexOf("]]", tokenIndex);
+                                        string[] token = text.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
+                                        tokenId = token[0];
+                                        tokenCount = int.Parse(token[1]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                    string tokenName;
+                    if (tokenId != null && _pvpTokenMap.TryGetValue(tokenId, out tokenName))
+                    {
+                        ItemLocation locInfo = new PvpItem()
+                        {
+                            TokenCount = tokenCount,
+                            TokenType = tokenName
+                        };
+                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                    }
+                    else if (tokenId != null && _vendorTokenMap.TryGetValue(tokenId, out tokenName))
+                    {
+                        VendorItem locInfo = new VendorItem()
+                        {
+                            Cost = cost,
+                            Count = tokenCount,
+                            Token = tokenName
+                        };
+                        if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                        foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                        {
+                            if (!string.IsNullOrEmpty(keyval))
+                            {
+                                string[] keyvalsplit = keyval.Split(':');
+                                string key = keyvalsplit[0];
+                                string val = keyvalsplit[1];
+                                switch (key)
+                                {
+                                    case "z":       // Zone
+                                        locInfo.VendorArea = GetZoneName(val);
+                                        break;
+                                }
+                            }
+                        }
+                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                    }
+                    else if (tokenId != null)
+                    {
+                        // ok now let's see what info we can get about this token
+                        string boss = null;
+                        string area = null;
+                        bool heroic = false;
+                        if (!_tokenDropMap.ContainsKey(tokenId))
+                        {
+                            XmlDocument docToken = wrw.DownloadItemWowhead(site, tokenId);
+
+                            tokenName = docItem.SelectSingleNode("wowhead/item/name").InnerText;
+
+                            string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
+
+                            string tokenSource = string.Empty;
+                            if (tokenJson.Contains("source:["))
+                            {
+                                tokenSource = tokenJson.Substring(tokenJson.IndexOf("source:[") + "source:[".Length);
+                                tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
+                            }
+
+                            string tokenSourcemore = string.Empty;
+                            if (tokenJson.Contains("sourcemore:[{"))
+                            {
+                                tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
+                                tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
+                            }
+                            if (tokenSource.Contains("2"))
+                            {
+                                foreach (string kv in tokenSourcemore.Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(kv))
+                                    {
+                                        string[] keyvalsplit = kv.Split(':');
+                                        string key = keyvalsplit[0];
+                                        string val = keyvalsplit[1];
+                                        switch (key)
+                                        {
+                                            case "n":       // NPC 'Name'
+                                                boss = val.Replace("\\'", "'").Trim('\'');
+                                                break;
+                                            case "z":       // Zone
+                                                area = GetZoneName(val);
+                                                break;
+                                            case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+                                                heroic = val == "2";
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            _tokenDropMap[tokenId] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenName };
+                        }
+                        else
+                        {
+                            TokenDropInfo info = _tokenDropMap[tokenId];
+                            boss = info.Boss;
+                            area = info.Area;
+                            heroic = info.Heroic;
+                            tokenName = info.Name;
+                        }
+                        if (area != null)
+                        {
+                            ItemLocation locInfo = new StaticDrop()
+                            {
+                                Area = area,
+                                Boss = boss,
+                                Heroic = heroic
+                            };
+                            LocationFactory.Add(item.Id.ToString(), locInfo);
+                        }
+                        else
+                        {
+                            // this is not a drop token, so treat it as a normal vendor item and include token info
+                            VendorItem locInfo = new VendorItem()
+                            {
+                                Cost = cost,
+                                Count = tokenCount,
+                                Token = tokenName
+                            };
+                            if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                            foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                            {
+                                if (!string.IsNullOrEmpty(keyval))
+                                {
+                                    string[] keyvalsplit = keyval.Split(':');
+                                    string key = keyvalsplit[0];
+                                    string val = keyvalsplit[1];
+                                    switch (key)
+                                    {
+                                        case "z":       // Zone
+                                            locInfo.VendorArea = GetZoneName(val);
+                                            break;
+                                    }
+                                }
+                            }
+                            LocationFactory.Add(item.Id.ToString(), locInfo);
+                        }
+                    }
+                    else
+                    {
+                        // if there is no token then this is a normal vendor item
+                        VendorItem locInfo = new VendorItem()
+                        {
+                            Cost = cost,
+                        };
+                        if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                        foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                        {
+                            if (!string.IsNullOrEmpty(keyval))
+                            {
+                                string[] keyvalsplit = keyval.Split(':');
+                                string key = keyvalsplit[0];
+                                string val = keyvalsplit[1];
+                                switch (key)
+                                {
+                                    case "z":       // Zone
+                                        locInfo.VendorArea = GetZoneName(val);
+                                        break;
+                                }
+                            }
+                        }
+                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                    }
+                }
+                else
+                {
+                    foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                    {
+                        if (!string.IsNullOrEmpty(keyval))
+                        {
+                            string[] keyvalsplit = keyval.Split(':');
+                            string key = keyvalsplit[0];
+                            string val = keyvalsplit[1];
+                            ProcessKeyValue(item, key, val);
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
+                }
             }
 
             if (item.Slot == Item.ItemSlot.Meta)
@@ -781,6 +1030,7 @@ namespace Rawr
                 case "2562": return "Karazhan";
                 case "3842": return "The Eye";
                 case "3805": return "Zul'Aman";
+                case "4273": return "Ulduar";
 				default: return "Unknown - " + zoneId;
 			}
 		}

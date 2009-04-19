@@ -437,7 +437,14 @@ namespace Rawr
                 string points = string.Format("Purchasable for {0} {1} Points", Points, PointType);
                 if (TokenCount > 0)
                 {
-                    return string.Format("{0} and {1} [{2}]", points, TokenCount, TokenType);
+                    if (Points > 0)
+                    {
+                        return string.Format("{0} and {1} [{2}]", points, TokenCount, TokenType);
+                    }
+                    else
+                    {
+                        return string.Format("Purchasable for {1} [{2}]", points, TokenCount, TokenType);
+                    }
                 }
                 return points;
             }
