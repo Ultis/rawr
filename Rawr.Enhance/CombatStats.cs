@@ -41,6 +41,7 @@ namespace Rawr.Enhance
 
         private float flurryUptime = 1f;
         private float edUptime = 0f;
+        private float edBonusCrit = 0f;
         private float urUptime = 0f;
 
         private float meleeAttacksPerSec = 0f;
@@ -92,6 +93,7 @@ namespace Rawr.Enhance
 
         public float URUptime { get { return urUptime; } }
         public float EDUptime { get { return edUptime; } }
+        public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
       
         public float DamageReduction {
@@ -213,6 +215,9 @@ namespace Rawr.Enhance
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (_character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
 
             // set output variables
+            edBonusCrit = edUptime * edCritBonus;
+            chanceWhiteCrit += edBonusCrit;
+            chanceYellowCrit += edBonusCrit;
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
             meleeCritsPerSec = meleeAttacksPerSec * chanceWhiteCrit;
             spellAttacksPerSec = 1 / secondsToFiveStack + 1 / shockSpeed;

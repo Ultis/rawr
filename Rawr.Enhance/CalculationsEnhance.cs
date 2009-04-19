@@ -498,12 +498,13 @@ namespace Rawr
             calculatedStats.YellowHit = (float)Math.Floor(cs.ChanceYellowHit * 10000f) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor(cs.ChanceSpellHit * 10000f) / 100f;
             calculatedStats.WhiteHit = (float)Math.Floor(cs.ChanceWhiteHit * 10000f) / 100f; 
-            calculatedStats.MeleeCrit = (float)Math.Floor(cs.ChanceWhiteCrit * 10000f) / 100f;
-            calculatedStats.YellowCrit = (float)Math.Floor(cs.ChanceYellowCrit * 10000f) / 100f;
+            calculatedStats.MeleeCrit = (float)Math.Floor((cs.ChanceWhiteCrit - cs.EDBonusCrit) * 10000f) / 100f;
+            calculatedStats.YellowCrit = (float)Math.Floor((cs.ChanceYellowCrit - cs.EDBonusCrit) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor(cs.ChanceSpellCrit * 10000f) / 100f;
 			calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
+            calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;
             calculatedStats.EDUptime = cs.EDUptime * 100f;
             calculatedStats.URUptime = cs.URUptime  * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
@@ -1062,6 +1063,13 @@ namespace Rawr
             set { _edUptime = value; }
         }
 
+        private float _edBonusCrit;
+        public float EDBonusCrit
+        {
+            get { return _edBonusCrit; }
+            set { _edBonusCrit = value; }
+        }
+
         private float _flurryUptime;
         public float FlurryUptime
         {
@@ -1222,7 +1230,9 @@ namespace Rawr
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%");
             					
             dictValues.Add("UR Uptime", URUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("ED Uptime", EDUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("ED Uptime", String.Format("{0}%*{1}% ED Bonus Crit",
+                EDUptime.ToString("F2", CultureInfo.InvariantCulture),
+                EDBonusCrit.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Flurry Uptime", FlurryUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Avg Time to 5 Stack", SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture) + " sec");
 
