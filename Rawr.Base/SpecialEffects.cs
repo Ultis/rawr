@@ -190,7 +190,13 @@ namespace Rawr
 			{
 				//stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
 			}
-			else if (line.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
+            else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 522 for 10 sec."))
+            {
+                // special case because of wrong description
+                // Elemental Focus Stone
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { HasteRating = 522 }, 10f, 45f, 0.1f));
+            }
+            else if (line.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
 			{ //Shattered Sun Pendant of Might
 				stats.ShatteredSunMightProc += 1f;
 			}
