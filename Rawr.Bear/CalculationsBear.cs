@@ -827,7 +827,7 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.Stamina *= (1f + statsTotal.BonusStaminaMultiplier);
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
 			statsTotal.Strength *= (1f + statsTotal.BonusStrengthMultiplier);
-			statsTotal.Agility += statsTotal.HighestStat;
+			//statsTotal.Agility += statsTotal.HighestStat;
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
@@ -894,7 +894,8 @@ the Threat Scale defined on the Options tab.",
 						break;
 				}
 			}
-            
+
+			statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
 			return statsTotal;
 		}
 

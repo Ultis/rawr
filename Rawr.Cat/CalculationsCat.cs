@@ -691,7 +691,7 @@ namespace Rawr.Cat
 
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
-			statsTotal.Agility += statsTotal.HighestStat;
+			//statsTotal.Agility += statsTotal.HighestStat;
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
@@ -761,6 +761,7 @@ namespace Rawr.Cat
 			//    }
 			//}
 
+			statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
 			return statsTotal;
 		}
 
