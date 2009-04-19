@@ -121,21 +121,9 @@ namespace Rawr.HolyPriest
 
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
-//            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
-//                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
-            // improved holy concentration removed in patch 3.1
-            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f)
-                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
-            float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
-            float ihchaste = 0f; // character.PriestTalents.ImprovedHolyConcentration * 0.1f; // improved holy concentration removed in patch 3.1
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
-            float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
-            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
-
-            // Test of Faith gives 2-6% extra crit on targets below 50%.
-            // this is no longer true in patch 3.1
-            //simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
+            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.045f) * (1 + simstats.HealingReceivedMultiplier);
 
             // Add on Renewed Hope crit for Disc Maintank Rotation.
             if (Rotation == 7)
@@ -154,14 +142,6 @@ namespace Rawr.HolyPriest
             // Surge of Light Flash Heal (cannot crit, is free)
             FlashHeal fh_sol = new FlashHeal(simstats, character);
             fh_sol.SurgeOfLight();
-
-            // Improved Holy Concentration Haste
-            simstats.SpellHaste += ihchaste;
-            Heal gh_hc = new Heal(simstats, character);
-            FlashHeal fh_hc = new FlashHeal(simstats, character);
-            FlashHeal fh_hc_sol = new FlashHeal(simstats, character);
-            fh_hc_sol.SurgeOfLight();
-            simstats.SpellHaste -= ihchaste;
 
             // Borrowed Time Haste
             simstats.SpellHaste += character.PriestTalents.BorrowedTime * 0.05f;
@@ -257,34 +237,36 @@ namespace Rawr.HolyPriest
             foreach (Spell s in sr)
                 ActionList += "\r\n- " + s.Name;
 
-            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, metareductiontot = 0;
+            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, holyconccast = 0, holyconccrit = 0, pwscasts = 0, metareductiontot = 0;
             for (int x = 0; x < sr.Count; x++)
             {
                 float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
                 if (sr[x] == gh || sr[x] == gh_bt)
                 {   // Greater Heal (A Borrowed Time GHeal cannot also be improved Holy conc hasted, so this works)
-                    clen = sr[x].CastTime * (1f - ihcastshasted) + gh_hc.CastTime * ihcastshasted;
+                    clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
                     absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
-                    solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
+                    solctr = 1f - (1f - solctr) * (1f - solchance);
                     mcost = sr[x].ManaCost;
-                    mcost -= mcost * hcchance;
                     mcost -= simstats.ManaGainOnGreaterHealOverheal * calculationOptions.Serendipity / 100f;
                     castctr++;
                     crittable += sr[x].CritChance;
+                    holyconccast++;
+                    holyconccrit += sr[x].CritChance;
                 }
                 else if (sr[x] == fh || sr[x] == fh_bt)
                 {   // Flash Heal (Same applies to FH as GHeal with regards to borrowed time)
-                    clen = sr[x].CastTime * (1f - hcchance) + fh_hc.CastTime * hcchance;
+                    clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
                     absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
-                    solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
+                    solctr = 1f - (1f - solctr) * (1f - solchance);
                     mcost = sr[x].ManaCost;
-                    mcost -= mcost * hcchance;
                     mcost -= mcost * solctr;
                     solctr = 0;
                     castctr++;
                     crittable += sr[x].CritChance;
+                    holyconccast++;
+                    holyconccrit += sr[x].CritChance;
                 }
                 else if (sr[x] == penance || sr[x] == penance_bt)
                 {
@@ -310,6 +292,11 @@ namespace Rawr.HolyPriest
                     heal = renew.AvgTotHeal * healmultiplier;
                     mcost = renew.ManaCost;
                     castctr++;
+                    if (character.PriestTalents.ImprovedRenew > 0)
+                    {
+                        holyconccast++;
+                        holyconccrit += renew.CritChance;
+                    }
                 }
                 else if (sr[x] == pws)
                 {
@@ -317,6 +304,7 @@ namespace Rawr.HolyPriest
                     absorb = pws.AvgTotHeal;
                     mcost = pws.ManaCost;
                     castctr++;
+                    pwscasts++;
                 }
                 else if (sr[x] == prom_1 || sr[x] == prom_max)
                 {
@@ -337,7 +325,6 @@ namespace Rawr.HolyPriest
             float avgcritcast = crittable / sr.Count;
 
             float periodicRegenOutFSR = StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
-
             // Add up all mana gains.
             float regen = 0, tmpregen = 0;
 
@@ -353,6 +340,33 @@ namespace Rawr.HolyPriest
             {
                 ManaSources.Add(new ManaSource("Meditation", tmpregen));
                 regen += tmpregen;
+            }
+            if (character.PriestTalents.HolyConcentration > 0)
+            {
+                float hceffect = character.PriestTalents.HolyConcentration * 0.5f / 3f;
+                float hccastinterval = cyclelen / holyconccast;
+                float hccritchance = holyconccrit / holyconccast;
+                // Calculate chance that you crit within 8 seconds.
+                float hcuptime = 1f - (float)Math.Pow(1f - hccritchance, 8f / hccastinterval);
+                tmpregen = (periodicRegenOutFSR * (1f - calculationOptions.FSRRatio / 100f)
+                    + periodicRegenOutFSR * simstats.SpellCombatManaRegeneration * calculationOptions.FSRRatio / 100f)
+                    * hcuptime * hceffect;
+                if (tmpregen > 0)
+                {
+                    ManaSources.Add(new ManaSource("Holy Concentration", tmpregen));
+                    regen += tmpregen;
+                }
+            }
+            if (character.PriestTalents.Rapture > 0 && pwscasts > 0)
+            {   // New Rapture restores 1.5% - 2% - 2.5% of max mana every 12 seconds at best.
+                float rapturereturn = 0.015f + (character.PriestTalents.Rapture - 1) * 0.005f;
+                float maxrapture = simstats.Mana * rapturereturn / 12f;
+                tmpregen = maxrapture * calculationOptions.Rapture / 100f;
+                if (tmpregen > 0)
+                {
+                    ManaSources.Add(new ManaSource("Rapture", tmpregen));
+                    regen += tmpregen;
+                }
             }
             tmpregen = simstats.Mp5 / 5;
             ManaSources.Add(new ManaSource("MP5", tmpregen));
@@ -477,9 +491,10 @@ namespace Rawr.HolyPriest
                 regen += tmpregen;
             }
             if (mp1use > regen)
-            {
-                tmpregen = (simstats.Mana * 0.08f)
-                    / (5f * 60f);
+            {   // Hymn of Hope increases max mana by 20% and restores 3% of total mana for 4 ticks, 5 if glyphed.
+                float ticks = character.PriestTalents.GlyphofHymnofHope ? 5 : 4;
+                tmpregen = (simstats.Mana * 1.2f * 0.03f * ticks)
+                    / (6f * 60f);
                 ManaSources.Add(new ManaSource("Hymn of Hope", tmpregen));
                 ActionList += string.Format("\r\n- Used Hymn of Hope");
                 regen += tmpregen;
@@ -541,20 +556,8 @@ namespace Rawr.HolyPriest
 
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
-//            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
-//                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
-            // improved holy concentration removed in patch 3.1
-            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f)
-                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
-            float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
-//            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f; // improved holy concentration removed in patch 3.1
-            float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
-            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
+            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.045f) * (1 + simstats.HealingReceivedMultiplier);
             float divineaegis = character.PriestTalents.DivineAegis * 0.1f;
-
-            // Test of Faith gives 2-6% extra crit on targets below 50%.
-            // no longer true in patch 3.1
-            //simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
 
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float solbhchance = 1f - (float)Math.Pow(1f - solchance, 2);
@@ -574,6 +577,7 @@ namespace Rawr.HolyPriest
             float OtherHeal = 0f;
             float AbsorbHeal = 0f;
             float CritCounter = 0f;
+            float HCCritCounter = 0f;
 
             FlashHeal fh = new FlashHeal(simstats, character);
             BindingHeal bh = new BindingHeal(simstats, character);
@@ -587,6 +591,7 @@ namespace Rawr.HolyPriest
             CircleOfHealing coh = new CircleOfHealing(simstats, character, 1);
             CircleOfHealing coh_max = new CircleOfHealing(simstats, character);
             HolyNova hn = new HolyNova(simstats, character, 1);
+            DivineHymn dh = new DivineHymn(simstats, character);
             Dispel dispel = new Dispel(simstats, character);
             MassDispel md = new MassDispel(simstats, character);
 
@@ -614,6 +619,7 @@ namespace Rawr.HolyPriest
                 DirectHeal += fh.AvgTotHeal * healmultiplier * calculationOptions.FlashHealCast;
                 AbsorbHeal += fh.AvgCrit * fh.CritChance * healmultiplier * calculationOptions.FlashHealCast * divineaegis;
                 CritCounter += fh.CritChance * calculationOptions.FlashHealCast;
+                HCCritCounter += fh.CritChance * calculationOptions.FlashHealCast;
             }
 
             // Binding Heal
@@ -627,6 +633,7 @@ namespace Rawr.HolyPriest
                 OtherHeal += bh.AvgTotHeal * healmultiplier * calculationOptions.BindingHealCast;
                 AbsorbHeal += bh.AvgCrit * 2 * bh.CritChance * healmultiplier * calculationOptions.BindingHealCast * divineaegis;
                 CritCounter += bh.CritChance * 2 * calculationOptions.BindingHealCast;
+                HCCritCounter += bh.CritChance * 2 * calculationOptions.BindingHealCast;
             }
 
             // Greater Heal
@@ -641,6 +648,7 @@ namespace Rawr.HolyPriest
                 DirectHeal += gh.AvgTotHeal * healmultiplier * calculationOptions.GreaterHealCast;
                 AbsorbHeal += gh.AvgCrit * gh.CritChance * healmultiplier * calculationOptions.GreaterHealCast * divineaegis;
                 CritCounter += gh.CritChance * calculationOptions.GreaterHealCast;
+                HCCritCounter += gh.CritChance * calculationOptions.GreaterHealCast;
             }
 
             // Penance
@@ -665,6 +673,12 @@ namespace Rawr.HolyPriest
                 TimeUsed += renew.GlobalCooldown * calculationOptions.RenewCast;
                 BaseTimeUsed += 1.5f * calculationOptions.RenewCast;
                 OtherHeal += renew.AvgHeal / (renew.HotDuration * 3) * healmultiplier * calculationOptions.RenewTicks;
+                if (character.PriestTalents.EmpoweredRenew > 0)
+                {
+                    DirectHeal += (renew.AvgTotHeal - renew.AvgHeal) * healmultiplier;
+                    CritCounter += renew.CritChance * calculationOptions.RenewCast;
+                    HCCritCounter += renew.CritChance * calculationOptions.RenewCast;
+                }
             }
 
             // Prayer of Mending
@@ -731,6 +745,19 @@ namespace Rawr.HolyPriest
                 CritCounter += hn.CritChance * 5 * calculationOptions.HolyNovaCast;
             }
 
+            // Divine Hymn
+            if (calculationOptions.DivineHymnCast > 0)
+            {
+                TotalCasts += calculationOptions.DivineHymnCast;
+                ActionList += String.Format("\r\n- {0} Divine Hymn", calculationOptions.DivineHymnCast);
+                ManaUsed += dh.ManaCost * calculationOptions.DivineHymnCast;
+                TimeUsed += dh.CastTime * calculationOptions.DivineHymnCast;
+                BaseTimeUsed += dh.BaseCastTime * calculationOptions.DivineHymnCast;
+                DirectHeal += dh.AvgTotHeal * healmultiplier * calculationOptions.DivineHymnCast;
+                AbsorbHeal += dh.AvgCrit * 3 * dh.CritChance * healmultiplier * calculationOptions.DivineHymnCast * divineaegis;
+                CritCounter += dh.CritChance * 8/2*3 * calculationOptions.DivineHymnCast; // 12 total heals from Divine Hymn
+            }
+
             // Dispel
             if (calculationOptions.DispelCast > 0)
             {
@@ -750,6 +777,8 @@ namespace Rawr.HolyPriest
                 TimeUsed += md.CastTime * calculationOptions.MDCast;
                 BaseTimeUsed += md.BaseCastTime * calculationOptions.MDCast;
             }
+
+            ActionList += String.Format("\r\n- {0} Spells Cast", TotalCasts);
 
             if (TimeUsed > calculationOptions.FightLengthSeconds)
             {
@@ -779,6 +808,36 @@ namespace Rawr.HolyPriest
                     ManaSources.Add(new ManaSource("Meditation", tmpregen));
                     regen += tmpregen;
                 }
+                float holyconccast = calculationOptions.RenewCast + calculationOptions.FlashHealCast + calculationOptions.GreaterHealCast + calculationOptions.BindingHealCast * 2;
+                if (character.PriestTalents.HolyConcentration > 0 && holyconccast > 0)
+                {
+                    float hceffect = character.PriestTalents.HolyConcentration * 0.5f / 3f;
+                    float hccastinterval = calculationOptions.FightLengthSeconds / holyconccast;
+                    float hccritchance = HCCritCounter / holyconccast;
+                    // Calculate chance that you crit within 8 seconds.
+                    float hcuptime = 1f - (float)Math.Pow(1f - hccritchance, 8f / hccastinterval);
+                    tmpregen = (periodicRegenOutFSR * (1f - calculationOptions.FSRRatio / 100f) 
+                        + periodicRegenOutFSR * simstats.SpellCombatManaRegeneration * calculationOptions.FSRRatio / 100f)
+                        * hcuptime * hceffect;
+                    if (tmpregen > 0)
+                    {
+                        ManaSources.Add(new ManaSource("Holy Concentration", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+                if (character.PriestTalents.Rapture > 0 && calculationOptions.PWSCast > 0)
+                {   // New Rapture restores 1.5% - 2% - 2.5% of max mana.
+                    float rapturereturn = 0.015f + (character.PriestTalents.Rapture - 1) * 0.005f;
+                    float timebetweenshields = calculationOptions.FightLengthSeconds / calculationOptions.PWSCast;
+                    float maxrapture = simstats.Mana * rapturereturn / timebetweenshields;
+                    tmpregen = maxrapture * calculationOptions.Rapture / 100f;
+                    if (tmpregen > 0)
+                    {
+                        ManaSources.Add(new ManaSource("Rapture", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+
                 tmpregen = simstats.Mp5 / 5;
                 ManaSources.Add(new ManaSource("MP5", tmpregen));
                 regen += tmpregen;
@@ -856,9 +915,10 @@ namespace Rawr.HolyPriest
                     regen += tmpregen;
                 }
                 if (mp1use > regen)
-                {
-                    tmpregen = (simstats.Mana * 0.08f)
-                        / (5f * 60f);
+                {   // 20% increased mana, 3% restored for 4 ticks unless Glyphed. Then its 5.
+                    float ticks = character.PriestTalents.GlyphofHymnofHope ? 5 : 4;
+                    tmpregen = (simstats.Mana * 1.2f * 0.03f * ticks)
+                        / (6f * 60f);
                     ManaSources.Add(new ManaSource("Hymn of Hope", tmpregen));
                     ActionList += string.Format("\r\n- Used Hymn of Hope");
                     regen += tmpregen;

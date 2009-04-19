@@ -84,7 +84,7 @@ namespace Rawr.HolyPriest
             get
             {
                 if (IsHot)
-                    return AvgHeal / HotDuration;
+                    return AvgTotHeal / HotDuration;
 
                 return AvgTotHeal / CastTime;
             }
@@ -165,6 +165,8 @@ namespace Rawr.HolyPriest
 
     public class Renew : Spell
     {
+        public float InstantHealEffect = 0f;
+
         private static readonly List<SpellData> SpellRankTable = new List<SpellData> (){   
         /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef HotDuration    */
             new SpellData( 1,  8,   45,   45, 0),
@@ -183,6 +185,14 @@ namespace Rawr.HolyPriest
             new SpellData(14, 80, 1400, 1400, 0),
             };
 
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return AvgHeal + InstantHealEffect * (1f - CritChance) + InstantHealEffect * CritCoef * CritChance;
+            }
+        }
+
         public Renew(Stats stats, Character character)
             : base("Renew", stats, character, SpellRankTable, 17, 15f / 15f, 15f, Color.Green)
         {
@@ -191,33 +201,38 @@ namespace Rawr.HolyPriest
 
 		protected void Calculate(Stats stats, Character character)
         {
-            MinHeal = MaxHeal = (MinHeal +
-                stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
+            MinHeal = (MinHeal +
+                stats.SpellPower * (SP2HP * HealingCoef * (1 - RankCoef)
+                + character.PriestTalents.EmpoweredRenew * 0.05f))
                 * (1 + character.PriestTalents.ImprovedRenew * 0.05f) 
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
-            CritChance = 0.0f;
-            CritCoef = 1.0f;
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
-                * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
             if (stats.RenewDurationIncrease > 0)
             {
-                MinHeal = MaxHeal = MinHeal * (HotDuration + stats.RenewDurationIncrease) / HotDuration;
+                MinHeal = MinHeal * (HotDuration + stats.RenewDurationIncrease) / HotDuration;
                 HotDuration += stats.RenewDurationIncrease;
             }
             if (character.PriestTalents.GlyphofRenew)
                 HotDuration -= 3;
+
+            InstantHealEffect = character.PriestTalents.EmpoweredRenew * 0.05f * MinHeal;
+            MaxHeal = MinHeal;
+
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+                * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
             CastTime = 0;
         }
 
         public override string ToString()
         {
-            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nTick: {3}\r\nCost: {4}\r\n{5}",
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nTick: {3}\r\nInstant Heal: {4}\r\nCost: {5}\r\n{6}",
                           MinHeal.ToString("0"),
                           HpS.ToString("0.00"),
                           HpM.ToString("0.00"),
+                          InstantHealEffect.ToString("0"),
                           (MinHeal/HotDuration*3).ToString("0"),
                           ManaCost.ToString("0"),
                           Name);
@@ -248,21 +263,26 @@ namespace Rawr.HolyPriest
 
         protected void Calculate(Stats stats, Character character)
         {
+            CalculationOptionsPriest calcOpts = character.CalculationOptions as CalculationOptionsPriest;
+
             MinHeal = (MinHeal +
                 stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP
                 + character.PriestTalents.EmpoweredHealing * 0.04f))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             MaxHeal = (MaxHeal +
                 stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP
                 + character.PriestTalents.EmpoweredHealing * 0.04f))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
-            CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
+            CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f
+                + character.PriestTalents.ImprovedFlashHeal * 0.04f * calcOpts.TestOfFaith / 100f;
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.ImprovedFlashHeal * 0.05f - (character.PriestTalents.GlyphofFlashHeal ? 0.1f : 0.0f)));
         }
@@ -312,16 +332,18 @@ namespace Rawr.HolyPriest
         {
             MinHeal = (MinHeal +
                 stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP
-                + character.PriestTalents.EmpoweredHealing * 0.08f ))
+                + character.PriestTalents.EmpoweredHealing * 0.08f))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f) 
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
                 * (1 + stats.BonusGHHealingMultiplier);
 
             MaxHeal = (MaxHeal +
-                stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP 
+                stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP
                 + character.PriestTalents.EmpoweredHealing * 0.08f))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f) 
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
                 * (1 + stats.BonusGHHealingMultiplier);
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
@@ -398,12 +420,14 @@ namespace Rawr.HolyPriest
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
@@ -495,13 +519,15 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 
@@ -600,13 +626,15 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (character.PriestTalents.GlyphofHolyNova ? 1.4f : 1.0f );
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
+                * (character.PriestTalents.GlyphofHolyNova ? 1.4f : 1.0f);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
                 * (character.PriestTalents.GlyphofHolyNova ? 1.4f : 1.0f);
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
@@ -680,18 +708,20 @@ namespace Rawr.HolyPriest
         protected void Calculate(Stats stats, Character character)
         {
             MinHeal = (MinHeal +
-                stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP 
+                stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP
                 + character.PriestTalents.EmpoweredHealing * 0.04f))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             MaxHeal = (MaxHeal +
                 stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP 
                 + character.PriestTalents.EmpoweredHealing * 0.04f))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
 
@@ -767,13 +797,15 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
@@ -840,7 +872,8 @@ namespace Rawr.HolyPriest
             MinHeal = MaxHeal = (MinHeal * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
                 + stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef)
                 + stats.SpellPower * character.PriestTalents.BorrowedTime * 0.08f)
-                * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
+                * (1 + character.PriestTalents.TwinDisciplines * 0.01f
+                    + character.PriestTalents.SpiritualHealing * 0.02f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 
@@ -950,13 +983,16 @@ namespace Rawr.HolyPriest
                 stats.SpellPower * SP2HP * (1 - RankCoef) * HealingCoef)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * (1 - RankCoef) * HealingCoef)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
@@ -964,7 +1000,7 @@ namespace Rawr.HolyPriest
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
-            Cooldown = 8.0f - character.PriestTalents.Aspiration * 1.0f;
+            Cooldown = (10.0f - (character.PriestTalents.GlyphofPenance ? 2 : 0)) * (1f - character.PriestTalents.Aspiration * 0.1f);
         }
 
         public override string ToString()
@@ -1022,6 +1058,61 @@ namespace Rawr.HolyPriest
                           (MinHeal / HotDuration * 3).ToString("0"),
                           Name);
         }
+    }
+
+    public class DivineHymn : Spell
+    {
+        private static readonly List<SpellData> SpellRankTable = new List<SpellData>(){   
+            new SpellData(1, 80,  4320*4, 4774*4, 8f),
+        };
+
+        public DivineHymn(Stats stats, Character character)
+            : base("Divine Hymn", stats, character, SpellRankTable, 63, 8f / 3.5f, 8f, Color.White)
+        {
+            Calculate(stats, character);
+        }
+
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance) + AvgCrit * CritChance) * 3;
+            }
+        }
+
+        protected void Calculate(Stats stats, Character character)
+        {
+            MinHeal = (MinHeal +
+                stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
+                * (1 + character.PriestTalents.DivineProvidence * 0.02f)
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+            MaxHeal = (MaxHeal +
+                stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
+                * (1 + character.PriestTalents.DivineProvidence * 0.02f)
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+                * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
+
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
+            CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
+            Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nTick: {3}\r\nCost: {4}\r\n{5}",
+                          AvgTotHeal.ToString("0"),
+                          HpS.ToString("0.00"),
+                          HpM.ToString("0.00"),
+                          (AvgTotHeal / HotDuration * 2 / 3).ToString("0"),
+                          ManaCost.ToString("0"),
+                          Name);
+        }  
     }
 
     public class Dispel : Spell

@@ -37,7 +37,7 @@ namespace Rawr.HolyPriest
             numFightLength.Value = (int)calcOpts.FightLengthSeconds;
 
             trkSerendipity.Value = (int)calcOpts.Serendipity;
-            lblSerendipity.Text = trkSerendipity.Value + "% Heals give Serendipity.";
+            lblSerendipity.Text = trkSerendipity.Value + "% T5 2 Set Bonus.";
 
             trkRapture.Value = (int)calcOpts.Rapture;
             lblRapture.Text = trkRapture.Value + "% of max Rapture returns.";
@@ -49,7 +49,7 @@ namespace Rawr.HolyPriest
             lblShadowfiend.Text = trkShadowfiend.Value + "% effectiveness of Shadowfiend.";
 
             trkTestOfFaith.Value = (int)calcOpts.TestOfFaith;
-            lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith.";
+            lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith or Improved Flash Heal.";
 
             trkSurvivability.Value = (int)calcOpts.Survivability;
             lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
@@ -68,6 +68,7 @@ namespace Rawr.HolyPriest
             numPWSCast.Value = calcOpts.PWSCast;
             numCoHCast.Value = calcOpts.CoHCast;
             numHolyNovaCast.Value = calcOpts.HolyNovaCast;
+            numDivineHymnCast.Value = calcOpts.DivineHymnCast;
             numDispelCast.Value = calcOpts.DispelCast;
             numMDCast.Value = calcOpts.MDCast;
 
@@ -122,7 +123,7 @@ namespace Rawr.HolyPriest
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                lblSerendipity.Text = trkSerendipity.Value + "% Heals give Serendipity.";
+                lblSerendipity.Text = trkSerendipity.Value + "% T5 2 Set Bonus.";
                 calcOpts.Serendipity = trkSerendipity.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -188,7 +189,7 @@ namespace Rawr.HolyPriest
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith.";
+                lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith or Improved Flash Heal.";
                 calcOpts.TestOfFaith = trkTestOfFaith.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -333,6 +334,16 @@ namespace Rawr.HolyPriest
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void numDivineHymnCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.DivineHymnCast = (int)numDivineHymnCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
@@ -353,7 +364,7 @@ namespace Rawr.HolyPriest
         public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public int Rotation = 0;
         public float FSRRatio = 93f;
-        public float FightLengthSeconds = 300f;
+        public float FightLengthSeconds = 480f;
         public float Serendipity = 75f;
         public float Replenishment = 50f;
         public float Shadowfiend = 100f;
@@ -374,6 +385,7 @@ namespace Rawr.HolyPriest
         public int PWSCast = 0;
         public int CoHCast = 0;
         public int HolyNovaCast = 0;
+        public int DivineHymnCast = 0;
         public int DispelCast = 0;
         public int MDCast = 0;
 	}

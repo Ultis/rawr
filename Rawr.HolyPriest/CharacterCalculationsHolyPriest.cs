@@ -188,6 +188,8 @@ namespace Rawr.HolyPriest
                 dictValues.Add("Gift of the Naaru", new GiftOfTheNaaru(BasicStats, character).ToString());
             else
                 dictValues.Add("Gift of the Naaru", "-");
+            dictValues.Add("Divine Hymn", new DivineHymn(BasicStats, character).ToString());
+
 
             return dictValues;
         }

@@ -194,13 +194,14 @@ namespace Rawr.HolyPriest
                 _relevantGlyphs.Add("Glyph of Flash Heal");
                 _relevantGlyphs.Add("Glyph of Guardian Spirit");
                 _relevantGlyphs.Add("Glyph of Holy Nova");
+                _relevantGlyphs.Add("Glyph of Hymn of Hope");
+                _relevantGlyphs.Add("Glyph of Inner Fire");
                 _relevantGlyphs.Add("Glyph of Lightwell");
                 _relevantGlyphs.Add("Glyph of Mass Dispel");
                 _relevantGlyphs.Add("Glyph of Penance");
                 _relevantGlyphs.Add("Glyph of Power Word: Shield");
                 _relevantGlyphs.Add("Glyph of Prayer of Healing");
                 _relevantGlyphs.Add("Glyph of Renew");
-                _relevantGlyphs.Add("Glyph of Inner Fire");
                 _relevantGlyphs.Add("Glyph of Fading");
 
             }
@@ -274,7 +275,8 @@ namespace Rawr.HolyPriest
                     "Spells:Lightwell",
 				    "Spells:CoH",
                     "Spells:Penance",
-                    "Spells:Gift of the Naaru"
+                    "Spells:Gift of the Naaru",
+                    "Spells:Divine Hymn",
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -330,7 +332,7 @@ namespace Rawr.HolyPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "MP5 Sources", "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM", "Relative Stat Values" };
+                    _customChartNames = new string[] { "MP5 Sources", "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
                 return _customChartNames;
             }
         }
@@ -561,8 +563,8 @@ namespace Rawr.HolyPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + GetInnerFireSpellPowerBonus(character));
+            statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
+                + GetInnerFireSpellPowerBonus(character);
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += (statsTotal.Stamina - 20f) * 10f + 20f;

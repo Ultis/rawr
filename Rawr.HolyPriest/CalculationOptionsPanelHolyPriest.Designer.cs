@@ -41,17 +41,17 @@
             this.trkShadowfiend = new System.Windows.Forms.TrackBar();
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.trkTestOfFaith = new System.Windows.Forms.TrackBar();
-            this.cbModelProcs = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.lblSerendipity = new System.Windows.Forms.Label();
+            this.cbModelProcs = new System.Windows.Forms.CheckBox();
+            this.trkRapture = new System.Windows.Forms.TrackBar();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblShadowfiend = new System.Windows.Forms.Label();
             this.lblSurvivability = new System.Windows.Forms.Label();
-            this.trkRapture = new System.Windows.Forms.TrackBar();
             this.lblRapture = new System.Windows.Forms.Label();
             this.lblTestOfFaith = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -60,6 +60,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.numFightLength = new System.Windows.Forms.NumericUpDown();
             this.panelCustom = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.numDivineHymnCast = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
             this.numBindingHealCast = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
@@ -97,6 +99,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFightLength)).BeginInit();
             this.panelCustom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numDivineHymnCast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBindingHealCast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHolyNovaCast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMDCast)).BeginInit();
@@ -185,9 +188,7 @@
             this.trkSerendipity.Size = new System.Drawing.Size(262, 42);
             this.trkSerendipity.TabIndex = 30;
             this.trkSerendipity.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkSerendipity, "Tell Rawr how many % of your Greater Heals and Flash Heals overheal the target, g" +
-                    "iving you mana returns via Serendipity. Also controls how effective T5 2 Part bo" +
-                    "nus is.");
+            this.toolTip1.SetToolTip(this.trkSerendipity, "Tell Rawr how effective T5 2 Part bonus is.");
             this.trkSerendipity.Scroll += new System.EventHandler(this.trkSerendipity_Scroll);
             // 
             // trkReplenishment
@@ -232,21 +233,9 @@
             this.trkTestOfFaith.Size = new System.Drawing.Size(262, 42);
             this.trkTestOfFaith.TabIndex = 44;
             this.trkTestOfFaith.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkTestOfFaith, "Set this slider to the amount of Heals landing on players with less than 50% heal" +
-                    "th.");
+            this.toolTip1.SetToolTip(this.trkTestOfFaith, "Set this slider to the amount of Heals landing on players with less than or equal" +
+                    " to 50% health.");
             this.trkTestOfFaith.Scroll += new System.EventHandler(this.trkTestOfFaith_Scroll);
-            // 
-            // cbModelProcs
-            // 
-            this.cbModelProcs.AutoSize = true;
-            this.cbModelProcs.Location = new System.Drawing.Point(6, 98);
-            this.cbModelProcs.Name = "cbModelProcs";
-            this.cbModelProcs.Size = new System.Drawing.Size(177, 17);
-            this.cbModelProcs.TabIndex = 41;
-            this.cbModelProcs.Text = "Model items with Procs and Use";
-            this.toolTip1.SetToolTip(this.cbModelProcs, "Checking this will make Rawr model Trinkets and other items with Use and Procs");
-            this.cbModelProcs.UseVisualStyleBackColor = true;
-            this.cbModelProcs.CheckedChanged += new System.EventHandler(this.cbUseTrinkets_CheckedChanged);
             // 
             // label2
             // 
@@ -304,9 +293,34 @@
             this.lblSerendipity.AutoSize = true;
             this.lblSerendipity.Location = new System.Drawing.Point(3, 205);
             this.lblSerendipity.Name = "lblSerendipity";
-            this.lblSerendipity.Size = new System.Drawing.Size(70, 13);
+            this.lblSerendipity.Size = new System.Drawing.Size(92, 13);
             this.lblSerendipity.TabIndex = 31;
-            this.lblSerendipity.Text = "% Serendipity";
+            this.lblSerendipity.Text = "% T5 2 Set Bonus";
+            this.toolTip1.SetToolTip(this.lblSerendipity, "How many of your heals are landing on targets with less than or equal to 50% of t" +
+                    "heir maximum hitpoints?");
+            // 
+            // cbModelProcs
+            // 
+            this.cbModelProcs.AutoSize = true;
+            this.cbModelProcs.Location = new System.Drawing.Point(6, 388);
+            this.cbModelProcs.Name = "cbModelProcs";
+            this.cbModelProcs.Size = new System.Drawing.Size(177, 17);
+            this.cbModelProcs.TabIndex = 47;
+            this.cbModelProcs.Text = "Model items with Procs and Use";
+            this.toolTip1.SetToolTip(this.cbModelProcs, "Checking this will make Rawr model Trinkets and other items with Use and Procs");
+            this.cbModelProcs.UseVisualStyleBackColor = true;
+            // 
+            // trkRapture
+            // 
+            this.trkRapture.Location = new System.Drawing.Point(6, 340);
+            this.trkRapture.Maximum = 100;
+            this.trkRapture.Name = "trkRapture";
+            this.trkRapture.Size = new System.Drawing.Size(262, 42);
+            this.trkRapture.TabIndex = 39;
+            this.trkRapture.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkRapture, "Effectiveness of Rapture. 75% means you expect 75% of the shields to be entirely " +
+                    "consumed or dispelled.");
+            this.trkRapture.Scroll += new System.EventHandler(this.trkRapture_Scroll);
             // 
             // lblReplenishment
             // 
@@ -335,16 +349,6 @@
             this.lblSurvivability.TabIndex = 37;
             this.lblSurvivability.Text = "Survivability";
             // 
-            // trkRapture
-            // 
-            this.trkRapture.Location = new System.Drawing.Point(6, 334);
-            this.trkRapture.Maximum = 100;
-            this.trkRapture.Name = "trkRapture";
-            this.trkRapture.Size = new System.Drawing.Size(262, 42);
-            this.trkRapture.TabIndex = 39;
-            this.trkRapture.TickFrequency = 5;
-            this.trkRapture.Scroll += new System.EventHandler(this.trkRapture_Scroll);
-            // 
             // lblRapture
             // 
             this.lblRapture.AutoSize = true;
@@ -359,9 +363,9 @@
             this.lblTestOfFaith.AutoSize = true;
             this.lblTestOfFaith.Location = new System.Drawing.Point(3, 263);
             this.lblTestOfFaith.Name = "lblTestOfFaith";
-            this.lblTestOfFaith.Size = new System.Drawing.Size(139, 13);
+            this.lblTestOfFaith.Size = new System.Drawing.Size(189, 13);
             this.lblTestOfFaith.TabIndex = 43;
-            this.lblTestOfFaith.Text = "% of Heals use Test of Faith";
+            this.lblTestOfFaith.Text = "% Test of Faith or Improved Flash Heal";
             // 
             // label4
             // 
@@ -396,7 +400,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(279, 548);
+            this.tabControl1.Size = new System.Drawing.Size(279, 565);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tabControl1.TabIndex = 48;
             // 
@@ -406,7 +410,6 @@
             this.tabPage1.Controls.Add(this.numFightLength);
             this.tabPage1.Controls.Add(this.panelCustom);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.cbModelProcs);
             this.tabPage1.Controls.Add(this.lblFightLength);
             this.tabPage1.Controls.Add(this.cbRotation);
             this.tabPage1.Controls.Add(this.lblSurvivability);
@@ -414,7 +417,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(271, 522);
+            this.tabPage1.Size = new System.Drawing.Size(271, 539);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Role";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -444,6 +447,8 @@
             // 
             // panelCustom
             // 
+            this.panelCustom.Controls.Add(this.label14);
+            this.panelCustom.Controls.Add(this.numDivineHymnCast);
             this.panelCustom.Controls.Add(this.label19);
             this.panelCustom.Controls.Add(this.numBindingHealCast);
             this.panelCustom.Controls.Add(this.label18);
@@ -475,8 +480,30 @@
             this.panelCustom.Controls.Add(this.label3);
             this.panelCustom.Location = new System.Drawing.Point(0, 165);
             this.panelCustom.Name = "panelCustom";
-            this.panelCustom.Size = new System.Drawing.Size(271, 357);
+            this.panelCustom.Size = new System.Drawing.Size(271, 374);
             this.panelCustom.TabIndex = 42;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(3, 298);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.TabIndex = 51;
+            this.label14.Text = "Divine Hymn";
+            // 
+            // numDivineHymnCast
+            // 
+            this.numDivineHymnCast.Location = new System.Drawing.Point(81, 296);
+            this.numDivineHymnCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numDivineHymnCast.Name = "numDivineHymnCast";
+            this.numDivineHymnCast.Size = new System.Drawing.Size(78, 20);
+            this.numDivineHymnCast.TabIndex = 50;
+            this.numDivineHymnCast.ValueChanged += new System.EventHandler(this.numDivineHymnCast_ValueChanged);
             // 
             // label19
             // 
@@ -520,7 +547,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(3, 324);
+            this.label16.Location = new System.Drawing.Point(3, 351);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(64, 13);
             this.label16.TabIndex = 45;
@@ -529,7 +556,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(3, 298);
+            this.label15.Location = new System.Drawing.Point(3, 325);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(36, 13);
             this.label15.TabIndex = 44;
@@ -537,7 +564,7 @@
             // 
             // numMDCast
             // 
-            this.numMDCast.Location = new System.Drawing.Point(81, 322);
+            this.numMDCast.Location = new System.Drawing.Point(81, 349);
             this.numMDCast.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -550,7 +577,7 @@
             // 
             // numDispelCast
             // 
-            this.numDispelCast.Location = new System.Drawing.Point(81, 296);
+            this.numDispelCast.Location = new System.Drawing.Point(81, 323);
             this.numDispelCast.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -756,6 +783,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.cbModelProcs);
             this.tabPage2.Controls.Add(this.lblSerendipity);
             this.tabPage2.Controls.Add(this.lblRapture);
             this.tabPage2.Controls.Add(this.trkRapture);
@@ -773,9 +801,9 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(271, 522);
+            this.tabPage2.Size = new System.Drawing.Size(271, 539);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Mana";
+            this.tabPage2.Text = "Mana & Procs";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelHolyPriest
@@ -799,6 +827,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numFightLength)).EndInit();
             this.panelCustom.ResumeLayout(false);
             this.panelCustom.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numDivineHymnCast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBindingHealCast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHolyNovaCast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMDCast)).EndInit();
@@ -837,7 +866,6 @@
         private System.Windows.Forms.TrackBar trkSurvivability;
         private System.Windows.Forms.TrackBar trkRapture;
         private System.Windows.Forms.Label lblRapture;
-        private System.Windows.Forms.CheckBox cbModelProcs;
         private System.Windows.Forms.Label lblTestOfFaith;
         private System.Windows.Forms.TrackBar trkTestOfFaith;
         private System.Windows.Forms.Label label4;
@@ -877,5 +905,8 @@
         private System.Windows.Forms.NumericUpDown numHolyNovaCast;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.NumericUpDown numBindingHealCast;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown numDivineHymnCast;
+        private System.Windows.Forms.CheckBox cbModelProcs;
     }
 }
