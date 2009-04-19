@@ -29,7 +29,7 @@ namespace Rawr
             cmbLength.Value = (decimal) calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
-
+            chbMagmaSearing.Checked = calcOpts.Magma;
             chbBaseStatOption.Checked = calcOpts.BaseStatOption;
 
             labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");

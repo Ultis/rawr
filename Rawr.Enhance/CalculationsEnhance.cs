@@ -89,8 +89,8 @@ namespace Rawr
                     "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
                     "Attacks:White Damage",
                     "Attacks:Windfury Attack",
-                    "Attacks:Flametongue Attack",
                     "Attacks:Stormstrike",
+                    "Attacks:Flametongue Attack",
                     "Attacks:Lava Lash",
                     "Attacks:Searing/Magma Totem",
                     "Attacks:Earth Shock",
@@ -367,7 +367,6 @@ namespace Rawr
             float dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
             float dpsMelee = dpsMHMeleeTotal + (character.ShamanTalents.DualWield == 1 ? dpsOHMeleeTotal : 0f);
                               
-
             //2: Stormstrike DPS
             float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
             float damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
@@ -511,7 +510,7 @@ namespace Rawr
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
             calculatedStats.TotalExpertise = (float) Math.Floor(cs.ExpertiseBonus * 400f + 0.0001);
 
-            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.ChanceWhiteHit, cs.ChanceDodge, cs.GlancingRate, cs.ChanceWhiteCrit);
+            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.ChanceWhiteHit, cs.ChanceDodge, cs.GlancingRate, cs.ChanceMeleeCrit);
             calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
             calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
             calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);

@@ -14,6 +14,8 @@ namespace Rawr.Enhance
         private ShamanTalents _talents = new ShamanTalents();
 
         private float glancingRate = 0.24f;
+        private float whiteCritDepression = 0.048f;
+        private float yellowCritDepression = 0.018f;
         private float bloodlustHaste = 0f;
         private float chanceDodge = 0f;
         private float expertiseBonus = 0f;
@@ -25,7 +27,7 @@ namespace Rawr.Enhance
         private float chanceSpellCrit = 0f;
         private float chanceWhiteCrit = 0f;
         private float chanceMeleeHit = 0f;
-
+        
         private float unhastedMHSpeed = 0f;
         private float hastedMHSpeed = 0f;
         private float unhastedOHSpeed = 0f;
@@ -66,8 +68,8 @@ namespace Rawr.Enhance
         public float ChanceDodge { get { return chanceDodge; } }
         public float ExpertiseBonus { get { return expertiseBonus; } }
 
-        public float NormalHitModifier { get { return 1 - chanceWhiteCrit - glancingRate; } }
-        public float CritHitModifier { get { return chanceWhiteCrit * (2f + _stats.BonusCritMultiplier); } }
+        public float NormalHitModifier { get { return 1 - chanceWhiteCrit + whiteCritDepression - glancingRate; } }
+        public float CritHitModifier { get { return (chanceWhiteCrit - whiteCritDepression) * (2f + _stats.BonusCritMultiplier); } }
         public float GlancingHitModifier { get { return glancingRate * .35f; } }
 
         public float ChanceSpellHit { get { return 1 - chanceSpellMiss; } }
@@ -75,8 +77,9 @@ namespace Rawr.Enhance
         public float ChanceYellowHit { get { return 1 - chanceYellowMiss; } }
         public float ChanceSpellCrit { get { return chanceSpellCrit; } }
         public float ChanceWhiteCrit { get { return chanceWhiteCrit; } }
-        public float ChanceYellowCrit { get { return chanceYellowCrit; } }
+        public float ChanceYellowCrit { get { return chanceYellowCrit - yellowCritDepression; } }
         public float ChanceMeleeHit { get { return chanceMeleeHit; } }
+        public float ChanceMeleeCrit { get { return chanceWhiteCrit - whiteCritDepression; } }
 
         public float UnhastedMHSpeed { get { return unhastedMHSpeed; } }
         public float HastedMHSpeed { get { return hastedMHSpeed; } }
