@@ -480,7 +480,7 @@ namespace Rawr
                     {
                         cNextCharacter = stream.peekNextCharacter(true);
 
-                        if (cNextCharacter == 'e' || cNextCharacter == 'E' || cNextCharacter == '.' || cNextCharacter == ',' || cNextCharacter == '-')
+                        if (cNextCharacter == 'e' || cNextCharacter == 'E' || cNextCharacter == '.' || cNextCharacter == '-')
                         {
                             bIsInteger = false;
                         }
