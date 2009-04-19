@@ -689,13 +689,13 @@ namespace Rawr
 
                     // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
                     //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
-                    if (fightDuration <= Duration)
+                    if (triggerInterval > 0 && fightDuration <= Duration)
                     {
                         double n = fightDuration / triggerInterval;
                         double p = triggerChance * GetChance(attackSpeed);
                         return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
                     }
-                    else if (fightDuration <= Cooldown)
+                    else if (triggerInterval > 0 && fightDuration <= Cooldown)
                     {
                         double D = Duration / triggerInterval;
                         double n = fightDuration / triggerInterval - D;
