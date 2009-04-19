@@ -1421,6 +1421,11 @@ namespace Rawr
 			this.UpdateItemCacheWowhead();
 		}
 
+        void bw_ImportWowheadFilter(object sender, DoWorkEventArgs e)
+        {
+            this.ImportWowheadFilter((string)e.Argument);
+        }
+
         void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -1494,6 +1499,15 @@ namespace Rawr
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
             _character.InvalidateItemInstances();
+        }
+
+        public void ImportWowheadFilter(string filter)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus("ImportWowheadFilter", "Importing Items From Wowhead");
+            Wowhead.ImportItemsFromWowhead(filter);
+            ItemCache.OnItemsChanged();
+            StatusMessaging.UpdateStatusFinished("ImportWowheadFilter");
         }
 
 		public void GetArmoryUpgrades(Character currentCharacter)
@@ -2140,6 +2154,19 @@ namespace Rawr
         private void toolStripDropDownButtonSort_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void updateFromWowheadFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormEnterWowheadFilter filterForm = new FormEnterWowheadFilter();
+            if (filterForm.ShowDialog() == DialogResult.OK)
+            {
+                StartProcessing();
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(bw_ImportWowheadFilter);
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
+                bw.RunWorkerAsync(filterForm.WowheadFilter);
+            }
         }
     }
 }

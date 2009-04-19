@@ -1349,6 +1349,55 @@ namespace Rawr
             }
         }
 
+        public static void ImportItemsFromWowhead(string filter)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+
+            XmlDocument docUpgradeSearch = null;
+            try
+            {
+                string site = /*usePTR ? "ptr" :*/ "www";
+                StatusMessaging.UpdateStatus("ImportWowheadFilter", "Downloading Item List");
+                WebRequestWrapper wrw = new WebRequestWrapper();
+                docUpgradeSearch = wrw.DownloadUpgradesWowhead(site, filter);
+                if (docUpgradeSearch != null)
+                {
+                    // at this stage have an HTML doc that has upgrades in a <div class="listview-void"> block
+                    // need to get the itemID list out and then load them and add to cache
+                    int startpos = docUpgradeSearch.InnerXml.IndexOf("<div class=\"listview-void\">");
+                    if (startpos > 1)
+                    {
+                        int endpos = docUpgradeSearch.InnerXml.IndexOf("</div>", startpos);
+                        XmlDocument doc = new XmlDocument();
+                        doc.InnerXml = docUpgradeSearch.InnerXml.Substring(startpos, endpos - startpos + 6);
+                        XmlNodeList nodeList = doc.SelectNodes("//a/@href");
+
+                        for (int i = 0; i < nodeList.Count; i++)
+                        {
+                            StatusMessaging.UpdateStatus("ImportWowheadFilter", string.Format("Downloading definition {0} of {1} items", i, nodeList.Count));
+                            string id = nodeList[i].Value.Substring(7);
+                            if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
+                            {
+                                Item item = GetItem(site, id, true);
+                                if (item != null)
+                                {
+                                    ItemCache.AddItem(item, false);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    StatusMessaging.ReportError("ImportWowheadFilter", null, "No response returned from Wowhead");
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessaging.ReportError("ImportWowheadFilter", ex, "Error interpreting the data returned from Wowhead");
+            }
+        }
+
         private static void LoadUpgradesForSlot(Character character, Character.CharacterSlot slot, Dictionary<Item.ItemSlot, int> idealGems, bool usePTR)
         {
             XmlDocument docUpgradeSearch = null;

@@ -60,8 +60,7 @@ namespace Rawr.Rogue
         {
             get
             {
-				return 1f - ArmorCalculations.GetDamageReduction(80, _calcOpts.TargetArmor,
-				_stats.ArmorPenetration, _stats.ArmorPenetrationRating);
+				return 1f - StatConversion.GetArmorDamageReduction(80, _calcOpts.TargetArmor, 0, 0, _stats.ArmorPenetrationRating);
 
                 //var totalArmor = _calcOpts.TargetArmor - TotalArmorPenetration;
                 //return 1f - (totalArmor / ((467.5f * _calcOpts.TargetLevel) + totalArmor - 22167.5f));
