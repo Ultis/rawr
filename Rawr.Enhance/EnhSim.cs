@@ -42,7 +42,7 @@ namespace Rawr.Enhance
             sb.AppendLine("oh_speed                        " + OHSpeed.ToString());
             sb.AppendLine("mh_dps                          " + wdpsMH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
-            float chanceCrit = cs.ChanceWhiteCrit * 100f;
+            float chanceCrit = (cs.ChanceWhiteCrit - cs.EDBonusCrit) * 100f;
             sb.AppendLine("mh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             float hitBonus = StatConversion.GetHitFromRating(stats.HitRating) * 100f;
