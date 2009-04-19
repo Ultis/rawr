@@ -480,7 +480,7 @@ namespace Rawr
                     {
                         cNextCharacter = stream.peekNextCharacter(true);
 
-                        if (cNextCharacter == 'e' || cNextCharacter == 'E' || cNextCharacter == '.' || cNextCharacter == '-')
+                        if (cNextCharacter == 'e' || cNextCharacter == 'E' || cNextCharacter == '.' || cNextCharacter == ',' || cNextCharacter == '-')
                         {
                             bIsInteger = false;
                         }
@@ -500,7 +500,7 @@ namespace Rawr
                     }
                     else
                     {
-                        return new LuaDoubleToken(Double.Parse(sValue));
+                        return new LuaDoubleToken(Double.Parse(sValue, System.Globalization.CultureInfo.InvariantCulture));
                     }
                 }
             }
