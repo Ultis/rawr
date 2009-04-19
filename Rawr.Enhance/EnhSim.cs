@@ -25,7 +25,7 @@ namespace Rawr.Enhance
             Stats stats = calcs.BaseStats;
             CombatStats cs = new CombatStats(character, stats);
             
-            removeUseProcEffects(character, stats);
+            getSpecialsNames(character, stats);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("##########################################");
@@ -390,128 +390,15 @@ namespace Rawr.Enhance
             }
         }
 
-        private void removeUseProcEffects(Character character, Stats stats)
+        private void getSpecialsNames(Character character, Stats stats)
         {
-            // this routine needs to remove the effects of meta gems, enchants, trinkets and totems
-            // Rawr adds in average proc effects whereas EnhSim uses the raw data and the name of
-            // the meta gem, enchants, trinkets and totems
-            if (character.Trinket1 != null)
-            {
-                _trinket1name = character.Trinket1.Id.ToString();
-                adjustTrinketStats(character, character.Trinket1, stats);
-            } 
-            else
-                _trinket1name = "-";
-            if (character.Trinket2 != null)
-            {
-                _trinket2name = character.Trinket2.Id.ToString();
-                adjustTrinketStats(character, character.Trinket2, stats);
-            }
-            else
-                _trinket2name = "-";
+            // this routine now just gets the names of the meta gem, enchants, trinkets and totems
+            _trinket1name = character.Trinket1 == null ? "-" : character.Trinket1.Id.ToString();
+            _trinket2name = character.Trinket2 == null ? "-" : character.Trinket2.Id.ToString();
             _totemname = character.Ranged == null ? "-" : character.Ranged.Id.ToString();
             _mhEnchant = character.MainHandEnchant == null ? "-" : character.MainHandEnchant.Id.ToString();
             _ohEnchant = character.OffHandEnchant == null ? "-" : character.OffHandEnchant.Id.ToString();
-            _metagem = getMetaGemName(character, character.Head, stats);
-           
-            // having removed all the stuff added by on use/procs we need to take the ceiling values as 100+2.66 would have been floored to 102
-            // if we take 2.66 from 102 we get 101.33 which is too low.
-            stats.AttackPower = (float) Math.Ceiling(stats.AttackPower);
-            stats.SpellPower = (float) Math.Ceiling(stats.SpellPower);
-            stats.HasteRating = (float)Math.Ceiling(stats.HasteRating);
-            stats.CritRating = (float)Math.Ceiling(stats.CritRating);
-            stats.ArmorPenetrationRating = (float)Math.Ceiling(stats.ArmorPenetrationRating);
-        }
-
-        private String getMetaGemName(Character character, ItemInstance head, Stats stats)
-        {
-            if (head == null)
-                return "-";
-            return head.Gem1Id == 0 ? "-" : head.Gem1Id.ToString();
-        }
-
-        private void adjustTrinketStats(Character character, ItemInstance trinket, Stats stats)
-        {
-            float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
-            switch (trinket.Id)
-            {
-	            case 32505:
-                    stats.ArmorPenetrationRating -= 42f / 5f; // "madness_of_the_betrayer";
-                    break;
-	            case 28034:
-                    stats.AttackPower -= 300f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 300f / 6f; // "hourglass_of_the_unraveller";
-                    break;
-                case 30627:
-                    stats.AttackPower -= 340f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 340f / 6f; // "tsunami_talisman";
-                    break;
-                case 34472:
-                    stats.AttackPower -= 90f;
-                    stats.SpellPower -= spellpowerBonus * 90f; // "shard_of_contempt";  // checked
-                    break;
-                case 33831:
-                    stats.AttackPower -= 360f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 360f / 6f; // "berserkers_call";
-                    break;
-                case 29383:
-                    stats.AttackPower -= 278f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 278f / 6f; // "bloodlust_brooch";
-                    break;
-                case 28288:
-                    stats.HasteRating -= 260f / 12f; //  "abacus_of_violent_odds";
-                    break;
-                case 32658:
-                    stats.CritRating -= ((150f / 6f) / 25f) * 45.90598679f;
-                    stats.AttackPower -= (150f / 6f) * 1.03f;
-                    stats.SpellPower -= spellpowerBonus * (150f / 6f) * 1.03f; // "badge_of_tenacity";
-                    break;
-                case 35702:
-                    stats.AttackPower -= 320f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 320f / 6f; // "shadowsong_panther";
-                    break;
-                case 31856:
-                    stats.AttackPower -= 120; 
-                    stats.SpellPower -= spellpowerBonus * 120;
-                    stats.SpellPower -= 80; // "darkmoon_card_crusade";
-                    break;
-                case 39257:
-                    stats.AttackPower -= 670f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 670f / 6f; // "loathebs_shadow";
-                    break;
-                case 40432:
-                    stats.SpellPower -= 200; // "illustration_of_the_dragon_soul";
-                    break;
-                case 37723:
-                    stats.ArmorPenetrationRating -= 291; // "incisor_fragment";
-                    break;
-                case 37873:
-                    stats.SpellPower -= 346f / 6f; // "mark_of_the_war_prisoner";
-                    break;
-                case 37166:
-                    stats.AttackPower -= 670f / 6f;
-                    stats.SpellPower -= spellpowerBonus * 670f / 6f; // "sphere_of_red_dragons_blood";
-                    break;
-                case 36972:
-                    stats.HasteRating -= 256f / 6f; // "tome_of_arcane_phenomena";
-                    break;
-                case 40531:
-                    stats.HasteRating -= 491f / 6f; // "mark_of_norgannon";
-                    break;
-                case 44014:
-                    stats.AttackPower -= 54f;
-                    stats.SpellPower -= spellpowerBonus * 54f; // "fezziks_pocketwatch";
-                    break;
-                case 43836:
-                    stats.HasteRating -= 212f / 6f; // "thorny_rose_brooch";
-                    break;
-                case 38764:
-                    stats.HasteRating -= 208f / 6f; // "rune_of_finite_variation";
-                    break;
-                case 42395:
-                    stats.SpellPower -= 292f / 15f; // "twilight_serpent";
-                    break;
-            }
+            _metagem = character.Head == null ? "-" : (character.Head.Gem1Id == 0 ? "-" : character.Head.Gem1Id.ToString());
         }
 
         private String getSetBonuses(Character character)
