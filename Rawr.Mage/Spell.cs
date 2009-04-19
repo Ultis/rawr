@@ -813,7 +813,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return (float)Math.Floor((BaseCost * CostAmplifier - castingState.BaseStats.SpellsManaReduction) * CostModifier);
+                return (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
         }
 
@@ -821,7 +821,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return (float)Math.Floor((Math.Round(BaseCost * CostAmplifier) - castingState.BaseStats.SpellsManaReduction) * CostModifier);
+                return (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
             }
         }
 
@@ -970,11 +970,11 @@ namespace Rawr.Mage
             float cost;
             if (round)
             {
-                cost = (float)Math.Floor((Math.Round(BaseCost * CostAmplifier) - castingState.BaseStats.SpellsManaReduction) * CostModifier);
+                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
             }
             else
             {
-                cost = (float)Math.Floor((BaseCost * CostAmplifier - castingState.BaseStats.SpellsManaReduction) * CostModifier);
+                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
@@ -992,11 +992,11 @@ namespace Rawr.Mage
             float cost;
             if (round)
             {
-                cost = (float)Math.Floor((Math.Round(BaseCost * CostAmplifier) - castingState.BaseStats.SpellsManaReduction) * CostModifier);
+                cost = (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
             }
             else
             {
-                cost = (float)Math.Floor((BaseCost * CostAmplifier - castingState.BaseStats.SpellsManaReduction) * CostModifier);
+                cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
@@ -1157,6 +1157,7 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = calculations.CalculationOptions;
 
             Cooldown = BaseCooldown;
+            BaseCost -= (int)calculations.BaseStats.SpellsManaReduction;
 
             BaseDirectDamageModifier = 1.0f;
             BaseDotDamageModifier = 1.0f;
@@ -2174,7 +2175,7 @@ namespace Rawr.Mage
             cycle.CritProcs += weight * rawSpell.CritProcs;
             cycle.TargetProcs += weight * rawSpell.TargetProcs;
 
-            double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier) - calculations.BaseStats.SpellsManaReduction;
+            double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
 
