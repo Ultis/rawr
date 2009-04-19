@@ -240,12 +240,21 @@ namespace Rawr
             }
             else if (line.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec."))
                 stats.Strength += 32f; //LivingRoot = 32str
-            else if (line.StartsWith("Chance on critical hit to increase your attack power by "))
+/*            else if (line.StartsWith("Chance on critical hit to increase your attack power by "))
             {
                 line = line.Substring("Chance on critical hit to increase your attack power by ".Length);
                 if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = ((float)int.Parse(line))
                 stats.AttackPower += ((float)int.Parse(line)) / 6f;
+            }
+*/
+            else if ((match = Regex.Match(line, @"Chance on critical hit to increase your attack power by (?<attackPower>\d+) for (?<duration>\d+) secs.")).Success)
+            {
+                int ap = int.Parse(match.Groups["attackPower"].Value);
+                int duration = int.Parse(match.Groups["duration"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = ap }, duration, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { AttackPower = ap }, duration, 45f, .1f));
             }
             else if (line.StartsWith("Chance on melee critical strike to increase your attack power by 1000 for 10 secs.")
                 || line.StartsWith("Chance on melee and ranged critical strike to increase your attack power by 1000 for 10 secs."))
