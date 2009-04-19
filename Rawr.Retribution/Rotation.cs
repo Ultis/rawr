@@ -144,30 +144,30 @@ namespace Rawr.Retribution
 
         public override float GetMeleeAttacksPerSec()
         {
-            return Solution.CrusaderStrike / Solution.FightLength * cs.ChanceToLand()
-                + Solution.DivineStorm / Solution.FightLength * ds.ChanceToLand()
+            return Solution.CrusaderStrike / Solution.FightLength * cs.ChanceToLand() * cs.Targets()
+                + Solution.DivineStorm / Solution.FightLength * ds.ChanceToLand() * ds.Targets()
                 + white.ChanceToLand() / Combats.AttackSpeed;
         }
 
         public override float GetMeleeCritsPerSec()
         {
-            return Solution.CrusaderStrike * cs.ChanceToCrit() / Solution.FightLength
-                + Solution.DivineStorm * ds.ChanceToCrit() / Solution.FightLength
+            return Solution.CrusaderStrike * cs.ChanceToCrit() / Solution.FightLength * cs.Targets()
+                + Solution.DivineStorm * ds.ChanceToCrit() / Solution.FightLength * ds.Targets()
                 + 1f / Combats.AttackSpeed;
         }
 
         public override float GetPhysicalAttacksPerSec()
         {
             return GetMeleeAttacksPerSec()
-                + Solution.Judgement * judge.ChanceToLand() / Solution.FightLength
-                + Solution.HammerOfWrath* how.ChanceToLand() / Solution.FightLength;
+                + Solution.Judgement * judge.ChanceToLand() / Solution.FightLength * judge.Targets()
+                + Solution.HammerOfWrath * how.ChanceToLand() / Solution.FightLength * how.Targets();
         }
 
         public override float GetPhysicalCritsPerSec()
         {
             return GetMeleeAttacksPerSec()
-                + Solution.Judgement * judge.ChanceToCrit() / Solution.FightLength
-                + Solution.HammerOfWrath * how.ChanceToCrit() / Solution.FightLength;
+                + Solution.Judgement * judge.ChanceToCrit() / Solution.FightLength * judge.Targets()
+                + Solution.HammerOfWrath * how.ChanceToCrit() / Solution.FightLength * how.Targets();
         }
 
     }

@@ -402,7 +402,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.Targets = (int)nudTargets.Value;
+                calcOpts.Targets = (float)nudTargets.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -439,7 +439,7 @@ namespace Rawr.Retribution
         public float TimeUnder20 = .18f;
         public float Delay = .05f;
         public float Wait = .05f;
-        public int Targets = 1;
+        public float Targets = 1f;
 
         public int StackTrinketReset = 0;
 

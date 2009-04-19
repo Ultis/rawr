@@ -246,7 +246,7 @@ namespace Rawr.Retribution
 
         public override float Targets()
         {
-            return (float)Math.Min(Combats.CalcOpts.Targets, 3);
+            return (float)Math.Min(Combats.CalcOpts.Targets, 3f);
         }
 
     }
