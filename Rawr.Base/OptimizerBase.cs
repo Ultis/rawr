@@ -302,7 +302,7 @@ namespace Rawr.Optimizer
                 {
                     bestIndividual = BuildRandomIndividual();
                 }
-                this.bestValue = GetOptimizationValue(injectIndividual);
+                this.bestValue = GetOptimizationValue(bestIndividual);
 			}
 
 			noImprove = 0;

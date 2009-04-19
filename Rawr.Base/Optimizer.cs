@@ -945,6 +945,16 @@ namespace Rawr.Optimizer
                                 lockedSlot = Character.CharacterSlot.Trinket2;
                             }
                             __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
+                            if (lockedSlot == Character.CharacterSlot.MainHand && item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
+                            {
+                                // can't dual wield unique items, so make the other slot empty
+                                __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.OffHand, null);
+                            }
+                            if (lockedSlot == Character.CharacterSlot.OffHand && item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
+                            {
+                                // can't dual wield unique items, so make the other slot empty
+                                __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.MainHand, null);
+                            }
                             // instead of just putting in the first gemming on the list select the best one
                             float best = -10000000f;
                             CharacterCalculationsBase bestCalculations;
@@ -1053,6 +1063,16 @@ namespace Rawr.Optimizer
                         List<object> savedItems = slotItems[(int)lockedSlot];
                         slotItems[(int)lockedSlot] = lockedItems;
                         __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, upgrade);
+                        if (lockedSlot == Character.CharacterSlot.MainHand && item.Item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
+                        {
+                            // can't dual wield unique items, so make the other slot empty
+                            __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.OffHand, null);
+                        }
+                        if (lockedSlot == Character.CharacterSlot.OffHand && item.Item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
+                        {
+                            // can't dual wield unique items, so make the other slot empty
+                            __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.MainHand, null);
+                        }
                         float best;
                         CharacterCalculationsBase bestCalculations;
                         Character bestCharacter;
