@@ -28,6 +28,9 @@ namespace Rawr.ProtPaladin
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
 			armorBosses.Add(8800, ": Void Reaver");
+			armorBosses.Add(9729, ": Level 80 Warior Type Creature");
+			armorBosses.Add(10026, ": Level 81 Warior Type Creature");
+			armorBosses.Add(10331, ": Level 82 Warior Type Creature");
             armorBosses.Add(10643, ": Wrath Bosses in 3.1");
             armorBosses.Add(13100, ": Tier 7 Bosses in 3.08");
 		}
@@ -95,7 +98,7 @@ namespace Rawr.ProtPaladin
 			{
 				CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
 				// Attacker Stats
-                trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
+                trackBarTargetArmor.Value = trackBarTargetArmor.Value;
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
                 trackBarBossAttackValue.Value = 500 * (trackBarBossAttackValue.Value / 500);
                 labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();

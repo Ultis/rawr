@@ -318,8 +318,9 @@ namespace Rawr
             float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
             TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
             float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-            TargetArmor -= ArPCap * GetArmorPenetrationFromRating(ArmorPenetrationRating);
-
+            //TargetArmor -= ArPCap * GetArmorPenetrationFromRating(ArmorPenetrationRating); 
+            TargetArmor -= ArPCap * Math.Min(1f, GetArmorPenetrationFromRating(ArmorPenetrationRating));
+            
             return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
         }
 

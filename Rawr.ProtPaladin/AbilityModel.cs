@@ -315,7 +315,7 @@ namespace Rawr.ProtPaladin
             AttackTable = new AttackTable(character, stats, ability);
 
             Name                = Lookup.Name(Ability);
-            ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats);//TODO: Separate spells, no need to calculate armor, if it doesn't affect the ability anyways
+            ArmorReduction      = Lookup.EffectiveTargetArmorReduction(Character, Stats);//TODO: Separate spells, no need to calculate armor, if it doesn't affect the ability anyways
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
             DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character);
 

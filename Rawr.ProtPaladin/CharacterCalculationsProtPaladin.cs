@@ -42,7 +42,14 @@ namespace Rawr.ProtPaladin
             set { _subPoints[2] = value; }
         }
 
+        // Target Info
         public int TargetLevel { get; set; }
+        public int TargetArmor { get; set; }
+        public float EffectiveTargetArmor { get; set; }
+        public float TargetArmorDamageReduction { get; set; }
+        public float EffectiveTargetArmorDamageReduction { get; set; }
+
+        // Ranking Modes
         public int RankingMode { get; set; }
         public float ThreatScale { get; set; }
 
@@ -101,6 +108,10 @@ namespace Rawr.ProtPaladin
         public float PhysicalHaste { get; set; }
         public float SpellHaste { get; set; }
         public float ArmorPenetration { get; set; }
+        public float ArmorPenetrationFromRating { get; set; }
+        public float EffectiveArmorPenetration { get; set; }
+        public float EffectiveArmorPenetrationRating { get; set; }
+        public float ArmorPenetrationCap { get; set; }
         public float WeaponSpeed { get; set; }
         public float TotalDamagePerSecond { get; set; }
 
@@ -180,14 +191,31 @@ namespace Rawr.ProtPaladin
                                          BasicStats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + BasicStats.Expertise,
                                 BasicStats.ExpertiseRating, Expertise));
             dictValues.Add("Physical Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", PhysicalHaste, BasicStats.HasteRating));
-            dictValues.Add("Armor Penetration",
-                string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}",
-                                ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
+            dictValues.Add("Effective Target Armor", 
+                string.Format("{0}*Reduces the physical damage you deal by {1:0.00%}" + Environment.NewLine + Environment.NewLine +
+                              "Effective Armor depends on Armor ignore debuffs," + Environment.NewLine +
+                              "your Armor Penetration buffs and talents." + Environment.NewLine +
+                              "Damage Reduction depends on your Level.",
+                              (float)Math.Floor(EffectiveTargetArmor), EffectiveTargetArmorDamageReduction));
+            
+            dictValues.Add("Effective Armor Penetration",
+                string.Format("{0:0.00%}*Armor Penetration Rating {1} = {2:0.00%}." + Environment.NewLine + "" + Environment.NewLine +
+                              "Your Armor Penetration Cap is {3} Armor, this is" + Environment.NewLine + 
+                              "the highest amount your Arp Rating will ignore." + Environment.NewLine + 
+                              "Your Rating currently reduces Enemy Armor by {4}." + Environment.NewLine + "" + Environment.NewLine + 
+                              "Your Arp Rating is {5:0.00%} effective (GC)."+ Environment.NewLine +
+                              "Note that debuffs like Sunder reduce the Cap.",
+                              EffectiveArmorPenetration, BasicStats.ArmorPenetrationRating, ArmorPenetrationFromRating, 
+                              (float)Math.Floor(ArmorPenetrationCap), 
+                              (float)Math.Floor(ArmorPenetrationCap * ArmorPenetrationFromRating), 
+                              EffectiveArmorPenetrationRating));
+            
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
                                                  Crit, BasicStats.CritRating, TargetLevel));
             dictValues.Add("Spell Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
                                                        SpellCrit, BasicStats.CritRating, TargetLevel));
-            dictValues.Add("Weapon Damage", string.Format("{0:0.00}*As average damage per {1}" + Environment.NewLine + "Before Armor", BasicStats.WeaponDamage, Lookup.Name(Ability.None)));
+            dictValues.Add("Weapon Damage", string.Format("{0:0.00}*As average damage per {1}" + Environment.NewLine + "Before Armor", 
+                                                          BasicStats.WeaponDamage, Lookup.Name(Ability.None)));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine +
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));

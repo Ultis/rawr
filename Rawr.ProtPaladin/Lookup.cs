@@ -6,6 +6,31 @@ namespace Rawr.ProtPaladin
 {
     public static class Lookup
     {
+        
+        public static float GetEffectiveTargetArmor(int AttackerLevel, float TargetArmor,
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+        {
+            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
+            TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
+            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
+            float Amount = StatConversion.GetArmorPenetrationFromRating(ArmorPenetrationRating);
+            TargetArmor -= ArPCap * Math.Min(1.0f, Amount);
+
+            return TargetArmor;
+        }
+        
+        public static float GetArmorPenetrationCap(int AttackerLevel, float TargetArmor,
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+        {
+            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
+            TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
+            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
+            
+            //float ArPCapRating = 100.0f * ProtPaladin.ArPToArmorPenetration; // 1231.62 rating = 100%
+
+            return ArPCap;
+        }
+        
         public static float LevelModifier(Character character)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
@@ -15,10 +40,19 @@ namespace Rawr.ProtPaladin
         public static float TargetArmorReduction(Character character, Stats stats)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-			int targetArmor = calcOpts.TargetArmor;
-			float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
-			return damageReduction;
+            int targetArmor = calcOpts.TargetArmor;
+            float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
+            return damageReduction;
+        }
+
+        public static float EffectiveTargetArmorReduction(Character character, Stats stats)
+        {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            float targetArmor = GetEffectiveTargetArmor(character.Level, calcOpts.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            float damageReduction = StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, targetArmor, 0f, 0f, 0f); 
+            
+            return damageReduction;
         }
 
         public static float TargetCritChance(Character character, Stats stats)
@@ -301,10 +335,10 @@ namespace Rawr.ProtPaladin
             }
             // Non-Normalized Hits
             if (!normalized)
-                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f));// + stats.WeaponDamage;
+                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f));
             // Normalized Hits
             else
-                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * stats.AttackPower / 14.0f));// + stats.WeaponDamage;
+                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * stats.AttackPower / 14.0f));
 
             return weaponDamage;
         }
@@ -325,10 +359,10 @@ namespace Rawr.ProtPaladin
             // The character is a melee class, highEnd is element of [0.20, 0.99]
             float highEnd = Math.Max(0.20f, Math.Min(0.99f, 1.2f - (0.03f * (float)(calcOpts.TargetLevel - character.Level) * 5.0f)));
             
-            return (lowEnd + highEnd) / 2;
+            return (lowEnd + highEnd) / 2.0f;
         }
 
-        public static float ArmorReduction(Character character, Stats stats)
+        public static float ArmorReduction(Character character, Stats stats) // incoming damage
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * calcOpts.TargetLevel - 22167.5f))));
@@ -336,7 +370,8 @@ namespace Rawr.ProtPaladin
 
         public static float BlockReduction(Character character, Stats stats)
         {
-            if (stats.JudgementBlockValue > 0) return stats.BlockValue + 5f / 9f * stats.JudgementBlockValue;
+            PaladinTalents talents = character.PaladinTalents;
+            if (stats.JudgementBlockValue > 0) return stats.BlockValue + (5f / (10f - 1f * talents.ImprovedJudgements)) * stats.JudgementBlockValue;
             else return stats.BlockValue;
         }
 

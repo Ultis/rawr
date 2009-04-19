@@ -147,7 +147,8 @@ namespace Rawr.ProtPaladin
                     "Offensive Stats:Hit",
                     "Offensive Stats:Spell Hit",
                     "Offensive Stats:Physical Haste",
-                    "Offensive Stats:Armor Penetration",
+                    "Offensive Stats:Effective Target Armor",
+                    "Offensive Stats:Effective Armor Penetration",
                     "Offensive Stats:Crit",
                     "Offensive Stats:Spell Crit",
                     "Offensive Stats:Expertise",
@@ -308,10 +309,19 @@ focus on Survival Points.",
             AttackModel am = new AttackModel(character, stats, amm);
 
             calculatedStats.BasicStats = stats;
+
+            // Target Info
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
+            calculatedStats.TargetArmor = calcOpts.TargetArmor;
+            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats);
+            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character ,stats);
+            calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calcOpts.TargetLevel, calcOpts.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
 
+            // Defensive stats
             calculatedStats.Miss = dm.DefendTable.Miss;
             calculatedStats.Dodge = dm.DefendTable.Dodge;
             calculatedStats.Parry = dm.DefendTable.Parry;
@@ -347,14 +357,23 @@ focus on Survival Points.",
             calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature);
             calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow);
 
+            // Offensive Stats
             calculatedStats.Hit = Lookup.HitChance(character, stats);
             calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats);
             calculatedStats.Crit = Lookup.CritChance(character, stats);
             calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats);
-            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);            
+            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
             calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(character, stats);
             calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(character, stats);
-            calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
+            calculatedStats.ArmorPenetration = 1.0f - (1.0f - stats.ArmorPenetration) * (1.0f - (float)Math.Min(1.0f, StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating)));
+            calculatedStats.ArmorPenetrationFromRating = (float)Math.Min(1.0f, Lookup.BonusArmorPenetrationPercentage(character, stats));
+            calculatedStats.EffectiveArmorPenetration = (calcOpts.TargetArmor == 0) ? 0.0f : 1.0f - calculatedStats.EffectiveTargetArmor / calculatedStats.TargetArmor;
+            if ((calculatedStats.ArmorPenetrationFromRating * calcOpts.TargetArmor) == 0.0f)
+                calculatedStats.EffectiveArmorPenetrationRating = 0.0f;
+            else
+                calculatedStats.EffectiveArmorPenetrationRating = (float)Math.Max(0.0f, 
+                    (calculatedStats.ArmorPenetrationFromRating * calculatedStats.ArmorPenetrationCap) / (calculatedStats.ArmorPenetrationFromRating * calcOpts.TargetArmor));
+            float test = calculatedStats.EffectiveTargetArmorDamageReduction / calculatedStats.TargetArmorDamageReduction;
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
@@ -365,6 +384,7 @@ focus on Survival Points.",
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
+            // Ranking Points
             //calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             //am.RageModelMode = RageModelMode.Limited;
             calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
@@ -1211,13 +1231,13 @@ focus on Survival Points.",
                 PhysicalCrit = stats.PhysicalCrit,
                 SpellCrit = stats.SpellCrit,
                 HitRating = stats.HitRating,
-                //SpellHitRating = stats.SpellHitRating,
                 PhysicalHit = stats.PhysicalHit,
                 SpellHit = stats.SpellHit,
                 HasteRating = stats.HasteRating,
                 PhysicalHaste = stats.PhysicalHaste,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
+                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1289,6 +1309,8 @@ focus on Survival Points.",
                 stats.BlockRating +
 
                 stats.BonusArmor +
+                stats.ArmorPenetrationRating +
+                stats.ArmorPenetration +
 
                 stats.JudgementBlockValue +
                 stats.ConsecrationSpellPower +
@@ -1329,6 +1351,7 @@ focus on Survival Points.",
                 stats.PhysicalHit +
                 stats.SpellHit +
                 stats.Miss +
+                stats.ArmorPenetration +
 
                 stats.BonusStrengthMultiplier +
                 stats.BonusAgilityMultiplier +
