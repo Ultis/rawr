@@ -318,16 +318,16 @@ namespace Rawr.Tree
             {
                 if (effect.Trigger == Trigger.Use)
                 {
-                  resultNew += effect.GetAverageStats(0.0f, 1.0f);   // 0 cooldown, 100% chance to use
+                  resultNew += effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration);   // 0 cooldown, 100% chance to use
                 }
                 else if (effect.Trigger == Trigger.SpellCast ||  effect.Trigger == Trigger.SpellHit
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
                 {
-                    resultNew += effect.GetAverageStats(1.0f/CastFraction);
+                    resultNew += effect.GetAverageStats(1.0f/CastFraction,1.0f,1.0f/CastFraction,FightDuration);
                 }
                 else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit )
                 {
-                    resultNew += effect.GetAverageStats(1.0f / CastFraction, 1.0f / CritsFraction);
+                    resultNew += effect.GetAverageStats(1.0f / CastFraction, 1.0f / CritsFraction, 1.0f / CastFraction, FightDuration);
                 }
                 else
                 {
@@ -350,6 +350,7 @@ namespace Rawr.Tree
                 SpellPower = result.SpellPower,
                 Mp5 = result.Mp5,
                 SpellCombatManaRegeneration = result.SpellCombatManaRegeneration,
+                BonusHealingReceived = result.BonusHealingReceived,
             };
         }
         
@@ -1031,7 +1032,8 @@ namespace Rawr.Tree
 
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
+            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore 
+                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -1067,7 +1069,7 @@ namespace Rawr.Tree
                 + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
-                stats.RejuvenationInstantTick
+                stats.RejuvenationInstantTick 
                 > 0)
                 return true;
 

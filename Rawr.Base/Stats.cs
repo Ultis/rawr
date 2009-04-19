@@ -170,7 +170,7 @@ namespace Rawr
         Strength,
         TerrorProc,
         TimbalsProc,
-        TrollDivinity,
+        BonusHealingReceived,
         UnseenMoonDamageBonus,
         WeaponDamage,
         WindfuryAPBonus,
@@ -2578,10 +2578,10 @@ namespace Rawr
         [DisplayName("Troll Divinity")]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float TrollDivinity
+        public float BonusHealingReceived
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.TrollDivinity]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TrollDivinity] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived] = value; }
         }
 
         [DisplayName("Mongoose Proc Average")]

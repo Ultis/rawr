@@ -1074,7 +1074,15 @@ namespace Rawr
             else if (line.StartsWith("For the next 20 sec, your direct heals increase healing received by their target by up to 58."))
             {
                 // Talisman of Troll Divinity
-                stats.TrollDivinity = 58 * 5;
+                // For 20 seconds, direct healing adds a stack of 58 +healing for 10 seconds
+                // Stacks 5 times, 2 minute cd
+                // Direct heals: Nourish (1.5) HT (3) Regrowth (2)
+                // Assumption: every 2 seconds, a direct healing spell is cast
+                // (1+2+3+4)+11*5 = 70 stacks over the total duration of 30 seconds
+                //  70 stacks/ 15 casts = 4.67 stacks
+                // But remember that the spellpower will increase for others in the raid too!
+                stats.BonusHealingReceived = 58 * 5;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusHealingReceived = 58 * 4.67f }, 30, 120));
             }
             else if (line.StartsWith("Your heals each cost "))
             {

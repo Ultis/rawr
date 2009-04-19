@@ -107,6 +107,7 @@ namespace Rawr.Tree
             speed *= (1 + calculatedStats.SpellHaste);
             critModifier *= 1f + calculatedStats.BonusCritHealMultiplier;
             NGmod = calcs.LocalCharacter.DruidTalents.NaturesGrace / 3f;
+            extraHealing = calculatedStats.BonusHealingReceived;
             applyHaste();
         }
 

@@ -273,15 +273,15 @@ namespace Rawr.Tree
             // Living Ice Crystals
             createHealingUse(stats.Heal1Min, 0, 60, true);
             // Talisman of Troll Divinity
-            if (stats.TrollDivinity > 0)
+            if (stats.BonusHealingReceived > 0)
             {
                 // For 20 seconds, direct healing adds a stack of 58 +healing for 10 seconds
                 // Stacks 5 times, 2 minute cd
                 // Direct heals: Nourish (1.5) HT (3) Regrowth (2)
                 // Assumption: every 2 seconds, a direct healing spell is cast
-                // 2*(1+2+3+4)+22*5 = 130, total duration 30 seconds
+                // (1+2+3+4)+11*5 = 70 stacks over the total duration of 30 seconds
                 // But remember that the spellpower will increase for others in the raid too!
-                createSpellPowerUse(58f * 130f / 30f, 30, 120, false);
+                createSpellPowerUse(58f * 70f / 30f, 30, 120, false);
             }
 
             // TODO: Darkmoon Card: Illusion
@@ -315,7 +315,7 @@ namespace Rawr.Tree
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
                 BonusHoTOnDirectHeals = stats.BonusHoTOnDirectHeals,
                 Heal1Min = stats.Heal1Min,
-                TrollDivinity = stats.TrollDivinity,
+                BonusHealingReceived = stats.BonusHealingReceived,
             };
         }
 
@@ -346,7 +346,7 @@ namespace Rawr.Tree
                 stats.SpiritFor20SecOnUse2Min +
                 stats.BonusHoTOnDirectHeals +
                 stats.Heal1Min +
-                stats.TrollDivinity) > 0;
+                stats.BonusHealingReceived) > 0;
         }
 
         private SpecialEffects Clone()
