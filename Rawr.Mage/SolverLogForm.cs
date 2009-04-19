@@ -36,6 +36,11 @@ namespace Rawr.Mage
                 get { return Encoding.Default; }
             }
 
+            public void Clear()
+            {
+                sb.Length = 0;
+            }
+
             public void UpdateTextBox()
             {
                 if (TextBox.Visible)
@@ -66,20 +71,29 @@ namespace Rawr.Mage
 
             public override void Write(char value)
             {
-                sb.Append(value);
-                UpdateTextBox();
+                if (SolverLogForm.Instance.advancedSolver != null)
+                {
+                    sb.Append(value);
+                    UpdateTextBox();
+                }
             }
 
             public override void WriteLine(string value)
             {
-                sb.AppendLine(value);
-                UpdateTextBox();
+                if (SolverLogForm.Instance.advancedSolver != null)
+                {
+                    sb.AppendLine(value);
+                    UpdateTextBox();
+                }
             }
 
             public override void Write(string value)
             {
-                sb.Append(value);
-                UpdateTextBox();
+                if (SolverLogForm.Instance.advancedSolver != null)
+                {
+                    sb.Append(value);
+                    UpdateTextBox();
+                }
             }
         }
 
@@ -108,6 +122,7 @@ namespace Rawr.Mage
             lock (solverLock)
             {
                 advancedSolver = solver;
+                writer.Clear();
             }
             UpdateCancelButton();
         }
