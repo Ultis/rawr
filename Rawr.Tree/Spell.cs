@@ -254,7 +254,7 @@ namespace Rawr.Tree
         {
             InitializeRegrowth(calcs, calculatedStats);
 
-            if (withRegrowthActive && ((CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions).glyphOfRegrowth)
+            if (withRegrowthActive && calcs.LocalCharacter.DruidTalents.GlyphOfRegrowth) //(CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions).glyphOfRegrowth)
             {
                 minHeal *= 1.2f;
                 maxHeal *= 1.2f;
@@ -369,6 +369,17 @@ namespace Rawr.Tree
 
             //z.B.: Idol of Budding Life (-36 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
+            #endregion
+
+            #region Tier 8 (4) SetBonus
+            if (calculatedStats.RejuvenationInstantTick > 0.0f )
+            {
+                // Set AverageHealingwithCrit = PeriodicTick
+                minHeal = PeriodicTick;
+                maxHeal = PeriodicTick;
+                coefDH = 0.0f;
+                critPercent = 0.0f;
+            }
             #endregion
 
             applyHaste();
@@ -532,6 +543,8 @@ namespace Rawr.Tree
              new float[] {295f, 263f, 234f, 206f, 176f, 147f, 117f} //Rank 4
         };
 
+        public int maxTargets;
+
         /// <summary>
         /// returns the Tick of WG, Ranks: 0 = Rank 2, 1 = Rank 4, valid index - 0 to 6
         /// </summary>
@@ -553,6 +566,7 @@ namespace Rawr.Tree
             periodicTick = 206f; // 1442 / 7
             periodicTicks = 7;
             periodicTickTime = 1f;
+            maxTargets = 5;
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
@@ -570,6 +584,10 @@ namespace Rawr.Tree
 
             // 6% chance to get Omen of Clarity...
             manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+
+            // Glyph of Wild Growth
+            if (druidTalents.GlyphOfWildGrowth)
+              maxTargets += 1;
 
             coefHoT *=
                 (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
@@ -596,6 +614,8 @@ namespace Rawr.Tree
      */
     public class Nourish : Spell
     {
+        float NourishBonusPerHoTGlyphs;
+
         public Nourish(CharacterCalculationsTree calcs, Stats calculatedStats)
         {
             InitializeNourish(calcs, calculatedStats);
@@ -606,9 +626,9 @@ namespace Rawr.Tree
             InitializeNourish(calcs, calculatedStats);
             if (hotsActive>0)
             {
-                minHeal *= 1.2f + calculatedStats.NourishBonusPerHoT * hotsActive;
-                maxHeal *= 1.2f + calculatedStats.NourishBonusPerHoT * hotsActive;
-                coefDH *= 1.2f + calculatedStats.NourishBonusPerHoT * hotsActive;
+                minHeal *= 1.2f + (calculatedStats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs) * hotsActive;
+                maxHeal *= 1.2f + (calculatedStats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs) * hotsActive;
+                coefDH  *= 1.2f + (calculatedStats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs) * hotsActive;
             }
         }
 
@@ -627,6 +647,7 @@ namespace Rawr.Tree
 
             minHeal = 1883f;
             maxHeal = 2187f;
+            NourishBonusPerHoTGlyphs = 0.0f;
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
@@ -662,6 +683,9 @@ namespace Rawr.Tree
                 (1 + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
+
+            if (druidTalents.GlyphOfNourish)
+                NourishBonusPerHoTGlyphs = 0.06f;
         }
     }
 }

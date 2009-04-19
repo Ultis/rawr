@@ -2077,6 +2077,17 @@ namespace Rawr
                 SetName = "Dreamwalker Regalia",
                 SetThreshold = 4
             });
+            // Tree Tier 8 set bonuses
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nightsong Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RejuvenationInstantTick = 1.0f },
+                SetName = "Nightsong Regalia",
+                SetThreshold = 4
+            });
+
             defaultBuffs.Add(new Buff()
             {
                 Name = "Destroyer Armor 2 Piece Bonus",

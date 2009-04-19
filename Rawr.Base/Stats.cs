@@ -217,8 +217,11 @@ namespace Rawr
         BonusNukeCritChance,
         BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
+        #region Added by Rawr.Tree
         LifebloomCostReduction,
         NourishBonusPerHoT,
+        RejuvenationInstantTick,
+        #endregion
         #region Added by Rawr.Enhance
         TotemLLAttackPower,
         TotemShockSpellPower,
@@ -2353,6 +2356,17 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus] = value; }
         }
+
+        // Tier 8 Set bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Instant Tick by Rejuvenation")]
+        [Category("Tree")]
+        public float RejuvenationInstantTick
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationInstantTick]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationInstantTick] = value; }
+        }
+
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healing by Lifebloom Ticks")]

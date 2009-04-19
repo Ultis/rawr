@@ -211,9 +211,12 @@ namespace Rawr.Tree
                         "Nourish:N Heal",
                         "Nourish:N HPM",
                         "Nourish:N HPS",
-                        "Nourish:N (HoT) Heal",
-                        "Nourish:N (HoT) HPM",
-                        "Nourish:N (HoT) HPS",
+                        "Nourish:N (1 HoT) Heal",
+                        "Nourish:N (1 HoT) HPM",
+                        "Nourish:N (1 HoT) HPS",
+                        "Nourish:N (3 HoTs) Heal",
+                        "Nourish:N (3 HoTs) HPM",
+                        "Nourish:N (3 HoTs) HPS",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -389,7 +392,7 @@ namespace Rawr.Tree
             float hotsHealsPerMinute = 0;
             if (rejuvOnTank)
             {
-                hotsHPS += rejuvenate.HPSHoT;
+                hotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
                 hotsMPS += rejuvenate.manaCost / rejuvenate.Duration;
                 hotsCastTime += rejuvenate.CastTime / rejuvenate.Duration;
                 hotsCastsPerMinute += 60f / rejuvenate.Duration;
@@ -994,8 +997,9 @@ namespace Rawr.Tree
                 HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, //HealingTouchHealBonus?
                 RegrowthExtraTicks = stats.RegrowthExtraTicks, //T5 (2) Bonus
                 BonusHealingTouchMultiplier = stats.BonusHealingTouchMultiplier,  //T6 (4) Bonus
-                LifebloomCostReduction = stats.LifebloomCostReduction,
-                NourishBonusPerHoT = stats.NourishBonusPerHoT,
+                LifebloomCostReduction = stats.LifebloomCostReduction,  //T7 (2) Bonus
+                NourishBonusPerHoT = stats.NourishBonusPerHoT,          //T7 (4) Bonus
+                RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1062,7 +1066,8 @@ namespace Rawr.Tree
                 + stats.GreatnessProc + stats.TreeOfLifeAura + stats.ReduceRegrowthCost 
                 + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
-                + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT
+                + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
+                stats.RejuvenationInstantTick
                 > 0)
                 return true;
 

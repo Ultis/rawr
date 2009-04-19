@@ -132,18 +132,22 @@ namespace Rawr.Tree
                 dictValues.Add("WG first Tick", Math.Round(wg.getTick(1, 0), 2) + "*" + tmp);
                 dictValues.Add("WG HPS(single)", Math.Round(wg.PeriodicTick, 2).ToString());
                 dictValues.Add("WG HPM(single)", Math.Round(wg.HPM, 2) + "*" + Math.Round(wg.PeriodicTick * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
-                dictValues.Add("WG HPS(max)", Math.Round(wg.PeriodicTick * 5, 2).ToString());
-                dictValues.Add("WG HPM(max)", Math.Round(wg.HPM * 5, 2) + "*" + Math.Round(wg.PeriodicTick * 5 * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
+                dictValues.Add("WG HPS(max)", Math.Round(wg.PeriodicTick * wg.maxTargets, 2).ToString() + "*" + wg.maxTargets.ToString() + " targets being healed");
+                dictValues.Add("WG HPM(max)", Math.Round(wg.HPM * wg.maxTargets, 2) + "*" + Math.Round(wg.PeriodicTick * wg.maxTargets * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
             }
 
             spell = new Nourish(this, BasicStats);
             dictValues.Add("N Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
             dictValues.Add("N HPM", Math.Round(spell.HPM,2).ToString());
             dictValues.Add("N HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
+            spell = new Nourish(this, BasicStats, 1);
+            dictValues.Add("N (1 HoT) Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
+            dictValues.Add("N (1 HoT) HPM", Math.Round(spell.HPM, 2).ToString());
+            dictValues.Add("N (1 HoT) HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
             spell = new Nourish(this, BasicStats, 3);
-            dictValues.Add("N (HoT) Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
-            dictValues.Add("N (HoT) HPM", Math.Round(spell.HPM, 2).ToString());
-            dictValues.Add("N (HoT) HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
+            dictValues.Add("N (3 HoTs) Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
+            dictValues.Add("N (3 HoTs) HPM", Math.Round(spell.HPM, 2).ToString());
+            dictValues.Add("N (3 HoTs) HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
             return dictValues;
         }
 
