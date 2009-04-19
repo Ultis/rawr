@@ -48457,7 +48457,7 @@
         <SpecialEffect>
           <Trigger>SpellCast</Trigger>
           <Stats>
-            <SpellPower>850</SpellPower>
+            <SpellPower>751</SpellPower>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>45</Cooldown>
@@ -48865,18 +48865,18 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DoTTick</Trigger>
+          <Trigger>DamageSpellCast</Trigger>
           <Stats>
-            <ShadowDamage>1050</ShadowDamage>
+            <SpellPower>850</SpellPower>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>10</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <CritRating>95</CritRating>
+      <CritRating>120</CritRating>
       <ExtractOfNecromanticPowerProc>1</ExtractOfNecromanticPowerProc>
     </Stats>
     <Quality>Epic</Quality>
