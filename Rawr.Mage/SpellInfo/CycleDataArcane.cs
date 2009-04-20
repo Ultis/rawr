@@ -607,36 +607,39 @@ namespace Rawr.Mage
         public AB2ABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "AB2ABar2C";
 
             // S0: no proc at start
             // AB0-AB1-ABar2          => S0     (1-MB)*(1-MB)*(1-MB)
             //                        => S1     (1-MB)*(1 - (1-MB)*(1-MB))
-            // AB0-AB1-MBAM2-ABar2C   => S0     MB*(1-MB)
-            //                        => S1     MB*MB
+            // AB0-AB1-MBAM2-ABar2    => S0     MB*(1-T8)*(1-MB)
+            //                        => S1     MB*(1 - (1-T8)*(1-MB))
             // S1: proc at start
-            // AB0-AB1-MBAM2-ABar2C   => S0     (1-MB)
-            //                        => S1     MB
+            // AB0-AB1-MBAM2-ABar2    => S0     (1-T8)*(1-MB)
+            //                        => S1     1 - (1-T8)*(1-MB)
 
-            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB) + MB*(1-MB)) + S1 * (1-MB)
-            // S1 = S0 * ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB) + S1 * MB
+            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB) + MB*(1-T8)*(1-MB)) + S1 * (1-T8)*(1-MB)
+            // S1 = S0 * ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*(1 - (1-T8)*(1-MB))) + S1 * (1 - (1-T8)*(1-MB))
             // S0 + S1 = 1
 
-            // (1-MB) = S0 * ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB + 1-MB)
-            // S0 = (1-MB) / ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB + 1-MB)
-            // S1 = ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB) / ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB + 1-MB)
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)*(1-MB)
+            // S0 = S0 * ((1-MB)*P1 + MB*P2) + S1 * P2
+
+            // S0 = P2/(1 + (1-MB)*(P2 - P1))
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-            //Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
-            //Spell ABar2C = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = (1 - MB) / ((1 - MB) * (1 - (1 - MB) * (1 - MB)) + MB * MB + 1 - MB);
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8) * (1 - MB);
+            float S0 = P2 / (1 + (1 - MB) * (P2 - P1));
             float S1 = 1 - S0;
             K1 = S0 * (1 - MB);
             K2 = S0 * MB + S1;
@@ -656,32 +659,35 @@ namespace Rawr.Mage
         public AB2ABar2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "AB2ABar2MBAM";
 
             // S0: no proc at start
 
             // AB0-AB1-ABar2          => S0     (1-MB)*(1-MB)*(1-MB)
             //                        => S1     (1-MB)*(1 - (1-MB)*(1-MB))
-            // AB0-AB1-MBAM2          => S0     MB
+            // AB0-AB1-MBAM2          => S0     MB*(1-T8)
+            //                        => S1     MB*T8
             // S1: proc at start
-            // AB0-AB1-MBAM2          => S0     1
+            // AB0-AB1-MBAM2          => S0     1-T8
+            //                        => S1     T8
 
-            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB) + MB) + S1
-            // S1 = S0 * (1-MB)*(1 - (1-MB)*(1-MB))
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)
+            // S0 = S0 * ((1-MB)*P1 + MB*P2) + S1 * P2
 
-            // 1 = S0 * (1 + (1-MB)*(1 - (1-MB)*(1-MB)))
-            // S0 = 1 / (1 + (1-MB)*(1 - (1-MB)*(1-MB)))
-            // S1 = (1-MB)*(1 - (1-MB)*(1-MB)) / (1 + (1-MB)*(1 - (1-MB)*(1-MB)))
+            // S0 = P2/(1 + (1-MB)*(P2 - P1))
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
             Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = 1 / (1 + (1 - MB) * (1 - (1 - MB) * (1 - MB)));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8);
+            float S0 = P2 / (1 + (1 - MB) * (P2 - P1));
             float S1 = 1 - S0;
             K1 = S0 * (1 - MB);
             K2 = S0 * MB + S1;
@@ -700,25 +706,23 @@ namespace Rawr.Mage
         public AB2ABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "AB2ABar3C";
 
             // S0: no proc at start
             // AB0-AB1-ABar2              => S0     (1-MB)*(1-MB)*(1-MB)
             //                            => S1     (1-MB)*(1 - (1-MB)*(1-MB))
-            // AB0-AB1-AB2-MBAM3-ABar     => S0     MB*(1-MB)
-            //                            => S1     MB*MB
+            // AB0-AB1-AB2-MBAM3-ABar     => S0     MB*(1-T8)*(1-MB)
+            //                            => S1     MB*(1 - (1-T8)*(1-MB))
             // S1: proc at start
-            // AB0-AB1-AB2-MBAM3-ABar     => S0     (1-MB)
-            //                            => S1     MB
+            // AB0-AB1-AB2-MBAM3-ABar     => S0     (1-T8)*(1-MB)
+            //                            => S1     1 - (1-T8)*(1-MB)
 
-            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB) + MB*(1-MB)) + S1 * (1-MB)
-            // S1 = S0 * ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB) + S1 * MB
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)*(1-MB)
+            // S0 = S0 * ((1-MB)*P1 + MB*P2) + S1 * P2
 
-            // (1-MB) = S0 * ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB + 1-MB)
-            // S0 = (1-MB) / ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB + 1-MB)
-            // S1 = ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB) / ((1-MB)*(1 - (1-MB)*(1-MB)) + MB*MB + 1-MB)
+            // S0 = P2/(1 + (1-MB)*(P2 - P1))
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
@@ -727,8 +731,11 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = (1 - MB) / ((1 - MB) * (1 - (1 - MB) * (1 - MB)) + MB * MB + 1 - MB);
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8) * (1 - MB);
+            float S0 = P2 / (1 + (1 - MB) * (P2 - P1));
             float S1 = 1 - S0;
             K1 = S0 * (1 - MB);
             K2 = S0 * MB + S1;
@@ -749,22 +756,21 @@ namespace Rawr.Mage
         public ABABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "ABABar3C";
 
             // S0: no proc at start
             // AB0-ABar1                  => S0     (1-MB)*(1-MB)
             //                            => S1     (1 - (1-MB)*(1-MB))
             // S1: proc at start
-            // AB0-AB1-AB2-MBAM3-ABar     => S0     (1-MB)
-            //                            => S1     MB
+            // AB0-AB1-AB2-MBAM3-ABar     => S0     (1-T8)(1-MB)
+            //                            => S1     (1 - (1-T8)(1-MB))
 
-            // S0 = S0 * (1-MB)*(1-MB) + S1 * (1-MB)
-            // S1 = S0 * (1 - (1-MB)*(1-MB)) + S1 * MB
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)*(1-MB)
+            // S0 = S0 * P1 + S1 * P2
 
-            // S0 = (1-MB) / (2 - MB - (1-MB)*(1-MB))
-            // S1 = 1 - S0
+            // S0 = P2/(P2-P1+1)
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
@@ -773,8 +779,11 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = (1 - MB) / (2 - MB - (1 - MB) * (1 - MB));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8) * (1 - MB);
+            float S0 = P2 / (P2 - P1 + 1);
             float S1 = 1 - S0;
             K1 = S0;
             K2 = S1;
@@ -796,22 +805,21 @@ namespace Rawr.Mage
         public ABABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "ABABar2C";
 
             // S0: no proc at start
             // AB0-ABar1                  => S0     (1-MB)*(1-MB)
             //                            => S1     (1 - (1-MB)*(1-MB))
             // S1: proc at start
-            // AB0-AB1-MBAM2-ABar         => S0     (1-MB)
-            //                            => S1     MB
+            // AB0-AB1-MBAM2-ABar         => S0     (1-T8)*(1-MB)
+            //                            => S1     (1 - (1-T8)*(1-MB))
 
-            // S0 = S0 * (1-MB)*(1-MB) + S1 * (1-MB)
-            // S1 = S0 * (1 - (1-MB)*(1-MB)) + S1 * MB
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)*(1-MB)
+            // S0 = S0 * P1 + S1 * P2
 
-            // S0 = (1-MB) / (2 - MB - (1-MB)*(1-MB))
-            // S1 = 1 - S0
+            // S0 = P2/(P2-P1+1)
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
@@ -819,8 +827,11 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = (1 - MB) / (2 - MB - (1 - MB) * (1 - MB));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8) * (1 - MB);
+            float S0 = P2 / (P2 - P1 + 1);
             float S1 = 1 - S0;
             K1 = S0;
             K2 = S1;
@@ -841,29 +852,32 @@ namespace Rawr.Mage
         public ABABar2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "ABABar2MBAM";
 
             // S0: no proc at start
             // AB0-ABar1                  => S0     (1-MB)*(1-MB)
             //                            => S1     (1 - (1-MB)*(1-MB))
             // S1: proc at start
-            // AB0-AB1-MBAM2              => S0     
+            // AB0-AB1-MBAM2              => S0     (1-T8)
+            //                            => S1     T8
 
-            // S0 = S0 * (1-MB)*(1-MB) + S1
-            // S1 = S0 * (1 - (1-MB)*(1-MB))
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)
+            // S0 = S0 * P1 + S1 * P2
 
-            // S0 = 1 / (2 - (1-MB)*(1-MB))
-            // S1 = 1 - S0
+            // S0 = P2/(P2-P1+1)
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
             Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = 1 / (2 - (1 - MB) * (1 - MB));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8);
+            float S0 = P2 / (P2 - P1 + 1);
             float S1 = 1 - S0;
             K1 = S0;
             K2 = S1;
@@ -883,28 +897,31 @@ namespace Rawr.Mage
         public ABABar1MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "ABABar1MBAM";
 
             // S0: no proc at start
             // AB0-ABar1                  => S0     (1-MB)*(1-MB)
             //                            => S1     (1 - (1-MB)*(1-MB))
             // S1: proc at start
-            // AB0-MBAM1                  => S0     
+            // AB0-MBAM1                  => S0     1-T8    
+            //                            => S1     T8
 
-            // S0 = S0 * (1-MB)*(1-MB) + S1
-            // S1 = S0 * (1 - (1-MB)*(1-MB))
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)
+            // S0 = S0 * P1 + S1 * P2
 
-            // S0 = 1 / (2 - (1-MB)*(1-MB))
-            // S1 = 1 - S0
+            // S0 = P2/(P2-P1+1)
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
             Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = 1 / (2 - (1 - MB) * (1 - MB));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8);
+            float S0 = P2 / (P2 - P1 + 1);
             float S1 = 1 - S0;
             K1 = S0;
             K2 = S1;
@@ -923,38 +940,38 @@ namespace Rawr.Mage
         public AB3ABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "AB3ABar3C";
 
             // S0: no proc at start
             // AB0-AB1-AB2-ABar3          => S0     (1-MB)*(1-MB)*(1-MB)*(1-MB)
             //                            => S1     (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB))
-            // AB0-AB1-AB2-MBAM3-ABar3C   => S0     (1 - (1-MB)*(1-MB))*(1-MB)
-            //                            => S1     (1 - (1-MB)*(1-MB))*MB
+            // AB0-AB1-AB2-MBAM3-ABar3C   => S0     (1 - (1-MB)*(1-MB))*(1-T8)*(1-MB)
+            //                            => S1     (1 - (1-MB)*(1-MB))*(1 - (1-T8)*(1-MB))
             // S1: proc at start
-            // AB0-AB1-AB2-MBAM3-ABar3C   => S0     (1-MB)
-            //                            => S1     MB
+            // AB0-AB1-AB2-MBAM3-ABar3C   => S0     (1-T8)*(1-MB)
+            //                            => S1     (1 - (1-T8)*(1-MB))
 
-            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB)*(1-MB) + (1 - (1-MB)*(1-MB))*(1-MB)) + S1 * (1-MB)
-            // S1 = S0 * ((1-MB)*(1-MB)*(1 - (1-MB)*(1-MB)) + (1 - (1-MB)*(1-MB))*MB) + S1 * MB
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)*(1-MB)
 
-            // S1 = S0 * (1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + S1 * MB
-            // (1-MB) = S0 * [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
-            // S0 = (1-MB) / [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
-            // S1 = [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB)] / [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
+            // S0 = S0 * (P1 * P1 + (1 - P1) * P2) + S1 * P2
+
+            // S0 = P2/(P1*(P2-P1)+1)
+
 
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
-            //Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
-            //Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = (1 - MB) / ((1 - (1 - MB) * (1 - MB)) * ((1 - MB) * (1 - MB) + MB) + (1 - MB));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8) * (1 - MB);
+            float S0 = P2 / (P1 * (P2 - P1) + 1);
             float S1 = 1 - S0;
-            K1 = S0 * (1 - MB) * (1 - MB);
-            K2 = S0 * (1 - (1 - MB) * (1 - MB)) + S1;
+            K1 = S0 * P1;
+            K2 = S0 * (1 - P1) + S1;
 
             if (needsDisplayCalculations)
             {
@@ -983,32 +1000,36 @@ namespace Rawr.Mage
         public AB3ABar3MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            float MB, K1, K2;
+            float K1, K2;
             Name = "AB3ABar3MBAM";
 
             // S0: no proc at start
             // AB0-AB1-AB2-ABar3          => S0     (1-MB)*(1-MB)*(1-MB)*(1-MB)
             //                            => S1     (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB))
-            // AB0-AB1-AB2-MBAM3          => S0     (1 - (1-MB)*(1-MB))
+            // AB0-AB1-AB2-MBAM3          => S0     (1 - (1-MB)*(1-MB))*(1-T8)
+            //                            => S1     (1 - (1-MB)*(1-MB))*T8
             // S1: proc at start
-            // AB0-AB1-AB2-MBAM3          => S0     1
+            // AB0-AB1-AB2-MBAM3          => S0     1-T8
+            //                            => S1     T8
 
-            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB)*(1-MB) + (1 - (1-MB)*(1-MB))) + S1
-            // S1 = S0 * (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB))
-            // S0 + S1 = 1
+            // P1 = (1-MB)*(1-MB)
+            // P2 = (1-T8)
 
-            // S1 = S0 * (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB))
-            // S0 = 1 / (1 + (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB)))
-            // S1 = 1 - S0
+            // S0 = S0 * (P1 * P1 + (1 - P1) * P2) + S1 * P2
+
+            // S0 = P2/(P1*(P2-P1)+1)
 
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
 
-            MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            float S0 = 1 / (1 + (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB)));
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float P1 = (1 - MB) * (1 - MB);
+            float P2 = (1 - T8);
+            float S0 = P2 / (P1 * (P2 - P1) + 1);
             float S1 = 1 - S0;
-            K1 = S0 * (1 - MB) * (1 - MB);
-            K2 = S0 * (1 - (1 - MB) * (1 - MB)) + S1;
+            K1 = S0 * P1;
+            K2 = S0 * (1 - P1) + S1;
 
             if (needsDisplayCalculations)
             {
