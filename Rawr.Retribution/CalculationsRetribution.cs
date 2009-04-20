@@ -390,8 +390,8 @@ namespace Rawr.Retribution
             statsRace.AttackPower = 220f;
             statsRace.Health = 6754f;
             statsRace.Mana = 4114;
-            statsRace.PhysicalCrit = .0317f;
-            statsRace.SpellCrit = .0317f;
+            statsRace.PhysicalCrit = .0327f;
+            statsRace.SpellCrit = .0334f;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -646,14 +646,14 @@ namespace Rawr.Retribution
         public override bool HasRelevantStats(Stats stats)
         {
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
-                stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
+                stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.Bloodlust) > 0;
-            bool maybeStats = (stats.Agility + stats.Strength +
+            bool maybeStats = (stats.Agility + stats.Strength + stats.ExpertiseRating + stats.PhysicalHit +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +

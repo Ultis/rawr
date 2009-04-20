@@ -38,14 +38,19 @@ namespace Rawr.Retribution
         public readonly float PartialResist = 0.953f;
 
         protected static readonly float[] DodgeChance = { 0.05f, 0.055f, 0.06f, 0.065f };
+        protected static readonly float[] ParryChance = { 0.05f, 0.055f, 0.06f, 0.13f };
         protected static readonly float[] MissChance = { 0.05f, 0.052f, 0.054f, 0.08f };
         protected static readonly float[] ResistChance = { 0.04f, 0.05f, 0.06f, 0.17f };
         public static float GetMissChance(float hit, int targetLevel) { return (float)Math.Max(MissChance[targetLevel - 80] - hit, 0f); }
         public static float GetDodgeChance(float expertise, int targetLevel) { return (float)Math.Max(DodgeChance[targetLevel - 80] - expertise * .0025f, 0f); }
         public static float GetResistChance(float spellHit, int targetLevel) { return (float)Math.Max(ResistChance[targetLevel - 80] - spellHit, 0f); }
+        public static float GetParryChance(float expertise, int targetLevel) { return (float)Math.Max(ParryChance[targetLevel - 80] - expertise * .0025f, 0f); }
         public float GetMeleeAvoid()
         {
-            return 1f - GetMissChance(_stats.PhysicalHit, _calcOpts.TargetLevel) - GetDodgeChance(_stats.Expertise, _calcOpts.TargetLevel);
+            return 1f
+                - GetMissChance(_stats.PhysicalHit, _calcOpts.TargetLevel)
+                - GetDodgeChance(_stats.Expertise, _calcOpts.TargetLevel)
+                - GetParryChance(_stats.Expertise, _calcOpts.TargetLevel) * _calcOpts.InFront;
         }
         public float GetRangeAvoid()
         {

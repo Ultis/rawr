@@ -32,6 +32,7 @@ namespace Rawr.Retribution
             cmbLength.Value = (decimal)calcOpts.FightLength;
 
             nudTimeUnder20.Value = (decimal)(calcOpts.TimeUnder20 * 100);
+            nudInFront.Value = (decimal)(calcOpts.InFront * 100);
             nudTargets.Value = (decimal)calcOpts.Targets;
 
             nudDelay.Value = (decimal)calcOpts.Delay;
@@ -417,6 +418,16 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudInFront_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.InFront = (float)nudInFront.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -440,6 +451,7 @@ namespace Rawr.Retribution
         public float Delay = .05f;
         public float Wait = .05f;
         public float Targets = 1f;
+        public float InFront = 0f;        
 
         public int StackTrinketReset = 0;
 
@@ -510,6 +522,7 @@ namespace Rawr.Retribution
             clone.Delay = Delay;
             clone.SimulateRotation = SimulateRotation;
             clone.Targets = Targets;
+            clone.InFront = InFront;
 
             clone.JudgeCD = JudgeCD;
             clone.CSCD = CSCD;

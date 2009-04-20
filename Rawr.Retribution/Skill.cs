@@ -382,14 +382,10 @@ namespace Rawr.Retribution
         {
             const float glanceChance = .24f;
             const float glancingAmount = 1f - 0.35f;
-            float critBonus = 2f * (1f + Stats.BonusCritMultiplier);
-            float toMiss = CombatStats.GetMissChance(Stats.PhysicalHit, CalcOpts.TargetLevel);
-            float toDodge = CombatStats.GetDodgeChance(Stats.Expertise, CalcOpts.TargetLevel);
-
             return HitDamage() *
                 (glanceChance * glancingAmount +
-                Stats.PhysicalCrit * critBonus +
-                (1f - Stats.PhysicalCrit - glanceChance - toMiss - toDodge));
+                CritChance() * CritBonus() +
+                (ChanceToLand() - CritChance() - glanceChance));
         }
 
         public float WhiteDPS()

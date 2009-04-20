@@ -75,6 +75,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.nudTargets = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.nudInFront = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
@@ -94,6 +97,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudStackTrinket)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTimeUnder20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargets)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudInFront)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMobType
@@ -115,20 +119,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(86, 32);
+            this.label1.Location = new System.Drawing.Point(90, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.Size = new System.Drawing.Size(54, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Mob Type:";
+            this.label1.Text = "Mob type:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(74, 85);
+            this.label2.Location = new System.Drawing.Point(78, 85);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.Size = new System.Drawing.Size(66, 13);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Target Level:";
+            this.label2.Text = "Target level:";
             // 
             // groupBox2
             // 
@@ -160,7 +164,7 @@
             this.groupBox2.Controls.Add(this.listUnlimitedPriority);
             this.groupBox2.Controls.Add(this.butUnlimitedDown);
             this.groupBox2.Controls.Add(this.butUnlimitedUp);
-            this.groupBox2.Location = new System.Drawing.Point(3, 187);
+            this.groupBox2.Location = new System.Drawing.Point(3, 213);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(225, 339);
             this.groupBox2.TabIndex = 6;
@@ -676,21 +680,21 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(56, 111);
+            this.label11.Location = new System.Drawing.Point(60, 111);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(88, 13);
+            this.label11.Size = new System.Drawing.Size(84, 13);
             this.label11.TabIndex = 9;
-            this.label11.Text = "Below 20% Time:";
+            this.label11.Text = "Below 20% time:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(74, 5);
+            this.label12.Location = new System.Drawing.Point(79, 5);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(69, 13);
+            this.label12.Size = new System.Drawing.Size(65, 13);
             this.label12.TabIndex = 1;
-            this.label12.Text = "Fight Length:";
+            this.label12.Text = "Fight length:";
             // 
             // cmbLength
             // 
@@ -833,7 +837,7 @@
             0,
             0,
             65536});
-            this.nudTargets.Location = new System.Drawing.Point(150, 161);
+            this.nudTargets.Location = new System.Drawing.Point(150, 163);
             this.nudTargets.Maximum = new decimal(new int[] {
             10,
             0,
@@ -857,17 +861,53 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(97, 163);
+            this.label7.Location = new System.Drawing.Point(98, 165);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(46, 13);
             this.label7.TabIndex = 13;
             this.label7.Text = "Targets:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(216, 189);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(15, 13);
+            this.label8.TabIndex = 41;
+            this.label8.Text = "%";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // nudInFront
+            // 
+            this.nudInFront.Location = new System.Drawing.Point(150, 187);
+            this.nudInFront.Name = "nudInFront";
+            this.nudInFront.Size = new System.Drawing.Size(60, 20);
+            this.nudInFront.TabIndex = 40;
+            this.nudInFront.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            this.nudInFront.ValueChanged += new System.EventHandler(this.nudInFront_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(44, 189);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(100, 13);
+            this.label9.TabIndex = 39;
+            this.label9.Text = "Time infront of mob:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.nudInFront);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.nudTargets);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -907,6 +947,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudStackTrinket)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTimeUnder20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargets)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudInFront)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -960,6 +1001,9 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown nudTargets;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown nudInFront;
+        private System.Windows.Forms.Label label9;
 
     }
 }
