@@ -2838,7 +2838,8 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                else if (calculationOptions.MaintainSnare && talents.Slow > 0)
+                // deprecated, if there is demand for this we have to create completely new cycles
+                /*else if (calculationOptions.MaintainSnare && talents.Slow > 0)
                 {
                     if (useGlobalOptimizations)
                     {
@@ -2870,7 +2871,7 @@ namespace Rawr.Mage
                         list.Add(CycleId.FBABarSlow);
                         list.Add(CycleId.ABABarSlow);
                     }
-                }
+                }*/
                 else
                 {
                     if (useGlobalOptimizations)
@@ -2954,19 +2955,15 @@ namespace Rawr.Mage
                         if (talents.FingersOfFrost > 0) list.Add(CycleId.FrBFBIL);
                         list.Add(CycleId.ArcaneBlastSpam);
                         list.Add(CycleId.ABAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(CycleId.ABABar0C);
-                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.ABarAM);
-                        if (talents.MissileBarrage > 0) list.Add(CycleId.ABSpamMBAM);
-                        if (talents.MissileBarrage > 0) list.Add(CycleId.AB3AM);
-                        if (talents.MissileBarrage > 0) list.Add(CycleId.AB3AM2MBAM);
-                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FBABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FB2ABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FrBABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FrB2ABar);
-                        if (calculationOptions.PlayerLevel >= 75 && talents.ArcaneBarrage > 0) list.Add(CycleId.FFBABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.ABABar);
+                        list.Add(CycleId.AB3AM);
+                        if (talents.MissileBarrage > 0)
+                        {
+                            list.Add(CycleId.AB3AM2MBAM);
+                            list.Add(CycleId.ABSpam3MBAM);
+                        }
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
+                            list.Add(CycleId.ABABar0C);
                             list.Add(CycleId.ABABar1C);
                             list.Add(CycleId.ABABar0MBAM);
                             list.Add(CycleId.AB2ABar2MBAM);
@@ -2975,7 +2972,6 @@ namespace Rawr.Mage
                             list.Add(CycleId.AB3ABar3C);
                             list.Add(CycleId.ABSpam3C);
                             list.Add(CycleId.ABSpam03C);
-                            list.Add(CycleId.ABSpam3MBAM);
                             list.Add(CycleId.ABABar3C);
                             list.Add(CycleId.ABABar2C);
                             list.Add(CycleId.ABABar2MBAM);

@@ -111,6 +111,13 @@
     <Compile Include="CooldownRestrictionsForm.Designer.cs">
       <DependentUpon>CooldownRestrictionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SpellInfo\CycleDataArcane.cs" />
+    <Compile Include="SpellInfo\Cycle.cs" />
+    <Compile Include="SpellInfo\CycleDataDeprecated.cs" />
+    <Compile Include="SpellInfo\CycleDataFire.cs" />
+    <Compile Include="SpellInfo\CycleDataFrost.cs" />
+    <Compile Include="SpellInfo\SpellData.cs" />
+    <Compile Include="SpellInfo\SpellTemplate.cs" />
     <Compile Include="TalentScoreForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,7 +157,7 @@
     <Compile Include="Solver.MIP.cs" />
     <Compile Include="SolverLP.cs" />
     <Compile Include="SparseMatrix.cs" />
-    <Compile Include="Spell.cs" />
+    <Compile Include="SpellInfo\Spell.cs" />
     <Compile Include="XMath.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -47,6 +47,8 @@ namespace Rawr.Mage
             }
         }
 
+        public const float SetBonus4T8ProcRate = 0.1f;
+
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
         public float Latency { get; set; }

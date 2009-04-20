@@ -1,0 +1,1072 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rawr.Mage
+{
+    class FBPyro : DynamicCycle
+    {
+        public FBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FB;
+            StaticCycle chain2;
+            float K;
+            Name = "FBPyro";
+            AffectedByFlameCap = true;
+
+            FB = castingState.GetSpell(SpellId.Fireball);
+            Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Fireball";
+
+            // no Pyro
+            // FB => no Pyro 1 - c*c/(1+c)
+            //    => Pyro c*c/(1+c)
+            // Pyro
+            // Pyro => no Pyro
+
+            // 1 - c*c/(1+c)
+            // FB
+
+            // c*c/(1+c)
+            chain2 = new StaticCycle(2);
+            chain2.AddSpell(FB, castingState);
+            chain2.AddSpell(Pyro, castingState);
+            chain2.Calculate(castingState);
+
+            K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+            if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+
+            AddSpell(needsDisplayCalculations, FB, 1 - K);
+            AddCycle(needsDisplayCalculations, chain2, K);
+            Calculate();
+        }
+    }
+
+    class FBLBPyro : DynamicCycle
+    {
+        public FBLBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FB;
+            Spell LB;
+            Spell Pyro;
+            float X;
+            float K;
+            Name = "FBLBPyro";
+            AffectedByFlameCap = true;
+
+            FB = castingState.GetSpell(SpellId.Fireball);
+            LB = castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Fireball";
+
+            // 3.0.8 calcs
+
+            // 0 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X
+            //        => 1 HS charge    FBcrit * X
+            // LB     => 0 HS charge    (1 - LBcrit) * (1 - X)
+            //        => 1 HS charge    LBcrit * (1 - X)
+            // 1 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X + (1 - H) * FBcrit * X
+            // FBPyro => 0 HS charge    H * FBcrit * X
+            // LB     => 0 HS charge    (1 - LBcrit) * (1 - X) + (1 - H) * LBcrit * (1 - X)
+            // LBPyro => 0 HS charge    H * LBcrit * (1 - X)
+
+            // S0 + S1 = 1
+            // S0 = S0 * [(1 - FBcrit) * X + (1 - LBcrit) * (1 - X)] + S1
+            // S1 = S0 * [FBcrit * X + LBcrit * (1 - X)]
+
+            // 1 - S0 = S0 * [FBcrit * X + LBcrit * (1 - X)]
+            // S0 = 1 / (1 + FBcrit * X + LBcrit * (1 - X))
+            // C := FBcrit * X + LBcrit * (1 - X) = LBcrit + X * (FBcrit - LBcrit)
+            // S0 = 1 / (1 + C)
+            // S1 = C / (1 + C)
+
+            // value = S0 * (X * value(FB) + (1 - X) * value(LB)) + S1 * (X * value(FB) + (1 - X) * value(LB) + H * C * value(Pyro))
+            //       = X * value(FB) + (1 - X) * value(LB) + H * C * C / (1 + C) * value(Pyro)
+
+            // time(LB) * (1 - X) / [time(FB) * X + time(LB) * (1 - X) + time(Pyro) * H * C * C / (1 + C)] = time(LB) / 12
+            // 12 * (1 - X) = time(FB) * X + time(LB) * (1 - X) + time(Pyro) * H * C * C / (1 + C)
+
+            // (1 + C) * (12 * (1 - X) - time(FB) * X - time(LB) * (1 - X)) = time(Pyro) * H * C * C
+            // (1 + C) * (12 - 12 * X - time(FB) * X - time(LB) + time(LB) * X) = time(Pyro) * H * C * C
+            // (1 + LBcrit + X * (FBcrit - LBcrit)) * (12 - time(LB) + X * (time(LB) - time(FB) - 12)) = time(Pyro) * H * C * C
+            // [(1 + LBcrit) * (12 - time(LB)) - time(Pyro) * H * LBcrit * LBcrit] + X * [(FBcrit - LBcrit) * (12 - time(LB)) + (time(LB) - time(FB) - 12) * (1 + LBcrit) - time(Pyro) * H * 2 * LBcrit * (FBcrit - LBcrit)] + X * X * [(FBcrit - LBcrit) * (time(LB) - time(FB) - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * time(Pyro) * H] = 0
+
+            /*if (castingState.CalculationOptions.Mode308)*/
+            {
+                float FBcrit = FB.CritRate;
+                float LBcrit = LB.CritRate;
+                float H = castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                float A2 = (FBcrit - LBcrit) * (LB.CastTime - FB.CastTime - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * Pyro.CastTime * H;
+                float A1 = (FBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime * H * 2 * LBcrit * (FBcrit - LBcrit);
+                float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime * H * LBcrit * LBcrit;
+                if (Math.Abs(A2) < 0.00001)
+                {
+                    X = -A0 / A1;
+                }
+                else
+                {
+                    X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                }
+                float C = LBcrit + X * (FBcrit - LBcrit);
+                K = H * C * C / (1 + C);
+            }
+
+            // 3.0 calcs
+
+            // Living Bomb shouldn't be cast more often than it's dot duration
+            // time casting LB / all time casting <= LB cast time / 12
+
+            // 0 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X
+            //        => 1 HS charge    FBcrit * X
+            // LB     => 0 HS charge    (1 - X)
+            // 1 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X + (1 - H) * FBcrit * X
+            // FBPyro => 0 HS charge    H * FBcrit * X
+            // LB     => 1 HS charge    (1 - X)
+
+            // S0 = FB0a + FB0b + LB0
+            // S1 = FB1 + FBPyro + LB1
+
+            // solve for stationary distribution
+            // FB0a = (1 - FBcrit) * X * S0
+            // FB0b = FBcrit * X * S0
+            // LB0 = (1 - X) * S0
+            // FB1 = ((1 - FBcrit) * X + (1 - H) * FBcrit * X) * S1
+            // FBPyro = H * FBcrit * X * S1
+            // LB1 = (1 - X) * S1
+
+            // S0 + S1 = 1
+            // S0 = FB0a + LB0 + FB1 + FBPyro
+            // S1 = FB0b + LB1
+
+            // S1 = FBcrit * X * S0 + (1 - X) * S1
+            // X * S1 = FBcrit * X * S0
+            // S1 = FBcrit * S0
+            // S0 = 1 / (1 + FBcrit)
+
+            // value = [value(FB) * X + value(LB) * (1 - X)] * 1 / (1 + FBcrit) + [value(FB) * X + value(LB) * (1 - X) + H * FBcrit * X * value(Pyro)] * FBcrit / (1 + FBcrit)
+            //       = value(FB) * X + value(LB) * (1 - X) + value(Pyro) * H * X * FBcrit * FBcrit / (1 + FBcrit)
+
+            // time(LB) * (1 - X) / [time(FB) * X + time(LB) * (1 - X) + time(Pyro) * H * X * FBcrit * FBcrit / (1 + FBcrit)] = time(LB) / 12
+            // time(LB) * (1 - X) = time(LB) / 12 * [time(FB) * X + time(LB) * (1 - X) + time(Pyro) * H * X * FBcrit * FBcrit / (1 + FBcrit)]
+            // 12 * (1 - X) = time(FB) * X + time(LB) * (1 - X) + time(Pyro) * H * X * FBcrit * FBcrit / (1 + FBcrit)
+            // X * time(LB) - 12 * X - time(FB) * X - time(Pyro) * H * X * FBcrit * FBcrit / (1 + FBcrit) = time(LB) - 12
+            // X * (time(LB) - 12 - time(FB) - time(Pyro) * H * FBcrit * FBcrit / (1 + FBcrit)) = time(LB) - 12
+            // X = (12 - time(LB)) / (12 - time(LB) + time(FB) + time(Pyro) * H * FBcrit * FBcrit / (1 + FBcrit))
+
+            /*else
+            {
+                K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+                X = (12.0f - LB.CastTime) / (12.0f + FB.CastTime - LB.CastTime + Pyro.CastTime * K);
+            }*/
+
+            AddSpell(needsDisplayCalculations, FB, X);
+            AddSpell(needsDisplayCalculations, LB, 1 - X);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class FFBLBPyro : DynamicCycle
+    {
+        public FFBLBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FFB;
+            Spell LB;
+            Spell Pyro;
+            float X;
+            float K;
+            Name = "FFBLBPyro";
+            AffectedByFlameCap = true;
+
+            FFB = castingState.GetSpell(SpellId.FrostfireBolt);
+            LB = castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Frostfire Bolt";
+
+            /*if (castingState.CalculationOptions.Mode308)*/
+            {
+                float FFBcrit = FFB.CritRate;
+                float LBcrit = LB.CritRate;
+                float H = castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime * H;
+                float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime * H * 2 * LBcrit * (FFBcrit - LBcrit);
+                float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime * H * LBcrit * LBcrit;
+                if (Math.Abs(A2) < 0.00001)
+                {
+                    X = -A0 / A1;
+                }
+                else
+                {
+                    X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                }
+                float C = LBcrit + X * (FFBcrit - LBcrit);
+                K = H * C * C / (1 + C);
+            }
+            /*else
+            {
+                K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+                X = (12.0f - LB.CastTime) / (12.0f + FFB.CastTime - LB.CastTime + Pyro.CastTime * K);
+            }*/
+
+            AddSpell(needsDisplayCalculations, FFB, X);
+            AddSpell(needsDisplayCalculations, LB, 1 - X);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class ScLBPyro : DynamicCycle
+    {
+        public ScLBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell Sc;
+            Spell LB;
+            Spell Pyro;
+            float X;
+            float K;
+            Name = "ScLBPyro";
+            ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
+            AffectedByFlameCap = true;
+
+            Sc = castingState.GetSpell(SpellId.Scorch);
+            LB = castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Scorch";
+
+            /*if (castingState.CalculationOptions.Mode308)*/
+            {
+                float SCcrit = Sc.CritRate;
+                float LBcrit = LB.CritRate;
+                float H = castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                float A2 = (SCcrit - LBcrit) * (LB.CastTime - Sc.CastTime - 12) - (SCcrit - LBcrit) * (SCcrit - LBcrit) * Pyro.CastTime * H;
+                float A1 = (SCcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - Sc.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime * H * 2 * LBcrit * (SCcrit - LBcrit);
+                float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime * H * LBcrit * LBcrit;
+                if (Math.Abs(A2) < 0.00001)
+                {
+                    X = -A0 / A1;
+                }
+                else
+                {
+                    X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                }
+                float C = LBcrit + X * (SCcrit - LBcrit);
+                K = H * C * C / (1 + C);
+            }
+            /*else
+            {
+                K = Sc.CritRate * Sc.CritRate / (1.0f + Sc.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+                X = (12.0f - LB.CastTime) / (12.0f + Sc.CastTime - LB.CastTime + Pyro.CastTime * K);
+            }*/
+
+            AddSpell(needsDisplayCalculations, Sc, X);
+            AddSpell(needsDisplayCalculations, LB, 1 - X);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class FFBPyro : DynamicCycle
+    {
+        public FFBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FFB;
+            StaticCycle chain2;
+            float K;
+            Name = "FFBPyro";
+            AffectedByFlameCap = true;
+
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
+            Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Frostfire Bolt";
+
+            // no Pyro
+            // FB => no Pyro 1 - c*c/(1+c)
+            //    => Pyro c*c/(1+c)
+            // Pyro
+            // Pyro => no Pyro
+
+            // 1 - c*c/(1+c)
+            // FB
+
+            // c*c/(1+c)
+            chain2 = new StaticCycle(2);
+            chain2.AddSpell(FFB, castingState);
+            chain2.AddSpell(Pyro, castingState);
+            chain2.Calculate(castingState);
+
+            K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+            if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+
+            AddSpell(needsDisplayCalculations, FFB, 1 - K);
+            AddCycle(needsDisplayCalculations, chain2, K);
+            Calculate();
+        }
+    }
+
+    class FBScPyro : DynamicCycle
+    {
+        public FBScPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FB;
+            Spell Sc;
+            Spell Pyro;
+            float K;
+            float X;
+            Name = "FBScPyro";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            FB = castingState.GetSpell(SpellId.Fireball);
+            Sc = castingState.GetSpell(SpellId.Scorch);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Fireball";
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            // proportion of time casting non-scorch spells has to be less than gap := (30 - (averageScorchesNeeded + extraScorches)) / (30 - extraScorches)
+            // 0 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X
+            //        => 1 HS charge    FBcrit * X
+            // Sc     => 0 HS charge    (1 - SCcrit) * (1 - X)
+            //           1 HS charge    SCcrit * (1 - X)
+            // 1 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X + (1 - H) * FBcrit * X
+            // FBPyro => 0 HS charge    H * FBcrit * X
+            // Sc     => 0 HS charge    (1 - SCcrit) * (1 - X) + (1 - H) * SCcrit * (1 - X)
+            // ScPyro => 0 HS charge    H * SCcrit * (1 - X)
+
+            // S0 = FB0a + FB0b + Sc0a + Sc0b
+            // S1 = FB1 + FBPyro + Sc1 + ScPyro
+
+            // solve for stationary distribution
+            // FB0a = (1 - FBcrit) * X * S0
+            // FB0b = FBcrit * X * S0
+            // Sc0a = (1 - SCcrit) * (1 - X) * S0
+            // Sc0b = SCcrit * (1 - X) * S0
+            // FB1 = ((1 - FBcrit) * X + (1 - H) * FBcrit * X) * S1
+            // FBPyro = H * FBcrit * X * S1
+            // Sc1 = ((1 - SCcrit) * (1 - X) + (1 - H) * SCcrit * (1 - X)) * S1
+            // ScPyro = H * SCcrit * (1 - X) * S1
+
+            // S0 + S1 = 1
+            // S0 = FB0a + Sc0a + S1
+            // S1 = FB0b + Sc0b
+
+            // S1 = (FBcrit * X  + SCcrit * (1 - X)) * S0
+            // C := (FBcrit * X  + SCcrit * (1 - X))
+            //    = X * (FBcrit - SCcrit) + SCcrit
+
+            // S1 = C * (1 - S1)
+            // S1 = C / (1 + C)
+            // S0 = 1 / (1 + C)
+
+            // value = (X * value(FB) + (1 - X) * value(Sc)) * 1 / (1 + C) + (X * value(FB) + (1 - X) * value(Sc) + H * (FBcrit * X + SCcrit * (1 - X)) * value(Pyro)) * C / (1 + C)
+            //         X * value(FB) + (1 - X) * value(Sc) + value(Pyro) * H * C * C / (1 + C)
+
+            // (X * time(FB) + time(Pyro) * H * C * C / (1 + C)) / [X * time(FB) + (1 - X) * time(Sc) + time(Pyro) * H * C * C / (1 + C)] = gap
+            // (X * time(FB) + time(Pyro) * H * C * C / (1 + C)) = gap * [X * time(FB) + time(Pyro) * H * C * C / (1 + C)] + gap * (1 - X) * time(Sc)
+            // (X * time(FB) + time(Pyro) * H * C * C / (1 + C)) * (1 - gap) = gap * (1 - X) * time(Sc)
+            // (X * (1 + C) * time(FB) + time(Pyro) * H * C * C) * (1 - gap) = gap * (1 - X) * (1 + C) * time(Sc)
+            // (X * (1 + C) * time(FB) + time(Pyro) * H * C * C) * (1 - gap) = gap * (1 + C) * time(Sc) - gap * X * (1 + C) * time(Sc)
+            // (X * time(FB) + X * C * time(FB) + time(Pyro) * H * C * C) * (1 - gap) = gap * time(Sc) + gap * C * time(Sc) - gap * X * time(Sc) - gap * X * C * time(Sc)
+            // (X * time(FB) + X * (X * (FBcrit - SCcrit) + SCcrit) * time(FB) + time(Pyro) * H * (X * (FBcrit - SCcrit) + SCcrit) * (X * (FBcrit - SCcrit) + SCcrit)) * (1 - gap) = gap * time(Sc) + gap * (X * (FBcrit - SCcrit) + SCcrit) * time(Sc) - gap * X * time(Sc) - gap * X * (X * (FBcrit - SCcrit) + SCcrit) * time(Sc)
+            // X * time(FB) * (1 - gap) + X * (X * (FBcrit - SCcrit) + SCcrit) * time(FB) * (1 - gap) + time(Pyro) * H * (X * (FBcrit - SCcrit) + SCcrit) * (X * (FBcrit - SCcrit) + SCcrit) * (1 - gap) = gap * time(Sc) + gap * (X * (FBcrit - SCcrit) + SCcrit) * time(Sc) - gap * X * time(Sc) - gap * X * (X * (FBcrit - SCcrit) + SCcrit) * time(Sc)
+            // X * [time(FB) * (1 - gap) + SCcrit * time(FB) * (1 - gap) + 2 * (FBcrit - SCcrit) * SCcrit * time(Pyro) * H * (1 - gap)] + X * X * [(FBcrit - SCcrit) * time(FB) * (1 - gap) + (FBcrit - SCcrit) * (FBcrit - SCcrit) * time(Pyro) * H * (1 - gap)] + SCcrit * SCcrit * time(Pyro) * H * (1 - gap) = gap * time(Sc) + gap * (X * (FBcrit - SCcrit) + SCcrit) * time(Sc) - gap * X * time(Sc) - gap * X * (X * (FBcrit - SCcrit) + SCcrit) * time(Sc)
+            // X * X * [(FBcrit - SCcrit) * time(FB) * (1 - gap) + (FBcrit - SCcrit) * (FBcrit - SCcrit) * time(Pyro) * H * (1 - gap) + gap * (FBcrit - SCcrit) * time(Sc)] + X * [time(FB) * (1 - gap) + SCcrit * time(FB) * (1 - gap) + 2 * (FBcrit - SCcrit) * SCcrit * time(Pyro) * H * (1 - gap) - gap * (FBcrit - SCcrit) * time(Sc) + gap * time(Sc) + gap * SCcrit * time(Sc)] + [SCcrit * SCcrit * time(Pyro) * H * (1 - gap) - gap * time(Sc) - gap * SCcrit * time(Sc)] = 0
+
+            // A2 :=
+            // (FBcrit - SCcrit) * time(FB) * (1 - gap) + (FBcrit - SCcrit) * (FBcrit - SCcrit) * time(Pyro) * H * (1 - gap) + gap * (FBcrit - SCcrit) * time(Sc)
+            // (FBcrit - SCcrit) * [time(FB) * (1 - gap) + (FBcrit - SCcrit) * time(Pyro) * H * (1 - gap) + gap * time(Sc)]
+            // (FBcrit - SCcrit) * [time(FB) * (1 - gap) + (FBcrit - SCcrit) * time(Pyro) * H * (1 - gap) - (1 - gap) * time(Sc) + time(Sc)]
+            // (FBcrit - SCcrit) * [(1 - gap) * (time(FB) + (FBcrit - SCcrit) * time(Pyro) * H - time(Sc)) + time(Sc)]
+            // A1 :=
+            // time(FB) * (1 - gap) + SCcrit * time(FB) * (1 - gap) + 2 * (FBcrit - SCcrit) * SCcrit * time(Pyro) * H * (1 - gap) - gap * (FBcrit - SCcrit) * time(Sc) + gap * time(Sc) + gap * SCcrit * time(Sc)
+            // time(FB) * [(1 - gap) + SCcrit * (1 - gap)] + time(Pyro) * H * [2 * (FBcrit - SCcrit) * SCcrit * (1 - gap)] + time(Sc) * [gap + gap * SCcrit - gap * (FBcrit - SCcrit)]
+            // time(FB) * (1 - gap) * (1 + SCcrit) + time(Pyro) * H * [2 * (FBcrit - SCcrit) * SCcrit * (1 - gap)] + time(Sc) * gap * [1 + 2 * SCcrit - FBcrit]
+            // (1 - gap) * [time(FB) * (1 + SCcrit) + time(Pyro) * H * 2 * (FBcrit - SCcrit) * SCcrit - time(Sc) * (1 + 2 * SCcrit - FBcrit)] + time(Sc) * (1 + 2 * SCcrit - FBcrit)
+            // A0 :=
+            // SCcrit * SCcrit * time(Pyro) * H * (1 - gap) - gap * time(Sc) * (1 + SCcrit)
+            // (1 - gap) * (SCcrit * SCcrit * time(Pyro) * H + time(Sc) * (1 + SCcrit)) - time(Sc) * (1 + SCcrit)
+
+            // A2 * X * X + A1 * X + A0 = 0
+            // X = [- A1 +/- sqrt[A1 * A1 - 4 * A2 * A0]] / (2 * A2)
+
+            // A1 * A1 - 4 * A2 * A0
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+            float FBcrit = FB.CritRate;
+            float SCcrit = Sc.CritRate;
+            float H = castingState.MageTalents.HotStreak / 3.0f;
+            if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+            float A2 = (FBcrit - SCcrit) * FB.CastTime * (1 - gap) + (FBcrit - SCcrit) * (FBcrit - SCcrit) * Pyro.CastTime * H * (1 - gap) + gap * (FBcrit - SCcrit) * Sc.CastTime;
+            float A1 = FB.CastTime * (1 - gap) * (1 + SCcrit) + Pyro.CastTime * H * (2 * (FBcrit - SCcrit) * SCcrit * (1 - gap)) + Sc.CastTime * gap * (1 + 2 * SCcrit - FBcrit);
+            float A0 = SCcrit * SCcrit * Pyro.CastTime * H * (1 - gap) - gap * Sc.CastTime * (1 + SCcrit);
+            if (Math.Abs(A2) < 0.00001)
+            {
+                X = -A0 / A1;
+            }
+            else
+            {
+                X = (float)((-A1 + Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+            }
+            if (gap == 1.0f) X = 1.0f; //avoid rounding errors
+            float C = X * (FBcrit - SCcrit) + SCcrit;
+            K = H * C * C / (1 + C);
+
+            AddSpell(needsDisplayCalculations, FB, X);
+            AddSpell(needsDisplayCalculations, Sc, 1 - X);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class FBScLBPyro : DynamicCycle
+    {
+        public FBScLBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FB;
+            Spell Sc;
+            Spell LB;
+            Spell Pyro;
+            float K;
+            float X;
+            float Y;
+            Name = "FBScLBPyro";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            FB = castingState.GetSpell(SpellId.Fireball);
+            Sc = castingState.GetSpell(SpellId.Scorch);
+            LB = castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Fireball";
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            // 3.0.8 calculations
+
+            // 0 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X
+            //        => 1 HS charge    FBcrit * X
+            // LB     => 0 HS charge    (1 - LBcrit) * (1 - X - Y)
+            //        => 1 HS charge    LBcrit * (1 - X - Y)
+            // Sc     => 0 HS charge    (1 - SCcrit) * Y
+            //           1 HS charge    SCcrit * Y
+            // 1 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X + (1 - H) * FBcrit * X
+            // FBPyro => 0 HS charge    H * FBcrit * X
+            // LB     => 0 HS charge    (1 - LBcrit) * (1 - X - Y) + (1 - H) * LBcrit * (1 - X - Y)
+            // LBPyro => 0 HS charge    H * LBcrit * (1 - X - Y)
+            // Sc     => 0 HS charge    (1 - SCcrit) * Y + (1 - H) * SCcrit * Y
+            // ScPyro => 0 HS charge    H * SCcrit * Y
+
+            // S0 + S1 = 1
+            // C := FBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y)
+            // S0 = S0 * (1 - C) + S1
+            // S1 = S0 * C
+            // 1 - S0 = S0 * C
+            // S0 = 1 / (1 + C)
+            // S1 = C / (1 + C)
+
+            // value = (X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB)) * 1 / (1 + C) + (X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + H * C * value(Pyro)) * C / (1 + C)
+            //         X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + value(Pyro) * H * C * C / (1 + C)
+
+            // (1 - X - Y) * time(LB) / [X * time(FB) + Y * time(Sc) + (1 - X - Y) * time(LB) + time(Pyro) * H * C * C / (1 + C)] = time(LB) / 12
+            // Z = 1 - X - Y
+            // Z * time(LB) / [X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * C * C / (1 + C)] = time(LB) / 12
+            // 12 * Z = X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * C * C / (1 + C)
+            // T := X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * C * C / (1 + C)
+            // 12 * Z = T
+
+            // (X * time(FB) + Z * time(LB) + time(Pyro) * H * C * C / (1 + C)) / T = gap
+            // (T - Y * time(Sc)) / T = gap
+            // T * (1 - gap) = Y * time(Sc)
+            // if gap = 1 => Y = 0
+            // 12 * Z * (1 - gap) = Y * time(Sc)
+            // X = 1 - Y * [1 + time(Sc) / (12 * (1 - gap))]
+            // P := 1 + time(Sc) / (12 * (1 - gap))
+            // X = 1 - P * Y
+            // Z = 1 - X - Y = 1 - 1 + P * Y - Y = Y * (P - 1)
+            // C = (FBcrit * X  + SCcrit * Y + LBcrit * Z)
+            //     (FBcrit * (1 - P * Y) + SCcrit * Y + LBcrit * Y * (P - 1))
+            //     (FBcrit + Y * (SCcrit - FBcrit * P + LBcrit * (P - 1)))
+            // C / (1 + C) = (FBcrit + Y * (SCcrit - FBcrit * P + LBcrit * (P - 1))) / (1 + FBcrit + Y * (SCcrit - FBcrit * P + LBcrit * (P - 1)))
+            // 12 * Y * (P - 1) = T
+            // CY := SCcrit - FBcrit * P + LBcrit * (P - 1)
+            // C = FBcrit + Y * CY
+
+            // T =
+            // X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * C * C / (1 + C)
+            // (1 - P * Y) * time(FB) + Y * time(Sc) + Y * (P - 1) * time(LB) + time(Pyro) * H * C * C / (1 + C)
+            // time(FB) + Y * [time(Sc) - P * time(FB) + (P - 1) * time(LB)] + time(Pyro) * H * C * C / (1 + C)
+
+            // 0 = time(FB) + Y * [time(Sc) - P * time(FB) + (P - 1) * time(LB) - 12 * (P - 1)] + time(Pyro) * H * C * C / (1 + C)
+            // T1 := time(Sc) - P * time(FB) + (P - 1) * time(LB) - 12 * (P - 1)
+            // 0 = time(FB) + Y * T1 + time(Pyro) * H * C * C / (1 + C)
+            // 0 = time(FB) + C * time(FB) + Y * T1 + Y * C * T1 + time(Pyro) * H * C * C
+            // 0 = time(FB) + (FBcrit + Y * CY) * time(FB) + Y * T1 + Y * (FBcrit + Y * CY) * T1 + time(Pyro) * H * (FBcrit + Y * CY) * (FBcrit + Y * CY)
+            // 0 = [time(FB) + FBcrit * time(FB) + time(Pyro) * H * FBcrit * FBcrit] + Y * [CY * time(FB) + T1 + FBcrit * T1 + 2 * time(Pyro) * H * FBcrit * CY] + Y * Y * [CY * T1 + time(Pyro) * H * CY * CY]
+
+            /*if (castingState.CalculationOptions.Mode308)*/
+            {
+                float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+                if (castingState.MageTalents.ImprovedScorch == 0)
+                {
+                    ProvidesScorch = false;
+                    gap = 1.0f;
+                }
+                if (gap == 1.0f)
+                {
+                    Y = 0.0f;
+                    float FBcrit = FB.CritRate;
+                    float LBcrit = LB.CritRate;
+                    float H = castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                    float A2 = (FBcrit - LBcrit) * (LB.CastTime - FB.CastTime - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * Pyro.CastTime * H;
+                    float A1 = (FBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime * H * 2 * LBcrit * (FBcrit - LBcrit);
+                    float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime * H * LBcrit * LBcrit;
+                    if (Math.Abs(A2) < 0.00001)
+                    {
+                        X = -A0 / A1;
+                    }
+                    else
+                    {
+                        X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                    }
+                    float C = LBcrit + X * (FBcrit - LBcrit);
+                    K = H * C * C / (1 + C);
+                }
+                else
+                {
+                    float P = 1.0f + Sc.CastTime / (12.0f * (1.0f - gap));
+                    float FBcrit = FB.CritRate;
+                    float SCcrit = Sc.CritRate;
+                    float LBcrit = LB.CritRate;
+                    float H = castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                    float T1 = Sc.CastTime - P * FB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
+                    float CY = SCcrit - FBcrit * P + LBcrit * (P - 1);
+
+                    float A2 = CY * T1 + Pyro.CastTime * H * CY * CY;
+                    float A1 = CY * FB.CastTime + T1 + FBcrit * T1 + 2 * Pyro.CastTime * H * FBcrit * CY;
+                    float A0 = FB.CastTime + FBcrit * FB.CastTime + Pyro.CastTime * H * FBcrit * FBcrit;
+                    if (Math.Abs(A2) < 0.00001)
+                    {
+                        Y = -A0 / A1;
+                    }
+                    else
+                    {
+                        Y = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                    }
+                    X = 1 - P * Y;
+                    float C = (FBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y));
+                    K = H * C * C / (1 + C);
+                }
+            }
+
+            // 3.0 calculations
+
+            // Living Bomb shouldn't be cast more often than it's dot duration
+            // time casting LB / all time casting <= LB cast time / 12
+
+            // proportion of time casting non-scorch spells has to be less than gap := (30 - (averageScorchesNeeded + extraScorches)) / (30 - extraScorches)
+
+            // 0 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X
+            //        => 1 HS charge    FBcrit * X
+            // LB     => 0 HS charge    1 - X - Y
+            // Sc     => 0 HS charge    (1 - SCcrit) * Y
+            //           1 HS charge    SCcrit * Y
+            // 1 HS charge:
+            // FB     => 0 HS charge    (1 - FBcrit) * X + (1 - H) * FBcrit * X
+            // FBPyro => 0 HS charge    H * FBcrit * X
+            // LB     => 1 HS charge    1 - X - Y
+            // Sc     => 0 HS charge    (1 - SCcrit) * Y + (1 - H) * SCcrit * Y
+            // ScPyro => 0 HS charge    H * SCcrit * Y
+
+            // S0 = FB0a + FB0b + LB0 + Sc0a + Sc0b
+            // S1 = FB1 + FBPyro + LB1 + Sc1 + ScPyro
+
+            // solve for stationary distribution
+            // FB0a = (1 - FBcrit) * X * S0
+            // FB0b = FBcrit * X * S0
+            // LB0 = (1 - X - Y) * S0
+            // Sc0a = (1 - SCcrit) * Y * S0
+            // Sc0b = SCcrit * Y * S0
+            // FB1 = ((1 - FBcrit) * X + (1 - H) * FBcrit * X) * S1
+            // FBPyro = H * FBcrit * X * S1
+            // LB1 = (1 - X - Y) * S1
+            // Sc1 = ((1 - SCcrit) * Y + (1 - H) * SCcrit * Y) * S1
+            // ScPyro = H * SCcrit * Y * S1
+
+            // S0 + S1 = 1
+            // S0 = FB0a + Sc0a + S1 - LB1
+            // S1 = FB0b + Sc0b + LB1
+
+            // S1 = (FBcrit * X  + SCcrit * Y) * S0 + (1 - X - Y) * S1
+            // S1 = (FBcrit * X  + SCcrit * Y) / (X + Y) * S0
+            // C := (FBcrit * X  + SCcrit * Y) / (X + Y)
+
+            // S1 = C * (1 - S1)
+            // S1 = C / (1 + C)
+            // S0 = 1 / (1 + C)
+
+            // value = (X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB)) * 1 / (1 + C) + (X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + H * (FBcrit * X + SCcrit * Y) * value(Pyro)) * C / (1 + C)
+            //         X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + value(Pyro) * H * (X + Y) * C * C / (1 + C)
+
+            // (1 - X - Y) * time(LB) / [X * time(FB) + Y * time(Sc) + (1 - X - Y) * time(LB) + time(Pyro) * H * (X + Y) * C * C / (1 + C)] = time(LB) / 12
+            // Z = 1 - X - Y
+            // Z * time(LB) / [X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * (1 - Z) * C * C / (1 + C)] = time(LB) / 12
+            // 12 * Z = X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * (1 - Z) * C * C / (1 + C)
+            // T := X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * (1 - Z) * C * C / (1 + C)
+            // 12 * Z = T
+
+            // (X * time(FB) + Z * time(LB) + time(Pyro) * H * (1 - Z) * C * C / (1 + C)) / T = gap
+            // (T - Y * time(Sc)) / T = gap
+            // T * (1 - gap) = Y * time(Sc)
+            // if gap = 1 => Y = 0
+            // 12 * Z * (1 - gap) = Y * time(Sc)
+            // X = 1 - Y * [1 + time(Sc) / (12 * (1 - gap))]
+            // P := 1 + time(Sc) / (12 * (1 - gap))
+            // X = 1 - P * Y
+            // Z = 1 - X - Y = 1 - 1 + P * Y - Y = Y * (P - 1)
+            // C = (FBcrit * X  + SCcrit * Y) / (X + Y)
+            //     (FBcrit * (1 - P * Y) + SCcrit * Y) / (1 - Y * (P - 1))
+            //     (FBcrit + Y * (SCcrit - FBcrit * P)) / (1 - Y * (P - 1))
+            // 1 + C = (1 - Y * (P - 1) + FBcrit + Y * (SCcrit - FBcrit * P)) / (1 - Y * (P - 1))
+            // C / (1 + C) = (FBcrit + Y * (SCcrit - FBcrit * P)) / (1 + FBcrit + Y * (1 + SCcrit - P * (1 + FBcrit)))
+            // 12 * Y * (P - 1) = T
+
+            // T =
+            // X * time(FB) + Y * time(Sc) + Z * time(LB) + time(Pyro) * H * (1 - Z) * C * C / (1 + C)
+            // (1 - P * Y) * time(FB) + Y * time(Sc) + Y * (P - 1) * time(LB) + time(Pyro) * H * (1 - Y * (P - 1)) * C * C / (1 + C)
+            // (1 - P * Y) * time(FB) + Y * time(Sc) + Y * (P - 1) * time(LB) + time(Pyro) * H * (FBcrit + Y * (SCcrit - FBcrit * P)) * C / (1 + C)
+            // time(FB) + Y * [time(Sc) - P * time(FB) + (P - 1) * time(LB)] + time(Pyro) * H * (FBcrit + Y * (SCcrit - FBcrit * P)) * C / (1 + C)
+            // time(FB) + Y * [time(Sc) - P * time(FB) + (P - 1) * time(LB)] + time(Pyro) * H * (FBcrit + Y * (SCcrit - FBcrit * P)) * (FBcrit + Y * (SCcrit - FBcrit * P)) / (1 + FBcrit + Y * (1 + SCcrit - P * (1 + FBcrit)))
+
+            // 0 = time(FB) + Y * [time(Sc) - P * time(FB) + (P - 1) * time(LB) - 12 * (P - 1)] + time(Pyro) * H * (FBcrit + Y * (SCcrit - FBcrit * P)) * (FBcrit + Y * (SCcrit - FBcrit * P)) / (1 + FBcrit + Y * (1 + SCcrit - P * (1 + FBcrit)))
+            // K1 := time(Sc) - P * time(FB) + (P - 1) * time(LB) - 12 * (P - 1)
+            // K2 := SCcrit - FBcrit * P
+            // K3 := 1 + SCcrit - P * (1 + FBcrit) = 1 - P + K2
+
+            // 0 = time(FB) + Y * K1 + time(Pyro) * H * (FBcrit + Y * K2) * (FBcrit + Y * K2) / (1 + FBcrit + Y * K3)
+            // 0 = time(FB) * (1 + FBcrit + Y * K3) + Y * K1 * (1 + FBcrit + Y * K3) + time(Pyro) * H * (FBcrit + Y * K2) * (FBcrit + Y * K2)
+            // 0 = time(FB) * (1 + FBcrit) + time(FB) * Y * K3 + Y * K1 * (1 + FBcrit) + Y * Y * K3 * K1 + time(Pyro) * H * (FBcrit + Y * K2) * (FBcrit + Y * K2)
+            // 0 = time(FB) * (1 + FBcrit) + Y * [time(FB) * K3 + K1 * (1 + FBcrit)] + Y * Y * [K3 * K1] + time(Pyro) * H * (FBcrit * FBcrit + 2 * FBcrit * K2 * Y + Y * Y * K2 * K2)
+            // 0 = [time(FB) * (1 + FBcrit) + time(Pyro) * H * FBcrit * FBcrit] + Y * [time(FB) * K3 + K1 * (1 + FBcrit) + time(Pyro) * H * 2 * FBcrit * K2] + Y * Y * [K3 * K1 + time(Pyro) * H * K2 * K2]
+
+            // A2 := K3 * K1 + time(Pyro) * H * K2 * K2
+            // A1 := time(FB) * K3 + K1 * (1 + FBcrit) + time(Pyro) * H * 2 * FBcrit * K2
+            // A0 := time(FB) * (1 + FBcrit) + time(Pyro) * H * FBcrit * FBcrit
+
+            // A2 * Y * Y + A1 * Y + A0 = 0
+            // Y = [- A1 +/- sqrt[A1 * A1 - 4 * A2 * A0]] / (2 * A2)
+
+            /*else
+            {
+                float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+                if (castingState.MageTalents.ImprovedScorch == 0)
+                {
+                    ProvidesScorch = false;
+                    gap = 1.0f;
+                }
+                if (gap == 1.0f)
+                {
+                    Y = 0.0f;
+                    K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+                    X = (12.0f - LB.CastTime) / (12.0f + FB.CastTime - LB.CastTime + Pyro.CastTime * K);
+                }
+                else
+                {
+                    float P = 1.0f + Sc.CastTime / (12.0f * (1.0f - gap));
+                    float FBcrit = FB.CritRate;
+                    float SCcrit = Sc.CritRate;
+                    float H = castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                    float K1 = Sc.CastTime - P * FB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
+                    float K2 = SCcrit - FBcrit * P;
+                    float K3 = 1.0f - P + K2;
+
+                    float A2 = K3 * K1 + Pyro.CastTime * H * K2 * K2;
+                    float A1 = FB.CastTime * K3 + K1 * (1 + FBcrit) + Pyro.CastTime * H * 2 * FBcrit * K2;
+                    float A0 = FB.CastTime * (1 + FBcrit) + Pyro.CastTime * H * FBcrit * FBcrit;
+                    if (Math.Abs(A2) < 0.00001)
+                    {
+                        Y = -A0 / A1;
+                    }
+                    else
+                    {
+                        Y = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                    }
+                    X = 1 - P * Y;
+                    float C = (FBcrit * X + SCcrit * Y) / (X + Y);
+                    K = H * (X + Y) * C * C / (1 + C);
+                }
+            }*/
+
+            AddSpell(needsDisplayCalculations, FB, X);
+            AddSpell(needsDisplayCalculations, Sc, Y);
+            AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class FFBScLBPyro : DynamicCycle
+    {
+        public FFBScLBPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FFB;
+            Spell Sc;
+            Spell LB;
+            Spell Pyro;
+            float K;
+            float X;
+            float Y;
+            Name = "FFBScLBPyro";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            FFB = castingState.GetSpell(SpellId.FrostfireBolt);
+            Sc = castingState.GetSpell(SpellId.Scorch);
+            LB = castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Frostfire Bolt";
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            /*if (castingState.CalculationOptions.Mode308)*/
+            {
+                float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+                if (castingState.MageTalents.ImprovedScorch == 0)
+                {
+                    ProvidesScorch = false;
+                    gap = 1.0f;
+                }
+                if (gap == 1.0f)
+                {
+                    Y = 0.0f;
+                    float FFBcrit = FFB.CritRate;
+                    float LBcrit = LB.CritRate;
+                    float H = castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                    float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime * H;
+                    float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime * H * 2 * LBcrit * (FFBcrit - LBcrit);
+                    float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime * H * LBcrit * LBcrit;
+                    if (Math.Abs(A2) < 0.00001)
+                    {
+                        X = -A0 / A1;
+                    }
+                    else
+                    {
+                        X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                    }
+                    float C = LBcrit + X * (FFBcrit - LBcrit);
+                    K = H * C * C / (1 + C);
+                }
+                else
+                {
+                    float P = 1.0f + Sc.CastTime / (12.0f * (1.0f - gap));
+                    float FFBcrit = FFB.CritRate;
+                    float SCcrit = Sc.CritRate;
+                    float LBcrit = LB.CritRate;
+                    float H = castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                    float T1 = Sc.CastTime - P * FFB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
+                    float CY = SCcrit - FFBcrit * P + LBcrit * (P - 1);
+
+                    float A2 = CY * T1 + Pyro.CastTime * H * CY * CY;
+                    float A1 = CY * FFB.CastTime + T1 + FFBcrit * T1 + 2 * Pyro.CastTime * H * FFBcrit * CY;
+                    float A0 = FFB.CastTime + FFBcrit * FFB.CastTime + Pyro.CastTime * H * FFBcrit * FFBcrit;
+                    if (Math.Abs(A2) < 0.00001)
+                    {
+                        Y = -A0 / A1;
+                    }
+                    else
+                    {
+                        Y = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                    }
+                    X = 1 - P * Y;
+                    float C = (FFBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y));
+                    K = H * C * C / (1 + C);
+                }
+            }
+            /*else
+            {
+                float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+                if (castingState.MageTalents.ImprovedScorch == 0)
+                {
+                    ProvidesScorch = false;
+                    gap = 1.0f;
+                }
+                if (gap == 1.0f)
+                {
+                    Y = 0.0f;
+                    K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+                    X = (12.0f - LB.CastTime) / (12.0f + FFB.CastTime - LB.CastTime + Pyro.CastTime * K);
+                }
+                else
+                {
+                    float P = 1.0f + Sc.CastTime / (12.0f * (1.0f - gap));
+                    float FFBcrit = FFB.CritRate;
+                    float SCcrit = Sc.CritRate;
+                    float H = castingState.MageTalents.HotStreak / 3.0f;
+                    if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                    float K1 = Sc.CastTime - P * FFB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
+                    float K2 = SCcrit - FFBcrit * P;
+                    float K3 = 1.0f - P + K2;
+
+                    float A2 = K3 * K1 + Pyro.CastTime * H * K2 * K2;
+                    float A1 = FFB.CastTime * K3 + K1 * (1 + FFBcrit) + Pyro.CastTime * H * 2 * FFBcrit * K2;
+                    float A0 = FFB.CastTime * (1 + FFBcrit) + Pyro.CastTime * H * FFBcrit * FFBcrit;
+                    if (Math.Abs(A2) < 0.00001)
+                    {
+                        Y = -A0 / A1;
+                    }
+                    else
+                    {
+                        Y = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                    }
+                    X = 1 - P * Y;
+                    float C = (FFBcrit * X + SCcrit * Y) / (X + Y);
+                    K = H * (X + Y) * C * C / (1 + C);
+                }
+            }*/
+
+            AddSpell(needsDisplayCalculations, FFB, X);
+            AddSpell(needsDisplayCalculations, Sc, Y);
+            AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class FFBScPyro : DynamicCycle
+    {
+        public FFBScPyro(bool needsDisplayCalculations, CastingState castingState)
+            : base(needsDisplayCalculations, castingState)
+        {
+            Spell FFB;
+            Spell Sc;
+            Spell Pyro;
+            float K;
+            float X;
+            Name = "FFBScPyro";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
+            Sc = castingState.GetSpell(SpellId.Scorch);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Frostfire Bolt";
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+            float FFBcrit = FFB.CritRate;
+            float SCcrit = Sc.CritRate;
+            float H = castingState.MageTalents.HotStreak / 3.0f;
+            if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+            float A2 = (FFBcrit - SCcrit) * FFB.CastTime * (1 - gap) + (FFBcrit - SCcrit) * (FFBcrit - SCcrit) * Pyro.CastTime * H * (1 - gap) + gap * (FFBcrit - SCcrit) * Sc.CastTime;
+            float A1 = FFB.CastTime * (1 - gap) * (1 + SCcrit) + Pyro.CastTime * H * (2 * (FFBcrit - SCcrit) * SCcrit * (1 - gap)) + Sc.CastTime * gap * (1 + 2 * SCcrit - FFBcrit);
+            float A0 = SCcrit * SCcrit * Pyro.CastTime * H * (1 - gap) - gap * Sc.CastTime * (1 + SCcrit);
+            if (Math.Abs(A2) < 0.00001)
+            {
+                X = -A0 / A1;
+            }
+            else
+            {
+                X = (float)((-A1 + Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+            }
+            if (gap == 1.0f) X = 1.0f; //avoid rounding errors
+            float C = X * (FFBcrit - SCcrit) + SCcrit;
+            K = H * C * C / (1 + C);
+
+            AddSpell(needsDisplayCalculations, FFB, X);
+            AddSpell(needsDisplayCalculations, Sc, 1 - X);
+            AddSpell(needsDisplayCalculations, Pyro, K);
+            Calculate();
+        }
+    }
+
+    class FBSc : StaticCycle
+    {
+        public FBSc(CastingState castingState)
+            : base(33)
+        {
+            Name = "FBSc";
+
+            Spell FB = castingState.GetSpell(SpellId.Fireball);
+            Spell Sc = castingState.GetSpell(SpellId.Scorch);
+
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                // in this case just Fireball, scorch debuff won't be applied
+                AddSpell(FB, castingState);
+                Calculate(castingState);
+            }
+            else
+            {
+                ProvidesScorch = true;
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+                int extraScorches = 1;
+                if (Sc.HitRate >= 1.0) extraScorches = 0;
+                if (castingState.MageTalents.GlyphOfImprovedScorch)
+                {
+                    averageScorchesNeeded = 1;
+                    extraScorches = 0;
+                }
+                double timeOnScorch = 30;
+                int fbCount = 0;
+
+                while (timeOnScorch > FB.CastTime + (averageScorchesNeeded + extraScorches) * Sc.CastTime) // one extra scorch gap to account for possible resist
+                {
+                    AddSpell(FB, castingState);
+                    fbCount++;
+                    timeOnScorch -= FB.CastTime;
+                }
+                for (int i = 0; i < averageScorchesNeeded; i++)
+                {
+                    AddSpell(Sc, castingState);
+                }
+
+                Calculate(castingState);
+
+                sequence = string.Format("{0}x Fireball : {1}x Scorch", fbCount, averageScorchesNeeded);
+            }
+        }
+    }
+
+    class FBFBlast : StaticCycle
+    {
+        public FBFBlast(CastingState castingState)
+            : base(33)
+        {
+            Name = "FBFBlast";
+
+            Spell FB = castingState.GetSpell(SpellId.Fireball);
+            Spell Blast = castingState.GetSpell(SpellId.FireBlast);
+            Spell Sc = castingState.GetSpell(SpellId.Scorch);
+
+            if (castingState.MageTalents.ImprovedScorch == 0 || !castingState.CalculationOptions.MaintainScorch)
+            {
+                // in this case just Fireball/Fire Blast, scorch debuff won't be applied
+                float blastCooldown = Blast.Cooldown - Blast.CastTime;
+                AddSpell(Blast, castingState);
+                while (blastCooldown > 0)
+                {
+                    AddSpell(FB, castingState);
+                    blastCooldown -= FB.CastTime;
+                }
+                Calculate(castingState);
+            }
+            else
+            {
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+                int extraScorches = 1;
+                if (castingState.MageTalents.GlyphOfImprovedScorch)
+                {
+                    averageScorchesNeeded = 1;
+                    extraScorches = 0;
+                }
+                double timeOnScorch = 30;
+                int fbCount = 0;
+                float blastCooldown = 0;
+
+                do
+                {
+                    float expectedTimeWithBlast = Blast.CastTime + (int)((timeOnScorch - (blastCooldown > 0f ? blastCooldown : 0f) - Blast.CastTime - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / FB.CastTime) * FB.CastTime + averageScorchesNeeded * Sc.CastTime;
+                    if (expectedTimeWithBlast > Blast.Cooldown && (blastCooldown <= 0 || (Blast.DamagePerSecond * Blast.CastTime / (Blast.CastTime + blastCooldown) > FB.DamagePerSecond)))
+                    {
+                        if (blastCooldown > 0)
+                        {
+                            AddPause(blastCooldown);
+                            timeOnScorch -= blastCooldown;
+                        }
+                        AddSpell(Blast, castingState);
+                        fbCount++;
+                        timeOnScorch -= Blast.CastTime;
+                        blastCooldown = Blast.Cooldown - Blast.CastTime;
+                    }
+                    else if (timeOnScorch > FB.CastTime + (averageScorchesNeeded + extraScorches) * Sc.CastTime) // one extra scorch gap to account for possible resist
+                    {
+                        AddSpell(FB, castingState);
+                        fbCount++;
+                        timeOnScorch -= FB.CastTime;
+                        blastCooldown -= FB.CastTime;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+                for (int i = 0; i < averageScorchesNeeded; i++)
+                {
+                    AddSpell(Sc, castingState);
+                    blastCooldown -= Sc.CastTime;
+                }
+                if (blastCooldown > 0) AddPause(blastCooldown);
+
+                Calculate(castingState);
+            }
+        }
+    }
+}
