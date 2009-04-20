@@ -1897,14 +1897,23 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Kirin'dor Garb 2 Piece",
+                Name = "Kirin Tor Garb 2 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
-                SetName = "Kirin'dor Garb",
+                SetName = "Kirin Tor Garb",
                 SetThreshold = 2
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.MageNukeCast, new Stats() { SpellPower = 350f }, 15f, 45f, 0.25f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Kirin Tor Garb 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mage4T8 = 1 },
+                SetName = "Kirin Tor Garb",
+                SetThreshold = 4
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Duskweaver 2 Piece",

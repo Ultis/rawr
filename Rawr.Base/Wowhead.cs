@@ -161,6 +161,7 @@ namespace Rawr
             public string Boss;
             public string Area;
             public bool Heroic;
+            public bool Container;
             public string Name;
         }
 
@@ -244,7 +245,6 @@ namespace Rawr
             if (!string.IsNullOrEmpty(source) && !string.IsNullOrEmpty(sourcemore))
             {
                 string[] sourceKeys = source.Split(',');
-                sourcemore.Trim('{', '}');
                 string[] sourcemoreKeys = sourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
 
                 // most mobs that have a vendor bought alternative will give more information through the vendor than the mob
@@ -355,11 +355,12 @@ namespace Rawr
                         string boss = null;
                         string area = null;
                         bool heroic = false;
+                        bool container = false;
                         if (!_tokenDropMap.ContainsKey(tokenId))
                         {
                             XmlDocument docToken = wrw.DownloadItemWowhead(site, tokenId);
 
-                            tokenName = docItem.SelectSingleNode("wowhead/item/name").InnerText;
+                            tokenName = docToken.SelectSingleNode("wowhead/item/name").InnerText;
 
                             string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
 
@@ -376,32 +377,53 @@ namespace Rawr
                                 tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
                                 tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
                             }
-                            if (tokenSource.Contains("2"))
+
+                            if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
                             {
-                                foreach (string kv in tokenSourcemore.Split(','))
+                                string[] tokenSourceKeys = tokenSource.Split(',');
+                                string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                // for tokens we prefer loot info, we don't care if it can be bought with badges
+                                tokenSource = tokenSourceKeys[0];
+                                tokenSourcemore = tokenSourcemoreKeys[0];
+
+                                int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
+                                if (dropIndex >= 0)
                                 {
-                                    if (!string.IsNullOrEmpty(kv))
+                                    tokenSource = tokenSourceKeys[dropIndex];
+                                    tokenSourcemore = tokenSourcemoreKeys[dropIndex];
+                                }
+
+                                if (tokenSource == "2")
+                                {
+                                    foreach (string kv in tokenSourcemore.Split(','))
                                     {
-                                        string[] keyvalsplit = kv.Split(':');
-                                        string key = keyvalsplit[0];
-                                        string val = keyvalsplit[1];
-                                        switch (key)
+                                        if (!string.IsNullOrEmpty(kv))
                                         {
-                                            case "n":       // NPC 'Name'
-                                                boss = val.Replace("\\'", "'").Trim('\'');
-                                                break;
-                                            case "z":       // Zone
-                                                area = GetZoneName(val);
-                                                break;
-                                            case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
-                                                heroic = val == "2";
-                                                break;
+                                            string[] keyvalsplit = kv.Split(':');
+                                            string key = keyvalsplit[0];
+                                            string val = keyvalsplit[1];
+                                            switch (key)
+                                            {
+                                                case "t":
+                                                    container = val == "2" || val == "3";
+                                                    break;
+                                                case "n":       // NPC 'Name'
+                                                    boss = val.Replace("\\'", "'").Trim('\'');
+                                                    break;
+                                                case "z":       // Zone
+                                                    area = GetZoneName(val);
+                                                    break;
+                                                case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+                                                    heroic = val == "2";
+                                                    break;
+                                            }
                                         }
                                     }
                                 }
                             }
 
-                            _tokenDropMap[tokenId] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenName };
+                            _tokenDropMap[tokenId] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenName, Container = container };
                         }
                         else
                         {
@@ -410,16 +432,30 @@ namespace Rawr
                             area = info.Area;
                             heroic = info.Heroic;
                             tokenName = info.Name;
+                            container = info.Container;
                         }
                         if (area != null)
                         {
-                            ItemLocation locInfo = new StaticDrop()
+                            if (container)
                             {
-                                Area = area,
-                                Boss = boss,
-                                Heroic = heroic
-                            };
-                            LocationFactory.Add(item.Id.ToString(), locInfo);
+                                ItemLocation locInfo = new ContainerItem()
+                                {                                    
+                                    Area = area,
+                                    Container = boss,
+                                    Heroic = heroic
+                                };
+                                LocationFactory.Add(item.Id.ToString(), locInfo);
+                            }
+                            else
+                            {
+                                ItemLocation locInfo = new StaticDrop()
+                                {
+                                    Area = area,
+                                    Boss = boss,
+                                    Heroic = heroic
+                                };
+                                LocationFactory.Add(item.Id.ToString(), locInfo);
+                            }
                         }
                         else
                         {
@@ -535,7 +571,7 @@ namespace Rawr
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
 				htmlTooltip = htmlTooltip.Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-					.Replace("Heroes' ", "").Replace("Conqueror's ", "");
+					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Kirin'dor", "Kirin Tor");
 				item.SetName = htmlTooltip;
 			}
 			//if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";

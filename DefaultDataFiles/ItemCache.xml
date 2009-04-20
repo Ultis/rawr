@@ -85,6 +85,22 @@
     <Slot>Meta</Slot>
   </Item>
   <Item>
+    <ItemLevel>175</ItemLevel>
+    <IconPath>inv_gauntlets_01</IconPath>
+    <Stats>
+      <Armor>1247</Armor>
+      <Stamina>51</Stamina>
+      <Strength>55</Strength>
+      <HitRating>43</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Plate Claws of the Dragon</Name>
+    <Id>35651</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>183</ItemLevel>
     <IconPath>INV_Helmet_123</IconPath>
     <Stats>
@@ -5636,7 +5652,6 @@
     <IconPath>RACIAL_TROLL_BERSERK</IconPath>
     <Stats>
       <Spirit>73</Spirit>
-      <TrollDivinity>290</TrollDivinity>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -11536,6 +11551,22 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>171</ItemLevel>
+    <IconPath>inv_jewelry_necklace_17</IconPath>
+    <Stats>
+      <Stamina>36</Stamina>
+      <AttackPower>68</AttackPower>
+      <CritRating>23</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Choker of the Betrayer</Name>
+    <Id>39652</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
     <ItemLevel>187</ItemLevel>
     <IconPath>INV_Bracer_16</IconPath>
     <Stats>
@@ -12291,6 +12322,22 @@
     <Name>Cowl of the Perished</Name>
     <Id>39768</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_shoulder_69</IconPath>
+    <Stats>
+      <Armor>1185</Armor>
+      <Stamina>60</Stamina>
+      <Strength>43</Strength>
+      <HitRating>34</HitRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Scourgebane Pauldrons</Name>
+    <Id>39888</Id>
+    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>70</ItemLevel>
@@ -23600,6 +23647,18 @@
     <Name>Hateful Gladiator's Scaled Helm</Name>
     <Id>40821</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Sigil of the Frozen Conscience</Name>
+    <Id>40822</Id>
+    <Slot>Ranged</Slot>
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
@@ -38840,6 +38899,49 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_jewelry_talisman_01</IconPath>
+    <Stats>
+      <AttackPower>106</AttackPower>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Crusader's Locket</Name>
+    <Id>43829</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_box_04</IconPath>
+    <Stats>
+      <AttackPower>53</AttackPower>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Chuchu's Tiny Box of Horrors</Name>
+    <Id>43838</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_belt_27</IconPath>
+    <Stats>
+      <Armor>889</Armor>
+      <Stamina>44</Stamina>
+      <Strength>39</Strength>
+      <CritRating>28</CritRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Stability Girdle</Name>
+    <Id>43947</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>187</ItemLevel>
     <IconPath>INV_Belt_16</IconPath>
     <Stats>
@@ -39379,6 +39481,56 @@
     <Name>Leggings of the Honored</Name>
     <Id>44011</Id>
     <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_sword_91</IconPath>
+    <Stats>
+      <Stamina>39</Stamina>
+      <AttackPower>50</AttackPower>
+      <ParryRating>26</ParryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>124</MinDamage>
+    <MaxDamage>231</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketBonus />
+    <Name>Quickblade of Cold Return</Name>
+    <Id>44029</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_bracer_17</IconPath>
+    <Stats>
+      <Armor>867</Armor>
+      <Stamina>48</Stamina>
+      <Strength>35</Strength>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Battlescar Spirebands</Name>
+    <Id>44038</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <IconPath>inv_jewelry_ring_43</IconPath>
+    <Stats>
+      <Agility>24</Agility>
+      <Stamina>31</Stamina>
+      <AttackPower>68</AttackPower>
+      <CritRating>18</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus />
+    <Name>Signet of Bridenbrad</Name>
+    <Id>44039</Id>
+    <Slot>Finger</Slot>
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
@@ -52416,7 +52568,7 @@
       <HitRating>69</HitRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Meta</SocketColor1>
@@ -52440,7 +52592,7 @@
       <CritRating>82</CritRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Blue</SocketColor1>
@@ -52487,7 +52639,7 @@
       <HasteRating>47</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Yellow</SocketColor1>
@@ -52510,7 +52662,7 @@
       <HitRating>66</HitRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Red</SocketColor1>
@@ -52534,7 +52686,7 @@
       <HasteRating>62</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Yellow</SocketColor1>

@@ -12,8 +12,6 @@ namespace Rawr
     {
         Agility,
         AllResist,
-        AldorRegaliaInterruptProtection,
-        ArcaneBlastBonus,
         ArcaneResistance,
         Armor,
         BonusArmor,
@@ -33,7 +31,6 @@ namespace Rawr
         BonusEvisEnvenomDamage,
         BonusFreeFinisher,
         BonusLacerateDamageMultiplier,
-        BonusManaGem,
         BonusMangleBearDamage,
         BonusMangleCatDamage,
         BonusRipDamagePerCPPerTick,
@@ -58,7 +55,6 @@ namespace Rawr
         DodgeRating,
         DrumsOfBattle,
         DrumsOfWar,
-        EvocationExtension,
         ExecutionerProc,
         Expertise,
         ExpertiseRating,
@@ -81,10 +77,6 @@ namespace Rawr
         LightweaveEmbroideryProc,
         ThunderCapacitorProc,
         LotPCritRating,
-        MageAllResist,
-        MageIceArmor,
-        MageMageArmor,
-        MageMoltenArmor,
         WarlockFelArmor,
         WarlockDemonArmor,
         WarlockGrandSpellstone,
@@ -217,6 +209,17 @@ namespace Rawr
         BonusNukeCritChance,
         BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
+        #region Added by Rawr.Mage
+        AldorRegaliaInterruptProtection,
+        ArcaneBlastBonus,
+        BonusManaGem,
+        EvocationExtension,
+        MageAllResist,
+        MageIceArmor,
+        MageMageArmor,
+        MageMoltenArmor,
+        Mage4T8,
+        #endregion
         #region Added by Rawr.Tree
         LifebloomCostReduction,
         NourishBonusPerHoT,
@@ -1424,6 +1427,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus] = value; }
+        }
+
+        [DisplayName("Kirin Tor Garb 4 Piece Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Mage4T8
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T8]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mage4T8] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

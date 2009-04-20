@@ -759,7 +759,7 @@ namespace Rawr
     [Serializable]
     public class ContainerItem : ItemLocation
     {
-        private ContainerItem()
+        public ContainerItem()
         {
             Source = ItemSource.Container;
         }
@@ -768,11 +768,11 @@ namespace Rawr
         {
             get
             {
-                return string.Format("Found in {0} in {1}", Container, Area);
+                return string.Format("Found in {0} in {1}{2}", Container, Heroic ? "Heroic " : "", Area);
             }
         }
 
-
+        public bool Heroic { get; set; }
         public String Area { get; set; }
         public String Container { get; set; }
         public int MinLevel { get; set; }
