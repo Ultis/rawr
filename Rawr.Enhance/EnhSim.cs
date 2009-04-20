@@ -440,14 +440,14 @@ namespace Rawr.Enhance
                             if (kvp.Value >= 4)
                             {
                                 bonusCount++;
-                                sb.AppendLine("set_bonus" + bonusCount + "                      ulduar_melee_4");
+                                sb.AppendLine("set_bonus" + bonusCount + "                      worldbreaker_battlegear_4");
                             }
                             else if (kvp.Value >= 2)
                             {
                                 bonusCount++;
-                                sb.AppendLine("set_bonus" + bonusCount + "                      ulduar_melee_2");
-                             }
-                           break;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      worldbreaker_battlegear_2");
+                            }
+                            break;
                     }
                 }
             }
