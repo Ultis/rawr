@@ -193,8 +193,8 @@ namespace Rawr
         {
             #region Applied Stats
             //_cachedCharacter = character;
+            ItemInstance offhand = character.OffHand;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            int targetLevel = calcOpts.TargetLevel;
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -202,14 +202,15 @@ namespace Rawr
             calculatedStats.BasicStats = stats;
             calculatedStats.BaseStats = stats.Clone();
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
-            calculatedStats.TargetLevel = targetLevel;
+            calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
-            StatsSpecialEffects specialEffects = new StatsSpecialEffects(character, stats);
-            stats += specialEffects.getSpecialEffects();
+            StatsSpecialEffects se = new StatsSpecialEffects(character, stats);
+            Stats specialEffects = se.getSpecialEffects();
+            stats += specialEffects;
             if (stats.GreatnessProc > 0)
-                specialEffects.GreatnessProc();
+                se.GreatnessProc();
             //Set up some talent variables
             float initialAP = stats.AttackPower;
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
@@ -351,21 +352,26 @@ namespace Rawr
             //1: Melee DPS
             float APDPS = attackPower / 14f;
             float adjustedMHDPS = (wdpsMH + APDPS);
-            float adjustedOHDPS = (wdpsOH + APDPS) * .5f;
+            float adjustedOHDPS = 0f;
+            float dpsOHMeleeTotal = 0f;
 
             float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifier;
             float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifier;
             float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
 
-            float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifier;
-            float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitModifier;
-            float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitModifier;
-
             float meleeMultipliers = weaponMastery * cs.DamageReduction * cs.ChanceWhiteHit * (1 + bonusPhysicalDamage);
-
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
-            float dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
-            float dpsMelee = dpsMHMeleeTotal + (character.ShamanTalents.DualWield == 1 ? dpsOHMeleeTotal : 0f);
+
+            if (character.ShamanTalents.DualWield == 1 && cs.HastedOHSpeed != 0)
+            {
+                adjustedOHDPS = (wdpsOH + APDPS) * .5f;
+                float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifier;
+                float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitModifier;
+                float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitModifier;
+                dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
+            }
+
+            float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
                               
             //2: Stormstrike DPS
             float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
@@ -375,14 +381,12 @@ namespace Rawr
             {
                 float dpsMHSS = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * cs.HitsPerSMHSS;
                 float dpsOHSS = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSOHSS;
-                if (character.ShamanTalents.DualWield == 0)
-                    dpsOHSS = 0f;
                 dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * cs.DamageReduction * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
             }
 
             //3: Lavalash DPS
             float dpsLL = 0f;
-            if (character.ShamanTalents.LavaLash == 1)
+            if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
             {
                 dpsLL = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSLL
                       * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery; //and no armor reduction yeya!

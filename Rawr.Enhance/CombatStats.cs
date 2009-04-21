@@ -179,7 +179,7 @@ namespace Rawr.Enhance
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
-                swingsPerSOHMelee = 1f / hastedOHSpeed;
+                swingsPerSOHMelee = hastedOHSpeed == 0f ? 0f : 1f / hastedOHSpeed;
                 
                 float hitsThatProcWFPerS = (1f - chanceWhiteMiss) * swingsPerSMHMelee + hitsPerSMHSS;
 
@@ -204,9 +204,12 @@ namespace Rawr.Enhance
                 flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);
 
                 hitsPerSMH = swingsPerSMHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSWF + hitsPerSMHSS;
-                if (_character.ShamanTalents.DualWield == 1)
+                mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH;
+                if (_character.ShamanTalents.DualWield == 1 && unhastedOHSpeed != 0f)
+                {
                     hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSOHSS + hitsPerSLL;
-                mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH + (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
+                    mwProcsPerSecond += (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
+                }
                 secondsToFiveStack /* oh but i want it now! */ = 5 / mwProcsPerSecond;
 
                 float couldCritSpellsPerS = (earthShocksPerS + 1 / secondsToFiveStack) * (1f - chanceSpellMiss);
@@ -215,7 +218,9 @@ namespace Rawr.Enhance
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
-            float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS + (_character.ShamanTalents.DualWield == 1 ? hitsPerSOHSS : 0f);
+            float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS;
+            if (_character.ShamanTalents.DualWield == 1 && unhastedMHSpeed != 0)
+                yellowAttacksPerSecond += hitsPerSOHSS;
 
             // set output variables
             edBonusCrit = edUptime * edCritBonus;
