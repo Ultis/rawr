@@ -195,12 +195,12 @@ namespace Rawr
             //_cachedCharacter = character;
             ItemInstance offhand = character.OffHand;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             Stats stats = GetCharacterStats(character, additionalItem);
+            calculatedStats.BasicStats = stats;
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
-            calculatedStats.BasicStats = stats;
-            calculatedStats.BaseStats = stats.Clone();
+            calculatedStats.BaseStats = ApplyTalents(character, statsRace, statsBaseGear);
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -596,11 +596,11 @@ namespace Rawr
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             int AK = character.ShamanTalents.AncestralKnowledge;
             float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
-			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
+            float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsBaseGear.BonusAgilityMultiplier));
 			float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
-			float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
+            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsBaseGear.BonusStrengthMultiplier));
             float intBase = (float)Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK)+ .0001f); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
-            float intBonus = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK));
+            float intBonus = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsBaseGear.BonusIntellectMultiplier) * (1 + .02f * AK));
             float staBase = (float)Math.Floor(statsRace.Stamina);  
 			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
             float spiBase = (float)Math.Floor(statsRace.Spirit);  
@@ -624,7 +624,7 @@ namespace Rawr
             statsTotal.Mana = statsRace.Mana + statsGearEnchantsBuffs.Mana;
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.SpellPower = (statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower) * (1f + statsTotal.BonusSpellPowerMultiplier);
-            statsTotal = ApplyTalents(character, statsTotal);
+            statsTotal = ApplyTalents(character, statsTotal, null);
             return statsTotal;
 		}
 
@@ -646,8 +646,17 @@ namespace Rawr
             return (float)Math.Floor(strength + agility + intBonusToAP);
         }
 
-        private Stats ApplyTalents(Character character, Stats stats) // also includes basic class benefits
+        private Stats ApplyTalents(Character character, Stats stats, Stats gear) // also includes basic class benefits
         {
+            if (gear != null)
+            {
+                int AK = character.ShamanTalents.AncestralKnowledge;
+                float intBase = (float)Math.Floor(stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1 + .02f * AK) + .0001f); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
+                float intBonus = (float)Math.Floor(gear.Intellect * (1 + gear.BonusIntellectMultiplier) * (1 + .02f * AK));
+                stats += gear;
+                stats.Intellect = (float)Math.Floor((intBase + intBonus));
+            }
+            
             stats.Mana += 15f * stats.Intellect;
             stats.Health += 10f * stats.Stamina;
             stats.Expertise += 3 * character.ShamanTalents.UnleashedRage;
