@@ -348,7 +348,7 @@ namespace Rawr.TankDK
             float parryPreDR = (defSkill * 0.04f) + (stats.ParryRating + parryRatingFromStr) / 49.18498611f;
 
             float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
-            float missPostDR = 1f / (1f / 47.003525f + 0.9560f / missPreDR); //TODO: Search for correct value
+            float missPostDR = 1f / (1f / 16.0f + 0.9560f / missPreDR); //TODO: Search for correct value
             float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
 
             float dodgeTotal = dodgeNonDR + dodgePostDR;
@@ -503,7 +503,7 @@ namespace Rawr.TankDK
 
             float defPostEffect = 1f / (1f / 88.129021f + 0.9560f / (dodgePreDR + defPreEffect)) - dodgePostDR;
             defPostEffect += 1f / (1f / 47.003525f + 0.9560f / (parryPreDR + defPreEffect)) - parryPostDR;
-            defPostEffect += 1f / (1f / 47.003525f + 0.9560f / (missPreDR + defPreEffect)) - missPostDR;
+            defPostEffect += 1f / (1f / 16.0f + 0.9560f / (missPreDR + defPreEffect)) - missPostDR;
 
             calcs.DRDefense = defPostEffect / (3.0f * defPreEffect) * 100.0f;
         }
