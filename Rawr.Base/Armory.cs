@@ -219,7 +219,7 @@ namespace Rawr
 						break;
 					case Character.CharacterClass.DeathKnight:
 						character.DeathKnightTalents = new DeathKnightTalents(talentCode);
-						if (character.DeathKnightTalents.Lichborne > 0) character.CurrentModel = "TankDK";
+						if (character.DeathKnightTalents.Anticipation > 0) character.CurrentModel = "TankDK";
 						else character.CurrentModel = "DPSDK";
 						break;
 					default:
