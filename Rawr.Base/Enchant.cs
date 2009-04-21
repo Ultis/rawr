@@ -48,7 +48,7 @@ namespace Rawr
 					.Replace("Savage", "Sav").Replace("Mighty Armor", "Mighty Arm").Replace("Shadow Armor", "Shadow Arm")
 					.Replace("Attack Power", "AP").Replace("Rune of the ", "").Replace(" Gargoyle", "")
 					.Replace("speed Accelerators", "").Replace(" Mysteries", "").Replace(" Embroidery", "")
-					.Replace("Mana Restoration", "Mp5").Replace("Restore Mana", "Mp5");
+					.Replace("Mana Restoration", "Mp5").Replace("Restore Mana", "Mp5").Replace("Vengeance", "Veng.");
                 return shortName.Substring(0, Math.Min(shortName.Length, 12));
             }
         }
