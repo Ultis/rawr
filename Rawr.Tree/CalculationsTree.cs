@@ -345,12 +345,12 @@ namespace Rawr.Tree
             return new Stats()
             {
                 // TODO: Switch to resultNew
-                Spirit = result.Spirit,
-                HasteRating = result.HasteRating,
-                SpellPower = result.SpellPower,
-                Mp5 = result.Mp5,
-                SpellCombatManaRegeneration = result.SpellCombatManaRegeneration,
-                BonusHealingReceived = result.BonusHealingReceived,
+                Spirit = resultNew.Spirit,
+                HasteRating = resultNew.HasteRating,
+                SpellPower = resultNew.SpellPower,
+                Mp5 = resultNew.Mp5,
+                SpellCombatManaRegeneration = resultNew.SpellCombatManaRegeneration,
+                BonusHealingReceived = resultNew.BonusHealingReceived,
             };
         }
         
