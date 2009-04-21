@@ -466,7 +466,7 @@ namespace Rawr.Moonkin
             //statsTotal.SpellCrit += 0.0185f;
             // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
             //statsTotal.SpellCrit += statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent);
-			statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
+            statsTotal.SpellCrit += 0.0185f + StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             // All spells: Crit% + (0.01 * Natural Perfection)
             statsTotal.SpellCrit += 0.01f * character.DruidTalents.NaturalPerfection;
             // All spells: Haste% + (0.01 * Celestial Focus)
