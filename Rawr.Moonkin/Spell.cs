@@ -53,12 +53,23 @@ namespace Rawr.Moonkin
             this.Duration = copy.Duration;
             this.TickDamage = copy.TickDamage;
             this.TickLength = copy.TickLength;
-            this.SpellDamageModifier = copy.SpellDamageModifier;
+            //this.SpellDamageModifier = copy.SpellDamageModifier;
+            this.SpellDamageModifierPerTick = copy.SpellDamageModifierPerTick;
         }
         public float Duration { get; set; }
         public float TickLength { get; set; }
         public float TickDamage { get; set; }
-        public float SpellDamageModifier { get; set; }
+        public float SpellDamageModifier
+        {
+            get
+            {
+                return SpellDamageModifierPerTick * NumberOfTicks;
+            }
+            set
+            {
+                SpellDamageModifierPerTick += value / NumberOfTicks;
+            }
+        }
         public float AllDamageModifier { get; set; }
         public float NumberOfTicks
         {
@@ -67,8 +78,8 @@ namespace Rawr.Moonkin
                 return Duration / TickLength;
             }
         }
-        public float SpellDamageModifierPerTick
-        {
+        public float SpellDamageModifierPerTick { get; set; }
+        /*{
             get
             {
                 return SpellDamageModifier / NumberOfTicks;
@@ -77,7 +88,7 @@ namespace Rawr.Moonkin
             {
                 SpellDamageModifier += value * NumberOfTicks;
             }
-        }
+        }*/
         public float BaseDamage
         {
             get
@@ -736,7 +747,7 @@ namespace Rawr.Moonkin
                                     Duration = 12.0f,
                                     TickLength = 3.0f,
                                     TickDamage = 200.0f,
-                                    SpellDamageModifier = (12f / 15f) * (12f / 15f) / (1.5f / 3.5f + 12f / 15f)
+                                    SpellDamageModifierPerTick = (12f / 15f) * (12f / 15f) / (1.5f / 3.5f + 12f / 15f) / (12.0f / 3.0f)
                                 },
                             School = SpellSchool.Arcane
                         },
@@ -764,7 +775,7 @@ namespace Rawr.Moonkin
                                 Duration = 12.0f,
                                 TickLength = 2.0f,
                                 TickDamage = 1290.0f / 6.0f,
-                                SpellDamageModifier = 1.2f
+                                SpellDamageModifierPerTick = 0.2f
                             },
                             School = SpellSchool.Nature
                         }
@@ -861,16 +872,18 @@ namespace Rawr.Moonkin
             SpellRotation maxRotation = rotations[0];
 
             float manaPool = GetEffectiveManaPool(character, calcs);
-            float manaGained = manaPool - calcs.BasicStats.Mana;
 
             // Do tree calculations: Calculate damage per cast.
             float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
             // Extend that to number of casts per fight.  Round down and ensure that only complete tree casts are counted.
-            treeDamage *= (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1.0f;
+            float treeCasts = (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1.0f;
+            treeDamage *= treeCasts;
             // Multiply by raid-wide damage increases.
             treeDamage *= (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier);
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
+            float treeManaUsage = treeCasts * CalculationsMoonkin.BaseMana * 0.12f;
+            manaPool -= treeManaUsage;
 
 			// Do Starfall calculations.
             bool starfallGlyph = character.DruidTalents.GlyphOfStarfall;
@@ -881,6 +894,10 @@ namespace Rawr.Moonkin
             starfallDamage *= numStarfallCasts;
 			starfallDamage *= (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
 			float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
+            float starfallManaUsage = numStarfallCasts * CalculationsMoonkin.BaseMana * 0.39f;
+            manaPool -= starfallManaUsage;
+            
+            float manaGained = manaPool - calcs.BasicStats.Mana;
 
             foreach (SpellRotation rot in rotations)
             {
