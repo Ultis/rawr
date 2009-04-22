@@ -692,6 +692,7 @@ namespace Rawr //O O . .
             else
                 return IsEquipped(itemToBeChecked, slot);
         }
+        
         public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
         {
             return (object)this[slot] != null && itemToBeChecked.Id == this[slot].Id;
@@ -1141,6 +1142,18 @@ namespace Rawr //O O . .
             {
                 ComputeGemCount();
                 return meetsGemRequirements;
+            }
+        }
+
+        public bool IsMetaGemActive
+        {
+            get
+            {
+                ItemInstance head = _item[1];
+                if (head == null) return true;
+                Item metagem = head.Gem1;
+                if (metagem == null) return true;
+                return metagem.MeetsRequirements(this);
             }
         }
 

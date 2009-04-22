@@ -59,6 +59,7 @@ namespace Rawr
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr v{0}";
+        private Color _defaultColor = Color.White;
 		private System.Threading.Timer _timerCheckForUpdates;
 
         private FormRelevantItemRefinement _itemRefinement;
@@ -119,6 +120,7 @@ namespace Rawr
 
 			LoadModel(ConfigModel);
 			InitializeComponent();
+            _defaultColor = itemButtonHead.BackColor;
 			if (Type.GetType("Mono.Runtime") != null)
 				copyDataToClipboardToolStripMenuItem.Text += " (Doesn't work under Mono)";
 			Application.DoEvents();
@@ -423,6 +425,10 @@ namespace Rawr
 
 			FormItemSelection.CurrentCalculations = calcs;
             UpdateDisplayCalculationValues(calcs.GetCharacterDisplayCalculationValues());
+            if (Character.IsMetaGemActive)
+                itemButtonHead.BackColor = _defaultColor;
+            else
+                itemButtonHead.BackColor = Color.Red;
             LoadComparisonData();
             if (calcs.RequiresAsynchronousDisplayCalculation)
             {
@@ -2150,11 +2156,6 @@ namespace Rawr
 		{
 			ShowStartPage();
 		}
-
-        private void toolStripDropDownButtonSort_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void updateFromWowheadFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
