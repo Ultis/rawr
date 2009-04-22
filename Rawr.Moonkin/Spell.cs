@@ -886,7 +886,7 @@ namespace Rawr.Moonkin
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
             // Calculate mana usage for trees.
-            float treeManaUsage = treeCasts * CalculationsMoonkin.BaseMana * 0.12f;
+            float treeManaUsage = (float)Math.Ceiling(treeCasts) * CalculationsMoonkin.BaseMana * 0.12f;
             manaPool -= character.DruidTalents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
 
 			// Do Starfall calculations.
@@ -902,20 +902,20 @@ namespace Rawr.Moonkin
             starfallDamage *= numStarfallCasts;
 			starfallDamage *= (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
 			float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
-            float starfallManaUsage = numStarfallCasts * CalculationsMoonkin.BaseMana * 0.39f;
+            float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f;
             manaPool -= character.DruidTalents.Starfall == 1 ? starfallManaUsage : 0.0f;
 
             // Simple faerie fire mana calc
             float faerieFireCasts = (float)Math.Floor(calcOpts.FightLength / 5) + (calcOpts.FightLength % 5 != 0 ? 1.0f : 0.0f);
             float faerieFireMana = faerieFireCasts * CalculationsMoonkin.BaseMana * 0.08f;
-            if (character.ActiveBuffsContains("Improved Faerie Fire"))
+            if (character.ActiveBuffsContains("Improved Faerie Fire") && character.DruidTalents.ImprovedFaerieFire > 0)
                 manaPool -= faerieFireMana;
 
             // Calculate effect of casting Starfall/Treants/ImpFF (regular FF is assumed to be provided by a feral)
             float globalCooldown = 1.5f / (1 + baseHaste) + calcs.Latency;
-            float treantLatency = character.DruidTalents.ForceOfNature == 1 ? globalCooldown * treeCasts : 0.0f;
-            float starfallLatency = character.DruidTalents.Starfall == 1 ? globalCooldown * numStarfallCasts : 0.0f;
-            float faerieFireLatency = character.ActiveBuffsContains("Improved Faerie Fire") ? globalCooldown * faerieFireCasts : 0.0f;
+            float treantLatency = (character.DruidTalents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
+            float starfallLatency = (character.DruidTalents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
+            float faerieFireLatency = (character.ActiveBuffsContains("Improved Faerie Fire") && character.DruidTalents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
             float totalAverageLatency = (treantLatency + starfallLatency + faerieFireLatency) / (calcOpts.FightLength * 60.0f);
 
             calcs.Latency += totalAverageLatency;
