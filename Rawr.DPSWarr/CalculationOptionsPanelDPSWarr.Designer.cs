@@ -125,6 +125,7 @@
             this.CB_ToughLvl.Name = "CB_ToughLvl";
             this.CB_ToughLvl.Size = new System.Drawing.Size(155, 21);
             this.CB_ToughLvl.TabIndex = 5;
+            this.CB_ToughLvl.SelectedIndexChanged += new System.EventHandler(this.CB_ToughLvl_SelectedIndexChanged);
             // 
             // LB_ToughLvl
             // 
@@ -146,6 +147,7 @@
             this.RB_StanceFury.TabStop = true;
             this.RB_StanceFury.Text = "Fury Stance";
             this.RB_StanceFury.UseVisualStyleBackColor = true;
+            this.RB_StanceFury.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
             // 
             // RB_StanceArms
             // 
@@ -156,6 +158,7 @@
             this.RB_StanceArms.TabIndex = 8;
             this.RB_StanceArms.Text = "Arms Stance";
             this.RB_StanceArms.UseVisualStyleBackColor = true;
+            this.RB_StanceArms.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
             // 
             // CalculationOptionsPanelDPSWarr
             // 

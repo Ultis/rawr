@@ -146,7 +146,9 @@
             float rage = _combatFactors.AvgMhWeaponDmg*_combatFactors.DamageReduction*15.0f/4/320.6f;
             rage *= (1.0f + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg
                             - (1.0f - _combatFactors.ProbMhWhiteHit) - (0.25f * 0.35f));
-            rage += 7.0f/2.0f*(1+_combatFactors.MhCrit- (1.0f - _combatFactors.ProbMhWhiteHit));
+            rage += 7.0f / 2.0f * (1 + _combatFactors.MhCrit - (1.0f - _combatFactors.ProbMhWhiteHit));
+            //int modNumber = 0; if (_talents.GlyphOfHeroicStrike) { modNumber = 10; }
+            //rage += 1.0f * (1 + _combatFactors.MhCrit - (1.0f - _combatFactors.ProbMhWhiteHit)) * modNumber;
             
             return rage;
         }
@@ -174,10 +176,8 @@
                          (1 - _combatFactors.YellowMissChance - _combatFactors.OhDodgeChance
                          + _combatFactors.MhYellowCrit * _combatFactors.BonusYellowCritDmg));
             wwDamage *= WhirlWindHits();
-            if (wwDamage < 0)
-                wwDamage = 0;
+            if (wwDamage < 0) { wwDamage = 0; }
             return _combatFactors.DamageReduction * wwDamage;
-
         }
 
         public float HeroicStrike()
@@ -191,8 +191,7 @@
             float damageIncrease = heroicStrikePercent* _combatFactors.DamageReduction*((_combatFactors.DamageBonus*495)
                                    + _combatFactors.DamageReduction*_combatFactors.AvgMhWeaponDmg*(((_combatFactors.MhYellowCrit)-(_combatFactors.MhCrit))*
                                    (1+(_combatFactors.BonusYellowCritDmg-_combatFactors.BonusWhiteCritDmg))+(_combatFactors.WhiteMissChance-_combatFactors.YellowMissChance)+(0.25f*0.35f)));
-            if (damageIncrease < 0)
-                damageIncrease = 0;
+            if (damageIncrease < 0){damageIncrease = 0;}
             return damageIncrease;
         }
 
