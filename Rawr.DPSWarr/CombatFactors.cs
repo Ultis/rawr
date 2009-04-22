@@ -24,7 +24,7 @@ namespace Rawr.DPSWarr {
                 if(_calcOpts==null){
 				    return 1f - StatConversion.GetArmorDamageReduction(80,12900,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating);
                 }else{
-                    return 1f - StatConversion.GetArmorDamageReduction(80,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating);
+                    return 1f - StatConversion.GetArmorDamageReduction(80,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating) + ((!_calcOpts.FuryStance) ? 0.10f:0.00f);
                 }
                 //return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
             }
@@ -95,26 +95,25 @@ namespace Rawr.DPSWarr {
             }
         }
         private float CalcCrit(Item weapon) {
-            var crit = _stats.PhysicalCrit + _stats.CritRating * DPSWarr.CritRatingToCrit/100;
-            if (_calcOpts != null)
-            {
-                if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
+            var crit = _stats.PhysicalCrit + _stats.CritRating * DPSWarr.CritRatingToCrit / 100.00f;
+            if (_calcOpts != null) {
+                //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
                 if (_calcOpts.FuryStance) { crit += 0.03f; }
             }
+            //crit += 0.01f * _talents.Cruelty;
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
             
             return crit;
         }
         private float CalcYellowCrit(Item weapon) {
-            var crit = _stats.PhysicalCrit + _stats.CritRating * DPSWarr.CritRatingToCrit / 100;
+            var crit = _stats.PhysicalCrit + _stats.CritRating * DPSWarr.CritRatingToCrit / 100.00f;
             crit *= (1 - YellowMissChance - MhDodgeChance);
             if (_calcOpts != null) {
-                if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
-                if (_calcOpts.FuryStance) {
-                    crit += 0.03f;
-                }
+                //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
+                if (_calcOpts.FuryStance) { crit += 0.03f; }
             }
+            //crit += 0.01f * _talents.Cruelty;
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
 

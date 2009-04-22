@@ -3,14 +3,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Rawr.DPSWarr
-{
-    public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase
-    {
+namespace Rawr.DPSWarr {
+    public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
 
-        public CalculationOptionsPanelDPSWarr()
-        {
+        public CalculationOptionsPanelDPSWarr() {
             InitializeComponent();
 
             armorBosses.Add(10900, "Patchwerk");
@@ -22,16 +19,25 @@ namespace Rawr.DPSWarr
 
             CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
         }
-
-        protected override void LoadCalculationOptions()
-        {
-            if (Character.CalculationOptions == null) {
-                Character.CalculationOptions = new CalculationOptionsDPSWarr();
+        protected override void LoadCalculationOptions() {
+            if (Character != null && Character.CalculationOptions == null) { Character.CalculationOptions = new CalculationOptionsDPSWarr(); return; }
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            if (calcOpts != null){
+                CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
+                CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
+                switch (calcOpts.ToughnessLvl) {
+                    case 3: CB_ToughLvl.SelectedIndex = 1; break;
+                    case 5: CB_ToughLvl.SelectedIndex = 2; break;
+                    case 7: CB_ToughLvl.SelectedIndex = 3; break;
+                    case 10: CB_ToughLvl.SelectedIndex = 4; break;
+                    case 30: CB_ToughLvl.SelectedIndex = 5; break;
+                    case 50: CB_ToughLvl.SelectedIndex = 6; break;
+                    default: CB_ToughLvl.SelectedIndex = 0; break;
+                }
+                RB_StanceArms.Checked = !calcOpts.FuryStance;
             }
         }
-
-        private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
             int targetArmor = int.Parse(CB_TargArmor.Text);
             LB_TargArmorDesc.Text = armorBosses[targetArmor];
 

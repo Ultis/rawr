@@ -7,6 +7,7 @@ namespace Rawr.DPSWarr
     public class CharacterCalculationsDPSWarr : CharacterCalculationsBase
     {
         public Stats BasicStats { get; set; }
+        public Skills SkillAttacks { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
         //public AbilityModelList Abilities { get; set; }
 
@@ -32,14 +33,15 @@ namespace Rawr.DPSWarr
 
         public int TargetLevel { get; set; }
 
+        public float BaseHealth { get; set; }
         // Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
         public float HitPercent { get; set; }
         public float ExpertiseRating { get; set; }
         public float Expertise { get; set; }
-        //public float MhExpertise { get; set; }
-        //public float OhExpertise { get; set; }
+        public float MhExpertise { get; set; }
+        public float OhExpertise { get; set; }
         public float AgilityCritBonus { get; set; }
         public float CritRating { get; set; }
         public float CritPercent { get; set; }
@@ -91,57 +93,67 @@ namespace Rawr.DPSWarr
             WarriorTalents talents = new WarriorTalents();
             Character character = new Character();
             CombatFactors combatFactors = new CombatFactors(character, BasicStats);
-            
-            var whiteAttacks = new WhiteAttacks(talents, BasicStats, combatFactors);
-            var skillAttacks = new Skills(talents, BasicStats, combatFactors, whiteAttacks);
 
-            dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, BasicStats, combatFactors);
+            if (SkillAttacks == null){SkillAttacks = new Skills(talents, BasicStats, combatFactors, whiteAttacks);}
+
+            // BELOW is READY
+            dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
+                , BasicStats.Health, BaseHealth, BasicStats.Stamina * DPSWarr.StaminaToHP));
+            dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}"
+                ,BasicStats.Stamina,BasicStats.Stamina*DPSWarr.StaminaToHP));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*DPSWarr.StrengthToAP));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
-            dictValues.Add("Agility",string.Format("{0}*Increases Crit by {1:0.00%}"+Environment.NewLine+"Increases Armor by {2:0}",
-                BasicStats.Agility, AgilityCritBonus, BasicStats.Agility*DPSWarr.AgilityToArmor));
+            dictValues.Add("Agility",string.Format("{0}*Base Crit at lvl 80 3.192%"+
+                Environment.NewLine+"Increases Crit by {1:0.00%}"+
+                Environment.NewLine+"Total Crit increase of {2:0.00%}"+
+                Environment.NewLine+"Increases Armor by {3:0}",
+                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + .03192f, BasicStats.Agility * DPSWarr.AgilityToArmor));
             dictValues.Add("Haste",string.Format("{0:0.00%}*Haste Rating {1}", HastePercent, BasicStats.HasteRating));
-            dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}" +
-                Environment.NewLine + "MH Crit {2:0.00%}" +
-                Environment.NewLine + "OH Crit {3:0.00%}",
-                CritPercent, BasicStats.CritRating,MhCrit,OhCrit));
+            dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1} (+{2:0.00%})" +
+                Environment.NewLine + "MH Crit {3:0.00%}" +
+                Environment.NewLine + "OH Crit {4:0.00%}",
+                CritPercent, BasicStats.CritRating, BasicStats.CritRating*DPSWarr.CritRatingToCrit/100.00f, MhCrit, OhCrit));
             dictValues.Add("Armor Penetration", 
-                string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}",
-                                BasicStats.ArmorPenetrationRating * DPSWarr.ArPToArmorPenetration,
-                                BasicStats.ArmorPenetrationRating,
-                                BasicStats.ArmorPenetration * DPSWarr.ArPToArmorPenetration));
+                string.Format("{0:0.00%}*Armor Penetration Rating {1}",
+                                ArmorPenetration,
+                                BasicStats.ArmorPenetrationRating));
             dictValues.Add("Hit Rating",
-                string.Format("{0}*% Chance to hit {1}" + Environment.NewLine + "This does not include Precision", BasicStats.HitRating, BasicStats.HitRating*DPSWarr.HitRatingToHit));
+                string.Format("{0}*{1:0.00%} Increased Chance to hit" + Environment.NewLine + "Note: This does not include Precision"
+                ,BasicStats.HitRating,BasicStats.HitRating*DPSWarr.HitRatingToHit/100.00f));
             dictValues.Add("Expertise", 
                 string.Format("{0:0.00}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}." +
-                                Environment.NewLine + "Main Hand Exp- {3:0.00}" + Environment.NewLine + "Off Hand Exp- {4:0.00}" +
-                                Environment.NewLine + Environment.NewLine + "Weapon types dont seem to affect this like it should. calc error", 
+                                Environment.NewLine + "Main Hand Exp- {3:0.00} / {4:0.00%}" + Environment.NewLine + "Off Hand Exp- {5:0.00} / {6:0.00%}" +
+                                Environment.NewLine + "Note: This does not include Weapon Mastery or Strength of Arms", 
                                 BasicStats.ExpertiseRating * DPSWarr.ExpertiseRatingToExpertise + BasicStats.Expertise,
-                                BasicStats.ExpertiseRating, Expertise,combatFactors.MhExpertise,combatFactors.OhExpertise));
+                                BasicStats.ExpertiseRating, Expertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f,
+                                MhExpertise, MhExpertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f,
+                                OhExpertise, OhExpertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f));
+            // BELOW is NOT READY
             // DPS ind
-            dictValues.Add("Bloodsurge", skillAttacks.Bloodsurge().ToString());
-            dictValues.Add("Bloodthirst",skillAttacks.Bloodthirst().ToString());
-            dictValues.Add("Whirlwind",skillAttacks.Whirlwind().ToString());
-            dictValues.Add("Mortal Strike", skillAttacks.MortalStrike().ToString());
-            dictValues.Add("Slam",skillAttacks.Slam().ToString());
-            dictValues.Add("Rend",skillAttacks.Rend().ToString());
-            dictValues.Add("Sudden Death",skillAttacks.SuddenDeath().ToString());
-            dictValues.Add("Overpower",skillAttacks.Overpower().ToString());
-            dictValues.Add("Bladestorm",skillAttacks.BladeStorm().ToString());
-            dictValues.Add("Sword Spec",skillAttacks.SwordSpec().ToString());
+            dictValues.Add("Bloodsurge", SkillAttacks.Bloodsurge().ToString());
+            dictValues.Add("Bloodthirst",SkillAttacks.Bloodthirst().ToString());
+            dictValues.Add("Whirlwind",SkillAttacks.Whirlwind().ToString());
+            dictValues.Add("Mortal Strike", SkillAttacks.MortalStrike().ToString());
+            dictValues.Add("Slam",SkillAttacks.Slam().ToString());
+            dictValues.Add("Rend",SkillAttacks.Rend().ToString());
+            dictValues.Add("Sudden Death",SkillAttacks.SuddenDeath().ToString());
+            dictValues.Add("Overpower",SkillAttacks.Overpower().ToString());
+            dictValues.Add("Bladestorm",SkillAttacks.BladeStorm().ToString());
+            dictValues.Add("Sword Spec",SkillAttacks.SwordSpec().ToString());
             // DPS
-            dictValues.Add("Heroic Strike", skillAttacks.HeroicStrike().ToString());
-            dictValues.Add("Deep Wounds", skillAttacks.Deepwounds().ToString());
+            dictValues.Add("Heroic Strike", SkillAttacks.HeroicStrike().ToString());
+            dictValues.Add("Deep Wounds", SkillAttacks.Deepwounds().ToString());
             dictValues.Add("White DPS",(whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS()).ToString());
-            dictValues.Add("Total DPS",(whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + skillAttacks.Bloodthirst() + skillAttacks.Whirlwind() +
-                                       skillAttacks.HeroicStrike() + skillAttacks.Bloodsurge() + skillAttacks.Deepwounds() +
-                                       skillAttacks.MortalStrike() + skillAttacks.SuddenDeath() + skillAttacks.Slam() + skillAttacks.Overpower() + skillAttacks.Rend() + skillAttacks.SwordSpec() + skillAttacks.BladeStorm()).ToString());
+            dictValues.Add("Total DPS",(whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + SkillAttacks.Bloodthirst() + SkillAttacks.Whirlwind() +
+                                       SkillAttacks.HeroicStrike() + SkillAttacks.Bloodsurge() + SkillAttacks.Deepwounds() +
+                                       SkillAttacks.MortalStrike() + SkillAttacks.SuddenDeath() + SkillAttacks.Slam() + SkillAttacks.Overpower() +
+                                       SkillAttacks.Rend() + SkillAttacks.SwordSpec() + SkillAttacks.BladeStorm()).ToString());
             // Rage
-            dictValues.Add("Free Rage", skillAttacks.freeRage().ToString());
+            dictValues.Add("Free Rage", SkillAttacks.freeRage().ToString());
             dictValues.Add("White DPS Rage",whiteAttacks.whiteRageGen().ToString());
-            dictValues.Add("Other Rage", skillAttacks.OtherRage().ToString());
+            dictValues.Add("Other Rage", SkillAttacks.OtherRage().ToString());
             
             return dictValues;
         }
