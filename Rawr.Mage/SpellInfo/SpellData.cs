@@ -307,7 +307,7 @@ namespace Rawr.Mage
 
         public virtual Spell GetSpell(CastingState castingState, bool spammedDot)
         {
-            Spell spell = new Spell(this);
+            AoeSpell spell = new AoeSpell(this);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState, false, false, spammedDot);
             return spell;
