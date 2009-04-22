@@ -973,7 +973,8 @@ namespace Rawr
 				case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
 					ItemLocation locationDifficulty = item.LocationInfo;
 					if (locationDifficulty is StaticDrop) (locationDifficulty as StaticDrop).Heroic = value == "2";
-					break;
+                    else if (locationDifficulty is ContainerItem) (locationDifficulty as ContainerItem).Heroic = value == "2";
+                    break;
 
 				case "s":   // Source (755 = Jewelcrafting apparently?)
 					if (item.LocationInfo is CraftedItem)
