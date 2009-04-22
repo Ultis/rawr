@@ -657,6 +657,12 @@ namespace Rawr
                 line = line.Substring(0, line.IndexOf(" spell power for 10 sec."));
                 stats.UnseenMoonDamageBonus += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
             }
+            else if (line.StartsWith("Increases the spell power of your Insect Swarm by "))
+            {
+                line = line.Substring("Increases the spell power of your Insect Swarm by ".Length);
+                line = line.Replace(".", "");
+                stats.InsectSwarmDmg += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+            }
             else if (line.StartsWith("Increases the final healing value of your Lifebloom by "))
             {
                 line = line.Substring("Increases the final healing value of your Lifebloom by ".Length);
