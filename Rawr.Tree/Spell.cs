@@ -67,7 +67,7 @@ namespace Rawr.Tree
 
         protected float extraHealing = 0f; // for BonusHoTOnDirectHeals
 
-        public float AverageHealing
+        virtual public float AverageHealing
         { get { return extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH; } }
 
         public float AverageHealingwithCrit
@@ -365,8 +365,10 @@ namespace Rawr.Tree
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols etc
-            //z.B.: Harold's Rejuvenating Broach / Idol of Pure Thoughts
-            healingBonus += calculatedStats.RejuvenationHealBonus;
+            //z.B.: Harold's Rejuvenating Broach 
+            healingBonus += calculatedStats.RejuvenationSpellpower;
+            //z.B.: Idol of Pure Thoughts
+            periodicTick += calculatedStats.RejuvenationHealBonus;
 
             //z.B.: Idol of Budding Life (-36 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
@@ -425,8 +427,15 @@ namespace Rawr.Tree
         protected float idolHoTBonus = 0f;
         protected float idolDHBonus = 0f;
 
+        private float stackScaling = 1.0f;
+        private float stackSize = 1.0f;
+
         public override float PeriodicTick
-        { get { return periodicTick + (idolHoTBonus + healingBonus) * coefHoT; } }
+        { get { return stackScaling * (periodicTick + (idolHoTBonus + healingBonus) * coefHoT); } }
+
+        public override float AverageHealing
+        {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH); } }
+
 
         public override float HealingBonus
         { 
@@ -472,6 +481,42 @@ namespace Rawr.Tree
 
             applyHaste();
         }
+
+        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats, int numStacks) : this(calcs, calculatedStats) 
+        {
+            if (numStacks == 1)
+            {
+                // Do nothing, already setup
+            }
+            else if (numStacks == 2)
+            {
+                float newPeriodicTicks = periodicTicks * 2 - 1;  // Double number of ticks, but lose 1
+                manaCost *= 2;
+                  // N-1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
+                stackScaling = ( (periodicTicks-1)+2*periodicTicks ) / newPeriodicTicks;
+
+                stackSize = 2.0f; // Bloom heal doubled
+
+                periodicTicks = newPeriodicTicks;
+
+                castTime = 2.0f * gcd;
+            }
+            else if (numStacks == 3)
+            {
+                float newPeriodicTicks = periodicTicks * 3 - 2;  // Triple number of ticks, but lose 1 each time
+                manaCost *= 3;
+                // N-1 ticks of 1 stack + N -1 ticks of 2 stacks, averaged over total ticks
+                stackScaling = ( (periodicTicks - 1) + 2 * (periodicTicks - 1) + 3 * periodicTicks )/ newPeriodicTicks;
+
+                stackSize *= 3.0f; // Bloom heal trippled
+
+                periodicTicks = newPeriodicTicks;
+
+                castTime = 3.0f * gcd;
+            }
+        }
+
+
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
         {
@@ -525,6 +570,7 @@ namespace Rawr.Tree
             minHeal = 0f;
             maxHeal = 0f;
             coefDH = 0f;
+            critPercent = 0f;
 
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
             if (calcOpts.newManaRegen) manaCost *= 2;
@@ -649,6 +695,11 @@ namespace Rawr.Tree
             minHeal = 1883f;
             maxHeal = 2187f;
             NourishBonusPerHoTGlyphs = 0.0f;
+            #endregion
+
+            #region Idols
+            // Idol of Flourishing Life
+            healingBonus += calculatedStats.NourishSpellpower;
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);

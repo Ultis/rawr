@@ -168,6 +168,8 @@ namespace Rawr.Tree
 
                         "Simulation:Result",
                         "Simulation:Time until OOM",
+                        "Simulation:Unused Mana Remaining",
+                        "Simulation:Unused cast time fraction",
                         "Simulation:Total healing done",
                         "Simulation:HPS for tank HoTs",
                         "Simulation:MPS for tank HoTs",
@@ -175,17 +177,23 @@ namespace Rawr.Tree
                         "Simulation:HoT refresh fraction",
                         "Simulation:HPS for primary heal",
                         "Simulation:MPS for primary heal",
-                        "Simulation:Unused cast time fraction",
                         "Simulation:Mana regen per second",
                         "Simulation:Casts per minute until OOM",
                         "Simulation:Crits per minute until OOM",
 
                         "Lifebloom:LB Tick",
                         "Lifebloom:LB Heal",
+                        "Lifebloom:LB HPS",
                         "Lifebloom:LB HPM",
 
-                        "Lifebloom Stack:LBS Tick",
-                        "Lifebloom Stack:LBS HPM",
+                        "Lifebloom Stacked Blooms:LBx2 HPS",
+                        "Lifebloom Stacked Blooms:LBx2 HPM",
+                        "Lifebloom Stacked Blooms:LBx3 HPS",
+                        "Lifebloom Stacked Blooms:LBx3 HPM",
+
+                        "Lifebloom Continuous Stack:LBS Tick",
+                        "Lifebloom Continuous Stack:LBS HPS",
+                        "Lifebloom Continuous Stack:LBS HPM",
 
                         "Rejuvenation:RJ Tick",
                         "Rejuvenation:RJ HPS",
@@ -354,18 +362,29 @@ namespace Rawr.Tree
             };
         }
         
-        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, bool lbOnTank, int nTanks, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
+        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, int lbOnTank, int nTanks, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
         {
+            float lifebloomDuration = 0.0f;
             //Value passed in primaryFrac, not used anymore, this value is calculated to let mana last for the fight duration
             #region Spells
             int hots = 0;
             if (rejuvOnTank) hots++;
             if (rgOnTank) hots++;
-            if (lbOnTank) hots++;
+            if (lbOnTank > 0) hots++;
             //Spell regrowth = new Regrowth(calculatedStats, stats, false);
             Spell regrowth = new Regrowth(calculatedStats, stats, true);
-            //Spell lifebloom = new Lifebloom(calculatedStats, stats);
-            Spell stack = new LifebloomStack(calculatedStats, stats);
+            Spell lifebloom = null;
+            if ((lbOnTank >= 1)&&(lbOnTank <= 3))
+            {
+                lifebloom = new Lifebloom(calculatedStats, stats, lbOnTank);
+                lifebloomDuration = lifebloom.Duration + 1.0f; // Add 1 sec, to make sure bloom has taken place, before applying again
+            }
+            else if (lbOnTank == 4)
+            {
+                lifebloom = new LifebloomStack(calculatedStats, stats);
+                lifebloomDuration = lifebloom.Duration;
+            }
+            
             Spell rejuvenate = new Rejuvenation(calculatedStats, stats);
             //Spell nourish = new Nourish(calculatedStats, stats);
             //Spell nourishWithHoT = new Nourish(calculatedStats, stats, hots > 0 ? hots : 1);
@@ -409,13 +428,15 @@ namespace Rawr.Tree
                 hotsHealsPerMinute += 60f / regrowth.Duration; // direct component
                 hotsHealsPerMinute += 20; // hot component
             }
-            if (lbOnTank)
+            if ((lbOnTank > 0)&&(lifebloom != null))
             {
-                hotsHPS += stack.HPSHoT;
-                hotsMPS += stack.manaCost / stack.Duration;
-                hotsCastTime += stack.CastTime / stack.Duration;
-                hotsCastsPerMinute += 60f / stack.Duration;
+                           // HoT part                 Bloom Part
+                hotsHPS += lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloomDuration;
+                hotsMPS += lifebloom.manaCost / lifebloomDuration;
+                hotsCastTime += lifebloom.CastTime / lifebloomDuration;
+                hotsCastsPerMinute += 60f / lifebloomDuration;
                 hotsHealsPerMinute += 60; // hot component
+                hotsCritsPerMinute += 60f / lifebloomDuration * lifebloom.CritPercent / 100f;  // Bloom crits
             }
             hotsHPS *= nTanks;
             hotsMPS *= nTanks;
@@ -607,161 +628,225 @@ namespace Rawr.Tree
         protected Rotation predefinedRotation(int rotation, Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
         {
             Rotation result = null;
+            bool rejuvOnTank, rgOnTank;
+            int lifeBloomStackSize, noTanks;
+            Spell primaryHeal;
+            HealTargetTypes healTarget;
+
             switch (rotation)
             {
                 case 0:
                 default:
                     // 1 Tank (RJ/RG/LB/N*)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 1,
-                            new Nourish(calculatedStats, stats, 3),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Nourish(calculatedStats, stats, 3);
+                        healTarget = HealTargetTypes.TankHealing;
 
                     }
                     break;
                 case 1:
                     // 2 Tanks (RJ/RG/LB/N*)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 2,
-                            new Nourish(calculatedStats, stats, 3),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Nourish(calculatedStats, stats, 3);
+                        healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 2:
                     // 1 Tank (RJ/RG/LB/HT*)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 1,
-                            new HealingTouch(calculatedStats, stats),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new HealingTouch(calculatedStats, stats);
+                        healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 3:
                     // 2 Tanks (RJ/RG/LB/HT*)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 2,
-                            new HealingTouch(calculatedStats, stats),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new HealingTouch(calculatedStats, stats);
+                        healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 4:
                     // 1 Tank (RJ/RG/LB/RG*)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 1,
-                            new Regrowth(calculatedStats, stats, true),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 5:
                     // 2 Tanks (RJ/RG/LB/RG*)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 2,
-                            new Regrowth(calculatedStats, stats, true),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 6:
                     // RG Raid (1 Tank RJ/LB)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, false, true, 1,
-                            new Regrowth(calculatedStats, stats, false),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Regrowth(calculatedStats, stats, false);
+                        healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 7:
                     // RG Raid (2 Tanks RJ/LB)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, false, true, 2,
-                            new Regrowth(calculatedStats, stats, false),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Regrowth(calculatedStats, stats, false);
+                        healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 8:
                     // RJ Raid (1 Tank RJ/LB)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, false, true, 1,
-                            new Rejuvenation(calculatedStats, stats),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                        healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 9:
                     // RJ Raid (2 Tanks RJ/LB)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, false, true, 2,
-                            new Rejuvenation(calculatedStats, stats),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                        healTarget = HealTargetTypes.RaidHealing;
+
                     }
                     break;
                 case 10:
                     // N Raid (1 Tank RJ/LB)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, false, true, 1,
-                            new Nourish(calculatedStats, stats, 0),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 11:
                     // N Raid (2 Tanks RJ/LB)
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            true, false, true, 2,
-                            new Nourish(calculatedStats, stats, 0),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        healTarget = HealTargetTypes.RaidHealing;
+
                     }
                     break;
                 case 12:
                     // N spam
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            false, false, false, 0,
-                            new Nourish(calculatedStats, stats),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 0;
+                        rejuvOnTank = false;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 0;
+                        primaryHeal = new Nourish(calculatedStats, stats);
+                        healTarget = HealTargetTypes.TankHealing;
+
                     }
                     break;
                 case 13:
                     // HT spam
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            false, false, false, 0,
-                            new HealingTouch(calculatedStats, stats),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 0;
+                        rejuvOnTank = false;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 0;
+                        primaryHeal = new HealingTouch(calculatedStats, stats);
+                        healTarget = HealTargetTypes.TankHealing;
+
                     }
                     break;
                 case 14:
                     // RG spam
                     {
-                        result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            false, false, false, 0,
-                            new Regrowth(calculatedStats, stats, true),
-                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
+                        noTanks = 0;
+                        rejuvOnTank = false;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 0;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
+                case 15:
+                    // 2 Tanks (RJ/RG/1xLB*/RG*)
+                    {
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 1;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
+                    }
+                    break;
+                case 16:
+                    // 2 Tanks (RJ/RG/2xLB*/RG*)
+                    {
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 2;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
+                    }
+                    break;
+                case 17:
+                    // 2 Tanks (RJ/RG/3xLB*/RG*)
+                    {
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 3;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
+                    }
+                    break;
+ 
             }
+
+            result = SimulateHealing(
+                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
+                            rejuvOnTank, rgOnTank, lifeBloomStackSize, noTanks,
+                            primaryHeal,
+                            .01f * calcOpts.MainSpellFraction, healTarget);
             return result;
         }
 
@@ -952,7 +1037,10 @@ namespace Rawr.Tree
                         "Raid healing with Nourish (2 Tanks RJ/LB)",
                         "Nourish spam",
                         "Healing Touch spam",
-                        "Regrowth spam"
+                        "Regrowth spam",
+                        "Single target Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
+                        "Single target Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
+                        "Single target Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
                     };
 
                     for (int i = 0; i < rotations.Length; i++)
@@ -992,6 +1080,7 @@ namespace Rawr.Tree
                 ReduceRegrowthCost = stats.ReduceRegrowthCost,
                 ReduceRejuvenationCost = stats.ReduceRejuvenationCost, //Idol of Budding Life (-36)
                 RejuvenationHealBonus = stats.RejuvenationHealBonus,
+                RejuvenationSpellpower = stats.RejuvenationSpellpower,
                 LifebloomTickHealBonus = stats.LifebloomTickHealBonus,
                 LifebloomFinalHealBonus = stats.LifebloomFinalHealBonus,
                 ReduceHealingTouchCost = stats.ReduceHealingTouchCost, //Refered to Idol of Longevity, which grant 25mana on HT cast?
@@ -1001,6 +1090,7 @@ namespace Rawr.Tree
                 LifebloomCostReduction = stats.LifebloomCostReduction,  //T7 (2) Bonus
                 NourishBonusPerHoT = stats.NourishBonusPerHoT,          //T7 (4) Bonus
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
+                NourishSpellpower = stats.NourishSpellpower,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1065,11 +1155,11 @@ namespace Rawr.Tree
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
                 + stats.BonusManaPotion + stats.ExtraSpiritWhileCasting
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
-                + stats.GreatnessProc + stats.TreeOfLifeAura + stats.ReduceRegrowthCost 
-                + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus 
+                + stats.GreatnessProc + stats.TreeOfLifeAura + stats.ReduceRegrowthCost
+                + stats.ReduceRejuvenationCost + stats.RejuvenationSpellpower + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
-                stats.RejuvenationInstantTick 
+                stats.RejuvenationInstantTick + stats.NourishSpellpower
                 > 0)
                 return true;
 

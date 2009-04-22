@@ -179,6 +179,7 @@ namespace Rawr
         ReduceRegrowthCost,
         ReduceHealingTouchCost,
         RejuvenationHealBonus,
+        RejuvenationSpellpower,
         LifebloomTickHealBonus,
         HealingTouchFinalHealBonus,
         ManaregenFor8SecOnUse5Min,
@@ -223,6 +224,7 @@ namespace Rawr
         #region Added by Rawr.Tree
         LifebloomCostReduction,
         NourishBonusPerHoT,
+        NourishSpellpower,
         RejuvenationInstantTick,
         #endregion
         #region Added by Rawr.Enhance
@@ -1784,6 +1786,14 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell power of Rejuvenation")]
+        [Category("Tree")]
+        public float RejuvenationSpellpower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationSpellpower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationSpellpower] = value; }
+        }
 
         // Tier 8 Set bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2540,6 +2550,15 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT]; }
             set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Nourish spell power")]
+        [Category("Tree")]
+        public float NourishSpellpower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.NourishSpellpower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.NourishSpellpower] = value; }
+        }
+
 		
         #region Added by Rawr.Enhance
 

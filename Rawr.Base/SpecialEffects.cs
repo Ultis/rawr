@@ -679,11 +679,17 @@ namespace Rawr
             {
                 stats.ReduceHealingTouchCost += 25;
             }
-            else if (line.StartsWith("Increases healing done by Rejuvenation by up to "))
+            else if (line.StartsWith("Increases the periodic healing of Rejuvenation by "))
             {
-                line = line.Substring("Increases healing done by Rejuvenation by up to ".Length);
+                line = line.Substring("Increases the periodic healing of Rejuvenation by ".Length);
                 line = line.Replace(".", "");
                 stats.RejuvenationHealBonus += (float)int.Parse(line);
+            }
+            else if (line.StartsWith("Increases spell power of Rejuvenation by "))
+            {
+                line = line.Substring("Increases spell power of Rejuvenation by ".Length);
+                line = line.Replace(".", "");
+                stats.RejuvenationSpellpower += (float)int.Parse(line);
             }
             else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
             {
@@ -696,6 +702,12 @@ namespace Rawr
                 line = line.Substring("Increases the amount healed by Healing Touch by ".Length);
                 line = line.Replace(".", "");
                 stats.HealingTouchFinalHealBonus += (float)int.Parse(line);
+            }
+            else if (line.StartsWith("Increases the spell power of your Nourish by "))
+            {
+                line = line.Substring("Increases the spell power of your Nourish by ".Length);
+                line = line.Replace(".", "");
+                stats.NourishSpellpower += (float)int.Parse(line);
             }
             else if (line.StartsWith("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for "))
             { //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.

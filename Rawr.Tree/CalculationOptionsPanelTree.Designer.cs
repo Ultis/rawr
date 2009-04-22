@@ -293,7 +293,11 @@
             "Raid healing with Nourish (2 Tanks RJ/LB)",
             "Nourish spam",
             "Healing Touch spam",
-            "Regrowth spam"});
+            "Regrowth spam",
+            "Single target Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
+            "Single target Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
+            "Single target Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
+            });
             this.cbRotation.Location = new System.Drawing.Point(9, 34);
             this.cbRotation.MaxDropDownItems = 10;
             this.cbRotation.Name = "cbRotation";
