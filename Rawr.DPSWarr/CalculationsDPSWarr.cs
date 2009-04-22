@@ -498,6 +498,7 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
                 float procUptime = procDuration * procPerSecond;
 
                 statsItems.AttackPower += 400.0f * procUptime;
+                statsItems.Armor -= (statsItems.Armor * .05f) * procUptime;
             }
 
             return statsItems;
