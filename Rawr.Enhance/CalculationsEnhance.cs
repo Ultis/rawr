@@ -437,7 +437,6 @@ namespace Rawr
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
             {
-                float glancingRate = 0.24f;
                 float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating);
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
                 float soeBuff = IsBuffChecked("Strength of Earth Totem") ? 155f : 0f;
@@ -449,7 +448,7 @@ namespace Rawr
                 float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
                 float dogsBaseDPS = 206.17f + dogsAP / 14f;
 
-                float dogsMeleeNormal = dogsBaseDPS * (1 - dogsMissrate - dogsCrit - glancingRate);
+                float dogsMeleeNormal = dogsBaseDPS * (1 - dogsMissrate - dogsCrit - cs.GlancingRate);
                 float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
                 float dogsMeleeGlances = dogsBaseDPS * cs.GlancingHitModifier;
 
@@ -457,7 +456,7 @@ namespace Rawr
                 float dogsMultipliers = cs.DamageReduction * (1 - dogsMissrate) * (1 + bonusPhysicalDamage);
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
-                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, glancingRate, dogsCrit);
+                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit);
             }
             else
             {

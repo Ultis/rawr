@@ -32,6 +32,9 @@ namespace Rawr.Enhance
             sb.AppendLine("### Rawr.Enhance Data Export to EnhSim ###");
             sb.AppendLine("##########################################");
             sb.AppendLine();
+            sb.AppendLine("config_source rawr");
+            sb.AppendLine();
+
             float MHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float OHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
