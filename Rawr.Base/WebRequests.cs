@@ -711,6 +711,7 @@ namespace Rawr
                     try
                     {
                         returnDocument = new XmlDocument();
+                        returnDocument.XmlResolver = null;
                         returnDocument.LoadXml(xml.Replace("&",""));
                         if (returnDocument == null || returnDocument.DocumentElement == null
                                     || !returnDocument.DocumentElement.HasChildNodes
