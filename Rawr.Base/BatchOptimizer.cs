@@ -947,7 +947,7 @@ namespace Rawr.Optimizer
                     {
                         ItemInstance item1 = ReplaceGem(character._item[mutation1.Slot], mutation1.Index, mutation2.Gem);
                         ItemInstance item2 = ReplaceGem(character._item[mutation2.Slot], mutation2.Index, mutation1.Gem);
-                        if (((upgradeItems != null && item1.Id == upgradeItems[0].Id && upgradeItems.Contains(item1)) || ((upgradeItems == null || item1.Id != upgradeItems[0].Id) && item1.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item1.GemmedId))) && ((upgradeItems != null && item2.Id == upgradeItems[0].Id && upgradeItems.Contains(item2)) || ((upgradeItems == null || item2.Id != upgradeItems[0].Id) && item2.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item2.GemmedId))))
+                        if (ItemAvailable(item1) && ItemAvailable(item2))
                         {
                             successful = true;
                             items[(upgradeItems != null && item1.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item1.Id]] = item1;
@@ -1022,7 +1022,7 @@ namespace Rawr.Optimizer
                                 // anything will be better than breaking the jeweler constraint
                                 // pick from available instances that don't have jewelers gems
                                 List<ItemInstance> list = new List<ItemInstance>();
-                                foreach (ItemInstance it in item.Item.AvailabilityInformation.ItemList)
+                                foreach (ItemInstance it in (upgradeItems != null && item.Id == upgradeItems[0].Id) ? upgradeItems : item.Item.AvailabilityInformation.ItemList)
                                 {
                                     if (!ItemHasJewelerGem(it))
                                     {
@@ -1078,13 +1078,17 @@ namespace Rawr.Optimizer
                                 // anything will be better than breaking the jeweler constraint
                                 // pick from available instances that don't have jewelers gems
                                 int pickTries = 0;
+                                if (originalitem.Item.AvailabilityInformation == null)
+                                {
+                                    itemGenerator.GenerateItemAvailabilityInformation(originalitem.Item);
+                                }
                                 do
                                 {
                                     item = originalitem.Clone();
                                     int g = 1 + rand.Next(originalitem.Item.AvailabilityInformation.GemCount);
                                     item.SetGem(g, mutation1.Gem);
                                     pickTries++;
-                                } while (pickTries <= 5 && !originalitem.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item.GemmedId));
+                                } while (pickTries <= 5 && !ItemAvailable(item));
                                 if (pickTries <= 5)
                                 {
                                     // we got it
@@ -1114,6 +1118,11 @@ namespace Rawr.Optimizer
                 return GenerateIndividual(items);
             }
             return null;
+        }
+
+        private bool ItemAvailable(ItemInstance item)
+        {
+            return ((upgradeItems != null && item.Id == upgradeItems[0].Id && upgradeItems.Contains(item)) || ((upgradeItems == null || item.Id != upgradeItems[0].Id) && item.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item.GemmedId)));
         }
 
         private static bool ItemHasJewelerGem(ItemInstance item)
