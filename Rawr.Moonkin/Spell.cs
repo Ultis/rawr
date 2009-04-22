@@ -875,27 +875,50 @@ namespace Rawr.Moonkin
 
             // Do tree calculations: Calculate damage per cast.
             float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
-            // Extend that to number of casts per fight.  Round down and ensure that only complete tree casts are counted.
-            float treeCasts = (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1.0f;
+            // Extend that to number of casts per fight.
+            float treeCasts = (float)Math.Floor(calcOpts.FightLength / 3) + 1.0f;
+            // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
+            if ((int)calcOpts.FightLength % 3 == 0 && calcOpts.FightLength - (int)calcOpts.FightLength < 0.5)
+                treeCasts += (calcOpts.FightLength - (int)calcOpts.FightLength) / 0.5f - 1.0f;
             treeDamage *= treeCasts;
             // Multiply by raid-wide damage increases.
             treeDamage *= (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier);
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
+            // Calculate mana usage for trees.
             float treeManaUsage = treeCasts * CalculationsMoonkin.BaseMana * 0.12f;
-            manaPool -= treeManaUsage;
+            manaPool -= character.DruidTalents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
 
 			// Do Starfall calculations.
             bool starfallGlyph = character.DruidTalents.GlyphOfStarfall;
 			float starfallDamage = (character.DruidTalents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit, Wrath.CriticalDamageModifier) : 0.0f;
             float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
-            float starfallDivisor = starfallCD + 1.0f / 6.0f;
-            float numStarfallCasts = (float)Math.Floor(calcOpts.FightLength / starfallDivisor) + 1.0f;
+            float numStarfallCasts = (float)Math.Floor(calcOpts.FightLength / starfallCD) + 1.0f;
+            // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
+            // calculate a partial cast
+            float starfallDiff = calcOpts.FightLength * 60.0f - (numStarfallCasts - 1) * starfallCD * 60.0f;
+            if (starfallDiff > 0 && starfallDiff < 10)
+                numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
             starfallDamage *= numStarfallCasts;
 			starfallDamage *= (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
 			float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
             float starfallManaUsage = numStarfallCasts * CalculationsMoonkin.BaseMana * 0.39f;
-            manaPool -= starfallManaUsage;
+            manaPool -= character.DruidTalents.Starfall == 1 ? starfallManaUsage : 0.0f;
+
+            // Simple faerie fire mana calc
+            float faerieFireCasts = (float)Math.Floor(calcOpts.FightLength / 5) + (calcOpts.FightLength % 5 != 0 ? 1.0f : 0.0f);
+            float faerieFireMana = faerieFireCasts * CalculationsMoonkin.BaseMana * 0.08f;
+            if (character.ActiveBuffsContains("Improved Faerie Fire"))
+                manaPool -= faerieFireMana;
+
+            // Calculate effect of casting Starfall/Treants/ImpFF (regular FF is assumed to be provided by a feral)
+            float globalCooldown = 1.5f / (1 + baseHaste) + calcs.Latency;
+            float treantLatency = character.DruidTalents.ForceOfNature == 1 ? globalCooldown * treeCasts : 0.0f;
+            float starfallLatency = character.DruidTalents.Starfall == 1 ? globalCooldown * numStarfallCasts : 0.0f;
+            float faerieFireLatency = character.ActiveBuffsContains("Improved Faerie Fire") ? globalCooldown * faerieFireCasts : 0.0f;
+            float totalAverageLatency = (treantLatency + starfallLatency + faerieFireLatency) / (calcOpts.FightLength * 60.0f);
+
+            calcs.Latency += totalAverageLatency;
             
             float manaGained = manaPool - calcs.BasicStats.Mana;
 
@@ -1015,6 +1038,8 @@ namespace Rawr.Moonkin
             calcs.SubPoints = new float[] { maxDamageDone, maxBurstDamageDone };
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
             calcs.Rotations = cachedResults;
+
+            calcs.Latency -= totalAverageLatency;
         }
 
         // Create proc effect calculations for proc-based trinkets.
