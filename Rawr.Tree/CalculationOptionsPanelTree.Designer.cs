@@ -61,6 +61,10 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.chbGlyphWG = new System.Windows.Forms.CheckBox();
+            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.chbGlyphNourish = new System.Windows.Forms.CheckBox();
             this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.chbGlyphInnervate = new System.Windows.Forms.CheckBox();
             this.extendedToolTipLabel10 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -75,10 +79,6 @@
             this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.chbGlyphNourish = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.chbGlyphWG = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -296,8 +296,7 @@
             "Regrowth spam",
             "Single target Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
             "Single target Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
-            "Single target Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
-            });
+            "Single target Regrowth (2 Tanks RJ/RG/3xLB Blooms)"});
             this.cbRotation.Location = new System.Drawing.Point(9, 34);
             this.cbRotation.MaxDropDownItems = 10;
             this.cbRotation.Name = "cbRotation";
@@ -404,12 +403,15 @@
             // cbNewManaRegen
             // 
             this.cbNewManaRegen.AutoSize = true;
+            this.cbNewManaRegen.Checked = true;
+            this.cbNewManaRegen.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbNewManaRegen.Location = new System.Drawing.Point(6, 174);
             this.cbNewManaRegen.Name = "cbNewManaRegen";
             this.cbNewManaRegen.Size = new System.Drawing.Size(122, 17);
             this.cbNewManaRegen.TabIndex = 51;
             this.cbNewManaRegen.Text = "Use 3.1 calculations";
             this.cbNewManaRegen.UseVisualStyleBackColor = true;
+            this.cbNewManaRegen.Visible = false;
             this.cbNewManaRegen.CheckedChanged += new System.EventHandler(this.cbNewManaRegen_CheckedChanged);
             // 
             // label10
@@ -508,6 +510,53 @@
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Glyphes";
             // 
+            // extendedToolTipLabel2
+            // 
+            this.extendedToolTipLabel2.AutoSize = true;
+            this.extendedToolTipLabel2.Location = new System.Drawing.Point(6, 161);
+            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
+            this.extendedToolTipLabel2.Size = new System.Drawing.Size(107, 13);
+            this.extendedToolTipLabel2.TabIndex = 11;
+            this.extendedToolTipLabel2.Text = "Glyph of Wild Growth";
+            this.extendedToolTipLabel2.ToolTipText = "Wild Growth can affect 1 additional target.";
+            // 
+            // chbGlyphWG
+            // 
+            this.chbGlyphWG.AutoSize = true;
+            this.chbGlyphWG.Checked = true;
+            this.chbGlyphWG.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbGlyphWG.Enabled = false;
+            this.chbGlyphWG.Location = new System.Drawing.Point(256, 160);
+            this.chbGlyphWG.Name = "chbGlyphWG";
+            this.chbGlyphWG.Size = new System.Drawing.Size(15, 14);
+            this.chbGlyphWG.TabIndex = 12;
+            this.chbGlyphWG.Tag = "Glyph of Wild Growth";
+            this.chbGlyphWG.UseVisualStyleBackColor = true;
+            // 
+            // extendedToolTipLabel1
+            // 
+            this.extendedToolTipLabel1.AutoSize = true;
+            this.extendedToolTipLabel1.Location = new System.Drawing.Point(6, 138);
+            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
+            this.extendedToolTipLabel1.Size = new System.Drawing.Size(85, 13);
+            this.extendedToolTipLabel1.TabIndex = 9;
+            this.extendedToolTipLabel1.Text = "Glyph of Nourish";
+            this.extendedToolTipLabel1.ToolTipText = "Your Nourish heals an additional 6% for each of your heal over time effects prese" +
+                "nt on the target.";
+            // 
+            // chbGlyphNourish
+            // 
+            this.chbGlyphNourish.AutoSize = true;
+            this.chbGlyphNourish.Checked = true;
+            this.chbGlyphNourish.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbGlyphNourish.Enabled = false;
+            this.chbGlyphNourish.Location = new System.Drawing.Point(256, 137);
+            this.chbGlyphNourish.Name = "chbGlyphNourish";
+            this.chbGlyphNourish.Size = new System.Drawing.Size(15, 14);
+            this.chbGlyphNourish.TabIndex = 10;
+            this.chbGlyphNourish.Tag = "Glyph of Nourish";
+            this.chbGlyphNourish.UseVisualStyleBackColor = true;
+            // 
             // extendedToolTipLabel11
             // 
             this.extendedToolTipLabel11.AutoSize = true;
@@ -569,6 +618,8 @@
             // chbGlyphRegrowth
             // 
             this.chbGlyphRegrowth.AutoSize = true;
+            this.chbGlyphRegrowth.Checked = true;
+            this.chbGlyphRegrowth.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbGlyphRegrowth.Enabled = false;
             this.chbGlyphRegrowth.Location = new System.Drawing.Point(256, 35);
             this.chbGlyphRegrowth.Name = "chbGlyphRegrowth";
@@ -668,53 +719,6 @@
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbModuleNotes.Size = new System.Drawing.Size(276, 537);
             this.tbModuleNotes.TabIndex = 0;
-            // 
-            // extendedToolTipLabel1
-            // 
-            this.extendedToolTipLabel1.AutoSize = true;
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(6, 138);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(85, 13);
-            this.extendedToolTipLabel1.TabIndex = 9;
-            this.extendedToolTipLabel1.Text = "Glyph of Nourish";
-            this.extendedToolTipLabel1.ToolTipText = "Your Nourish heals an additional 6% for each of your heal over time effects prese" +
-                "nt on the target.";
-            // 
-            // chbGlyphNourish
-            // 
-            this.chbGlyphNourish.AutoSize = true;
-            this.chbGlyphNourish.Checked = true;
-            this.chbGlyphNourish.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphNourish.Enabled = false;
-            this.chbGlyphNourish.Location = new System.Drawing.Point(256, 137);
-            this.chbGlyphNourish.Name = "chbGlyphNourish";
-            this.chbGlyphNourish.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphNourish.TabIndex = 10;
-            this.chbGlyphNourish.Tag = "Glyph of Nourish";
-            this.chbGlyphNourish.UseVisualStyleBackColor = true;
-            // 
-            // extendedToolTipLabel2
-            // 
-            this.extendedToolTipLabel2.AutoSize = true;
-            this.extendedToolTipLabel2.Location = new System.Drawing.Point(6, 161);
-            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
-            this.extendedToolTipLabel2.Size = new System.Drawing.Size(107, 13);
-            this.extendedToolTipLabel2.TabIndex = 11;
-            this.extendedToolTipLabel2.Text = "Glyph of Wild Growth";
-            this.extendedToolTipLabel2.ToolTipText = "Wild Growth can affect 1 additional target.";
-            // 
-            // chbGlyphWG
-            // 
-            this.chbGlyphWG.AutoSize = true;
-            this.chbGlyphWG.Checked = true;
-            this.chbGlyphWG.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphWG.Enabled = false;
-            this.chbGlyphWG.Location = new System.Drawing.Point(256, 160);
-            this.chbGlyphWG.Name = "chbGlyphWG";
-            this.chbGlyphWG.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphWG.TabIndex = 12;
-            this.chbGlyphWG.Tag = "Glyph of Wild Growth";
-            this.chbGlyphWG.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelTree
             // 

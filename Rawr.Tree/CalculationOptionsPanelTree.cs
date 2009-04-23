@@ -77,7 +77,7 @@ namespace Rawr.Tree
 
              */
              
-            cbNewManaRegen.Checked = calcOpts.newManaRegen;
+//            cbNewManaRegen.Checked = calcOpts.newManaRegen;
             cbInnervate.Checked = calcOpts.Innervates > 0;
             tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";

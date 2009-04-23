@@ -454,7 +454,7 @@ namespace Rawr.Tree
             periodicTickTime = 1f;
             coefDH = 0.645f; 
             coefHoT = 0.6684f / 7f;
-            manaCost = 0.14f * TreeConstants.BaseMana;
+            manaCost = 0.14f * TreeConstants.BaseMana;      // manaCost after refund, for continuous stack (LifebloomStack), scaled there
             healingBonus = calculatedStats.SpellPower;
             critPercent = calculatedStats.SpellCrit;
 
@@ -572,8 +572,9 @@ namespace Rawr.Tree
             coefDH = 0f;
             critPercent = 0f;
 
-            CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
-            if (calcOpts.newManaRegen) manaCost *= 2;
+//            CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
+//            if (calcOpts.newManaRegen) 
+            manaCost *= 2;       // manaCost without refund
         }
     }
 

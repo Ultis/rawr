@@ -352,7 +352,6 @@ namespace Rawr.Tree
 
             return new Stats()
             {
-                // TODO: Switch to resultNew
                 Spirit = resultNew.Spirit,
                 HasteRating = resultNew.HasteRating,
                 SpellPower = resultNew.SpellPower,
@@ -453,12 +452,13 @@ namespace Rawr.Tree
             float spiritRegen = CalculateManaRegen(stats.Intellect, stats.Spirit);
             float spiritRegenPlusMDF = CalculateManaRegen(stats.Intellect, stats.ExtraSpiritWhileCasting + stats.Spirit);
 
-            if (calcOpts.newManaRegen) 
+            /*     TODO: Decide if we can into CalculateManaRegen. Check if we still need SpellCombatManaRegeneration scaling
+                      if (calcOpts.newManaRegen) */
             {
                 spiritRegen *= 0.6f;
-                spiritRegenPlusMDF *= 0.6f;
+                spiritRegenPlusMDF *= 0.6f; 
                 stats.SpellCombatManaRegeneration *= 5f / 3f;
-            }
+            } 
             
             float replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
             float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegenPlusMDF * stats.SpellCombatManaRegeneration;
@@ -498,14 +498,14 @@ namespace Rawr.Tree
 
 
             #region Determine if Mana or GCD limited
-            if (calcOpts.newManaRegen)
+//            if (calcOpts.newManaRegen)
             {
                 primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
             }
-            else
+/*            else
             {
                 primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);
-            }
+            } */
 
             float tpsHealing = 1f - (hotsCastTime + wgCastTime);
 
@@ -1193,7 +1193,7 @@ namespace Rawr.Tree
 
         public float CalculateManaRegen(float intel, float spi)
         {
-            float baseRegen = 0.005575f; 
+            float baseRegen = 0.005575f;  // TODO: Decide if we should put 0.6f change in 3.1 in here, or is this function for out of combat regen
             return (float)Math.Round(5f * (0.001f + (float)Math.Sqrt(intel) * spi * baseRegen));
         }
     }
