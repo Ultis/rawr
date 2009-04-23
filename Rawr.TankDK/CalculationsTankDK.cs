@@ -390,13 +390,23 @@ namespace Rawr.TankDK
 
 
 //***** Mitigation Rating *****
+
             float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
-            float ibfDR = (0.2f + (stats.Defense + defSkill) / 140.0f * 0.15f) * ibfUptime; //TODO: 3.1
+            float ibfReduction = 0.2f + (stats.Defense + defSkill) * 0.0014f;
+            if (character.DeathKnightTalents.GlyphofIceboundFortitude == true)
+            {
+                ibfReduction = 0.3f + ((stats.Defense + defSkill) * 0.0014f);
+            }
+            float ibfDR = (ibfReduction * ibfUptime);
 
             float bsDR = 0.0f;
             if (character.DeathKnightTalents.BoneShield > 0)
             {
                 float bsUptime = ((8.0f * (100.0f - currentAvoidance) + 60.0f * currentAvoidance)) / (120.0f * 100.0f);
+                if (character.DeathKnightTalents.GlyphofBoneShield == true)
+                {
+                    bsUptime = bsUptime + (bsUptime * 0.5f);
+                }
                 bsDR = 0.2f * bsUptime;
             }
 
