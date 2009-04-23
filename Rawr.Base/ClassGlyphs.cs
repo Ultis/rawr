@@ -403,4 +403,80 @@ namespace Rawr
 
 
     }
+
+    public partial class DeathKnightTalents
+    {
+        private bool[] _glyphData = new bool[33];
+        public override bool[] GlyphData { get { return _glyphData; } }
+        //Major
+        [GlyphData(0, "Glyph of Anti-Magic Shell", true, @"Increases the duration of your Anti-Magic Shell by 2 sec.")]
+        public bool GlyphofAntiMagicShell { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        [GlyphData(1, "Glyph of Blood Strike", true, @"Your Blood Strike causes an additional 20% damage to snared targets.")]
+        public bool GlyphofBloodStrike { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(2, "Glyph of Bone Shield", true, @"Adds 2 additional charges to your Bone Shield.")]
+        public bool GlyphofBoneShield { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(3, "Glyph of Chains of Ice", true, @"Your Chains of Ice also causes 144 to 156 Frost damage, increased by your attack power.")]
+        public bool GlyphofChainsofIce { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(4, "Glyph of Dancing Rune Weapon", true, @"Increases the duration of Dancing Rune Weapon by 5 sec.")]
+        public bool GlyphofDancingRuneWeapon { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData(5, "Glyph of Dark Command", true, @"Increases the chance for your Dark Command ability to work successfully by 8%.")]
+        public bool GlyphofDarkCommand { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(6, "Glyph of Dark Death", true, @"Increases the damage done by Death Coil by 15%.")]
+        public bool GlyphofDarkDeath { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        [GlyphData(7, "Glyph of Death and Decay", true, @"Damage of your Death and Decay spell increased by 20%.")]
+        public bool GlyphofDeathandDecay { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(8, "Glyph of Death Grip", true, @"When you deal a killing blow that grants honor or experience, the cooldown of your Death Grip is refreshed.")]
+        public bool GlyphofDeathGrip { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        [GlyphData(9, "Glyph of Death Strike", true, @"Increases your Death Strike's damage by 2% for every 2 runic power you currently have (up to a maximum of 25%).  The runic power is not consumed by this effect.")]
+        public bool GlyphofDeathStrike { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        [GlyphData(10, "Glyph of Disease", true, @"Your Pestilence ability now refreshes disease durations on your primary target back to their maximum duration.")]
+        public bool GlyphofDisease { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(11, "Glyph of Frost Strike", true, @"Reduces the cost of your Frost Strike by 8 Runic Power.")]
+        public bool GlyphofFrostStrike { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(12, "Glyph of Heart Strike", true, @"Your Heart Strike also reduces the movement speed of your target by 50% for 10 sec.")]
+        public bool GlyphofHeartStrike { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(13, "Glyph of Howling Blast", true, @"Your Howling Blast ability now infects your targets with Frost Fever.")]
+        public bool GlyphofHowlingBlast { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Hungering Cold", true, @"Reduces the cost of Hungering Cold by 40 runic power.")]
+        public bool GlyphofHungeringCold { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Icebound Fortitude", true, @"Your Icebound Fortitude now always grants at least 30% damage reduction, regardless of your defense skill.")]
+        public bool GlyphofIceboundFortitude { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(16, "Glyph of Icy Touch", true, @"Your Icy Touch generates 10 additional runic power.")]
+        public bool GlyphofIcyTouch { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Obliterate", true, @"Increases the damage of your Obliterate ability by 20%.")]
+        public bool GlyphofObliterate { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Plague Strike", true, @"Your Plague Strike does 20% additional damage.")]
+        public bool GlyphofPlagueStrike { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, "Glyph of Rune Strike", true, @"Increases the critical strike chance of your Rune Strike by 10%.")]
+        public bool GlyphofRuneStrike { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, "Glyph of Rune Tap", true, @"Your Rune Tap heals yourself for an additional 10% of the effect, and also heals your party for 10% of their maximum health.")]
+        public bool GlyphofRuneTap { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(21, "Glyph of Scourge Strike", true, @"Your Scourge Strike has a 25% chance to cause Blood Plague and Frost Fever.")]
+        public bool GlyphofScourgeStrike { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, "Glyph of Strangulate", true, @"Reduces the cooldown of your Strangulate by 20 sec.")]
+        public bool GlyphofStrangulate { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        [GlyphData(23, "Glyph of the Ghoul", true, @"Your Ghoul receives an additional 40% of your Strength and 40% of your Stamina.")]
+        public bool GlyphoftheGhoul { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Unbreakable Armor", true, @"Increases the amount of damage absorbed by Unbreakable Armor by 20%.")]
+        public bool GlyphofUnbreakableArmor { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, "Glyph of Unholy Blight", true, @"Increases the duration of Unholy Blight by 10 sec.")]
+        public bool GlyphofUnholyBlight { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(26, "Glyph of Vampiric Blood", true, @"Increases  the duration of your Vampiric Blood by 10 sec.")]
+        public bool GlyphofVampiricBlood { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        //Minor
+        [GlyphData(27, "Glyph of Blood Tap", false, @"Your Blood Tap no longer causes damage to you.")]
+        public bool GlyphofBloodTap { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(28, "Glyph of Corpse Explosion", false, @"Any target killed by your Corpse Explosion ability will also explode.  Only affects targets within range of your Corpse Explosion ability, and cannot happen more than once every 6 seconds.")]
+        public bool GlyphofCorpseExplosion { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
+        [GlyphData(29, "Glyph of Death's Embrace", false, @"Your Death Coil refunds 20 runic power when used to heal.")]
+        public bool GlyphofDeathsEmbrace { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
+        [GlyphData(30, "Glyph of Horn of Winter", false, @"Increases the duration of your Horn of Winter ability by 1 min.")]
+        public bool GlyphofHornofWinter { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
+        [GlyphData(31, "Glyph of Pestilence", false, @"Increases the radius of your Pestilence effect by 5 yards.")]
+        public bool GlyphofPestilence { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
+        [GlyphData(32, "Glyph of Raise Dead", false, @"Your Raise Dead spell no longer requires a reagent.")]
+        public bool GlyphofRaiseDead { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+    } 
+
+
 }
