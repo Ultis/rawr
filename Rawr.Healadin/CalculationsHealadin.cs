@@ -527,29 +527,35 @@ namespace Rawr.Healadin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
-                + stats.HitRating + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
-                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + 
+            bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellCrit + stats.SpellHaste
+                + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
+                + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + 
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction
                 + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit) > 0;
-            bool survivalStats = (stats.Stamina + stats.Health) > 0;
+            bool maybeStats = (stats.HasteRating + stats.CritRating + stats.Stamina + stats.Health) > 0;
             bool ignoreStats = (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                 + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit + stats.DodgeRating + stats.ParryRating
                 + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue) > 0;
             bool specialEffect = false;
+            bool hasSpecialEffect = false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+                hasSpecialEffect = true;
+                specialEffect = false;
                 if (effect.Trigger == Trigger.Use
                     || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
                 {
-                    specialEffect = HasRelevantSpecialEffectStats(effect.Stats);
-                    if (specialEffect) break;
+                    if (HasRelevantSpecialEffectStats(effect.Stats))
+                    {
+                        specialEffect = true;
+                        break;
+                    }
                 }
             }
-            return (wantedStats || ((survivalStats || specialEffect) && !ignoreStats));
+            return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));
         }
     }
 }

@@ -2151,7 +2151,7 @@ namespace Rawr
 
         // Bandit's Insignia
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Arcane Damage")]
+        [DisplayName("Shadow Damage")]
         [Category("Equipment Effects")]
         public float ShadowDamage
         {

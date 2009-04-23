@@ -334,7 +334,9 @@ namespace Rawr.Retribution
             {
                 rot = new EffectiveCooldown(combats);
             }
-            calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage + stats.FireDamage).AverageDamage();
+            calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
+                + new MagicDamage(combats, stats.FireDamage).AverageDamage()
+                + new MagicDamage(combats, stats.ShadowDamage).AverageDamage();
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
 
@@ -449,11 +451,10 @@ namespace Rawr.Retribution
                         {
                             trigger = 1f / rot.GetPhysicalCritsPerSec();
                         }
-                        else if (effect.Trigger == Trigger.PhysicalHit)
+                        else if (effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
                         {
                             trigger = 1f / rot.GetPhysicalAttacksPerSec();
                         }
-
                         if (effect.MaxStack > 1)
                         {
                             float timeToMax = (float)Math.Min(fightLength, effect.GetChance(combats.BaseWeaponSpeed) * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
@@ -626,12 +627,9 @@ namespace Rawr.Retribution
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
                 {
-                    if (HasRelevantSpecialEffectStats(effect.Stats))
-                    {
-                        s.AddSpecialEffect(effect);
-                    }
+                    s.AddSpecialEffect(effect);
                 }
             }
             return s;
@@ -640,7 +638,7 @@ namespace Rawr.Retribution
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
             return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
-            + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage) > 0;
+            + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -659,16 +657,22 @@ namespace Rawr.Retribution
             bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +
                 stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.BlockValue) > 0;
             bool specialEffect = false;
+            bool hasSpecialEffect = false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+                hasSpecialEffect = true;
+                specialEffect = false;
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
                 {
-                    specialEffect = HasRelevantSpecialEffectStats(effect.Stats);
-                    if (specialEffect) break;
+                    if (HasRelevantSpecialEffectStats(effect.Stats))
+                    {
+                        specialEffect = true;
+                        break;
+                    }
                 }
             }
-            return wantedStats || ((maybeStats || specialEffect) && !ignoreStats);
+            return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));
         }
     }
 }

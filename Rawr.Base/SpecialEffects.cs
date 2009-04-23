@@ -263,21 +263,13 @@ namespace Rawr
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = ap }, duration, 45f, .1f));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { AttackPower = ap }, duration, 45f, .1f));
             }
-            else if (line.StartsWith("Chance on melee critical strike to increase your attack power by 1000 for 10 secs.")
-                || line.StartsWith("Chance on melee and ranged critical strike to increase your attack power by 1000 for 10 secs."))
+            else if ((match = new Regex(@"Chance on melee and ranged critical strike to increase your attack power by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
-                // Mirror of Truth
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = 1000f }, 10f, 50f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 50f, .1f));
             }
-            else if (line.StartsWith("Chance on melee and ranged critical strike to increase your attack power by 1234 for 10 sec."))
+            else if ((match = new Regex(@"Chance on melee or ranged hit to increase your attack power by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
-                // Pyrite Infuser
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = 1234 }, 10f, 50f, .1f));
-            }
-            else if (line.StartsWith("Chance on melee or ranged hit to increase your attack power by 1000 for 10 secs."))
-            {
-                // Anvil of Titans
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 1000f }, 10f, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45f, .1f));
             }
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec."))
             {
@@ -322,24 +314,14 @@ namespace Rawr
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.BonusRipDamagePerCPPerTick += (float)int.Parse(line);
             }
-            else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your haste rating by "))
+            else if ((match = new Regex(@"Your melee and ranged attacks have a chance to increase your haste rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
-                // Dragonspine Trophy
-                // Meteorite Whetstone
-                line = line.Substring("Your melee and ranged attacks have a chance to increase your haste rating by ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                int rating = int.Parse(line);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { HasteRating = (float)rating }, 10f, 45, .15f));
-                if (rating == 325)
-                {
-                    // internal cooldown of 20 secs, Dragonspine Trophy
-                    stats.HasteRatingOnPhysicalAttack += 325 * 20 / 45;
-                }
-                else
-                {
-                    stats.HasteRatingOnPhysicalAttack += rating * 10 / 45;
-                }
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45, .15f));
+                stats.HasteRatingOnPhysicalAttack += int.Parse(match.Groups["amount"].Value) * 10f / 45f;
+            }
+            else if ((match = new Regex(@"Chance on melee and ranged critical strike to increase your haste rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45, .10f));
             }
             else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your armor penetration rating by "))
             {
@@ -726,23 +708,17 @@ namespace Rawr
                 // Darkmoon Card: Blue Dragon
                 stats.FullManaRegenFor15SecOnSpellcast += 2f;
             }
-            else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
+            else if ((match = new Regex("Reduces the mana cost of Holy Light by (?<amount>\\d\\d*).").Match(line)).Success)
             {
-                line = line.Replace(".", "");
-                line = line.Substring("Reduces the mana cost of Holy Light by ".Length);
-                stats.HolyLightManaCostReduction += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+                stats.HolyLightManaCostReduction += (float)int.Parse(match.Groups["amount"].Value);
             }
-            else if (line.StartsWith("Increases spell power of Flash of Light by "))
+            else if ((match = new Regex("Increases spell power of Flash of Light by (?<amount>\\d\\d*).").Match(line)).Success)
             {
-                line = line.Replace(".", "");
-                line = line.Substring("Increases spell power of Flash of Light by ".Length);
-                stats.FlashOfLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+                stats.FlashOfLightSpellPower += (float)int.Parse(match.Groups["amount"].Value);
             }
-            else if (line.StartsWith("Increases spell power of Holy Light by "))
+            else if ((match = new Regex("Increases spell power of Holy Light by (?<amount>\\d\\d*).").Match(line)).Success)
             {
-                line = line.Replace(".", "");
-                line = line.Substring("Increases spell power of Holy Light by ".Length);
-                stats.HolyLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+                stats.HolyLightSpellPower += (float)int.Parse(match.Groups["amount"].Value);
             }
             else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
             {
@@ -814,17 +790,10 @@ namespace Rawr
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 176f }, 15f, 45f, .10f));
                 stats.ManaRestoreOnCast_10_45 += 176 * 3;
             }
-            else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 100 mana per 5 for 15 sec."))
+            else if ((match = new Regex("Each time you cast a spell, there is a chance you will gain up to (?<amount>\\d\\d*) mana per 5 for 15 sec.").Match(line)).Success)
             {
-                // Je'Tze's Bell
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 100f }, 15f, 45f, .10f));
-                stats.ManaRestoreOnCast_10_45 += 100 * 3;
-            }
-            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
-            {
-                // Memento of Tyrande
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 76f }, 15f, 45f, .10f));
-                stats.ManaRestoreOnCast_10_45 += 76 * 3;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, .10f));
+                stats.ManaRestoreOnCast_10_45 += int.Parse(match.Groups["amount"].Value) * 3f;
             }
             else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
             {
@@ -903,10 +872,9 @@ namespace Rawr
                 line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
                 stats.LavaBurstBonus = float.Parse(line);
             }
-            else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec." ||
-                    line == "Your Crusader Strike ability also grants you 120 attack power for 10 sec.")
+            else if ((match = new Regex("Your Crusader Strike ability also grants you (?<amount>\\d\\d*) attack power for 10 sec.").Match(line)).Success)
             {
-                stats.APCrusaderStrike_10 = 120f;
+                stats.APCrusaderStrike_10 += (float)int.Parse(match.Groups["amount"].Value);
             }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
@@ -925,10 +893,6 @@ namespace Rawr
                 stats.DivineStormDamage = 235f;
             }
             else if (line == "Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec.")
-            {
-                stats.DivineStormDamage = 81;
-            }
-            else if (line == "Causes your Divine Storm to deal an additional 81 damage.")
             {
                 stats.DivineStormDamage = 81;
             }
@@ -982,7 +946,7 @@ namespace Rawr
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)
 		{
-            Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*) for (?<duration>\d\d*) sec\. \((?<cooldown>\d\d*) Min Cooldown\)");
+            Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)? for (?<duration>\d\d*) sec\. \((?<cooldown>\d\d*) Min Cooldown\)");
             Match match = regex.Match(line);
             if (match.Success)
             {
@@ -992,21 +956,21 @@ namespace Rawr
                 float duration = int.Parse(match.Groups["duration"].Value);
                 float cooldown = int.Parse(match.Groups["cooldown"].Value) * 60;
 
-                if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { AttackPower = amount }; }
-                else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { AttackPower = amount }; }
-                else if (statName.Equals("haste rating", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { HasteRating = amount }; }
-                else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { SpellPower = amount }; }
-                else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { Agility = amount }; }
-                else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { CritRating = amount }; }
-                else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { DodgeRating = amount }; }
-                else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { DodgeRating = amount }; }
-                else if (statName.Equals("parry", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { ParryRating = amount }; }
-                else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { ParryRating = amount }; }
-                else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { Spirit = amount }; }
-                else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { ArmorPenetrationRating = amount }; }
-                else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { BlockValue = amount }; }
-                else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { Health = amount }; }
-                else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s = new Stats() { BonusArmor = amount }; }
+                if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+                else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+                else if (statName.Equals("haste rating", StringComparison.InvariantCultureIgnoreCase)) { s.HasteRating = amount; }
+                else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
+                else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
+                else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
+                else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+                else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+                else if (statName.Equals("parry", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+                else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+                else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
+                else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
+                else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
+                else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
+                else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
 
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
             }
