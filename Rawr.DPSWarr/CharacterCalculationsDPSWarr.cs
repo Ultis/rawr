@@ -56,6 +56,8 @@ namespace Rawr.DPSWarr
         public float TeethBonus { get; set; }
         // DPS
         public float WhiteDPS { get; set; }
+        public float WhiteDPSMH { get; set; }
+        public float WhiteDPSOH { get; set; }
         public float DeepWoundsDPS { get; set; }
         public float HeroicStrikeDPS { get; set; }
         public float SlamDPS { get; set; }
@@ -97,7 +99,6 @@ namespace Rawr.DPSWarr
             WhiteAttacks whiteAttacks = new WhiteAttacks(talents, BasicStats, combatFactors);
             if (SkillAttacks == null){SkillAttacks = new Skills(talents, BasicStats, combatFactors, whiteAttacks);}
 
-            // BELOW is READY
             dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
                 , BasicStats.Health, BaseHealth, BasicStats.Stamina * DPSWarr.StaminaToHP));
             dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}"
@@ -130,29 +131,29 @@ namespace Rawr.DPSWarr
                                 BasicStats.ExpertiseRating, Expertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f,
                                 MhExpertise, MhExpertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f,
                                 OhExpertise, OhExpertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f));
-            // BELOW is NOT READY
             // DPS ind
-            dictValues.Add("Bloodsurge", SkillAttacks.Bloodsurge().ToString());
-            dictValues.Add("Bloodthirst",SkillAttacks.Bloodthirst().ToString());
-            dictValues.Add("Whirlwind",SkillAttacks.Whirlwind().ToString());
-            dictValues.Add("Mortal Strike", SkillAttacks.MortalStrike().ToString());
-            dictValues.Add("Slam",SkillAttacks.Slam().ToString());
-            dictValues.Add("Rend",SkillAttacks.Rend().ToString());
-            dictValues.Add("Sudden Death",SkillAttacks.SuddenDeath().ToString());
-            dictValues.Add("Overpower",SkillAttacks.Overpower().ToString());
-            dictValues.Add("Bladestorm",SkillAttacks.BladeStorm().ToString());
-            dictValues.Add("Sword Spec",SkillAttacks.SwordSpec().ToString());
+            dictValues.Add("Bloodsurge",    string.Format("{0:0.00}",SkillAttacks.Bloodsurge()));
+            dictValues.Add("Bloodthirst",   string.Format("{0:0.00}",SkillAttacks.Bloodthirst()));
+            dictValues.Add("Whirlwind",     string.Format("{0:0.00}",SkillAttacks.Whirlwind()));
+            dictValues.Add("Mortal Strike", string.Format("{0:0.00}",SkillAttacks.MortalStrike()));
+            dictValues.Add("Slam",          string.Format("{0:0.00}",SkillAttacks.Slam()));
+            dictValues.Add("Rend",          string.Format("{0:0.00}",SkillAttacks.Rend()));
+            dictValues.Add("Sudden Death",  string.Format("{0:0.00}",SkillAttacks.SuddenDeath()));
+            dictValues.Add("Overpower",     string.Format("{0:0.00}",SkillAttacks.Overpower()));
+            dictValues.Add("Bladestorm",    string.Format("{0:0.00}",SkillAttacks.BladeStorm()));
+            dictValues.Add("Sword Spec",    string.Format("{0:0.00}",SkillAttacks.SwordSpec()));
             // DPS
-            dictValues.Add("Heroic Strike", SkillAttacks.HeroicStrike().ToString());
-            dictValues.Add("Deep Wounds", SkillAttacks.Deepwounds().ToString());
-            dictValues.Add("White DPS",(whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS()).ToString());
-            dictValues.Add("Total DPS",(whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + SkillAttacks.Bloodthirst() + SkillAttacks.Whirlwind() +
+            dictValues.Add("Heroic Strike", string.Format("{0:0.00}",SkillAttacks.HeroicStrike()));
+            dictValues.Add("Deep Wounds",   string.Format("{0:0.00}",SkillAttacks.Deepwounds()));
+            dictValues.Add("White DPS",     string.Format("{0:0.00}*Main Hand-{1:0.00}"+Environment.NewLine+"Off Hand- {2:0.00}",
+                WhiteDPS, WhiteDPSMH, WhiteDPSOH));
+            dictValues.Add("Total DPS",string.Format("{0:0.00}",WhiteDPSMH + WhiteDPSOH + SkillAttacks.Bloodthirst() + SkillAttacks.Whirlwind() +
                                        SkillAttacks.HeroicStrike() + SkillAttacks.Bloodsurge() + SkillAttacks.Deepwounds() +
                                        SkillAttacks.MortalStrike() + SkillAttacks.SuddenDeath() + SkillAttacks.Slam() + SkillAttacks.Overpower() +
-                                       SkillAttacks.Rend() + SkillAttacks.SwordSpec() + SkillAttacks.BladeStorm()).ToString());
+                                       SkillAttacks.Rend() + SkillAttacks.SwordSpec() + SkillAttacks.BladeStorm()));
             // Rage
             dictValues.Add("Free Rage", SkillAttacks.freeRage().ToString());
-            dictValues.Add("White DPS Rage",whiteAttacks.whiteRageGen().ToString());
+            dictValues.Add("White DPS Rage", WhiteRage.ToString());
             dictValues.Add("Other Rage", SkillAttacks.OtherRage().ToString());
             
             return dictValues;

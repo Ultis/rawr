@@ -13,16 +13,14 @@
             if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1) {
                 wepSpeed += (1.5f - (0.5f * _talents.ImprovedSlam)) / 5;
             }
-            var mhWhiteDPS = _combatFactors.AvgMhWeaponDmg / wepSpeed;
-            mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg
-                            - (1 - _combatFactors.ProbMhWhiteHit) - (0.24f * 0.35f));
+            float mhWhiteDPS = _combatFactors.AvgMhWeaponDmg / wepSpeed;
+            mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (0.24f * 0.35f));
             mhWhiteDPS *= _combatFactors.DamageReduction;
             return mhWhiteDPS;
         }
         public float CalcOhWhiteDPS() {
-            var ohWhiteDPS = _combatFactors.AvgOhWeaponDmg / _combatFactors.OffHandSpeed;
-            ohWhiteDPS *= (1 + _combatFactors.OhCrit * _combatFactors.BonusWhiteCritDmg
-                            - (1 - _combatFactors.ProbOhWhiteHit) - (0.24f * 0.35f));
+            float ohWhiteDPS = _combatFactors.AvgOhWeaponDmg / _combatFactors.OffHandSpeed;
+            ohWhiteDPS *= (1 + _combatFactors.OhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbOhWhiteHit) - (0.24f * 0.35f));
             ohWhiteDPS *= _combatFactors.DamageReduction;
             if (_combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
                 return ohWhiteDPS;

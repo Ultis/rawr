@@ -265,7 +265,9 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
             calculatedStats.HasteRating = stats.HasteRating;
             calculatedStats.HastePercent = stats.HasteRating * DPSWarr.HasteRatingToHaste / 100.0f;
             // DPS
-            calculatedStats.WhiteDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS();// + swordSpecDPS);
+            calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
+            calculatedStats.WhiteDPSOH = whiteAttacks.CalcOhWhiteDPS();
+            calculatedStats.WhiteDPS   = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
             calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
             calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
             calculatedStats.SlamDPS = skillAttacks.Slam();
