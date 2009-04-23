@@ -347,6 +347,7 @@ namespace Rawr.DPSDK
         public bool GlyphofOblit = false;
         public bool GlyphofPS = false;
         public bool GlyphofGhoul = false;
+        public bool GlyphofDS = false;
 
 	    public DeathKnightTalents talents = null;
 	    public Rotation rotation;

@@ -34,6 +34,7 @@ namespace Rawr.DPSDK
             txtSS.KeyUp += new KeyEventHandler(txtSS_KeyUp);
             txtUB.KeyUp += new KeyEventHandler(txtUB_KeyUp);
             txtUptime.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
+            txtDS.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
             txtGargoyleDuration.KeyUp += new KeyEventHandler(txtGargoyleDuration_KeyUp);
         }
 
@@ -48,6 +49,7 @@ namespace Rawr.DPSDK
             txtIT.Text = rotation.IcyTouch.ToString();
             txtNumDisease.Text = rotation.numDisease.ToString();
             txtOblit.Text = rotation.Obliterate.ToString();
+            txtDS.Text = rotation.DeathStrike.ToString();
             txtPS.Text = rotation.PlagueStrike.ToString();
             txtSS.Text = rotation.ScourgeStrike.ToString();
             txtUB.Text = rotation.UnholyBlight.ToString();
@@ -315,6 +317,22 @@ namespace Rawr.DPSDK
             catch
             {
                 rotation.Obliterate = 0f;
+                t.Text = "0";
+            }
+        }
+
+        void txtDS_KeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            try
+            {
+                double d = double.Parse(t.Text);
+                float f = (float)d;
+                rotation.DeathStrike = f;
+            }
+            catch
+            {
+                rotation.DeathStrike = 0f;
                 t.Text = "0";
             }
         }

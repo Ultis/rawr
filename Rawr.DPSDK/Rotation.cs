@@ -27,6 +27,7 @@ namespace Rawr.DPSDK
         public float FrostStrike = 0f;
         public float HowlingBlast = 0f;
         public float Obliterate = 0f;
+        public float DeathStrike = 0f;
         public float BloodStrike = 0f;
         public float HeartStrike = 0f;
         public float DancingRuneWeapon = 0f;
@@ -56,7 +57,8 @@ namespace Rawr.DPSDK
                     UnholyBlight = 0f;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
-                    Obliterate = 2f;
+                    Obliterate = 0f;
+                    DeathStrike = 2f;
                     BloodStrike = 0f;
                     HeartStrike = 6f;
                     curRotationDuration = 20f;

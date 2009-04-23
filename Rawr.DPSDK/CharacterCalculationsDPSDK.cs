@@ -124,6 +124,13 @@ namespace Rawr.DPSDK
             set { _ObliterateDPS = value; }
         }
 
+        private float _DeathStrikeDPS;
+        public float DeathStrikeDPS
+        {
+            get { return _DeathStrikeDPS; }
+            set { _DeathStrikeDPS = value; }
+        }
+
         private float _BloodStrikeDPS;
         public float BloodStrikeDPS
         {
@@ -290,6 +297,7 @@ namespace Rawr.DPSDK
             set { _talents = value; }
         }
 
+
         public List<Buff> ActiveBuffs { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -352,6 +360,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Icy Touch", IcyTouchDPS.ToString("N2"));
             dictValues.Add("Necrosis", NecrosisDPS.ToString("N2"));
             dictValues.Add("Obliterate", ObliterateDPS.ToString("N2"));
+            dictValues.Add("Death Strike", DeathStrikeDPS.ToString("N2"));
             dictValues.Add("Plague Strike", PlagueStrikeDPS.ToString("N2"));
             dictValues.Add("Scourge Strike", ScourgeStrikeDPS.ToString("N2"));
             dictValues.Add("Unholy Blight", UnholyBlightDPS.ToString("N2"));

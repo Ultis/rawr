@@ -68,6 +68,8 @@
             this.label18 = new System.Windows.Forms.Label();
             this.rbUnholyPresence = new System.Windows.Forms.RadioButton();
             this.rbBloodPresence = new System.Windows.Forms.RadioButton();
+            this.txtDS = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -451,11 +453,30 @@
             this.rbBloodPresence.UseVisualStyleBackColor = true;
             this.rbBloodPresence.CheckedChanged += new System.EventHandler(this.rbBloodPresence_CheckedChanged);
             // 
+            // txtDS
+            // 
+            this.txtDS.Location = new System.Drawing.Point(129, 511);
+            this.txtDS.Name = "txtDS";
+            this.txtDS.Size = new System.Drawing.Size(29, 20);
+            this.txtDS.TabIndex = 72;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(18, 514);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(69, 13);
+            this.label19.TabIndex = 71;
+            this.label19.Text = "Death Strike:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(209, 516);
+            this.ClientSize = new System.Drawing.Size(209, 545);
+            this.Controls.Add(this.txtDS);
+            this.Controls.Add(this.label19);
             this.Controls.Add(this.rbBloodPresence);
             this.Controls.Add(this.rbUnholyPresence);
             this.Controls.Add(this.label18);
@@ -544,5 +565,7 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.RadioButton rbUnholyPresence;
         private System.Windows.Forms.RadioButton rbBloodPresence;
+        private System.Windows.Forms.TextBox txtDS;
+        private System.Windows.Forms.Label label19;
     }
 }
