@@ -1471,10 +1471,13 @@ namespace Rawr.Moonkin
             Starfire.SpellDamageModifier += 0.04f * character.DruidTalents.WrathOfCenarius;
 
             // Add spell damage from idols
-            Starfire.IdolExtraSpellPower += stats.StarfireDmg;
-            Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
+            //Starfire.IdolExtraSpellPower += stats.StarfireDmg;
+            Starfire.BaseDamage += stats.StarfireDmg;
+            //Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
+            Moonfire.BaseDamage += stats.MoonfireDmg;
             Wrath.BaseDamage += stats.WrathDmg;
-            InsectSwarm.IdolExtraSpellPower += stats.InsectSwarmDmg;
+            //InsectSwarm.IdolExtraSpellPower += stats.InsectSwarmDmg;
+            InsectSwarm.DotEffect.TickDamage += stats.InsectSwarmDmg / InsectSwarm.DotEffect.NumberOfTicks;
 
             float moonfireDDGlyph = character.DruidTalents.GlyphOfMoonfire ? -0.9f : 0.0f;
             float moonfireDotGlyph = character.DruidTalents.GlyphOfMoonfire ? 0.75f : 0.0f;

@@ -623,6 +623,9 @@ namespace Rawr
             hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 10f, 60f));
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, hyper));
 
+            // Engineering cloak enchant
+            defaultEnchants.Add(new Enchant(3859, "Springy Arachnoweave", Item.ItemSlot.Back, new Stats() { SpellPower = 18f }));
+
             // Tailoring enchant
             Stats stats = new Stats();
             stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 250 }, 15, 45, 0.5f));
