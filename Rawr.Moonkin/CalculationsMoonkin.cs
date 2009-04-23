@@ -335,18 +335,9 @@ namespace Rawr.Moonkin
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
-            //float hitRatingMultiplier = 1.0f / CalculationsMoonkin.hitRatingConversionFactor;
-            //float critRatingMultiplier = 1.0f / CalculationsMoonkin.critRatingConversionFactor;
-            //float hasteRatingMultiplier = 1.0f / CalculationsMoonkin.hasteRatingConversionFactor;
-
-            //calcs.SpellCrit = stats.CritRating * critRatingMultiplier + stats.SpellCrit;
-            //calcs.SpellHit = stats.HitRating * hitRatingMultiplier + stats.SpellHit;
-            //calcs.SpellHaste = (1 + (stats.HasteRating + stats.DrumsOfBattle) * hasteRatingMultiplier) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
-
 			calcs.SpellCrit = StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
 			calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
 			calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
-            stats.SpellPower += stats.DrumsOfWar / 2.0f;
 
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
             stats.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;
@@ -361,8 +352,7 @@ namespace Rawr.Moonkin
 			calcs.TargetLevel = calcOpts.TargetLevel;
             calcs.Scryer = calcOpts.AldorScryer == "Scryer";
 
-            // 2.4 spirit regen
-            //float spiritRegen = 0.001f + ManaRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
+            // 3.1 spirit regen
 			float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
             calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
             calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
@@ -404,30 +394,64 @@ namespace Rawr.Moonkin
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
-            // Bonus multipliers
-			Stats statsTalents = new Stats()
-			{
-				BonusStaminaMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.02f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
-                BonusAgilityMultiplier = (1 + 0.02f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
-                BonusStrengthMultiplier = (0.02f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
-                BonusIntellectMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1,
-                BonusSpiritMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.05f * character.DruidTalents.LivingSpirit) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) - 1
-			};
-			if (character.ActiveBuffsContains("Moonkin Form"))
-			{
-				statsTalents.BonusIntellectMultiplier += 1;
-				statsTalents.BonusIntellectMultiplier *= 1 + 0.02f * character.DruidTalents.Furor;
-				statsTalents.BonusIntellectMultiplier -= 1;
-			}
+            // Talented bonus multipliers
+
+            Stats statsHotW = new Stats()
+            {
+                BonusIntellectMultiplier = 0.04f * character.DruidTalents.HeartOfTheWild
+            };
+
+            Stats statsSotF = new Stats()
+            {
+                BonusStaminaMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
+                BonusIntellectMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
+                BonusSpiritMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
+                BonusAgilityMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest
+            };
+
+            Stats statsImpMotW = new Stats()
+            {
+                BonusStaminaMultiplier = 0.01f * character.DruidTalents.ImprovedMarkOfTheWild,
+                BonusIntellectMultiplier = 0.01f * character.DruidTalents.ImprovedMarkOfTheWild,
+                BonusSpiritMultiplier = 0.01f * character.DruidTalents.ImprovedMarkOfTheWild,
+                BonusAgilityMultiplier = 0.01f * character.DruidTalents.ImprovedMarkOfTheWild
+            };
+
+            Stats statsLivingSpirit = new Stats()
+            {
+                BonusSpiritMultiplier = 0.05f * character.DruidTalents.LivingSpirit
+            };
+
+            Stats statsFuror = new Stats()
+            {
+                BonusIntellectMultiplier = (character.ActiveBuffsContains("Moonkin Form")) ? 0.02f * character.DruidTalents.Furor : 0.0f
+            };
+
+            Stats statsEarthAndMoon = new Stats()
+            {
+                BonusSpellPowerMultiplier = 0.01f * character.DruidTalents.EarthAndMoon
+            };
+
+            Stats statsMasterSS = new Stats()
+            {
+                BonusSpellPowerMultiplier = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0) ?
+                                            0.01f * character.DruidTalents.MasterShapeshifter : 0.0f
+            };
+
+            Stats statsTalents = statsHotW + statsImpMotW + statsLivingSpirit + statsSotF + statsFuror + statsEarthAndMoon + statsMasterSS;
 
             // Create the total stats object
             Stats statsTotal = statsGearEnchantsBuffs + statsRace + statsTalents;
 
             // Base stats: Intellect, Stamina, Spirit, Agility
-			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-			statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
-			statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+			statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsRace.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Intellect += (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Agility = (float)Math.Floor(statsRace.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility += (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsRace.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.Spirit += (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
             if (statsTotal.GreatnessProc > 0)
             {
@@ -487,20 +511,6 @@ namespace Rawr.Moonkin
             {
                 statsTotal.SpellCrit += 0.01f * character.DruidTalents.ImprovedFaerieFire;
             }
-
-            // Put in this check so that the multiplicative spell power multipliers work correctly
-            if (statsTotal.BonusSpellPowerMultiplier == 0.0f)
-                statsTotal.BonusSpellPowerMultiplier = 1.0f;
-
-            // All spells: Damage + (0.01 * Earth and Moon)
-            statsTotal.BonusSpellPowerMultiplier *= 1.0f + (0.01f * character.DruidTalents.EarthAndMoon);
-            // All spells: Damage + (0.02 * Master Shapeshifter)
-            if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
-                statsTotal.BonusSpellPowerMultiplier *= 1.0f + (0.02f * character.DruidTalents.MasterShapeshifter);
-
-            // Make sure we revert the value to a proper percentage after multiplicative calculations are done
-            if (statsTotal.BonusSpellPowerMultiplier >= 1.0f)
-                statsTotal.BonusSpellPowerMultiplier -= 1.0f;
 
             return statsTotal;
         }
