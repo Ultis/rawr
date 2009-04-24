@@ -721,45 +721,40 @@ namespace Rawr.Cat
 				StatConversion.GetCritFromAgility(statsTotal.Agility, Character.CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
 				- (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
+			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
 				switch (effect.Trigger)
 				{
 					case Trigger.Use:
-						statsTotal += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
+						statsProcs += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
 						break;
 					case Trigger.MeleeHit:
 					case Trigger.PhysicalHit:
-						statsTotal += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
+						statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
 						break;
 					case Trigger.MeleeCrit:
 					case Trigger.PhysicalCrit:
-						statsTotal += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
+						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
 						break;
 					case Trigger.DoTTick:
-						statsTotal += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
+						statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
 						break;
 					case Trigger.DamageDone:
-						statsTotal += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
+						statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
 						break;
 				}
 			}
 
-			// Inserted by Trolando
-			//if (statsTotal.GreatnessProc > 0)
-			//{
-			//    float expectedAgi = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-			//    float expectedStr = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
-			//    // Highest stat
-			//    if (expectedAgi > expectedStr)
-			//    {
-			//        statsTotal.Agility += statsTotal.GreatnessProc * 15f / 47f;
-			//    }
-			//    else
-			//    {
-			//        statsTotal.Strength += statsTotal.GreatnessProc * 15f / 47f;
-			//    }
-			//}
+			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
+			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+			statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility;
+			statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
+			statsProcs.Armor += 2f * statsProcs.Agility;
+			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
+			statsTotal += statsProcs;
 
 			statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
 			return statsTotal;

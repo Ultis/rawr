@@ -517,7 +517,7 @@ namespace Rawr
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
 			Stats mongoose = new Stats() { MongooseProc = 1f };
-			mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120f, PhysicalHaste = 0.02f }, 15f, 0f, -1.5f));
+			mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120f, PhysicalHaste = 0.02f }, 15f, 0f, -1f));
 			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, mongoose));
 
             Stats berserking = new Stats() { BerserkingProc = 1f };
