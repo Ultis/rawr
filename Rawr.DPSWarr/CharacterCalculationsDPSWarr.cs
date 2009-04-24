@@ -97,7 +97,7 @@ namespace Rawr.DPSWarr
             CombatFactors combatFactors = new CombatFactors(character, BasicStats);
 
             WhiteAttacks whiteAttacks = new WhiteAttacks(talents, BasicStats, combatFactors);
-            if (SkillAttacks == null){SkillAttacks = new Skills(talents, BasicStats, combatFactors, whiteAttacks);}
+            if (SkillAttacks == null){SkillAttacks = new Skills(character,talents, BasicStats, combatFactors, whiteAttacks);}
 
             dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
                 , BasicStats.Health, BaseHealth, BasicStats.Stamina * DPSWarr.StaminaToHP));

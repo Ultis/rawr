@@ -115,7 +115,7 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
                         "DPS Breakdown (Arms):Mortal Strike",
                         "DPS Breakdown (Arms):Slam",
                         "DPS Breakdown (Arms):Rend",
-                        "DPS Breakdown (Arms):Sudden Death",
+                        "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
                         "DPS Breakdown (Arms):Overpower",
                         "DPS Breakdown (Arms):Bladestorm",
                         "DPS Breakdown (Arms):Sword Spec",
@@ -233,7 +233,7 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
 
             CombatFactors combatFactors = new CombatFactors(character, stats);
             WhiteAttacks whiteAttacks = new WhiteAttacks(character.WarriorTalents, stats, combatFactors);
-            Skills skillAttacks = new Skills(character.WarriorTalents, stats, combatFactors, whiteAttacks);
+            Skills skillAttacks = new Skills(character,character.WarriorTalents, stats, combatFactors, whiteAttacks);
             Stats statsRace = GetRaceStats(character);
 
             calculatedStats.BasicStats = stats;
