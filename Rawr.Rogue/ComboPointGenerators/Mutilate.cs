@@ -5,25 +5,37 @@ namespace Rawr.Rogue.ComboPointGenerators
     public class Mutilate : IComboPointGenerator
     {
         public string Name { get { return "Mutilate"; } }
-        public float EnergyCost { get { return 60f; } }
+        
+		public float EnergyCost(CombatFactors combatFactors)
+		{ 
+			//Assume Mutiliate can only crit once, so Focused Attacks can only return 2 energy, and
+			//not 2 energy for a MH crit, and another 2 energy (total 4) for a MH and OH crit
+			return 60f - ( Crit(combatFactors) * Talents.FocusedAttacks.Bonus ); 
+		}
 
         public float Crit(CombatFactors combatFactors)
         {
-            return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Bonus;
-        }
+            return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus;
+		}
 
-        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
+		public float ComboPointsGeneratedPerAttack
+		{
+			get { return 2f; }
+		}
+
+        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
             baseDamage *= TalentBonusDamage();
             baseDamage *= BonusIfTargetIsPoisoned(calcOpts);
             baseDamage *= Talents.DirtyDeeds.Multiplier;
+			baseDamage *= Talents.FindWeakness.Multiplier;
             baseDamage *= combatFactors.DamageReduction;
 
             var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors);
             var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
 
-            return (critDamage + nonCritDamage)*(numCPG/2f)/cycleTime;
+            return (critDamage + nonCritDamage)*(numCpg/2f)/cycleTime;
         }
 
         private static float BaseAttackDamage(CombatFactors combatFactors)
@@ -35,7 +47,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         private static float TalentBonusDamage()
         {
-            return Talents.Add(Talents.FindWeakness, Talents.Opportunity);
+            return 1f + Talents.Add(Talents.FindWeakness, Talents.Opportunity);
         }
 
         private static float BonusIfTargetIsPoisoned(CalculationOptionsRogue calcOpts)

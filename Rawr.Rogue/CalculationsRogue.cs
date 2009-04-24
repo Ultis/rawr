@@ -14,7 +14,7 @@ namespace Rawr.Rogue
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                return new List<GemmingTemplate>();
             }
         }
 
@@ -81,6 +81,9 @@ namespace Rawr.Rogue
         /// </summary>
         /// <param name="character"></param>
         /// <param name="additionalItem"></param>
+        /// <param name="referenceCalculation"></param>
+        /// <param name="significantChange"></param>
+        /// <param name="needsDisplayCalculations"></param>
         /// <returns></returns>
         /// Much of this code is based on Aldriana's RogueCalc
         /// 
@@ -97,23 +100,23 @@ namespace Rawr.Rogue
         {
             var calculatedStats = new CharacterCalculationsRogue(stats);
            
-            var numCPG = CalcComboPointsNeededForCycle(calcOpts);
+            var numCpg = CalcComboPointsNeededForCycle(calcOpts);
             var cpg = ComboPointGenerator.Get(talents, combatFactors);
 
             var whiteAttacks = new WhiteAttacks(combatFactors);
-            var cycleTime = CalcCycleTime(talents, calcOpts, combatFactors, whiteAttacks.OhHits, numCPG, cpg);
-            var cpgDPS = cpg.CalcCpgDPS(stats, combatFactors, calcOpts, numCPG, cycleTime);
+            var cycleTime = CalcCycleTime(calcOpts, combatFactors, whiteAttacks.OhHits, numCpg, cpg);
+            var cpgDps = cpg.CalcCpgDPS(stats, combatFactors, calcOpts, numCpg, cycleTime);
 
-            var totalFinisherDPS = 0f;
+            var totalFinisherDps = 0f;
             foreach (var component in calcOpts.DPSCycle.Components)
             {
                 var finisherDps = component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime);
                 calculatedStats.AddToolTip(DisplayValue.FinisherDPS, component + ": " + finisherDps);
-                totalFinisherDPS += finisherDps;
+                totalFinisherDps += finisherDps;
             }
 
-            var swordSpecDPS = new SwordSpec().CalcDPS(combatFactors, whiteAttacks, numCPG, cycleTime);
-            var poisonDPS = CalcPoisonDPS(stats, calcOpts, combatFactors, whiteAttacks);
+            var swordSpecDps = new SwordSpec().CalcDPS(combatFactors, whiteAttacks, numCpg, cycleTime);
+            var poisonDps = CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
@@ -151,12 +154,12 @@ namespace Rawr.Rogue
             calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
             calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDPS);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, totalFinisherDPS);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDPS, swordSpecDPS);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDPS, poisonDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, totalFinisherDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDPS, swordSpecDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDPS, poisonDps);
 
-            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDPS + cpgDPS + totalFinisherDPS + poisonDPS;
+            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
             return calculatedStats;
@@ -167,21 +170,21 @@ namespace Rawr.Rogue
             return calcOpts.DPSCycle.TotalComboPoints - (calcOpts.DPSCycle.Components.Count * Talents.Ruthlessness.Bonus);
         }
 
-        private static float CalcCycleTime(RogueTalents talents, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg)
+        private static float CalcCycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float numCpg, IComboPointGenerator cpg)
         {
             var energyRegen = combatFactors.BaseEnergyRegen;
-            energyRegen += (.2f * 3f * talents.CombatPotency) * ohHits;
+            energyRegen += Talents.CombatPotency.ChanceForEnergy.Bonus * Talents.CombatPotency.Energy.Bonus * ohHits;
 
-            var energyCost = numCPG*cpg.EnergyCost;
+            var energyCost = numCpg * cpg.EnergyCost(combatFactors) / cpg.ComboPointsGeneratedPerAttack;
             foreach(var component in calcOpts.DPSCycle.Components)
             {
-                energyCost += component.Finisher.EnergyCost(combatFactors);
+                energyCost += component.Finisher.EnergyCost(combatFactors, component.Rank);
             }
 
             return energyCost / energyRegen;
         }
 
-        private static float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
+        private static float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
         {
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
             {
@@ -264,18 +267,18 @@ namespace Rawr.Rogue
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
-			CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
+			var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
 
             switch (character.RogueTalents.SerratedBlades)
             {
                 case 3:
-                    statsTotal.ArmorPenetration += 640f / (float)calcOpts.TargetArmor;
+                    statsTotal.ArmorPenetration += 640f / calcOpts.TargetArmor;
                     break;
                 case 2:
-                    statsTotal.ArmorPenetration += 434.4f / (float)calcOpts.TargetArmor;
+                    statsTotal.ArmorPenetration += 434.4f / calcOpts.TargetArmor;
                     break;
                 case 1:
-                    statsTotal.ArmorPenetration += 213.6f / (float)calcOpts.TargetArmor;
+                    statsTotal.ArmorPenetration += 213.6f / calcOpts.TargetArmor;
                     break;
             }
 

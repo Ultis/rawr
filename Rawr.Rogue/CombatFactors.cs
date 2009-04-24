@@ -9,7 +9,7 @@ namespace Rawr.Rogue
             _stats = stats;
 			_mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
 			_offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
-			_talents = character.RogueTalents;
+			//_talents = character.RogueTalents;
             _calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             _characterRace = character.Race;
         }
@@ -17,9 +17,9 @@ namespace Rawr.Rogue
         private readonly Stats _stats;
         private readonly Item _mainHand;
         private readonly Item _offHand;
-        private readonly RogueTalents _talents;
+        //private readonly RogueTalents _talents;
         private readonly CalculationOptionsRogue _calcOpts;
-        private Character.CharacterRace _characterRace;
+        private readonly Character.CharacterRace _characterRace;
 
         public Item MainHand
         {
@@ -45,14 +45,9 @@ namespace Rawr.Rogue
         {
 			get
 			{
-				float armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
-				float reducedArmor = (float)_calcOpts.TargetArmor * (armorReductionPercent);
+				var armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
+				var reducedArmor = _calcOpts.TargetArmor * (armorReductionPercent);
 				return _calcOpts.TargetArmor - reducedArmor;
-
-
-				//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
-
-				//return _stats.ArmorPenetration + _calcOpts.TargetArmor * _stats.ArmorPenetrationRating * RogueConversions.ArmorPenRatingToArmorReduction / 100;
 			}
         }
 
@@ -61,9 +56,6 @@ namespace Rawr.Rogue
             get
             {
 				return 1f - StatConversion.GetArmorDamageReduction(80, _calcOpts.TargetArmor, 0, 0, _stats.ArmorPenetrationRating);
-
-                //var totalArmor = _calcOpts.TargetArmor - TotalArmorPenetration;
-                //return 1f - (totalArmor / ((467.5f * _calcOpts.TargetLevel) + totalArmor - 22167.5f));
             }
         } 
 
@@ -114,7 +106,7 @@ namespace Rawr.Rogue
 
         public float BaseExpertise
         {
-            get { return _talents.WeaponExpertise * 5f + _stats.Expertise + (float)Math.Floor(_stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise); }
+            get { return Talents.WeaponExpertise.Bonus + _stats.Expertise + (float)Math.Floor(_stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise); }
         }
 
         public float MhExpertise
@@ -196,10 +188,8 @@ namespace Rawr.Rogue
         {
             get
             {
-                var energyRegen = 10f*(1 + Talents.Vitality.Bonus);
-                energyRegen += Talents.AdrenalineRush.Bonus;
-                energyRegen += Talents.HungerForBlood.Bonus;
-                
+                var energyRegen = 10f*Talents.Multiply(Talents.Vitality, Talents.AdrenalineRush);
+                energyRegen += Talents.HungerForBlood.EnergyPerSecond.Bonus;
                 return energyRegen;
             }
         }
@@ -231,7 +221,7 @@ namespace Rawr.Rogue
             var crit = _stats.PhysicalCrit + CritFromCritRating;
             if (weapon.Type == Item.ItemType.Dagger || weapon.Type == Item.ItemType.FistWeapon)
             {
-                crit += _talents.CloseQuartersCombat;
+                crit += Talents.CloseQuartersCombat.Bonus;
             }
             return crit;
         }

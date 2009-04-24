@@ -58,14 +58,14 @@ namespace Rawr.Rogue
     {
 		public override string Name { get { return "Deadly Poison"; } }
 
-        private const float _stackSize = 5f;
-        private const float _duration = 12f;
+        private const float STACK_SIZE = 5f;
+        private const float DURATION = 12f;
 
 		public override bool IsDeadlyPoison { get { return true; } }
 
 		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return _stackSize * (296f + .08f * stats.AttackPower) * Talents.VilePoisons.Multiplier / _duration;
+            return STACK_SIZE * (296f + .12f * stats.AttackPower) * Talents.VilePoisons.Multiplier / DURATION;
         }
     }
 
@@ -78,7 +78,11 @@ namespace Rawr.Rogue
 
 		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits*combatFactors.ProbPoisonHit*(445f + .15f*stats.AttackPower)*Talents.VilePoisons.Multiplier*(Talents.ImprovedPoisons.Multiplier);
+			var damage = hits * (300f + .10f * stats.AttackPower);
+			damage *= (.2f + Talents.ImprovedPoisons.InstantPoison.Bonus);
+			damage *= combatFactors.ProbPoisonHit;
+			damage *= Talents.VilePoisons.Multiplier;
+			return damage;
         }
     }
 

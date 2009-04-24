@@ -37,12 +37,12 @@
 
         private float MhSwingsPerSecond
         {
-            get { return _combatFactors.BaseHaste / _combatFactors.MainHand.Speed; }
+			get { return (1f / _combatFactors.MainHand.Speed) * (1 +_combatFactors.BaseHaste); }
         }
 
         private float OhSwingsPerSecond
         {
-            get { return _combatFactors.BaseHaste / _combatFactors.OffHand.Speed; }
+			get { return (1f / _combatFactors.MainHand.Speed) * (1 + _combatFactors.BaseHaste); }
         }
     }
 }

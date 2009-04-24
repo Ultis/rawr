@@ -6,49 +6,46 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public string Name { get { return "Backstab"; } }
 
-        public float EnergyCost
+        public float EnergyCost(CombatFactors combatFactors)
         {
-            get { return 60f - Talents.SlaughterFromTheShadows.SecondaryBonus; }
+			return 60f - Talents.SlaughterFromTheShadows.BackstabAndAmbushEnergyCost.Bonus - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus);  
         }
 
         public float Crit(CombatFactors combatFactors)
         {
-            return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.SecondaryBonus) * combatFactors.ProbYellowHit;
+            return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.Backstab.Bonus) * combatFactors.ProbYellowHit;
         }
 
-        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
+    	public float ComboPointsGeneratedPerAttack
+    	{
+			get { return 1f; }
+    	}
+
+    	public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
-            baseDamage *= TalentBonusDamage();
+			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.Aggression, Talents.BladeTwisting, Talents.SurpriseAttacks, Talents.Opportunity));
             baseDamage *= Talents.DirtyDeeds.Multiplier;
+    		baseDamage *= Talents.FindWeakness.Multiplier;
             baseDamage *= combatFactors.DamageReduction;
 
             var critDamage = baseDamage*CriticalDamageMultiplier(combatFactors)*Crit(combatFactors);
             var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
 
-            return (critDamage + nonCritDamage)* numCPG / cycleTime;
+            return (critDamage + nonCritDamage)* numCpg / cycleTime;
         }
 
         private static float BaseAttackDamage(CombatFactors combatFactors)
         {
             var attackDamage = combatFactors.MhNormalizedDamage;
             attackDamage += 465;
-            attackDamage *= (1.5f + Talents.SinisterCalling.Bonus);
+            attackDamage *= (1.5f + Talents.SinisterCalling.HemoAndBackstab.Bonus);
             return attackDamage;
         }
 
         private static float CriticalDamageMultiplier(CombatFactors combatFactors)
         {
             return (combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus);
-        }
-
-        private static float TalentBonusDamage()
-        {
-            return Talents.Add(Talents.FindWeakness,
-                                    Talents.Aggression,
-                                    Talents.BladeTwisting,
-                                    Talents.SurpriseAttacks,
-                                    Talents.Opportunity);
         }
     }
 }

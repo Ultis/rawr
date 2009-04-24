@@ -3,9 +3,10 @@
     public interface IComboPointGenerator 
     {
         string Name { get; }
-        float EnergyCost { get; }
+    	float EnergyCost(CombatFactors combatFactors);
         float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime);
         float Crit(CombatFactors combatFactors);
+		float ComboPointsGeneratedPerAttack { get; }
     }
 
     public static class ComboPointGenerator

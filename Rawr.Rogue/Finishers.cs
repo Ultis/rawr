@@ -13,7 +13,7 @@ namespace Rawr.Rogue
     {
 		public abstract char Id { get; }
 		public abstract string Name { get; }
-	    public abstract float EnergyCost(CombatFactors combatFactors);
+	    public abstract float EnergyCost(CombatFactors combatFactors, int rank);
 		public abstract float CalcFinisherDPS(Stats stats, CombatFactors combatFactors, int rank, float cycleTime);
     }
 
@@ -48,9 +48,9 @@ namespace Rawr.Rogue
 
 		public override string Name { get { return "Rupture"; } }
 
-		public override float EnergyCost(CombatFactors combatFactors)
+		public override float EnergyCost(CombatFactors combatFactors, int rank)
 		{
-            var baseCost = 25f;
+            var baseCost = 25f - (rank * Talents.RelentlessStrikes.Bonus);
             var missCost = baseCost * combatFactors.YellowMissChance * (1 - Talents.QuickRecovery.Bonus);
             var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
             return baseCost + missCost + dodgeCost;
@@ -82,8 +82,9 @@ namespace Rawr.Rogue
             //Note:  Bonus Physical Damage isn't modeled yet  (e.g. Savage Combat/Blood Frenzy) 
 		    //Note:  Need to Model Tier 7 2-Piece Bonus;
 
-            finisherDmg *= Talents.Add(Talents.SerratedBlades, Talents.BloodSpatter, Talents.FindWeakness);
+            finisherDmg *= (1f + Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness));
 		    finisherDmg *= Talents.DirtyDeeds.Multiplier;
+			finisherDmg *= Talents.FindWeakness.Multiplier;
             finisherDmg *= (1f + stats.BonusBleedDamageMultiplier);
             finisherDmg *= (1f - combatFactors.YellowMissChance);
             if (!Talents.SurpriseAttacks.HasPoints)
@@ -99,9 +100,9 @@ namespace Rawr.Rogue
 
 		public override string Name { get { return "Evis"; } }
 
-		public override float EnergyCost(CombatFactors combatFactors)
+		public override float EnergyCost(CombatFactors combatFactors, int rank)
 		{
-		    var baseCost = 35f;
+			var baseCost = 35f - (rank * Talents.RelentlessStrikes.Bonus);
             var missCost = baseCost * combatFactors.YellowMissChance * (1-Talents.QuickRecovery.Bonus);
             var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
             return baseCost + missCost + dodgeCost;
@@ -115,7 +116,8 @@ namespace Rawr.Rogue
 
             var finisherDmg = (evisMin + evisMax)/2f;
             finisherDmg *= Talents.ImprovedEviscerate.Multiplier;
-            finisherDmg *= Talents.Aggression.Multiplier;
+			finisherDmg *= Talents.FindWeakness.Multiplier;
+			finisherDmg *= Talents.Aggression.Multiplier;
             finisherDmg = finisherDmg * (1f - combatFactors.ProbMhCrit) + (finisherDmg * 2f) * combatFactors.ProbMhCrit;
             finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
 
@@ -132,7 +134,10 @@ namespace Rawr.Rogue
     {
 		public override char Id { get { return 'S'; } }
 		public override string Name { get { return "SnD"; } }
-		public override float EnergyCost(CombatFactors combatFactors) { return 25f; }
+		public override float EnergyCost(CombatFactors combatFactors, int rank)
+		{
+			return 25f - (rank * Talents.RelentlessStrikes.Bonus);
+		}
 		public override float CalcFinisherDPS(Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
             return 0f;
@@ -144,7 +149,7 @@ namespace Rawr.Rogue
     {
 		public override char Id { get { return 'Z'; } }
 		public override string Name { get { return "None"; } }
-		public override float EnergyCost(CombatFactors combatFactors) { return 0f; }
+		public override float EnergyCost(CombatFactors combatFactors, int rank) { return 0f; }
 		public override float CalcFinisherDPS(Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
             return 0f;

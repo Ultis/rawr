@@ -6,30 +6,33 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public string Name { get { return "Sinister Strike"; } }
 
-        public float EnergyCost
+        public float EnergyCost(CombatFactors combatFactors)
         {
-            get
-            {
-                return 45f - Talents.ImprovedSinisterStrike.Bonus;
-            }
+			return 45f - Talents.ImprovedSinisterStrike.Bonus - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus);
         }
 
         public float Crit(CombatFactors combatFactors)
         {
             return combatFactors.ProbMhCrit * combatFactors.ProbYellowHit;
-        }
+		}
 
-        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
+		public float ComboPointsGeneratedPerAttack
+		{
+			get { return 1f; }
+		}
+
+        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
-            baseDamage *= TalentBonusDamage();
+			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.Aggression, Talents.BladeTwisting, Talents.SurpriseAttacks));
             baseDamage *= Talents.DirtyDeeds.Multiplier;
-            baseDamage *= combatFactors.DamageReduction;
+			baseDamage *= Talents.FindWeakness.Multiplier;
+			baseDamage *= combatFactors.DamageReduction;
 
             var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors);
             var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
 
-            return (critDamage + nonCritDamage) * numCPG / cycleTime;
+            return (critDamage + nonCritDamage) * numCpg / cycleTime;
         }
 
         private static float BaseAttackDamage(CombatFactors combatFactors)
@@ -42,14 +45,6 @@ namespace Rawr.Rogue.ComboPointGenerators
         private static float CriticalDamageMultiplier(CombatFactors combatFactors)
         {
             return (combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus);
-        }
-
-        private static float TalentBonusDamage()
-        {
-            return Talents.Add( Talents.FindWeakness,
-                                Talents.Aggression,
-                                Talents.BladeTwisting,
-                                Talents.SurpriseAttacks);
         }
     }
 }
