@@ -1136,11 +1136,10 @@ namespace Rawr
 				if (clickedMenuItem != gearToolStripMenuItem)
 				{
 					gearToolStripMenuItem.Text = "Gear > " + clickedMenuItem.Text;
-					toolStripDropDownButtonSubSlotGear.Text = "> " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotGear.Text = clickedMenuItem.Text;
 				}
 
 				toolStripDropDownButtonSlot.Text = "Slot: Gear";
-				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
 				toolStripDropDownButtonSubSlotGear.Visible = true;
 				toolStripDropDownButtonSubSlotEnchants.Visible = toolStripDropDownButtonSubSlotGems.Visible =
 					toolStripDropDownButtonSubSlotBuffs.Visible = false;
@@ -1153,11 +1152,10 @@ namespace Rawr
 				if (clickedMenuItem != enchantsToolStripMenuItem)
 				{
 					enchantsToolStripMenuItem.Text = "Enchants > " + clickedMenuItem.Text;
-					toolStripDropDownButtonSubSlotEnchants.Text = "> " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotEnchants.Text = clickedMenuItem.Text;
 				}
 
 				toolStripDropDownButtonSlot.Text = "Slot: Enchants";
-				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
 				toolStripDropDownButtonSubSlotEnchants.Visible = true;
 				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotGems.Visible =
 					toolStripDropDownButtonSubSlotBuffs.Visible = false;
@@ -1170,11 +1168,10 @@ namespace Rawr
 				if (clickedMenuItem != gemsToolStripMenuItem)
 				{
 					gemsToolStripMenuItem.Text = "Gems > " + clickedMenuItem.Text;
-					toolStripDropDownButtonSubSlotGems.Text = "> " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotGems.Text = clickedMenuItem.Text;
 				}
 
 				toolStripDropDownButtonSlot.Text = "Slot: Gems";
-				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
 				toolStripDropDownButtonSubSlotGems.Visible = true;
 				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotEnchants.Visible =
 					toolStripDropDownButtonSubSlotBuffs.Visible = false;
@@ -1187,11 +1184,10 @@ namespace Rawr
 				if (clickedMenuItem != buffsToolStripMenuItem)
 				{
 					buffsToolStripMenuItem.Text = "Buffs > " + clickedMenuItem.Text;
-					toolStripDropDownButtonSubSlotBuffs.Text = "> " + clickedMenuItem.Text;
+					toolStripDropDownButtonSubSlotBuffs.Text = clickedMenuItem.Text;
 				}
 
 				toolStripDropDownButtonSlot.Text = "Slot: Buffs";
-				toolStripDropDownButtonSlot.ShowDropDownArrow = false;
 				toolStripDropDownButtonSubSlotBuffs.Visible = true;
 				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotEnchants.Visible =
 					toolStripDropDownButtonSubSlotGems.Visible = false;
@@ -1199,7 +1195,6 @@ namespace Rawr
 			else
 			{
 				toolStripDropDownButtonSlot.Text = "Slot: " + clickedMenuItem.Text;
-				toolStripDropDownButtonSlot.ShowDropDownArrow = true;
 				toolStripDropDownButtonSubSlotGear.Visible = toolStripDropDownButtonSubSlotEnchants.Visible = 
 					toolStripDropDownButtonSubSlotGems.Visible = toolStripDropDownButtonSubSlotBuffs.Visible = false;
 			}

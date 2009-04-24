@@ -86,7 +86,7 @@
   </Item>
   <Item>
     <ItemLevel>175</ItemLevel>
-    <IconPath>inv_gauntlets_01</IconPath>
+    <IconPath>INV_Gauntlets_01</IconPath>
     <Stats>
       <Armor>1247</Armor>
       <Stamina>51</Stamina>
@@ -3702,7 +3702,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
       <CritRating>74</CritRating>
-      <HasteRatingOnPhysicalAttack>98</HasteRatingOnPhysicalAttack>
+      <HasteRatingOnPhysicalAttack>98.6666641</HasteRatingOnPhysicalAttack>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -5478,6 +5478,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Misc_Bone_08</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <ArmorPenetrationRating>291</ArmorPenetrationRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <AttackPower>148</AttackPower>
     </Stats>
     <Quality>Rare</Quality>
@@ -5651,7 +5664,21 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>RACIAL_TROLL_BERSERK</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <BonusHealingReceived>270.860016</BonusHealingReceived>
+          </Stats>
+          <Duration>30</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Spirit>73</Spirit>
+      <BonusHealingReceived>290</BonusHealingReceived>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -11552,7 +11579,7 @@
   </Item>
   <Item>
     <ItemLevel>171</ItemLevel>
-    <IconPath>inv_jewelry_necklace_17</IconPath>
+    <IconPath>INV_Jewelry_Necklace_17</IconPath>
     <Stats>
       <Stamina>36</Stamina>
       <AttackPower>68</AttackPower>
@@ -11561,7 +11588,9 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <SocketColor1>Blue</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
     <Name>Choker of the Betrayer</Name>
     <Id>39652</Id>
     <Slot>Neck</Slot>
@@ -12325,7 +12354,7 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_shoulder_69</IconPath>
+    <IconPath>INV_Shoulder_69</IconPath>
     <Stats>
       <Armor>1185</Armor>
       <Stamina>60</Stamina>
@@ -16417,6 +16446,19 @@
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Trinket_Naxxramas05</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <DodgeRating>455</DodgeRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <BonusArmor>850</BonusArmor>
     </Stats>
     <Quality>Epic</Quality>
@@ -18184,6 +18226,19 @@
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Trinket_Naxxramas01</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <ParryRating>375</ParryRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <ParryRating>95</ParryRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -22099,6 +22154,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_QirajIdol_Sun</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <DodgeRating>335</DodgeRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>84</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -23511,6 +23579,50 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>1480</Armor>
+      <Stamina>133</Stamina>
+      <Strength>82</Strength>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Plate Gauntlets</Name>
+    <Id>40807</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_GAUNTLETS_62</IconPath>
+    <Stats>
+      <Armor>1480</Armor>
+      <Stamina>133</Stamina>
+      <Strength>82</Strength>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dreadplate Gauntlets</Name>
+    <Id>40809</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_HELMET_98</IconPath>
     <Stats>
@@ -23650,7 +23762,7 @@
   </Item>
   <Item>
     <ItemLevel>150</ItemLevel>
-    <IconPath>inv_shield_56</IconPath>
+    <IconPath>INV_Shield_56</IconPath>
     <Stats />
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -24525,6 +24637,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>1480</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ornamented Gloves</Name>
+    <Id>40927</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Helmet_124</IconPath>
     <Stats>
@@ -24932,6 +25067,25 @@
     <Slot>Wrist</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Bracer_17</IconPath>
+    <Stats>
+      <Armor>1027</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
+      <Resilience>42</Resilience>
+      <Mp5>17</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior|Paladin</RequiredClasses>
+    <SocketBonus />
+    <Name>Furious Gladiator's Bracers of Salvation</Name>
+    <Id>40983</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_CHEST_MAIL_02</IconPath>
     <Stats>
@@ -25145,6 +25299,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_71</IconPath>
+    <Stats>
+      <Armor>828</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <Resilience>47</Resilience>
+      <Mp5>16</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ringmail Gauntlets</Name>
+    <Id>41001</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_65</IconPath>
     <Stats>
@@ -25211,6 +25388,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Mail Gauntlets</Name>
     <Id>41006</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_71</IconPath>
+    <Stats>
+      <Armor>828</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mail Gauntlets</Name>
+    <Id>41007</Id>
     <Slot>Hands</Slot>
   </Item>
   <Item>
@@ -25453,6 +25653,30 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Pants_Mail_15</IconPath>
+    <Stats>
+      <Armor>1160</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <Resilience>80</Resilience>
+      <Mp5>26</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ringmail Leggings</Name>
+    <Id>41027</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_PANTS_MAIL_25</IconPath>
     <Stats>
@@ -25522,6 +25746,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Mail Leggings</Name>
     <Id>41032</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Pants_Mail_15</IconPath>
+    <Stats>
+      <Armor>1160</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mail Leggings</Name>
+    <Id>41033</Id>
     <Slot>Legs</Slot>
   </Item>
   <Item>
@@ -25725,6 +25973,28 @@
     <Slot>Waist</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Belt_13</IconPath>
+    <Stats>
+      <Armor>739</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>90</SpellPower>
+      <Resilience>56</Resilience>
+      <Mp5>20</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter|Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Waistguard of Salvation</Name>
+    <Id>41051</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Boots_Plate_09</IconPath>
     <Stats>
@@ -25785,6 +26055,25 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Wristguards of Salvation</Name>
     <Id>41059</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Bracer_18</IconPath>
+    <Stats>
+      <Armor>575</Armor>
+      <Stamina>76</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
+      <Resilience>42</Resilience>
+      <Mp5>17</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter|Shaman</RequiredClasses>
+    <SocketBonus />
+    <Name>Furious Gladiator's Wristguards of Salvation</Name>
+    <Id>41060</Id>
     <Slot>Wrist</Slot>
   </Item>
   <Item>
@@ -26226,6 +26515,30 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_71</IconPath>
+    <Stats>
+      <Armor>828</Armor>
+      <Agility>60</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>104</AttackPower>
+      <Intellect>45</Intellect>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Linked Gauntlets</Name>
+    <Id>41137</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_65</IconPath>
     <Stats>
@@ -26295,6 +26608,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Chain Gauntlets</Name>
     <Id>41142</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_73</IconPath>
+    <Stats>
+      <Armor>828</Armor>
+      <Agility>60</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>104</AttackPower>
+      <Intellect>45</Intellect>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Chain Gauntlets</Name>
+    <Id>41143</Id>
     <Slot>Hands</Slot>
   </Item>
   <Item>
@@ -26569,6 +26906,31 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Linked Leggings</Name>
     <Id>41198</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Pants_Mail_15</IconPath>
+    <Stats>
+      <Armor>1160</Armor>
+      <Agility>81</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>128</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Furious Gladiator's Linked Leggings</Name>
+    <Id>41199</Id>
     <Slot>Legs</Slot>
   </Item>
   <Item>
@@ -26856,6 +27218,26 @@
     <Slot>Wrist</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Bracer_18</IconPath>
+    <Stats>
+      <Armor>575</Armor>
+      <Agility>42</Agility>
+      <Stamina>73</Stamina>
+      <AttackPower>84</AttackPower>
+      <Intellect>31</Intellect>
+      <CritRating>43</CritRating>
+      <Resilience>41</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter|Shaman</RequiredClasses>
+    <SocketBonus />
+    <Name>Furious Gladiator's Wristguards of Triumph</Name>
+    <Id>41225</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Boots_Plate_09</IconPath>
     <Stats>
@@ -26899,6 +27281,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Sabatons of Triumph</Name>
     <Id>41229</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Boots_Plate_09</IconPath>
+    <Stats>
+      <Armor>903</Armor>
+      <Agility>57</Agility>
+      <Stamina>97</Stamina>
+      <AttackPower>96</AttackPower>
+      <Intellect>35</Intellect>
+      <CritRating>56</CritRating>
+      <Resilience>56</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter|Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Resilience>4</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Sabatons of Triumph</Name>
+    <Id>41230</Id>
     <Slot>Feet</Slot>
   </Item>
   <Item>
@@ -27298,6 +27703,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>373</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <Spirit>39</Spirit>
+      <SpellPower>96</SpellPower>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Kodohide Gloves</Name>
+    <Id>41287</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_58</IconPath>
     <Stats>
@@ -27364,6 +27792,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Wyrmhide Gloves</Name>
     <Id>41292</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>373</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Wyrmhide Gloves</Name>
+    <Id>41293</Id>
     <Slot>Hands</Slot>
   </Item>
   <Item>
@@ -27508,6 +27959,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Wyrmhide Legguards</Name>
     <Id>41303</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Pants_Leather_24</IconPath>
+    <Stats>
+      <Armor>522</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Wyrmhide Legguards</Name>
+    <Id>41304</Id>
     <Slot>Legs</Slot>
   </Item>
   <Item>
@@ -29572,6 +30047,28 @@
     <Slot>Waist</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Belt_12</IconPath>
+    <Stats>
+      <Armor>333</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>42</Intellect>
+      <Spirit>48</Spirit>
+      <SpellPower>90</SpellPower>
+      <Resilience>56</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Belt of Salvation</Name>
+    <Id>41617</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Boots_Cloth_05</IconPath>
     <Stats>
@@ -29635,6 +30132,25 @@
     <Slot>Wrist</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Bracer_09</IconPath>
+    <Stats>
+      <Armor>259</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <Spirit>42</Spirit>
+      <SpellPower>73</SpellPower>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <SocketBonus />
+    <Name>Furious Gladiator's Armwraps of Salvation</Name>
+    <Id>41625</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Belt_12</IconPath>
     <Stats>
@@ -29679,6 +30195,28 @@
     <Slot>Waist</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Belt_12</IconPath>
+    <Stats>
+      <Armor>333</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>90</SpellPower>
+      <CritRating>48</CritRating>
+      <Resilience>56</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Belt of Dominance</Name>
+    <Id>41630</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Boots_Cloth_05</IconPath>
     <Stats>
@@ -29720,6 +30258,28 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Boots of Dominance</Name>
     <Id>41634</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Boots_Cloth_05</IconPath>
+    <Stats>
+      <Armor>406</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>90</SpellPower>
+      <CritRating>48</CritRating>
+      <Resilience>56</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Resilience>4</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Boots of Dominance</Name>
+    <Id>41635</Id>
     <Slot>Feet</Slot>
   </Item>
   <Item>
@@ -30162,6 +30722,30 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Pants_Leather_24</IconPath>
+    <Stats>
+      <Armor>522</Armor>
+      <Agility>105</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>120</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dragonhide Legguards</Name>
+    <Id>41667</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Misc_Bandana_03</IconPath>
     <Stats>
@@ -30443,6 +31027,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_53</IconPath>
+    <Stats>
+      <Armor>373</Armor>
+      <Agility>82</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>90</AttackPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Leather Gloves</Name>
+    <Id>41767</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_58</IconPath>
     <Stats>
@@ -30509,6 +31116,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Dragonhide Gloves</Name>
     <Id>41772</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>373</Armor>
+      <Agility>82</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>90</AttackPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dragonhide Gloves</Name>
+    <Id>41773</Id>
     <Slot>Hands</Slot>
   </Item>
   <Item>
@@ -30679,6 +31309,25 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Armwraps of Triumph</Name>
     <Id>41839</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Bracer_09</IconPath>
+    <Stats>
+      <Armor>259</Armor>
+      <Agility>63</Agility>
+      <Stamina>73</Stamina>
+      <AttackPower>62</AttackPower>
+      <CritRating>43</CritRating>
+      <Resilience>41</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <SocketBonus />
+    <Name>Furious Gladiator's Armwraps of Triumph</Name>
+    <Id>41840</Id>
     <Slot>Wrist</Slot>
   </Item>
   <Item>
@@ -31060,6 +31709,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_49</IconPath>
+    <Stats>
+      <Armor>198</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <Spirit>39</Spirit>
+      <SpellPower>96</SpellPower>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mooncloth Gloves</Name>
+    <Id>41874</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Belt_13</IconPath>
     <Stats>
@@ -31186,6 +31858,28 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Treads of Salvation</Name>
     <Id>41884</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Boots_Cloth_12</IconPath>
+    <Stats>
+      <Armor>216</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>42</Intellect>
+      <Spirit>48</Spirit>
+      <SpellPower>90</SpellPower>
+      <Resilience>56</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest|Mage|Warlock</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Resilience>4</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Slippers of Salvation</Name>
+    <Id>41885</Id>
     <Slot>Feet</Slot>
   </Item>
   <Item>
@@ -31673,6 +32367,30 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Pants_Cloth_24</IconPath>
+    <Stats>
+      <Armor>278</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Satin Leggings</Name>
+    <Id>41927</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shoulder_100</IconPath>
     <Stats>
@@ -31808,6 +32526,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Satin Gloves</Name>
     <Id>41939</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_49</IconPath>
+    <Stats>
+      <Armor>198</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Satin Gloves</Name>
+    <Id>41940</Id>
     <Slot>Hands</Slot>
   </Item>
   <Item>
@@ -32186,6 +32927,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Silk Handguards</Name>
     <Id>41970</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_64</IconPath>
+    <Stats>
+      <Armor>198</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Silk Handguards</Name>
+    <Id>41971</Id>
     <Slot>Hands</Slot>
   </Item>
   <Item>
@@ -32622,6 +33386,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>198</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Felweave Handguards</Name>
+    <Id>42017</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Jewelry_Necklace_36</IconPath>
     <Stats>
@@ -32875,6 +33662,23 @@
     <Stats>
       <Stamina>94</Stamina>
       <AttackPower>126</AttackPower>
+      <CritRating>42</CritRating>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Pendant of Triumph</Name>
+    <Id>42034</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_36</IconPath>
+    <Stats>
+      <Stamina>94</Stamina>
+      <AttackPower>126</AttackPower>
       <HitRating>42</HitRating>
       <Resilience>42</Resilience>
     </Stats>
@@ -32893,6 +33697,42 @@
       <Stamina>73</Stamina>
       <Intellect>31</Intellect>
       <SpellPower>73</SpellPower>
+      <CritRating>42</CritRating>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Pendant of Dominance</Name>
+    <Id>42036</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_36</IconPath>
+    <Stats>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
+      <HitRating>42</HitRating>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Pendant of Ascendancy</Name>
+    <Id>42037</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_36</IconPath>
+    <Stats>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
       <Resilience>42</Resilience>
       <HasteRating>42</HasteRating>
     </Stats>
@@ -32902,6 +33742,24 @@
     <SocketBonus />
     <Name>Furious Gladiator's Pendant of Subjugation</Name>
     <Id>42038</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_36</IconPath>
+    <Stats>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <Spirit>42</Spirit>
+      <SpellPower>73</SpellPower>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Pendant of Deliverance</Name>
+    <Id>42039</Id>
     <Slot>Neck</Slot>
   </Item>
   <Item>
@@ -33192,6 +34050,63 @@
       <Stamina>73</Stamina>
       <Intellect>31</Intellect>
       <SpellPower>73</SpellPower>
+      <CritRating>42</CritRating>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Cloak of Dominance</Name>
+    <Id>42069</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Cape_19</IconPath>
+    <Stats>
+      <Armor>157</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
+      <Resilience>42</Resilience>
+      <HasteRating>42</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Cloak of Subjugation</Name>
+    <Id>42070</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Cape_19</IconPath>
+    <Stats>
+      <Armor>157</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
+      <HitRating>42</HitRating>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Cloak of Ascendancy</Name>
+    <Id>42071</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Cape_19</IconPath>
+    <Stats>
+      <Armor>157</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <SpellPower>73</SpellPower>
       <Resilience>42</Resilience>
       <Mp5>17</Mp5>
     </Stats>
@@ -33201,6 +34116,25 @@
     <SocketBonus />
     <Name>Furious Gladiator's Cloak of Salvation</Name>
     <Id>42072</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Cape_19</IconPath>
+    <Stats>
+      <Armor>157</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>31</Intellect>
+      <Spirit>42</Spirit>
+      <SpellPower>73</SpellPower>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Cloak of Deliverance</Name>
+    <Id>42073</Id>
     <Slot>Back</Slot>
   </Item>
   <Item>
@@ -38562,6 +39496,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Elemental_Crystal_Water</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalCrit</Trigger>
+          <Stats>
+            <HasteRating>410</HasteRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <HasteRating>73</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -38900,7 +39847,7 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_jewelry_talisman_01</IconPath>
+    <IconPath>INV_Jewelry_Talisman_01</IconPath>
     <Stats>
       <AttackPower>106</AttackPower>
     </Stats>
@@ -38913,7 +39860,7 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_box_04</IconPath>
+    <IconPath>INV_Box_04</IconPath>
     <Stats>
       <AttackPower>53</AttackPower>
     </Stats>
@@ -38926,7 +39873,7 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_belt_27</IconPath>
+    <IconPath>INV_Belt_27</IconPath>
     <Stats>
       <Armor>889</Armor>
       <Stamina>44</Stamina>
@@ -38936,7 +39883,9 @@
     <Quality>Uncommon</Quality>
     <Type>Plate</Type>
     <SocketColor1>Blue</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
     <Name>Stability Girdle</Name>
     <Id>43947</Id>
     <Slot>Waist</Slot>
@@ -39484,7 +40433,7 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_sword_91</IconPath>
+    <IconPath>INV_Sword_91</IconPath>
     <Stats>
       <Stamina>39</Stamina>
       <AttackPower>50</AttackPower>
@@ -39502,11 +40451,12 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_bracer_17</IconPath>
+    <IconPath>INV_Bracer_17</IconPath>
     <Stats>
       <Armor>867</Armor>
       <Stamina>48</Stamina>
       <Strength>35</Strength>
+      <ArmorPenetrationRating>34</ArmorPenetrationRating>
     </Stats>
     <Quality>Rare</Quality>
     <Type>Plate</Type>
@@ -39517,7 +40467,7 @@
   </Item>
   <Item>
     <ItemLevel>174</ItemLevel>
-    <IconPath>inv_jewelry_ring_43</IconPath>
+    <IconPath>INV_Jewelry_Ring_43</IconPath>
     <Stats>
       <Agility>24</Agility>
       <Stamina>31</Stamina>
@@ -39527,7 +40477,9 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+      <HasteRating>4</HasteRating>
+    </SocketBonus>
     <Name>Signet of Bridenbrad</Name>
     <Id>44039</Id>
     <Slot>Finger</Slot>
@@ -39608,6 +40560,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Jewelcrafting_GoldenCrab</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <DodgeRating>300</DodgeRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>63</Stamina>
     </Stats>
     <Quality>Rare</Quality>
@@ -41138,24 +42103,10 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_JEWELRY_RING_76</IconPath>
     <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <HasteRating>125</HasteRating>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.15</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
       <Agility>49</Agility>
       <Stamina>54</Stamina>
       <AttackPower>58</AttackPower>
       <HasteRating>29</HasteRating>
-      <HasteRatingOnPhysicalAttack>27</HasteRatingOnPhysicalAttack>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -42043,6 +42994,32 @@
     <Name>Mechanized Snow Goggles</Name>
     <Id>44742</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Misc_Rune_14</IconPath>
+    <Stats>
+      <HasteRating>71</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Frenzyheart Insignia of Fury</Name>
+    <Id>44869</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Misc_Rune_05</IconPath>
+    <Stats>
+      <CritRating>71</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Oracle Talisman of Ablution</Name>
+    <Id>44870</Id>
+    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -43115,6 +44092,20 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Banner_02</IconPath>
+    <Stats>
+      <Resilience>73</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Jouster's Fury</Name>
+    <Id>45131</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
     <ItemLevel>239</ItemLevel>
     <IconPath>inv_weapon_hand_23</IconPath>
     <Stats>
@@ -43375,9 +44366,7 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Relics_LibramofHope</IconPath>
-    <Stats>
-      <CrusaderStrikeDamage>115.5</CrusaderStrikeDamage>
-    </Stats>
+    <Stats />
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <SocketBonus />
@@ -43510,6 +44499,89 @@
     <Slot>Waist</Slot>
   </Item>
   <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_16</IconPath>
+    <Stats>
+      <Stamina>57</Stamina>
+      <Strength>43</Strength>
+      <ArmorPenetrationRating>47</ArmorPenetrationRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Pendant of Azure Dreams</Name>
+    <Id>45152</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_20</IconPath>
+    <Stats>
+      <Agility>47</Agility>
+      <Stamina>38</Stamina>
+      <AttackPower>86</AttackPower>
+      <HasteRating>26</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Susurrating Shell Necklace</Name>
+    <Id>45153</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_15</IconPath>
+    <Stats>
+      <Stamina>33</Stamina>
+      <Intellect>21</Intellect>
+      <Spirit>50</Spirit>
+      <SpellPower>50</SpellPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Necklace of Valiant Blood</Name>
+    <Id>45154</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_31</IconPath>
+    <Stats>
+      <Stamina>42</Stamina>
+      <Intellect>29</Intellect>
+      <SpellPower>52</SpellPower>
+      <HitRating>43</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Choker of Spiral Focus</Name>
+    <Id>45155</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Belt_42B</IconPath>
+    <Stats>
+      <Armor>163</Armor>
+      <Stamina>38</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>67</SpellPower>
+      <HasteRating>50</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <HasteRating>4</HasteRating>
+    </SocketBonus>
+    <Name>Sash of Shattering Hearts</Name>
+    <Id>45156</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_jewelry_ring_AhnQiraj_01</IconPath>
     <Stats>
@@ -43531,6 +44603,19 @@
     <ItemLevel>226</ItemLevel>
     <IconPath>inv_spiritshard_01</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <DodgeRating>432</DodgeRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>162</Stamina>
     </Stats>
     <Quality>Epic</Quality>
@@ -43542,14 +44627,53 @@
     <Slot>Trinket</Slot>
   </Item>
   <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Boots_Leather_02</IconPath>
+    <Stats>
+      <Armor>375</Armor>
+      <Agility>42</Agility>
+      <Stamina>49</Stamina>
+      <AttackPower>116</AttackPower>
+      <ArmorPenetrationRating>41</ArmorPenetrationRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <HitRating>4</HitRating>
+    </SocketBonus>
+    <Name>Treads of Nimble Evasion</Name>
+    <Id>45159</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_BELT_36</IconPath>
+    <Stats>
+      <Armor>1218</Armor>
+      <Stamina>75</Stamina>
+      <Strength>50</Strength>
+      <ExpertiseRating>57</ExpertiseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <ExpertiseRating>4</ExpertiseRating>
+    </SocketBonus>
+    <Name>Girdle of Valorous Defeat</Name>
+    <Id>45160</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Belt_48C</IconPath>
     <Stats>
       <Armor>1321</Armor>
-      <Stamina>126</Stamina>
-      <Strength>85</Strength>
+      <Stamina>96</Stamina>
+      <Strength>98</Strength>
       <ArmorPenetrationRating>49</ArmorPenetrationRating>
-      <CritRating>62</CritRating>
+      <CritRating>60</CritRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Plate</Type>
@@ -43574,6 +44698,23 @@
     <SocketBonus />
     <Name>Flamestalker Boots</Name>
     <Id>45162</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Boots_Plate_09</IconPath>
+    <Stats>
+      <Armor>1489</Armor>
+      <Stamina>84</Stamina>
+      <Strength>59</Strength>
+      <DodgeRating>41</DodgeRating>
+      <DefenseRating>34</DefenseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Stanchions of Unseatable Furor</Name>
+    <Id>45163</Id>
     <Slot>Feet</Slot>
   </Item>
   <Item>
@@ -43728,6 +44869,78 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Belt_37A</IconPath>
+    <Stats>
+      <Armor>307</Armor>
+      <Stamina>75</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>73</SpellPower>
+      <HasteRating>33</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Wrap of the Everliving Tree</Name>
+    <Id>45181</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Gauntlets_30</IconPath>
+    <Stats>
+      <Armor>1354</Armor>
+      <Stamina>57</Stamina>
+      <Intellect>54</Intellect>
+      <SpellPower>69</SpellPower>
+      <CritRating>38</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Gauntlets of Shattered Pride</Name>
+    <Id>45182</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Boots_Chain_04</IconPath>
+    <Stats>
+      <Armor>833</Armor>
+      <Stamina>45</Stamina>
+      <Intellect>43</Intellect>
+      <SpellPower>71</SpellPower>
+      <CritRating>47</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Treads of the Glorious Spirit</Name>
+    <Id>45183</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>inv_belt_44c</IconPath>
+    <Stats>
+      <Armor>682</Armor>
+      <Agility>38</Agility>
+      <Stamina>62</Stamina>
+      <AttackPower>116</AttackPower>
+      <ArmorPenetrationRating>33</ArmorPenetrationRating>
+      <Intellect>39</Intellect>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <SocketBonus />
+    <Name>Cinch of Bonded Servitude</Name>
+    <Id>45184</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Belt_38A</IconPath>
     <Stats>
@@ -43762,7 +44975,7 @@
     <SocketBonus>
       <SpellPower>5</SpellPower>
     </SocketBonus>
-    <Name>Soot-covered Mantle</Name>
+    <Name>Soot-Covered Mantle</Name>
     <Id>45186</Id>
     <Slot>Shoulders</Slot>
   </Item>
@@ -43859,6 +45072,38 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_09</IconPath>
+    <Stats>
+      <Agility>47</Agility>
+      <Stamina>38</Stamina>
+      <AttackPower>86</AttackPower>
+      <HasteRating>26</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Choker of Feral Fury</Name>
+    <Id>45206</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_19</IconPath>
+    <Stats>
+      <Stamina>42</Stamina>
+      <Intellect>29</Intellect>
+      <SpellPower>52</SpellPower>
+      <HitRating>43</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Necklace of Stolen Skulls</Name>
+    <Id>45207</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
     <IconPath>INV_Sword_61</IconPath>
     <Stats>
       <Stamina>45</Stamina>
@@ -43880,6 +45125,26 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Belt_38C</IconPath>
+    <Stats>
+      <Armor>163</Armor>
+      <Stamina>38</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>67</SpellPower>
+      <HasteRating>50</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <HasteRating>4</HasteRating>
+    </SocketBonus>
+    <Name>Sash of Trumpted Pride</Name>
+    <Id>45209</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Rifle_34</IconPath>
     <Stats>
       <Agility>32</Agility>
@@ -43896,6 +45161,23 @@
     <Name>Sen'jin Beakblade Longrifle</Name>
     <Id>45210</Id>
     <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Belt_26</IconPath>
+    <Stats>
+      <Armor>307</Armor>
+      <Stamina>75</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>73</SpellPower>
+      <HasteRating>33</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Waistguard of Equine Fury</Name>
+    <Id>45211</Id>
+    <Slot>Waist</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -43919,6 +45201,22 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_42</IconPath>
+    <Stats>
+      <Stamina>33</Stamina>
+      <Intellect>21</Intellect>
+      <Spirit>50</Spirit>
+      <SpellPower>50</SpellPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Pendant of Emerald Crusader</Name>
+    <Id>45213</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Shortblade_76</IconPath>
     <Stats>
       <Stamina>28</Stamina>
@@ -43939,6 +45237,131 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
+    <IconPath>inv_belt_47c</IconPath>
+    <Stats>
+      <Armor>682</Armor>
+      <Agility>38</Agility>
+      <Stamina>62</Stamina>
+      <AttackPower>116</AttackPower>
+      <ArmorPenetrationRating>33</ArmorPenetrationRating>
+      <Intellect>39</Intellect>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <SocketBonus />
+    <Name>Links of Unquenched Savagery</Name>
+    <Id>45215</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Gauntlets_30</IconPath>
+    <Stats>
+      <Armor>1354</Armor>
+      <Stamina>57</Stamina>
+      <Intellect>54</Intellect>
+      <SpellPower>69</SpellPower>
+      <CritRating>38</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Gauntlets of Mending Touch</Name>
+    <Id>45216</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>inv_belt_46</IconPath>
+    <Stats>
+      <Armor>1218</Armor>
+      <Stamina>75</Stamina>
+      <Strength>50</Strength>
+      <ExpertiseRating>57</ExpertiseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <ExpertiseRating>4</ExpertiseRating>
+    </SocketBonus>
+    <Name>Clinch of Savage Fury</Name>
+    <Id>45217</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Boots_Plate_09</IconPath>
+    <Stats>
+      <Armor>1489</Armor>
+      <Stamina>84</Stamina>
+      <Strength>59</Strength>
+      <DodgeRating>41</DodgeRating>
+      <DefenseRating>34</DefenseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Blood-Caked Stompers</Name>
+    <Id>45218</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Banner_03</IconPath>
+    <Stats>
+      <Resilience>73</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Jouster's Fury</Name>
+    <Id>45219</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Boots_Leather01</IconPath>
+    <Stats>
+      <Armor>375</Armor>
+      <Agility>42</Agility>
+      <Stamina>49</Stamina>
+      <AttackPower>116</AttackPower>
+      <ArmorPenetrationRating>41</ArmorPenetrationRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <HitRating>4</HitRating>
+    </SocketBonus>
+    <Name>Treads of the Earnest Squire</Name>
+    <Id>45220</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Boots_Chain_06</IconPath>
+    <Stats>
+      <Armor>833</Armor>
+      <Stamina>45</Stamina>
+      <Intellect>43</Intellect>
+      <SpellPower>71</SpellPower>
+      <CritRating>47</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Treads of Whispering Dreams</Name>
+    <Id>45221</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Shortblade_97</IconPath>
     <Stats>
       <Stamina>43</Stamina>
@@ -43956,6 +45379,21 @@
     <Name>Spinal Destroyer</Name>
     <Id>45222</Id>
     <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_34</IconPath>
+    <Stats>
+      <Stamina>57</Stamina>
+      <Strength>43</Strength>
+      <ArmorPenetrationRating>47</ArmorPenetrationRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Razor's Edge Pendant</Name>
+    <Id>45223</Id>
+    <Slot>Neck</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -44273,6 +45711,26 @@
     <Name>Drape of Mortal Downfall</Name>
     <Id>45242</Id>
     <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_30Naxxramas</IconPath>
+    <Stats>
+      <Stamina>70</Stamina>
+      <Intellect>48</Intellect>
+      <Spirit>47</Spirit>
+      <SpellPower>75</SpellPower>
+      <HasteRating>35</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Sapphire Amulet of Renewal</Name>
+    <Id>45243</Id>
+    <Slot>Neck</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -44734,7 +46192,9 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Relics_IdolofRejuvenation</IconPath>
-    <Stats />
+    <Stats>
+      <InsectSwarmDmg>374</InsectSwarmDmg>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Unique>true</Unique>
@@ -45057,6 +46517,51 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_24</IconPath>
+    <Stats>
+      <Armor>369</Armor>
+      <Stamina>70</Stamina>
+      <Intellect>62</Intellect>
+      <Spirit>57</Spirit>
+      <SpellPower>98</SpellPower>
+      <CritRating>56</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Handguards of Potent Cures</Name>
+    <Id>45293</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Wand_29</IconPath>
+    <Stats>
+      <Stamina>22</Stamina>
+      <Intellect>17</Intellect>
+      <Spirit>20</Spirit>
+      <SpellPower>42</SpellPower>
+      <HitRating>27</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Wand</Type>
+    <MinDamage>397</MinDamage>
+    <MaxDamage>737</MaxDamage>
+    <DamageType>Nature</DamageType>
+    <Speed>1.8</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Petrified Ivy Sprig</Name>
+    <Id>45294</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
     <IconPath>INV_Pants_Plate_15</IconPath>
     <Stats>
       <Armor>2054</Armor>
@@ -45361,6 +46866,62 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
+    <IconPath>inv_gauntlets_54</IconPath>
+    <Stats>
+      <Armor>1451</Armor>
+      <Stamina>117</Stamina>
+      <Strength>59</Strength>
+      <ArmorPenetrationRating>43</ArmorPenetrationRating>
+      <DodgeRating>56</DodgeRating>
+      <DefenseRating>48</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Gauntlets of the Iron Furnace</Name>
+    <Id>45310</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Weapon_Halberd_30</IconPath>
+    <Stats>
+      <Agility>65</Agility>
+      <Stamina>111</Stamina>
+      <AttackPower>212</AttackPower>
+      <CritRating>76</CritRating>
+      <HasteRating>62</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Polearm</Type>
+    <MinDamage>543</MinDamage>
+    <MaxDamage>815</MaxDamage>
+    <Speed>3.2</Speed>
+    <SocketBonus />
+    <Name>Relentless Edge</Name>
+    <Id>45311</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_47</IconPath>
+    <Stats>
+      <Armor>365</Armor>
+      <Agility>83</Agility>
+      <Stamina>63</Stamina>
+      <AttackPower>112</AttackPower>
+      <CritRating>53</CritRating>
+      <HasteRating>48</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Gloves of Smoldering Touch</Name>
+    <Id>45312</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
     <IconPath>INV_Shield_59</IconPath>
     <Stats>
       <SpecialEffects>
@@ -45385,6 +46946,23 @@
     <Name>Furnace Stone</Name>
     <Id>45313</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Offhand_UlduarRaid_D_03</IconPath>
+    <Stats>
+      <Stamina>44</Stamina>
+      <Intellect>45</Intellect>
+      <Spirit>36</Spirit>
+      <SpellPower>64</SpellPower>
+      <CritRating>47</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Igniter Rod</Name>
+    <Id>45314</Id>
+    <Slot>OffHand</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -45423,6 +47001,41 @@
     <Name>Armbraces of the Vibrant Flame</Name>
     <Id>45316</Id>
     <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Misc_Cape_09</IconPath>
+    <Stats>
+      <Armor>155</Armor>
+      <Stamina>65</Stamina>
+      <Intellect>35</Intellect>
+      <SpellPower>74</SpellPower>
+      <HasteRating>39</HasteRating>
+      <Mp5>12</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Shawl of the Caretaker</Name>
+    <Id>45317</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Misc_Cape_22</IconPath>
+    <Stats>
+      <Armor>155</Armor>
+      <Stamina>67</Stamina>
+      <Strength>68</Strength>
+      <CritRating>30</CritRating>
+      <HasteRating>46</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Drape of Fuming Anger</Name>
+    <Id>45318</Id>
+    <Slot>Back</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -45744,6 +47357,29 @@
     <Name>Valorous Darkruned Faceguard</Name>
     <Id>45336</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_28</IconPath>
+    <Stats>
+      <Armor>1451</Armor>
+      <Stamina>119</Stamina>
+      <Strength>57</Strength>
+      <ParryRating>52</ParryRating>
+      <DefenseRating>47</DefenseRating>
+      <ExpertiseRating>36</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Darkruned Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <DodgeRating>4</DodgeRating>
+    </SocketBonus>
+    <Name>Valorous Darkruned Handguards</Name>
+    <Id>45337</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -46237,6 +47873,30 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_25</IconPath>
+    <Stats>
+      <Armor>812</Armor>
+      <Agility>44</Agility>
+      <Stamina>62</Stamina>
+      <AttackPower>158</AttackPower>
+      <Intellect>41</Intellect>
+      <HitRating>40</HitRating>
+      <HasteRating>41</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Scourgestalker Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Valorous Scourgestalker Handguards</Name>
+    <Id>45360</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
     <IconPath>INV_Helmet_92</IconPath>
     <Stats>
       <Armor>1056</Armor>
@@ -46346,7 +48006,7 @@
       <HitRating>64</HitRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Meta</SocketColor1>
@@ -46370,7 +48030,7 @@
       <HitRating>62</HitRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Red</SocketColor1>
@@ -46394,7 +48054,7 @@
       <CritRating>76</CritRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Blue</SocketColor1>
@@ -46418,7 +48078,7 @@
       <HasteRating>57</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Yellow</SocketColor1>
@@ -46940,6 +48600,29 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_17</IconPath>
+    <Stats>
+      <Armor>194</Armor>
+      <Stamina>57</Stamina>
+      <Intellect>41</Intellect>
+      <Spirit>49</Spirit>
+      <SpellPower>92</SpellPower>
+      <CritRating>59</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Sanctification Garb</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <HitRating>4</HitRating>
+    </SocketBonus>
+    <Name>Valorous Handwraps of Sanctification</Name>
+    <Id>45392</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
     <IconPath>INV_Shoulder_25</IconPath>
     <Stats>
       <Armor>233</Armor>
@@ -47032,6 +48715,29 @@
     <Name>Valorous Terrorblade Breastplate</Name>
     <Id>45396</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_25</IconPath>
+    <Stats>
+      <Armor>365</Armor>
+      <Agility>79</Agility>
+      <Stamina>53</Stamina>
+      <AttackPower>120</AttackPower>
+      <CritRating>40</CritRating>
+      <HitRating>50</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Terrorblade Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Valorous Terrorblade Gauntlets</Name>
+    <Id>45397</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -47507,6 +49213,29 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_17</IconPath>
+    <Stats>
+      <Armor>194</Armor>
+      <Stamina>69</Stamina>
+      <Intellect>57</Intellect>
+      <Spirit>25</Spirit>
+      <SpellPower>92</SpellPower>
+      <HitRating>59</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Deathbringer Garb</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Valorous Deathbringer Gloves</Name>
+    <Id>45419</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
     <IconPath>INV_Pants_Cloth_05</IconPath>
     <Stats>
       <Armor>272</Armor>
@@ -47824,6 +49553,27 @@
     <Name>Valorous Siegebreaker Shoulderplates</Name>
     <Id>45433</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Boots_Plate_11</IconPath>
+    <Stats>
+      <Armor>1614</Armor>
+      <Stamina>73</Stamina>
+      <Intellect>62</Intellect>
+      <SpellPower>90</SpellPower>
+      <CritRating>48</CritRating>
+      <Mp5>22</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Greaves of the Rockmender</Name>
+    <Id>45434</Id>
+    <Slot>Feet</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -48189,6 +49939,27 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Belt_37A</IconPath>
+    <Stats>
+      <Armor>333</Armor>
+      <Stamina>90</Stamina>
+      <Intellect>47</Intellect>
+      <Spirit>51</Spirit>
+      <SpellPower>98</SpellPower>
+      <HasteRating>40</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <HasteRating>4</HasteRating>
+    </SocketBonus>
+    <Name>Belt of the Crystal Tree</Name>
+    <Id>45455</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
     <IconPath>INV_Jewelry_Ring_71</IconPath>
     <Stats>
       <Agility>63</Agility>
@@ -48255,10 +50026,10 @@
     <ItemLevel>239</ItemLevel>
     <IconPath>INV_Jewelry_Necklace_04</IconPath>
     <Stats>
-      <Stamina>106</Stamina>
-      <Strength>64</Strength>
-      <CritRating>40</CritRating>
-      <HitRating>47</HitRating>
+      <Stamina>81</Stamina>
+      <Strength>74</Strength>
+      <ArmorPenetrationRating>48</ArmorPenetrationRating>
+      <HitRating>40</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -48333,6 +50104,26 @@
     <Name>Gloves of the Frozen Glade</Name>
     <Id>45462</Id>
     <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_91</IconPath>
+    <Stats>
+      <Agility>52</Agility>
+      <Stamina>51</Stamina>
+      <AttackPower>74</AttackPower>
+      <HitRating>37</HitRating>
+      <ExpertiseRating>29</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Vulmir, the Northern Tempest</Name>
+    <Id>45463</Id>
+    <Slot>OneHand</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -48428,8 +50219,8 @@
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Jewelry_Ring_54</IconPath>
     <Stats>
-      <Stamina>94</Stamina>
-      <Strength>63</Strength>
+      <Stamina>72</Stamina>
+      <Strength>72</Strength>
       <CritRating>42</CritRating>
       <ExpertiseRating>42</ExpertiseRating>
     </Stats>
@@ -48504,9 +50295,9 @@
     <IconPath>INV_Gauntlets_29</IconPath>
     <Stats>
       <Armor>1467</Armor>
-      <Stamina>126</Stamina>
-      <Strength>85</Strength>
-      <CritRating>62</CritRating>
+      <Stamina>96</Stamina>
+      <Strength>98</Strength>
+      <CritRating>60</CritRating>
       <HasteRating>49</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -48602,6 +50393,49 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Pants_Cloth_27</IconPath>
+    <Stats>
+      <Armor>284</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>98</Intellect>
+      <SpellPower>122</SpellPower>
+      <CritRating>77</CritRating>
+      <HitRating>70</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketColor3>Blue</SocketColor3>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Leggings of the Enslaved Idol</Name>
+    <Id>45488</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Hand_23</IconPath>
+    <Stats>
+      <Agility>52</Agility>
+      <Stamina>51</Stamina>
+      <AttackPower>80</AttackPower>
+      <CritRating>34</CritRating>
+      <ExpertiseRating>25</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>372</MinDamage>
+    <MaxDamage>558</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Insanity's Grip</Name>
+    <Id>45489</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>achievement_dungeon_ulduar77_25man</IconPath>
     <Stats>
@@ -48609,7 +50443,7 @@
         <SpecialEffect>
           <Trigger>SpellCast</Trigger>
           <Stats>
-            <SpellPower>751</SpellPower>
+            <SpellPower>850</SpellPower>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>45</Cooldown>
@@ -49017,18 +50851,18 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageSpellCast</Trigger>
+          <Trigger>DoTTick</Trigger>
           <Stats>
-            <SpellPower>850</SpellPower>
+            <ShadowDamage>1050</ShadowDamage>
           </Stats>
-          <Duration>10</Duration>
+          <Duration>1</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <CritRating>120</CritRating>
+      <CritRating>95</CritRating>
       <ExtractOfNecromanticPowerProc>1</ExtractOfNecromanticPowerProc>
     </Stats>
     <Quality>Epic</Quality>
@@ -49038,6 +50872,237 @@
     <Name>Flare of the Heavens</Name>
     <Id>45518</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Gauntlets_71</IconPath>
+    <Stats>
+      <Armor>203</Armor>
+      <Stamina>72</Stamina>
+      <Intellect>72</Intellect>
+      <Spirit>64</Spirit>
+      <SpellPower>92</SpellPower>
+      <CritRating>74</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Handwraps of the Vigilant</Name>
+    <Id>45520</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_93</IconPath>
+    <Stats>
+      <Stamina>129</Stamina>
+      <Strength>129</Strength>
+      <CritRating>81</CritRating>
+      <HitRating>66</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandMace</Type>
+    <MinDamage>670</MinDamage>
+    <MaxDamage>1005</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketBonus />
+    <Name>Earthshaper</Name>
+    <Id>45521</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>inv_misc_gem_bloodstone_03</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalCrit</Trigger>
+          <Stats>
+            <AttackPower>1284</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>50</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <HitRating>108</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Blood of the Old God</Name>
+    <Id>45522</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Helmet_100</IconPath>
+    <Stats>
+      <Armor>480</Armor>
+      <Agility>98</Agility>
+      <Stamina>99</Stamina>
+      <AttackPower>130</AttackPower>
+      <ExpertiseRating>59</ExpertiseRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>8</Agility>
+    </SocketBonus>
+    <Name>Garona's Guise</Name>
+    <Id>45523</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_CHEST_MAIL_03</IconPath>
+    <Stats>
+      <Armor>1314</Armor>
+      <Agility>68</Agility>
+      <Stamina>88</Stamina>
+      <AttackPower>196</AttackPower>
+      <ArmorPenetrationRating>67</ArmorPenetrationRating>
+      <Intellect>59</Intellect>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Chestguard of Insidious Intent</Name>
+    <Id>45524</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_54</IconPath>
+    <Stats>
+      <Agility>46</Agility>
+      <Stamina>63</Stamina>
+      <AttackPower>126</AttackPower>
+      <CritRating>42</CritRating>
+      <ExpertiseRating>36</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Godbane Signet</Name>
+    <Id>45525</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_80</IconPath>
+    <Stats>
+      <Stamina>54</Stamina>
+      <Intellect>49</Intellect>
+      <SpellPower>550</SpellPower>
+      <CritRating>28</CritRating>
+      <HasteRating>48</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>88</MinDamage>
+    <MaxDamage>282</MaxDamage>
+    <Speed>1.8</Speed>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Soulscribe</Name>
+    <Id>45527</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Cape_16</IconPath>
+    <Stats>
+      <Armor>157</Armor>
+      <Stamina>46</Stamina>
+      <Intellect>46</Intellect>
+      <Spirit>49</Spirit>
+      <SpellPower>74</SpellPower>
+      <CritRating>36</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Shawl of Haunted Memories</Name>
+    <Id>45529</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_JEWELRY_RING_80</IconPath>
+    <Stats>
+      <Stamina>63</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>74</SpellPower>
+      <HasteRating>31</HasteRating>
+      <Mp5>20</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Sanity's Bond</Name>
+    <Id>45530</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Chest_Leather_13</IconPath>
+    <Stats>
+      <Armor>1314</Armor>
+      <Stamina>85</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>75</CritRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Chestguard of the Fallen God</Name>
+    <Id>45531</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Helmet_136</IconPath>
+    <Stats>
+      <Armor>256</Armor>
+      <Stamina>85</Stamina>
+      <Intellect>66</Intellect>
+      <Spirit>80</Spirit>
+      <SpellPower>115</SpellPower>
+      <CritRating>59</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Cowl of Dark Whispers</Name>
+    <Id>45532</Id>
+    <Slot>Head</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -49661,6 +51726,49 @@
     <Name>Daschal's Bite</Name>
     <Id>45605</Id>
     <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>24</ItemLevel>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Armor>21</Armor>
+      <Stamina>4</Stamina>
+      <SpellPower>4</SpellPower>
+      <HitRating>4</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Spidersilk Drape</Name>
+    <Id>45626</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>34</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_04</IconPath>
+    <Stats>
+      <HitRating>11</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Amulet of Truesight</Name>
+    <Id>45627</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>54</ItemLevel>
+    <IconPath>INV_Misc_Spyglass_03</IconPath>
+    <Stats>
+      <HitRating>24</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>High-powered Flashlight</Name>
+    <Id>45631</Id>
+    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -51007,6 +53115,22 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>206</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_35</IconPath>
+    <Stats>
+      <Stamina>55</Stamina>
+      <CritRating>55</CritRating>
+      <HitRating>55</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>The 5 Ring</Name>
+    <Id>45859</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
     <ItemLevel>80</ItemLevel>
     <IconPath>INV_Jewelcrafting_Gem_37</IconPath>
     <Stats>
@@ -51422,6 +53546,126 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_GAUNTLETS_62</IconPath>
+    <Stats>
+      <Armor>1467</Armor>
+      <Stamina>51</Stamina>
+      <Intellect>56</Intellect>
+      <SpellPower>99</SpellPower>
+      <CritRating>41</CritRating>
+      <HasteRating>54</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>6</CritRating>
+    </SocketBonus>
+    <Name>Gauntlets of the Thunder God</Name>
+    <Id>45928</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>spell_ice_rune</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <Mp5>156</Mp5>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpellPower>110</SpellPower>
+      <ManaRestoreOnCast_10_45>468</ManaRestoreOnCast_10_45>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Sif's Remembrance</Name>
+    <Id>45929</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_79</IconPath>
+    <Stats>
+      <Agility>41</Agility>
+      <Stamina>36</Stamina>
+      <AttackPower>68</AttackPower>
+      <CritRating>28</CritRating>
+      <HasteRating>31</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>192</MinDamage>
+    <MaxDamage>288</MaxDamage>
+    <Speed>1.4</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <HasteRating>4</HasteRating>
+    </SocketBonus>
+    <Name>Combatant's Bootblade</Name>
+    <Id>45930</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Rune_11</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalHit</Trigger>
+          <Stats>
+            <ArmorPenetrationRating>612</ArmorPenetrationRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Mjolnir Runestone</Name>
+    <Id>45931</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_46</IconPath>
+    <Stats>
+      <Stamina>45</Stamina>
+      <Intellect>43</Intellect>
+      <SpellPower>74</SpellPower>
+      <CritRating>41</CritRating>
+      <HasteRating>31</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Pendant of the Shallow Grave</Name>
+    <Id>45933</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>INV_Staff_94</IconPath>
     <Stats>
@@ -51507,6 +53751,25 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
+    <IconPath>INV_CHEST_LEATHER_15</IconPath>
+    <Stats>
+      <Armor>1299</Armor>
+      <Agility>76</Agility>
+      <Stamina>93</Stamina>
+      <AttackPower>212</AttackPower>
+      <Intellect>56</Intellect>
+      <HitRating>48</HitRating>
+      <HasteRating>60</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketBonus />
+    <Name>Chestguard of the Lasher</Name>
+    <Id>45941</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
     <IconPath>INV_Mace_90</IconPath>
     <Stats>
       <Stamina>44</Stamina>
@@ -51530,10 +53793,10 @@
     <IconPath>INV_Misc_Cape_14</IconPath>
     <Stats>
       <Armor>155</Armor>
-      <Stamina>51</Stamina>
-      <Strength>58</Strength>
-      <ArmorPenetrationRating>61</ArmorPenetrationRating>
-      <CritRating>43</CritRating>
+      <Stamina>67</Stamina>
+      <Strength>68</Strength>
+      <ArmorPenetrationRating>43</ArmorPenetrationRating>
+      <CritRating>35</CritRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -51559,6 +53822,42 @@
     <Name>Shoulderguards of Assimilation</Name>
     <Id>45974</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Belt_49</IconPath>
+    <Stats>
+      <Armor>1306</Armor>
+      <Stamina>69</Stamina>
+      <Intellect>57</Intellect>
+      <SpellPower>92</SpellPower>
+      <HasteRating>49</HasteRating>
+      <Mp5>22</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Cable of the Metrognome</Name>
+    <Id>45975</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_52</IconPath>
+    <Stats>
+      <Armor>194</Armor>
+      <Stamina>68</Stamina>
+      <Intellect>56</Intellect>
+      <Spirit>39</Spirit>
+      <SpellPower>92</SpellPower>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketBonus />
+    <Name>Static Charge Handwraps</Name>
+    <Id>45976</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>80</ItemLevel>
@@ -51655,6 +53954,95 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Gauntlets_28</IconPath>
+    <Stats>
+      <Armor>1451</Armor>
+      <Stamina>90</Stamina>
+      <Strength>91</Strength>
+      <ArmorPenetrationRating>60</ArmorPenetrationRating>
+      <HitRating>39</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Gauntlets of the Wretched</Name>
+    <Id>45997</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_22</IconPath>
+    <Stats>
+      <Agility>60</Agility>
+      <Stamina>51</Stamina>
+      <AttackPower>54</AttackPower>
+      <CritRating>46</CritRating>
+      <HasteRating>43</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Choker of the Abyss</Name>
+    <Id>46008</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Bracer_32</IconPath>
+    <Stats>
+      <Armor>256</Armor>
+      <Stamina>44</Stamina>
+      <Intellect>43</Intellect>
+      <Spirit>34</Spirit>
+      <SpellPower>70</SpellPower>
+      <CritRating>46</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Bindings of the Depths</Name>
+    <Id>46009</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_AhnQiraj_02</IconPath>
+    <Stats>
+      <Stamina>67</Stamina>
+      <Strength>68</Strength>
+      <CritRating>40</CritRating>
+      <HitRating>40</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Darkstone Ring</Name>
+    <Id>46010</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_94</IconPath>
+    <Stats>
+      <Agility>45</Agility>
+      <Stamina>34</Stamina>
+      <AttackPower>60</AttackPower>
+      <HitRating>35</HitRating>
+      <ExpertiseRating>31</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>235</MinDamage>
+    <MaxDamage>353</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketBonus />
+    <Name>Shadowbite</Name>
+    <Id>46011</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
     <IconPath>INV_Chest_Cloth_73</IconPath>
     <Stats>
       <Armor>311</Armor>
@@ -51670,6 +54058,283 @@
     <Name>Vestments of the Piercing Light</Name>
     <Id>46012</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Shoulder_97</IconPath>
+    <Stats>
+      <Armor>233</Armor>
+      <Stamina>58</Stamina>
+      <Intellect>60</Intellect>
+      <Spirit>46</Spirit>
+      <SpellPower>92</SpellPower>
+      <HasteRating>40</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Underworld Mantle</Name>
+    <Id>46013</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Misc_Cape_20</IconPath>
+    <Stats>
+      <Armor>155</Armor>
+      <Stamina>88</Stamina>
+      <Strength>43</Strength>
+      <HitRating>35</HitRating>
+      <ParryRating>29</ParryRating>
+      <DefenseRating>46</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Saronite Animus Cloak</Name>
+    <Id>46014</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_17</IconPath>
+    <Stats>
+      <Stamina>58</Stamina>
+      <Intellect>40</Intellect>
+      <SpellPower>70</SpellPower>
+      <CritRating>29</CritRating>
+      <Mp5>18</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Pendant of Endless Despair</Name>
+    <Id>46015</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_sword_136</IconPath>
+    <Stats>
+      <Stamina>159</Stamina>
+      <Strength>106</Strength>
+      <ArmorPenetrationRating>76</ArmorPenetrationRating>
+      <HitRating>62</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandSword</Type>
+    <MinDamage>577</MinDamage>
+    <MaxDamage>866</MaxDamage>
+    <Speed>3.4</Speed>
+    <SocketBonus />
+    <Name>Abaddon</Name>
+    <Id>46016</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Weapon_Crossbow_33</IconPath>
+    <Stats>
+      <Agility>24</Agility>
+      <Stamina>29</Stamina>
+      <AttackPower>68</AttackPower>
+      <ArmorPenetrationRating>26</ArmorPenetrationRating>
+      <HitRating>16</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Crossbow</Type>
+    <MinDamage>342</MinDamage>
+    <MaxDamage>513</MaxDamage>
+    <Speed>2.9</Speed>
+    <SocketBonus />
+    <Name>Deliverance</Name>
+    <Id>46018</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Pants_Mail_15</IconPath>
+    <Stats>
+      <Armor>1137</Armor>
+      <Agility>81</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>212</AttackPower>
+      <Intellect>53</Intellect>
+      <HitRating>49</HitRating>
+      <HasteRating>55</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketBonus />
+    <Name>Leggings of the Insatiable</Name>
+    <Id>46019</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_crown_13</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <ParryRating>380</ParryRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Stamina>155</Stamina>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Royal Seal of King Llane</Name>
+    <Id>46021</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_AhnQiraj_02</IconPath>
+    <Stats>
+      <Stamina>68</Stamina>
+      <Strength>67</Strength>
+      <CritRating>43</CritRating>
+      <HitRating>35</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Pendant of a Thousand Maws</Name>
+    <Id>46022</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_79</IconPath>
+    <Stats>
+      <Agility>46</Agility>
+      <Stamina>34</Stamina>
+      <AttackPower>70</AttackPower>
+      <HitRating>36</HitRating>
+      <ExpertiseRating>23</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>182</MinDamage>
+    <MaxDamage>274</MaxDamage>
+    <Speed>1.4</Speed>
+    <SocketBonus />
+    <Name>Kingsbane</Name>
+    <Id>46024</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_staff_92</IconPath>
+    <Stats>
+      <Stamina>129</Stamina>
+      <Intellect>81</Intellect>
+      <Spirit>106</Spirit>
+      <SpellPower>487</SpellPower>
+      <HasteRating>87</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>211</MinDamage>
+    <MaxDamage>390</MaxDamage>
+    <Speed>2.1</Speed>
+    <SocketBonus />
+    <Name>Devotion</Name>
+    <Id>46025</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Helmet_129</IconPath>
+    <Stats>
+      <Armor>1886</Armor>
+      <Stamina>69</Stamina>
+      <Intellect>65</Intellect>
+      <SpellPower>105</SpellPower>
+      <CritRating>76</CritRating>
+      <Mp5>24</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus />
+    <Name>Faceguard of the Eyeless Horror</Name>
+    <Id>46028</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Boots_Cloth_14</IconPath>
+    <Stats>
+      <Armor>214</Armor>
+      <Stamina>69</Stamina>
+      <Intellect>57</Intellect>
+      <Spirit>42</Spirit>
+      <SpellPower>93</SpellPower>
+      <CritRating>59</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketBonus />
+    <Name>Treads of the Dragon Council</Name>
+    <Id>46030</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>INV_Axe_101</IconPath>
+    <Stats>
+      <Agility>24</Agility>
+      <Stamina>52</Stamina>
+      <AttackPower>92</AttackPower>
+      <CritRating>26</CritRating>
+      <HitRating>34</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>297</MinDamage>
+    <MaxDamage>552</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Touch of Madness</Name>
+    <Id>46031</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_Cape_14</IconPath>
+    <Stats>
+      <Armor>157</Armor>
+      <Agility>69</Agility>
+      <Stamina>31</Stamina>
+      <AttackPower>92</AttackPower>
+      <ArmorPenetrationRating>30</ArmorPenetrationRating>
+      <CritRating>40</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Drape of the Faceless General</Name>
+    <Id>46032</Id>
+    <Slot>Back</Slot>
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
@@ -52266,6 +54931,26 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Belt_37C</IconPath>
+    <Stats>
+      <Armor>333</Armor>
+      <Agility>85</Agility>
+      <Stamina>65</Stamina>
+      <AttackPower>114</AttackPower>
+      <CritRating>53</CritRating>
+      <ExpertiseRating>56</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus />
+    <Name>Soul-Devouring Cinch</Name>
+    <Id>46095</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
     <IconPath>INV_Shirt_Purple_01</IconPath>
     <Stats />
     <Quality>Epic</Quality>
@@ -52297,6 +54982,28 @@
     <Name>Conqueror's Darkruned Battleplate</Name>
     <Id>46111</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_28</IconPath>
+    <Stats>
+      <Armor>1467</Armor>
+      <Stamina>102</Stamina>
+      <Strength>90</Strength>
+      <CritRating>42</CritRating>
+      <HitRating>56</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Darkruned Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <HitRating>4</HitRating>
+    </SocketBonus>
+    <Name>Conqueror's Darkruned Gauntlets</Name>
+    <Id>46113</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -52392,6 +55099,29 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_28</IconPath>
+    <Stats>
+      <Armor>1467</Armor>
+      <Stamina>128</Stamina>
+      <Strength>62</Strength>
+      <ParryRating>56</ParryRating>
+      <DefenseRating>50</DefenseRating>
+      <ExpertiseRating>39</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Darkruned Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <DodgeRating>4</DodgeRating>
+    </SocketBonus>
+    <Name>Conqueror's Darkruned Handguards</Name>
+    <Id>46119</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
     <IconPath>INV_Helmet_58</IconPath>
     <Stats>
       <Armor>1908</Armor>
@@ -52484,6 +55214,29 @@
     <Name>Conqueror's Terrorblade Breastplate</Name>
     <Id>46123</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_25</IconPath>
+    <Stats>
+      <Armor>369</Armor>
+      <Agility>85</Agility>
+      <Stamina>59</Stamina>
+      <AttackPower>130</AttackPower>
+      <CritRating>43</CritRating>
+      <HitRating>54</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Terrorblade Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Conqueror's Terrorblade Gauntlets</Name>
+    <Id>46124</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -52616,7 +55369,7 @@
       <HasteRating>44</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Kirin'dor Garb</SetName>
+    <SetName>Kirin Tor Garb</SetName>
     <Type>Cloth</Type>
     <RequiredClasses>Mage</RequiredClasses>
     <SocketColor1>Yellow</SocketColor1>
@@ -52770,7 +55523,9 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Relics_IdolofRejuvenation</IconPath>
-    <Stats />
+    <Stats>
+      <NourishSpellpower>187</NourishSpellpower>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Unique>true</Unique>
@@ -52972,6 +55727,28 @@
     <Name>Conqueror's Siegebreaker Battleplate</Name>
     <Id>46146</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_28</IconPath>
+    <Stats>
+      <Armor>1467</Armor>
+      <Stamina>102</Stamina>
+      <Strength>90</Strength>
+      <HitRating>38</HitRating>
+      <ExpertiseRating>60</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Siegebreaker Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <HitRating>4</HitRating>
+    </SocketBonus>
+    <Name>Conqueror's Siegebreaker Gauntlets</Name>
+    <Id>46148</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -53534,6 +56311,29 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_28</IconPath>
+    <Stats>
+      <Armor>1467</Armor>
+      <Stamina>115</Stamina>
+      <Strength>84</Strength>
+      <ParryRating>36</ParryRating>
+      <BlockValue>68</BlockValue>
+      <DefenseRating>45</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Aegis Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Conqueror's Aegis Handguards</Name>
+    <Id>46174</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
     <IconPath>INV_HELMET_97</IconPath>
     <Stats>
       <Armor>1908</Armor>
@@ -53723,6 +56523,29 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_25</IconPath>
+    <Stats>
+      <Armor>369</Armor>
+      <Stamina>63</Stamina>
+      <Intellect>64</Intellect>
+      <Spirit>57</Spirit>
+      <SpellPower>90</SpellPower>
+      <CritRating>48</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Regalia</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Conqueror's Nightsong Handguards</Name>
+    <Id>46183</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
     <IconPath>inv_jewelry_necklace_11</IconPath>
     <Stats>
       <Armor>480</Armor>
@@ -53815,6 +56638,52 @@
     <Name>Conqueror's Nightsong Spaulders</Name>
     <Id>46187</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_17</IconPath>
+    <Stats>
+      <Armor>197</Armor>
+      <Stamina>60</Stamina>
+      <Intellect>56</Intellect>
+      <Spirit>60</Spirit>
+      <SpellPower>100</SpellPower>
+      <HasteRating>49</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Sanctification Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Conqueror's Gloves of Sanctification</Name>
+    <Id>46188</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_25</IconPath>
+    <Stats>
+      <Armor>369</Armor>
+      <Stamina>63</Stamina>
+      <Intellect>64</Intellect>
+      <Spirit>48</Spirit>
+      <SpellPower>90</SpellPower>
+      <HitRating>57</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Conqueror's Nightsong Gloves</Name>
+    <Id>46189</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -54029,6 +56898,29 @@
     <Name>Conqueror's Worldbreaker Tunic</Name>
     <Id>46198</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Gauntlets_25</IconPath>
+    <Stats>
+      <Armor>821</Armor>
+      <Stamina>63</Stamina>
+      <Intellect>64</Intellect>
+      <SpellPower>90</SpellPower>
+      <CritRating>48</CritRating>
+      <HasteRating>57</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Worldbreaker Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Conqueror's Worldbreaker Handguards</Name>
+    <Id>46199</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -54343,6 +57235,20 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Misc_AhnQirajTrinket_05</IconPath>
+    <Stats>
+      <CritRating>136</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Vanquished Clutches of Yogg-Saron</Name>
+    <Id>46312</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>inv_jewelry_necklace_11</IconPath>
     <Stats>
@@ -54367,6 +57273,18 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>175</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_62</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Gondria's Spectral Claw</Name>
+    <Id>46324</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>INV_Weapon_Rifle_33</IconPath>
     <Stats>
@@ -54384,6 +57302,24 @@
     <Name>Mimiron's Repeater</Name>
     <Id>46339</Id>
     <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_gauntlets_54</IconPath>
+    <Stats>
+      <Armor>1451</Armor>
+      <Stamina>119</Stamina>
+      <Strength>79</Strength>
+      <ParryRating>41</ParryRating>
+      <BlockRating>25</BlockRating>
+      <DefenseRating>51</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Adamant Handguards</Name>
+    <Id>46340</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
