@@ -8,7 +8,9 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public float EnergyCost(CombatFactors combatFactors)
         {
-			return 45f - Talents.ImprovedSinisterStrike.Bonus - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus);
+            return 45f * combatFactors.Tier7FourPieceEnergyCostReduction
+                - Talents.ImprovedSinisterStrike.Bonus 
+                - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus);
         }
 
         public float Crit(CombatFactors combatFactors)

@@ -19,6 +19,16 @@
             get { return OhSwingsPerSecond * (_combatFactors.ProbOhWhiteHit + _combatFactors.ProbOhCrit + _combatFactors.ProbGlancingHit); }
         }
 
+        public float MhCrits
+        {
+            get { return MhSwingsPerSecond * _combatFactors.ProbMhCrit; }
+        }
+
+        public float OhCrits
+        {
+            get { return OhSwingsPerSecond * _combatFactors.ProbOhCrit; }
+        }
+
         public float CalcMhWhiteDPS()
         {
             var dps = _combatFactors.MhAvgDamage * 0.75f * _combatFactors.ProbGlancingHit;
@@ -37,12 +47,12 @@
 
         private float MhSwingsPerSecond
         {
-			get { return (1f / _combatFactors.MainHand.Speed) * (1 +_combatFactors.BaseHaste); }
+			get { return (1f / _combatFactors.MainHand.Speed) * _combatFactors.BaseHaste; }
         }
 
         private float OhSwingsPerSecond
         {
-			get { return (1f / _combatFactors.MainHand.Speed) * (1 + _combatFactors.BaseHaste); }
+			get { return (1f / _combatFactors.MainHand.Speed) * _combatFactors.BaseHaste; }
         }
     }
 }

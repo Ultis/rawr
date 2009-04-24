@@ -199,9 +199,9 @@ namespace Rawr.Rogue
             get
             {
                 var totalHaste = 1f;
-                totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));
+                totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));  //TODO:  change from assuming SnD has a 100% uptime
                 totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-                totalHaste *= Talents.BladeFlurry.Bonus;
+                totalHaste *= (1f + Talents.BladeFlurry.Bonus);
                 return totalHaste;
             }
         }
@@ -214,6 +214,27 @@ namespace Rawr.Rogue
         public float CritFromCritRating
         {
             get { return _stats.CritRating*RogueConversions.CritRatingToCrit; }
+        }
+
+        public float Tier7TwoPieceRuptureBonusDamage
+        {
+            get { return 1f + _stats.RogueT7TwoPieceBonus * .1f; }    
+        }
+
+        public float Tier7FourPieceEnergyCostReduction
+        {
+            get{ return ( 1f - _stats.RogueT7FourPieceBonus * 0.05f);}
+        }
+
+        public float Tier8TwoPieceEnergyBonus
+        {
+            //1 energy per Deadly Poison tick, 1 tick every 3 seconds
+            get { return _stats.RogueT8TwoPieceBonus == 1 ? 1f / 3f : 0f; }
+        }
+
+        public float Tier8FourPieceRuptureCrit
+        {
+            get { return 1 + (_stats.RogueT8FourPieceBonus == 1 ? ProbMhCrit : 0f); }
         }
 
         private float CalcCrit(Item weapon)

@@ -82,11 +82,13 @@ namespace Rawr.Rogue
             //Note:  Bonus Physical Damage isn't modeled yet  (e.g. Savage Combat/Blood Frenzy) 
 		    //Note:  Need to Model Tier 7 2-Piece Bonus;
 
-            finisherDmg *= (1f + Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness));
+		    finisherDmg *= ( 1f + Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness) );
 		    finisherDmg *= Talents.DirtyDeeds.Multiplier;
-			finisherDmg *= Talents.FindWeakness.Multiplier;
-            finisherDmg *= (1f + stats.BonusBleedDamageMultiplier);
-            finisherDmg *= (1f - combatFactors.YellowMissChance);
+		    finisherDmg *= Talents.FindWeakness.Multiplier;
+		    finisherDmg *= ( 1f + stats.BonusBleedDamageMultiplier );
+		    finisherDmg *= ( 1f - combatFactors.YellowMissChance );
+		    finisherDmg *= combatFactors.Tier7TwoPieceRuptureBonusDamage;
+		    finisherDmg *= combatFactors.Tier8FourPieceRuptureCrit;
             if (!Talents.SurpriseAttacks.HasPoints)
                 finisherDmg *= (1f - combatFactors.MhDodgeChance);
             return finisherDmg / cycleTime;

@@ -27,9 +27,6 @@ namespace Rawr
         Bloodlust,
         BloodlustProc,
         BonusCommandingShoutHP,
-        BonusCPGDamage,
-        BonusEvisEnvenomDamage,
-        BonusFreeFinisher,
         BonusLacerateDamageMultiplier,
         BonusMangleBearDamage,
         BonusMangleCatDamage,
@@ -37,13 +34,10 @@ namespace Rawr
         BonusRipDuration,
 		BonusSavageRoarDuration,
         BonusShredDamage,
-        BonusSnDDuration,
-        BonusSnDHaste,
         BonusStreadyShotCrit,
         ExtraSpiritWhileCasting,
         CatFormStrength,
 		ClearcastOnBleedChance,
-        CPOnFinisher,
         PhysicalCrit,
         CritRating,
         CritMeleeRating,
@@ -312,6 +306,16 @@ namespace Rawr
         #region Warrior set bonuses
 		DevastateCritIncrease,
 		DreadnaughtBonusRageProc,
+        #endregion
+        #region Rogue set bonuses
+        BonusSnDDuration,
+        BonusSnDHaste,
+        BonusCPGDamage,
+        BonusEvisEnvenomDamage,
+        BonusFreeFinisher,
+        CPOnFinisher,
+        RogueComboMoveEnergyReduction,
+        RogueRuptureDamageBonus,
         #endregion
         ArcaneDamage,
         FireDamage,
@@ -1167,6 +1171,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.InterruptProtection] = value; }
         }
 
+        #region Rogue bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
         public float BonusSnDDuration
@@ -1192,22 +1197,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Death Knight")]
-        public float BonusObliterateDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Death Knight")]
-        public float BonusScourgeStrikeDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
         public float BonusFreeFinisher
         {
@@ -1229,6 +1218,55 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float RogueT7TwoPieceBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RogueRuptureDamageBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RogueRuptureDamageBonus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float RogueT7FourPieceBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float RogueT8TwoPieceBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RogueRuptureDamageBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RogueRuptureDamageBonus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float RogueT8FourPieceBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction] = value; }
+        }
+        #endregion
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusObliterateDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusScourgeStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

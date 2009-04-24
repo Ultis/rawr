@@ -34,13 +34,13 @@ namespace Rawr.Rogue
 		private Talents(TalentDelegate talent, params float[] multipliers)
 		{
 			_talent = talent;
-			_multipliers.Add(0f);
-			_multipliers.AddRange(multipliers);
+			_bonuses.Add(0f);
+			_bonuses.AddRange(multipliers);
 			_items.Add(this);
 		}
 
 		private readonly TalentDelegate _talent;
-		private readonly List<float> _multipliers = new List<float>();
+		private readonly List<float> _bonuses = new List<float>();
 		private static readonly List<Talents> _items = new List<Talents>();
 		private static RogueTalents _talents = new RogueTalents();
 
@@ -114,11 +114,7 @@ namespace Rawr.Rogue
 		public static readonly Talents Vitality = new Talents(() => _talents.Vitality, .08f, .16f, .25f);
 		public static readonly Talents AdrenalineRush = new Talents(() => _talents.AdrenalineRush, 0.08333333f);
 
-		public class CombatPotency
-		{
-			public static readonly Talents ChanceForEnergy = new Talents(() => _talents.CombatPotency, .2f, .4f, .6f, .8f, 1f);
-			public static readonly Talents Energy = new Talents(() => _talents.CombatPotency, 3f, 3f, 3f, 3f, 3f);
-		}
+        public static readonly Talents CombatPotency = new Talents(() => _talents.CombatPotency, .6f, 1.2f, 1.8f, 2.4f, 3f); //energy per success
 
 		//NEED: Unfair Advantage??
 		public static readonly Talents SurpriseAttacks = new Talents(() => _talents.SurpriseAttacks, 0.1f);
@@ -176,7 +172,7 @@ namespace Rawr.Rogue
 
 		public float Bonus
 		{
-			get { return _multipliers[_talent()]; }
+			get { return _bonuses[_talent()]; }
 		}
 
 		public float Multiplier

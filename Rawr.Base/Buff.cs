@@ -2536,7 +2536,8 @@ namespace Rawr
                 SetThreshold = 4
             });
 
-            // Rogue set bonuses
+            #region Rogue set bonuses
+            
             defaultBuffs.Add(new Buff()
             {
                 Name = "Netherblade 2 Piece Bonus",
@@ -2596,6 +2597,50 @@ namespace Rawr
                 SetName = "Slayer's Armor",
                 SetThreshold = 4
             });
+
+            //T7
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Bonescythe Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT7TwoPieceBonus = 1f },
+                SetName = "Bonescythe Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Bonescythe Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT7FourPieceBonus = 1f },
+                SetName = "Bonescythe Battlegear",
+                SetThreshold = 4
+            });
+
+            //T8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Terrorblade Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT8TwoPieceBonus = 1f },
+                SetName = "Terrorblade Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Terrorblade Battlegear4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT8FourPieceBonus = 1f },
+                SetName = "Terrorblade Battlegear",
+                SetThreshold = 4
+            });
+
+            #endregion
 
             //Paladin Set Bonuses
             //Holy T7
