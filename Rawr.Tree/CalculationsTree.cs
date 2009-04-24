@@ -11,6 +11,7 @@ namespace Rawr.Tree
         public float MaxHPS;
         public float HPSFromPrimary;
         public float HPSFromHots;
+        public float HPSFromWildGrowth;
         public float MPSFromPrimary;
         public float MPSFromHots;
         public float HotsFraction;
@@ -173,6 +174,7 @@ namespace Rawr.Tree
                         "Simulation:Total healing done",
                         "Simulation:HPS for tank HoTs",
                         "Simulation:MPS for tank HoTs",
+                        "Simulation:HPS for Wild Growth",
                         "Simulation:MPS for Wild Growth",
                         "Simulation:HoT refresh fraction",
                         "Simulation:HPS for primary heal",
@@ -388,7 +390,7 @@ namespace Rawr.Tree
             //Spell nourish = new Nourish(calculatedStats, stats);
             //Spell nourishWithHoT = new Nourish(calculatedStats, stats, hots > 0 ? hots : 1);
             //Spell healingTouch = new HealingTouch(calculatedStats, stats);
-            Spell wildGrowth = new WildGrowth(calculatedStats, stats);
+            WildGrowth wildGrowth = new WildGrowth(calculatedStats, stats);
             #endregion
 
             float castsPerMinute = 0;
@@ -398,6 +400,7 @@ namespace Rawr.Tree
             #region WildGrowthPerMinute
             float wgCastTime = wildGrowth.CastTime / 60f * wgPerMin;
             float wgMPS = wildGrowth.manaCost / 60f * wgPerMin;
+            float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * wgPerMin;  // Assume no overhealing
             castsPerMinute += wgPerMin;
             healsPerMinute += wgPerMin * 10; // assumption it will go 10 times ;)
             #endregion
@@ -575,7 +578,7 @@ namespace Rawr.Tree
 
             #region Calculate total healing in the fight
             float mps = hotsMPS + mpsHealing + wgMPS;
-            float hps = hotsHPS + hpsHealing;
+            float hps = hotsHPS + hpsHealing + wgHPS;
             float TotalTime = calcOpts.FightDuration;
             float TimeToOOM = TotalTime;
             float EffectiveManaBurn = hotsMPS + mpsHealing + wgMPS - manaRegen / 5f;
@@ -596,10 +599,11 @@ namespace Rawr.Tree
 
             return new Rotation() {
                 HPS = hps,
-                MaxHPS = hotsHPS + hpsHeal100,
+                MaxHPS = hotsHPS + hpsHeal100 + wgHPS,
                 MPS = mps,
                 HPSFromPrimary = hpsHealing,
                 HPSFromHots = hotsHPS,
+                HPSFromWildGrowth = wgHPS,
                 MPSFromPrimary = mpsHealing,
                 MPSFromHots = hotsMPS,
                 MPSFromWildGrowth = wgMPS,

@@ -87,7 +87,8 @@ namespace Rawr.Tree
             dictValues.Add("MPS for primary heal", Math.Round(Simulation.MPSFromPrimary,2).ToString());
             dictValues.Add("MPS for tank HoTs", Math.Round(Simulation.MPSFromHots,2).ToString());
             dictValues.Add("MPS for Wild Growth", Math.Round(Simulation.MPSFromWildGrowth, 2).ToString());
-            dictValues.Add("Mana regen per second", Math.Round(Simulation.ManaPer5InRotation/5, 2).ToString());
+            dictValues.Add("HPS for Wild Growth", Math.Round(Simulation.HPSFromWildGrowth, 2).ToString());
+            dictValues.Add("Mana regen per second", Math.Round(Simulation.ManaPer5InRotation / 5, 2).ToString());
             dictValues.Add("HoT refresh fraction", Math.Round(Simulation.HotsFraction, 2).ToString());
             dictValues.Add("Casts per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());
             dictValues.Add("Crits per minute until OOM", Math.Round(Simulation.CritsPerMinute, 2).ToString());

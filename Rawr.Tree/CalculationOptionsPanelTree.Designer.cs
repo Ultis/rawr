@@ -241,6 +241,7 @@
             this.label7.TabIndex = 42;
             this.label7.Text = "(Healing provided by wild growth is not yet modelled, but mana usage and gcd time" +
                 " is)";
+            this.label7.Visible = false;
             // 
             // tbPrimaryHealFrac
             // 
@@ -268,7 +269,6 @@
             // 
             this.tbWildGrowth.BackColor = System.Drawing.SystemColors.Window;
             this.tbWildGrowth.Location = new System.Drawing.Point(6, 202);
-            this.tbWildGrowth.Maximum = 20;
             this.tbWildGrowth.Name = "tbWildGrowth";
             this.tbWildGrowth.Size = new System.Drawing.Size(262, 45);
             this.tbWildGrowth.TabIndex = 39;
