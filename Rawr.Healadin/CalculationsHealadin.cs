@@ -514,30 +514,62 @@ namespace Rawr.Healadin
                     || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
                 {
-                    if (HasRelevantSpecialEffectStats(effect.Stats)) s.AddSpecialEffect(effect);
+                    if (HasSpecialEffectStats(effect.Stats)) s.AddSpecialEffect(effect);
                 }
             }
             return s;
         }
 
-        public bool HasRelevantSpecialEffectStats(Stats stats)
+        public bool HasSpecialEffectStats(Stats stats)
         {
             return (stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
         }
 
-        public override bool HasRelevantStats(Stats stats)
+        private bool HasWantedStats(Stats stats)
         {
-            bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellCrit + stats.SpellHaste
+            return (stats.Mp5 + stats.SpellCrit + stats.SpellHaste
                 + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
-                + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + 
+                + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit +
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction
                 + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit) > 0;
-            bool maybeStats = (stats.HasteRating + stats.CritRating + stats.Stamina + stats.Health) > 0;
-            bool ignoreStats = (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
+        }
+
+        private bool HasMaybeStats(Stats stats)
+        {
+            return (stats.Intellect + stats.HasteRating + stats.CritRating + stats.SpellPower) > 0;
+        }
+
+        public bool HasSurvivalStats(Stats stats)
+        {
+            return (stats.Stamina + stats.Health) > 0;
+        }
+
+        private bool HasIgnoreStats(Stats stats)
+        {
+            return (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                 + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit + stats.DodgeRating + stats.ParryRating
                 + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue) > 0;
+        }
+    
+
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            return HasWantedStats(buff.Stats) || HasMaybeStats(buff.Stats) || HasSurvivalStats(buff.Stats) || (buff.Stats.HitRating > 0);
+        }
+
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            return HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats) || (enchant.Stats.HitRating > 0);
+        }
+
+        public override bool HasRelevantStats(Stats stats)
+        {
+            bool wantedStats = HasWantedStats(stats);
+            bool maybeStats = HasMaybeStats(stats);
+            bool ignoreStats = HasIgnoreStats(stats);
+            bool survivalStats = HasSurvivalStats(stats);
             bool specialEffect = false;
             bool hasSpecialEffect = false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -548,14 +580,14 @@ namespace Rawr.Healadin
                     || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
                 {
-                    if (HasRelevantSpecialEffectStats(effect.Stats))
+                    if (HasSpecialEffectStats(effect.Stats))
                     {
                         specialEffect = true;
                         break;
                     }
                 }
             }
-            return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));
+            return wantedStats || ((specialEffect || (maybeStats && (!hasSpecialEffect || specialEffect)) || (survivalStats && !ignoreStats)) && !ignoreStats);
         }
     }
 }
