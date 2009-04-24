@@ -1095,6 +1095,7 @@ namespace Rawr.Tree
                 NourishBonusPerHoT = stats.NourishBonusPerHoT,          //T7 (4) Bonus
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
                 NourishSpellpower = stats.NourishSpellpower,
+                SpellsManaReduction = stats.SpellsManaReduction,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1163,7 +1164,7 @@ namespace Rawr.Tree
                 + stats.ReduceRejuvenationCost + stats.RejuvenationSpellpower + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
-                stats.RejuvenationInstantTick + stats.NourishSpellpower
+                stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction
                 > 0)
                 return true;
 

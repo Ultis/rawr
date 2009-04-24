@@ -172,15 +172,6 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            #region Idols
-            //guessed that it doesnt work with talents
-            //z.B.: Idol of the Avian Heart (+136 Healing)
-            healingBonus += calculatedStats.HealingTouchFinalHealBonus;
-
-            //z.B.: Idol of Longevity (25 Mana on cast.... -25 Manacost)
-            manaCost -= calculatedStats.ReduceHealingTouchCost;
-            #endregion
-
             #region Glyph of Healing Touch
             if (calcs.LocalCharacter.DruidTalents.GlyphOfHealingTouch) //(calcOpts.glyphOfHealingTouch)
             {
@@ -191,6 +182,17 @@ namespace Rawr.Tree
                 coefDH *= 1 - 0.5f;
             }
             #endregion
+
+            #region Idols
+            //guessed that it doesnt work with talents
+            //z.B.: Idol of the Avian Heart (+136 Healing)
+            healingBonus += calculatedStats.HealingTouchFinalHealBonus;
+
+            //z.B.: Idol of Longevity (25 Mana on cast.... -25 Manacost)
+            manaCost -= calculatedStats.ReduceHealingTouchCost;
+            #endregion
+
+            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
@@ -292,6 +294,8 @@ namespace Rawr.Tree
             manaCost -= calculatedStats.ReduceRegrowthCost;
             #endregion
 
+            manaCost -= calculatedStats.SpellsManaReduction;
+
             /* Glyph of Regrowth is modelled in the constructor */
             applyHaste();
         }
@@ -384,6 +388,8 @@ namespace Rawr.Tree
                 critPercent = 0.0f;
             }
             #endregion
+
+            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
@@ -478,6 +484,8 @@ namespace Rawr.Tree
                 periodicTicks += 1;
 
             manaCost *= (1-calculatedStats.LifebloomCostReduction);
+
+            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
@@ -574,7 +582,8 @@ namespace Rawr.Tree
 
 //            CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 //            if (calcOpts.newManaRegen) 
-            manaCost *= 2;       // manaCost without refund
+            manaCost *= 2;       // manaCost without refund   TODO: check if  SpellsManaReduction is applied correctly
+
         }
     }
 
@@ -618,6 +627,8 @@ namespace Rawr.Tree
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
+
+            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
@@ -704,6 +715,8 @@ namespace Rawr.Tree
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
+
+            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
