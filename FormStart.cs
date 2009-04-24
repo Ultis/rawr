@@ -18,15 +18,25 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-            labelVersionHistory.Text = @"v2.2.0.9
+			labelVersionHistory.Text = @"v2.2.1.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
- - All talent trees and tooltips updated to 3.1
- - Option to display gem names in tooltips
- - Fix for tooltip rendering
- - Rawr.ProtPaladin: calculation fixes
- - Rawr.TankDK: updated for 3.1
- - Rawr.HolyPriest, Rawr.ShadowPriest: glyph updates
- - Rawr.Tree: Nature's Bounty, Revitalize";
+ - Updated to the new ArPen model for 3.1
+ - New Load from Wowhead Filter feature in the Tools menu
+ - Fix for a few bugs with the Optimizer
+ - Fix for parsing several items
+ - Fix for CharacterProfiler support in foreign languages
+ - Rawr.Cat: More 3.1 updates
+ - Rawr.Bear: More 3.1 updates
+ - Rawr.Moonkin: More 3.1 updates
+ - Rawr.HolyPriest: More 3.1 updates
+ - Rawr.ShadowPriest: More 3.1 updates
+ - Rawr.Mage: More 3.1 updates
+ - Rawr.EnhSham: More 3.1 updates
+ - Rawr.Tree: More 3.1 updates
+ - Rawr.Retribution: More 3.1 updates
+ - Rawr.ProtPaladin: More 3.1 updates
+ - Rawr.DPSWarr: More 3.1 updates
+ - Rawr.DPSDK: More 3.1 updates";
 			labelVersionHistory.Height = 560;
 
 			this.DoubleBuffered = true;
