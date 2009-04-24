@@ -938,9 +938,11 @@ namespace Rawr
                 }
             }
             #endregion
-            else if (line == "Reduces the mana cost of your spells by 42.")
+            else if (line.StartsWith("Reduces the mana cost of your spells by "))
             {
-                stats.SpellsManaReduction = 42f;
+                line = line.Replace(".", "");
+                line = line.Substring("Reduces the mana cost of your spells by ".Length);
+                stats.SpellsManaReduction = float.Parse(line);
             }
         }
 

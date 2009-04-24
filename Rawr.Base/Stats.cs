@@ -275,7 +275,7 @@ namespace Rawr
         Heal1Min,
         Healed,
         ManaRestore,
-        SpellsManaReduction,
+        SpellsManaReduction,        // How is this different from ManaRestore with 100% proc on SpellCast? Which convention do we use?
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
