@@ -448,6 +448,7 @@ namespace Rawr
                 {
                     _filePath = dialog.FileName;
                     batchCharacterListBindingSource.DataSource = BatchCharacterList.Load(_filePath);
+                    FormMain.Instance.AddRecentCharacter(_filePath);
                 }
                 dialog.Dispose();
             }
@@ -458,6 +459,7 @@ namespace Rawr
             if (!string.IsNullOrEmpty(_filePath))
             {
                 ((BatchCharacterList)batchCharacterListBindingSource.DataSource).Save(_filePath);
+                FormMain.Instance.AddRecentCharacter(_filePath);
                 _unsavedChanges = false;
             }
             else
@@ -475,6 +477,7 @@ namespace Rawr
             {
                 _filePath = dialog.FileName;
                 ((BatchCharacterList)batchCharacterListBindingSource.DataSource).Save(_filePath);
+                FormMain.Instance.AddRecentCharacter(_filePath);
                 _unsavedChanges = false;
             }
             dialog.Dispose();

@@ -498,6 +498,29 @@ namespace Rawr
 			}
 		}
 
+        public enum FileType
+        {
+            Character,
+            Batch
+        }
+
+        public FileType GetFileType(string file)
+        {
+            StreamReader reader = new StreamReader(file);
+            reader.ReadLine(); // xml declaration
+            string root = reader.ReadLine();
+            if (root.StartsWith("<Character"))
+            {
+                return FileType.Character;
+            }
+            else if (root.StartsWith("<ArrayOfBatchCharacter"))
+            {
+                return FileType.Batch;
+            }
+            // otherwise assume Character, it won't load anyway
+            return FileType.Character;
+        }
+
 		public string[] ConfigRecentCharacters
 		{
 			get
@@ -828,11 +851,22 @@ namespace Rawr
 
         public void LoadSavedCharacter(string path)
         {
-            StartProcessing();
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_LoadSavedCharacterComplete);
-            bw.DoWork += new DoWorkEventHandler(bw_LoadSavedCharacter);
-            bw.RunWorkerAsync(path);
+            switch (GetFileType(path))
+            {
+                case FileType.Character:
+                    StartProcessing();
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_LoadSavedCharacterComplete);
+                    bw.DoWork += new DoWorkEventHandler(bw_LoadSavedCharacter);
+                    bw.RunWorkerAsync(path);
+                    break;
+                case FileType.Batch:
+                    FormBatchTools form = new FormBatchTools(this);
+                    AddRecentCharacter(path);
+                    form.batchCharacterListBindingSource.DataSource = BatchCharacterList.Load(path);
+                    form.Show();
+                    break;
+            }
         }
 
         void bw_LoadSavedCharacter(object sender, DoWorkEventArgs e)
