@@ -347,14 +347,18 @@ namespace Rawr
             float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
                               
             //2: Stormstrike DPS
-            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
-            float damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
+            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed + stats.TotemSSDamage;
+            float damageOHSwing = 0f;
+            if (character.ShamanTalents.DualWield == 1)
+                damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed + stats.TotemSSDamage;
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1)
             {
-                float dpsMHSS = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * cs.HitsPerSMHSS;
-                float dpsOHSS = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSOHSS;
-                dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * cs.DamageReduction * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
+                float swingDPS = damageMHSwing * cs.HitsPerSMHSS + damageOHSwing * cs.HitsPerSOHSS;
+                float SSnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * swingDPS;
+                float SScrit = swingDPS * cs.ChanceYellowCrit * critMultiplierMelee;
+                dpsSS = (SSnormal + SScrit) * weaponMastery * cs.DamageReduction * 
+                        (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
             }
 
             //3: Lavalash DPS
@@ -861,6 +865,7 @@ namespace Rawr
                     TotemShockAttackPower = stats.TotemShockAttackPower,
                     TotemShockSpellPower = stats.TotemShockSpellPower,
                     TotemSSHaste = stats.TotemSSHaste,
+                    TotemSSDamage = stats.TotemSSDamage,
                     TotemWFAttackPower = stats.TotemWFAttackPower,
                     GreatnessProc = stats.GreatnessProc,
                     BonusLSDamage = stats.BonusLSDamage,
@@ -919,7 +924,7 @@ namespace Rawr
                 stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +
-                stats.BonusLSDamage + stats.BonusLLSSDamage) > 0
+                stats.BonusLSDamage + stats.BonusLLSSDamage + stats.TotemSSDamage) > 0
 
                 &&
 

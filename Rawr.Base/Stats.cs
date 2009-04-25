@@ -226,6 +226,7 @@ namespace Rawr
         TotemShockSpellPower,
         TotemShockAttackPower,
         TotemSSHaste,
+        TotemSSDamage,
         TotemWFAttackPower,
         BonusFlurryHaste,
         BonusLSDamage,
@@ -2630,6 +2631,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemSSHaste]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemSSHaste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Enhance")]
+        public float TotemSSDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemSSDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemSSDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

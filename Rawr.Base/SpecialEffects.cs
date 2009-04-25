@@ -937,6 +937,15 @@ namespace Rawr
                     stats.TotemShockSpellPower += (float)int.Parse(m.Groups["spellpower"].Value);
                 }
             }
+            else if (line.StartsWith("Increases weapon damage when you use Stormstrike by "))
+            {
+                Regex r = new Regex("Increases weapon damage when you use Stormstrike by (?<damage>\\d*).");
+                Match m = r.Match(line);
+                if (m.Success) // Totem of Dancing Flame
+                {
+                    stats.TotemSSDamage += (float)int.Parse(m.Groups["damage"].Value);
+                }
+            }
             #endregion
             else if (line.StartsWith("Reduces the mana cost of your spells by "))
             {
