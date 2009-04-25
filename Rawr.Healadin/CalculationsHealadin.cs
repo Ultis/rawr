@@ -251,6 +251,8 @@ namespace Rawr.Healadin
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character == null) return new CharacterCalculationsHealadin();
+
             Stats stats;
             CharacterCalculationsHealadin calc = null;
             PaladinTalents talents = character.PaladinTalents;

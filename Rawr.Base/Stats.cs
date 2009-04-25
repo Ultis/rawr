@@ -3935,6 +3935,56 @@ namespace Rawr
             return c;
         }
 
+        /// <summary>
+        /// Adds together two stats, when using a + operator. When adding additional stats for
+        /// Rawr to track, after adding the stat property, also add a line for it to this method,
+        /// to properly combine the stat, as appropriate.
+        /// </summary>
+        /// <param name="a">The first Stats object to combine.</param>
+        /// <param name="b">The second Stats object to combine.</param>
+        /// <returns>The combined Stats object.</returns>
+        public static Stats operator -(Stats a, Stats b)
+        {
+            Stats c = new Stats();
+
+            int i = c._rawAdditiveData.Length;
+            while (--i >= 0)
+            {
+                c._rawAdditiveData[i] = a._rawAdditiveData[i] - b._rawAdditiveData[i];
+            }
+            i = c._rawMultiplicativeData.Length;
+            while (--i >= 0)
+            {
+                c._rawMultiplicativeData[i] = (1 + a._rawMultiplicativeData[i]) / (1 + b._rawMultiplicativeData[i]) - 1;
+            }
+            i = c._rawInverseMultiplicativeData.Length;
+            while (--i >= 0)
+            {
+                c._rawInverseMultiplicativeData[i] = 1 - (1 - a._rawInverseMultiplicativeData[i]) / (1 - b._rawInverseMultiplicativeData[i]);
+            }
+
+            //i = c._rawNoStackData.Length;
+            //while (--i >= 0)
+            //{
+            //    c._rawNoStackData[i] = Math.Max(a._rawNoStackData[i], b._rawNoStackData[i]);
+            //}
+            //int specialEffectCount = a._rawSpecialEffectDataSize + b._rawSpecialEffectDataSize;
+            //if (specialEffectCount > 0)
+            //{
+            //    c._rawSpecialEffectData = new SpecialEffect[specialEffectCount];
+            //    c._rawSpecialEffectDataSize = specialEffectCount;
+            //    if (a._rawSpecialEffectDataSize > 0)
+            //    {
+            //        Array.Copy(a._rawSpecialEffectData, c._rawSpecialEffectData, a._rawSpecialEffectDataSize);
+            //    }
+            //    if (b._rawSpecialEffectDataSize > 0)
+            //    {
+            //        Array.Copy(b._rawSpecialEffectData, 0, c._rawSpecialEffectData, a._rawSpecialEffectDataSize, b._rawSpecialEffectDataSize);
+            //    }
+            //}
+            return c;
+        }
+
         public void AddSpecialEffect(SpecialEffect specialEffect)
         {
             EnsureSpecialEffectCapacity(_rawSpecialEffectDataSize + 1);

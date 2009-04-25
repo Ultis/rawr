@@ -234,6 +234,10 @@ namespace Rawr
 		{
 			return Instance.GetCharacterStats(character);
 		}
+        public static Stats GetItemStats(Character character, Item additionalItem)
+        {
+            return Instance.GetItemStats(character, additionalItem);
+        }
 		public static Stats GetCharacterStats(Character character, Item additionalItem)
 		{
 			return Instance.GetCharacterStats(character, additionalItem);

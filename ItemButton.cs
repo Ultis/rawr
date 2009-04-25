@@ -21,6 +21,8 @@ namespace Rawr
 			//ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 		}
 
+        public IFormItemSelectionProvider FormItemSelection { get; set; }
+
 		private bool _readOnly = false;
 		public bool ReadOnly
 		{
@@ -66,7 +68,7 @@ namespace Rawr
 		{
 			if (e.Button == MouseButtons.Left && !ReadOnly)
 			{
-				(this.FindForm() as IFormItemSelectionProvider).FormItemSelection.Show(this, CharacterSlot);
+				(FormItemSelection ?? (this.FindForm() as IFormItemSelectionProvider)).FormItemSelection.Show(this, CharacterSlot);
 			}
 			else if (e.Button == MouseButtons.Right && SelectedItemInstance != null)
 			{

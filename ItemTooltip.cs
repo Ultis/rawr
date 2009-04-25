@@ -182,7 +182,7 @@ namespace Rawr
                             }
 
                             Stats relevantStats = Calculations.GetRelevantStats(_currentItem.Stats);
-                            var positiveStats = relevantStats.Values(x => x > 0);
+                            var positiveStats = relevantStats.Values(x => x != 0);
 
                             #region Calculate statHeight
                             var xGrid = new

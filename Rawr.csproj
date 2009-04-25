@@ -124,6 +124,12 @@
     <Compile Include="CalculationDisplay.Designer.cs">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="ComparisonSetControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ComparisonSetControl.Designer.cs">
+      <DependentUpon>ComparisonSetControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEnterWowheadFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -153,6 +159,12 @@
     </Compile>
     <Compile Include="FormChooseCharacter.designer.cs">
       <DependentUpon>FormChooseCharacter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormItemComparison.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemComparison.Designer.cs">
+      <DependentUpon>FormItemComparison.cs</DependentUpon>
     </Compile>
     <Compile Include="FormItemFilter.cs">
       <SubType>Form</SubType>
@@ -344,6 +356,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormGemmingTemplates.resx">
       <DependentUpon>FormGemmingTemplates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormItemComparison.resx">
+      <DependentUpon>FormItemComparison.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormItemEditor.resx">

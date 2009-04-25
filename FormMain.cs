@@ -2164,5 +2164,12 @@ namespace Rawr
                 bw.RunWorkerAsync(filterForm.WowheadFilter);
             }
         }
+
+        private void itemComparisonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormItemComparison itemCompare = new FormItemComparison();
+            itemCompare.BaseCharacter = Character;
+            itemCompare.Show();
+        }
     }
 }

@@ -19,6 +19,17 @@ namespace Rawr
 			ItemToolTip.Instance.SetToolTip(this, "");
 		}
 
+        private IFormItemSelectionProvider _formItemSelection;
+        public IFormItemSelectionProvider FormItemSelection
+        {
+            get { return _formItemSelection; }
+            set
+            {
+                _formItemSelection = value;
+                itemButtonItem.FormItemSelection = value;
+            }
+        }
+
 		public override string Text { get { return itemButtonItem.Text; } set { itemButtonItem.Text = value; } }
 		public Character.CharacterSlot CharacterSlot { get { return itemButtonItem.CharacterSlot; } set { itemButtonItem.CharacterSlot = value; } }
         public ItemInstance SelectedItem { get { return itemButtonItem.SelectedItemInstance; } set { itemButtonItem.SelectedItemInstance = value; UpdateSelectedItem(); } }
@@ -69,16 +80,18 @@ namespace Rawr
 
 		public void UpdateSelectedItem()
 		{
-            if (SelectedEnchant != null)
+            if (Width < 50 || Height < 60)
             {
-                buttonEnchant.Text = SelectedEnchant.ShortName;
+                if (SelectedEnchant == null) buttonEnchant.Text = "None";
+                else buttonEnchant.Text = SelectedEnchant.ReallyShortName;
             }
+            else if (SelectedEnchant != null) buttonEnchant.Text = SelectedEnchant.ShortName ?? "No Enchant";
             itemButtonItem.UpdateSelectedItem();
 		}
 
 		private void buttonEnchant_Click(object sender, EventArgs e)
 		{
-			(this.FindForm() as IFormItemSelectionProvider).FormItemSelection.Show(this, CharacterSlot);
+            (FormItemSelection ?? (this.FindForm() as IFormItemSelectionProvider)).FormItemSelection.Show(this, CharacterSlot);
 		}
 
 		void buttonEnchant_MouseLeave(object sender, EventArgs e)

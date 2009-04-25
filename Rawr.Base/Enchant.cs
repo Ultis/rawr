@@ -53,6 +53,22 @@ namespace Rawr
             }
         }
 
+        public string ReallyShortName
+        {
+            get
+            {
+                if (Id == 0) return "None";
+                string[] split = Name.Split(' ');
+                if (split.Length > 1) 
+                {
+                    string ret = "";
+                    foreach (string s in split) { ret += s.Substring(0, 1); }
+                    return ret;
+                }
+                return Name.Substring(0, 5);
+            }
+        }
+
         /// <summary>
         /// The slot that the enchant is applied to. If the enchant is available on multiple slots,
         /// define the enchant multiple times, once for each slot.
