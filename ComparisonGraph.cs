@@ -192,6 +192,18 @@ namespace Rawr
             this.Invalidate();
         }
 
+        private string Shorten(float number)
+        {
+            string sign = number < 0 ? "-" : "";
+            number = (float)Math.Abs(number);
+            if (number < 100) return sign + Math.Round(number, 2).ToString();
+            else if (number < 1000) return sign + Math.Round(number).ToString();
+            else if (number < 10000) return sign + Math.Round(number / 1000, 2).ToString() + "k";
+            else if (number < 100000) return sign + Math.Round(number / 1000, 1).ToString() + "k";
+            else if (number < 1000000) return sign + Math.Round(number / 1000).ToString() + "k";
+            else return sign + Math.Round(number / 1000000, 2).ToString() + "m";
+         }
+
         private Bitmap _prerenderedGraph = null;
         public Bitmap PrerenderedGraph
         {
@@ -392,7 +404,7 @@ namespace Rawr
                             }
                             g.DrawLine(p1, kvp.Value, 36, kvp.Value, 39);
                             g.DrawLine(p2, kvp.Value, 41, kvp.Value, _prerenderedGraph.Height);
-                            g.DrawString(kvp.Key.ToString(), this.Font, b, kvp.Value, 36, formatTick);
+                            g.DrawString(Shorten(kvp.Key), this.Font, b, kvp.Value, 36, formatTick);
                             if (kvp.Key < 0) negAlt = !negAlt;
                             else if (kvp.Key > 0) posAlt = !posAlt;
                         }

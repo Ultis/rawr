@@ -79,7 +79,7 @@ namespace Rawr
             get
             {
                 if (_itemComparison == null || _itemComparison.IsDisposed)
-                    _itemComparison = new FormItemComparison();
+                    _itemComparison = new FormItemComparison(Character);
                 return _itemComparison;
             }
         }
@@ -248,7 +248,7 @@ namespace Rawr
 					Character.CurrentModel = null;
 					
 					Calculations.CalculationOptionsPanel.Character = _character;
-					ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character = ItemComparison.BaseCharacter =
+                    ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character = ItemComparison.BaseCharacter = 
 						ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
@@ -277,6 +277,9 @@ namespace Rawr
 						comboBoxClass.Text = Character.Class.ToString();
 						_character_ClassChanged(null, null);
 					}
+
+                    _itemComparison.Hide();
+                    _itemComparison.Dispose();
 
 					_loadingCharacter = false;
                     _character.IsLoading = false;
@@ -2212,7 +2215,6 @@ namespace Rawr
 
         private void itemComparisonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ItemComparison.BaseCharacter = Character;
             ItemComparison.Show();
         }
     }

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-    public partial class FormItemComparison : Form, IFormItemSelectionProvider
+    public partial class FormItemComparison : Form
     {
 
         private List<ComparisonSetControl> comparisonSets;
@@ -21,11 +21,20 @@ namespace Rawr
             get { return _baseCharacter; }
             set
             {
+                if (_baseCharacter != null)
+                {
+                    _baseCharacter.CalculationsInvalidated -= new EventHandler(UpdateCalculations);
+                }
                 _baseCharacter = value;
                 if (_baseCharacter != null)
                 {
-                    FormItemSelection.Character = _baseCharacter;
                     _baseCharacter.CalculationsInvalidated += new EventHandler(UpdateCalculations);
+
+                    Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[_baseCharacter.CurrentModel], true);
+                    if (icon != null)
+                    {
+                        this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
+                    }
 
                     foreach (ComparisonSetControl csc in comparisonSets) csc.BaseCharacter = BaseCharacter;
                     comparisonGraph.Character = BaseCharacter;
@@ -52,7 +61,7 @@ namespace Rawr
             }
         }
 
-        public FormItemComparison()
+        public FormItemComparison(Character character)
         {
             InitializeComponent();
 
@@ -60,12 +69,14 @@ namespace Rawr
             comparisonPages = new List<TabPage>();
             comparisonButtons = new List<Button>();
 
+            BaseCharacter = character;
+
             AddComparisonSet(1);            
         }
 
         private TabPage AddComparisonSet(int number)
         {
-            ComparisonSetControl set = new ComparisonSetControl();
+            ComparisonSetControl set = new ComparisonSetControl(BaseCharacter);
             TabPage tabPage = new TabPage();
             Button button = new Button();
 
@@ -111,19 +122,7 @@ namespace Rawr
             _currentCalculations = null;
             if (BaseCharacter != null)
             {
-                FormItemSelection.CurrentCalculations = CurrentCalculations;
                 UpdateGraph(this, EventArgs.Empty);
-            }
-        }
-
-        private FormItemSelection _formItemSelection;
-        public FormItemSelection FormItemSelection
-        {
-            get
-            {
-                if (_formItemSelection == null || _formItemSelection.IsDisposed)
-                    _formItemSelection = new FormItemSelection();
-                return _formItemSelection;
             }
         }
 

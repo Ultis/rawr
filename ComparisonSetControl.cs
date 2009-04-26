@@ -11,7 +11,7 @@ namespace Rawr
     public partial class ComparisonSetControl : UserControl, IFormItemSelectionProvider
     {
 
-        public ComparisonSetControl()
+        public ComparisonSetControl(Character character)
         {
             InitializeComponent();
 
@@ -59,7 +59,9 @@ namespace Rawr
             itemButtonWaist.FormItemSelection = this;
             itemButtonWrist.FormItemSelection = this;
 
-            ItemChanged(null, null);
+            BaseCharacter = character;
+
+            ItemChanged(this, EventArgs.Empty);
         }
 
         private Character _deltaCharacter;
@@ -81,7 +83,7 @@ namespace Rawr
                 if (_baseCharacter != null)
                 {
                     _baseCharacter.CalculationsInvalidated += new EventHandler(UpdateCalculations);
-                    UpdateCalculations(null, null);
+                    UpdateCalculations(this, EventArgs.Empty);
                 }
             }
         }
@@ -128,11 +130,7 @@ namespace Rawr
             {
                 if (_currentCalculations == null)
                 {
-                    if (CompositeCharacter != null)
-                    {
-                        _currentCalculations = Calculations.GetCharacterCalculations(CompositeCharacter, null, true, true, true);
-                    }
-                    else return null;
+                    UpdateCalculations(this, EventArgs.Empty);
                 }
                 return _currentCalculations;
             }
@@ -147,7 +145,7 @@ namespace Rawr
             if (CompositeCharacter != null)
             {
                 FormItemSelection.Character = CompositeCharacter;
-                FormItemSelection.CurrentCalculations = CurrentCalculations;
+                _currentCalculations = Calculations.GetCharacterCalculations(CompositeCharacter, null, true, true, true);
                 if (CalculationsInvalidated != null) CalculationsInvalidated(this, EventArgs.Empty);
             }
         }
