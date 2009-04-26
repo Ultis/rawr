@@ -156,15 +156,20 @@ namespace Rawr
 
                 if (probToStack > 0)
                 {
-                    // For now, assume it stacks to max, if it can stack at all
-                    float buildTime = triggerInterval / triggerChance * MaxStack;
-                    float value;
-                    if (fightDuration > buildTime)
-                        value = buildTime * (MaxStack - 1) / 2 + (fightDuration - buildTime) * MaxStack;
+                    if (fightDuration == 0.0f)
+                        averageStack = MaxStack;        // Infinite time, it will stack to Max
                     else
-                        value = buildTime * (MaxStack - 1) / 2;
+                    {
+                        // For now, assume it stacks to max, if it can stack at all
+                        float buildTime = triggerInterval / triggerChance * MaxStack;
+                        float value;
+                        if (fightDuration > buildTime)
+                            value = buildTime * (MaxStack - 1) / 2 + (fightDuration - buildTime) * MaxStack;
+                        else
+                            value = buildTime * (MaxStack - 1) / 2;
 
-                    averageStack = value / fightDuration;
+                        averageStack = value / fightDuration;
+                    }
                 }
                 else
                 {
