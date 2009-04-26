@@ -99,7 +99,7 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance)
         {
-            return Stats * GetAverageUptime(triggerInterval, triggerChance);
+            return GetAverageStats(triggerInterval, triggerChance, 3f, 0f);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Rawr
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed)
         {
-            return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed);
+            return GetAverageStats(triggerInterval, triggerChance, attackSpeed, 0f);
         }
 
         /// <summary>
