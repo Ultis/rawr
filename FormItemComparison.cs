@@ -120,6 +120,7 @@ namespace Rawr
         public void UpdateCalculations(object sender, EventArgs e)
         {
             _currentCalculations = null;
+            foreach (ComparisonSetControl csc in comparisonSets) csc.CurrentCalculations = null;
             if (BaseCharacter != null)
             {
                 UpdateGraph(this, EventArgs.Empty);

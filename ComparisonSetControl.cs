@@ -134,6 +134,7 @@ namespace Rawr
                 }
                 return _currentCalculations;
             }
+            set { _currentCalculations = value; }
         }
 
         public event EventHandler CalculationsInvalidated;
