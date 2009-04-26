@@ -74,15 +74,6 @@ namespace Rawr
         }
 
         private FormItemComparison _itemComparison;
-        public FormItemComparison ItemComparison
-        {
-            get
-            {
-                if (_itemComparison == null || _itemComparison.IsDisposed)
-                    _itemComparison = new FormItemComparison(Character);
-                return _itemComparison;
-            }
-        }
 
         private FormItemFilter _formItemFilter;
         public FormItemFilter FormItemFilter
@@ -248,7 +239,7 @@ namespace Rawr
 					Character.CurrentModel = null;
 					
 					Calculations.CalculationOptionsPanel.Character = _character;
-                    ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character = ItemComparison.BaseCharacter = 
+                    ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character =
 						ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
@@ -258,6 +249,8 @@ namespace Rawr
 						itemButtonWaist.Character = itemButtonMainHand.Character = itemButtonOffHand.Character =
 						itemButtonProjectile.Character = itemButtonProjectileBag.Character = itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
+
+                    if (_itemComparison != null && !_itemComparison.IsDisposed) _itemComparison.Character = _character;
 
 					_character.ClassChanged += new EventHandler(_character_ClassChanged);
 					_character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
@@ -278,8 +271,11 @@ namespace Rawr
 						_character_ClassChanged(null, null);
 					}
 
-                    _itemComparison.Hide();
-                    _itemComparison.Dispose();
+                    //if (_itemComparison != null && !_itemComparison.IsDisposed)
+                    //{
+                    //    _itemComparison.Hide();
+                    //    _itemComparison.Dispose();
+                    //}
 
 					_loadingCharacter = false;
                     _character.IsLoading = false;
@@ -2215,7 +2211,11 @@ namespace Rawr
 
         private void itemComparisonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ItemComparison.Show();
+            if (_itemComparison == null || _itemComparison.IsDisposed)
+            {
+                _itemComparison = new FormItemComparison(Character);
+            }
+            _itemComparison.Show();
         }
     }
 }

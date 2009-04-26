@@ -266,7 +266,7 @@ namespace Rawr
                         minOverallPoints = (float)Math.Floor(Math.Round(minOverallPoints, 2));
                         float minScale = 0f;
                         float minRoundTo = 2f;
-                        if (minOverallPoints <= -10) minScale = (int)Math.Pow(10, Math.Floor(Math.Log10(-minOverallPoints) - .3f));
+                        if (minOverallPoints <= -10) minRoundTo = (int)Math.Pow(10, Math.Floor(Math.Log10(-minOverallPoints) - .3f));
                         minScale = minRoundTo * (float)Math.Floor(minOverallPoints / minRoundTo);
 
                         float totalScale = maxScale - minScale;

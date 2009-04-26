@@ -15,31 +15,30 @@ namespace Rawr
         private List<Button> comparisonButtons;
         private List<TabPage> comparisonPages;
 
-        private Character _baseCharacter;
-        public Character BaseCharacter
+        private Character _character;
+        public Character Character
         {
-            get { return _baseCharacter; }
+            get { return _character; }
             set
             {
-                if (_baseCharacter != null)
+                if (_character != null)
                 {
-                    _baseCharacter.CalculationsInvalidated -= new EventHandler(UpdateCalculations);
+                    _character.CalculationsInvalidated -= new EventHandler(UpdateCalculations);
                 }
-                _baseCharacter = value;
-                if (_baseCharacter != null)
+                _character = value;
+                if (_character != null)
                 {
-                    _baseCharacter.CalculationsInvalidated += new EventHandler(UpdateCalculations);
+                    _character.CalculationsInvalidated += new EventHandler(UpdateCalculations);
 
-                    Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[_baseCharacter.CurrentModel], true);
+                    Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[_character.CurrentModel], true);
                     if (icon != null)
                     {
                         this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
                     }
 
-                    foreach (ComparisonSetControl csc in comparisonSets) csc.BaseCharacter = BaseCharacter;
-                    comparisonGraph.Character = BaseCharacter;
+                    comparisonGraph.Character = Character;
 
-                    UpdateCalculations(null, null);
+                    UpdateCalculations(this, EventArgs.Empty);
                 }
             }
         }
@@ -51,9 +50,9 @@ namespace Rawr
             {
                 if (_currentCalculations == null)
                 {
-                    if (BaseCharacter != null)
+                    if (Character != null)
                     {
-                        _currentCalculations = Calculations.GetCharacterCalculations(BaseCharacter, null, true, true, true);
+                        _currentCalculations = Calculations.GetCharacterCalculations(Character, null, true, true, true);
                     }
                     else return null;
                 }
@@ -69,14 +68,14 @@ namespace Rawr
             comparisonPages = new List<TabPage>();
             comparisonButtons = new List<Button>();
 
-            BaseCharacter = character;
+            Character = character;
 
             AddComparisonSet(1);            
         }
 
         private TabPage AddComparisonSet(int number)
         {
-            ComparisonSetControl set = new ComparisonSetControl(BaseCharacter);
+            ComparisonSetControl set = new ComparisonSetControl(this);
             TabPage tabPage = new TabPage();
             Button button = new Button();
 
@@ -107,7 +106,6 @@ namespace Rawr
             set.Size = new System.Drawing.Size(210, 305);
             set.TabIndex = 2;
             set.CalculationsInvalidated += new EventHandler(UpdateGraph);
-            set.BaseCharacter = BaseCharacter;
             set.Tag = number;
 
             comparisonSets.Add(set);
@@ -121,7 +119,7 @@ namespace Rawr
         {
             _currentCalculations = null;
             foreach (ComparisonSetControl csc in comparisonSets) csc.CurrentCalculations = null;
-            if (BaseCharacter != null)
+            if (Character != null)
             {
                 UpdateGraph(this, EventArgs.Empty);
             }
@@ -137,13 +135,11 @@ namespace Rawr
                 Item item = new Item();
                 item.Name = "Comparison Set #" + ++i;
                 item.Quality = Item.ItemQuality.Temp;
-                item.Stats = Calculations.GetItemStats(csc.CompositeCharacter, null) - Calculations.GetItemStats(BaseCharacter, null);
+                item.Stats = Calculations.GetItemStats(csc.CompositeCharacter, null) - Calculations.GetItemStats(Character, null);
                 
                 ComparisonCalculationBase comp = Calculations.GetCharacterComparisonCalculations(CurrentCalculations, csc.CurrentCalculations, item.Name, false);
                 comp.Item = item;
                 compareCalcs.Add(comp);
-
-
             }
 
             comparisonGraph.ItemCalculations = compareCalcs.ToArray();
