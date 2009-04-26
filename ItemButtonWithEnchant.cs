@@ -82,10 +82,10 @@ namespace Rawr
 		{
             if (Width < 50 || Height < 60)
             {
-                if (SelectedEnchant == null) buttonEnchant.Text = "None";
+                if (SelectedEnchant == null) buttonEnchant.Text = "";
                 else buttonEnchant.Text = SelectedEnchant.ReallyShortName;
             }
-            else if (SelectedEnchant != null) buttonEnchant.Text = SelectedEnchant.ShortName ?? "No Enchant";
+            else if (SelectedEnchant != null) buttonEnchant.Text = SelectedEnchant.ShortName;
             itemButtonItem.UpdateSelectedItem();
 		}
 

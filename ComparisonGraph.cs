@@ -347,19 +347,23 @@ namespace Rawr
                         float graphZero = (float)Math.Round(graphStart - minScale / totalScale * graphWidth);
                         ticks[0] = graphZero;
 
-                        int maxTicks = (int)Math.Floor(maxScale / totalScale * 8f);
-                        int minTicks = (int)Math.Floor(-minScale / totalScale * 8f);
+                        int maxTicks = (int)Math.Round(maxScale / totalScale * 8f);
+                        int minTicks = (int)Math.Round(-minScale / totalScale * 8f);
 
-                        float tickInc = (float)(Math.Floor(totalScale / Math.Max(maxRoundTo, minRoundTo)) * Math.Max(maxRoundTo, minRoundTo) / 8f);
+                        float tickInc;// = (float)(Math.Floor(totalScale / Math.Max(maxRoundTo, minRoundTo)) * Math.Max(maxRoundTo, minRoundTo) / 8f);
+                        if (minTicks > maxTicks) tickInc = -minScale / minTicks;
+                        else tickInc = maxScale / maxTicks;
 
                         for (int i = 0; i < maxTicks; i++)
                         {
-                            ticks[(i + 1) * tickInc] = (float)Math.Round(graphZero + (i + 1) * tickInc / totalScale * graphWidth);
+                            if ((i + 1) * tickInc <= maxScale)
+                                ticks[(i + 1) * tickInc] = (float)Math.Round(graphZero + (i + 1) * tickInc / totalScale * graphWidth);
                         }
 
                         for (int i = 0; i < minTicks; i++)
                         {
-                            ticks[(i + 1) * -tickInc] = (float)Math.Round(graphZero + (i + 1) * -tickInc / totalScale * graphWidth);
+                            if ((i + 1) * -tickInc >= minScale)
+                                ticks[(i + 1) * -tickInc] = (float)Math.Round(graphZero + (i + 1) * -tickInc / totalScale * graphWidth);
                         }
 
                         #region Pens
@@ -493,103 +497,41 @@ namespace Rawr
                             g.DrawString(item.Name, this.Font, brushItemNames, rectItemName, formatItemNames);
                             #endregion
 
-                            if (item.OverallPoints < 0.00001f || item.OverallPoints > 0.00001f || DisplayMode == GraphDisplayMode.Overall || DisplayMode == GraphDisplayMode.CustomSubpoints)
+                            int posStart = (int)graphZero + 1;
+                            int negStart = (int)graphZero - 1;
+                            int barWidth = 0;
+
+                            #region Sub Point Display Mode
+                            if (DisplayMode == GraphDisplayMode.Subpoints)
                             {
-                                int posStart = (int)graphZero + 1;
-                                int negStart = (int)graphZero - 1;
-                                int barWidth = 0;
-                                float scale = 1;
-
-                                #region Sub Point Display Mode
-                                if (DisplayMode == GraphDisplayMode.Subpoints)
+                                for (int subNumber = 0; subNumber < item.SubPoints.Length && subNumber < colorSubPointsA.Length; subNumber++)
                                 {
-                                    for (int subNumber = 0; subNumber < item.SubPoints.Length && subNumber < colorSubPointsA.Length; subNumber++)
+                                    float subPoint = item.SubPoints[subNumber];
+
+                                    if (subPoint < 0)
                                     {
-                                        float subPoint = item.SubPoints[subNumber];
-
-                                        if (subPoint < 0)
-                                        {
-                                            barWidth = (int)Math.Round(subPoint / minScale * (graphZero - graphStart));
-                                            rectSubPoint = new Rectangle(negStart - barWidth, 50 + itemNumber * 36, barWidth, 24);
-                                            negStart -= barWidth;
-                                            scale = minScale;
-                                        }
-                                        else if (subPoint > 0)
-                                        {
-                                            barWidth = (int)Math.Round(subPoint / maxScale * (graphEnd - graphZero));
-                                            rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
-                                            posStart += barWidth;
-                                            scale = maxScale;
-                                        }
-                                        else
-                                        {
-                                            rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, 0, 24);
-                                        }
-
-                                        if (barWidth > 0)
-                                        {
-                                            brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorSubPointsA[subNumber], colorSubPointsB[subNumber],
-                                                67f + (20f * subPoint / scale));
-                                            blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
-                                            blendSubPoint.Colors = new Color[] { colorSubPointsA[subNumber], colorSubPointsB[subNumber], colorSubPointsA[subNumber] };
-                                            blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
-                                            brushSubPointFill.InterpolationColors = blendSubPoint;
-
-                                            g.FillRectangle(brushSubPointFill, rectSubPoint);
-                                            g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-                                            g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-                                            g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-
-                                            if (Math.Abs(rectSubPoint.Width) > 7)
-                                                g.DrawString(subPoint.ToString("F"),
-                                                    this.Font, brushSubPoints[subNumber], rectSubPoint, formatSubPoint);
-                                        }
-
-                                    }
-                                    g.DrawString(RoundValues ? item.OverallPoints.ToString("F") :
-                                            item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle(posStart + 2, 50 + itemNumber * 36, 50, 24), formatOverall);
-                                }
-                                #endregion
-
-                                #region Overall Display Mode
-                                else if (DisplayMode == GraphDisplayMode.Overall || DisplayMode == GraphDisplayMode.CustomSubpoints)
-                                {
-                                    float points = item.OverallPoints;
-                                    Color colorA = Color.FromArgb(128, 64, 0, 64);
-                                    Color colorB = Color.FromArgb(128, 128, 0, 128);
-                                    if (DisplayMode != GraphDisplayMode.Overall &&Sort != ComparisonSort.Alphabetical && Sort != ComparisonSort.Overall)
-                                    {
-                                        points = item.SubPoints[(int)Sort];
-
-                                        if (DisplayMode != GraphDisplayMode.CustomSubpoints)
-                                        {
-                                            colorA = colorSubPointsA[(int)Sort];
-                                            colorB = colorSubPointsB[(int)Sort];
-                                        }
-                                    }
-                                    if (points < 0)
-                                    {
-                                        barWidth = (int)Math.Round(points / minScale * (graphZero - graphStart));
+                                        barWidth = (int)Math.Round(subPoint / minScale * (graphZero - graphStart));
                                         rectSubPoint = new Rectangle(negStart - barWidth, 50 + itemNumber * 36, barWidth, 24);
-                                        scale = minScale;
+                                        negStart -= barWidth;
                                     }
-                                    else if (points > 0)
+                                    else if (subPoint > 0)
                                     {
-                                        barWidth = (int)Math.Round(points / maxScale * (graphEnd - graphZero));
+                                        barWidth = (int)Math.Round(subPoint / maxScale * (graphEnd - graphZero));
                                         rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
-                                        scale = maxScale;
+                                        posStart += barWidth;
                                     }
                                     else
                                     {
-                                        rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
+                                        barWidth = 0;
+                                        rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, 0, 24);
                                     }
 
                                     if (barWidth > 0)
                                     {
-                                        brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorA, colorB,
-                                            67f + (20f * points / scale));
+                                        brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorSubPointsA[subNumber], colorSubPointsB[subNumber],
+                                            67f + (20f * subPoint / totalScale));
                                         blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
-                                        blendSubPoint.Colors = new Color[] { colorA, colorB, colorA };
+                                        blendSubPoint.Colors = new Color[] { colorSubPointsA[subNumber], colorSubPointsB[subNumber], colorSubPointsA[subNumber] };
                                         blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
                                         brushSubPointFill.InterpolationColors = blendSubPoint;
 
@@ -598,13 +540,68 @@ namespace Rawr
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 
-                                        g.DrawString(RoundValues ? points.ToString("F") :
-                                            points.ToString(), this.Font, brushOverall, new Rectangle(posStart + barWidth + 2, 50 + itemNumber * 36, 50, 24), formatOverall);
+                                        if (Math.Abs(rectSubPoint.Width) > 7)
+                                            g.DrawString(subPoint.ToString("F"),
+                                                this.Font, brushSubPoints[subNumber], rectSubPoint, formatSubPoint);
+                                    }
+
+                                }
+                                g.DrawString(RoundValues ? item.OverallPoints.ToString("F") :
+                                        item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle(posStart + 2, 50 + itemNumber * 36, 50, 24), formatOverall);
+                            }
+                            #endregion
+
+                            #region Overall Display Mode
+                            else if (DisplayMode == GraphDisplayMode.Overall || DisplayMode == GraphDisplayMode.CustomSubpoints)
+                            {
+                                float points = item.OverallPoints;
+                                Color colorA = Color.FromArgb(128, 64, 0, 64);
+                                Color colorB = Color.FromArgb(128, 128, 0, 128);
+                                if (DisplayMode != GraphDisplayMode.Overall && Sort != ComparisonSort.Alphabetical && Sort != ComparisonSort.Overall)
+                                {
+                                    points = item.SubPoints[(int)Sort];
+
+                                    if (DisplayMode != GraphDisplayMode.CustomSubpoints)
+                                    {
+                                        colorA = colorSubPointsA[(int)Sort];
+                                        colorB = colorSubPointsB[(int)Sort];
                                     }
                                 }
-                                #endregion
+                                if (points < 0)
+                                {
+                                    barWidth = (int)Math.Round(points / minScale * (graphZero - graphStart));
+                                    rectSubPoint = new Rectangle(negStart - barWidth, 50 + itemNumber * 36, barWidth, 24);
+                                }
+                                else if (points > 0)
+                                {
+                                    barWidth = (int)Math.Round(points / maxScale * (graphEnd - graphZero));
+                                    rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
+                                }
+                                else
+                                {
+                                    rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
+                                }
 
+                                if (barWidth > 0)
+                                {
+                                    brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorA, colorB,
+                                        67f + (20f * points / totalScale));
+                                    blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
+                                    blendSubPoint.Colors = new Color[] { colorA, colorB, colorA };
+                                    blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+                                    brushSubPointFill.InterpolationColors = blendSubPoint;
+
+                                    g.FillRectangle(brushSubPointFill, rectSubPoint);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+
+                                    g.DrawString(RoundValues ? points.ToString("F") :
+                                        points.ToString(), this.Font, brushOverall, new Rectangle(posStart + barWidth + 2, 50 + itemNumber * 36, 50, 24), formatOverall);
+                                }
                             }
+                            #endregion
+
                         }
                         if (hasItemAvailabilty)
                         {
