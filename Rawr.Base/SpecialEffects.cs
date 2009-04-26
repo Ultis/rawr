@@ -799,6 +799,7 @@ namespace Rawr
             {
                 // Majestic Dragon Figurine
                 stats.ExtraSpiritWhileCasting += 180;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 18.0f }, 10f, 0f, 1.0f, 10));
             }
             else if (line.StartsWith("Your spells have a chance to increase your haste rating by 505 for 10 secs."))
             {

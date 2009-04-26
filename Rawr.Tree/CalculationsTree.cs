@@ -352,14 +352,18 @@ namespace Rawr.Tree
             Stats result = effects.estimateAll(FightDuration, CastFraction, HealFraction, CritsFraction, out Healing);
             #endregion
 
+            Healing = resultNew.Healed;
             return new Stats()
             {
                 Spirit = resultNew.Spirit,
                 HasteRating = resultNew.HasteRating,
                 SpellPower = resultNew.SpellPower,
-                Mp5 = resultNew.Mp5,
+                CritRating = resultNew.CritRating,
+                Mp5 = resultNew.Mp5 + resultNew.ManaRestore,
                 SpellCombatManaRegeneration = resultNew.SpellCombatManaRegeneration,
                 BonusHealingReceived = resultNew.BonusHealingReceived,
+                SpellsManaReduction = resultNew.SpellsManaReduction,
+                
             };
         }
         
@@ -399,7 +403,7 @@ namespace Rawr.Tree
 
             #region WildGrowthPerMinute
             float wgCastTime = wildGrowth.CastTime / 60f * wgPerMin;
-            float wgMPS = wildGrowth.manaCost / 60f * wgPerMin;
+            float wgMPS = wildGrowth.ManaCost / 60f * wgPerMin;
             float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * wgPerMin;  // Assume no overhealing
             castsPerMinute += wgPerMin;
             healsPerMinute += wgPerMin * 10; // assumption it will go 10 times ;)
@@ -415,7 +419,7 @@ namespace Rawr.Tree
             if (rejuvOnTank)
             {
                 hotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
-                hotsMPS += rejuvenate.manaCost / rejuvenate.Duration;
+                hotsMPS += rejuvenate.ManaCost / rejuvenate.Duration;
                 hotsCastTime += rejuvenate.CastTime / rejuvenate.Duration;
                 hotsCastsPerMinute += 60f / rejuvenate.Duration;
                 hotsHealsPerMinute += 20; // hot component
@@ -423,7 +427,7 @@ namespace Rawr.Tree
             if (rgOnTank)
             {
                 hotsHPS += regrowth.HPSHoT + regrowth.HPS / regrowth.Duration;
-                hotsMPS += regrowth.manaCost / regrowth.Duration;
+                hotsMPS += regrowth.ManaCost / regrowth.Duration;
                 hotsCastTime += regrowth.CastTime / regrowth.Duration;
                 hotsCastsPerMinute += 60f / regrowth.Duration;
                 hotsCritsPerMinute += 60f / regrowth.Duration * regrowth.CritPercent / 100f;
@@ -434,7 +438,7 @@ namespace Rawr.Tree
             {
                            // HoT part                 Bloom Part
                 hotsHPS += lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloomDuration;
-                hotsMPS += lifebloom.manaCost / lifebloomDuration;
+                hotsMPS += lifebloom.ManaCost / lifebloomDuration;
                 hotsCastTime += lifebloom.CastTime / lifebloomDuration;
                 hotsCastsPerMinute += 60f / lifebloomDuration;
                 hotsHealsPerMinute += 60; // hot component
@@ -516,7 +520,7 @@ namespace Rawr.Tree
             float effectiveManaBurnTankHots = hotsMPS + wgMPS - manaRegen / 5f;
             float manaAvailForPrimaryHeal = (extraMana + stats.Mana) - effectiveManaBurnTankHots * calcOpts.FightDuration;
             float primaryHealMpsAvail = manaAvailForPrimaryHeal / calcOpts.FightDuration;
-            float mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
+            float mpsHealing = tpsHealing * primaryHeal.ManaCost / primaryHeal.CastTime;
 
             float unusedMana = 0f;
             float unusedCastTimeFrac = 0f;
@@ -567,7 +571,7 @@ namespace Rawr.Tree
                 hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
                 hpsHeal100 = tpsHeal100 * primaryHeal.HPS;
             }
-            mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
+            mpsHealing = tpsHealing * primaryHeal.ManaCost / primaryHeal.CastTime;
             castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
             critsPerMinute += 60f * tpsHealing / primaryHeal.CastTime * primaryHeal.CritPercent / 100f;
             float primaryCPM = 60f * tpsHealing / primaryHeal.CastTime;
@@ -863,8 +867,9 @@ namespace Rawr.Tree
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 
             #region Rotations
-            float ExtraHealing = 0f;
+            Stats combinedStats = calculatedStats.BasicStats;
             Stats stats = calculatedStats.BasicStats;
+            float ExtraHPS = 0f;
             Rotation rot = predefinedRotation(calcOpts.Rotation, stats, calcOpts, calculatedStats);
             int nPasses = 3, k;
             for (k = 0; k < nPasses; k++)
@@ -872,14 +877,20 @@ namespace Rawr.Tree
                 Stats procs = getTrinketStats(calculatedStats.LocalCharacter, stats,
                     rot.TotalTime, rot.TotalCastsPerMinute / 60f,
                     rot.TotalHealsPerMinute / 60f, rot.TotalCritsPerMinute / 60f,
-                    out ExtraHealing);
-                rot = predefinedRotation(calcOpts.Rotation, stats + procs, calcOpts, calculatedStats);
+                    out ExtraHPS);
+
+                
+                // Create a new stats instance that uses the proc effects
+                combinedStats = GetCharacterStats(character, additionalItem, procs);
+                rot = predefinedRotation(calcOpts.Rotation, combinedStats, calcOpts, calculatedStats);
+//                rot = predefinedRotation(calcOpts.Rotation, stats + procs, calcOpts, calculatedStats);
             }
             calculatedStats.Simulation = rot;
+            calculatedStats.BasicStats = combinedStats;     // Replace BasicStats to get Spirit while casting included
             #endregion
 
-            calculatedStats.BurstPoints = rot.MaxHPS + ExtraHealing / (rot.TotalMod * rot.TimeToOOM);
-            calculatedStats.SustainedPoints = (rot.TotalHealing + ExtraHealing) / rot.TotalTime;
+            calculatedStats.BurstPoints = rot.MaxHPS + ExtraHPS;
+            calculatedStats.SustainedPoints = (rot.TotalHealing + ExtraHPS * rot.TotalTime) / rot.TotalTime;
 
             // Penalty
             if (rot.TimeToOOM < rot.TotalTime)
@@ -906,6 +917,11 @@ namespace Rawr.Tree
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            return GetCharacterStats(character, additionalItem, new Stats());
+        }
+
+        public Stats GetCharacterStats(Character character, Item additionalItem, Stats statsProcs)
+        {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
 
             Stats statsRace = GetRacialBaseStats(character.Race);
@@ -922,7 +938,7 @@ namespace Rawr.Tree
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents + statsProcs;
 
             statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
@@ -935,7 +951,11 @@ namespace Rawr.Tree
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
-            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
+
+            // Removed, since proc effects added by GetCharacterCalculations
+//            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
+            statsTotal.ExtraSpiritWhileCasting = 0f;
+
             if (statsTotal.GreatnessProc>0) {
                 // Highest stat in combat
                 if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect)
@@ -1096,6 +1116,7 @@ namespace Rawr.Tree
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
                 NourishSpellpower = stats.NourishSpellpower,
                 SpellsManaReduction = stats.SpellsManaReduction,
+                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1164,7 +1185,8 @@ namespace Rawr.Tree
                 + stats.ReduceRejuvenationCost + stats.RejuvenationSpellpower + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
-                stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction
+                stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
+                stats.ManacostReduceWithin15OnHealingCast
                 > 0)
                 return true;
 

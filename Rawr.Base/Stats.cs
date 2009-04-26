@@ -276,7 +276,7 @@ namespace Rawr
         Heal1Min,
         Healed,
         ManaRestore,
-        SpellsManaReduction,        // How is this different from ManaRestore with 100% proc on SpellCast? Which convention do we use?
+        SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
@@ -2052,7 +2052,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.BerserkingProc] = value; }
         }
 
-        [DisplayName("Troll Divinity")]
+        [DisplayName("Bonus Healing Received")]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusHealingReceived

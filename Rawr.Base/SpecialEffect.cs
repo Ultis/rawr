@@ -99,7 +99,8 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance)
         {
-            return GetAverageStats(triggerInterval, triggerChance, 3f, 0f);
+            // Since no fightDuration given, assume stack building time  (if applicable) doesn't matter and only calculate Uptime
+            return Stats * (MaxStack * GetAverageUptime(triggerInterval, triggerChance));
         }
 
         /// <summary>
@@ -112,7 +113,8 @@ namespace Rawr
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed)
         {
-            return GetAverageStats(triggerInterval, triggerChance, attackSpeed, 0f);
+            // Since no fightDuration given, assume stack building time (if applicable) doesn't matter and only calculate Uptime
+            return Stats * (MaxStack * GetAverageUptime(triggerInterval, triggerChance, attackSpeed));
         }
 
         /// <summary>
@@ -126,7 +128,54 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
-            return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            if (MaxStack > 1)
+            {
+                return Stats * GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else
+              return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+        }
+
+        /// <summary>
+        /// Computes average stack size given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageStackSize(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            float averageStack = 0;
+            if ((MaxStack > 1) && (Cooldown == 0f))
+            {
+                // Simplified handling for stacking procs
+                float probToStack = 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
+                
+
+                if (probToStack > 0)
+                {
+                    // For now, assume it stacks to max, if it can stack at all
+                    float buildTime = triggerInterval / triggerChance * MaxStack;
+                    float value;
+                    if (fightDuration > buildTime)
+                        value = buildTime * (MaxStack - 1) / 2 + (fightDuration - buildTime) * MaxStack;
+                    else
+                        value = buildTime * (MaxStack - 1) / 2;
+
+                    averageStack = value / fightDuration;
+                }
+                else
+                {
+                    // Handle it like single stack only for now
+                    // Since no cooldown, assume it isn't stacking because Duration <  ( triggerInterval / triggerChance )
+                    averageStack = Duration / (triggerInterval / triggerChance);       // Average Uptime
+                }
+                return averageStack;
+            }
+            else
+                return GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
         }
 
         /// <summary>
@@ -155,7 +204,7 @@ namespace Rawr
         }
 
         /// <summary>
-        /// Computes average uptime of the effect given the frequency of triggers.
+        /// Computes average uptime of (atleast 1 stack of) the effect given the frequency of triggers.
         /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
         /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
@@ -169,6 +218,7 @@ namespace Rawr
             {
                 return 0f;
             }
+
             if (Cooldown > Duration)
             {
                 // fight duration is used only in this case, for the cooldown < duration case the other approximations are good enough

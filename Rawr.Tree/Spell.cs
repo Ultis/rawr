@@ -30,7 +30,14 @@ namespace Rawr.Tree
         }
         public float gcd = 1.5f;
         public float gcdBeforeHaste = 1.5f;
-        public float manaCost = 0f;
+        protected float manaCost = 0f;
+
+        virtual public float ManaCost
+        {
+            get { return checkOmenlikeProcs(); }
+//            set { manaCost = value; }
+        }
+
         public float coefDH = 0f; //coef for DirectHeal
         public float speed = 1;
         public float NGmod = 0;
@@ -90,7 +97,7 @@ namespace Rawr.Tree
         { get { return (AverageHealingwithCrit + PeriodicTick * PeriodicTicks); } }
 
         public float HPM
-        { get { return (TotalAverageHealing) / manaCost; } }
+        { get { return (TotalAverageHealing) / ManaCost; } }
 
         // Wildebees: 20090221 : Healing per cast time, considers direct healing and HoT parts
         //     Total healing divided by CastTime
@@ -101,6 +108,8 @@ namespace Rawr.Tree
         public float Duration
         { get { return periodicTicks * periodicTickTime; } }
 
+        private Stats cachedStats;  // Keep a local copy of stats used to create spell
+
         public void Initialize(CharacterCalculationsTree calcs, Stats calculatedStats)
         {
             speed = (1 + (calculatedStats.HasteRating) / TreeConstants.HasteRatingToHaste);
@@ -108,6 +117,7 @@ namespace Rawr.Tree
             critModifier *= 1f + calculatedStats.BonusCritHealMultiplier;
             NGmod = calcs.LocalCharacter.DruidTalents.NaturesGrace / 3f;
             extraHealing = calculatedStats.BonusHealingReceived;
+            cachedStats = calculatedStats;
             applyHaste();
         }
 
@@ -145,6 +155,34 @@ namespace Rawr.Tree
             gcd = gcdBeforeHaste / speed;
             castTime = (float)Math.Round(castTimeBeforeHaste / speed, 4);
         }
+
+        protected float OmenProc(float chance, float maxReduction)
+        {
+            if (manaCost < maxReduction)
+                return manaCost * (1.0f - chance);
+            else
+            {
+                return manaCost * (1.0f - chance) + chance * (manaCost - maxReduction);
+            }
+        }
+
+        protected float checkOmenlikeProcs() 
+        {
+            float newManaCost = manaCost;
+
+            //Attempt to handle new SpecialEffect for this
+            foreach (Rawr.SpecialEffect effect in cachedStats.SpecialEffects())
+            {
+               if (effect.Trigger == Trigger.SpellCast && (effect.Stats.ManacostReduceWithin15OnHealingCast > 0))
+                   newManaCost = OmenProc(effect.Chance, effect.Stats.ManacostReduceWithin15OnHealingCast);
+            }
+
+            // Handle case of stat not being created as a SpecialEffect
+            if (cachedStats.ManacostReduceWithin15OnHealingCast > 0)
+                newManaCost = OmenProc(0.02f, cachedStats.ManacostReduceWithin15OnHealingCast);
+
+            return newManaCost;
+        }
     }
 
     /*
@@ -170,6 +208,9 @@ namespace Rawr.Tree
             maxHeal = 4428f;
             #endregion
 
+            // Seems to apply before talents
+            manaCost -= calculatedStats.SpellsManaReduction;
+
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Glyph of Healing Touch
@@ -192,7 +233,7 @@ namespace Rawr.Tree
             manaCost -= calculatedStats.ReduceHealingTouchCost;
             #endregion
 
-            manaCost -= calculatedStats.SpellsManaReduction;
+            
 
             applyHaste();
         }
@@ -287,14 +328,15 @@ namespace Rawr.Tree
             periodicTicks = 7;
             #endregion
 
+            // Seems to apply before talents
+            manaCost -= calculatedStats.SpellsManaReduction;
+
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols
             //z.B.: Idol of the Crescent Goddess (-65 Mana)
             manaCost -= calculatedStats.ReduceRegrowthCost;
             #endregion
-
-            manaCost -= calculatedStats.SpellsManaReduction;
 
             /* Glyph of Regrowth is modelled in the constructor */
             applyHaste();
@@ -366,6 +408,9 @@ namespace Rawr.Tree
             periodicTicks = 5;
             #endregion
 
+            // Seems to apply before talents
+            manaCost -= calculatedStats.SpellsManaReduction;
+
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols etc
@@ -388,8 +433,6 @@ namespace Rawr.Tree
                 critPercent = 0.0f;
             }
             #endregion
-
-            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
@@ -470,6 +513,9 @@ namespace Rawr.Tree
             periodicTicks = 7;
             #endregion
 
+            // Seems to apply before talents
+            manaCost -= calculatedStats.SpellsManaReduction;
+
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols
@@ -484,8 +530,6 @@ namespace Rawr.Tree
                 periodicTicks += 1;
 
             manaCost *= (1-calculatedStats.LifebloomCostReduction);
-
-            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }
@@ -582,7 +626,7 @@ namespace Rawr.Tree
 
 //            CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 //            if (calcOpts.newManaRegen) 
-            manaCost *= 2;       // manaCost without refund   TODO: check if  SpellsManaReduction is applied correctly
+            manaCost *= 2;       // manaCost without refund   
 
         }
     }
@@ -626,9 +670,10 @@ namespace Rawr.Tree
             maxTargets = 5;
             #endregion
 
-            calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
-
+            // Seems to apply before talents
             manaCost -= calculatedStats.SpellsManaReduction;
+
+            calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             applyHaste();
         }
@@ -709,14 +754,15 @@ namespace Rawr.Tree
             NourishBonusPerHoTGlyphs = 0.0f;
             #endregion
 
+            // Seems to apply before talents
+            manaCost -= calculatedStats.SpellsManaReduction;
+
             #region Idols
             // Idol of Flourishing Life
             healingBonus += calculatedStats.NourishSpellpower;
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
-
-            manaCost -= calculatedStats.SpellsManaReduction;
 
             applyHaste();
         }

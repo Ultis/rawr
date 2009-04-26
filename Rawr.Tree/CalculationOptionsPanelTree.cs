@@ -18,18 +18,18 @@ namespace Rawr.Tree
                 "Some trinkets are hard to model. They can be much better if you use them in a smart way. They are modelled by taking the expected uptime or number of procs and converting it to an average value.\r\n"+
                 "\r\n" +
                 "Trinket notes:\r\n" +
-                "Majestic Dragon Figurine (expected 80% uptime after going out of mana)\r\n" +
                 "Talisman of Troll Divinity (keep in mind that it also helps other healers so it is probably worth more)\r\n" +
                 "Alchemist Stones (mana potions are modelled as extra mana at the start of the fight)\r\n" +
                 "\r\n"+
-                "Implemented: Flow of Knowledge, Forethought Talisman, Forge Ember, Dying Curse, Illustration of the Dragon Soul, "+
+                "Implemented: \r\n"+
+                "Majestic Dragon Figurine, Flow of Knowledge, Forethought Talisman, Forge Ember, Dying Curse, Illustration of the Dragon Soul, "+
                 "Soul of the Dead, Je'tze's Bell, Spark of Life, Various Figurines, The Egg of Mortal Essence, "+
                 "Embrace of the Spider, Darkmoon Card: Blue Dragon, Darkmoon Card: Greatness, " +
-                "Spirit-World Glass, Living Ice Crystals, "+
+                "Spirit-World Glass, Living Ice Crystals, Soul Preserver, Spark of Hope \r\n" +
                 "Various On Use Spell Power trinkets\r\n"+
                 "\r\n"+
                 "Currently unmodelled trinkets:\r\n" +
-                "Darkmoon Card: Illusion, Soul Preserver\r\n"+
+                "Darkmoon Card: Illusion\r\n"+
                 "\r\n"+
                 "HealBurst is the maximum HPS of your current rotation until you go out of mana (with 100% casting Primary healing spells outside keeping HoTs on the tanks).\r\n"+
                 "HealSustained is the HPS from your current rotation for the entire fight.";

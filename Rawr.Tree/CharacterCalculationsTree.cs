@@ -102,37 +102,37 @@ namespace Rawr.Tree
             dictValues.Add("RG Tick", Math.Round(spell.PeriodicTick, 2) + "*" + spell.Duration + "sec Duration\n" + Math.Round(spell.PeriodicTick * 6f, 2) + " - " + Math.Round(spell.PeriodicTick * 9f, 2) + " Swiftmend");
             dictValues.Add("RG HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + "sec Casttime");
             dictValues.Add("RG HPS (HoT)", Math.Round(spell.HPSHoT, 2).ToString());
-            dictValues.Add("RG HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
-            dictValues.Add("RG HPM (spam)", Math.Round(spell.AverageHealingwithCrit / spell.manaCost, 2).ToString());
+            dictValues.Add("RG HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
+            dictValues.Add("RG HPM (spam)", Math.Round(spell.AverageHealingwithCrit / spell.ManaCost, 2).ToString());
 
             spell = new Lifebloom(this, BasicStats);
             dictValues.Add("LB Tick", Math.Round(spell.PeriodicTick, 2) + "*" + spell.Duration + "sec Duration");
             dictValues.Add("LB Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.AverageHealing * 1.5f, 2) + " Crit\n" + spell.CritPercent + "%");
             dictValues.Add("LB HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
-            dictValues.Add("LB HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("LB HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new Lifebloom(this, BasicStats, 2);
             dictValues.Add("LBx2 HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
-            dictValues.Add("LBx2 HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("LBx2 HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new Lifebloom(this, BasicStats, 3);
             dictValues.Add("LBx3 HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
-            dictValues.Add("LBx3 HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("LBx3 HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new LifebloomStack(this, BasicStats);
             dictValues.Add("LBS Tick", Math.Round(spell.PeriodicTick, 2).ToString());
             dictValues.Add("LBS HPS", Math.Round(spell.TotalAverageHealing/spell.Duration, 2).ToString());
-            dictValues.Add("LBS HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("LBS HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new Rejuvenation(this, BasicStats);
             dictValues.Add("RJ Tick", Math.Round(spell.PeriodicTick, 2) + "*" + spell.Duration + "sec Duration\n" + Math.Round(spell.PeriodicTick * 4f, 2) + " - " + Math.Round(spell.PeriodicTick * 6f, 2) + " Swiftmend");
             dictValues.Add("RJ HPS", Math.Round(spell.HPSHoT, 2).ToString());
-            dictValues.Add("RJ HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("RJ HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new HealingTouch(this, BasicStats);
             dictValues.Add("HT Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + spell.CritPercent + "% Crit");
             dictValues.Add("HT HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + "sec Casttime" + (spell.castTimeBeforeHaste < spell.CastTime ? ", GCD capped" : ""));
-            dictValues.Add("HT HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("HT HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new WildGrowth(this, BasicStats);
             {
@@ -143,14 +143,14 @@ namespace Rawr.Tree
 
                 dictValues.Add("WG first Tick", Math.Round(wg.getTick(1, 0), 2) + "*" + tmp);
                 dictValues.Add("WG HPS(single)", Math.Round(wg.PeriodicTick, 2).ToString());
-                dictValues.Add("WG HPM(single)", Math.Round(wg.HPM, 2) + "*" + Math.Round(wg.PeriodicTick * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
+                dictValues.Add("WG HPM(single)", Math.Round(wg.HPM, 2) + "*" + Math.Round(wg.PeriodicTick * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.ManaCost, 2) + " Manacost");
                 dictValues.Add("WG HPS(max)", Math.Round(wg.PeriodicTick * wg.maxTargets, 2).ToString() + "*" + wg.maxTargets.ToString() + " targets being healed");
-                dictValues.Add("WG HPM(max)", Math.Round(wg.HPM * wg.maxTargets, 2) + "*" + Math.Round(wg.PeriodicTick * wg.maxTargets * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
+                dictValues.Add("WG HPM(max)", Math.Round(wg.HPM * wg.maxTargets, 2) + "*" + Math.Round(wg.PeriodicTick * wg.maxTargets * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.ManaCost, 2) + " Manacost");
             }
 
             spell = new Nourish(this, BasicStats);
             dictValues.Add("N Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
-            dictValues.Add("N HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
+            dictValues.Add("N HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
             dictValues.Add("N HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
             spell = new Nourish(this, BasicStats, 1);
             dictValues.Add("N (1 HoT) Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
