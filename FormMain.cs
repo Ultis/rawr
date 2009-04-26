@@ -73,6 +73,17 @@ namespace Rawr
             }
         }
 
+        private FormItemComparison _itemComparison;
+        public FormItemComparison ItemComparison
+        {
+            get
+            {
+                if (_itemComparison == null || _itemComparison.IsDisposed)
+                    _itemComparison = new FormItemComparison();
+                return _itemComparison;
+            }
+        }
+
         private FormItemFilter _formItemFilter;
         public FormItemFilter FormItemFilter
         {
@@ -237,7 +248,7 @@ namespace Rawr
 					Character.CurrentModel = null;
 					
 					Calculations.CalculationOptionsPanel.Character = _character;
-					ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character =
+					ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character = ItemComparison.BaseCharacter =
 						ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
@@ -2201,9 +2212,8 @@ namespace Rawr
 
         private void itemComparisonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormItemComparison itemCompare = new FormItemComparison();
-            itemCompare.BaseCharacter = Character;
-            itemCompare.Show();
+            ItemComparison.BaseCharacter = Character;
+            ItemComparison.Show();
         }
     }
 }

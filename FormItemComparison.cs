@@ -164,10 +164,10 @@ namespace Rawr
                 List<Button> newButtons = new List<Button>();
 
                 int number = (int)((Button)sender).Tag;
-                int i = 1;
+                int i = 0;
 
                 tabControl.SuspendLayout();
-                foreach (TabPage tabPage in tabControl.Controls)
+                foreach (TabPage tabPage in comparisonPages)
                 {
                     if ((int)tabPage.Tag == number)
                     {
@@ -176,20 +176,22 @@ namespace Rawr
                             c.Dispose();
                         }
                         tabPage.Dispose();
-                        tabControl.Controls.Remove(tabPage);
                     }
                     else
                     {
+                        tabPage.Text = "Set #" + ++i;
                         foreach (Control c in tabPage.Controls)
                         {
-                            c.Tag = number;
+                            c.Tag = i;
                             if (c.GetType() == typeof(Button)) newButtons.Add(c as Button);
                             if (c.GetType() == typeof(ComparisonSetControl)) newSets.Add(c as ComparisonSetControl);
                         }
-                        tabPage.Tag = i++;
+                        tabPage.Tag = i;
                         newPages.Add(tabPage);
                     }
                 }
+                tabControl.Controls.Clear();
+                tabControl.Controls.AddRange(newPages.ToArray());
                 tabControl.ResumeLayout(false);
 
                 comparisonPages = newPages;
