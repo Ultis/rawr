@@ -77,9 +77,9 @@ namespace Rawr.Enhance
         public float ChanceYellowHit { get { return 1 - chanceYellowMiss; } }
         public float ChanceSpellCrit { get { return chanceSpellCrit; } }
         public float ChanceWhiteCrit { get { return chanceWhiteCrit; } }
-        public float ChanceYellowCrit { get { return chanceYellowCrit - yellowCritDepression; } }
+        public float ChanceYellowCrit { get { return chanceYellowCrit; } }
         public float ChanceMeleeHit { get { return chanceMeleeHit; } }
-        public float ChanceMeleeCrit { get { return chanceWhiteCrit - whiteCritDepression; } }
+        public float ChanceMeleeCrit { get { return chanceWhiteCrit; } }
 
         public float UnhastedMHSpeed { get { return unhastedMHSpeed; } }
         public float HastedMHSpeed { get { return hastedMHSpeed; } }
@@ -116,8 +116,8 @@ namespace Rawr.Enhance
             chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             chanceWhiteMiss = Math.Max(0f, 0.27f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
             chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
-            chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
-            chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
+            chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss - whiteCritDepression);
+            chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss - yellowCritDepression);
 
             // Spells
             float spellCritModifier = _stats.SpellCrit;
