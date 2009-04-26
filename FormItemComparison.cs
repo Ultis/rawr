@@ -12,8 +12,8 @@ namespace Rawr
     {
 
         private List<ComparisonSetControl> comparisonSets;
-        private List<GroupBox> comparisonGroupBoxes;
-        private List<Button> comparisonRemoveButtons;
+        private List<Button> comparisonButtons;
+        private List<TabPage> comparisonPages;
 
         private Character _baseCharacter;
         public Character BaseCharacter
@@ -57,41 +57,41 @@ namespace Rawr
             InitializeComponent();
 
             comparisonSets = new List<ComparisonSetControl>();
-            comparisonGroupBoxes = new List<GroupBox>();
-            comparisonRemoveButtons = new List<Button>();
+            comparisonPages = new List<TabPage>();
+            comparisonButtons = new List<Button>();
 
             AddComparisonSet(1);            
         }
 
-        private void AddComparisonSet(int number)
+        private TabPage AddComparisonSet(int number)
         {
             ComparisonSetControl set = new ComparisonSetControl();
-            GroupBox group = new GroupBox();
+            TabPage tabPage = new TabPage();
             Button button = new Button();
 
-            group.SuspendLayout();
-            this.panel1.Controls.Add(group);
+            this.tabControl.Controls.Add(tabPage);
+            tabPage.Controls.Add(button);
+            tabPage.Controls.Add(set);
 
-            group.Controls.Add(set);
-            group.Controls.Add(button);
-            group.Location = new System.Drawing.Point(3, 3 + 336 * (number - 1));
-            group.Name = "groupBox1";
-            group.Size = new System.Drawing.Size(222, 330);
-            group.TabIndex = number;
-            group.TabStop = false;
-            group.Text = "Comparison Set #" + number;
-            group.Tag = number;
+            tabPage.Location = new System.Drawing.Point(4, 22);
+            tabPage.Name = "Set" + number;
+            tabPage.Padding = new System.Windows.Forms.Padding(3);
+            tabPage.Size = new System.Drawing.Size(234, 422);
+            tabPage.TabIndex = 0;
+            tabPage.Tag = number;
+            tabPage.Text = "Set #" + number;
+            tabPage.UseVisualStyleBackColor = true;
 
-            button.Location = new System.Drawing.Point(158, -1);
+            button.Location = new System.Drawing.Point(132, 311);
             button.Name = "removeButton";
-            button.Size = new System.Drawing.Size(55, 20);
+            button.Size = new System.Drawing.Size(75, 23);
             button.TabIndex = 1;
             button.Text = "Remove";
             button.UseVisualStyleBackColor = true;
             button.Tag = number;
             button.Click += new EventHandler(removeButton_Click);
 
-            set.Location = new System.Drawing.Point(6, 19);
+            set.Location = new System.Drawing.Point(0, 2);
             set.Name = "comparisonSetControl1";
             set.Size = new System.Drawing.Size(210, 305);
             set.TabIndex = 2;
@@ -99,13 +99,11 @@ namespace Rawr
             set.BaseCharacter = BaseCharacter;
             set.Tag = number;
 
-            addSetButton.Top = 3 + 336 * number;
-
-            group.ResumeLayout(false);
-
             comparisonSets.Add(set);
-            comparisonGroupBoxes.Add(group);
-            comparisonRemoveButtons.Add(button);
+            comparisonButtons.Add(button);
+            comparisonPages.Add(tabPage);
+
+            return tabPage;
         }
 
         public void UpdateCalculations(object sender, EventArgs e)
@@ -153,7 +151,7 @@ namespace Rawr
 
         private void addSetButton_Click(object sender, EventArgs e)
         {
-            AddComparisonSet(comparisonSets.Count + 1);
+            tabControl.SelectedTab = AddComparisonSet(tabControl.Controls.Count + 1);
             UpdateGraph(this, EventArgs.Empty);
         }
 
@@ -161,38 +159,42 @@ namespace Rawr
         {
             if (sender.GetType() == typeof(Button))
             {
-                List<Button> newRemoveButtons = new List<Button>();
                 List<ComparisonSetControl> newSets = new List<ComparisonSetControl>();
-                List<GroupBox> newGroupBoxes = new List<GroupBox>();
+                List<TabPage> newPages = new List<TabPage>();
+                List<Button> newButtons = new List<Button>();
 
                 int number = (int)((Button)sender).Tag;
-                int i = 0;
-                foreach (GroupBox group in comparisonGroupBoxes)
+                int i = 1;
+
+                tabControl.SuspendLayout();
+                foreach (TabPage tabPage in tabControl.Controls)
                 {
-                    if ((int)group.Tag == number)
+                    if ((int)tabPage.Tag == number)
                     {
-                        foreach (Control c in group.Controls) c.Dispose();
-                        group.Dispose();
+                        foreach (Control c in tabPage.Controls)
+                        {
+                            c.Dispose();
+                        }
+                        tabPage.Dispose();
+                        tabControl.Controls.Remove(tabPage);
                     }
                     else
                     {
-                        group.Top = 3 + 336 * i++;
-                        group.Text = "Comparison Set #" + i;
-                        group.Tag = i;
-                        foreach (Control c in group.Controls)
+                        foreach (Control c in tabPage.Controls)
                         {
-                            if (c.GetType() == typeof(Button)) newRemoveButtons.Add(c as Button);
+                            c.Tag = number;
+                            if (c.GetType() == typeof(Button)) newButtons.Add(c as Button);
                             if (c.GetType() == typeof(ComparisonSetControl)) newSets.Add(c as ComparisonSetControl);
-                            c.Tag = i;
                         }
-                        newGroupBoxes.Add(group);
+                        tabPage.Tag = i++;
+                        newPages.Add(tabPage);
                     }
                 }
-                addSetButton.Top = 3 + 336 * i;
+                tabControl.ResumeLayout(false);
 
-                comparisonGroupBoxes = newGroupBoxes;
+                comparisonPages = newPages;
                 comparisonSets = newSets;
-                comparisonRemoveButtons = newRemoveButtons;
+                comparisonButtons = newButtons;
 
                 UpdateGraph(this, EventArgs.Empty);
             }

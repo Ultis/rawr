@@ -29,18 +29,17 @@
         private void InitializeComponent()
         {
             this.addSetButton = new System.Windows.Forms.Button();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.graphScrollBar = new System.Windows.Forms.VScrollBar();
+            this.comparisonPanel = new System.Windows.Forms.Panel();
+            this.tabControl = new System.Windows.Forms.TabControl();
             this.comparisonGraph = new Rawr.ComparisonGraph();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.comparisonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // addSetButton
             // 
             this.addSetButton.AutoSize = true;
-            this.addSetButton.Location = new System.Drawing.Point(145, 339);
+            this.addSetButton.Location = new System.Drawing.Point(143, 372);
             this.addSetButton.Name = "addSetButton";
             this.addSetButton.Size = new System.Drawing.Size(80, 23);
             this.addSetButton.TabIndex = 2;
@@ -48,40 +47,40 @@
             this.addSetButton.UseVisualStyleBackColor = true;
             this.addSetButton.Click += new System.EventHandler(this.addSetButton_Click);
             // 
-            // vScrollBar1
+            // graphScrollBar
             // 
-            this.vScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.graphScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.vScrollBar1.LargeChange = 41;
-            this.vScrollBar1.Location = new System.Drawing.Point(417, 0);
-            this.vScrollBar1.Maximum = 40;
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(17, 463);
-            this.vScrollBar1.SmallChange = 32;
-            this.vScrollBar1.TabIndex = 4;
-            this.vScrollBar1.Visible = false;
+            this.graphScrollBar.LargeChange = 41;
+            this.graphScrollBar.Location = new System.Drawing.Point(433, 0);
+            this.graphScrollBar.Maximum = 40;
+            this.graphScrollBar.Name = "graphScrollBar";
+            this.graphScrollBar.Size = new System.Drawing.Size(17, 483);
+            this.graphScrollBar.SmallChange = 32;
+            this.graphScrollBar.TabIndex = 4;
+            this.graphScrollBar.Visible = false;
             // 
-            // panel1
+            // comparisonPanel
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.addSetButton);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(245, 467);
-            this.panel1.TabIndex = 5;
+            this.comparisonPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comparisonPanel.BackColor = System.Drawing.Color.White;
+            this.comparisonPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.comparisonPanel.Controls.Add(this.comparisonGraph);
+            this.comparisonPanel.Controls.Add(this.graphScrollBar);
+            this.comparisonPanel.Location = new System.Drawing.Point(229, 0);
+            this.comparisonPanel.Name = "comparisonPanel";
+            this.comparisonPanel.Size = new System.Drawing.Size(454, 487);
+            this.comparisonPanel.TabIndex = 6;
             // 
-            // panel2
+            // tabControl
             // 
-            this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2.Controls.Add(this.comparisonGraph);
-            this.panel2.Controls.Add(this.vScrollBar1);
-            this.panel2.Location = new System.Drawing.Point(263, 12);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(438, 467);
-            this.panel2.TabIndex = 6;
+            this.tabControl.Location = new System.Drawing.Point(3, 3);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(220, 363);
+            this.tabControl.TabIndex = 7;
             // 
             // comparisonGraph
             // 
@@ -99,8 +98,8 @@
             this.comparisonGraph.Margin = new System.Windows.Forms.Padding(4);
             this.comparisonGraph.Name = "comparisonGraph";
             this.comparisonGraph.RoundValues = true;
-            this.comparisonGraph.ScrollBar = this.vScrollBar1;
-            this.comparisonGraph.Size = new System.Drawing.Size(416, 462);
+            this.comparisonGraph.ScrollBar = this.graphScrollBar;
+            this.comparisonGraph.Size = new System.Drawing.Size(432, 480);
             this.comparisonGraph.SlotMap = null;
             this.comparisonGraph.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
             this.comparisonGraph.TabIndex = 3;
@@ -109,17 +108,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 491);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.MinimumSize = new System.Drawing.Size(612, 421);
+            this.ClientSize = new System.Drawing.Size(683, 487);
+            this.Controls.Add(this.addSetButton);
+            this.Controls.Add(this.tabControl);
+            this.Controls.Add(this.comparisonPanel);
+            this.MinimumSize = new System.Drawing.Size(626, 441);
             this.Name = "FormItemComparison";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Set Comparison";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
+            this.comparisonPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -127,8 +126,8 @@
 
         private System.Windows.Forms.Button addSetButton;
         private ComparisonGraph comparisonGraph;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.VScrollBar graphScrollBar;
+        private System.Windows.Forms.Panel comparisonPanel;
+        private System.Windows.Forms.TabControl tabControl;
     }
 }
