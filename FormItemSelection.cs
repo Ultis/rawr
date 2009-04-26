@@ -293,9 +293,9 @@ namespace Rawr
 				if (Character != null && CurrentCalculations != null)
 				{
 					itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(slot), Character, CurrentCalculations);
-				}
-				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
-				ItemCalculations = itemCalculations.ToArray();
+                }
+                itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
+                ItemCalculations = itemCalculations.ToArray();
 			}
 		}
 

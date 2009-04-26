@@ -198,7 +198,6 @@ namespace Rawr
             number = (float)Math.Abs(number);
             if (number < 100) return sign + Math.Round(number, 2).ToString();
             else if (number < 1000) return sign + Math.Round(number).ToString();
-            else if (number < 10000) return sign + Math.Round(number / 1000, 2).ToString() + "k";
             else if (number < 100000) return sign + Math.Round(number / 1000, 1).ToString() + "k";
             else if (number < 1000000) return sign + Math.Round(number / 1000).ToString() + "k";
             else return sign + Math.Round(number / 1000000, 2).ToString() + "m";
@@ -232,7 +231,7 @@ namespace Rawr
                     {
 
                         float minOverallPoints = 0f;
-                        float maxOverallPoints = 2f;
+                        float maxOverallPoints = 0f;
                         foreach (ComparisonCalculationBase calc in ItemCalculations)
                         {
                             if (DisplayMode == GraphDisplayMode.Overall)
@@ -257,27 +256,18 @@ namespace Rawr
                                 minOverallPoints = Math.Min(minOverallPoints, neg);
                             }
                         }
-                        maxOverallPoints = (float)Math.Ceiling(maxOverallPoints);
+                        if (maxOverallPoints == 0f && minOverallPoints == 0f) maxOverallPoints = 2f;
+                        maxOverallPoints = (float)Math.Ceiling(Math.Round(maxOverallPoints, 2));
                         float maxScale = 10f;
-                        if (maxOverallPoints < 10)
-                            maxScale = 2f * (float)Math.Ceiling(maxOverallPoints / 2f);
-                        else
-                        {
-                            int digits = (int)Math.Pow(10, Math.Floor(Math.Log10(maxOverallPoints)));
-                            maxScale = (float)Math.Ceiling(maxOverallPoints / digits) * digits;
-                        }
+                        float maxRoundTo = 2f;
+                        if (maxOverallPoints >= 10) maxRoundTo = (int)Math.Pow(10, Math.Floor(Math.Log10(maxOverallPoints) - .3f));
+                        maxScale = maxRoundTo * (float)Math.Ceiling(maxOverallPoints / maxRoundTo);
 
-                        minOverallPoints = (float)Math.Floor(minOverallPoints);
+                        minOverallPoints = (float)Math.Floor(Math.Round(minOverallPoints, 2));
                         float minScale = 0f;
-                        if (minOverallPoints >= 0)
-                            minScale = 0;
-                        else if (minOverallPoints > -10)
-                            minScale = 2f * (float)Math.Floor(minOverallPoints / 2f);
-                        else
-                        {
-                            int digits = (int)Math.Pow(10, Math.Floor(Math.Log10(-minOverallPoints)));
-                            minScale = (float)Math.Floor(minOverallPoints / digits) * digits;
-                        }
+                        float minRoundTo = 2f;
+                        if (minOverallPoints <= -10) minScale = (int)Math.Pow(10, Math.Floor(Math.Log10(-minOverallPoints) - .3f));
+                        minScale = minRoundTo * (float)Math.Floor(minOverallPoints / minRoundTo);
 
                         float totalScale = maxScale - minScale;
 
@@ -346,10 +336,6 @@ namespace Rawr
                         Bitmap bmpDiamond3 = Rawr.Properties.Resources.Diamond3;
                         Bitmap bmpDiamond4 = Rawr.Properties.Resources.Diamond4;
                         Bitmap bmpDiamondOutline = Rawr.Properties.Resources.DiamondOutline;
-
-                        g.DrawImageUnscaled(bmpDiamond, legendX, 2);
-                        g.DrawString("=", this.Font, new SolidBrush(this.ForeColor), legendX + 12, 3);
-                        g.DrawString("Available for Optimizer", this.Font, new SolidBrush(this.ForeColor), legendX + 24, 4);
                         #endregion
 
                         #region Graph Ticks
@@ -359,8 +345,22 @@ namespace Rawr
 
                         Dictionary<float, float> ticks = new Dictionary<float, float>();
                         float graphZero = (float)Math.Round(graphStart - minScale / totalScale * graphWidth);
-                        for (float i = 0; i <= maxScale; i += totalScale / 8) ticks[i] = (float)Math.Round(graphZero + i / totalScale * graphWidth);
-                        for (float i = 0; i >= minScale; i -= totalScale / 8) ticks[i] = (float)Math.Round(graphZero + i / totalScale * graphWidth);
+                        ticks[0] = graphZero;
+
+                        int maxTicks = (int)Math.Floor(maxScale / totalScale * 8f);
+                        int minTicks = (int)Math.Floor(-minScale / totalScale * 8f);
+
+                        float tickInc = (float)(Math.Floor(totalScale / Math.Max(maxRoundTo, minRoundTo)) * Math.Max(maxRoundTo, minRoundTo) / 8f);
+
+                        for (int i = 0; i < maxTicks; i++)
+                        {
+                            ticks[(i + 1) * tickInc] = (float)Math.Round(graphZero + (i + 1) * tickInc / totalScale * graphWidth);
+                        }
+
+                        for (int i = 0; i < minTicks; i++)
+                        {
+                            ticks[(i + 1) * -tickInc] = (float)Math.Round(graphZero + (i + 1) * -tickInc / totalScale * graphWidth);
+                        }
 
                         #region Pens
                         Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
@@ -411,6 +411,8 @@ namespace Rawr
                         g.DrawLine(black200, graphStart - 4, 40, graphEnd + 4, 40);
                         #endregion
 
+                        bool hasItemAvailabilty = false;
+
                         for (int itemNumber = 0; itemNumber < ItemCalculations.Length; itemNumber++)
                         {
                             ComparisonCalculationBase item = ItemCalculations[itemNumber];
@@ -458,6 +460,7 @@ namespace Rawr
                             }
                             if (item.Item != null && item.Item.Id != 0)
                             {
+                                hasItemAvailabilty = true;
                                 Character.ItemAvailability itemAvailability;
                                 if (item.ItemInstance != null)
                                 {
@@ -494,7 +497,8 @@ namespace Rawr
                             {
                                 int posStart = (int)graphZero + 1;
                                 int negStart = (int)graphZero - 1;
-                                int barWidth;
+                                int barWidth = 0;
+                                float scale = 1;
 
                                 #region Sub Point Display Mode
                                 if (DisplayMode == GraphDisplayMode.Subpoints)
@@ -508,18 +512,24 @@ namespace Rawr
                                             barWidth = (int)Math.Round(subPoint / minScale * (graphZero - graphStart));
                                             rectSubPoint = new Rectangle(negStart - barWidth, 50 + itemNumber * 36, barWidth, 24);
                                             negStart -= barWidth;
+                                            scale = minScale;
                                         }
-                                        else
+                                        else if (subPoint > 0)
                                         {
                                             barWidth = (int)Math.Round(subPoint / maxScale * (graphEnd - graphZero));
                                             rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
                                             posStart += barWidth;
+                                            scale = maxScale;
+                                        }
+                                        else
+                                        {
+                                            rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, 0, 24);
                                         }
 
                                         if (barWidth > 0)
                                         {
                                             brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorSubPointsA[subNumber], colorSubPointsB[subNumber],
-                                                67f + (20f * subPoint / maxScale));
+                                                67f + (20f * subPoint / scale));
                                             blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
                                             blendSubPoint.Colors = new Color[] { colorSubPointsA[subNumber], colorSubPointsB[subNumber], colorSubPointsA[subNumber] };
                                             blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
@@ -561,17 +571,23 @@ namespace Rawr
                                     {
                                         barWidth = (int)Math.Round(points / minScale * (graphZero - graphStart));
                                         rectSubPoint = new Rectangle(negStart - barWidth, 50 + itemNumber * 36, barWidth, 24);
+                                        scale = minScale;
+                                    }
+                                    else if (points > 0)
+                                    {
+                                        barWidth = (int)Math.Round(points / maxScale * (graphEnd - graphZero));
+                                        rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
+                                        scale = maxScale;
                                     }
                                     else
                                     {
-                                        barWidth = (int)Math.Round(points / maxScale * (graphEnd - graphZero));
                                         rectSubPoint = new Rectangle(posStart, 50 + itemNumber * 36, barWidth, 24);
                                     }
 
                                     if (barWidth > 0)
                                     {
                                         brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorA, colorB,
-                                            67f + (20f * points / maxScale));
+                                            67f + (20f * points / scale));
                                         blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
                                         blendSubPoint.Colors = new Color[] { colorA, colorB, colorA };
                                         blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
@@ -589,6 +605,12 @@ namespace Rawr
                                 #endregion
 
                             }
+                        }
+                        if (hasItemAvailabilty)
+                        {
+                            g.DrawImageUnscaled(bmpDiamond, legendX, 2);
+                            g.DrawString("=", this.Font, new SolidBrush(this.ForeColor), legendX + 12, 3);
+                            g.DrawString("Available for Optimizer", this.Font, new SolidBrush(this.ForeColor), legendX + 24, 4);
                         }
                     }
                     g.Dispose();

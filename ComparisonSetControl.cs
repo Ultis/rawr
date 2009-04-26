@@ -146,6 +146,7 @@ namespace Rawr
             {
                 FormItemSelection.Character = CompositeCharacter;
                 _currentCalculations = Calculations.GetCharacterCalculations(CompositeCharacter, null, true, true, true);
+                FormItemSelection.CurrentCalculations = _currentCalculations;
                 if (CalculationsInvalidated != null) CalculationsInvalidated(this, EventArgs.Empty);
             }
         }
