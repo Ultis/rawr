@@ -460,8 +460,7 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
         }
         #endregion
 
-        public override Stats GetItemStats(Character character, Item additionalItem)
-        {
+        public override Stats GetItemStats(Character character, Item additionalItem) {
             Stats statsItems = base.GetItemStats(character,additionalItem);// new Stats();
 
             // Assuming a GCD every 1.5s
@@ -479,10 +478,26 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
                 statsItems.Agility += 120.0f * procUptime;
                 statsItems.HasteRating += (2.0f / DPSWarr.HasteRatingToHaste) * procUptime;
             }
+            if (character.MainHand != null && statsItems.MongooseProc > 1) {
+                float procRate = 1.0f; // PPM
+                float procDuration = 15.0f;
+                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
+                float procUptime = procDuration * procPerSecond;
+
+                statsItems.Agility += 120.0f * procUptime;
+                statsItems.HasteRating += (2.0f / DPSWarr.HasteRatingToHaste) * procUptime;
+            }
 
             //Executioner
-            if (character.MainHand != null && statsItems.ExecutionerProc > 0)
-            {
+            if (character.MainHand != null && statsItems.ExecutionerProc > 0) {
+                float procRate = 1.2f; // PPM
+                float procDuration = 15.0f;
+                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
+                float procUptime = procDuration * procPerSecond;
+
+                statsItems.ArmorPenetrationRating += 120.0f * procUptime;
+            }
+            if (character.MainHand != null && statsItems.ExecutionerProc > 1) {
                 float procRate = 1.2f; // PPM
                 float procDuration = 15.0f;
                 float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
@@ -492,8 +507,16 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
             }
 
             //Berserking
-            if (character.MainHand != null && statsItems.BerserkingProc > 0)
-            {
+            if (character.MainHand != null && statsItems.BerserkingProc > 0) {
+                float procRate = 1.2f; // PPM
+                float procDuration = 15.0f;
+                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
+                float procUptime = procDuration * procPerSecond;
+
+                statsItems.AttackPower += 400.0f * procUptime;
+                statsItems.Armor -= (statsItems.Armor * .05f) * procUptime;
+            }
+            if (character.MainHand != null && statsItems.BerserkingProc > 1) {
                 float procRate = 1.2f; // PPM
                 float procDuration = 15.0f;
                 float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;

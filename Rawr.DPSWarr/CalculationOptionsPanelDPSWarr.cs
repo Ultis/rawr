@@ -6,7 +6,6 @@ using System.Windows.Forms;
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
-
         public CalculationOptionsPanelDPSWarr() {
             InitializeComponent();
 
@@ -47,16 +46,13 @@ namespace Rawr.DPSWarr {
                 Character.OnCalculationsInvalidated();
             }
         }
-
-        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
             if (Character != null && Character.CalculationOptions != null) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void CB_ToughLvl_SelectedIndexChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             switch (CB_ToughLvl.SelectedIndex) {
@@ -70,7 +66,6 @@ namespace Rawr.DPSWarr {
             }
             Character.OnCalculationsInvalidated();
         }
-
         private void RB_StanceFury_CheckedChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.FuryStance = RB_StanceFury.Checked;
