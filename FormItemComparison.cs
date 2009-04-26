@@ -60,10 +60,7 @@ namespace Rawr
             comparisonGroupBoxes = new List<GroupBox>();
             comparisonRemoveButtons = new List<Button>();
 
-            AddComparisonSet(1);
-
-            comparisonGraph.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            
+            AddComparisonSet(1);            
         }
 
         private void AddComparisonSet(int number)
