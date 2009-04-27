@@ -31,6 +31,13 @@ namespace Rawr.DPSDK
         public float BloodStrike = 0f;
         public float HeartStrike = 0f;
         public float DancingRuneWeapon = 0f;
+        public float Horn = 0f;
+
+        public Boolean fourT7 = false;
+        public Boolean GlyphofIT = false;
+        public Boolean GlyphofFS = false;
+        public float GCDTime;
+        public float RP;
 
         public enum Type
         {            
@@ -40,6 +47,41 @@ namespace Rawr.DPSDK
         public Rotation()
         {
             setRotation(Type.Unholy);
+        }
+
+        public float getRP(Boolean fourT7, Boolean GlyphofIT, Boolean GlyphofFS)
+        {
+            this.fourT7 = fourT7;
+            this.GlyphofIT = GlyphofIT;
+            this.GlyphofFS = GlyphofFS;
+
+            RP = ((15 + (fourT7 ? 10 : 0)) * (Obliterate + ScourgeStrike + DeathStrike)) +
+                (10 * (PlagueStrike + BloodStrike + HeartStrike)) +
+                ((10 + (GlyphofIT ? 10 : 0)) * (IcyTouch)) +
+                (15 * HowlingBlast) +
+                (10 * Horn);
+            RP -= ((40 * DeathCoil) +
+                ((GlyphofFS ? 32 : 40) * FrostStrike));
+            return RP;
+        }
+
+
+        public float getGCDTime()
+        {
+            if (presence.Equals(CalculationOptionsDPSDK.Presence.Unholy))
+            {
+                GCDTime = DeathCoil + IcyTouch + PlagueStrike + ScourgeStrike + UnholyBlight +
+                    FrostStrike + HowlingBlast + Obliterate + DeathStrike + BloodStrike +
+                    HeartStrike + Horn;
+            }
+            else if (presence.Equals(CalculationOptionsDPSDK.Presence.Blood))
+            {
+                GCDTime = 1.5f * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
+                    BloodStrike + HeartStrike);
+                GCDTime += 1.5f * (DeathCoil + IcyTouch + UnholyBlight + HowlingBlast + Horn);
+                // this does not currently account for haste, and I don't think it is possible in the current design.
+            }
+            return GCDTime;
         }
 
         public void setRotation(Type t)
@@ -64,6 +106,7 @@ namespace Rawr.DPSDK
                     curRotationDuration = 20f;
                     DancingRuneWeapon = 190f;
                     GargoyleDuration = 0f;
+                    DeathStrike = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Frost:
@@ -82,6 +125,7 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 10f;
                     GargoyleDuration = 0f;
+                    DeathStrike = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Unholy:
@@ -100,6 +144,7 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
                     GargoyleDuration = 30f;
+                    DeathStrike = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:

@@ -34,8 +34,26 @@ namespace Rawr.DPSDK
             txtSS.KeyUp += new KeyEventHandler(txtSS_KeyUp);
             txtUB.KeyUp += new KeyEventHandler(txtUB_KeyUp);
             txtUptime.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
-            txtDS.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
+            txtDS.KeyUp += new KeyEventHandler(txtDS_KeyUp);
+            txtHoW.KeyUp += new KeyEventHandler(txtHoW_KeyUp);
             txtGargoyleDuration.KeyUp += new KeyEventHandler(txtGargoyleDuration_KeyUp);
+        }
+
+        void updateLabels()
+        {
+            rotation.getGCDTime();
+            totalGCDs.Text = rotation.getGCDTime() + " seconds";
+            if (rotation.getGCDTime() > rotation.curRotationDuration)
+            {
+                totalGCDs.ForeColor = Color.Red;
+            }
+            else totalGCDs.ForeColor = Color.Black;
+            netRP.Text = rotation.getRP(cbFourT7.Checked, cbGlyphOfIT.Checked, cbGlyphofFS.Checked) + " runic power";
+            if (rotation.getRP(cbFourT7.Checked, cbGlyphOfIT.Checked, cbGlyphofFS.Checked) < 0)
+            {
+                netRP.ForeColor = Color.Red;
+            }
+            else netRP.ForeColor = Color.Black;
         }
 
         private void loadCurRotation()
@@ -63,6 +81,10 @@ namespace Rawr.DPSDK
             {
                 rbBloodPresence.Checked = true;
             }
+            cbGlyphofFS.Checked = rotation.GlyphofFS;
+            cbGlyphOfIT.Checked = rotation.GlyphofIT;
+            cbFourT7.Checked = rotation.fourT7;
+            updateLabels();
         }
 
         private void lockTxt()
@@ -81,6 +103,7 @@ namespace Rawr.DPSDK
             txtUB.ReadOnly = true;
             txtUptime.ReadOnly = true;
             txtGargoyleDuration.ReadOnly = true;
+            updateLabels();
         }
 
         private void unLockTxt()
@@ -99,6 +122,7 @@ namespace Rawr.DPSDK
             txtUB.ReadOnly = false;
             txtUptime.ReadOnly = false;
             txtGargoyleDuration.ReadOnly = false;
+            updateLabels();
         }
 
         private void RotationViewer_Load(object sender, EventArgs e)
@@ -119,6 +143,7 @@ namespace Rawr.DPSDK
             {
                 rbUnholy.Checked = true;
             }
+            updateLabels();
         }
 
         private void rbUnholy_CheckedChanged(object sender, EventArgs e)
@@ -129,6 +154,7 @@ namespace Rawr.DPSDK
                 rotation.setRotation(Rotation.Type.Unholy);
                 loadCurRotation();
             }
+            updateLabels();
         }
 
         private void rbFrost_CheckedChanged(object sender, EventArgs e)
@@ -139,6 +165,7 @@ namespace Rawr.DPSDK
                 rotation.setRotation(Rotation.Type.Frost);
                 loadCurRotation();
             }
+            updateLabels();
         }
 
         private void rbCustom_CheckedChanged(object sender, EventArgs e)
@@ -149,6 +176,7 @@ namespace Rawr.DPSDK
                 rotation.setRotation(Rotation.Type.Custom);
                 loadCurRotation();
             }
+            updateLabels();
         }
 
         private void rbBlood_CheckedChanged(object sender, EventArgs e)
@@ -159,6 +187,7 @@ namespace Rawr.DPSDK
                 rotation.setRotation(Rotation.Type.Blood);
                 loadCurRotation();
             }
+            updateLabels();
         }
         private void rbUnholyPresence_CheckedChanged(object sender, EventArgs e)
         {
@@ -166,6 +195,7 @@ namespace Rawr.DPSDK
             {
                 rotation.presence = CalculationOptionsDPSDK.Presence.Unholy;
             }
+            updateLabels();
         }
         private void rbBloodPresence_CheckedChanged(object sender, EventArgs e)
         {
@@ -173,6 +203,7 @@ namespace Rawr.DPSDK
             {
                 rotation.presence = CalculationOptionsDPSDK.Presence.Blood;
             }
+            updateLabels();
         }
 
         //text changes, commits VALID entries into memory
@@ -191,6 +222,7 @@ namespace Rawr.DPSDK
                 rotation.DeathCoil = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtBS_KeyUp(object sender, KeyEventArgs e)
@@ -207,6 +239,7 @@ namespace Rawr.DPSDK
                 rotation.BloodStrike = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtDuration_KeyUp(object sender, KeyEventArgs e)
@@ -223,6 +256,7 @@ namespace Rawr.DPSDK
                 rotation.curRotationDuration = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtFS_KeyUp(object sender, KeyEventArgs e)
@@ -239,6 +273,7 @@ namespace Rawr.DPSDK
                 rotation.FrostStrike = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtHB_KeyUp(object sender, KeyEventArgs e)
@@ -255,6 +290,7 @@ namespace Rawr.DPSDK
                 rotation.HowlingBlast = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtHS_KeyUp(object sender, KeyEventArgs e)
@@ -271,6 +307,7 @@ namespace Rawr.DPSDK
                 rotation.HeartStrike = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtIT_KeyUp(object sender, KeyEventArgs e)
@@ -287,6 +324,7 @@ namespace Rawr.DPSDK
                 rotation.IcyTouch = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtNumDisease_KeyUp(object sender, KeyEventArgs e)
@@ -303,6 +341,7 @@ namespace Rawr.DPSDK
                 rotation.numDisease = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtOblit_KeyUp(object sender, KeyEventArgs e)
@@ -319,6 +358,7 @@ namespace Rawr.DPSDK
                 rotation.Obliterate = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtDS_KeyUp(object sender, KeyEventArgs e)
@@ -335,8 +375,25 @@ namespace Rawr.DPSDK
                 rotation.DeathStrike = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
+        void txtHoW_KeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            try
+            {
+                double d = double.Parse(t.Text);
+                float f = (float)d;
+                rotation.Horn = f;
+            }
+            catch
+            {
+                rotation.Horn = 0f;
+                t.Text = "0";
+            }
+            updateLabels();
+        }
         void txtPS_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
@@ -351,6 +408,7 @@ namespace Rawr.DPSDK
                 rotation.PlagueStrike = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtSS_KeyUp(object sender, KeyEventArgs e)
@@ -367,6 +425,7 @@ namespace Rawr.DPSDK
                 rotation.ScourgeStrike = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtUB_KeyUp(object sender, KeyEventArgs e)
@@ -383,6 +442,7 @@ namespace Rawr.DPSDK
                 rotation.UnholyBlight = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtUptime_KeyUp(object sender, KeyEventArgs e)
@@ -399,6 +459,7 @@ namespace Rawr.DPSDK
                 rotation.diseaseUptime = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
 
         void txtGargoyleDuration_KeyUp(object sender, KeyEventArgs e)
@@ -426,6 +487,7 @@ namespace Rawr.DPSDK
                 rotation.GargoyleDuration = 0f;
                 t.Text = "0";
             }
+            updateLabels();
         }
     }
 }
