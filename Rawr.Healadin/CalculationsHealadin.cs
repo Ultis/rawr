@@ -512,24 +512,30 @@ namespace Rawr.Healadin
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger == Trigger.Use
-                    || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
-                {
-                    if (HasSpecialEffectStats(effect.Stats)) s.AddSpecialEffect(effect);
-                }
+                if (HasRelevantSpecialEffect(effect)) s.AddSpecialEffect(effect);
             }
             return s;
         }
 
-        public bool HasSpecialEffectStats(Stats stats)
+        public bool HasRelevantSpecialEffect(SpecialEffect effect)
         {
-            return (stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0;
+            if (effect.Trigger == Trigger.Use
+                || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
+                || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+            {
+                Stats stats = effect.Stats;
+                if ((stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating
+                    + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool HasWantedStats(Stats stats)
         {
-            return (stats.Mp5 + stats.SpellCrit + stats.SpellHaste
+            return (stats.SpellCrit + stats.SpellHaste
                 + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
                 + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit +
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
@@ -540,7 +546,7 @@ namespace Rawr.Healadin
 
         private bool HasMaybeStats(Stats stats)
         {
-            return (stats.Intellect + stats.HasteRating + stats.CritRating + stats.SpellPower) > 0;
+            return (stats.Mp5 + stats.Intellect + stats.HasteRating + stats.CritRating + stats.SpellPower) > 0;
         }
 
         public bool HasSurvivalStats(Stats stats)
@@ -552,18 +558,22 @@ namespace Rawr.Healadin
         {
             return (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                 + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit + stats.DodgeRating + stats.ParryRating
-                + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue) > 0;
+                + stats.ExpertiseRating + stats.Expertise + stats.BlockRating + stats.Block) > 0;
         }
     
 
         public override bool IsBuffRelevant(Buff buff)
         {
-            return HasWantedStats(buff.Stats) || HasMaybeStats(buff.Stats) || HasSurvivalStats(buff.Stats) || (buff.Stats.HitRating > 0);
+            return HasWantedStats(buff.Stats) || HasMaybeStats(buff.Stats) || HasSurvivalStats(buff.Stats);
         }
 
         public override bool IsEnchantRelevant(Enchant enchant)
         {
-            return HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats) || (enchant.Stats.HitRating > 0);
+            foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
+            {
+                if (HasRelevantSpecialEffect(effect)) return true;
+            }
+            return HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats);
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -577,16 +587,10 @@ namespace Rawr.Healadin
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 hasSpecialEffect = true;
-                specialEffect = false;
-                if (effect.Trigger == Trigger.Use
-                    || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                if (HasRelevantSpecialEffect(effect))
                 {
-                    if (HasSpecialEffectStats(effect.Stats))
-                    {
-                        specialEffect = true;
-                        break;
-                    }
+                    specialEffect = true;
+                    break;
                 }
             }
             return wantedStats || ((specialEffect || (maybeStats && (!hasSpecialEffect || specialEffect)) || (survivalStats && !ignoreStats)) && !ignoreStats);

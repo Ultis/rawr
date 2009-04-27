@@ -466,14 +466,15 @@ namespace Rawr
                     case Character.CharacterClass.DeathKnight: baseChar.DeathKnightTalents = new DeathKnightTalents(); break;
                     default: baseChar.DruidTalents = new DruidTalents(); break;
                 }
+                CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
+
                 ComparisonCalculationBase compare;
                 Character newChar;
                 foreach (SavedTalentSpec spec in picker.SpecsFor(Character.Class))
                 {
                     newChar = Character.Clone();
                     newChar.CurrentTalents = spec.TalentSpec();
-                    CharacterCalculationsBase calculations = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                    compare = Calculations.GetCharacterComparisonCalculations(calculations, spec.ToString(), spec == picker.CurrentSpec());
+                    compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newChar, spec.ToString(), spec == picker.CurrentSpec());
                     compare.Item = null;
                     talentCalculations.Add(compare);
                 }

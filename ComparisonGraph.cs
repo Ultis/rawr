@@ -347,23 +347,24 @@ namespace Rawr
                         float graphZero = (float)Math.Round(graphStart - minScale / totalScale * graphWidth);
                         ticks[0] = graphZero;
 
-                        int maxTicks = (int)Math.Round(maxScale / totalScale * 8f);
-                        int minTicks = (int)Math.Round(-minScale / totalScale * 8f);
+                        float maxTicks = (float)Math.Floor(maxScale / totalScale * 8f);
+                        float minTicks = (float)Math.Floor(-minScale / totalScale * 8f);
 
-                        float tickInc;// = (float)(Math.Floor(totalScale / Math.Max(maxRoundTo, minRoundTo)) * Math.Max(maxRoundTo, minRoundTo) / 8f);
-                        if (minTicks > maxTicks) tickInc = -minScale / minTicks;
+                        if (maxTicks > minTicks) maxTicks += 8f - maxTicks - minTicks;
+                        else minTicks += 8f - maxTicks - minTicks;
+
+                        float tickInc;
+                        if (-minScale > maxScale) tickInc = -minScale / minTicks;
                         else tickInc = maxScale / maxTicks;
 
-                        for (int i = 0; i < maxTicks; i++)
+                        for (float i = tickInc; i <= maxScale; i += tickInc)
                         {
-                            if ((i + 1) * tickInc <= maxScale)
-                                ticks[(i + 1) * tickInc] = (float)Math.Round(graphZero + (i + 1) * tickInc / totalScale * graphWidth);
+                            ticks[i] = (float)Math.Round(graphZero + i / totalScale * graphWidth);
                         }
 
-                        for (int i = 0; i < minTicks; i++)
+                        for (float i = -tickInc; i >= minScale; i -= tickInc)
                         {
-                            if ((i + 1) * -tickInc >= minScale)
-                                ticks[(i + 1) * -tickInc] = (float)Math.Round(graphZero + (i + 1) * -tickInc / totalScale * graphWidth);
+                            ticks[i] = (float)Math.Round(graphZero + i / totalScale * graphWidth);
                         }
 
                         #region Pens

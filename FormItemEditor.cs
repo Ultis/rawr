@@ -360,7 +360,7 @@ namespace Rawr
                 Int32 item_id = Armory.GetItemIdByName(name);
                 if (item_id > 0)
                 {
-                    newItem = Item.LoadFromId(item_id, true, true, true);
+                    newItem = Item.LoadFromId(item_id, true, true, false);
                 }
             }
 
@@ -398,7 +398,7 @@ namespace Rawr
                 // try the armory (if requested)
                 if (useArmory)
                 {
-                    newItem = Item.LoadFromId(id, true, true, true);
+                    newItem = Item.LoadFromId(id, true, true, false);
                 }
 
                 // try wowhead (if requested)

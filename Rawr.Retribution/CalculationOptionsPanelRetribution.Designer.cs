@@ -837,7 +837,7 @@
             0,
             0,
             65536});
-            this.nudTargets.Location = new System.Drawing.Point(150, 163);
+            this.nudTargets.Location = new System.Drawing.Point(150, 161);
             this.nudTargets.Maximum = new decimal(new int[] {
             10,
             0,
@@ -861,7 +861,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(98, 165);
+            this.label7.Location = new System.Drawing.Point(98, 163);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(46, 13);
             this.label7.TabIndex = 13;
