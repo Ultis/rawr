@@ -11,11 +11,13 @@ namespace Rawr.DPSDK
     public partial class RotationViewer : Form
     {
         public Rotation rotation;
+        public DeathKnightTalents talents;
 
-        public RotationViewer(Rotation r)
+        public RotationViewer(Rotation r, DeathKnightTalents t)
         {
             InitializeComponent();
             rotation = r;
+            talents = t;
 
          //   cbPresence.Items.Clear();
          //   cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Blood.ToString());
@@ -48,8 +50,8 @@ namespace Rawr.DPSDK
                 totalGCDs.ForeColor = Color.Red;
             }
             else totalGCDs.ForeColor = Color.Black;
-            netRP.Text = rotation.getRP(cbFourT7.Checked, cbGlyphOfIT.Checked, cbGlyphofFS.Checked) + " runic power";
-            if (rotation.getRP(cbFourT7.Checked, cbGlyphOfIT.Checked, cbGlyphofFS.Checked) < 0)
+            netRP.Text = rotation.getRP(cbFourT7.Checked, talents.GlyphofIcyTouch, talents.GlyphofFrostStrike) + " runic power";
+            if (rotation.getRP(cbFourT7.Checked, talents.GlyphofIcyTouch, talents.GlyphofFrostStrike) < 0)
             {
                 netRP.ForeColor = Color.Red;
             }
@@ -81,8 +83,6 @@ namespace Rawr.DPSDK
             {
                 rbBloodPresence.Checked = true;
             }
-            cbGlyphofFS.Checked = rotation.GlyphofFS;
-            cbGlyphOfIT.Checked = rotation.GlyphofIT;
             cbFourT7.Checked = rotation.fourT7;
             updateLabels();
         }

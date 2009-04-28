@@ -106,7 +106,7 @@ namespace Rawr.DPSDK
                     curRotationDuration = 20f;
                     DancingRuneWeapon = 190f;
                     GargoyleDuration = 0f;
-                    DeathStrike = 0f;
+                    DeathStrike = 2f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Frost:

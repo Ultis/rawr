@@ -234,7 +234,7 @@ namespace Rawr.DPSDK
         private void btnRotation_Click(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            RotationViewer RV = new RotationViewer(calcOpts.rotation);
+            RotationViewer RV = new RotationViewer(calcOpts.rotation, calcOpts.talents);
             RV.ShowDialog();
             
 
@@ -277,37 +277,6 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
-        private void cbGlyphOblit_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbGlyphOblit.Checked) { calcOpts.GlyphofOblit = true; }
-            else { calcOpts.GlyphofOblit = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbGlyphPlagueStrike_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbGlyphPlagueStrike.Checked) { calcOpts.GlyphofPS = true; }
-            else { calcOpts.GlyphofPS = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbGlyphGhoul_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbGlyphGhoul.Checked) { calcOpts.GlyphofGhoul = true; }
-            else { calcOpts.GlyphofGhoul = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbGhoul_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbGhoul.Checked) { calcOpts.Ghoul = true; }
-            else { calcOpts.Ghoul = false; }
-            Character.OnCalculationsInvalidated();
-        }
     }
 
 	[Serializable]

@@ -77,8 +77,6 @@
             this.txtHoW = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.cbFourT7 = new System.Windows.Forms.CheckBox();
-            this.cbGlyphOfIT = new System.Windows.Forms.CheckBox();
-            this.cbGlyphofFS = new System.Windows.Forms.CheckBox();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -484,9 +482,9 @@
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(12, 377);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(67, 13);
+            this.label20.Size = new System.Drawing.Size(93, 13);
             this.label20.TabIndex = 73;
-            this.label20.Text = "Net RP flow:";
+            this.label20.Text = "Net RP flow (est.):";
             this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label21
@@ -494,9 +492,9 @@
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(12, 399);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(82, 13);
+            this.label21.Size = new System.Drawing.Size(108, 13);
             this.label21.TabIndex = 74;
-            this.label21.Text = "Total GCD time:";
+            this.label21.Text = "Total GCD time (est.):";
             this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // netRP
@@ -547,35 +545,11 @@
             this.cbFourT7.Text = "4 pc T7";
             this.cbFourT7.UseVisualStyleBackColor = true;
             // 
-            // cbGlyphOfIT
-            // 
-            this.cbGlyphOfIT.AutoSize = true;
-            this.cbGlyphOfIT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbGlyphOfIT.Location = new System.Drawing.Point(180, 90);
-            this.cbGlyphOfIT.Name = "cbGlyphOfIT";
-            this.cbGlyphOfIT.Size = new System.Drawing.Size(116, 17);
-            this.cbGlyphOfIT.TabIndex = 80;
-            this.cbGlyphOfIT.Text = "Glyph of Icy Touch";
-            this.cbGlyphOfIT.UseVisualStyleBackColor = true;
-            // 
-            // cbGlyphofFS
-            // 
-            this.cbGlyphofFS.AutoSize = true;
-            this.cbGlyphofFS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbGlyphofFS.Location = new System.Drawing.Point(180, 113);
-            this.cbGlyphofFS.Name = "cbGlyphofFS";
-            this.cbGlyphofFS.Size = new System.Drawing.Size(121, 17);
-            this.cbGlyphofFS.TabIndex = 81;
-            this.cbGlyphofFS.Text = "Glyph of Frost Strike";
-            this.cbGlyphofFS.UseVisualStyleBackColor = true;
-            // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(352, 424);
-            this.Controls.Add(this.cbGlyphofFS);
-            this.Controls.Add(this.cbGlyphOfIT);
             this.Controls.Add(this.cbFourT7);
             this.Controls.Add(this.txtHoW);
             this.Controls.Add(this.label22);
@@ -684,7 +658,5 @@
         private System.Windows.Forms.TextBox txtHoW;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.CheckBox cbFourT7;
-        private System.Windows.Forms.CheckBox cbGlyphOfIT;
-        private System.Windows.Forms.CheckBox cbGlyphofFS;
     }
 }

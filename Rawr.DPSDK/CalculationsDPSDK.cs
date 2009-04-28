@@ -305,7 +305,7 @@ namespace Rawr.DPSDK
             calcOpts.presence = calcOpts.rotation.presence;
 
             int numt7 = 0;
-
+            
             #region T7setbonus
             {
                 // Tier 7 set bonus hack
@@ -697,7 +697,7 @@ namespace Rawr.DPSDK
                     affectedDCMult /= calcOpts.rotation.DeathCoil;
                     dpsDeathCoil += dpsDeathCoil * affectedDCMult;*/
 
-                    dpsDeathCoil *= 1f + (.05f * (float)talents.Morbidity);
+                    dpsDeathCoil *= 1f + (.05f * (float)talents.Morbidity) + (talents.GlyphofDarkDeath ? .15f : 0f);
                 }
             }
             #endregion
@@ -730,7 +730,7 @@ namespace Rawr.DPSDK
                     float PSCrit = 1f + ((physCrits + (.03f * (float)talents.ViciousStrikes)) * PSCritDmgMult);
                     dpsPlagueStrike *= PSCrit;
 
-                    dpsPlagueStrike *= (calcOpts.GlyphofPS ? 1.2f : 1f);
+                    dpsPlagueStrike *= (talents.GlyphofPlagueStrike ? 1.2f : 1f);
 
                     dpsPlagueStrike *= 1f + (.1f * (float)talents.Outbreak);
                 }
@@ -855,7 +855,7 @@ namespace Rawr.DPSDK
                         (0.05f * (float)talents.Rime) +
                         (numt7 > 1 ? .05f : 0f)) * OblitCritDmgMult);
                     dpsObliterate = dpsObliterate * OblitCrit;
-                    dpsObliterate *= (calcOpts.GlyphofOblit ? 1.2f : 1f);
+                    dpsObliterate *= (talents.GlyphofObliterate ? 1.2f : 1f);
                 }
             }
             #endregion
@@ -869,7 +869,7 @@ namespace Rawr.DPSDK
                     float DSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f)))*0.75f) + 222.75f +
                         (character.Ranged != null && character.Ranged.Id == 40207 ? 315f : 0f);   // Sigil of Awareness
                     DSDmg *= 1f + 0.15f*(float)talents.ImprovedDeathStrike;
-                    DSDmg *= (calcOpts.GlyphofDS ? 1.25f : 1f);
+                    DSDmg *= (talents.GlyphofDeathStrike ? 1.25f : 1f);
                     dpsDeathStrike = DSDmg / DSCD;
                     //float OblitCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
                     //OblitCrit += .05f * (float)talents.Rime;
@@ -973,7 +973,7 @@ namespace Rawr.DPSDK
                     float GhoulAPdivisor = 16.7f;           // 
 
                     float GlyphofGhoulValue = 0f;
-                    if (calcOpts.GlyphofGhoul) GlyphofGhoulValue = 0.4f;
+                    if (talents.GlyphoftheGhoul) GlyphofGhoulValue = 0.4f;
 
                     float GhoulStrengthMult = GhoulBaseStrengthMult + (GhoulBaseStrengthMult * (0.2f * (float)talents.RavenousDead)) + GlyphofGhoulValue;
                     float GhoulStrength = GhoulBaseStrength + stats.Strength * GhoulStrengthMult;
@@ -1126,98 +1126,98 @@ namespace Rawr.DPSDK
             #region Apply Multi-Ability Talent Multipliers
             {
                 float BloodyVengeanceMult = .03f * (float)talents.BloodyVengeance;
-                BCBMult += BloodyVengeanceMult;
-                BloodStrikeMult += BloodyVengeanceMult;
-                HeartStrikeMult += BloodyVengeanceMult;
-                ObliterateMult += BloodyVengeanceMult;
-                DeathStrikeMult += BloodyVengeanceMult;
-                PlagueStrikeMult += BloodyVengeanceMult;
-                WhiteMult += BloodyVengeanceMult;
+                BCBMult *= 1 + BloodyVengeanceMult;
+                BloodStrikeMult *= 1 + BloodyVengeanceMult;
+                HeartStrikeMult *= 1 + BloodyVengeanceMult;
+                ObliterateMult *= 1 + BloodyVengeanceMult;
+                DeathStrikeMult *= 1 + BloodyVengeanceMult;
+                PlagueStrikeMult *= 1 + BloodyVengeanceMult;
+                WhiteMult *= 1 + BloodyVengeanceMult;
 
                 float HysteriaCoeff = .3f / 6f; // current uptime is 16.666...%
                 float HysteriaMult = HysteriaCoeff * (float)talents.Hysteria;
-                BCBMult += HysteriaMult;
-                BloodStrikeMult += HysteriaMult;
-                HeartStrikeMult += HysteriaMult;
-                ObliterateMult += HysteriaMult;
-                DeathStrikeMult += HysteriaMult;
-                PlagueStrikeMult += HysteriaMult;
-                WhiteMult += HysteriaMult;
+                BCBMult *= 1 + HysteriaMult;
+                BloodStrikeMult *= 1 + HysteriaMult;
+                HeartStrikeMult *= 1 + HysteriaMult;
+                ObliterateMult *= 1 + HysteriaMult;
+                DeathStrikeMult *= 1 + HysteriaMult;
+                PlagueStrikeMult *= 1 + HysteriaMult;
+                WhiteMult *= 1 + HysteriaMult;
 
                 float BlackIceMult = .02f * (float)talents.BlackIce;
-                FrostFeverMult += BlackIceMult;
-                HowlingBlastMult += BlackIceMult;
-                IcyTouchMult += BlackIceMult;
-                FrostStrikeMult += BlackIceMult;
-                DeathCoilMult += BlackIceMult;
-                ScourgeStrikeMult += BlackIceMult;
-                BloodPlagueMult += BlackIceMult;
+                FrostFeverMult *= 1 + BlackIceMult;
+                HowlingBlastMult *= 1 + BlackIceMult;
+                IcyTouchMult *= 1 + BlackIceMult;
+                FrostStrikeMult *= 1 + BlackIceMult;
+                DeathCoilMult *= 1 + BlackIceMult;
+                ScourgeStrikeMult *= 1 + BlackIceMult;
+                BloodPlagueMult *= 1 + BlackIceMult;
 
                 float MercilessCombatMult = .315f * 0.06f * (float)talents.MercilessCombat;   // The last 35% of a Boss don't take 35% of the fight-time...say .315 (10% faster)
-                ObliterateMult += MercilessCombatMult;
-                HowlingBlastMult += MercilessCombatMult;
-                IcyTouchMult += MercilessCombatMult;
-                FrostStrikeMult += MercilessCombatMult;
+                ObliterateMult *= 1 + MercilessCombatMult;
+                HowlingBlastMult *= 1 + MercilessCombatMult;
+                IcyTouchMult *= 1 + MercilessCombatMult;
+                FrostStrikeMult *= 1 + MercilessCombatMult;
 
-                float GlacierRot = .07f * (float)talents.GlacierRot;
-                HowlingBlastMult += GlacierRot;
-                IcyTouchMult += GlacierRot;
-                FrostStrikeMult += GlacierRot;
+                float GlacierRot = .0666666666666f * (float)talents.GlacierRot;
+                HowlingBlastMult *= 1 + GlacierRot;
+                IcyTouchMult *= 1 + GlacierRot;
+                FrostStrikeMult *= 1 + GlacierRot;
 
-                if (calcOpts.CryptFever)
-                {
-                    float CryptFeverMult = .1f * (float)talents.CryptFever;
-                    FrostFeverMult += CryptFeverMult;
-                    BloodPlagueMult += CryptFeverMult;
-                    UnholyBlightMult += CryptFeverMult;
-                }
+
+                float CryptFeverMult = .1f * (float)talents.CryptFever;
+                float CryptFeverBuff = stats.BonusDiseaseDamageMultiplier;
+                CryptFeverMult = Math.Max(CryptFeverMult, CryptFeverBuff);
+                FrostFeverMult *= 1 + CryptFeverMult;
+                BloodPlagueMult *= 1 + CryptFeverMult;
+                UnholyBlightMult *= 1 + CryptFeverMult;
 
                /* float DesecrationChance = (calcOpts.rotation.PlagueStrike * 12f) / calcOpts.rotation.curRotationDuration +
                                            (calcOpts.rotation.ScourgeStrike * 12f) / calcOpts.rotation.curRotationDuration;
                 if (DesecrationChance > 1f) DesecrationChance = 1f;*/
                 float DesecrationMult = .01f * (float)talents.Desecration;  //the new desecration is basically a flat 1% per point
-                BCBMult += DesecrationMult;
-                BloodPlagueMult += DesecrationMult;
-                BloodStrikeMult += DesecrationMult;
-                DeathCoilMult += DesecrationMult;
-                DancingRuneWeaponMult += DesecrationMult;
-                FrostFeverMult += DesecrationMult;
-                FrostStrikeMult += DesecrationMult;
-                //GargoyleMult += DesecrationMult;
-                HeartStrikeMult += DesecrationMult;
-                HowlingBlastMult += DesecrationMult;
-                IcyTouchMult += DesecrationMult;
-                NecrosisMult += DesecrationMult;
-                ObliterateMult += DesecrationMult;
-                DeathStrikeMult += DesecrationMult;
-                PlagueStrikeMult += DesecrationMult;
-                ScourgeStrikeMult += DesecrationMult;
-                UnholyBlightMult += DesecrationMult;
-                WhiteMult += DesecrationMult;
-                WindfuryMult += DesecrationMult;
+                BCBMult *= 1 + DesecrationMult;
+                BloodPlagueMult *= 1 + DesecrationMult;
+                BloodStrikeMult *= 1 + DesecrationMult;
+                DeathCoilMult *= 1 + DesecrationMult;
+                DancingRuneWeaponMult *= 1 + DesecrationMult;
+                FrostFeverMult *= 1 + DesecrationMult;
+                FrostStrikeMult *= 1 + DesecrationMult;
+                //GargoyleMult *= 1 + DesecrationMult;
+                HeartStrikeMult *= 1 + DesecrationMult;
+                HowlingBlastMult *= 1 + DesecrationMult;
+                IcyTouchMult *= 1 + DesecrationMult;
+                NecrosisMult *= 1 + DesecrationMult;
+                ObliterateMult *= 1 + DesecrationMult;
+                DeathStrikeMult *= 1 + DesecrationMult;
+                PlagueStrikeMult *= 1 + DesecrationMult;
+                ScourgeStrikeMult *= 1 + DesecrationMult;
+                UnholyBlightMult *= 1 + DesecrationMult;
+                WhiteMult *= 1 + DesecrationMult;
+                WindfuryMult *= 1 + DesecrationMult;
 
                 if ((float)talents.BoneShield >= 1f)
                 {
                     float BoneMult = .02f;
-                    BCBMult += BoneMult;
-                    BloodPlagueMult += BoneMult;
-                    BloodStrikeMult += BoneMult;
-                    DeathCoilMult += BoneMult;
-                    DancingRuneWeaponMult += BoneMult;
-                    FrostFeverMult += BoneMult;
-                    //GargoyleMult += BoneMult;
-                    FrostStrikeMult += BoneMult;
-                    HeartStrikeMult += BoneMult;
-                    HowlingBlastMult += BoneMult;
-                    IcyTouchMult += BoneMult;
-                    NecrosisMult += BoneMult;
-                    ObliterateMult += BoneMult;
-                    DeathStrikeMult += BoneMult;
-                    PlagueStrikeMult += BoneMult;
-                    ScourgeStrikeMult += BoneMult;
-                    UnholyBlightMult += BoneMult;
-                    WhiteMult += BoneMult;
-                    WindfuryMult += BoneMult;
+                    BCBMult *= 1 + BoneMult;
+                    BloodPlagueMult *= 1 + BoneMult;
+                    BloodStrikeMult *= 1 + BoneMult;
+                    DeathCoilMult *= 1 + BoneMult;
+                    DancingRuneWeaponMult *= 1 + BoneMult;
+                    FrostFeverMult *= 1 + BoneMult;
+                    //GargoyleMult *= 1 + BoneMult;
+                    FrostStrikeMult *= 1 + BoneMult;
+                    HeartStrikeMult *= 1 + BoneMult;
+                    HowlingBlastMult *= 1 + BoneMult;
+                    IcyTouchMult *= 1 + BoneMult;
+                    NecrosisMult *= 1 + BoneMult;
+                    ObliterateMult *= 1 + BoneMult;
+                    DeathStrikeMult *= 1 + BoneMult;
+                    PlagueStrikeMult *= 1 + BoneMult;
+                    ScourgeStrikeMult *= 1 + BoneMult;
+                    UnholyBlightMult *= 1 + BoneMult;
+                    WhiteMult *= 1 + BoneMult;
+                    WindfuryMult *= 1 + BoneMult;
                 }
             }
             #endregion
@@ -1255,8 +1255,9 @@ namespace Rawr.DPSDK
             {
                 if (talents.DancingRuneWeapon > 0)
                 {
-                    float DRWUptime = 1f / 9f;
+                    float DRWUptime = (15f + (1.5f * talents.RunicPowerMastery) + (talents.GlyphofDancingRuneWeapon ? 5f : 0)) / 90f;
                     dpsDancingRuneWeapon = (calcs.DPSPoints - calcs.GhoulDPS) * DRWUptime;
+                    dpsDancingRuneWeapon *= 0.5f; // "doing the same attacks as the Death Knight but for 50% reduced damage."
                     calcs.DPSPoints += dpsDancingRuneWeapon;
                     calcs.DRWDPS = dpsDancingRuneWeapon;
                 }
@@ -1445,6 +1446,7 @@ namespace Rawr.DPSDK
 
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusSpellPowerMultiplier = statsGearEnchantsBuffs.BonusShadowDamageMultiplier;
+            statsTotal.BonusDiseaseDamageMultiplier = statsGearEnchantsBuffs.BonusDiseaseDamageMultiplier;
 
        /*     if (calcOpts.MagicVuln)
             {
@@ -1567,7 +1569,8 @@ namespace Rawr.DPSDK
                 Bloodlust = stats.Bloodlust,
 
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
-                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier
 
                 
                 
@@ -1582,7 +1585,7 @@ namespace Rawr.DPSDK
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.BonusShadowDamageMultiplier
                 + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
-                + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste) != 0;
+                + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier) != 0;
         }
 
 
