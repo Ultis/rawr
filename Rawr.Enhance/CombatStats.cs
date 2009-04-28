@@ -70,7 +70,7 @@ namespace Rawr.Enhance
 
         public float NormalHitModifier { get { return 1 - chanceWhiteCrit + whiteCritDepression - glancingRate; } }
         public float CritHitModifier { get { return (chanceWhiteCrit - whiteCritDepression) * (2f + _stats.BonusCritMultiplier); } }
-        public float GlancingHitModifier { get { return glancingRate * .35f; } }
+        public float GlancingHitModifier { get { return glancingRate * .7f; } }
 
         public float ChanceSpellHit { get { return 1 - chanceSpellMiss; } }
         public float ChanceWhiteHit { get { return 1 - chanceWhiteMiss; } }
@@ -112,7 +112,7 @@ namespace Rawr.Enhance
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
-            float chanceCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            float chanceCrit = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             chanceWhiteMiss = Math.Max(0f, 0.27f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
             chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
