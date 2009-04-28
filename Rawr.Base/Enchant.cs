@@ -48,7 +48,8 @@ namespace Rawr
 					.Replace("Savage", "Sav").Replace("Mighty Armor", "Mighty Arm").Replace("Shadow Armor", "Shadow Arm")
 					.Replace("Attack Power", "AP").Replace("Rune of the ", "").Replace(" Gargoyle", "")
 					.Replace("speed Accelerators", "").Replace(" Mysteries", "").Replace(" Embroidery", "")
-					.Replace("Mana Restoration", "Mp5").Replace("Restore Mana", "Mp5").Replace("Vengeance", "Veng.");
+					.Replace("Mana Restoration", "Mp5").Replace("Restore Mana", "Mp5").Replace("Vengeance", "Veng.")
+                    .Replace("Reticulated Armor ", "");
                 return shortName.Substring(0, Math.Min(shortName.Length, 12));
             }
         }
@@ -638,6 +639,7 @@ namespace Rawr
             Stats hyper = new Stats();
             hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 10f, 60f));
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, hyper));
+            defaultEnchants.Add(new Enchant(3860, "Reticulated Armor Webbing", Item.ItemSlot.Hands, new Stats() { BonusArmor = 800 }));
 
             // Engineering cloak enchant
             defaultEnchants.Add(new Enchant(3859, "Springy Arachnoweave", Item.ItemSlot.Back, new Stats() { SpellPower = 18f }));
