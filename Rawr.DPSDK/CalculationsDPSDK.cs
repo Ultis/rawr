@@ -305,43 +305,64 @@ namespace Rawr.DPSDK
             calcOpts.presence = calcOpts.rotation.presence;
 
             int numt7 = 0;
+            int numt8 = 0;
             
-            #region T7setbonus
+            #region Tier 7 and 8 set bonuses
             {
-                // Tier 7 set bonus hack
-                if (character.Chest != null)
+                // Tier 7&8 set bonus hack
+                if (character.Chest != null && character.Chest.Item != null)
                 {
-                    if (character.Chest.Item.SetName != null && character.Chest.Item.SetName.Contains("Battlegear"))
+                    if (character.Chest.Item.Id == 39618 || character.Chest.Item.Id == 40550)
+                    {
+                        numt7++;
+                    } 
+                    if (character.Chest.Item.Id == 46111 || character.Chest.Item.Id == 45340)
+                    {
+                        numt8++;
+                    }
+                }
+                if (character.Head != null && character.Head.Item != null)
+                {
+                    if (character.Head.Item.Id == 39619 || character.Head.Item.Id == 40554)
                     {
                         numt7++;
                     }
+                    if (character.Head.Item.Id == 46115 || character.Head.Item.Id == 45342)
+                    {
+                        numt8++;
+                    }
                 }
-                if (character.Head != null)
+                if (character.Hands != null && character.Hands.Item != null)
                 {
-                    if (character.Head.Item.SetName != null && character.Head.Item.SetName.Contains("Battlegear"))
+                    if (character.Hands.Item.Id == 39618 || character.Hands.Item.Id == 40552)
                     {
                         numt7++;
                     }
+                    if (character.Hands.Item.Id == 46113 || character.Hands.Item.Id == 45341)
+                    {
+                        numt8++;
+                    }
                 }
-                if (character.Hands != null)
+                if (character.Legs != null && character.Legs.Item != null)
                 {
-                    if (character.Hands.Item.SetName != null && character.Hands.Item.SetName.Contains("Battlegear"))
+                    if (character.Legs.Item.Id == 39620 || character.Legs.Item.Id == 40556)
                     {
                         numt7++;
                     }
+                    if (character.Legs.Item.Id == 46116 || character.Legs.Item.Id == 45343)
+                    {
+                        numt8++;
+                    }
                 }
-                if (character.Legs != null)
+                if (character.Shoulders != null && character.Shoulders.Item != null)
                 {
-                    if (character.Legs.Item.SetName != null && character.Legs.Item.SetName.Contains("Battlegear"))
+                    if (character.Shoulders.Item.Id == 39621 || character.Shoulders.Item.Id == 40557)
                     {
                         numt7++;
                     }
-                }
-                if (character.Shoulders != null)
-                {
-                    if (character.Shoulders.Item.SetName != null && character.Shoulders.Item.SetName.Contains("Battlegear"))
+                    if (character.Shoulders.Item.Id == 46117 || character.Shoulders.Item.Id == 45344)
                     {
-                        numt7++;
+                        numt8++;
                     }
                 }
             }
@@ -686,9 +707,10 @@ namespace Rawr.DPSDK
                 {
                     float DCCD = realDuration / (calcOpts.rotation.DeathCoil + (0.05f * (float)talents.SuddenDoom));
                     float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower) +
-                        (character.Ranged != null && character.Ranged.Id == 40867 ? 80 : 0);     // Sigil of the Wild Buck
+                        (character.Ranged != null && character.Ranged.Id == 40867 ? 80 : 0)     // Sigil of the Wild Buck
+                        + (character.Ranged != null && character.Ranged.Id == 45254 ? 380 : 0); // Sigil of the Vengeful Heart
                     dpsDeathCoil = DCDmg / DCCD;
-                    dpsDeathCoil *= 1f + spellCrits;
+                    dpsDeathCoil *= 1f + spellCrits + (numt8 >= 2 ? .05f : 0f);
 
                     //sudden doom stuff
                     // this section is no longer relevant after 3.1.x changes
@@ -787,7 +809,7 @@ namespace Rawr.DPSDK
                 if (talents.ScourgeStrike > 0 && calcOpts.rotation.ScourgeStrike > 0f)
                 {
                     float SSCD = realDuration / calcOpts.rotation.ScourgeStrike;
-                    float SSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (.45f + 0.11f * .45f * calcOpts.rotation.avgDiseaseMult) + 357.188f +
+                    float SSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (.45f + 0.11f * .45f * calcOpts.rotation.avgDiseaseMult * (numt8 >= 4 ? 1.2f : 1f)) + 357.188f +
                         (character.Ranged != null && character.Ranged.Id == 40207 ? 189f : 0) +     // Sigil of Awareness
                         (character.Ranged != null && character.Ranged.Id == 40875 ? 91.35f : 0);     // Sigil of Arthritic Binding
                     dpsScourgeStrike = SSDmg / SSCD;
@@ -814,10 +836,11 @@ namespace Rawr.DPSDK
                 {
                     float addedCritFromKM = KMRatio;
                     float FSCD = realDuration / calcOpts.rotation.FrostStrike;
-                    float FSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * .6f + 150f;
+                    float FSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * .6f +
+                        150f + (character.Ranged != null && character.Ranged.Id == 45254 ? 380 : 0); // Sigil of the Vengeful Heart
                     dpsFrostStrike = FSDmg / FSCD;
                     float FSCritDmgMult = (.15f * (float)talents.GuileOfGorefiend);
-                    float FSCrit = 1f + physCrits + addedCritFromKM;
+                    float FSCrit = 1f + physCrits + addedCritFromKM + (numt8 >= 2 ? .05f : 0f);
                     dpsFrostStrike += dpsFrostStrike * FSCrit * FSCritDmgMult;
                 }
             }
@@ -844,7 +867,7 @@ namespace Rawr.DPSDK
                 {
                     // this is missing +crit chance from rime
                     float OblitCD = realDuration / calcOpts.rotation.Obliterate;
-                    float OblitDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f)))* (0.8f + 0.125f*0.8f*(float)calcOpts.rotation.avgDiseaseMult)) +
+                    float OblitDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.8f + 0.125f * 0.8f * (float)calcOpts.rotation.avgDiseaseMult * (numt8 >= 4 ? 1.2f : 1f))) +
                         (character.Ranged != null && character.Ranged.Id == 40207 ? 336f : 0) + 467.2f;   // Sigil of Awareness
                     dpsObliterate = OblitDmg / OblitCD;
                     //float OblitCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
@@ -888,7 +911,7 @@ namespace Rawr.DPSDK
                 if (calcOpts.rotation.BloodStrike > 0f)
                 {
                     float BSCD = realDuration / calcOpts.rotation.BloodStrike;
-                    float BSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.4f + 0.125f * 0.4f * (float)calcOpts.rotation.avgDiseaseMult)) +
+                    float BSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.4f + 0.125f * 0.4f * (float)calcOpts.rotation.avgDiseaseMult * (numt8 >= 4 ? 1.2f : 1f))) +
                         305.6f + (character.Ranged != null && character.Ranged.Id == 39208 ? 90 : 0);        // Sigil of the Dark Rider
                     dpsBloodStrike = BSDmg / BSCD;
                     float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
@@ -906,7 +929,7 @@ namespace Rawr.DPSDK
                 if (talents.HeartStrike > 0 && calcOpts.rotation.HeartStrike > 0f)
                 {
                     float HSCD = realDuration / calcOpts.rotation.HeartStrike;
-                    float HSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.5f + 0.1f * 0.5f * (float)calcOpts.rotation.avgDiseaseMult)) +
+                    float HSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.5f + 0.1f * 0.5f * (float)calcOpts.rotation.avgDiseaseMult) * (numt8 >= 4 ? 1.2f : 1f)) +
                         368f + (character.Ranged != null && character.Ranged.Id == 39208 ? 90 : 0);        // Sigil of the Dark Rider
                     dpsHeartStrike = HSDmg / HSCD;
                     //float HSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
