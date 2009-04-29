@@ -786,7 +786,7 @@ namespace Rawr.Mage
 
             double Tk = 0.01;
 
-            calculationResult.ChanceToDie = (float)(0.5f * (1f - XMath.Erf((characterStats.Health / burstWindow + characterStats.Hp5 / 5 - Xmean) / Math.Sqrt(2 * (Xvar * (1 + Tk) + Xmean * Xmean * Tk)))));
+            calculationResult.ChanceToDie = (float)(0.5f * (1f - SpecialFunction.Erf((characterStats.Health / burstWindow + characterStats.Hp5 / 5 - Xmean) / Math.Sqrt(2 * (Xvar * (1 + Tk) + Xmean * Xmean * Tk)))));
             calculationResult.MeanIncomingDps = (float)Xmean;
 
             //double maxTimeToDie = 1.0 / (1 - calculationOptions.ChanceToLiveLimit / 100.0) - 1;

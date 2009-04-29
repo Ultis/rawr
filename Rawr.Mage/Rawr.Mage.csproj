@@ -158,7 +158,6 @@
     <Compile Include="SolverLP.cs" />
     <Compile Include="SparseMatrix.cs" />
     <Compile Include="SpellInfo\Spell.cs" />
-    <Compile Include="XMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

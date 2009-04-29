@@ -87,7 +87,7 @@ namespace Rawr
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
         public Stats GetAverageStats(float triggerInterval)
         {
-            return GetAverageStats(triggerInterval, 1.0f);
+            return GetAverageStats(triggerInterval, 1.0f, 3.0f, 0.0f);
         }
 
         /// <summary>
@@ -99,8 +99,7 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance)
         {
-            // Since no fightDuration given, assume stack building time  (if applicable) doesn't matter and only calculate Uptime
-            return Stats * (MaxStack * GetAverageUptime(triggerInterval, triggerChance));
+            return GetAverageStats(triggerInterval, triggerChance, 3.0f, 0.0f); ;
         }
 
         /// <summary>
@@ -113,8 +112,7 @@ namespace Rawr
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed)
         {
-            // Since no fightDuration given, assume stack building time (if applicable) doesn't matter and only calculate Uptime
-            return Stats * (MaxStack * GetAverageUptime(triggerInterval, triggerChance, attackSpeed));
+            return GetAverageStats(triggerInterval, triggerChance, attackSpeed, 0.0f); ;
         }
 
         /// <summary>
@@ -132,8 +130,14 @@ namespace Rawr
             {
                 return Stats * GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
             }
+            else if (Duration == 0f)
+            {
+                return Stats * GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
             else
-              return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            {
+                return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
         }
 
         /// <summary>
@@ -219,7 +223,7 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
-            if (triggerChance == 0f)
+            if (triggerChance == 0f || triggerInterval > fightDuration)
             {
                 return 0f;
             }
@@ -324,18 +328,42 @@ namespace Rawr
 
                     // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
                     //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
-                    if (triggerInterval > 0 && fightDuration <= Duration)
+                    if (triggerInterval > 0)
                     {
-                        double n = fightDuration / triggerInterval;
-                        double p = triggerChance * GetChance(attackSpeed);
-                        return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
-                    }
-                    else if (triggerInterval > 0 && fightDuration <= Cooldown)
-                    {
-                        double D = Duration / triggerInterval;
-                        double n = fightDuration / triggerInterval - D;
-                        double p = triggerChance * GetChance(attackSpeed);
-                        return (float)((D - Math.Pow(1 - p, n) * (1 - p) / p * (1 - Math.Pow(1 - p, D))) / (fightDuration / triggerInterval));
+                        if (fightDuration <= Duration)
+                        {
+                            double n = fightDuration / triggerInterval;
+                            double p = triggerChance * GetChance(attackSpeed);
+                            return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
+                        }
+                        else if (fightDuration <= Cooldown)
+                        {
+                            double D = Duration / triggerInterval;
+                            double n = fightDuration / triggerInterval - D;
+                            double p = triggerChance * GetChance(attackSpeed);
+                            return (float)((D - Math.Pow(1 - p, n) * (1 - p) / p * (1 - Math.Pow(1 - p, D))) / (fightDuration / triggerInterval));
+                        }
+                        else
+                        {
+                            // approximation based on average proc computation (see GetAverageProcs for derivation)
+                            double d = Duration / triggerInterval;
+                            double n = fightDuration / triggerInterval;
+                            double p = triggerChance * GetChance(attackSpeed);
+
+                            double c = Cooldown / triggerInterval;
+                            if (c < 1.0) c = 1.0;
+                            double x = n;
+
+                            double averageUptime = 0.0;
+                            int r = 1;
+                            while (x > 0)
+                            {
+                                averageUptime += SpecialFunction.Ibeta(r, x, p) * Math.Min(d, x);
+                                r++;
+                                x -= c;
+                            }
+                            return (float)(averageUptime / n);
+                        }
                     }
                     else
                     {
@@ -490,6 +518,126 @@ namespace Rawr
                 return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * GetChance(attackSpeed)) * (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), (Duration - Cooldown) / triggerInterval);
             }
 
+        }
+
+        /// <summary>
+        /// Computes average number of procs per second given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageProcsPerSecond(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            // derivation from recurrence relation
+            // Procs[n] := average number of procs given fight length n
+            // p := proc rate
+            // q := 1-p
+            // C := Cooldown / triggerInterval (assume C = 1 if cooldown less than trigger interval)
+
+            // Procs[n] = p + p * Procs[n-C] + q * Procs[n-1]
+            // split the function definition in segments of size C and solve each segment separately
+            // that way the recurrence is only nonhomogeneous first order
+            // Procs[n,k] = p + p * Procs[n,k-1] + q * Procs[n-1,k]
+
+            // for k = 0 solve
+            // Procs[n,0] = p + q * Procs[n-1,0]
+            // Procs[0,0] = 0
+
+            // solution is
+            // Procs[n;0] = 1 - q^n
+
+            // for further segments let k be the previous segment and Procs(n)=Procs[n,k] the closed form
+            // solution for previous segment
+            // the homogeneous part has solution of form A + B * q^n
+            // the particular solution is obtained using method of undetermined coefficient using the
+            // form of n * P(n) * q^n, where P is polynomial of order k
+            // we can more generally just set the form of Procs2(n)=Procs[n,k+1] as
+            // Procs2(n):=q^n*sum(A[i] * n^i, i, 0, k+1)+sum(B[i]*n^i,i,0,k+1);
+            // using the recurrence
+            // eq: Procs2(n) = p + p * Procs(n) + q * Procs2(n-1);
+            // we compute the missing coefficients
+            // splitqn(eq):=makelist(ratcoef(eq,q^n,i),i,0,1);
+            // spliteq(eq,var,order):=makelist(ratcoef(eq,var,i),i,0,order);
+            // eqlist: flatten(map(splitqn,makelist(ratcoef(eq,n,i),i,0,k+1)));
+            // ev (tellsimp (0^0, 1), simp: false);
+            // solution: solve(append(eqlist,[Procs2(0)=Procs(C)]),append(makelist(A[i],i,0,k+1),makelist(B[i],i,0,k+1)))[1];
+            // Procs2s : subst(solution,Procs2(n));
+            // Procs2s : ratsubst(Q,q^C,facsum(subst(q,1-p,ratsimp(subst(1-p,q,Procs2s))),q^n));
+
+            // for the first few k we obtain the following (Q := q^C)
+
+            // Procs[n;0] = 1 - q^n
+            // Procs[n;1] = 2 - (1 + Q + p * n) * q^n
+            // Procs[n;2] = 3 - (1 + Q + Q^2 + p * (n + (C + n)*Q) + p^2 * n*(n+1)/2) * q^n
+            // Procs[n;3] = 4 - (1 + Q + Q^2 + Q^3 + p * (n + (C + n)*Q + (2*C + n)*Q^2) + p^2 * ((C^2+(2*n+1)*C+n^2+n)*Q+n^2+n)/2  + p^3 * (n*(n+1)*(n+2))/3!) * q^n
+
+            // analyzing the form we can obtain the following generalization
+            // Procs(n,k):=k+1-sum(sum(binomial(C*j+n+i-1,i)*q^(C*j+n)*p^i,j,0,k-i),i,0,k);
+            // which can be verified with the recurrence
+
+            // rearranging the sumation
+            // Procs(n,k):=k+1-sum(q^(C*j+n)*sum(binomial(C*j+n+i-1,i)*p^i,i,0,k-j),j,0,k);
+
+            // we inspect the inner sum which has the following form
+            // G(K,kj,p):=sum(binomial(K+i,i)*p^i*(1-p)^K,i,0,kj);
+            // for K = 0 we get
+            // sum(p^i,i,0,kj)
+            // which can be evaluated to
+            // G[0](kj,p):=(1-p^(kj-1))/(1-p);
+            // we can express G in terms of G with lower K as follows
+            // G[K+1](kj,p)=(1-p)^K*sum((1-p)*p^i*binomial(K+i+1,i),i,0,kj);
+            // G[K+1](kj,p)=((1-p)^K/(K+1)!*(sum((p^i*(K+i+1)*(K+i)!)/i!,i,0,kj)-sum(i*(p^i*(K+i)!)/i!,i,1,kj+1)));
+            // G[K+1](kj,p)=sum((1-p)^K/K!*(p^i*(K+i)!)/i!,i,0,kj)-(1-p)^K/(K+1)!*(kj+1)*(p^(kj+1)*(K+kj+1)!)/(kj+1)!;
+            // G[K+1](kj,p)=G[K](kj,p)-(1-p)^K/(K+1)!*(p^(kj+1)*(K+kj+1)!)/kj!;
+            // G[K+1](kj,p)=G[K](kj,p)-(1-p)^K*p^(kj+1)*binomial(K+kj+1,kj);
+            
+            // this gives us an alternative formulation of G
+            // G2(K,kj,p):=(1-p^(kj+1))/(1-p)-sum((1-p)^i*p^(kj+1)*binomial(i+kj+1,kj),i,0,K-1);
+
+            // we can now rephrase the Procs function using this to get
+            // Procs3(n,k):=k+1-(1-p)*sum(G2(C*j+n-1,k-j,p),j,0,k);
+            // =sum(p^(k-j+1),j,0,k)+sum(sum(binomial(k-j+i+1,k-j)*(1-p)^(i+1),i,0,j*C+n-2)*p^(k-j+1),j,0,k);
+
+            // we observe that we can express the inner expression in terms of negative binomial
+            // Procs3(n,k):=sum(sum(binomial(r-1+i,r-1)*(1-p)^(i),i,0,k*C-(r-1)*C+n-1)*p^r,r,1,k+1);
+            // Procs3(n,k)=sum(sum(Pr(NegBin(r,p)=i),i,0,k*C-(r-1)*C+n-1),r,1,k+1);
+            // using the cumulative probability density for negative binomial we can express Procs as
+
+            // P(x):=sum(I[p](r+1,x-r*C),r,0,floor(x/C))
+            // where I[p] is incomplete beta function
+
+            if (fightDuration == 0.0f)
+            {
+                // this is special case, meaning that we have infinite fight duration, so we have
+                // a proc on average every Cooldown + triggerInterval / p
+                float pp = triggerChance * GetChance(attackSpeed);
+                if (pp == 0.0) return 0.0f;
+                return 1.0f / (Cooldown + triggerInterval / pp);
+            }
+            if (triggerInterval == 0.0f)
+            {
+                // this is a special case, meaning that it basically auto triggers on cooldown
+                return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
+            }
+
+            double c = Cooldown / triggerInterval;
+            if (c < 1.0) c = 1.0;
+            double n = fightDuration / triggerInterval;
+            double x = n;
+            double p = triggerChance * GetChance(attackSpeed);
+
+            double averageProcs = 0.0;
+            int r = 1;
+            while (x > 0)
+            {
+                averageProcs += SpecialFunction.Ibeta(r, x, p);
+                r++;
+                x -= c;
+            }
+            return (float)(averageProcs / fightDuration);
         }
 
         public bool UsesPPM()

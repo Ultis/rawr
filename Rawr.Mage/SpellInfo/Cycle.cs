@@ -232,7 +232,7 @@ namespace Rawr.Mage
                             break;
                         case Trigger.DamageSpellCast:
                         case Trigger.SpellCast:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CastProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / CastProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
                             break;
                         case Trigger.MageNukeCast:
                             if (NukeProcs > 0) spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
@@ -292,24 +292,25 @@ namespace Rawr.Mage
         {
             Stats baseStats = CastingState.BaseStats;
             manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            float fight = CastingState.CalculationOptions.FightDuration;
             foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
             {
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        manaRegenPerSecond += effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
+                        manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(0, 1, 3, fight);
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
+                        manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / CastProcs, 1, 3, fight);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
+                        manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, CritProcs / Ticks, 3, fight);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        manaRegenPerSecond += effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
+                        manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, HitProcs / Ticks, 3, fight);
                         break;
                 }
             }
@@ -318,19 +319,19 @@ namespace Rawr.Mage
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f, 3, CastingState.CalculationOptions.FightDuration);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f, 3, fight);
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f, 3, fight);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, fight);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, fight);
                         break;
                 }
             }
@@ -345,24 +346,25 @@ namespace Rawr.Mage
             dict["Mana Tide"] += duration * CastingState.CalculationOptions.ManaTide * 0.24f * CastingState.BaseStats.Mana / CastingState.CalculationOptions.FightDuration;
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            float fight = CastingState.CalculationOptions.FightDuration;
             foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
             {
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        dict["Other"] += duration * effect.Stats.ManaRestore / effect.Cooldown * effect.Chance;
+                        dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(0, 1, 3, fight);
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
-                        dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CastProcs / effect.Chance);
+                        dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / CastProcs, 1, 3, fight);
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / CritProcs / effect.Chance);
+                        dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, CritProcs / Ticks, 3, fight);
                         break;
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        dict["Other"] += duration * effect.Stats.ManaRestore / (effect.Cooldown + CastTime / HitProcs / effect.Chance);
+                        dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, HitProcs / Ticks, 3, fight);
                         break;
                 }
             }

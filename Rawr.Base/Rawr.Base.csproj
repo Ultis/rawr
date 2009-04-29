@@ -147,6 +147,7 @@
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="SpecialEffect.cs" />
     <Compile Include="SpecialEffects.cs" />
+    <Compile Include="SpecialFunction.cs" />
     <Compile Include="StatConversion.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="StatusMessaging.cs" />
