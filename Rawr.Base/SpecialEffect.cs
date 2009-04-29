@@ -224,7 +224,7 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
-            if (triggerChance == 0f || triggerInterval > fightDuration)
+            if (triggerChance == 0f)
             {
                 return 0f;
             }
