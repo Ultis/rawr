@@ -50,8 +50,8 @@ namespace Rawr.DPSDK
                 totalGCDs.ForeColor = Color.Red;
             }
             else totalGCDs.ForeColor = Color.Black;
-            netRP.Text = rotation.getRP(cbFourT7.Checked, talents.GlyphofIcyTouch, talents.GlyphofFrostStrike) + " runic power";
-            if (rotation.getRP(cbFourT7.Checked, talents.GlyphofIcyTouch, talents.GlyphofFrostStrike) < 0)
+            netRP.Text = rotation.getRP(talents, cbFourT7.Checked) + " runic power";
+            if (rotation.getRP(talents, cbFourT7.Checked) < 0)
             {
                 netRP.ForeColor = Color.Red;
             }

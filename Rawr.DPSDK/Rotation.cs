@@ -49,17 +49,38 @@ namespace Rawr.DPSDK
             setRotation(Type.Unholy);
         }
 
-        public float getRP(Boolean fourT7, Boolean GlyphofIT, Boolean GlyphofFS)
+        public float getMeleeSpecialsPerSecond()
+        {
+            float temp;
+            temp = PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike + BloodStrike + HeartStrike;
+            temp = temp / curRotationDuration;
+            return temp;
+        }
+
+        public float getSpellSpecialsPerSecond()
+        {
+            float temp;
+            temp = DeathCoil + IcyTouch + HowlingBlast;
+            temp = temp / curRotationDuration;
+            return temp;
+        }
+
+
+        public float getRP(DeathKnightTalents talents, Boolean fourT7)
         {
             this.fourT7 = fourT7;
-            this.GlyphofIT = GlyphofIT;
-            this.GlyphofFS = GlyphofFS;
+            this.GlyphofIT = talents.GlyphofIcyTouch;
+            this.GlyphofFS = talents.GlyphofFrostStrike;
 
-            RP = ((15 + (fourT7 ? 10 : 0)) * (Obliterate + ScourgeStrike + DeathStrike)) +
+            RP = ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (Obliterate)) +
+                ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
+                ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
                 (10 * (PlagueStrike + BloodStrike + HeartStrike)) +
                 ((10 + (GlyphofIT ? 10 : 0)) * (IcyTouch)) +
                 (15 * HowlingBlast) +
-                (10 * Horn);
+                (10 * Horn) +
+                ((curRotationDuration / 5f)*talents.Butchery);
+            
             RP -= ((40 * DeathCoil) +
                 ((GlyphofFS ? 32 : 40) * FrostStrike));
             return RP;
