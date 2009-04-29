@@ -50,7 +50,7 @@ namespace Rawr.Rogue
 
 		public override float EnergyCost(CombatFactors combatFactors, int rank)
 		{
-            var baseCost = 25f - (rank * Talents.RelentlessStrikes.Bonus);
+            var baseCost = 25f - Talents.RelentlessStrikes.Bonus;
             var missCost = baseCost * combatFactors.YellowMissChance * (1 - Talents.QuickRecovery.Bonus);
             var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
             return baseCost + missCost + dodgeCost;
@@ -104,7 +104,7 @@ namespace Rawr.Rogue
 
 		public override float EnergyCost(CombatFactors combatFactors, int rank)
 		{
-			var baseCost = 35f - (rank * Talents.RelentlessStrikes.Bonus);
+			var baseCost = 35f - Talents.RelentlessStrikes.Bonus;
             var missCost = baseCost * combatFactors.YellowMissChance * (1-Talents.QuickRecovery.Bonus);
             var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
             return baseCost + missCost + dodgeCost;
@@ -138,7 +138,7 @@ namespace Rawr.Rogue
 		public override string Name { get { return "SnD"; } }
 		public override float EnergyCost(CombatFactors combatFactors, int rank)
 		{
-			return 25f - (rank * Talents.RelentlessStrikes.Bonus);
+			return 25f - Talents.RelentlessStrikes.Bonus;
 		}
 		public override float CalcFinisherDPS(Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
