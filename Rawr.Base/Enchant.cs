@@ -667,7 +667,7 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(3855, "Spellpower (Staff)", Item.ItemSlot.TwoHand, new Stats() { SpellPower = 69 }));
 
             Stats rockets = new Stats();
-            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1600f }, 1f, 45f));
+            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1600f }, 0f, 45f));
             defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", Item.ItemSlot.Hands, rockets));
             
             #region Enchants to Delete

@@ -33,7 +33,7 @@ namespace Rawr
                 }
                 else if (gemBonus == "Chance to restore mana on spellcast")
                 {
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 600 }, 1f, 15f, .05f));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 600 }, 0f, 15f, .05f));
                     stats.ManaRestoreOnCast_5_15 = 600; // IED
 				}
 				else if (gemBonus == "2% Increased Armor Value from Items")
@@ -574,7 +574,7 @@ namespace Rawr
             }
             else if (line == "Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.")
             {   //Bandit's Insignia
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880 }, 1f, 45f, 0.15f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880 }, 0f, 45f, 0.15f));
             }
             else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
             {
@@ -816,26 +816,26 @@ namespace Rawr
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
                 // Soul of the Dead
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaRestore = 900f }, 1f, 45f, .25f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaRestore = 900f }, 0f, 45f, .25f));
                 stats.ManaRestoreOnCrit_25_45 += 900f;
             }
             else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
             {
                 // Pendulum of Telluric Currents
                 stats.PendulumOfTelluricCurrentsProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { ShadowDamage = 1460 }, 1f, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { ShadowDamage = 1460 }, 0f, 45f, .1f));
             }
             else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
             {
                 // Extract of Necromantic Power
                 stats.ExtractOfNecromanticPowerProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { ShadowDamage = 1050f }, 1f, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { ShadowDamage = 1050f }, 0f, 45f, .1f));
             }
             else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage."))
             {
                 // Darkmoon Card: Death
                 stats.DarkmoonCardDeathProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { ShadowDamage = 2000f }, 1f, 45f, .35f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { ShadowDamage = 2000f }, 0f, 45f, .35f));
             }
             else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
             {
@@ -848,7 +848,7 @@ namespace Rawr
                     // internal cooldown: 45 seconds
                     // 20% chance, so on average procs after 5 casts
                     // lets say 60 seconds
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = hot }, 1f, 45f, .2f));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = hot }, 0f, 45f, .2f));
                     stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
             }
@@ -1185,12 +1185,12 @@ namespace Rawr
             {
                 // Figurine - Sapphire Owl
                 stats.ManaRestore5min = 2340;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = 2340 }, 1f, 300f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = 2340 }, 0f, 300f));
             }
             else if (line == "Instantly heal your current friendly target for 2710. (1 Min Cooldown)")
             {
                 // Living Ice Crystals
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = 2710 }, 1f, 60f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = 2710 }, 0f, 60f));
                 stats.Heal1Min = 2710;
             }
         }

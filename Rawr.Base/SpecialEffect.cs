@@ -675,8 +675,9 @@ namespace Rawr
         {
             get
             {
+                if (Duration == 0) return "";
                 int duration = (int)Duration;
-                return duration.ToString() + " Sec";
+                return duration.ToString() + " Sec ";
             }
         }
 
@@ -749,7 +750,7 @@ namespace Rawr
                     }
                     else
                     {
-                        return string.Format("{4}x {0} ({1} {2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString, MaxStack);
+                        return string.Format("{4}x {0} ({1}{2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString, MaxStack);
                     }
                 }
                 else
@@ -760,7 +761,7 @@ namespace Rawr
                     }
                     else
                     {
-                        return string.Format("{5}x {0} ({1} {2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString, MaxStack);
+                        return string.Format("{5}x {0} ({1}{2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString, MaxStack);
                     }
                 }
             }
@@ -774,7 +775,7 @@ namespace Rawr
                     }
                     else
                     {
-                        return string.Format("{0} ({1} {2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString);
+                        return string.Format("{0} ({1}{2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString);
                     }
                 }
                 else
@@ -785,7 +786,7 @@ namespace Rawr
                     }
                     else
                     {
-                        return string.Format("{0} ({1} {2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
+                        return string.Format("{0} ({1}{2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
                     }
                 }
             }

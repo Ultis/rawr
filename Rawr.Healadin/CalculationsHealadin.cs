@@ -339,15 +339,15 @@ namespace Rawr.Healadin
                             else { continue; }
                         }
 
-                        if (effect.MaxStack > 1)
-                        {
-                            float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack);
-                            statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
-                        }
-                        else
-                        {
-                            statsAverage += effect.GetAverageStats(trigger);
-                        }
+                        //if (effect.MaxStack > 1)
+                        //{
+                        //    float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack);
+                        //    statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
+                        //}
+                        //else
+                        //{
+                            statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
+                        //}
                     }
                 }
                 statsAverage.ManaRestore *= fightLength;
