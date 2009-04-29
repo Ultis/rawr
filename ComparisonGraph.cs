@@ -236,13 +236,19 @@ namespace Rawr
                         {
                             if (DisplayMode == GraphDisplayMode.Overall)
                             {
-                                maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
-                                minOverallPoints = Math.Min(minOverallPoints, calc.OverallPoints);
+                                if (!float.IsNaN(calc.OverallPoints))
+                                {
+                                    maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
+                                    minOverallPoints = Math.Min(minOverallPoints, calc.OverallPoints);
+                                }
                             }
                             else if (DisplayMode != GraphDisplayMode.Subpoints && Sort != ComparisonSort.Alphabetical && Sort != ComparisonSort.Overall)
                             {
-                                maxOverallPoints = Math.Max(maxOverallPoints, calc.SubPoints[(int)Sort]);
-                                minOverallPoints = Math.Min(minOverallPoints, calc.SubPoints[(int)Sort]);
+                                if (!float.IsNaN(calc.SubPoints[(int)Sort]))
+                                {
+                                    maxOverallPoints = Math.Max(maxOverallPoints, calc.SubPoints[(int)Sort]);
+                                    minOverallPoints = Math.Min(minOverallPoints, calc.SubPoints[(int)Sort]);
+                                }
                             }
                             else
                             {
@@ -252,8 +258,14 @@ namespace Rawr
                                     if (f < 0) neg += f;
                                     else pos += f;
                                 }
-                                maxOverallPoints = Math.Max(maxOverallPoints, pos);
-                                minOverallPoints = Math.Min(minOverallPoints, neg);
+                                if (!float.IsNaN(pos))
+                                {
+                                    maxOverallPoints = Math.Max(maxOverallPoints, pos);
+                                }
+                                if (!float.IsNaN(neg))
+                                {
+                                    minOverallPoints = Math.Min(minOverallPoints, neg);
+                                }
                             }
                         }
                         if (maxOverallPoints == 0f && minOverallPoints == 0f) maxOverallPoints = 2f;
