@@ -733,8 +733,8 @@ namespace Rawr
                 //        if (name == "Band of the Eternal Defender")
                 //        {
                 //The buff is up about 1/6 the time, so 800/6 = 133 armor
-                //TODO: Don't count this before talents since it's a buff.
-                stats.AverageArmor += (float)Math.Round(value / 6f);
+                //Bonus Armor is not affected by armor multipliers.
+                stats.BonusArmor += (float)Math.Round(value / 6f);
                 //        }
                 //        break;
                 //}
@@ -897,14 +897,24 @@ namespace Rawr
             {
                 stats.DivineStormDamage = 81;
             }
-            else if (line == "Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec.")
+            else if ((match = new Regex(@"Causes your Judgements to increase your Critical Strike rating by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {
-                stats.CritJudgement_5 = 61f;
+                          stats.CritJudgement_5 = (float)int.Parse(match.Groups["amount"].Value);
             }
             else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
             {
                 stats.CrusaderStrikeMultiplier = .05f;
             }
+            #region Added by Rawr.ProtPaladin
+            else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Judgement, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 5f, 10.0f, 1.0f));
+            }
+            else if (line == "Increases your block value by 272 while Holy Shield is active.")
+            {
+                stats.ShieldOfRighteousnessBlockValue = 272;
+            }
+            #endregion
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
             {
@@ -1112,7 +1122,7 @@ namespace Rawr
             }
             else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
             {
-                stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = 200f }, 20.0f, 120.0f));
             }
 			else if (line.StartsWith("Your heals each cost "))
 			{
@@ -1158,10 +1168,10 @@ namespace Rawr
 				stats.HasteRatingFor20SecOnUse5Min += 330;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 330 }, 20, 300));
 			}
-			else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
-			{
-				stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
-			}
+//			else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
+//			{
+//				stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
+//			}
 			else if (line.StartsWith("Removes all movement impairing effects and all effects which cause loss of control of your character."))
 			{
 				stats.PVPTrinket += 1f;

@@ -62,7 +62,7 @@ namespace Rawr.ProtPaladin
                 case AttackModelMode.BasicSoR:
                     {                        
                         // Basic Rotation (Assumes Judgement of Righteousness)
-                        Name = "Basic + Seal of Vengeance";
+                        Name = "Basic + Seal of Righteousness";
                         Description = "9-6-9-6 Rotation";
                         modelLength = 18.0f;
                         modelThreat =

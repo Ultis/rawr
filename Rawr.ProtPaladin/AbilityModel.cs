@@ -7,8 +7,8 @@ namespace Rawr.ProtPaladin
     public class AbilityModel
     {
         private Ability Ability;
-        //private DamageType DamageType;
-        //private AttackType AttackType;
+        private DamageType DamageType;
+        private AttackType AttackType;
         private Character Character;
         private Stats Stats;
         private PaladinTalents Talents;
@@ -46,6 +46,7 @@ namespace Rawr.ProtPaladin
                     DamageMultiplier *= (1.0f - ArmorReduction);
                     break;               
                 case Ability.ShieldOfRighteousness:
+                    
                     baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) * 1.3f + 520f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier = 2.0f;

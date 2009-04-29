@@ -48,43 +48,47 @@ namespace Rawr.ProtPaladin
             comboBoxTargetType.SelectedItem = calcOpts.TargetType.ToString();
             numericUpDownTargetLevel.Value = calcOpts.TargetLevel;
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
+
             trackBarBossAttackValue.Value = calcOpts.BossAttackValue;
             trackBarBossAttackSpeed.Value = (int)(calcOpts.BossAttackSpeed / 0.25f);
+
+            comboBoxMagicDamageType.SelectedItem = calcOpts.MagicDamageType.ToString();
+            trackBarBossAttackValueMagic.Value = calcOpts.BossAttackValueMagic;
+            trackBarBossAttackSpeedMagic.Value = (int)(calcOpts.BossAttackSpeedMagic / 0.25f);
+
             checkBoxUseParryHaste.Checked = calcOpts.UseParryHaste;
             // Stupid hack since you can't put in newlines into the VS editor properties
             extendedToolTipUseParryHaste.ToolTipText =
                 extendedToolTipUseParryHaste.ToolTipText.Replace("May not", Environment.NewLine + "May not");
 
             // Ranking System
-            if (calcOpts.ThreatScale > 24.0f) // Old scale value being saved, reset to default
-                calcOpts.ThreatScale = 8.0f;
-            trackBarThreatScale.Value = Convert.ToInt32(calcOpts.ThreatScale / 8.0f / 0.1f);
-            if (calcOpts.MitigationScale > 1.0f) // Old scale value being saved, reset to default
-                calcOpts.MitigationScale = (1.0f / 8.0f);
-            trackBarMitigationScale.Value = Convert.ToInt32((calcOpts.MitigationScale * 8.0f / 0.1f));
+            if (calcOpts.ThreatScale > 30.0f) // Old scale value being saved, reset to default
+                calcOpts.ThreatScale = 10.0f;
+            trackBarThreatScale.Value = Convert.ToInt32(calcOpts.ThreatScale / 10.0f / 0.1f);
+            if (calcOpts.MitigationScale > 51000.0f) // Old scale value being saved, reset to default
+                calcOpts.MitigationScale = 17000.0f;
+            trackBarMitigationScale.Value = Convert.ToInt32((calcOpts.MitigationScale / 17000.0f / 0.1f)); 
             radioButtonMitigationScale.Checked = (calcOpts.RankingMode == 1);
             radioButtonTankPoints.Checked = (calcOpts.RankingMode == 2);
             radioButtonBurstTime.Checked = (calcOpts.RankingMode == 3);
             radioButtonDamageOutput.Checked = (calcOpts.RankingMode == 4);
+            radioButtonProtWarrMode.Checked = (calcOpts.RankingMode == 5);
+            radioButtonDamageTakenMode.Checked = (calcOpts.RankingMode == 6);
             trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
-            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
+            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5) || (calcOpts.RankingMode == 6);
 
             // Seal Choice
             radioButtonSoR.Checked = (calcOpts.SealChoice == "Seal of Righteousness");
             radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
-
-            // Glyphs
-            //checkBoxGlyphOfJudgement.Checked  = Talents.GlyphOfJudgement;
-            //checkBoxGlyphOfSealOfVengeance.Checked = Talents.GlyphOfSealOfVengeance;
-            //checkBoxGlyphOfExorcism.Checked = Talents.GlyphOfExorcism;
-            //checkBoxGlyphOfDivinePlea.Checked = Talents.GlyphOfDivinePlea;
-            //checkBoxGlyphOfSenseUndead.Checked = Talents.GlyphOfSenseUndead;
 
             calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
             labelBossAttackSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeed.Value) * 0.25f));
+
+            labelBossMagicalDamage.Text = trackBarBossAttackValueMagic.Value.ToString(); ;
+            labelBossMagicSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeedMagic.Value) * 0.25f));
             labelThreatScale.Text = String.Format("{0:0.0}", ((float)(trackBarThreatScale.Value) * 0.1f));
             labelMitigationScale.Text = String.Format("{0:0.0}", ((float)(trackBarMitigationScale.Value) * 0.1f));
 
@@ -103,7 +107,9 @@ namespace Rawr.ProtPaladin
                 trackBarBossAttackValue.Value = 500 * (trackBarBossAttackValue.Value / 500);
                 labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
                 labelBossAttackSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeed.Value) * 0.25f));
-				// Ranking System
+                labelBossMagicalDamage.Text = trackBarBossAttackValueMagic.Value.ToString(); ;
+                labelBossMagicSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeedMagic.Value) * 0.25f));
+                // Ranking System
                 labelThreatScale.Text = String.Format("{0:0.0}", ((float)(trackBarThreatScale.Value) * 0.1f));
 				labelMitigationScale.Text = String.Format("{0:0.0}", ((float)(trackBarMitigationScale.Value) * 0.1f));
 
@@ -112,8 +118,8 @@ namespace Rawr.ProtPaladin
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 calcOpts.BossAttackValue = trackBarBossAttackValue.Value;
                 calcOpts.BossAttackSpeed = ((float)(trackBarBossAttackSpeed.Value) * 0.25f);
-                calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value) * 0.1f * 8.0f);
-                calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 0.1f / 8.0f);
+                calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value) * 0.1f * 10.0f);
+                calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 0.1f  * 17000.0f);
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -147,6 +153,16 @@ namespace Rawr.ProtPaladin
                 else if (radioButtonDamageOutput.Checked)
                 {
                     calcOpts.RankingMode = 4;
+                    trackBarThreatScale.Value = 10;
+                }
+                else if (radioButtonProtWarrMode.Checked)
+                {
+                    calcOpts.RankingMode = 5;
+                    trackBarThreatScale.Value = 10;
+                }
+                else if (radioButtonDamageTakenMode.Checked)
+                {
+                    calcOpts.RankingMode = 6;
                     trackBarThreatScale.Value = 10;
                 }
                 else
@@ -183,6 +199,18 @@ namespace Rawr.ProtPaladin
         {
             if (!radioButtonDamageOutput.Checked)
                 radioButtonDamageOutput.Checked = true;
+        }
+
+        private void extendedToolProtWarrMode_Click(object sender, EventArgs e)
+        {
+            if (!radioButtonProtWarrMode.Checked)
+                radioButtonProtWarrMode.Checked = true;
+        }
+
+        private void extendedToolTipDamageTakenMode_Click(object sender, EventArgs e)
+        {
+            if (!radioButtonDamageTakenMode.Checked)
+                radioButtonDamageTakenMode.Checked = true;
         }
 
         private void radioButtonSealChoice_CheckedChanged(object sender, EventArgs e)
@@ -232,75 +260,17 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        //#region Glyphs
+        private void comboBoxMagicDamageType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.MagicDamageType = comboBoxMagicDamageType.SelectedItem.ToString();
+                Character.OnCalculationsInvalidated();
+            }
 
-        //private void checkBoxGlyphOfJudgement_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (!_loadingCalculationOptions)
-        //    {
-        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-        //        PaladinTalents Talents = Character.PaladinTalents;
-        //        Talents.GlyphOfJudgement = checkBoxGlyphOfJudgement.Checked;
-        //        Character.OnCalculationsInvalidated();
-        //    }
-        //}
+        }
 
-        //private void checkBoxGlyphOfSealOfVengeance_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (!_loadingCalculationOptions)
-        //    {
-        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-        //        PaladinTalents Talents = Character.PaladinTalents;
-        //        Talents.GlyphOfSealOfVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
-        //        Character.OnCalculationsInvalidated();
-        //    }
-        //}
-
-        //private void checkBoxGlyphOfExorcism_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (!_loadingCalculationOptions)
-        //    {
-        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-        //        PaladinTalents Talents = Character.PaladinTalents;
-        //        Talents.GlyphOfExorcism = checkBoxGlyphOfExorcism.Checked;
-        //        Character.OnCalculationsInvalidated();
-        //    }
-        //}
-
-        //private void checkBoxGlyphOfDivinePlea_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (!_loadingCalculationOptions)
-        //    {
-        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-        //        PaladinTalents Talents = Character.PaladinTalents;
-        //        Talents.GlyphOfDivinePlea = checkBoxGlyphOfDivinePlea.Checked;
-        //        Character.OnCalculationsInvalidated();
-        //    }
-        //}
-
-        //private void checkBoxGlyphOfSenseUndead_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (!_loadingCalculationOptions)
-        //    {
-        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-        //        PaladinTalents Talents = Character.PaladinTalents;
-        //        Talents.GlyphOfSenseUndead = checkBoxGlyphOfSenseUndead.Checked;
-        //        Character.OnCalculationsInvalidated();
-        //    }
-        //}
-
-        //private void checkBoxGlyphOfSealOfRighteousness_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (!_loadingCalculationOptions)
-        //    {
-        //        CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-        //        PaladinTalents Talents = Character.PaladinTalents;
-        //        Talents.GlyphOfSealOfRighteousness = checkBoxGlyphOfSealOfRighteousness.Checked;
-        //        Character.OnCalculationsInvalidated();
-        //    }
-        //}
-
-        //#endregion
     }
 
 	[Serializable]
@@ -320,21 +290,17 @@ namespace Rawr.ProtPaladin
 		public int TargetArmor = 10643;
 		public int BossAttackValue = 25000;
         public float BossAttackSpeed = 2.0f;
+
+        public int BossAttackValueMagic = 8000;
+        public float BossAttackSpeedMagic = 1.0f;
         public bool UseParryHaste = false;
-		public float ThreatScale = 8.0f;
-        public float MitigationScale = 0.125f;
+		public float ThreatScale = 10.0f;
+        public float MitigationScale = 17000f;
         public int RankingMode = 1;
-        /*
-        public bool GlyphSealVengeance = false;
-        public bool GlyphSealRighteousness = false;
-        public bool GlyphJudgement = false;
-        public bool GlyphExorcism = false;
-        public bool GlyphDivinePlea = false;
-        public bool GlyphSenseUndead = false;
-        */
         public bool UseHolyShield = true;
         public string SealChoice = "Seal of Vengeance";
         public string TargetType = "Unspecified";
+        public string MagicDamageType = "None";
         public PaladinTalents talents = null;
 	}
 }

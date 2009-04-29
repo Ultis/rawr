@@ -43,6 +43,10 @@ namespace Rawr.ProtPaladin
 			this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
 			this.labelMitigationScale = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.extendedToolTipDamageTakenMode = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.extendedToolTipProtWarrMode = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.radioButtonDamageTakenMode = new System.Windows.Forms.RadioButton();
+			this.radioButtonProtWarrMode = new System.Windows.Forms.RadioButton();
 			this.extendedToolTipDamageOutput = new Rawr.CustomControls.ExtendedToolTipLabel();
 			this.radioButtonDamageOutput = new System.Windows.Forms.RadioButton();
 			this.extendedToolTipBurstTime = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -52,19 +56,29 @@ namespace Rawr.ProtPaladin
 			this.radioButtonTankPoints = new System.Windows.Forms.RadioButton();
 			this.radioButtonMitigationScale = new System.Windows.Forms.RadioButton();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.extendedToolTipUseParryHaste = new Rawr.CustomControls.ExtendedToolTipLabel();
-			this.labelBossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
 			this.label5 = new System.Windows.Forms.Label();
-			this.checkBoxUseParryHaste = new System.Windows.Forms.CheckBox();
 			this.comboBoxTargetType = new System.Windows.Forms.ComboBox();
-			this.labelBossAttackSpeed = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.numericUpDownTargetLevel = new System.Windows.Forms.NumericUpDown();
+			this.extendedToolTipUseParryHaste = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.labelBossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.checkBoxUseParryHaste = new System.Windows.Forms.CheckBox();
+			this.labelBossAttackSpeed = new System.Windows.Forms.Label();
 			this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
 			this.groupBoxPaladinAbilities = new System.Windows.Forms.GroupBox();
 			this.checkBoxUseHolyShield = new System.Windows.Forms.CheckBox();
 			this.Glyphs = new System.Windows.Forms.TabControl();
 			this.tabPageTarget = new System.Windows.Forms.TabPage();
+			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.comboBoxMagicDamageType = new System.Windows.Forms.ComboBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.labelBossMagicSpeed = new System.Windows.Forms.Label();
+			this.labelBossMagicalDamage = new System.Windows.Forms.Label();
+			this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.trackBarBossAttackValueMagic = new System.Windows.Forms.TrackBar();
+			this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.trackBarBossAttackSpeedMagic = new System.Windows.Forms.TrackBar();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.tabPageRanking = new System.Windows.Forms.TabPage();
 			this.tabPageAbilities = new System.Windows.Forms.TabPage();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
@@ -79,17 +93,21 @@ namespace Rawr.ProtPaladin
 			this.groupBoxPaladinAbilities.SuspendLayout();
 			this.Glyphs.SuspendLayout();
 			this.tabPageTarget.SuspendLayout();
+			this.groupBox4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValueMagic)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeedMagic)).BeginInit();
+			this.groupBox3.SuspendLayout();
 			this.tabPageRanking.SuspendLayout();
 			this.tabPageAbilities.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(3, 167);
+			this.label2.Location = new System.Drawing.Point(3, 45);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(83, 45);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Target Armor:  (Default: 1643)";
+			this.label2.Text = "Target Armor:  (Default: 10643)";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// trackBarTargetArmor
@@ -98,7 +116,7 @@ namespace Rawr.ProtPaladin
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.trackBarTargetArmor.LargeChange = 1000;
-			this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 167);
+			this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 45);
 			this.trackBarTargetArmor.Maximum = 20000;
 			this.trackBarTargetArmor.Name = "trackBarTargetArmor";
 			this.trackBarTargetArmor.Size = new System.Drawing.Size(178, 42);
@@ -111,7 +129,7 @@ namespace Rawr.ProtPaladin
 			// 
 			this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 204);
+			this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 82);
 			this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
 			this.labelTargetArmorDescription.Size = new System.Drawing.Size(172, 34);
 			this.labelTargetArmorDescription.TabIndex = 0;
@@ -155,7 +173,7 @@ namespace Rawr.ProtPaladin
 			// 
 			// labelBossAttack
 			// 
-			this.labelBossAttack.Location = new System.Drawing.Point(3, 45);
+			this.labelBossAttack.Location = new System.Drawing.Point(6, 17);
 			this.labelBossAttack.Name = "labelBossAttack";
 			this.labelBossAttack.Size = new System.Drawing.Size(83, 45);
 			this.labelBossAttack.TabIndex = 0;
@@ -169,7 +187,7 @@ namespace Rawr.ProtPaladin
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarBossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.trackBarBossAttackValue.LargeChange = 5000;
-			this.trackBarBossAttackValue.Location = new System.Drawing.Point(86, 45);
+			this.trackBarBossAttackValue.Location = new System.Drawing.Point(89, 17);
 			this.trackBarBossAttackValue.Maximum = 100000;
 			this.trackBarBossAttackValue.Minimum = 500;
 			this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
@@ -185,7 +203,7 @@ namespace Rawr.ProtPaladin
 			this.labelBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBossAttackValue.AutoSize = true;
-			this.labelBossAttackValue.Location = new System.Drawing.Point(92, 77);
+			this.labelBossAttackValue.Location = new System.Drawing.Point(95, 49);
 			this.labelBossAttackValue.Name = "labelBossAttackValue";
 			this.labelBossAttackValue.Size = new System.Drawing.Size(37, 13);
 			this.labelBossAttackValue.TabIndex = 0;
@@ -254,6 +272,10 @@ namespace Rawr.ProtPaladin
 			// 
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.extendedToolTipDamageTakenMode);
+			this.groupBox1.Controls.Add(this.extendedToolTipProtWarrMode);
+			this.groupBox1.Controls.Add(this.radioButtonDamageTakenMode);
+			this.groupBox1.Controls.Add(this.radioButtonProtWarrMode);
 			this.groupBox1.Controls.Add(this.extendedToolTipDamageOutput);
 			this.groupBox1.Controls.Add(this.radioButtonDamageOutput);
 			this.groupBox1.Controls.Add(this.extendedToolTipBurstTime);
@@ -269,10 +291,50 @@ namespace Rawr.ProtPaladin
 			this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
 			this.groupBox1.Location = new System.Drawing.Point(6, 6);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(270, 205);
+			this.groupBox1.Size = new System.Drawing.Size(270, 246);
 			this.groupBox1.TabIndex = 5;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Ranking System";
+			// 
+			// extendedToolTipDamageTakenMode
+			// 
+			this.extendedToolTipDamageTakenMode.Location = new System.Drawing.Point(108, 214);
+			this.extendedToolTipDamageTakenMode.Name = "extendedToolTipDamageTakenMode";
+			this.extendedToolTipDamageTakenMode.Size = new System.Drawing.Size(133, 18);
+			this.extendedToolTipDamageTakenMode.TabIndex = 18;
+			this.extendedToolTipDamageTakenMode.Text = "Damage Taken Mode *";
+			this.extendedToolTipDamageTakenMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.extendedToolTipDamageTakenMode.ToolTipText = "Amount Damage taken of Boss Attack Value (%DamageTaken * BossAttackValue)";
+			this.extendedToolTipDamageTakenMode.Click += new System.EventHandler(this.extendedToolTipDamageTakenMode_Click);
+			// 
+			// extendedToolTipProtWarrMode
+			// 
+			this.extendedToolTipProtWarrMode.Location = new System.Drawing.Point(108, 195);
+			this.extendedToolTipProtWarrMode.Name = "extendedToolTipProtWarrMode";
+			this.extendedToolTipProtWarrMode.Size = new System.Drawing.Size(96, 18);
+			this.extendedToolTipProtWarrMode.TabIndex = 17;
+			this.extendedToolTipProtWarrMode.Text = "ProtWarr Mode *";
+			this.extendedToolTipProtWarrMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.extendedToolTipProtWarrMode.ToolTipText = "Amount Damage mitigated of BossAttackValue (%Mitigation * BossAttackValue)";
+			this.extendedToolTipProtWarrMode.Click += new System.EventHandler(this.extendedToolProtWarrMode_Click);
+			// 
+			// radioButtonDamageTakenMode
+			// 
+			this.radioButtonDamageTakenMode.AutoSize = true;
+			this.radioButtonDamageTakenMode.Location = new System.Drawing.Point(95, 217);
+			this.radioButtonDamageTakenMode.Name = "radioButtonDamageTakenMode";
+			this.radioButtonDamageTakenMode.Size = new System.Drawing.Size(14, 13);
+			this.radioButtonDamageTakenMode.TabIndex = 16;
+			this.radioButtonDamageTakenMode.UseVisualStyleBackColor = true;
+			// 
+			// radioButtonProtWarrMode
+			// 
+			this.radioButtonProtWarrMode.AutoSize = true;
+			this.radioButtonProtWarrMode.Location = new System.Drawing.Point(95, 198);
+			this.radioButtonProtWarrMode.Name = "radioButtonProtWarrMode";
+			this.radioButtonProtWarrMode.Size = new System.Drawing.Size(14, 13);
+			this.radioButtonProtWarrMode.TabIndex = 15;
+			this.radioButtonProtWarrMode.UseVisualStyleBackColor = true;
 			// 
 			// extendedToolTipDamageOutput
 			// 
@@ -366,48 +428,19 @@ namespace Rawr.ProtPaladin
 			// 
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox2.Controls.Add(this.extendedToolTipUseParryHaste);
-			this.groupBox2.Controls.Add(this.labelBossSpeed);
 			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.checkBoxUseParryHaste);
 			this.groupBox2.Controls.Add(this.comboBoxTargetType);
-			this.groupBox2.Controls.Add(this.labelBossAttackSpeed);
 			this.groupBox2.Controls.Add(this.label4);
 			this.groupBox2.Controls.Add(this.numericUpDownTargetLevel);
-			this.groupBox2.Controls.Add(this.trackBarBossAttackSpeed);
-			this.groupBox2.Controls.Add(this.labelBossAttack);
 			this.groupBox2.Controls.Add(this.labelTargetArmorDescription);
-			this.groupBox2.Controls.Add(this.labelBossAttackValue);
 			this.groupBox2.Controls.Add(this.trackBarTargetArmor);
-			this.groupBox2.Controls.Add(this.trackBarBossAttackValue);
 			this.groupBox2.Controls.Add(this.label2);
 			this.groupBox2.Location = new System.Drawing.Point(6, 6);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(270, 231);
+			this.groupBox2.Size = new System.Drawing.Size(270, 108);
 			this.groupBox2.TabIndex = 7;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Attacker Stats";
-			// 
-			// extendedToolTipUseParryHaste
-			// 
-			this.extendedToolTipUseParryHaste.Location = new System.Drawing.Point(111, 146);
-			this.extendedToolTipUseParryHaste.Name = "extendedToolTipUseParryHaste";
-			this.extendedToolTipUseParryHaste.Size = new System.Drawing.Size(134, 14);
-			this.extendedToolTipUseParryHaste.TabIndex = 8;
-			this.extendedToolTipUseParryHaste.Text = "Use Parry Haste *";
-			this.extendedToolTipUseParryHaste.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.extendedToolTipUseParryHaste.ToolTipText = "Calculates the adjusted attacker speed based on parry hasting. May not be applica" +
-			"ble on all bosses. (e.g. Patchwerk does not parry haste.)";
-			// 
-			// labelBossSpeed
-			// 
-			this.labelBossSpeed.Location = new System.Drawing.Point(3, 96);
-			this.labelBossSpeed.Name = "labelBossSpeed";
-			this.labelBossSpeed.Size = new System.Drawing.Size(83, 45);
-			this.labelBossSpeed.TabIndex = 4;
-			this.labelBossSpeed.Text = "Attack Speed: * (Default: 2.00s)";
-			this.labelBossSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.labelBossSpeed.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+			this.groupBox2.Text = "Target Statistics";
 			// 
 			// label5
 			// 
@@ -417,17 +450,6 @@ namespace Rawr.ProtPaladin
 			this.label5.Size = new System.Drawing.Size(37, 13);
 			this.label5.TabIndex = 11;
 			this.label5.Text = "Type: ";
-			// 
-			// checkBoxUseParryHaste
-			// 
-			this.checkBoxUseParryHaste.AutoSize = true;
-			this.checkBoxUseParryHaste.Location = new System.Drawing.Point(95, 147);
-			this.checkBoxUseParryHaste.Name = "checkBoxUseParryHaste";
-			this.checkBoxUseParryHaste.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.checkBoxUseParryHaste.Size = new System.Drawing.Size(15, 14);
-			this.checkBoxUseParryHaste.TabIndex = 7;
-			this.checkBoxUseParryHaste.UseVisualStyleBackColor = true;
-			this.checkBoxUseParryHaste.CheckedChanged += new System.EventHandler(this.checkBoxUseParryHaste_CheckedChanged);
 			// 
 			// comboBoxTargetType
 			// 
@@ -450,17 +472,6 @@ namespace Rawr.ProtPaladin
 			this.comboBoxTargetType.Size = new System.Drawing.Size(89, 21);
 			this.comboBoxTargetType.TabIndex = 12;
 			this.comboBoxTargetType.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetType_SelectedIndexChanged);
-			// 
-			// labelBossAttackSpeed
-			// 
-			this.labelBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelBossAttackSpeed.AutoSize = true;
-			this.labelBossAttackSpeed.Location = new System.Drawing.Point(92, 128);
-			this.labelBossAttackSpeed.Name = "labelBossAttackSpeed";
-			this.labelBossAttackSpeed.Size = new System.Drawing.Size(28, 13);
-			this.labelBossAttackSpeed.TabIndex = 3;
-			this.labelBossAttackSpeed.Text = "2.00";
 			// 
 			// label4
 			// 
@@ -494,13 +505,56 @@ namespace Rawr.ProtPaladin
 									0});
 			this.numericUpDownTargetLevel.ValueChanged += new System.EventHandler(this.numericUpDownTargetLevel_ValueChanged);
 			// 
+			// extendedToolTipUseParryHaste
+			// 
+			this.extendedToolTipUseParryHaste.Location = new System.Drawing.Point(114, 118);
+			this.extendedToolTipUseParryHaste.Name = "extendedToolTipUseParryHaste";
+			this.extendedToolTipUseParryHaste.Size = new System.Drawing.Size(134, 14);
+			this.extendedToolTipUseParryHaste.TabIndex = 8;
+			this.extendedToolTipUseParryHaste.Text = "Use Parry Haste *";
+			this.extendedToolTipUseParryHaste.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.extendedToolTipUseParryHaste.ToolTipText = "Calculates the adjusted attacker speed based on parry hasting. May not be applica" +
+			"ble on all bosses. (e.g. Patchwerk does not parry haste.)";
+			// 
+			// labelBossSpeed
+			// 
+			this.labelBossSpeed.Location = new System.Drawing.Point(6, 68);
+			this.labelBossSpeed.Name = "labelBossSpeed";
+			this.labelBossSpeed.Size = new System.Drawing.Size(83, 45);
+			this.labelBossSpeed.TabIndex = 4;
+			this.labelBossSpeed.Text = "Attack Speed: * (Default: 2.00s)";
+			this.labelBossSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelBossSpeed.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+			// 
+			// checkBoxUseParryHaste
+			// 
+			this.checkBoxUseParryHaste.AutoSize = true;
+			this.checkBoxUseParryHaste.Location = new System.Drawing.Point(98, 119);
+			this.checkBoxUseParryHaste.Name = "checkBoxUseParryHaste";
+			this.checkBoxUseParryHaste.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.checkBoxUseParryHaste.Size = new System.Drawing.Size(15, 14);
+			this.checkBoxUseParryHaste.TabIndex = 7;
+			this.checkBoxUseParryHaste.UseVisualStyleBackColor = true;
+			this.checkBoxUseParryHaste.CheckedChanged += new System.EventHandler(this.checkBoxUseParryHaste_CheckedChanged);
+			// 
+			// labelBossAttackSpeed
+			// 
+			this.labelBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.labelBossAttackSpeed.AutoSize = true;
+			this.labelBossAttackSpeed.Location = new System.Drawing.Point(95, 100);
+			this.labelBossAttackSpeed.Name = "labelBossAttackSpeed";
+			this.labelBossAttackSpeed.Size = new System.Drawing.Size(28, 13);
+			this.labelBossAttackSpeed.TabIndex = 3;
+			this.labelBossAttackSpeed.Text = "2.00";
+			// 
 			// trackBarBossAttackSpeed
 			// 
 			this.trackBarBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 									| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarBossAttackSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.trackBarBossAttackSpeed.LargeChange = 4;
-			this.trackBarBossAttackSpeed.Location = new System.Drawing.Point(86, 96);
+			this.trackBarBossAttackSpeed.Location = new System.Drawing.Point(89, 68);
 			this.trackBarBossAttackSpeed.Maximum = 20;
 			this.trackBarBossAttackSpeed.Minimum = 1;
 			this.trackBarBossAttackSpeed.Name = "trackBarBossAttackSpeed";
@@ -547,6 +601,8 @@ namespace Rawr.ProtPaladin
 			// 
 			// tabPageTarget
 			// 
+			this.tabPageTarget.Controls.Add(this.groupBox4);
+			this.tabPageTarget.Controls.Add(this.groupBox3);
 			this.tabPageTarget.Controls.Add(this.groupBox2);
 			this.tabPageTarget.Location = new System.Drawing.Point(4, 22);
 			this.tabPageTarget.Name = "tabPageTarget";
@@ -555,6 +611,146 @@ namespace Rawr.ProtPaladin
 			this.tabPageTarget.TabIndex = 0;
 			this.tabPageTarget.Text = "Target";
 			this.tabPageTarget.UseVisualStyleBackColor = true;
+			// 
+			// groupBox4
+			// 
+			this.groupBox4.Controls.Add(this.comboBoxMagicDamageType);
+			this.groupBox4.Controls.Add(this.label6);
+			this.groupBox4.Controls.Add(this.labelBossMagicSpeed);
+			this.groupBox4.Controls.Add(this.labelBossMagicalDamage);
+			this.groupBox4.Controls.Add(this.extendedToolTipLabel1);
+			this.groupBox4.Controls.Add(this.trackBarBossAttackValueMagic);
+			this.groupBox4.Controls.Add(this.extendedToolTipLabel2);
+			this.groupBox4.Controls.Add(this.trackBarBossAttackSpeedMagic);
+			this.groupBox4.Location = new System.Drawing.Point(6, 273);
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.Size = new System.Drawing.Size(270, 166);
+			this.groupBox4.TabIndex = 9;
+			this.groupBox4.TabStop = false;
+			this.groupBox4.Text = "Attacker Statistics (Magical)";
+			// 
+			// comboBoxMagicDamageType
+			// 
+			this.comboBoxMagicDamageType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxMagicDamageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMagicDamageType.FormattingEnabled = true;
+			this.comboBoxMagicDamageType.Items.AddRange(new object[] {
+									"None",
+									"Physical",
+									"Holy",
+									"Fire",
+									"Nature",
+									"Frost",
+									"Frostfire",
+									"Shadow",
+									"Arcane",
+									"Spellfire"});
+			this.comboBoxMagicDamageType.Location = new System.Drawing.Point(95, 16);
+			this.comboBoxMagicDamageType.Name = "comboBoxMagicDamageType";
+			this.comboBoxMagicDamageType.Size = new System.Drawing.Size(169, 21);
+			this.comboBoxMagicDamageType.TabIndex = 13;
+			this.comboBoxMagicDamageType.SelectedIndexChanged += new System.EventHandler(this.comboBoxMagicDamageType_SelectedIndexChanged);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(6, 19);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(75, 13);
+			this.label6.TabIndex = 10;
+			this.label6.Text = "Magic School:";
+			// 
+			// labelBossMagicSpeed
+			// 
+			this.labelBossMagicSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.labelBossMagicSpeed.AutoSize = true;
+			this.labelBossMagicSpeed.Location = new System.Drawing.Point(92, 139);
+			this.labelBossMagicSpeed.Name = "labelBossMagicSpeed";
+			this.labelBossMagicSpeed.Size = new System.Drawing.Size(28, 13);
+			this.labelBossMagicSpeed.TabIndex = 9;
+			this.labelBossMagicSpeed.Text = "2.00";
+			// 
+			// labelBossMagicalDamage
+			// 
+			this.labelBossMagicalDamage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.labelBossMagicalDamage.AutoSize = true;
+			this.labelBossMagicalDamage.Location = new System.Drawing.Point(92, 88);
+			this.labelBossMagicalDamage.Name = "labelBossMagicalDamage";
+			this.labelBossMagicalDamage.Size = new System.Drawing.Size(31, 13);
+			this.labelBossMagicalDamage.TabIndex = 7;
+			this.labelBossMagicalDamage.Text = "8000";
+			// 
+			// extendedToolTipLabel1
+			// 
+			this.extendedToolTipLabel1.Location = new System.Drawing.Point(3, 107);
+			this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
+			this.extendedToolTipLabel1.Size = new System.Drawing.Size(83, 45);
+			this.extendedToolTipLabel1.TabIndex = 10;
+			this.extendedToolTipLabel1.Text = "Frequency: * (Default: 2.00s)";
+			this.extendedToolTipLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.extendedToolTipLabel1.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+			// 
+			// trackBarBossAttackValueMagic
+			// 
+			this.trackBarBossAttackValueMagic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarBossAttackValueMagic.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.trackBarBossAttackValueMagic.LargeChange = 1000;
+			this.trackBarBossAttackValueMagic.Location = new System.Drawing.Point(86, 56);
+			this.trackBarBossAttackValueMagic.Maximum = 100000;
+			this.trackBarBossAttackValueMagic.Minimum = 500;
+			this.trackBarBossAttackValueMagic.Name = "trackBarBossAttackValueMagic";
+			this.trackBarBossAttackValueMagic.Size = new System.Drawing.Size(178, 42);
+			this.trackBarBossAttackValueMagic.TabIndex = 8;
+			this.trackBarBossAttackValueMagic.TickFrequency = 5000;
+			this.trackBarBossAttackValueMagic.Value = 8000;
+			this.trackBarBossAttackValueMagic.Scroll += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// extendedToolTipLabel2
+			// 
+			this.extendedToolTipLabel2.Location = new System.Drawing.Point(3, 56);
+			this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
+			this.extendedToolTipLabel2.Size = new System.Drawing.Size(83, 45);
+			this.extendedToolTipLabel2.TabIndex = 6;
+			this.extendedToolTipLabel2.Text = "Damage: * (Default: 8000)";
+			this.extendedToolTipLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.extendedToolTipLabel2.ToolTipText = "Base attacker damage before armor.";
+			// 
+			// trackBarBossAttackSpeedMagic
+			// 
+			this.trackBarBossAttackSpeedMagic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarBossAttackSpeedMagic.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.trackBarBossAttackSpeedMagic.LargeChange = 40;
+			this.trackBarBossAttackSpeedMagic.Location = new System.Drawing.Point(86, 107);
+			this.trackBarBossAttackSpeedMagic.Maximum = 240;
+			this.trackBarBossAttackSpeedMagic.Minimum = 4;
+			this.trackBarBossAttackSpeedMagic.Name = "trackBarBossAttackSpeedMagic";
+			this.trackBarBossAttackSpeedMagic.Size = new System.Drawing.Size(178, 42);
+			this.trackBarBossAttackSpeedMagic.TabIndex = 11;
+			this.trackBarBossAttackSpeedMagic.TickFrequency = 40;
+			this.trackBarBossAttackSpeedMagic.Value = 40;
+			this.trackBarBossAttackSpeedMagic.Scroll += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// groupBox3
+			// 
+			this.groupBox3.Controls.Add(this.labelBossAttackSpeed);
+			this.groupBox3.Controls.Add(this.labelBossAttackValue);
+			this.groupBox3.Controls.Add(this.extendedToolTipUseParryHaste);
+			this.groupBox3.Controls.Add(this.labelBossSpeed);
+			this.groupBox3.Controls.Add(this.trackBarBossAttackValue);
+			this.groupBox3.Controls.Add(this.checkBoxUseParryHaste);
+			this.groupBox3.Controls.Add(this.labelBossAttack);
+			this.groupBox3.Controls.Add(this.trackBarBossAttackSpeed);
+			this.groupBox3.Location = new System.Drawing.Point(6, 120);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(270, 147);
+			this.groupBox3.TabIndex = 8;
+			this.groupBox3.TabStop = false;
+			this.groupBox3.Text = "Attacker Statistics (Physical)";
 			// 
 			// tabPageRanking
 			// 
@@ -602,10 +798,20 @@ namespace Rawr.ProtPaladin
 			this.groupBoxPaladinAbilities.PerformLayout();
 			this.Glyphs.ResumeLayout(false);
 			this.tabPageTarget.ResumeLayout(false);
+			this.groupBox4.ResumeLayout(false);
+			this.groupBox4.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValueMagic)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeedMagic)).EndInit();
+			this.groupBox3.ResumeLayout(false);
+			this.groupBox3.PerformLayout();
 			this.tabPageRanking.ResumeLayout(false);
 			this.tabPageAbilities.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
+		private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipDamageTakenMode;
+		private System.Windows.Forms.RadioButton radioButtonProtWarrMode;
+		private System.Windows.Forms.RadioButton radioButtonDamageTakenMode;
+		private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipProtWarrMode;
 
 		#endregion
 
@@ -648,5 +854,15 @@ namespace Rawr.ProtPaladin
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBoxTargetType;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
+        private System.Windows.Forms.TrackBar trackBarBossAttackValueMagic;
+        private System.Windows.Forms.Label labelBossMagicalDamage;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
+        private System.Windows.Forms.TrackBar trackBarBossAttackSpeedMagic;
+        private System.Windows.Forms.Label labelBossMagicSpeed;
+        private System.Windows.Forms.ComboBox comboBoxMagicDamageType;
+        private System.Windows.Forms.Label label6;
 	}
 }

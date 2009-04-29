@@ -2722,15 +2722,16 @@ namespace Rawr
                 SetThreshold = 2
             });
 
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Aegis Plate 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ShieldOfRighteousnessBlockValue = 225f },
+                Stats = new Stats(),
                 SetName = "Aegis Plate",
                 SetThreshold = 4
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Judgement, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 3.0f, 10.0f, 1.0f));
 
             //Retribution T8
             defaultBuffs.Add(new Buff()

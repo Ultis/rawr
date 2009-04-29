@@ -67,6 +67,10 @@
       <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.csproj">
+      <Project>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</Project>
+      <Name>Rawr</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelProtPaladin.resx">

@@ -21,6 +21,7 @@ namespace Rawr.ProtPaladin
         public float DamagePerSecond { get; set; }
         public float GuaranteedReduction { get; set; }
         public float Mitigation { get; set; }
+        public float DamageTaken { get; set; }
         public float[] ResistanceTable { get; set; }
         public float TankPoints { get; set; }
         public float EffectiveHealth { get; set; }
@@ -35,7 +36,7 @@ namespace Rawr.ProtPaladin
 
             DamagePerHit    = Options.BossAttackValue * guaranteedReduction;
             DamagePerCrit   = 2.0f * DamagePerHit;
-            DamagePerBlock  = Math.Max(0.0f, DamagePerHit - Lookup.BlockReduction(Character, Stats));
+            DamagePerBlock  = Math.Max(0.0f, DamagePerHit - Lookup.ActiveBlockReduction(Character, Stats));
 
             AverageDamagePerHit =
                 DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +
@@ -47,16 +48,29 @@ namespace Rawr.ProtPaladin
                 DamagePerBlock * DefendTable.Block;
 
             DamagePerSecond     = AverageDamagePerAttack / attackSpeed;
+            DamageTaken         = DamagePerSecond / baseDamagePerSecond;
             Mitigation          = (1.0f - (DamagePerSecond / baseDamagePerSecond));
             TankPoints          = (Stats.Health / (1.0f - Mitigation));
             EffectiveHealth     = (Stats.Health / guaranteedReduction);
             GuaranteedReduction = (1.0f - guaranteedReduction);
 
+            
             double a = Convert.ToDouble(DefendTable.AnyMiss);
             double h = Convert.ToDouble(Stats.Health);
             double H = Convert.ToDouble(AverageDamagePerHit);
             double s = Convert.ToDouble(ParryModel.BossAttackSpeed / Options.BossAttackSpeed);
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
+            /*
+            // Attempt to make a different TTL:
+            float damageTaken = Options.BossAttackValue; // for TTL(EH)
+            float health = EffectiveHealth;
+            float anyHit = 1.0f; // worst case, you get hit every swing
+            float attacksToKill = (float)Math.Ceiling(health / DamageTaken); // So 10 health / 4 damage = 2.5 attacks = 3 attacks.
+            float timeToDie = attacksToKill * attackSpeed; // time in seconds
+            float chanceToDie = Convert.ToSingle((float)Math.Pow(anyHit, attacksToKill)); // (= 1^attacksToKill)
+            float timeToLive = timeToDie * chanceToDie;
+            BurstTime = timeToLive;
+            */
         }
 
         public DefendModel(Character character, Stats stats)

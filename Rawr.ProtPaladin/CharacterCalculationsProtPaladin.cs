@@ -67,6 +67,7 @@ namespace Rawr.ProtPaladin
         public float BaseAttackerSpeed { get; set; }
         public float AttackerSpeed { get; set; }
         public float DamageTaken { get; set; }
+        public float DPSTaken { get; set; }
         public float DamageTakenPerHit { get; set; }
         public float DamageTakenPerCrit { get; set; }
 		
@@ -75,7 +76,8 @@ namespace Rawr.ProtPaladin
 
         // Shield Tank Defensive Stats
         public float Block { get; set; }
-        public float BlockValue { get; set; }
+        public float ActiveBlockValue { get; set; }
+        public float StaticBlockValue { get; set; }
         public float DodgePlusMissPlusParryPlusBlock { get; set; }
         public float DamageTakenPerBlock { get; set; }
 
@@ -129,13 +131,15 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Agility", BasicStats.Agility.ToString());
             dictValues.Add("Stamina", string.Format("{0}*Increases Health by {1}", BasicStats.Stamina, (BasicStats.Stamina - 20f) * 10f + 20f));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}", BasicStats.Armor, ArmorReduction));
+            dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}" + Environment.NewLine +
+                                                  "Armor Damage Reduction depends on Attacker Level.",
+                                                  BasicStats.Armor, ArmorReduction));
             dictValues.Add("Defense", Defense.ToString() + string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
             dictValues.Add("Dodge", string.Format("{0:0.00%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
             dictValues.Add("Parry", string.Format("{0:0.00%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
             dictValues.Add("Block", string.Format("{0:0.00%}*Block Rating {1}", Block, BasicStats.BlockRating));
             dictValues.Add("Miss", string.Format("{0:0.00%}", Miss));
-            dictValues.Add("Block Value", string.Format("{0}", BlockValue));
+            dictValues.Add("Block Value", string.Format("{0}*{1} Active Block Balue (Libram etc)", StaticBlockValue, ActiveBlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Avoidance", string.Format("{0:0.00%}", DodgePlusMissPlusParry));
             dictValues.Add("Avoidance + Block", string.Format("{0:0.00%}", DodgePlusMissPlusParryPlusBlock));
@@ -149,7 +153,9 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Damage Taken",
                 string.Format("{0:0.0} DPS*{1:0} damage per normal attack" + Environment.NewLine +
                                 "{2:0} damage per blocked attack" + Environment.NewLine +
-                                "{3:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit));
+                                "{3:0} damage per critical attack" + Environment.NewLine +
+                                "On Average, you take" + Environment.NewLine +
+                                "{4:0.00%} of incoming damage", DPSTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit, DamageTaken));
 
             dictValues.Add("Resilience",
                 string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1}%." + Environment.NewLine +
@@ -167,7 +173,7 @@ namespace Rawr.ProtPaladin
                                     CritVulnerability, defenseNeeded, resilienceNeeded));
             }
             else
-                dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
+                dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
 
             dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.NatureResistance + BasicStats.AllResist, NatureReduction));
             dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ArcaneResistance + BasicStats.AllResist, ArcaneReduction));
@@ -195,7 +201,7 @@ namespace Rawr.ProtPaladin
                 string.Format("{0}*Reduces the physical damage you deal by {1:0.00%}" + Environment.NewLine + Environment.NewLine +
                               "Effective Armor depends on Armor ignore debuffs," + Environment.NewLine +
                               "your Armor Penetration buffs and talents." + Environment.NewLine +
-                              "Damage Reduction depends on your Level.",
+                              "Enemy Damage Reduction depends on your Level.",
                               (float)Math.Floor(EffectiveTargetArmor), EffectiveTargetArmorDamageReduction));
             
             dictValues.Add("Effective Armor Penetration",
@@ -239,6 +245,22 @@ namespace Rawr.ProtPaladin
                     dictValues.Add("Ranking Mode", "Damage Output*The average amount of DPS which can be produced");
                     dictValues.Add("Survival Points", string.Format("{0:0}*Survival is not weighted in this mode", SurvivalPoints, SurvivalPoints / 100.0f));
                     break;
+                case 5:
+                    dictValues.Add("Ranking Mode", "ProtWarr Mode*Average mitigated damage vs Effective Health");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
+                    break;
+                case 6:
+                    dictValues.Add("Ranking Mode", "Damage Taken*Average taken damage vs. Effective Health");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
+                    break;
+                case 7:
+                    dictValues.Add("Ranking Mode", "Ranking Mode 7*Dummy Placeholder");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival Placeholder", SurvivalPoints));
+                    break;
+                case 8:
+                    dictValues.Add("Ranking Mode", "Ranking Mode 8*Dummy Placeholder");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival Placeholder", SurvivalPoints));
+                    break;
                 default:
                     dictValues.Add("Ranking Mode", "Mitigation Scale*Customizable scale which allows you to weight mitigation vs. effective health.");
                     dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
@@ -262,7 +284,7 @@ namespace Rawr.ProtPaladin
                 case "% chance to Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "Defense Skill": return Defense;
-                case "Block Value": return BlockValue;
+                case "Block Value": return StaticBlockValue;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
                 case "% Hit Chance": return Hit * 100.0f;
                 case "% Spell Hit Chance": return SpellHit * 100.0f;

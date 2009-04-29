@@ -25,6 +25,7 @@ namespace Rawr
         DoTTick,
         DamageDone,
         MageNukeCast,
+        Judgement,
     }
 
     [Serializable]
@@ -728,6 +729,8 @@ namespace Rawr
                         return " on Mana Gem";
                     case Trigger.MageNukeCast:
                         return " on Mage Nuke Cast";
+                    case Trigger.Judgement:
+                        return " on Judgement";
                     default:
                         return " " + Trigger.ToString();
                 }

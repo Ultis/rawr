@@ -368,11 +368,13 @@ namespace Rawr.ProtPaladin
             return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * calcOpts.TargetLevel - 22167.5f))));
         }
 
-        public static float BlockReduction(Character character, Stats stats)
+        public static float ActiveBlockReduction(Character character, Stats stats)
         {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             PaladinTalents talents = character.PaladinTalents;
-            if (stats.JudgementBlockValue > 0) return stats.BlockValue + (5f / (10f - 1f * talents.ImprovedJudgements)) * stats.JudgementBlockValue;
-            else return stats.BlockValue;
+            
+            // This formula assumes judging on cd, and needs to be modified as soon as we support custom rotations.
+            return (stats.BlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue);
         }
 
         public static float MagicReduction(Character character, Stats stats, DamageType school)
@@ -391,12 +393,17 @@ namespace Rawr.ProtPaladin
                 case DamageType.Shadow: totalResist += stats.ShadowResistance; break;
             }
 
-            if ((calcOpts.TargetLevel - character.Level) < 3)
+            if ((calcOpts.TargetLevel - character.Level) == 0)
                 resistScale = 400.0f;
+            if ((calcOpts.TargetLevel - character.Level) == 1)
+                resistScale = 405.0f;
+            if ((calcOpts.TargetLevel - character.Level) == 2)
+                resistScale = 410.0f;
             else
                 // This number is still being tested by many and may be slightly higher
-                // update: it seems 515 is a more realistic value
-                resistScale = 515.0f;
+                // update: it seems 510 is a more realistic value
+                // NB: resistScale is the resistance constant for 50% Mean Average Damage depending on Level difference.
+                resistScale = 510.0f;
 
             return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
         }
