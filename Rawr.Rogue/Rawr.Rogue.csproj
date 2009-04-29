@@ -98,6 +98,7 @@
     <Compile Include="ComboPointGenerators\Backstab.cs" />
     <Compile Include="ComboPointGenerators\ComboPointGenerator.cs" />
     <Compile Include="ComboPointGenerators\Hemo.cs" />
+    <Compile Include="ComboPointGenerators\HonorAmongThieves.cs" />
     <Compile Include="ComboPointGenerators\Mutilate.cs" />
     <Compile Include="ComboPointGenerators\SinisterStrike.cs" />
     <Compile Include="ComparisonCalculationsRogue.cs" />

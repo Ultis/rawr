@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Rawr.Rogue.ComboPointGenerators;
 
 namespace Rawr.Rogue
 {
     public partial class CalculationOptionsPanelRogue : CalculationOptionsPanelBase
     {
-        private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> _armorBosses = new Dictionary<int, string>();
         private static readonly CalculationOptionsRogue _calcOpts = new CalculationOptionsRogue();
 
         public CalculationOptionsPanelRogue()
         {
             InitializeComponent();
 
-            armorBosses.Add(13083, "All Level 83 Bosses");
-            armorBosses.Add(10338, "Generic 82 Elite");
+            _armorBosses.Add(13083, "All Level 83 Bosses");
+            _armorBosses.Add(10338, "Generic 82 Elite");
 
             comboBoxArmorBosses.DisplayMember = "Key";
-            comboBoxArmorBosses.DataSource = new BindingSource(armorBosses, null);
+            comboBoxArmorBosses.DataSource = new BindingSource(_armorBosses, null);
 
             comboBoxTargetLevel.DataSource = new[] {83, 82, 81, 80};
 
@@ -46,6 +47,9 @@ namespace Rawr.Rogue
 
             comboBoxOHPoison.DisplayMember = "Name";
             comboBoxOHPoison.DataSource = new PoisonList();
+
+            ComboBoxCpGenerator.DisplayMember = "Name";
+            ComboBoxCpGenerator.DataSource = new ComboPointGeneratorList();
         }
 
         protected override void LoadCalculationOptions()
@@ -71,7 +75,7 @@ namespace Rawr.Rogue
         private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
         {
             var targetArmor = int.Parse(comboBoxArmorBosses.Text);
-            labelTargetArmorDescription.Text = armorBosses[targetArmor];
+            labelTargetArmorDescription.Text = _armorBosses[targetArmor];
             _calcOpts.TargetArmor = targetArmor;
             UpdateCalculations();
         }
@@ -97,7 +101,7 @@ namespace Rawr.Rogue
             cycle.Components.Add(GetCycleComponent(comboBoxComboPoints1, comboBoxFinisher1));
             cycle.Components.Add(GetCycleComponent(comboBoxComboPoints2, comboBoxFinisher2));
             cycle.Components.Add(GetCycleComponent(comboBoxComboPoints3, comboBoxFinisher3));
-            _calcOpts.DPSCycle = cycle;
+            _calcOpts.DpsCycle = cycle;
             UpdateCalculations();
         }
 
@@ -110,6 +114,26 @@ namespace Rawr.Rogue
                                     Finisher = Finishers.Get(comboBoxFinisher.Text)
                                 };
             return component;
+        }
+
+        private void ComboBoxCpGenerator_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(ComboBoxCpGenerator.Text == new HonorAmongThieves(0f).Name)
+            {
+                CpPerSecLabel.Visible = HatStepper.Visible = true;
+                HatStepper_ValueChanged(sender, e);
+                return;
+            }
+
+            CpPerSecLabel.Visible = HatStepper.Visible = false;
+            _calcOpts.CpGenerator = ComboPointGeneratorList.Get(ComboBoxCpGenerator.Text);
+            UpdateCalculations();
+        }
+
+        private void HatStepper_ValueChanged(object sender, EventArgs e)
+        {
+            _calcOpts.CpGenerator = new HonorAmongThieves((float) HatStepper.Value);
+            UpdateCalculations();
         }
     }
 }

@@ -104,14 +104,14 @@ namespace Rawr.Rogue
             var calculatedStats = new CharacterCalculationsRogue(stats);
            
             var numCpg = CalcComboPointsNeededForCycle(calcOpts);
-            var cpg = ComboPointGenerator.Get(talents, combatFactors);
+            //var cpg = ComboPointGenerator.Get(talents, combatFactors);
 
             var whiteAttacks = new WhiteAttacks(combatFactors);
-            var cycleTime = CalcCycleTime(calcOpts, combatFactors, whiteAttacks, numCpg, cpg);
-            var cpgDps = cpg.CalcCpgDPS(stats, combatFactors, calcOpts, numCpg, cycleTime);
+            var cycleTime = CalcCycleTime(calcOpts, combatFactors, whiteAttacks, numCpg);
+            var cpgDps = calcOpts.CpGenerator.CalcCpgDPS(stats, combatFactors, calcOpts, numCpg, cycleTime);
 
             var totalFinisherDps = 0f;
-            foreach (var component in calcOpts.DPSCycle.Components)
+            foreach (var component in calcOpts.DpsCycle.Components)
             {
                 var finisherDps = component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime);
                 calculatedStats.AddToolTip(DisplayValue.FinisherDPS, component + ": " + finisherDps);
@@ -127,7 +127,7 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
 
-            calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
+            calculatedStats.AddDisplayValue(DisplayValue.CPG, calcOpts.CpGenerator.Name);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
 
             calculatedStats.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
@@ -151,7 +151,7 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.BaseHaste <= 0 ? 0 : combatFactors.BaseHaste - 1) );
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpg.Crit(combatFactors)*100);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors) * 100);
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
@@ -173,10 +173,10 @@ namespace Rawr.Rogue
 
         private static float CalcComboPointsNeededForCycle(CalculationOptionsRogue calcOpts)
         {
-            return calcOpts.DPSCycle.TotalComboPoints - (calcOpts.DPSCycle.Components.Count * Talents.Ruthlessness.Bonus);
+            return calcOpts.DpsCycle.TotalComboPoints - (calcOpts.DpsCycle.Components.Count * Talents.Ruthlessness.Bonus);
         }
 
-        private static float CalcCycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCpg, IComboPointGenerator cpg)
+        private static float CalcCycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCpg)
         {
             var energyRegen = combatFactors.BaseEnergyRegen;
             energyRegen += Talents.CombatPotency.Bonus * whiteAttacks.OhHits;
@@ -187,13 +187,14 @@ namespace Rawr.Rogue
                 energyRegen += combatFactors.Tier8TwoPieceEnergyBonus;    
             }
 
-            var energyCost = numCpg * cpg.EnergyCost(combatFactors) / cpg.ComboPointsGeneratedPerAttack;
-            foreach(var component in calcOpts.DPSCycle.Components)
-            {
-                energyCost += component.Finisher.EnergyCost(combatFactors, component.Rank);
-            }
+            var cpgDuration = calcOpts.CpGenerator.CalcDuration(numCpg, energyRegen, combatFactors);
 
-            return energyCost / energyRegen;
+            var finisherEnergyCost = 0f;
+            foreach(var component in calcOpts.DpsCycle.Components)
+            {
+                finisherEnergyCost += component.Finisher.EnergyCost(combatFactors, component.Rank);
+            }
+            return cpgDuration + (finisherEnergyCost / energyRegen);
         }
 
         private static float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CharacterCalculationsRogue calculatedStats )
@@ -302,10 +303,17 @@ namespace Rawr.Rogue
             statsTotal.BonusCPGDamage = statsGearEnchantsBuffs.BonusCPGDamage;
             statsTotal.BonusSnDHaste = statsGearEnchantsBuffs.BonusSnDHaste;
 
+            //-----------------------------------------------------------------
+            // FYI:  T7 and T8 are pulled from the base RAWR as true/false, 
+            //       not as the actual buff values.  The actual benefit is
+            //       defined/calculated in the CombatFactors class
+            //-----------------------------------------------------------------
+
             //T7 bonuses
             statsTotal.RogueT7TwoPieceBonus = statsGearEnchantsBuffs.RogueT7TwoPieceBonus;
             statsTotal.RogueT7FourPieceBonus = statsGearEnchantsBuffs.RogueT7FourPieceBonus;
 
+            //T8 bonuses
             statsTotal.RogueT8TwoPieceBonus = statsGearEnchantsBuffs.RogueT8TwoPieceBonus;
             statsTotal.RogueT8FourPieceBonus = statsGearEnchantsBuffs.RogueT8FourPieceBonus;
 

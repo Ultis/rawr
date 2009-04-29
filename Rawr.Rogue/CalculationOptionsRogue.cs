@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Windows.Forms;
+using Rawr.Rogue.ComboPointGenerators;
 
 namespace Rawr.Rogue
 {
@@ -28,8 +29,9 @@ namespace Rawr.Rogue
 
         public int TargetLevel;
         public int TargetArmor;
-        public Cycle DPSCycle = new Cycle();
+        public Cycle DpsCycle = new Cycle();
 		public PoisonBase TempMainHandEnchant = new NoPoison();
 		public PoisonBase TempOffHandEnchant = new NoPoison();
+        public ComboPointGenerator CpGenerator = new SinisterStrike();
     }
 }

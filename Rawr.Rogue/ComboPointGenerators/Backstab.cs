@@ -2,28 +2,24 @@ using System;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
-    public class Backstab : IComboPointGenerator
+    [Serializable]
+    public class Backstab : ComboPointGenerator
     {
-        public string Name { get { return "Backstab"; } }
+        public override string Name { get { return "Backstab"; } }
 
-        public float EnergyCost(CombatFactors combatFactors)
+        protected override float EnergyCost(CombatFactors combatFactors)
         {
             return 60f * combatFactors.Tier7FourPieceEnergyCostReduction
                 - Talents.SlaughterFromTheShadows.BackstabAndAmbushEnergyCost.Bonus 
                 - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus);  
         }
 
-        public float Crit(CombatFactors combatFactors)
+        public override float Crit(CombatFactors combatFactors)
         {
             return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.Backstab.Bonus) * combatFactors.ProbYellowHit;
         }
 
-    	public float ComboPointsGeneratedPerAttack
-    	{
-			get { return 1f; }
-    	}
-
-    	public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
+        public override float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
 			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.Aggression, Talents.BladeTwisting, Talents.SurpriseAttacks, Talents.Opportunity));

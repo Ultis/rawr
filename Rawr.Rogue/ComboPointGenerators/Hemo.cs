@@ -2,28 +2,24 @@ using System;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
-    public class Hemo : IComboPointGenerator
+    [Serializable]
+    public class Hemo : ComboPointGenerator
     {
-        public string Name { get { return "Hemo"; } }
+        public override string Name { get { return "Hemo"; } }
 
-        public float EnergyCost(CombatFactors combatFactors)
+        protected override float EnergyCost(CombatFactors combatFactors)
         {
             return 35f * combatFactors.Tier7FourPieceEnergyCostReduction
                 - Talents.SlaughterFromTheShadows.HemoEnergyCost.Bonus 
                 - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus); 
         }
 
-        public float Crit(CombatFactors combatFactors)
+        public override float Crit(CombatFactors combatFactors)
         {
             return combatFactors.ProbMhCrit * combatFactors.ProbYellowHit;
 		}
 
-		public float ComboPointsGeneratedPerAttack
-		{
-			get { return 1f; }
-		}
-
-        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
+        public override float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
 			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.SurpriseAttacks));

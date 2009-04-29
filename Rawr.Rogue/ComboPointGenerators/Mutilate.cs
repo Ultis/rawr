@@ -2,11 +2,12 @@ using System;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
-    public class Mutilate : IComboPointGenerator
+    [Serializable]
+    public class Mutilate : ComboPointGenerator
     {
-        public string Name { get { return "Mutilate"; } }
-        
-		public float EnergyCost(CombatFactors combatFactors)
+        public override string Name { get { return "Mutilate"; } }
+
+        protected override float EnergyCost(CombatFactors combatFactors)
 		{ 
 			//Assume Mutiliate can only crit once, so Focused Attacks can only return 2 energy, and
 			//not 2 energy for a MH crit, and another 2 energy (total 4) for a MH and OH crit
@@ -14,17 +15,17 @@ namespace Rawr.Rogue.ComboPointGenerators
                 - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus); 
 		}
 
-        public float Crit(CombatFactors combatFactors)
+        public override float Crit(CombatFactors combatFactors)
         {
             return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus;
 		}
 
-		public float ComboPointsGeneratedPerAttack
+        protected override float ComboPointsGeneratedPerAttack
 		{
 			get { return 2f; }
 		}
 
-        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
+        public override float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCpg, float cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
             baseDamage *= TalentBonusDamage();
