@@ -61,9 +61,9 @@ namespace Rawr.Rogue
             set { _finisher = value; }
         }
 
-        public float CalcFinisherDPS( RogueTalents talents, Stats stats, CombatFactors combatFactors, float cycleTime, WhiteAttacks whiteAttacks )
+        public float CalcFinisherDPS( RogueTalents talents, CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, float cycleTime, WhiteAttacks whiteAttacks )
         {
-            return _finisher.CalcFinisherDPS(stats, combatFactors, _rank, cycleTime, whiteAttacks);
+            return _finisher.CalcFinisherDPS(calcOpts, stats, combatFactors, _rank, cycleTime, whiteAttacks);
         }
 
         public override string ToString()

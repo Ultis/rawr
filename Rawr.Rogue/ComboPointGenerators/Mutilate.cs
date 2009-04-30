@@ -1,4 +1,5 @@
 using System;
+using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {

@@ -19,8 +19,12 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public virtual float CalcDuration(float numCpg, float regen, CombatFactors combatFactors)
         {
-            var energyNeeded = numCpg * EnergyCost(combatFactors) / ComboPointsGeneratedPerAttack;
-            return energyNeeded/regen;
+            return HitsNeeded(numCpg) * EnergyCost(combatFactors) / regen;
+        }
+
+        public virtual float HitsNeeded(float numCpg)
+        {
+            return numCpg / ComboPointsGeneratedPerAttack;    
         }
 
         protected abstract float EnergyCost(CombatFactors combatFactors);
@@ -28,7 +32,6 @@ namespace Rawr.Rogue.ComboPointGenerators
         {
             get { return 1; }
         }
-        
     }
 
     public class ComboPointGeneratorList : List<ComboPointGenerator>

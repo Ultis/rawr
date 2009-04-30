@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Rawr.Rogue.ComboPointGenerators;
 using Rawr.Rogue.FinishingMoves;
+using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue
 {

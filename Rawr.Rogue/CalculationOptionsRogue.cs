@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using Rawr.Rogue.ComboPointGenerators;
+using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue
 {

@@ -111,7 +111,12 @@
     <Compile Include="FinishingMoves\NoFinisher.cs" />
     <Compile Include="FinishingMoves\Rupture.cs" />
     <Compile Include="FinishingMoves\SnD.cs" />
-    <Compile Include="Poisons.cs" />
+    <Compile Include="Poisons\DeadlyPoison.cs" />
+    <Compile Include="Poisons\InstantPoison.cs" />
+    <Compile Include="Poisons\NoPoison.cs" />
+    <Compile Include="Poisons\PoisonBase.cs" />
+    <Compile Include="Poisons\PoisonList.cs" />
+    <Compile Include="Poisons\WoundPoison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RogueConversions.cs" />
     <Compile Include="SwordSpec.cs" />
