@@ -382,7 +382,8 @@ namespace Rawr
             }
             else if (Cooldown == 0.0f)
             {
-                return 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
+                if (triggerInterval >= Duration) return Duration / triggerInterval * GetChance(attackSpeed) * triggerChance;
+                else return 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
             }
             else
             {
