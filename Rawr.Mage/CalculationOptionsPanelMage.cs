@@ -133,6 +133,13 @@ namespace Rawr.Mage
             CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
             CastingState apState = new CastingState(calculationResult, Cooldown.ArcanePower, false);
 
+            Cycle wand = null;
+            if (Character.Ranged != null)
+            {
+                wand = new WandTemplate(calculationResult, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed).GetSpell(baseState);
+            }
+
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("Optimal Cycle Palette:");
@@ -170,7 +177,7 @@ z = remaining time on Missile Barrage
             }
             sb.AppendLine("");
 
-            foreach (GenericCycle cycle in generator.Analyze(baseState))
+            foreach (Cycle cycle in generator.Analyze(baseState, wand))
             {
                 sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
             }
@@ -187,7 +194,7 @@ z = remaining time on Missile Barrage
             }
             sb.AppendLine("");
 
-            foreach (GenericCycle cycle in generator.Analyze(apState))
+            foreach (Cycle cycle in generator.Analyze(apState, wand))
             {
                 sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
             }

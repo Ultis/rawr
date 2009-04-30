@@ -998,9 +998,9 @@ namespace Rawr.Mage
             return new GenericCycle(name, castingState, StateList);
         }
 
-        public List<GenericCycle> Analyze(CastingState castingState)
+        public List<Cycle> Analyze(CastingState castingState, Cycle wand)
         {
-            Dictionary<string, GenericCycle> cycleDict = new Dictionary<string, GenericCycle>();
+            Dictionary<string, Cycle> cycleDict = new Dictionary<string, Cycle>();
             int j;
             do
             {
@@ -1029,11 +1029,16 @@ namespace Rawr.Mage
                 }
             } while (j >= 0);
 
-            List<GenericCycle> cyclePalette = new List<GenericCycle>();
+            if (wand != null)
+            {
+                cycleDict["Wand"] = wand;
+            }
+
+            List<Cycle> cyclePalette = new List<Cycle>();
 
             double maxdps = 0;
-            GenericCycle maxdpsCycle = null;
-            foreach (GenericCycle cycle in cycleDict.Values)
+            Cycle maxdpsCycle = null;
+            foreach (Cycle cycle in cycleDict.Values)
             {
                 if (cycle.DamagePerSecond > maxdps)
                 {
@@ -1044,14 +1049,14 @@ namespace Rawr.Mage
 
             cyclePalette.Add(maxdpsCycle);
 
-            GenericCycle mindpmCycle;
+            Cycle mindpmCycle;
             do
             {
-                GenericCycle highdpsCycle = cyclePalette[cyclePalette.Count - 1];
+                Cycle highdpsCycle = cyclePalette[cyclePalette.Count - 1];
             RESTART:
                 mindpmCycle = null;
                 double mindpm = double.PositiveInfinity;
-                foreach (GenericCycle cycle in cycleDict.Values)
+                foreach (Cycle cycle in cycleDict.Values)
                 {
                     double dpm = (cycle.DamagePerSecond - highdpsCycle.DamagePerSecond) / (cycle.ManaPerSecond - highdpsCycle.ManaPerSecond);
                     if (dpm > 0 && dpm < mindpm && cycle.ManaPerSecond < highdpsCycle.ManaPerSecond)
@@ -1063,7 +1068,7 @@ namespace Rawr.Mage
                 if (mindpmCycle != null)
                 {
                     // validate cycle pair theory
-                    foreach (GenericCycle cycle in cycleDict.Values)
+                    foreach (Cycle cycle in cycleDict.Values)
                     {
                         double dpm = (cycle.DamagePerSecond - mindpmCycle.DamagePerSecond) / (cycle.ManaPerSecond - mindpmCycle.ManaPerSecond);
                         if (cycle != highdpsCycle && cycle.DamagePerSecond > mindpmCycle.DamagePerSecond && dpm > mindpm + 0.000001)
