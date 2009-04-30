@@ -311,7 +311,7 @@ namespace Rawr.ShadowPriest
             if (character.PriestTalents.Shadowform > 0)
             {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
-                CritCoef = 2f;
+                CritCoef = 1.5f * (1f + stats.BonusSpellCritMultiplier) + 0.5f;
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
@@ -356,7 +356,7 @@ namespace Rawr.ShadowPriest
             if (character.PriestTalents.Shadowform > 0)
             {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
-                CritCoef = 2f;
+                CritCoef = 1.5f * (1f + stats.BonusSpellCritMultiplier) + 0.5f;
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
@@ -683,7 +683,7 @@ namespace Rawr.ShadowPriest
             if (character.PriestTalents.Shadowform > 0)
             {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
-                CritCoef = 2f;
+                CritCoef = 1.5f * (1f + stats.BonusSpellCritMultiplier) + 0.5f;
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
