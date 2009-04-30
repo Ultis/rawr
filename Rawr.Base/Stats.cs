@@ -286,10 +286,8 @@ namespace Rawr
         DivineStormCrit,
         CrusaderStrikeCrit,
         DivineStormDamage,
-        APCrusaderStrike_10,
         CrusaderStrikeDamage,
         ConsecrationSpellPower,
-        CritJudgement_5,
         JudgementCDReduction,
         #endregion
         #region Added by Rawr.ProtPaladin
@@ -2209,30 +2207,12 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("AP on Crusader Strike (10 sec)")]
-        [Category("Retribution")]
-        public float APCrusaderStrike_10
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_10]; }
-            set { _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_10] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Crusader Strike Damage")]
         [Category("Retribution")]
         public float CrusaderStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Crit on Judgement (5 sec)")]
-        [Category("Retribution")]
-        public float CritJudgement_5
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CritJudgement_5]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CritJudgement_5] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

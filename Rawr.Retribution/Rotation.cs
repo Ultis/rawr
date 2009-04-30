@@ -107,6 +107,9 @@ namespace Rawr.Retribution
         public abstract float GetMeleeCritsPerSec();
         public abstract float GetPhysicalCritsPerSec();
 
+        public abstract float GetJudgementCD();
+        public abstract float GetCrusaderStrikeCD();
+
     }
 
     public class Simulator : Rotation
@@ -168,6 +171,16 @@ namespace Rawr.Retribution
             return GetMeleeAttacksPerSec()
                 + Solution.Judgement * judge.ChanceToCrit() / Solution.FightLength * judge.Targets()
                 + Solution.HammerOfWrath * how.ChanceToCrit() / Solution.FightLength * how.Targets();
+        }
+
+        public override float GetCrusaderStrikeCD()
+        {
+            return Solution.FightLength / Solution.CrusaderStrike;
+        }
+
+        public override float GetJudgementCD()
+        {
+            return Solution.FightLength / Solution.Judgement;
         }
 
     }
@@ -236,6 +249,16 @@ namespace Rawr.Retribution
                 + (judge.ChanceToCrit() / _calcOpts.JudgeCD * judge.Targets()) * (1f - _calcOpts.TimeUnder20)
                 + (judge.ChanceToCrit() / _calcOpts.JudgeCD20 * judge.Targets()
                 + how.ChanceToCrit() / _calcOpts.HoWCD20 * how.Targets()) * _calcOpts.TimeUnder20;
+        }
+
+        public override float GetCrusaderStrikeCD()
+        {
+            return _calcOpts.CSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.CSCD20 * _calcOpts.TimeUnder20;
+        }
+
+        public override float GetJudgementCD()
+        {
+            return _calcOpts.JudgeCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.JudgeCD20 * _calcOpts.TimeUnder20;
         }
 
     }

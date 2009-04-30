@@ -403,31 +403,14 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 Rotation rot;
-                float libramAP = 0, libramCrit = 0;
 
-
-                stats.AttackPower += libramAP;
-                stats.CritRating += libramCrit;
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
 
                 CombatStats combats = new CombatStats(character, stats);
-                if (calcOpts.SimulateRotation)
-                {
-                    rot = new Simulator(combats);
-                    RotationSolution sol = ((Simulator)rot).Solution;
-
-                    libramAP = stats.APCrusaderStrike_10 * (float)Math.Min(1f, 10f * sol.CrusaderStrike / sol.FightLength);
-                    libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength;
-
-                }
-                else
-                {
-                    rot = new EffectiveCooldown(combats);
-                    libramAP = stats.APCrusaderStrike_10 * 10f / (float)Math.Max(10, calcOpts.CSCD);
-                    libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgeCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgeCD20 * calcOpts.TimeUnder20);
-                }
+                if (calcOpts.SimulateRotation) rot = new Simulator(combats);
+                else rot = new EffectiveCooldown(combats);
 
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -455,22 +438,20 @@ namespace Rawr.Retribution
                         {
                             trigger = 1f / rot.GetPhysicalAttacksPerSec();
                         }
-                        //if (effect.MaxStack > 1)
-                        //{
-                        //    float timeToMax = (float)Math.Min(fightLength, effect.GetChance(combats.BaseWeaponSpeed) * trigger * effect.MaxStack * (1f + calcOpts.StackTrinketReset));
-                        //    statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
-                        //}
-                        //else
-                        //{
-                            statsAverage += effect.GetAverageStats(trigger, 1f, combats.BaseWeaponSpeed, fightLength);
-                        //}
+                        else if (effect.Trigger == Trigger.CrusaderStrike)
+                        {
+                            trigger = rot.GetCrusaderStrikeCD();
+                        }
+                        else if (effect.Trigger == Trigger.Judgement)
+                        {
+                            trigger = rot.GetJudgementCD();
+                        }
+                        statsAverage += effect.GetAverageStats(trigger, 1f, combats.BaseWeaponSpeed, fightLength);
                     }
                 }
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
-                stats.AttackPower += libramAP;
                 stats.Strength += stats.HighestStat;
-                stats.CritRating += libramCrit;
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
 
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
@@ -567,7 +548,7 @@ namespace Rawr.Retribution
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust +
-                stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
+                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
@@ -612,9 +593,7 @@ namespace Rawr.Retribution
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
-                CritJudgement_5 = stats.CritJudgement_5,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
-                APCrusaderStrike_10 = stats.APCrusaderStrike_10,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
                 JudgementCDReduction = stats.JudgementCDReduction,
                 DivineStormDamage = stats.DivineStormDamage,
@@ -626,19 +605,22 @@ namespace Rawr.Retribution
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
-                {
-                    s.AddSpecialEffect(effect);
-                }
+                if (HasRelevantSpecialEffect(effect)) s.AddSpecialEffect(effect);
             }
             return s;
         }
 
-        public bool HasRelevantSpecialEffectStats(Stats stats)
+        public bool HasRelevantSpecialEffect(SpecialEffect effect)
         {
-            return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
-            + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
+            if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit|| effect.Trigger == Trigger.MeleeHit
+                || effect.Trigger == Trigger.CrusaderStrike || effect.Trigger == Trigger.PhysicalCrit
+                || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.Judgement)
+            {
+                Stats stats = effect.Stats;
+                return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
+                + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
+            }
+            return false;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -647,7 +629,7 @@ namespace Rawr.Retribution
                 stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
-                stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_10 + stats.ConsecrationSpellPower +
+                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.Bloodlust) > 0;
@@ -662,14 +644,10 @@ namespace Rawr.Retribution
             {
                 hasSpecialEffect = true;
                 specialEffect = false;
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
+                if (HasRelevantSpecialEffect(effect))
                 {
-                    if (HasRelevantSpecialEffectStats(effect.Stats))
-                    {
-                        specialEffect = true;
-                        break;
-                    }
+                    specialEffect = true;
+                    break;
                 }
             }
             return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));

@@ -274,7 +274,7 @@ namespace Rawr
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec."))
             {
                 // Pandora's Plea
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 850f }, 10f, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 751f }, 10f, 45f, .1f));
             }
             // Idol of the Raven Goddess (already added)
             else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
@@ -875,7 +875,7 @@ namespace Rawr
             }
             else if ((match = new Regex("Your Crusader Strike ability also grants you (?<amount>\\d\\d*) attack power for 10 sec.").Match(line)).Success)
             {
-                stats.APCrusaderStrike_10 += (float)int.Parse(match.Groups["amount"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrike, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f));
             }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
@@ -897,9 +897,9 @@ namespace Rawr
             {
                 stats.DivineStormDamage = 81;
             }
-            else if ((match = new Regex(@"Causes your Judgements to increase your Critical Strike rating by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
+            else if ((match = new Regex(@"Causes your Judgements to increase your Critical Strike Rating by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {
-                          stats.CritJudgement_5 = (float)int.Parse(match.Groups["amount"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Judgement, new Stats() { CritRating = int.Parse(match.Groups["amount"].Value) }, 5f, 0f));
             }
             else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
             {

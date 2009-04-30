@@ -26,6 +26,7 @@ namespace Rawr
         DamageDone,
         MageNukeCast,
         Judgement,
+        CrusaderStrike
     }
 
     [Serializable]
@@ -655,6 +656,14 @@ namespace Rawr
             else return Chance;
         }
 
+        private string StackString
+        {
+            get
+            {
+                return MaxStack + "x";
+            }
+        }
+
         private string CooldownString
         {
             get
@@ -675,9 +684,7 @@ namespace Rawr
         {
             get
             {
-                if (Duration == 0) return "";
-                int duration = (int)Duration;
-                return duration.ToString() + " Sec ";
+                return ((int)Duration).ToString() + " Sec";
             }
         }
 
@@ -697,99 +704,83 @@ namespace Rawr
                 switch (Trigger)
                 {
                     case Trigger.DamageSpellCast:
-                        return " on Damaging Spell Cast";
+                        return "on Damaging Spell Cast";
                     case Trigger.DamageSpellCrit:
-                        return " on Damaging Spell Crit";
+                        return "on Damaging Spell Crit";
                     case Trigger.DamageSpellHit:
-                        return " on Damaging Spell Hit";
+                        return "on Damaging Spell Hit";
                     case Trigger.HealingSpellCast:
-                        return " on Healing Spell Cast";
+                        return "on Healing Cast";
                     case Trigger.HealingSpellCrit:
-                        return " on Healing Spell Crit";
+                        return "on Healing Crit";
                     case Trigger.HealingSpellHit:
-                        return " on Healing Spell Hit";
+                        return "on Healing Hit";
                     case Trigger.MeleeCrit:
-                        return " on Melee Crit";
+                        return "on Melee Crit";
                     case Trigger.MeleeHit:
-                        return " on Melee Hit";
+                        return "on Melee Hit";
                     case Trigger.SpellCast:
-                        return " on Spell Cast";
+                        return "on Spell Cast";
                     case Trigger.SpellCrit:
-                        return " on Spell Crit";
+                        return "on Spell Crit";
                     case Trigger.SpellHit:
-                        return " on Spell Hit";
+                        return "on Spell Hit";
                     case Trigger.SpellMiss:
-                        return " on Spell Miss";
+                        return "on Spell Miss";
                     case Trigger.Use:
                         return "";
                     case Trigger.PhysicalHit:
-                        return " on Physical Hit";
+                        return "on Physical Hit";
                     case Trigger.PhysicalCrit:
-                        return " on Physical Crit";
+                        return "on Physical Crit";
                     case Trigger.ManaGem:
-                        return " on Mana Gem";
+                        return "on Mana Gem";
                     case Trigger.MageNukeCast:
-                        return " on Mage Nuke Cast";
+                        return "on Mage Nuke Cast";
                     case Trigger.Judgement:
-                        return " on Judgement";
+                        return "on Judgement";
+                    case Trigger.CrusaderStrike:
+                        return "on Crusader Strike";
                     default:
-                        return " " + Trigger.ToString();
+                        return Trigger.ToString();
                 }
             }
         }
 
         public override string ToString()
         {
-            if (MaxStack > 1)
+            StringBuilder s = new StringBuilder();
+            if (MaxStack > 1) { s.Append(StackString); s.Append(" "); }
+            
+            s.Append(Stats.ToString());
+            s.Append(" (");
+
+            bool needsSpace = false;
+            if (Duration > 0)
             {
-                if (Cooldown == 0.0f)
-                {
-                    if (Chance == 1.0f)
-                    {
-                        return string.Format("{4}x {0} ({1}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString, MaxStack);
-                    }
-                    else
-                    {
-                        return string.Format("{4}x {0} ({1}{2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString, MaxStack);
-                    }
-                }
-                else
-                {
-                    if (Chance == 1.0f)
-                    {
-                        return string.Format("{5}x {0} ({1}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString, MaxStack);
-                    }
-                    else
-                    {
-                        return string.Format("{5}x {0} ({1}{2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString, MaxStack);
-                    }
-                }
+                s.Append(DurationString);
+                needsSpace = true;
             }
-            else
+            if (Chance < 1)
             {
-                if (Cooldown == 0.0f)
-                {
-                    if (Chance == 1.0f)
-                    {
-                        return string.Format("{0} ({1}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString);
-                    }
-                    else
-                    {
-                        return string.Format("{0} ({1}{2}{3})", Stats.ToString(), DurationString, ChanceString, TriggerString);
-                    }
-                }
-                else
-                {
-                    if (Chance == 1.0f)
-                    {
-                        return string.Format("{0} ({1}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
-                    }
-                    else
-                    {
-                        return string.Format("{0} ({1}{2}{3}/{4})", Stats.ToString(), DurationString, ChanceString, TriggerString, CooldownString);
-                    }
-                }
+                if (needsSpace) s.Append(" ");
+                s.Append(ChanceString);
+                needsSpace = true;
             }
+
+            if (Trigger != Trigger.Use)
+            {
+                if (needsSpace) s.Append(" ");
+                s.Append(TriggerString);
+                needsSpace = true;
+            }
+            if (Cooldown > 0)
+            {
+                if (needsSpace) s.Append("/");
+                s.Append(CooldownString);
+            }
+            s.Append(")");
+            return s.ToString();
         }
     }
 }

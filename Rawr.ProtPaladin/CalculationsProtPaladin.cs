@@ -1347,7 +1347,6 @@ focus on Survival Points.",
                 JudgementBlockValue = stats.JudgementBlockValue,
                 BonusHammerOfTheRighteousMultiplier = stats.BonusHammerOfTheRighteousMultiplier,
                 ShieldOfRighteousnessBlockValue = stats.ShieldOfRighteousnessBlockValue,
-                CritJudgement_5 = stats.CritJudgement_5,
                 BonusSealOfCorruptionDamageMultiplier = stats.BonusSealOfCorruptionDamageMultiplier,
                 BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
                 BonusSealOfVengeanceDamageMultiplier = stats.BonusSealOfVengeanceDamageMultiplier,
@@ -1424,7 +1423,6 @@ focus on Survival Points.",
 
                 stats.JudgementBlockValue +
                 stats.ShieldOfRighteousnessBlockValue +
-                stats.CritJudgement_5 +
                 stats.ConsecrationSpellPower +
  
                 //// Resistances
