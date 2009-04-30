@@ -1052,6 +1052,103 @@ namespace Rawr.Mage
         }
     }
 
+    public class GenericArcaneCycle : GenerativeCycle
+    {
+        private class State : CycleState
+        {
+            public bool MissileBarrageRegistered { get; set; }
+            public float MissileBarrageDuration { get; set; }
+            public float ArcaneBarrageCooldown { get; set; }
+            public int ArcaneBlastStack { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                State o = obj as State;
+                if ((object)o != null)
+                {
+                    return MissileBarrageRegistered == o.MissileBarrageRegistered && MissileBarrageDuration == o.MissileBarrageDuration && ArcaneBarrageCooldown == o.ArcaneBarrageCooldown && ArcaneBlastStack == o.ArcaneBlastStack;
+                }
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return MissileBarrageRegistered.GetHashCode() & MissileBarrageDuration.GetHashCode() & ArcaneBarrageCooldown.GetHashCode() & ArcaneBlastStack.GetHashCode();
+            }
+        }
+
+        public Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3;
+
+        public GenericArcaneCycle(string name, CastingState castingState) : base(name, castingState)
+        {
+            AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+            AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+            AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+            AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+            ABar0 = castingState.GetSpell(SpellId.ArcaneBarrage);
+            ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
+            ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
+            ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            AM0 = castingState.GetSpell(SpellId.ArcaneMissiles);
+            AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
+            AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
+            AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
+            MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
+            MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+
+            GenerateStateDescription();
+        }
+
+        protected override CycleState GetInitialState()
+        {
+            return new State();
+        }
+
+        protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
+        {
+            State s = (State)state;
+            List<CycleControlledStateTransition> list = new List<CycleControlledStateTransition>();
+            Spell AB;
+            Spell AM;
+            Spell ABar;
+            switch (s.ArcaneBlastStack)
+            {
+                case 0:
+                    AB = AB0;
+                    ABar = ABar0;
+                    AM = (s.MissileBarrageDuration > 0) ? MBAM0 : AM0;
+                    break;
+                case 1:
+                    AB = AB1;
+                    ABar = ABar1;
+                    AM = (s.MissileBarrageDuration > 0) ? MBAM1 : AM1;
+                    break;
+                case 2:
+                    AB = AB2;
+                    ABar = ABar2;
+                    AM = (s.MissileBarrageDuration > 0) ? MBAM2 : AM2;
+                    break;
+                case 3:
+                    AB = AB3;
+                    ABar = ABar3;
+                    AM = (s.MissileBarrageDuration > 0) ? MBAM3 : AM3;
+                    break;
+            }
+            //list.Add(new CycleControlledStateTransition() { Spell = AB, TargetState = new CycleState(
+
+            return list;
+        }
+
+        protected override bool CanStatesBeDistinguished(CycleState state1, CycleState state2)
+        {
+            State a = (State)state1;
+            State b = (State)state1;
+            return (a.ArcaneBlastStack != b.ArcaneBlastStack || a.ArcaneBarrageCooldown != b.ArcaneBarrageCooldown || a.MissileBarrageDuration != b.MissileBarrageDuration);
+        }
+    }
+
     class GenericArcane : Cycle
     {
         public Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3;

@@ -710,4 +710,273 @@ namespace Rawr.Mage
             }
         }
     }
+
+    public class CycleState
+    {
+        public List<CycleStateTransition> Transitions { get; set; }
+        public int Index { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class CycleStateTransition
+    {
+        public CycleState TargetState { get; set; }
+        public Cycle Cycle { get; set; }
+        public Spell Spell { get; set; }
+        public float Pause { get; set; }
+        public virtual float TransitionProbability { get; set; }
+    }
+
+    public class GenericCycle : DynamicCycle
+    {
+        public List<CycleState> StateList;
+        public double[] StateWeight;
+        Dictionary<Spell, double> SpellWeight = new Dictionary<Spell, double>();
+        Dictionary<Cycle, double> CycleWeight = new Dictionary<Cycle, double>();
+        public string SpellDistribution;
+
+        public GenericCycle(string name, CastingState castingState)
+            : base(false, castingState)
+        {
+            Name = name;
+        }
+
+        public unsafe void SetStateDescription(List<CycleState> stateDescription)
+        {
+            StateList = stateDescription;
+            for (int i = 0; i < StateList.Count; i++)
+            {
+                StateList[i].Index = i;
+            }
+
+            int size = stateDescription.Count;
+
+            ArraySet arraySet = ArrayPool.RequestArraySet(size, size);
+            LU M = new LU(size, arraySet);
+
+            StateWeight = new double[size];
+
+            fixed (double* U = arraySet.LU_U, x = StateWeight)
+            fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
+            fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
+            {
+                M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+
+                for (int replace = size - 1; replace >= size - 1; replace--)
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        for (int j = 0; j < size; j++)
+                        {
+                            U[i * size + j] = 0;
+                        }
+                    }
+
+                    //U[i * rows + j]
+
+                    foreach (CycleState state in StateList)
+                    {
+                        foreach (CycleStateTransition transition in state.Transitions)
+                        {
+                            U[transition.TargetState.Index * size + state.Index] = transition.TransitionProbability;
+                        }
+                    }
+
+                    // the above system is singular, "guess" which one is dependent and replace with sum=1
+                    // since not all states are used always we'll get a singular system anyway sometimes, but in those cases the FSolve should still work ok on the nonsingular part
+                    for (int i = 0; i < size; i++) x[i] = 0;
+
+                    if (replace < size)
+                    {
+                        for (int i = 0; i < size; i++)
+                        {
+                            U[replace * size + i] = 1;
+                        }
+
+                        x[replace] = 1;
+                    }
+
+                    M.Decompose();
+                    if (!M.Singular) break;
+                }
+                M.FSolve(x);
+
+                M.EndUnsafe();
+            }
+
+            SpellWeight = new Dictionary<Spell, double>();
+            CycleWeight = new Dictionary<Cycle, double>();
+
+            foreach (CycleState state in StateList)
+            {
+                foreach (CycleStateTransition transition in state.Transitions)
+                {
+                    if (transition.Spell != null)
+                    {
+                        double weight;
+                        SpellWeight.TryGetValue(transition.Spell, out weight);
+                        SpellWeight[transition.Spell] = weight + StateWeight[state.Index] * transition.TransitionProbability;
+                    }
+                    if (transition.Cycle != null)
+                    {
+                        double weight;
+                        CycleWeight.TryGetValue(transition.Cycle, out weight);
+                        CycleWeight[transition.Cycle] = weight + StateWeight[state.Index] * transition.TransitionProbability;
+                    }
+                    if (transition.Pause > 0)
+                    {
+                        AddPause(transition.Pause, (float)(StateWeight[state.Index] * transition.TransitionProbability));
+                    }
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            foreach (KeyValuePair<Spell, double> kvp in SpellWeight)
+            {
+                AddSpell(false, kvp.Key, (float)kvp.Value);
+                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Name, 100.0 * kvp.Value);
+            }
+            foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
+            {
+                AddCycle(false, kvp.Key, (float)kvp.Value);
+                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Name, 100.0 * kvp.Value);
+            }
+
+            Calculate();
+           
+            SpellDistribution = sb.ToString();
+            ArrayPool.ReleaseArraySet(arraySet);
+        }
+    }
+
+    public class CycleControlledStateTransition : CycleStateTransition
+    {
+        private float rawProbability;
+        private int controlIndex;
+        private int controlValue;
+        private int[] controlStates;
+
+        public void SetControls(int controlIndex, int[] controlStates, int controlValue)
+        {
+            this.controlIndex = controlIndex;
+            this.controlStates = controlStates;
+            this.controlValue = controlValue;
+        }
+
+        public override float TransitionProbability
+        {
+            get
+            {
+                return (controlStates[controlIndex] == controlValue) ? rawProbability : 0.0f;
+            }
+            set
+            {
+                rawProbability = value;
+            }
+        }
+    }
+
+    public abstract class GenerativeCycle : GenericCycle
+    {
+        public int[] ControlOptions;
+        public int[] ControlValue;
+        public int[] ControlIndex;
+
+        public GenerativeCycle(string name, CastingState castingState)
+            : base(name, castingState)
+        {
+        }
+
+        public void GenerateStateDescription()
+        {
+            List<CycleState> remainingStates = new List<CycleState>();
+            List<CycleState> processedStates = new List<CycleState>();
+            remainingStates.Add(GetInitialState());
+
+            while (remainingStates.Count > 0)
+            {
+                CycleState state = remainingStates[remainingStates.Count - 1];
+                remainingStates.RemoveAt(remainingStates.Count - 1);
+
+                List<CycleControlledStateTransition> transitions = GetStateTransitions(state);
+                state.Transitions = transitions.ConvertAll(transition => (CycleStateTransition)transition);
+                foreach (CycleControlledStateTransition transition in transitions)
+                {
+                    if (transition.TargetState != state && !processedStates.Contains(transition.TargetState) && !remainingStates.Contains(transition.TargetState))
+                    {
+                        remainingStates.Add(transition.TargetState);
+                    }
+                }
+
+                processedStates.Add(state);
+            }
+
+            StateList = processedStates;
+            for (int i = 0; i < StateList.Count; i++)
+            {
+                StateList[i].Index = i;
+            }
+
+            ControlIndex = new int[StateList.Count];
+            List<CycleState> controlledStates = new List<CycleState>();
+            foreach (CycleState state in StateList)
+            {
+                int controlIndex = -1;
+                foreach (CycleState controlledState in controlledStates)
+                {
+                    if (!CanStatesBeDistinguished(state, controlledState))
+                    {
+                        controlIndex = ControlIndex[controlledState.Index];
+                        break;
+                    }
+                }
+                if (controlIndex == -1)
+                {
+                    controlIndex = controlledStates.Count;
+                    controlledStates.Add(state);
+                }
+                ControlIndex[state.Index] = controlIndex;
+            }
+
+            ControlOptions = new int[controlledStates.Count];
+            ControlValue = new int[controlledStates.Count];
+
+            Dictionary<string, int>[] spellMap = new Dictionary<string, int>[controlledStates.Count];
+
+            foreach (CycleState state in StateList)
+            {
+                int controlIndex = ControlIndex[state.Index];
+                if (spellMap[controlIndex] == null)
+                {
+                    spellMap[controlIndex] = new Dictionary<string, int>();
+                }
+                foreach (CycleControlledStateTransition transition in state.Transitions)
+                {
+                    string n;
+                    if (transition.Spell != null)
+                    {
+                        n = transition.Spell.Name;
+                    }
+                    else
+                    {
+                        n = "Pause";
+                    }
+                    int controlValue;
+                    if (!spellMap[controlIndex].TryGetValue(n, out controlValue))
+                    {
+                        controlValue = spellMap[controlIndex].Keys.Count;
+                        spellMap[controlIndex][n] = controlValue;
+                    }
+                    transition.SetControls(controlIndex, ControlValue, controlValue);
+                }
+            }
+        }
+
+        protected abstract CycleState GetInitialState();
+        // the transition probabilities should be set as given the spell/pause is executed 100%
+        // the transitions should all be spell transitions and at most one can be a state changing pause
+        protected abstract List<CycleControlledStateTransition> GetStateTransitions(CycleState state);
+        // the states must form equivalence classes
+        protected abstract bool CanStatesBeDistinguished(CycleState state1, CycleState state2);
+    }
 }
