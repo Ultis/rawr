@@ -97,16 +97,17 @@ namespace Rawr.ShadowPriest
                 CalculationsShadowPriest.GetInnerFireSpellPowerBonus(character)));
             dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
 
-            dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{8}% from Focused Will\r\n{4}% from Base Crit\r\n{5}% from Buffs\r\n{6}% on Mind Blast, Mind Flay and Mind Sear.\r\n{7}% on Smite, Holy Fire and Penance.",
+            dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Focused Will\r\n{5}% from Base Crit\r\n{6}% from Buffs\r\n{7}% on Mind Blast, Mind Flay and Mind Sear.\r\n{8}% on VT, SW:P and DP\r\n{9}% on Smite, Holy Fire and Penance.",
                 (BasicStats.SpellCrit * 100f).ToString("0.00"),
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"),
                 BasicStats.CritRating.ToString("0"),
                 (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"),
+                character.PriestTalents.FocusedWill,
                 "1,24",
                 (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - 1.24f - character.PriestTalents.FocusedWill).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 2f).ToString("0.00"),
-                (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00"),
-                character.PriestTalents.FocusedWill));
+                (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 3f).ToString("0.00"),
+                (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00")));
 
             float Hit = calcOptions.TargetHit;
             float BonusHit = BasicStats.SpellHit * 100f;
