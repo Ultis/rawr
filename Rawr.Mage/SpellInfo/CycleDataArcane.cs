@@ -1152,7 +1152,7 @@ namespace Rawr.Mage
                 ),
                 TransitionProbability = 1.0f - MB
             });
-            if (s.ArcaneBarrageCooldown == 0)
+            //if (s.ArcaneBarrageCooldown == 0)
             {
                 if (MB > 0)
                 {

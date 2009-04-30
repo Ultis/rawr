@@ -138,7 +138,7 @@ namespace Rawr.Mage
             sb.AppendLine("Optimal Cycle Palette:");
             sb.AppendLine("");
             sb.AppendLine("Cycle Code Legend: 0 = AB, 1 = ABar, 2 = AM");
-            sb.AppendLine(@"State Descriptions: ABxABaryMBz+-
+            sb.AppendLine(@"State Descriptions: ABx,ABary,MBz+-
 x = number of AB stacks
 y = remaining cooldown on Arcane Barrage
 z = remaining time on Missile Barrage
