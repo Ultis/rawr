@@ -128,7 +128,7 @@ namespace Rawr.Mage
             BaseDirectDamageModifier = 1.0f;
             BaseDotDamageModifier = 1.0f;
             BaseCostModifier = 1.0f;
-            BaseCostAmplifier = 1.0f;
+            BaseCostAmplifier = calculationOptions.EffectCostMultiplier;
             BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.Precision);
             if (mageTalents.FrostChanneling > 0) BaseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
             if (MagicSchool == MagicSchool.Arcane) BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);

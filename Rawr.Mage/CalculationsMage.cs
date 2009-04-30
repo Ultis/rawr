@@ -712,9 +712,9 @@ namespace Rawr.Mage
             {
                 statsTalentBonusSpiritMultiplier = 0.03f * character.MageTalents.StudentOfTheMind;
             }
-            if (calculationOptions.EffectSpiritBonus > 0)
+            if (calculationOptions.EffectSpiritMultiplier != 1.0f)
             {
-                statsTotal.BonusSpiritMultiplier = (1 + statsTotal.BonusSpiritMultiplier) * (1f + calculationOptions.EffectSpiritBonus / 100f) - 1;
+                statsTotal.BonusSpiritMultiplier = (1 + statsTotal.BonusSpiritMultiplier) * calculationOptions.EffectSpiritMultiplier - 1;
             }
             statsTotal.Strength = (float)Math.Round((statsRaceStrength + statsTotal.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Round((statsRaceAgility + statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));

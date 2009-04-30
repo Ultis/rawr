@@ -571,7 +571,7 @@ namespace Rawr.Mage
             calculationResult.ShadowThreatMultiplier = threatFactor;
             calculationResult.HolyThreatMultiplier = threatFactor;
 
-            float baseSpellModifier = (1 + 0.01f * talents.ArcaneInstability) * (1 + 0.01f * talents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier);
+            float baseSpellModifier = (1 + 0.01f * talents.ArcaneInstability) * (1 + 0.01f * talents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier) * calculationOptions.EffectDamageMultiplier;
             calculationResult.BaseArcaneSpellModifier = baseSpellModifier * (1 + baseStats.BonusArcaneDamageMultiplier);
             calculationResult.BaseFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.FirePower) * (1 + baseStats.BonusFireDamageMultiplier);
             calculationResult.BaseFrostSpellModifier = baseSpellModifier * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * (1 + baseStats.BonusFrostDamageMultiplier);
@@ -653,7 +653,7 @@ namespace Rawr.Mage
             calculationResult.BaseHolyCritRate = spellCrit;
 
             float levelScalingFactor = calculationOptions.LevelScalingFactor;
-            calculationResult.SpiritRegen = 0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect);
+            calculationResult.SpiritRegen = (0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect)) * calculationOptions.EffectRegenMultiplier;
             calculationResult.ManaRegen = calculationResult.SpiritRegen + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
             calculationResult.ManaRegen5SR = calculationResult.SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * (5 - baseStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
             calculationResult.HealthRegen = 0.0312f * baseStats.Spirit + baseStats.Hp5 / 5f;
@@ -689,7 +689,7 @@ namespace Rawr.Mage
             calculationResult.BaseShadowCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
             calculationResult.BaseHolyCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
 
-            calculationResult.BaseCastingSpeed = (1 + baseStats.HasteRating / 995f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * character.MageTalents.NetherwindPresence);
+            calculationResult.BaseCastingSpeed = (1 + baseStats.HasteRating / 995f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * character.MageTalents.NetherwindPresence) * calculationOptions.EffectHasteMultiplier;
             calculationResult.BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / calculationResult.BaseCastingSpeed);
 
             calculationResult.IncomingDamageAmpMelee = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.Dodge);

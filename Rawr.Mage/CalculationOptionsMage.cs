@@ -210,8 +210,12 @@ namespace Rawr.Mage
         //public float ChanceToLiveLimit { get; set; }
         public float ChanceToLiveScore { get; set; }
 
-        public float EffectSpiritBonus { get; set; }
+        public float EffectSpiritMultiplier { get; set; }
         public float EffectCritBonus { get; set; }
+        public float EffectDamageMultiplier { get; set; }
+        public float EffectHasteMultiplier { get; set; }
+        public float EffectCostMultiplier { get; set; }
+        public float EffectRegenMultiplier { get; set; }
         public float EffectShadowSilenceFrequency { get; set; }
         public float EffectShadowSilenceDuration { get; set; }
         public float EffectShadowManaDrainFrequency { get; set; }
@@ -293,6 +297,11 @@ namespace Rawr.Mage
             SnaredTime = 1f;
             FixedSegmentDuration = 30;
             WarlockSpellPower = 2800;
+            EffectSpiritMultiplier = 1.0f;
+            EffectDamageMultiplier = 1.0f;
+            EffectHasteMultiplier = 1.0f;
+            EffectRegenMultiplier = 1.0f;
+            EffectCostMultiplier = 1.0f;
         }
 
         public CalculationOptionsMage(Character character)

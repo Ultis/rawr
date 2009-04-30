@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -247,9 +246,17 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label81 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label82 = new System.Windows.Forms.Label();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label83 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -258,6 +265,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -318,11 +326,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -1356,6 +1359,14 @@
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.textBox4);
+            this.tabPage6.Controls.Add(this.label83);
+            this.tabPage6.Controls.Add(this.textBox3);
+            this.tabPage6.Controls.Add(this.label82);
+            this.tabPage6.Controls.Add(this.textBox2);
+            this.tabPage6.Controls.Add(this.label81);
+            this.tabPage6.Controls.Add(this.textBox1);
+            this.tabPage6.Controls.Add(this.label11);
             this.tabPage6.Controls.Add(this.textBoxBonusCrit);
             this.tabPage6.Controls.Add(this.label94);
             this.tabPage6.Controls.Add(this.label76);
@@ -1392,7 +1403,7 @@
             // textBoxBonusCrit
             // 
             this.textBoxBonusCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectCritBonus", true));
-            this.textBoxBonusCrit.Location = new System.Drawing.Point(112, 29);
+            this.textBoxBonusCrit.Location = new System.Drawing.Point(112, 133);
             this.textBoxBonusCrit.Name = "textBoxBonusCrit";
             this.textBoxBonusCrit.Size = new System.Drawing.Size(75, 20);
             this.textBoxBonusCrit.TabIndex = 234;
@@ -1400,7 +1411,7 @@
             // label94
             // 
             this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(0, 32);
+            this.label94.Location = new System.Drawing.Point(0, 136);
             this.label94.Name = "label94";
             this.label94.Size = new System.Drawing.Size(115, 13);
             this.label94.TabIndex = 233;
@@ -1410,7 +1421,7 @@
             // label76
             // 
             this.label76.AutoSize = true;
-            this.label76.Location = new System.Drawing.Point(0, 165);
+            this.label76.Location = new System.Drawing.Point(0, 269);
             this.label76.Name = "label76";
             this.label76.Size = new System.Drawing.Size(111, 13);
             this.label76.TabIndex = 232;
@@ -1420,7 +1431,7 @@
             // textBoxEffectShadowBinary
             // 
             this.textBoxEffectShadowBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowOtherBinary", true));
-            this.textBoxEffectShadowBinary.Location = new System.Drawing.Point(112, 311);
+            this.textBoxEffectShadowBinary.Location = new System.Drawing.Point(112, 415);
             this.textBoxEffectShadowBinary.Name = "textBoxEffectShadowBinary";
             this.textBoxEffectShadowBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectShadowBinary.TabIndex = 231;
@@ -1428,7 +1439,7 @@
             // label68
             // 
             this.label68.AutoSize = true;
-            this.label68.Location = new System.Drawing.Point(3, 314);
+            this.label68.Location = new System.Drawing.Point(3, 418);
             this.label68.Name = "label68";
             this.label68.Size = new System.Drawing.Size(49, 13);
             this.label68.TabIndex = 229;
@@ -1437,7 +1448,7 @@
             // textBoxEffectNatureBinary
             // 
             this.textBoxEffectNatureBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectNatureOtherBinary", true));
-            this.textBoxEffectNatureBinary.Location = new System.Drawing.Point(112, 285);
+            this.textBoxEffectNatureBinary.Location = new System.Drawing.Point(112, 389);
             this.textBoxEffectNatureBinary.Name = "textBoxEffectNatureBinary";
             this.textBoxEffectNatureBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectNatureBinary.TabIndex = 228;
@@ -1445,7 +1456,7 @@
             // label69
             // 
             this.label69.AutoSize = true;
-            this.label69.Location = new System.Drawing.Point(3, 288);
+            this.label69.Location = new System.Drawing.Point(3, 392);
             this.label69.Name = "label69";
             this.label69.Size = new System.Drawing.Size(42, 13);
             this.label69.TabIndex = 226;
@@ -1454,7 +1465,7 @@
             // textBoxEffectHolyBinary
             // 
             this.textBoxEffectHolyBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHolyOtherBinary", true));
-            this.textBoxEffectHolyBinary.Location = new System.Drawing.Point(112, 259);
+            this.textBoxEffectHolyBinary.Location = new System.Drawing.Point(112, 363);
             this.textBoxEffectHolyBinary.Name = "textBoxEffectHolyBinary";
             this.textBoxEffectHolyBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectHolyBinary.TabIndex = 225;
@@ -1462,7 +1473,7 @@
             // label70
             // 
             this.label70.AutoSize = true;
-            this.label70.Location = new System.Drawing.Point(3, 262);
+            this.label70.Location = new System.Drawing.Point(3, 366);
             this.label70.Name = "label70";
             this.label70.Size = new System.Drawing.Size(31, 13);
             this.label70.TabIndex = 223;
@@ -1471,7 +1482,7 @@
             // textBoxEffectFrostBinary
             // 
             this.textBoxEffectFrostBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFrostOtherBinary", true));
-            this.textBoxEffectFrostBinary.Location = new System.Drawing.Point(112, 233);
+            this.textBoxEffectFrostBinary.Location = new System.Drawing.Point(112, 337);
             this.textBoxEffectFrostBinary.Name = "textBoxEffectFrostBinary";
             this.textBoxEffectFrostBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectFrostBinary.TabIndex = 222;
@@ -1479,7 +1490,7 @@
             // label71
             // 
             this.label71.AutoSize = true;
-            this.label71.Location = new System.Drawing.Point(3, 236);
+            this.label71.Location = new System.Drawing.Point(3, 340);
             this.label71.Name = "label71";
             this.label71.Size = new System.Drawing.Size(33, 13);
             this.label71.TabIndex = 220;
@@ -1488,7 +1499,7 @@
             // textBoxEffectFireBinary
             // 
             this.textBoxEffectFireBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFireOtherBinary", true));
-            this.textBoxEffectFireBinary.Location = new System.Drawing.Point(112, 207);
+            this.textBoxEffectFireBinary.Location = new System.Drawing.Point(112, 311);
             this.textBoxEffectFireBinary.Name = "textBoxEffectFireBinary";
             this.textBoxEffectFireBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectFireBinary.TabIndex = 219;
@@ -1496,7 +1507,7 @@
             // label72
             // 
             this.label72.AutoSize = true;
-            this.label72.Location = new System.Drawing.Point(3, 210);
+            this.label72.Location = new System.Drawing.Point(3, 314);
             this.label72.Name = "label72";
             this.label72.Size = new System.Drawing.Size(27, 13);
             this.label72.TabIndex = 217;
@@ -1505,7 +1516,7 @@
             // textBoxEffectArcaneBinary
             // 
             this.textBoxEffectArcaneBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectArcaneOtherBinary", true));
-            this.textBoxEffectArcaneBinary.Location = new System.Drawing.Point(112, 181);
+            this.textBoxEffectArcaneBinary.Location = new System.Drawing.Point(112, 285);
             this.textBoxEffectArcaneBinary.Name = "textBoxEffectArcaneBinary";
             this.textBoxEffectArcaneBinary.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectArcaneBinary.TabIndex = 216;
@@ -1513,7 +1524,7 @@
             // label73
             // 
             this.label73.AutoSize = true;
-            this.label73.Location = new System.Drawing.Point(3, 184);
+            this.label73.Location = new System.Drawing.Point(3, 288);
             this.label73.Name = "label73";
             this.label73.Size = new System.Drawing.Size(44, 13);
             this.label73.TabIndex = 214;
@@ -1522,7 +1533,7 @@
             // textBoxManaDrainFrequency
             // 
             this.textBoxManaDrainFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowManaDrainFrequency", true));
-            this.textBoxManaDrainFrequency.Location = new System.Drawing.Point(112, 133);
+            this.textBoxManaDrainFrequency.Location = new System.Drawing.Point(112, 237);
             this.textBoxManaDrainFrequency.Name = "textBoxManaDrainFrequency";
             this.textBoxManaDrainFrequency.Size = new System.Drawing.Size(75, 20);
             this.textBoxManaDrainFrequency.TabIndex = 165;
@@ -1530,7 +1541,7 @@
             // label67
             // 
             this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(0, 136);
+            this.label67.Location = new System.Drawing.Point(0, 240);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(95, 13);
             this.label67.TabIndex = 164;
@@ -1540,7 +1551,7 @@
             // textBoxManaDrain
             // 
             this.textBoxManaDrain.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowManaDrain", true));
-            this.textBoxManaDrain.Location = new System.Drawing.Point(112, 107);
+            this.textBoxManaDrain.Location = new System.Drawing.Point(112, 211);
             this.textBoxManaDrain.Name = "textBoxManaDrain";
             this.textBoxManaDrain.Size = new System.Drawing.Size(75, 20);
             this.textBoxManaDrain.TabIndex = 163;
@@ -1548,7 +1559,7 @@
             // label66
             // 
             this.label66.AutoSize = true;
-            this.label66.Location = new System.Drawing.Point(0, 110);
+            this.label66.Location = new System.Drawing.Point(0, 214);
             this.label66.Name = "label66";
             this.label66.Size = new System.Drawing.Size(72, 13);
             this.label66.TabIndex = 162;
@@ -1558,7 +1569,7 @@
             // textBoxSilenceDuration
             // 
             this.textBoxSilenceDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowSilenceDuration", true));
-            this.textBoxSilenceDuration.Location = new System.Drawing.Point(112, 81);
+            this.textBoxSilenceDuration.Location = new System.Drawing.Point(112, 185);
             this.textBoxSilenceDuration.Name = "textBoxSilenceDuration";
             this.textBoxSilenceDuration.Size = new System.Drawing.Size(75, 20);
             this.textBoxSilenceDuration.TabIndex = 161;
@@ -1566,7 +1577,7 @@
             // label65
             // 
             this.label65.AutoSize = true;
-            this.label65.Location = new System.Drawing.Point(0, 84);
+            this.label65.Location = new System.Drawing.Point(0, 188);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(95, 13);
             this.label65.TabIndex = 160;
@@ -1576,7 +1587,7 @@
             // textBoxEffectSilenceFrequency
             // 
             this.textBoxEffectSilenceFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowSilenceFrequency", true));
-            this.textBoxEffectSilenceFrequency.Location = new System.Drawing.Point(112, 55);
+            this.textBoxEffectSilenceFrequency.Location = new System.Drawing.Point(112, 159);
             this.textBoxEffectSilenceFrequency.Name = "textBoxEffectSilenceFrequency";
             this.textBoxEffectSilenceFrequency.Size = new System.Drawing.Size(75, 20);
             this.textBoxEffectSilenceFrequency.TabIndex = 159;
@@ -1584,7 +1595,7 @@
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(0, 58);
+            this.label64.Location = new System.Drawing.Point(0, 162);
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(105, 13);
             this.label64.TabIndex = 158;
@@ -1593,7 +1604,7 @@
             // 
             // textBoxEffectBonusSpirit
             // 
-            this.textBoxEffectBonusSpirit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectSpiritBonus", true));
+            this.textBoxEffectBonusSpirit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectSpiritMultiplier", true));
             this.textBoxEffectBonusSpirit.Location = new System.Drawing.Point(112, 3);
             this.textBoxEffectBonusSpirit.Name = "textBoxEffectBonusSpirit";
             this.textBoxEffectBonusSpirit.Size = new System.Drawing.Size(75, 20);
@@ -1604,10 +1615,10 @@
             this.label62.AutoSize = true;
             this.label62.Location = new System.Drawing.Point(0, 6);
             this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(81, 13);
+            this.label62.Size = new System.Drawing.Size(84, 13);
             this.label62.TabIndex = 156;
-            this.label62.Text = "Bonus Spirit%: *";
-            this.toolTipMage.SetToolTip(this.label62, "Percent increase of spirit.");
+            this.label62.Text = "Spirit Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label62, "Total spirit will be multiplied by this value.");
             // 
             // tabPage5
             // 
@@ -2579,6 +2590,83 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // textBox1
+            // 
+            this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectDamageMultiplier", true));
+            this.textBox1.Location = new System.Drawing.Point(112, 29);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(75, 20);
+            this.textBox1.TabIndex = 236;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(0, 32);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(101, 13);
+            this.label11.TabIndex = 235;
+            this.label11.Text = "Damage Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label11, "Damage dealt will be multiplied by this value.");
+            // 
+            // textBox2
+            // 
+            this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHasteMultiplier", true));
+            this.textBox2.Location = new System.Drawing.Point(112, 55);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(75, 20);
+            this.textBox2.TabIndex = 238;
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(0, 58);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(89, 13);
+            this.label81.TabIndex = 237;
+            this.label81.Text = "Haste Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label81, "Haste will be multiplied by this value.");
+            // 
+            // textBox3
+            // 
+            this.textBox3.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectRegenMultiplier", true));
+            this.textBox3.Location = new System.Drawing.Point(112, 81);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(75, 20);
+            this.textBox3.TabIndex = 240;
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(0, 84);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(93, 13);
+            this.label82.TabIndex = 239;
+            this.label82.Text = "Regen Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label82, "Regen from spirit will be multiplied by this value.");
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // textBox4
+            // 
+            this.textBox4.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectCostMultiplier", true));
+            this.textBox4.Location = new System.Drawing.Point(112, 107);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(75, 20);
+            this.textBox4.TabIndex = 242;
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(0, 110);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(82, 13);
+            this.label83.TabIndex = 241;
+            this.label83.Text = "Cost Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label83, "Spell cost will be multiplied by this value.");
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2590,7 +2678,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2604,6 +2691,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2827,6 +2915,14 @@
         private System.Windows.Forms.TextBox textBoxEffectFire;
         private System.Windows.Forms.TextBox textBoxEffectArcane;
         private System.Windows.Forms.Button buttonEditTalentScores;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label83;
 
     }
 }
