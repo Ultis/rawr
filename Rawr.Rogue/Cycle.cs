@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rawr.Rogue.FinishingMoves;
 
 namespace Rawr.Rogue
 {
@@ -60,9 +61,9 @@ namespace Rawr.Rogue
             set { _finisher = value; }
         }
 
-        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, float cycleTime)
+        public float CalcFinisherDPS( RogueTalents talents, Stats stats, CombatFactors combatFactors, float cycleTime, WhiteAttacks whiteAttacks )
         {
-            return _finisher.CalcFinisherDPS(stats, combatFactors, _rank, cycleTime);
+            return _finisher.CalcFinisherDPS(stats, combatFactors, _rank, cycleTime, whiteAttacks);
         }
 
         public override string ToString()

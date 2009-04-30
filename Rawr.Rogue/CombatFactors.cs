@@ -179,7 +179,7 @@ namespace Rawr.Rogue
         {
             get
             {
-                var missChance = .17f - HitPercent;
+                var missChance = .17f - (_stats.PhysicalHit / 100f) - (_stats.HitRating * RogueConversions.HitRatingToSpellHit / 100f) ;
                 return missChance < 0f ? 0f : 1f - missChance / 100f;
             }
         }

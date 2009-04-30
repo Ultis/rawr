@@ -113,7 +113,7 @@ namespace Rawr.Rogue
             var totalFinisherDps = 0f;
             foreach (var component in calcOpts.DpsCycle.Components)
             {
-                var finisherDps = component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime);
+                var finisherDps = component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime, whiteAttacks);
                 calculatedStats.AddToolTip(DisplayValue.FinisherDPS, component + ": " + finisherDps);
                 totalFinisherDps += finisherDps;
             }
