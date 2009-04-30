@@ -383,7 +383,7 @@ namespace Rawr.Retribution
             if (!loading)
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.Seal = (Seal)Enum.Parse(typeof(Seal), cmbSeal.Text);
+                calcOpts.Seal = (SealOf)Enum.Parse(typeof(SealOf), cmbSeal.Text);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -445,7 +445,7 @@ namespace Rawr.Retribution
 
 		public int TargetLevel = 83;
         public MobType Mob = MobType.Humanoid;
-        public Seal Seal = Seal.Blood;
+        public SealOf Seal = SealOf.Blood;
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
         public float Delay = .05f;

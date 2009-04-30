@@ -404,7 +404,7 @@ namespace Rawr.Retribution
             {
                 Rotation rot;
 
-                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
+                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
 
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
 
@@ -421,7 +421,7 @@ namespace Rawr.Retribution
                     }
                     else
                     {
-                        float trigger = 0;
+                        float trigger = 0f; float procChance = 1f;
                         if (effect.Trigger == Trigger.MeleeCrit)
                         {
                             trigger = 1f / rot.GetMeleeCritsPerSec();
@@ -441,18 +441,20 @@ namespace Rawr.Retribution
                         else if (effect.Trigger == Trigger.CrusaderStrike)
                         {
                             trigger = rot.GetCrusaderStrikeCD();
+                            procChance = rot.CS.ChanceToLand();
                         }
                         else if (effect.Trigger == Trigger.Judgement)
                         {
                             trigger = rot.GetJudgementCD();
+                            procChance = rot.Judge.ChanceToLand();
                         }
-                        statsAverage += effect.GetAverageStats(trigger, 1f, combats.BaseWeaponSpeed, fightLength);
+                        statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
                     }
                 }
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
                 stats.Strength += stats.HighestStat;
-                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == Seal.Vengeance) ? 10f : 0;
+                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
 
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
             }
@@ -497,7 +499,7 @@ namespace Rawr.Retribution
                 Character baseChar = character.Clone();
                 CalculationOptionsRetribution baseOpts = initOpts.Clone();
                 baseChar.CalculationOptions = baseOpts;
-                baseOpts.Seal = Seal.None;
+                baseOpts.Seal = SealOf.None;
                 CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(baseChar);
 
                 Character deltaChar = character.Clone();
@@ -505,23 +507,23 @@ namespace Rawr.Retribution
                 deltaChar.CalculationOptions = deltaOpts;
 
                 ComparisonCalculationBase Blood;
-                deltaOpts.Seal = Seal.Blood;
-                Blood = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Blood", initOpts.Seal == Seal.Blood);
+                deltaOpts.Seal = SealOf.Blood;
+                Blood = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Blood", initOpts.Seal == SealOf.Blood);
                 Blood.Item = null;
 
                 ComparisonCalculationBase Command;
-                deltaOpts.Seal = Seal.Command;
-                Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == Seal.Command);
+                deltaOpts.Seal = SealOf.Command;
+                Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == SealOf.Command);
                 Command.Item = null;
 
                 ComparisonCalculationBase Righteousness;
-                deltaOpts.Seal = Seal.Righteousness;
-                Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == Seal.Righteousness);
+                deltaOpts.Seal = SealOf.Righteousness;
+                Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == SealOf.Righteousness);
                 Righteousness.Item = null;
 
                 ComparisonCalculationBase Vengeance;
-                deltaOpts.Seal = Seal.Vengeance;
-                Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == Seal.Vengeance);
+                deltaOpts.Seal = SealOf.Vengeance;
+                Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == SealOf.Vengeance);
                 Vengeance.Item = null;
 
                 return new ComparisonCalculationBase[] { Blood, Command, Righteousness, Vengeance };

@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.Retribution
 {
 
-    public enum Seal
+    public enum SealOf
     {
         Blood = 0,
         Command,
