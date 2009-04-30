@@ -152,6 +152,9 @@ namespace Rawr.Mage
     
             sb.AppendLine("Base:");
 
+            //ArcaneCycleGenerator generator = new ArcaneCycleGenerator(baseState);
+            //generator.Analyze(baseState);
+
             ComputeOptimalCycles(baseState, sb);
 
             sb.AppendLine("");

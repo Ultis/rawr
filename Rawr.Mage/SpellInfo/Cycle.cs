@@ -716,6 +716,11 @@ namespace Rawr.Mage
         public List<CycleStateTransition> Transitions { get; set; }
         public int Index { get; set; }
         public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public class CycleStateTransition
@@ -725,6 +730,23 @@ namespace Rawr.Mage
         public Spell Spell { get; set; }
         public float Pause { get; set; }
         public virtual float TransitionProbability { get; set; }
+
+        public override string ToString()
+        {
+            if (Spell != null)
+            {
+                return string.Format("{0} => {1} : {2:F}%", Spell.Name, TargetState, 100 * TransitionProbability);
+            }
+            else if (Cycle != null)
+            {
+                return string.Format("{0} => {1} : {2:F}%", Cycle.Name, TargetState, 100 * TransitionProbability);
+            }
+            else if (Pause > 0)
+            {
+                return string.Format("{0:F} sec => {1} : {2:F}%", Pause, TargetState, 100 * TransitionProbability);
+            }
+            return base.ToString();
+        }
     }
 
     public class GenericCycle : DynamicCycle
@@ -735,21 +757,18 @@ namespace Rawr.Mage
         Dictionary<Cycle, double> CycleWeight = new Dictionary<Cycle, double>();
         public string SpellDistribution;
 
-        public GenericCycle(string name, CastingState castingState)
+        public unsafe GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription)
             : base(false, castingState)
         {
             Name = name;
-        }
 
-        public unsafe void SetStateDescription(List<CycleState> stateDescription)
-        {
             StateList = stateDescription;
             for (int i = 0; i < StateList.Count; i++)
             {
                 StateList[i].Index = i;
             }
 
-            int size = stateDescription.Count;
+            int size = StateList.Count + 1;
 
             ArraySet arraySet = ArrayPool.RequestArraySet(size, size);
             LU M = new LU(size, arraySet);
@@ -762,43 +781,27 @@ namespace Rawr.Mage
             {
                 M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
 
-                for (int replace = size - 1; replace >= size - 1; replace--)
+                Array.Clear(arraySet.LU_U, 0, size * size);
+
+                //U[i * rows + j]
+
+                foreach (CycleState state in StateList)
                 {
-                    for (int i = 0; i < size; i++)
+                    foreach (CycleStateTransition transition in state.Transitions)
                     {
-                        for (int j = 0; j < size; j++)
-                        {
-                            U[i * size + j] = 0;
-                        }
+                        U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
                     }
-
-                    //U[i * rows + j]
-
-                    foreach (CycleState state in StateList)
-                    {
-                        foreach (CycleStateTransition transition in state.Transitions)
-                        {
-                            U[transition.TargetState.Index * size + state.Index] = transition.TransitionProbability;
-                        }
-                    }
-
-                    // the above system is singular, "guess" which one is dependent and replace with sum=1
-                    // since not all states are used always we'll get a singular system anyway sometimes, but in those cases the FSolve should still work ok on the nonsingular part
-                    for (int i = 0; i < size; i++) x[i] = 0;
-
-                    if (replace < size)
-                    {
-                        for (int i = 0; i < size; i++)
-                        {
-                            U[replace * size + i] = 1;
-                        }
-
-                        x[replace] = 1;
-                    }
-
-                    M.Decompose();
-                    if (!M.Singular) break;
+                    U[state.Index * size + state.Index] -= 1.0;
                 }
+
+                for (int i = 0; i < size - 1; i++)
+                {
+                    U[(size - 1) * size + i] = 1;
+                }
+
+                x[size - 1] = 1;
+
+                M.Decompose();
                 M.FSolve(x);
 
                 M.EndUnsafe();
@@ -834,12 +837,12 @@ namespace Rawr.Mage
             foreach (KeyValuePair<Spell, double> kvp in SpellWeight)
             {
                 AddSpell(false, kvp.Key, (float)kvp.Value);
-                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Name, 100.0 * kvp.Value);
+                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.SpellId, 100.0 * kvp.Value);
             }
             foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
             {
                 AddCycle(false, kvp.Key, (float)kvp.Value);
-                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Name, 100.0 * kvp.Value);
+                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.CycleId, 100.0 * kvp.Value);
             }
 
             Calculate();
@@ -874,18 +877,31 @@ namespace Rawr.Mage
                 rawProbability = value;
             }
         }
+
+        public override string ToString()
+        {
+            if (Spell != null)
+            {
+                return string.Format("{0} => {1} : {2:F}%", Spell.Name, TargetState, 100 * rawProbability);
+            }
+            else if (Cycle != null)
+            {
+                return string.Format("{0} => {1} : {2:F}%", Cycle.Name, TargetState, 100 * rawProbability);
+            }
+            else if (Pause > 0)
+            {
+                return string.Format("{0:F} sec => {1} : {2:F}%", Pause, TargetState, 100 * rawProbability);
+            }
+            return base.ToString();
+        }
     }
 
-    public abstract class GenerativeCycle : GenericCycle
+    public abstract class CycleGenerator
     {
+        public List<CycleState> StateList;
         public int[] ControlOptions;
         public int[] ControlValue;
         public int[] ControlIndex;
-
-        public GenerativeCycle(string name, CastingState castingState)
-            : base(name, castingState)
-        {
-        }
 
         public void GenerateStateDescription()
         {
@@ -970,6 +986,95 @@ namespace Rawr.Mage
                     transition.SetControls(controlIndex, ControlValue, controlValue);
                 }
             }
+
+            for (int i = 0; i < ControlOptions.Length; i++)
+            {
+                ControlOptions[i] = spellMap[i].Keys.Count;
+            }
+        }
+
+        public GenericCycle GenerateCycle(string name, CastingState castingState)
+        {
+            return new GenericCycle(name, castingState, StateList);
+        }
+
+        public void Analyze(CastingState castingState)
+        {
+            Dictionary<string, GenericCycle> cycleDict = new Dictionary<string, GenericCycle>();
+            int j;
+            do
+            {
+                string name = "";
+                for (int i = 0; i < ControlValue.Length; i++)
+                {
+                    name += ControlValue[i].ToString();
+                }
+                GenericCycle generic = new GenericCycle(name, castingState, StateList);
+                if (!cycleDict.ContainsKey(generic.SpellDistribution))
+                {
+                    cycleDict.Add(generic.SpellDistribution, generic);
+                }
+                // increment control
+                j = ControlValue.Length - 1;
+                ControlValue[j]++;
+                while (ControlValue[j] >= ControlOptions[j])
+                {
+                    ControlValue[j] = 0;
+                    j--;
+                    if (j < 0)
+                    {
+                        break;
+                    }
+                    ControlValue[j]++;
+                }
+            } while (j >= 0);
+
+            List<GenericCycle> cyclePalette = new List<GenericCycle>();
+
+            double maxdps = 0;
+            GenericCycle maxdpsCycle = null;
+            foreach (GenericCycle cycle in cycleDict.Values)
+            {
+                if (cycle.DamagePerSecond > maxdps)
+                {
+                    maxdpsCycle = cycle;
+                    maxdps = cycle.DamagePerSecond;
+                }
+            }
+
+            cyclePalette.Add(maxdpsCycle);
+
+            GenericCycle mindpmCycle;
+            do
+            {
+                GenericCycle highdpsCycle = cyclePalette[cyclePalette.Count - 1];
+            RESTART:
+                mindpmCycle = null;
+                double mindpm = double.PositiveInfinity;
+                foreach (GenericCycle cycle in cycleDict.Values)
+                {
+                    double dpm = (cycle.DamagePerSecond - highdpsCycle.DamagePerSecond) / (cycle.ManaPerSecond - highdpsCycle.ManaPerSecond);
+                    if (dpm > 0 && dpm < mindpm && cycle.ManaPerSecond < highdpsCycle.ManaPerSecond)
+                    {
+                        mindpm = dpm;
+                        mindpmCycle = cycle;
+                    }
+                }
+                if (mindpmCycle != null)
+                {
+                    // validate cycle pair theory
+                    foreach (GenericCycle cycle in cycleDict.Values)
+                    {
+                        double dpm = (cycle.DamagePerSecond - mindpmCycle.DamagePerSecond) / (cycle.ManaPerSecond - mindpmCycle.ManaPerSecond);
+                        if (cycle != highdpsCycle && cycle.DamagePerSecond > mindpmCycle.DamagePerSecond && dpm > mindpm + 0.000001)
+                        {
+                            highdpsCycle = cycle;
+                            goto RESTART;
+                        }
+                    }
+                    cyclePalette.Add(mindpmCycle);
+                }
+            } while (mindpmCycle != null);
         }
 
         protected abstract CycleState GetInitialState();
