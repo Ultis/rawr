@@ -476,7 +476,7 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = simStats.Mana * simStats.ManaRestoreFromBaseManaPerHit * HitsPerSecond * (CalculationOptions.JoW / 100f);
+            tmpregen = SWP.BaseMana * (simStats.ManaRestoreFromBaseManaPerHit > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
             if (tmpregen > 0)
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
@@ -502,7 +502,7 @@ namespace Rawr.ShadowPriest
             if (MPS > regen)
             {   // Not enough mana, use Shadowfiend
                 float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
-                tmpregen = simStats.Mana * 0.4f * sf_rat;
+                tmpregen = simStats.Mana * 0.5f * sf_rat;
                 ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
                 regen += tmpregen;
                 SustainDPS -= MF.DpS * sf_rat;
@@ -519,7 +519,7 @@ namespace Rawr.ShadowPriest
                 Rotation += "\r\n- Used Dispersion";
             }
 
-            DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
+            DPS *= (1f - StatConversion.GetAverageResistance(character.Level, character.Level + CalculationOptions.TargetLevel, 0, 0)); // Level based Partial resists.
             SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
 
             SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
@@ -620,36 +620,47 @@ namespace Rawr.ShadowPriest
                 }
             }
 
-
+            float ShadowHitChance = (float)Math.Min(HitChance + character.PriestTalents.ShadowFocus * 0.01f, 1f);
             timer = 0;
             foreach (Spell spell in CastList)
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
                 float Damage = spell.AvgDamage;
                 float Cost = spell.ManaCost - simStats.ManaRestoreOnCast_5_15 * 0.05f;
-                switch (spell.Name)
+                if (spell.Name == "Smite")
                 {
-                    case "Smite":
-                    case "Shadow Word: Pain":
-                        // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of GCD of Smite DPS)
-                        Damage -= SM.DpS * SM.GlobalCooldown * (1f - HitChance / 100f);
-                        // Also invokes a mana penalty by needing to cast it again.
-                        Cost *= (2f - HitChance / 100f);
-                        break;
-                    case "Holy Fire":
-                    case "Mind Blast":
-                    case "Shadow Word: Death":
-                    case "Penance":
-                        // Spells that have cooldowns, a resist means full loss of damage.
-                        Damage *= HitChance / 100f;
-                        break;
-                    case "Devouring Plague":
-                        Damage *= HitChance / 100f;
-                        Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);
-                        break;
-                    default:
-                        break;
+                    Damage -= SM.DpS * SM.GlobalCooldown * (1f - HitChance / 100f);
+                    Cost *= (2f - HitChance / 100f);
+                    if (character.PriestTalents.GlyphofSmite)
+                        Damage *= (1f + 0.2f * 7 / 10);
                 }
+                else if (spell.Name == "Shadow Word: Pain")
+                {
+                    Damage -= SM.DpS * SM.GlobalCooldown * (1f - ShadowHitChance / 100f);
+                    Cost *= (2f - ShadowHitChance / 100f);
+                }
+                else if (spell.Name == "Holy Fire")
+                {
+                    Damage *= HitChance / 100f;
+                }
+                else if (spell.Name == "Mind Blast")
+                {
+                    Damage *= ShadowHitChance / 100f;
+                }
+                else if (spell.Name == "Shadow Word: Death")
+                {
+                    Damage *= ShadowHitChance / 100f;
+                }
+                else if (spell.Name == "Penance")
+                {
+                    Damage *= HitChance / 100f;
+                }
+                else if (spell.Name == "Devouring Plague")
+                {
+                    Damage *= ShadowHitChance / 100f;
+                    Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);
+                }
+
                 Damage *= (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier); // If there is shadow bonus damage there is holy bonus damage.
                 spell.SpellStatistics.DamageDone += Damage;
                 spell.SpellStatistics.ManaUsed += Cost;

@@ -129,6 +129,55 @@ namespace Rawr.ShadowPriest
             }
         }
 
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Vampiric Touch"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mana Spring Totem"));
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Restorative Totems"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Moonkin Form"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Shadow Protection"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Scorch"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgement of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Earth and Moon"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Spell Power Food"));
+        }
+
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Dispel Magic");
+                _relevantGlyphs.Add("Glyph of Dispersion");
+                _relevantGlyphs.Add("Glyph of Inner Fire");
+                _relevantGlyphs.Add("Glyph of Mass Dispel");
+                _relevantGlyphs.Add("Glyph of Mind Flay");
+                _relevantGlyphs.Add("Glyph of Mind Sear");
+                _relevantGlyphs.Add("Glyph of Penance");
+                _relevantGlyphs.Add("Glyph of Shadow");
+                _relevantGlyphs.Add("Glyph of Shadow Word: Death");
+                _relevantGlyphs.Add("Glyph of Shadow Word: Pain");
+                _relevantGlyphs.Add("Glyph of Smite");
+                _relevantGlyphs.Add("Glyph of Fading");
+            }
+            return _relevantGlyphs;
+        }
+
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 
         private string _currentChartName = null;
@@ -195,6 +244,7 @@ namespace Rawr.ShadowPriest
 				    "Shadow:SW Death",
                     "Shadow:Mind Blast",
                     "Shadow:Mind Flay",
+                    "Shadow:Shadowfiend",
                     "Shadow:Vampiric Embrace",
                     "Holy:PW Shield",
                     "Holy:Smite",
