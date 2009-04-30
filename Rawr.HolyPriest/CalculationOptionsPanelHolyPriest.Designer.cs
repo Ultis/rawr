@@ -147,9 +147,9 @@
             "Auto Raid (Rawr picks from Talents)",
             "Greater Heal Spam (GH)",
             "Flash Heal Spam (FH)",
-            "Circle of Healing Spam (CoH)",
+            "Circle/Prayer of Healing Spam (CoH/ProH)",
             "Holy-Tank (Renew/ProM/GH)",
-            "Holy-Raid (ProM/CoH/FH)",
+            "Holy-Raid (ProM/CoH/FH/ProH)",
             "Disc-Tank (Penance/PW:S/ProM/GH)",
             "Disc-Tank (Penance/PW:S/ProM/FH)",
             "Disc-Raid (PW:S/Penance/Flash)",
@@ -210,7 +210,8 @@
             this.trkShadowfiend.Size = new System.Drawing.Size(262, 42);
             this.trkShadowfiend.TabIndex = 35;
             this.trkShadowfiend.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkShadowfiend, resources.GetString("trkShadowfiend.ToolTip"));
+            this.toolTip1.SetToolTip(this.trkShadowfiend, "Tells Rawr how effective your Shadowfiend is expected to be. Some haste effects l" +
+                    "ike Windfury Totem and Heroism will affect the Shadowfiend.");
             this.trkShadowfiend.Scroll += new System.EventHandler(this.trkShadowfiend_Scroll);
             // 
             // trkSurvivability
@@ -296,8 +297,6 @@
             this.lblSerendipity.Size = new System.Drawing.Size(92, 13);
             this.lblSerendipity.TabIndex = 31;
             this.lblSerendipity.Text = "% T5 2 Set Bonus";
-            this.toolTip1.SetToolTip(this.lblSerendipity, "How many of your heals are landing on targets with less than or equal to 50% of t" +
-                    "heir maximum hitpoints?");
             // 
             // cbModelProcs
             // 

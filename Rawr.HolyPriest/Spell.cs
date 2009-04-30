@@ -401,19 +401,23 @@ namespace Rawr.HolyPriest
             }
         }
 
-        public PrayerOfHealing(Stats stats, Character character, int targets)
+        public PrayerOfHealing(Stats stats, Character character, int targets, float haste)
             : base(string.Format("Prayer of Healing ({0} targets)", targets), stats, character, SpellRankTable, 48, 3f / 3.5f * 0.5f, targetColors[targets - 1])
         {
-            Targets = targets;
-            Calculate(stats, character);
+            Calculate(stats, character, targets, haste);
         }
 
         public PrayerOfHealing(Stats stats, Character character)
-            : this(stats, character, 5)
+            : this(stats, character, 5, 0f)
         {}
 
-        protected void Calculate(Stats stats, Character character)
+        public PrayerOfHealing(Stats stats, Character character, int targets)
+            : this(stats, character, targets, 0f)
+        {}
+
+        protected void Calculate(Stats stats, Character character, int targets, float haste)
         {
+            Targets = targets;
             Range = 30;
 
             MinHeal = (MinHeal +
@@ -433,7 +437,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
                 * (1 - stats.BonusPoHManaCostReductionMultiplier));
 
-            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
+            CastTime = Math.Max(1.0f, (BaseCastTime * (1f - haste)) / (1 + stats.SpellHaste));
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
         }
@@ -879,7 +883,7 @@ namespace Rawr.HolyPriest
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f 
-                     - character.PriestTalents.SoulWarding * 0.3f) );
+                     - character.PriestTalents.SoulWarding * 0.15f) );
 
             CritChance = 0.0f;
             CritCoef = 1.0f;
@@ -1063,7 +1067,7 @@ namespace Rawr.HolyPriest
     public class DivineHymn : Spell
     {
         private static readonly List<SpellData> SpellRankTable = new List<SpellData>(){   
-            new SpellData(1, 80,  4320*4, 4774*4, 8f),
+            new SpellData(1, 80,  3000*4, 3850*4, 8f),
         };
 
         public DivineHymn(Stats stats, Character character)

@@ -366,10 +366,10 @@ namespace Rawr.HolyPriest
         public float FSRRatio = 93f;
         public float FightLengthSeconds = 480f;
         public float Serendipity = 75f;
-        public float Replenishment = 50f;
+        public float Replenishment = 75f;
         public float Shadowfiend = 100f;
         public float Survivability = 2f;
-        public float Rapture = 75f;
+        public float Rapture = 25f;
         public float TestOfFaith = 25f;
         public bool ModelProcs = true;
 
