@@ -296,7 +296,10 @@ namespace Rawr.DPSDK
             float totalMeleeAbilities = 0f;
             float totalSpellAbilities = 0f;
 
-            totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike + calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike + calcOpts.rotation.FrostStrike;
+            totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike + 
+                calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike + 
+                calcOpts.rotation.FrostStrike;
+
             totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
 
             calcOpts.rotation.avgDiseaseMult = calcOpts.rotation.numDisease * (calcOpts.rotation.diseaseUptime / 100);
@@ -474,29 +477,6 @@ namespace Rawr.DPSDK
                 MH = new Weapon(null, stats, calcOpts, 0f);
             }
 
-            #region Mitigation
-            {
-                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
-
-                //// Effective armor after ArP
-				//targetArmor -= totalArP;
-				//float ratingCoeff = stats.ArmorPenetrationRating / 1539f;
-				//targetArmor *= (1 - ratingCoeff);
-				//if (targetArmor < 0) targetArmor = 0f;
-
-                //// Convert armor to mitigation
-                ////mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
-                ////mitigation = 1f - targetArmor / (targetArmor + 400f + 85f * (5.5f * (float)calcOpts.TargetLevel - 265.5f));
-                //mitigation = 1f - (targetArmor / ((467.5f * (float)calcOpts.TargetLevel) + targetArmor - 22167.5f));
-
-				mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
-				
-				calcs.EnemyMitigation = 1f - mitigation;
-                calcs.EffectiveArmor = mitigation;
-            }
-            #endregion
-
             #region Crits, Resists
             {
                 // Attack Rolltable (DW):
@@ -580,10 +560,10 @@ namespace Rawr.DPSDK
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
                 realDuration = calcOpts.rotation.curRotationDuration;
-                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)/(1 + (stats.HasteRating/3278f) + stats.SpellHaste)));
+                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (stats.HasteRating / 3278f) + stats.SpellHaste)));
                 realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)/(1 + (stats.HasteRating/3278f) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)/(1 + (stats.HasteRating/3278f) + stats.SpellHaste)))))); //still need to implement spellhaste here
+                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (stats.HasteRating / 3278f) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (stats.HasteRating / 3278f) + stats.SpellHaste)))))); //still need to implement spellhaste here
             }
             #endregion
 
@@ -594,8 +574,8 @@ namespace Rawr.DPSDK
 
                 if (calcOpts.Bloodlust)
                 {
-                    float numLust = fightDuration % 300f;  // bloodlust changed in 3.0, can only have one every 5 minutes.
-                    float fullLustDur = (numLust - 1) * 300f + 40f;
+                    float numLust = fightDuration % 600f;  // bloodlust changed in 3.0, can only have one every 10 minutes.
+                    float fullLustDur = (numLust - 1) * 600f + 40f;
                     if (fightDuration < fullLustDur) // if the last lust doesn't go its full duration
                     {
                         float lastLustFraction = (fullLustDur - fightDuration) / 40f;
@@ -626,15 +606,31 @@ namespace Rawr.DPSDK
             }
             #endregion
 
-            //sadly in this model it is very difficult to track the individual benefit of windfury
-            #region Windfury
+          /*  StatsSpecialEffects se = new StatsSpecialEffects(character, calcs.BasicStats);
+            Stats statsFromSe = se.getSpecialEffects(calcOpts, calcs);
+            stats += statsFromSe;
+            calcs.BasicStats += statsFromSe;*/
+       
+            #region Mitigation
             {
-                if (calcOpts.Windfury)
-                {
-                    float WFMult = 1.2f;
-                    MH.hastedSpeed /= WFMult;
-                    OH.hastedSpeed /= WFMult;
-                }
+                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+
+                //// Effective armor after ArP
+				//targetArmor -= totalArP;
+				//float ratingCoeff = stats.ArmorPenetrationRating / 1539f;
+				//targetArmor *= (1 - ratingCoeff);
+				//if (targetArmor < 0) targetArmor = 0f;
+
+                //// Convert armor to mitigation
+                ////mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
+                ////mitigation = 1f - targetArmor / (targetArmor + 400f + 85f * (5.5f * (float)calcOpts.TargetLevel - 265.5f));
+                //mitigation = 1f - (targetArmor / ((467.5f * (float)calcOpts.TargetLevel) + targetArmor - 22167.5f));
+
+				mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+				
+				calcs.EnemyMitigation = 1f - mitigation;
+                calcs.EffectiveArmor = mitigation;
             }
             #endregion
 
@@ -1381,25 +1377,6 @@ namespace Rawr.DPSDK
             if (statsBaseGear.MongooseProc > 0)
                 statsBaseGear.Agility += 120f * 0.4f;
 
-            //calculate drums uptime...if it lands on an even minute mark ignore it, as it will have a duration of 0
-            //removed due to no drums in WotLK
-            /*float drumsEffectiveFightDuration = (float)calcOpts.FightLength - 1f;
-            float numDrums = drumsEffectiveFightDuration % 2;
-            float drumsUptime = (numDrums * .5f) / (float)calcOpts.FightLength;
-
-            // Drums of War - 60 AP/30 SD
-            if (calcOpts.DrumsOfWar)
-            {
-                statsBuffs.AttackPower += drumsUptime * 60f;
-                statsBuffs.SpellPower += drumsUptime * 30f;
-            }
-
-            // Drums of Battle - 80 Haste
-            if (calcOpts.DrumsOfBattle)
-            {
-                statsBuffs.HasteRating += drumsUptime * 80f;
-            }*/
-
             // Ferocious Inspiriation  **Temp fix - FI increases all damage, not just physical damage
             if (character.ActiveBuffsContains("Ferocious Inspiration"))
             {
@@ -1408,6 +1385,13 @@ namespace Rawr.DPSDK
             }
 
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
+
+
+
+            statsTotal.GreatnessProc = statsGearEnchantsBuffs.GreatnessProc;
+
+            if (statsTotal.GreatnessProc > 0)
+                statsGearEnchantsBuffs.Strength += statsTotal.GreatnessProc * 15f / 45f;
 
             statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
             statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
@@ -1470,7 +1454,14 @@ namespace Rawr.DPSDK
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusSpellPowerMultiplier = statsGearEnchantsBuffs.BonusShadowDamageMultiplier;
             statsTotal.BonusDiseaseDamageMultiplier = statsGearEnchantsBuffs.BonusDiseaseDamageMultiplier;
-
+            foreach (SpecialEffect effect in statsGearEnchantsBuffs.SpecialEffects())
+            {
+                if (HasRelevantStats(effect.Stats))
+                {
+                    statsTotal.AddSpecialEffect(effect);
+                    statsTotal += StatsSpecialEffects.getSpecialEffects(calcOpts, effect);
+                }
+            }
        /*     if (calcOpts.MagicVuln)
             {
                 statsTotal.BonusSpellPowerMultiplier += .13f;
@@ -1556,7 +1547,7 @@ namespace Rawr.DPSDK
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Health = stats.Health,
                 Strength = stats.Strength,
@@ -1598,15 +1589,66 @@ namespace Rawr.DPSDK
                 
                 
             };
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (HasRelevantStats(effect.Stats))
+                {
+                    if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageSpellCast ||
+                        effect.Trigger == Trigger.DamageSpellCrit ||
+                        effect.Trigger == Trigger.DamageSpellHit ||
+                        effect.Trigger == Trigger.SpellCast ||
+                        effect.Trigger == Trigger.SpellCrit ||
+                        effect.Trigger == Trigger.SpellHit ||
+                        effect.Trigger == Trigger.DoTTick ||
+                        effect.Trigger == Trigger.MeleeCrit ||
+                        effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.PhysicalCrit ||
+                        effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.Use)
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+
+            return s;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (relevantStats(effect.Stats))
+                {
+                    if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageSpellCast ||
+                        effect.Trigger == Trigger.DamageSpellCrit ||
+                        effect.Trigger == Trigger.DamageSpellHit ||
+                        effect.Trigger == Trigger.SpellCast ||
+                        effect.Trigger == Trigger.SpellCrit ||
+                        effect.Trigger == Trigger.SpellHit ||
+                        effect.Trigger == Trigger.DoTTick ||
+                        effect.Trigger == Trigger.MeleeCrit ||
+                        effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.PhysicalCrit ||
+                        effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.Use)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return relevantStats(stats);
+        }
+        private bool relevantStats(Stats stats)
+        {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + 
-                stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.BonusShadowDamageMultiplier
+                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.ShadowDamage +
+                stats.CritMeleeRating + stats.BonusShadowDamageMultiplier
                 + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
                 + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier) != 0;
         }

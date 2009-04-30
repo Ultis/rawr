@@ -141,6 +141,7 @@
     <Compile Include="RotationViewer.Designer.cs">
       <DependentUpon>RotationViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="StatsSpecialEffects.cs" />
     <Compile Include="Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
