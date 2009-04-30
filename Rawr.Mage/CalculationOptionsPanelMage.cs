@@ -137,38 +137,62 @@ namespace Rawr.Mage
 
             sb.AppendLine("Optimal Cycle Palette:");
             sb.AppendLine("");
-            sb.AppendLine("Cycle Code Legend:");
-            sb.AppendLine(@"1) at 0 stack with ABar not on cooldown and you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
-2) at 1 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
-3) at 0 stack with ABar on cooldown if you don't see MB do: 0 = AB, 1 = AM
-4) at 0 stack with ABar on cooldown if you see MB do: 0 = AB, 1 = AM
-5) at 1 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
-6) at 2 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
-7) at 2 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
-8) at 3 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
-9) at 3 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
-10) at 0 stack with ABar not on cooldown and you see MB do: 0 = AB, 1 = ABar, 2 = AM
+            sb.AppendLine("Cycle Code Legend: 0 = AB, 1 = ABar, 2 = AM");
+            sb.AppendLine(@"State Descriptions: ABxABaryMBz+-
+x = number of AB stacks
+y = remaining cooldown on Arcane Barrage
+z = remaining time on Missile Barrage
++ = Missile Barrage proc visible
+- = Missile Barrage proc not visible
 ");
     
+            //sb.AppendLine("Base:");
+
+            //ComputeOptimalCycles(baseState, sb);
+
+            //sb.AppendLine("");
+            //sb.AppendLine("Arcane Power:");
+
+            //ComputeOptimalCycles(apState, sb);
+
+            //MessageBox.Show(sb.ToString());
+
+            //sb.Length = 0;
+            //sb.AppendLine("Extended Model");
             sb.AppendLine("Base:");
 
-            //ArcaneCycleGenerator generator = new ArcaneCycleGenerator(baseState);
-            //generator.Analyze(baseState);
+            ArcaneCycleGenerator generator = new ArcaneCycleGenerator(baseState);
 
-            ComputeOptimalCycles(baseState, sb);
+            sb.AppendLine("");
+            for (int i = 0; i < generator.ControlOptions.Length; i++)
+            {
+                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
+            }
+            sb.AppendLine("");
+
+            foreach (GenericCycle cycle in generator.Analyze(baseState))
+            {
+                sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
+            }
 
             sb.AppendLine("");
             sb.AppendLine("Arcane Power:");
 
-            ComputeOptimalCycles(apState, sb);
+            generator = new ArcaneCycleGenerator(apState);
+
+            sb.AppendLine("");
+            for (int i = 0; i < generator.ControlOptions.Length; i++)
+            {
+                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
+            }
+            sb.AppendLine("");
+
+            foreach (GenericCycle cycle in generator.Analyze(apState))
+            {
+                sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
+            }
 
             MessageBox.Show(sb.ToString());
-
-
-            /*foreach (GenericArcane cycle in cycleDict.Values)
-            {
-                System.Diagnostics.Debug.Write(cycle.Name + ":\r\n" + cycle.DamagePerSecond + " dps\r\n" + cycle.ManaPerSecond + " mps\r\n" + cycle.SpellDistribution + "\r\n");
-            }*/
         }
 
         private static StringBuilder ComputeOptimalCycles(CastingState baseState, StringBuilder sb)

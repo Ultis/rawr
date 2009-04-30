@@ -998,7 +998,7 @@ namespace Rawr.Mage
             return new GenericCycle(name, castingState, StateList);
         }
 
-        public void Analyze(CastingState castingState)
+        public List<GenericCycle> Analyze(CastingState castingState)
         {
             Dictionary<string, GenericCycle> cycleDict = new Dictionary<string, GenericCycle>();
             int j;
@@ -1075,6 +1075,7 @@ namespace Rawr.Mage
                     cyclePalette.Add(mindpmCycle);
                 }
             } while (mindpmCycle != null);
+            return cyclePalette;
         }
 
         protected abstract CycleState GetInitialState();
