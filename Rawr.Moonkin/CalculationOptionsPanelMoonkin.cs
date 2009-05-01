@@ -32,18 +32,10 @@ namespace Rawr.Moonkin
             cmbPotType.Enabled = chkManaPots.Checked;
             txtInnervateDelay.Text = calcOpts.InnervateDelay.ToString();
             txtInnervateDelay.Enabled = chkInnervate.Checked;
-            chkInnervateWeapon.Checked = calcOpts.InnervateWeapon;
-            txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
-            txtInnervateWeaponInt.Text = calcOpts.InnervateWeaponInt.ToString();
-            txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
-            txtInnervateWeaponSpi.Text = calcOpts.InnervateWeaponSpi.ToString();
             rdbAldor.Checked = calcOpts.AldorScryer == "Aldor";
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
-/*            cmbGlyph1.SelectedItem = calcOpts.glyph1.ToString();
-            cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
-            cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();*/
             cmbUserRotation.SelectedItem = calcOpts.userRotation;
             if (calcOpts.LunarEclipse)
                 cmbEclipseType.SelectedItem = "Lunar";
@@ -103,29 +95,6 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
 
-        private void txtInnervateWeaponInt_Leave(object sender, EventArgs e)
-        {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			calcOpts.InnervateWeaponInt = float.Parse(txtInnervateWeaponInt.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void txtInnervateWeaponSpi_Leave(object sender, EventArgs e)
-        {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			calcOpts.InnervateWeaponSpi = float.Parse(txtInnervateWeaponSpi.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void chkInnervateWeapon_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			calcOpts.InnervateWeapon = chkInnervateWeapon.Checked;
-            txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
-            txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
         private void rdbScryer_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
@@ -148,27 +117,6 @@ namespace Rawr.Moonkin
             lblLifespanValue.Text = trkTreantLifespan.Value.ToString();
             Character.OnCalculationsInvalidated();
         }
-
-/*        private void cmbGlyph1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.glyph1 = cmbGlyph1.SelectedItem.ToString();
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cmbGlyph2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.glyph2 = cmbGlyph2.SelectedItem.ToString();
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cmbGlyph3_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.glyph3 = cmbGlyph3.SelectedItem.ToString();
-            Character.OnCalculationsInvalidated();
-        }*/
 
         private void cmbUserRotation_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -321,15 +269,9 @@ namespace Rawr.Moonkin
 		public float InnervateDelay = 1;
 		public bool ManaPots = false;
 		public string ManaPotType = "Runic Mana Potion";
-		public bool InnervateWeapon = false;
-		public float InnervateWeaponInt = 0;
-		public float InnervateWeaponSpi = 0;
 		public string AldorScryer = "Aldor";
         public float ReplenishmentUptime = 1.0f;
         public float TreantLifespan = 1.0f;
-/*        public string glyph1 = "Starfire";
-        public string glyph2 = "Moonfire";
-        public string glyph3 = "Insect Swarm";*/
         public bool LunarEclipse = true;
         public bool MoonfireAlways = true;
         public string userRotation = "None";

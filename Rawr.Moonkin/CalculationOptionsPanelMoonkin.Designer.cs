@@ -40,11 +40,6 @@
             this.lblInnervateOffset = new System.Windows.Forms.Label();
             this.txtInnervateDelay = new System.Windows.Forms.TextBox();
             this.lblManaPotType = new System.Windows.Forms.Label();
-            this.chkInnervateWeapon = new System.Windows.Forms.CheckBox();
-            this.txtInnervateWeaponInt = new System.Windows.Forms.TextBox();
-            this.txtInnervateWeaponSpi = new System.Windows.Forms.TextBox();
-            this.lblInnervateWeaponInt = new System.Windows.Forms.Label();
-            this.lblInnervateWeaponSpi = new System.Windows.Forms.Label();
             this.rdbAldor = new System.Windows.Forms.RadioButton();
             this.rdbScryer = new System.Windows.Forms.RadioButton();
             this.trkReplenishmentUptime = new System.Windows.Forms.TrackBar();
@@ -179,55 +174,10 @@
             this.lblManaPotType.TabIndex = 21;
             this.lblManaPotType.Text = "Mana Potion Type:";
             // 
-            // chkInnervateWeapon
-            // 
-            this.chkInnervateWeapon.AutoSize = true;
-            this.chkInnervateWeapon.Location = new System.Drawing.Point(6, 182);
-            this.chkInnervateWeapon.Name = "chkInnervateWeapon";
-            this.chkInnervateWeapon.Size = new System.Drawing.Size(140, 17);
-            this.chkInnervateWeapon.TabIndex = 8;
-            this.chkInnervateWeapon.Text = "Use Innervate weapon?";
-            this.chkInnervateWeapon.UseVisualStyleBackColor = true;
-            this.chkInnervateWeapon.CheckedChanged += new System.EventHandler(this.chkInnervateWeapon_CheckedChanged);
-            // 
-            // txtInnervateWeaponInt
-            // 
-            this.txtInnervateWeaponInt.Location = new System.Drawing.Point(108, 205);
-            this.txtInnervateWeaponInt.Name = "txtInnervateWeaponInt";
-            this.txtInnervateWeaponInt.Size = new System.Drawing.Size(93, 20);
-            this.txtInnervateWeaponInt.TabIndex = 9;
-            this.txtInnervateWeaponInt.Leave += new System.EventHandler(this.txtInnervateWeaponInt_Leave);
-            // 
-            // txtInnervateWeaponSpi
-            // 
-            this.txtInnervateWeaponSpi.Location = new System.Drawing.Point(108, 231);
-            this.txtInnervateWeaponSpi.Name = "txtInnervateWeaponSpi";
-            this.txtInnervateWeaponSpi.Size = new System.Drawing.Size(93, 20);
-            this.txtInnervateWeaponSpi.TabIndex = 10;
-            this.txtInnervateWeaponSpi.Leave += new System.EventHandler(this.txtInnervateWeaponSpi_Leave);
-            // 
-            // lblInnervateWeaponInt
-            // 
-            this.lblInnervateWeaponInt.AutoSize = true;
-            this.lblInnervateWeaponInt.Location = new System.Drawing.Point(3, 208);
-            this.lblInnervateWeaponInt.Name = "lblInnervateWeaponInt";
-            this.lblInnervateWeaponInt.Size = new System.Drawing.Size(76, 13);
-            this.lblInnervateWeaponInt.TabIndex = 25;
-            this.lblInnervateWeaponInt.Text = "Intellect value:";
-            // 
-            // lblInnervateWeaponSpi
-            // 
-            this.lblInnervateWeaponSpi.AutoSize = true;
-            this.lblInnervateWeaponSpi.Location = new System.Drawing.Point(3, 234);
-            this.lblInnervateWeaponSpi.Name = "lblInnervateWeaponSpi";
-            this.lblInnervateWeaponSpi.Size = new System.Drawing.Size(62, 13);
-            this.lblInnervateWeaponSpi.TabIndex = 26;
-            this.lblInnervateWeaponSpi.Text = "Spirit value:";
-            // 
             // rdbAldor
             // 
             this.rdbAldor.AutoSize = true;
-            this.rdbAldor.Location = new System.Drawing.Point(39, 353);
+            this.rdbAldor.Location = new System.Drawing.Point(39, 278);
             this.rdbAldor.Name = "rdbAldor";
             this.rdbAldor.Size = new System.Drawing.Size(49, 17);
             this.rdbAldor.TabIndex = 13;
@@ -238,7 +188,7 @@
             // rdbScryer
             // 
             this.rdbScryer.AutoSize = true;
-            this.rdbScryer.Location = new System.Drawing.Point(108, 353);
+            this.rdbScryer.Location = new System.Drawing.Point(108, 278);
             this.rdbScryer.Name = "rdbScryer";
             this.rdbScryer.Size = new System.Drawing.Size(55, 17);
             this.rdbScryer.TabIndex = 14;
@@ -249,7 +199,7 @@
             // 
             // trkReplenishmentUptime
             // 
-            this.trkReplenishmentUptime.Location = new System.Drawing.Point(125, 257);
+            this.trkReplenishmentUptime.Location = new System.Drawing.Point(125, 182);
             this.trkReplenishmentUptime.Maximum = 100;
             this.trkReplenishmentUptime.Name = "trkReplenishmentUptime";
             this.trkReplenishmentUptime.Size = new System.Drawing.Size(76, 42);
@@ -260,7 +210,7 @@
             // 
             // trkTreantLifespan
             // 
-            this.trkTreantLifespan.Location = new System.Drawing.Point(128, 305);
+            this.trkTreantLifespan.Location = new System.Drawing.Point(128, 230);
             this.trkTreantLifespan.Maximum = 100;
             this.trkTreantLifespan.Name = "trkTreantLifespan";
             this.trkTreantLifespan.Size = new System.Drawing.Size(73, 42);
@@ -272,7 +222,7 @@
             // lblReplenishmentUptime
             // 
             this.lblReplenishmentUptime.AutoSize = true;
-            this.lblReplenishmentUptime.Location = new System.Drawing.Point(3, 267);
+            this.lblReplenishmentUptime.Location = new System.Drawing.Point(3, 192);
             this.lblReplenishmentUptime.Name = "lblReplenishmentUptime";
             this.lblReplenishmentUptime.Size = new System.Drawing.Size(116, 13);
             this.lblReplenishmentUptime.TabIndex = 31;
@@ -281,7 +231,7 @@
             // lblTreantLifespan
             // 
             this.lblTreantLifespan.AutoSize = true;
-            this.lblTreantLifespan.Location = new System.Drawing.Point(3, 316);
+            this.lblTreantLifespan.Location = new System.Drawing.Point(3, 241);
             this.lblTreantLifespan.Name = "lblTreantLifespan";
             this.lblTreantLifespan.Size = new System.Drawing.Size(84, 13);
             this.lblTreantLifespan.TabIndex = 32;
@@ -290,7 +240,7 @@
             // lblUptimeValue
             // 
             this.lblUptimeValue.AutoSize = true;
-            this.lblUptimeValue.Location = new System.Drawing.Point(127, 286);
+            this.lblUptimeValue.Location = new System.Drawing.Point(127, 211);
             this.lblUptimeValue.Name = "lblUptimeValue";
             this.lblUptimeValue.Size = new System.Drawing.Size(25, 13);
             this.lblUptimeValue.TabIndex = 33;
@@ -299,7 +249,7 @@
             // lblLifespanValue
             // 
             this.lblLifespanValue.AutoSize = true;
-            this.lblLifespanValue.Location = new System.Drawing.Point(127, 334);
+            this.lblLifespanValue.Location = new System.Drawing.Point(127, 259);
             this.lblLifespanValue.Name = "lblLifespanValue";
             this.lblLifespanValue.Size = new System.Drawing.Size(19, 13);
             this.lblLifespanValue.TabIndex = 34;
@@ -308,7 +258,7 @@
             // lblUserRotation
             // 
             this.lblUserRotation.AutoSize = true;
-            this.lblUserRotation.Location = new System.Drawing.Point(6, 429);
+            this.lblUserRotation.Location = new System.Drawing.Point(6, 354);
             this.lblUserRotation.Name = "lblUserRotation";
             this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
             this.lblUserRotation.TabIndex = 44;
@@ -327,7 +277,7 @@
             "IS/MF/SF",
             "SF Spam",
             "W Spam"});
-            this.cmbUserRotation.Location = new System.Drawing.Point(108, 426);
+            this.cmbUserRotation.Location = new System.Drawing.Point(108, 351);
             this.cmbUserRotation.Name = "cmbUserRotation";
             this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
             this.cmbUserRotation.TabIndex = 21;
@@ -336,7 +286,7 @@
             // lblEclipseType
             // 
             this.lblEclipseType.AutoSize = true;
-            this.lblEclipseType.Location = new System.Drawing.Point(3, 379);
+            this.lblEclipseType.Location = new System.Drawing.Point(3, 304);
             this.lblEclipseType.Name = "lblEclipseType";
             this.lblEclipseType.Size = new System.Drawing.Size(68, 13);
             this.lblEclipseType.TabIndex = 46;
@@ -348,7 +298,7 @@
             this.cmbEclipseType.Items.AddRange(new object[] {
             "Lunar",
             "Solar"});
-            this.cmbEclipseType.Location = new System.Drawing.Point(108, 376);
+            this.cmbEclipseType.Location = new System.Drawing.Point(108, 301);
             this.cmbEclipseType.Name = "cmbEclipseType";
             this.cmbEclipseType.Size = new System.Drawing.Size(93, 21);
             this.cmbEclipseType.TabIndex = 19;
@@ -357,7 +307,7 @@
             // chkMoonfireAlways
             // 
             this.chkMoonfireAlways.AutoSize = true;
-            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 403);
+            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 328);
             this.chkMoonfireAlways.Name = "chkMoonfireAlways";
             this.chkMoonfireAlways.Size = new System.Drawing.Size(138, 17);
             this.chkMoonfireAlways.TabIndex = 20;
@@ -382,11 +332,6 @@
             this.Controls.Add(this.trkReplenishmentUptime);
             this.Controls.Add(this.rdbScryer);
             this.Controls.Add(this.rdbAldor);
-            this.Controls.Add(this.lblInnervateWeaponSpi);
-            this.Controls.Add(this.lblInnervateWeaponInt);
-            this.Controls.Add(this.txtInnervateWeaponSpi);
-            this.Controls.Add(this.txtInnervateWeaponInt);
-            this.Controls.Add(this.chkInnervateWeapon);
             this.Controls.Add(this.lblManaPotType);
             this.Controls.Add(this.txtInnervateDelay);
             this.Controls.Add(this.lblInnervateOffset);
@@ -400,7 +345,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 455);
+            this.Size = new System.Drawing.Size(204, 383);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -422,11 +367,6 @@
         private System.Windows.Forms.Label lblInnervateOffset;
         private System.Windows.Forms.TextBox txtInnervateDelay;
         private System.Windows.Forms.Label lblManaPotType;
-        private System.Windows.Forms.CheckBox chkInnervateWeapon;
-        private System.Windows.Forms.TextBox txtInnervateWeaponInt;
-        private System.Windows.Forms.TextBox txtInnervateWeaponSpi;
-        private System.Windows.Forms.Label lblInnervateWeaponInt;
-        private System.Windows.Forms.Label lblInnervateWeaponSpi;
         private System.Windows.Forms.RadioButton rdbAldor;
         private System.Windows.Forms.RadioButton rdbScryer;
         private System.Windows.Forms.TrackBar trkReplenishmentUptime;

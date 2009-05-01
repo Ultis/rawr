@@ -109,7 +109,7 @@ namespace Rawr
 		//Tree Glyphs
 		[GlyphData(15, "Glyph of Healing Touch", true, @"Decreases the cast time of Healing Touch by 1.5 sec., the mana cost by 25%, and the amount healed by 50%.")]
 		public bool GlyphOfHealingTouch { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-		[GlyphData(16, "Glyph of Innervate", true, @"Innervate now grants the caster full mana regeneration while casting for 20 sec, in addition to the effect on the target. If the caster targets him or herself, the mana regeneration effect of your Innervate is increased by 20%.")]
+		[GlyphData(16, "Glyph of Innervate", true, @"Innervate now grants the caster 90% of his base mana pool over 20 sec in addition to the normal effects of Innervate.")]
 		public bool GlyphOfInnervate { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
 		[GlyphData(17, "Glyph of Lifebloom", true, @"Increases the duration of Lifebloom by 1 sec.")]
 		public bool GlyphOfLifebloom { get { return _glyphData[17]; } set { _glyphData[17] = value; } }

@@ -1223,7 +1223,7 @@ namespace Rawr.Moonkin
                     }
                 });
             }
-            // Moonkin 4T8 set bonus (?? chance on IS tick to proc an instant-cast Starfire)
+            // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
             if (calcs.BasicStats.StarfireProc > 0)
             {
                 procEffects.Add(new ProcEffect()
@@ -1246,7 +1246,7 @@ namespace Rawr.Moonkin
                             SpellDamageModifier = r.Solver.Starfire.SpellDamageModifier
                         };
                         r.DoSpecialStarfire(c, ref newSF, sp, sHi, sc, sHa);
-                        float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / 0.05f;
+                        float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / 0.15f;
                         float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
                         float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);
                         return (replaceWrathWithSFDPS * (r.WrathCount / (r.WrathCount + r.StarfireCount)) + 
@@ -1309,29 +1309,8 @@ namespace Rawr.Moonkin
             // Innervate calculations
             float innervateDelay = calcOpts.InnervateDelay * 60.0f;
             int numInnervates = (calcOpts.Innervate && fightLength - innervateDelay > 0) ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
-            float totalInnervateMana = 0.0f;
-            if (numInnervates > 0)
-            {
-                // Innervate mana rate increases only spirit-based regen
-                float spiritRegen = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f);
-                // Add in calculations for an innervate weapon
-                if (calcOpts.InnervateWeapon)
-                {
-                    //float baseRegenConstant = CalculationsMoonkin.ManaRegenConstant;
-                    // Calculate the intellect from a weapon swap
-                    float userIntellect = calcs.BasicStats.Intellect - (character.MainHand == null ? 0 : character.MainHand.Item.Stats.Intellect) - (character.OffHand == null ? 0 : character.OffHand.Item.Stats.Intellect)
-                        + calcOpts.InnervateWeaponInt;
-                    // Do the same with spirit
-                    float userSpirit = calcs.BasicStats.Spirit - (character.MainHand == null ? 0 : character.MainHand.Item.Stats.Spirit) - (character.OffHand == null ? 0 : character.OffHand.Item.Stats.Spirit)
-                        + calcOpts.InnervateWeaponSpi;
-                    // The new spirit regen for innervate periods uses the new weapon stats
-					spiritRegen = StatConversion.GetSpiritRegenSec(userSpirit, userIntellect);
-                    //spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;
-                }
-                float innervateManaRate = spiritRegen * 4 * (character.DruidTalents.GlyphOfInnervate ? 1.2f : 1.0f) + calcs.BasicStats.Mp5 / 5f;
-                float innervateTime = numInnervates * 20.0f;
-                totalInnervateMana = innervateManaRate * innervateTime;
-            }
+            float totalInnervateMana = numInnervates * CalculationsMoonkin.BaseMana * (4.5f + (character.DruidTalents.GlyphOfInnervate ? 0.9f : 0.0f));
+
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
             float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength * 60;
