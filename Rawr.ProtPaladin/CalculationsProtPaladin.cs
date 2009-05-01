@@ -1504,7 +1504,9 @@ focus on Survival Points.",
                 stats.ShieldOfRighteousnessBlockValue +
                 stats.BonusSealOfCorruptionDamageMultiplier +
                 stats.BonusSealOfRighteousnessDamageMultiplier +
-                stats.BonusSealOfVengeanceDamageMultiplier
+                stats.BonusSealOfVengeanceDamageMultiplier +
+
+                stats.BossAttackSpeedMultiplier
                 ) != 0;
 
             bool notClassSetBonus = ((buff.Group == "Set Bonuses") && !((buff.Name.Contains("Aegis")) || buff.Name.Contains("Redemption")));

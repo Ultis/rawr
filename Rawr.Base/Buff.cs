@@ -1154,6 +1154,38 @@ namespace Rawr
             });
             #endregion
 
+            #region Boss Attack Speed Reduction
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Judgements of the Just",
+                Group = "Boss Attack Speed",
+                Stats = { BossAttackSpeedMultiplier = -0.2f }
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Infected Wounds",
+                Group = "Boss Attack Speed",
+                Stats = { BossAttackSpeedMultiplier = -0.2f }
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Frost Fever",
+                Group = "Boss Attack Speed",
+                Stats = { BossAttackSpeedMultiplier = -0.15f },
+                Improvements = { new Buff { Name = "Improved Icy Touch", Stats = { BossAttackSpeedMultiplier = -0.06f } } }
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunder Clap",
+                Group = "Boss Attack Speed",
+                Stats = { BossAttackSpeedMultiplier = -0.10f },
+                Improvements = { new Buff { Name = "Improved Thunder Clap", Stats = { BossAttackSpeedMultiplier = -0.06f } } }
+            });
+            #endregion
+
             #endregion
 
             #region Consumables

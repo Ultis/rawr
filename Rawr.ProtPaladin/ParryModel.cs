@@ -23,7 +23,7 @@ namespace Rawr.ProtPaladin
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
 
-            BossAttackSpeed             = baseBossAttackSpeed;
+            BossAttackSpeed             = baseBossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
             WeaponSpeed                 = baseWeaponSpeed;
 
             if (Options.UseParryHaste)

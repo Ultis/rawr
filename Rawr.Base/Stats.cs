@@ -391,6 +391,9 @@ namespace Rawr
         BonusShieldSlamDamage,
         BonusSlamDamage,
         #endregion
+        #region Boss Stats
+        BossAttackSpeedMultiplier
+        #endregion
     }
 
     enum InverseMultiplicativeStat : int
@@ -2985,6 +2988,16 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.ThreatIncreaseMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.ThreatIncreaseMultiplier] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Boss Attack Speed Reduction")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BossAttackSpeedMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BossAttackSpeedMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BossAttackSpeedMultiplier] = value; }
         }
 
         [Percentage]
