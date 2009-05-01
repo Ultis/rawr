@@ -333,21 +333,6 @@ namespace Rawr.Moonkin
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             Stats stats = GetCharacterStats(character, additionalItem);
-
-            foreach (SpecialEffect s in stats.SpecialEffects())
-            {
-                if (s.Stats.HighestStat > 0)
-                {
-                    if (stats.Spirit > stats.Intellect)
-                        stats.Spirit += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
-                    else
-                        stats.Intellect += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
-                }
-                if (s.Stats.Spirit > 0)
-                {
-                    stats.Spirit += s.Stats.Spirit * s.MaxStack;
-                }
-            }
             calcs.BasicStats = stats;
 
 			calcs.SpellCrit = StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
@@ -467,6 +452,21 @@ namespace Rawr.Moonkin
             statsTotal.Agility += (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Spirit = (float)Math.Floor(statsRace.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit += (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+
+            foreach (SpecialEffect s in stats.SpecialEffects())
+            {
+                if (s.Stats.HighestStat > 0)
+                {
+                    if (stats.Spirit > stats.Intellect)
+                        stats.Spirit += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
+                    else
+                        stats.Intellect += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
+                }
+                if (s.Stats.Spirit > 0)
+                {
+                    stats.Spirit += s.Stats.Spirit * s.MaxStack;
+                }
+            }
 
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
