@@ -453,18 +453,18 @@ namespace Rawr.Moonkin
             statsTotal.Spirit = (float)Math.Floor(statsRace.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit += (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
-            foreach (SpecialEffect s in stats.SpecialEffects())
+            foreach (SpecialEffect s in statsTotal.SpecialEffects())
             {
                 if (s.Stats.HighestStat > 0)
                 {
-                    if (stats.Spirit > stats.Intellect)
-                        stats.Spirit += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
+                    if (statsTotal.Spirit > statsTotal.Intellect)
+                        statsTotal.Spirit += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
                     else
-                        stats.Intellect += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
+                        statsTotal.Intellect += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
                 }
                 if (s.Stats.Spirit > 0)
                 {
-                    stats.Spirit += s.Stats.Spirit * s.MaxStack;
+                    statsTotal.Spirit += s.Stats.Spirit * s.MaxStack;
                 }
             }
 
