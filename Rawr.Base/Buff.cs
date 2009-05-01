@@ -2090,15 +2090,16 @@ namespace Rawr
                 SetName = "Nightsong Garb",
                 SetThreshold = 2
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Nightsong Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { StarfireProc = 1f },
+                Stats = new Stats(),
                 SetName = "Nightsong Garb",
                 SetThreshold = 4
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.15f, 1));
             // Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {

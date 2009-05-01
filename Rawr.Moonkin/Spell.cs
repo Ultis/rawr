@@ -154,25 +154,63 @@ namespace Rawr.Moonkin
                     }
                 };
             }
+            else if (effect.Stats.Mp5 > 0)
+            {
+                CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                {
+                    float procsPerRotation = Effect.Chance * r.CastCount;
+                    float timeBetweenProcs = r.Duration / procsPerRotation + Effect.Cooldown;
+                    return (Effect.Stats.Mp5 / 5.0f * Effect.Duration) / timeBetweenProcs * 5.0f;
+                };
+            }
+            // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
+            else if (effect.Trigger == Trigger.InsectSwarmTick)
+            {
+                CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                {
+                    if (r.InsectSwarmTicks == 0) return 0.0f;
+                    Spell newSF = new Spell()
+                    {
+                        AllDamageModifier = r.Solver.Starfire.AllDamageModifier,
+                        BaseCastTime = 1.5f,
+                        BaseDamage = r.Solver.Starfire.BaseDamage,
+                        BaseManaCost = r.Solver.Starfire.BaseManaCost,
+                        CriticalChanceModifier = r.Solver.Starfire.CriticalChanceModifier,
+                        CriticalDamageModifier = r.Solver.Starfire.CriticalDamageModifier,
+                        DotEffect = null,
+                        IdolExtraSpellPower = r.Solver.Starfire.IdolExtraSpellPower,
+                        Name = r.Solver.Starfire.Name,
+                        School = r.Solver.Starfire.School,
+                        SpellDamageModifier = r.Solver.Starfire.SpellDamageModifier
+                    };
+                    r.DoSpecialStarfire(c, ref newSF, sp, sHi, sc, sHa);
+                    float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / Effect.Chance;
+                    float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
+                    float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);
+                    return (replaceWrathWithSFDPS * (r.WrathCount / (r.WrathCount + r.StarfireCount)) +
+                        replaceSFWithSFDPS * (r.StarfireCount / (r.WrathCount + r.StarfireCount)))
+                        / timeBetweenProcs;
+                };
+            }
             else
             {
                 Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
-                    if (Effect.MaxStack > 0)
+                    if (Effect.Stats.SpellPower > 0)
                         sp += Effect.Stats.SpellPower * Effect.MaxStack;
-                    else
-                        sp += Effect.Stats.SpellPower;
-                    sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
-                    sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+                    if (Effect.Stats.CritRating > 0)
+                        sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
+                    if (Effect.Stats.HasteRating > 0)
+                        sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
                 };
                 Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
-                    if (Effect.MaxStack > 0)
+                    if (Effect.Stats.SpellPower > 0)
                         sp -= Effect.Stats.SpellPower * Effect.MaxStack;
-                    else
-                        sp -= Effect.Stats.SpellPower;
-                    sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
-                    sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+                    if (Effect.Stats.CritRating > 0)
+                        sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
+                    if (Effect.Stats.HasteRating > 0)
+                        sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
                 };
                 UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
                 {
@@ -1045,89 +1083,7 @@ namespace Rawr.Moonkin
         // Create proc effect calculations for proc-based trinkets.
         private void BuildProcList(CharacterCalculationsMoonkin calcs)
         {
-            // Sundial of the Exiled, et al. (Spell power 10 sec on hit, 10% chance, 45s cooldown)
-            /*if (calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp += c.BasicStats.SpellPowerFor10SecOnHit_10_45;
-                    },
-                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp -= c.BasicStats.SpellPowerFor10SecOnHit_10_45;
-                    },
-                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-                    {
-                        float timeToProc = r.Duration / (r.CastCount * 0.1f) + 45.0f;
-                        return 10.0f / (10.0f + timeToProc);
-                    }
-                });
-            }
-            // Dying Curse, et al. (Spell power for 10 sec on cast, 15% chance, 45s cooldown)
-            if (calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp += c.BasicStats.SpellPowerFor10SecOnCast_15_45;
-                    },
-                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp -= c.BasicStats.SpellPowerFor10SecOnCast_15_45;
-                    },
-                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-                    {
-                        float timeToProc = r.Duration / (r.CastCount * 0.15f) + 45.0f;
-                        return 10.0f / (10.0f + timeToProc);
-                    }
-                });
-            }
-            // Flow of Knowledge, et al. (Spell power for 10 sec on cast, 10% chance, 45s cooldown)
-            if (calcs.BasicStats.SpellPowerFor10SecOnCast_10_45 > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp += c.BasicStats.SpellPowerFor10SecOnCast_10_45;
-                    },
-                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sp -= c.BasicStats.SpellPowerFor10SecOnCast_10_45;
-                    },
-                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-                    {
-                        float timeToProc = r.Duration / (r.CastCount * 0.10f) + 45.0f;
-                        return 10.0f / (10.0f + timeToProc);
-                    }
-                });
-            }
-            // Embrace of the Spider (505 haste/10 sec, 45s internal cooldown, 10% chance on cast)
-            if (calcs.BasicStats.SpellHasteFor10SecOnCast_10_45 > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-						sHa += StatConversion.GetSpellHasteFromRating(c.BasicStats.SpellHasteFor10SecOnCast_10_45);
-                        //sHa += c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
-                    },
-                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-						sHa -= StatConversion.GetSpellHasteFromRating(c.BasicStats.SpellHasteFor10SecOnCast_10_45);
-                        //sHa -= c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
-                    },
-                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-                    {
-                        float timeToProc = (r.Duration / r.CastCount) / 0.1f + 45.0f;
-                        return 10.0f / (10.0f + timeToProc);
-                    }
-                });
-            }*/
-            // New trinket code
+            // Implement a new handler for each special effect in the calculations stats
             foreach (SpecialEffect effect in calcs.BasicStats.SpecialEffects())
             {
                 procEffects.Add(new ProcEffect(effect));
@@ -1149,67 +1105,6 @@ namespace Rawr.Moonkin
                     }
                 });
             }
-            // Lightweave Embroidery (1100 Holy damage, 50% chance on cast, 45s internal cooldown)
-            /*if (calcs.BasicStats.LightweaveEmbroideryProc > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float baseDamage = (1000 + 1200) / 2.0f;
-                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
-                        float timeBetweenProcs = r.Duration / (sHi * r.CastCount * 0.5f) + 45f;
-                        return averageDamage / timeBetweenProcs;
-                    }
-                });
-            }
-            // Pendulum of Telluric Currents (15% chance on spell hit, 45s internal cooldown)
-            if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float baseDamage = (1168 + 1752) / 2.0f;
-                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
-                        float timeBetweenProcs = r.Duration / (sHi * r.CastCount * 0.15f) + 45f;
-                        return averageDamage / timeBetweenProcs;
-                    }
-                });
-            }
-            // Extract of Necromantic Power (10% proc on a DoT tick, 15s internal cooldown)
-            if (calcs.BasicStats.ExtractOfNecromanticPowerProc > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        if (r.DotTicks == 0) return 0.0f;
-                        float specialDamageModifier = (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float baseDamage = (788 + 1312) / 2.0f;
-                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
-                        float timeBetweenProcs = 1 / (r.DotTicks / r.Duration * 0.1f) + 15.0f;
-                        return averageDamage / timeBetweenProcs;
-                    }
-                });
-            }
-            // Darkmoon Card: Death (35% proc from any damage source, 45s internal cooldown)
-            if (calcs.BasicStats.DarkmoonCardDeathProc > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float baseDamage = (1750f + 2250f) / 2.0f;
-                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
-                        float timeBetweenProcs = r.Duration / ((r.CastCount + r.DotTicks) * 0.35f) + 45.0f;
-                        return averageDamage / timeBetweenProcs;
-                    }
-                });
-            }*/
             // Je'Tze's Bell (10% chance of 100 mp5 for 15 sec)
             if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
             {
@@ -1223,57 +1118,6 @@ namespace Rawr.Moonkin
                     }
                 });
             }
-            // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
-            if (calcs.BasicStats.StarfireProc > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        if (r.InsectSwarmTicks == 0) return 0.0f;
-                        Spell newSF = new Spell()
-                        {
-                            AllDamageModifier = r.Solver.Starfire.AllDamageModifier,
-                            BaseCastTime = 1.5f,
-                            BaseDamage = r.Solver.Starfire.BaseDamage,
-                            BaseManaCost = r.Solver.Starfire.BaseManaCost,
-                            CriticalChanceModifier = r.Solver.Starfire.CriticalChanceModifier,
-                            CriticalDamageModifier = r.Solver.Starfire.CriticalDamageModifier,
-                            DotEffect = null,
-                            IdolExtraSpellPower = r.Solver.Starfire.IdolExtraSpellPower,
-                            Name = r.Solver.Starfire.Name,
-                            School = r.Solver.Starfire.School,
-                            SpellDamageModifier = r.Solver.Starfire.SpellDamageModifier
-                        };
-                        r.DoSpecialStarfire(c, ref newSF, sp, sHi, sc, sHa);
-                        float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / 0.15f;
-                        float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
-                        float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);
-                        return (replaceWrathWithSFDPS * (r.WrathCount / (r.WrathCount + r.StarfireCount)) + 
-                            replaceSFWithSFDPS * (r.StarfireCount / (r.WrathCount + r.StarfireCount)))
-                            / timeBetweenProcs;
-                    }
-                });
-            }
-            // Nature's Grace (33/66/100% chance of 20% haste for 3 sec on crit)
-            /*if (NaturesGrace > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sHa += 0.2f;
-                    },
-                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
-                    {
-                        sHa -= 0.2f;
-                    },
-                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
-                    {
-                        return (1.0f - (float)Math.Pow(1.0f - c.SpellCrit, 3.0f / (r.Duration / r.CastCount))) * (r.Solver.NaturesGrace / 3.0f);
-                    }
-                });
-            }*/
         }
 
         // Non-rotation-specific mana calculations

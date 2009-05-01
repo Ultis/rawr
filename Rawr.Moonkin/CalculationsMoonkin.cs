@@ -964,13 +964,17 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellHit ||
                     effect.Trigger == Trigger.SpellMiss ||
                     effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.InsectSwarmTick)
                 {
                     if (effect.Stats.SpellPower > 0 ||
-                        effect.Stats.SpellCritRating > 0 ||
-                        effect.Stats.SpellHasteRating > 0 ||
+                        effect.Stats.CritRating > 0 ||
+                        effect.Stats.HasteRating > 0 ||
                         effect.Stats.HighestStat > 0 ||
-                        effect.Stats.ShadowDamage > 0)
+                        effect.Stats.ShadowDamage > 0 ||
+                        effect.Stats.StarfireProc > 0 ||
+                        effect.Stats.Spirit > 0 ||
+                        effect.Stats.Mp5 > 0)
                     {
                         s.AddSpecialEffect(effect);
                     }
@@ -999,13 +1003,17 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellHit ||
                     effect.Trigger == Trigger.SpellMiss ||
                     effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.InsectSwarmTick)
                 {
                     if (effect.Stats.SpellPower > 0 ||
-                        effect.Stats.SpellCritRating > 0 ||
-                        effect.Stats.SpellHasteRating > 0 ||
+                        effect.Stats.CritRating > 0 ||
+                        effect.Stats.HasteRating > 0 ||
                         effect.Stats.HighestStat > 0 ||
-                        effect.Stats.ShadowDamage > 0)
+                        effect.Stats.ShadowDamage > 0 ||
+                        effect.Stats.StarfireProc > 0 ||
+                        effect.Stats.Spirit > 0 ||
+                        effect.Stats.Mp5 > 0)
                     {
                         return true;
                     }

@@ -26,7 +26,8 @@ namespace Rawr
         DamageDone,
         MageNukeCast,
         JudgementHit,
-        CrusaderStrikeHit
+        CrusaderStrikeHit,
+        InsectSwarmTick
     }
 
     [Serializable]
