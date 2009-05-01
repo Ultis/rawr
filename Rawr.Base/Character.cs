@@ -1532,6 +1532,7 @@ namespace Rawr //O O . .
 			int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, 
 			int enchantMainHand, int enchantOffHand, int enchantRanged*/)
         {
+            IsLoading = true;
             _name = name;
             _realm = realm;
             _region = region;
@@ -1557,25 +1558,11 @@ namespace Rawr //O O . .
 			_ranged = ranged;
 			_projectile = projectile;
 			_projectileBag = projectileBag;
-            //_extraWristSocket = extraWristSocket;
-            //_extraHandsSocket = extraHandsSocket;
-            //_extraWaistSocket = extraWaistSocket;
 
-            //_headEnchant = enchantHead;
-            //_shouldersEnchant = enchantShoulders;
-            //_backEnchant = enchantBack;
-            //_chestEnchant = enchantChest;
-            //_wristEnchant = enchantWrist;
-            //_handsEnchant = enchantHands;
-            //_legsEnchant = enchantLegs;
-            //_feetEnchant = enchantFeet;
-            //_finger1Enchant = enchantFinger1;
-            //_finger2Enchant = enchantFinger2;
-            //_mainHandEnchant = enchantMainHand;
-            //_offHandEnchant = enchantOffHand;
-            //_rangedEnchant = enchantRanged;
             WaistBlacksmithingSocketEnabled = true;
-		}
+            IsLoading = false;
+            RecalculateSetBonuses();
+        }
 
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,

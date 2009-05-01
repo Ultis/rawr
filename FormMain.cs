@@ -705,8 +705,14 @@ namespace Rawr
 		{
             if (this.InvokeRequired)
             {
-                BeginInvoke((EventHandler)ItemCache_ItemsChanged, sender, e);
-                //InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
+                if (_loadingCharacter)
+                {
+                    Character.InvalidateItemInstances();
+                }
+                else
+                {
+                    BeginInvoke((EventHandler)ItemCache_ItemsChanged, sender, e);
+                }
             }
             else
             {
@@ -1603,7 +1609,9 @@ namespace Rawr
             StatusMessaging.UpdateStatusFinished("Get Character From Armory");
             if (itemsOnChar != null)
             {
+                _loadingCharacter = true; // suppress item changed event
                 EnsureItemsLoaded(itemsOnChar);
+                _loadingCharacter = false;
             }
             else
             {
@@ -1702,7 +1710,9 @@ namespace Rawr
             StatusMessaging.UpdateStatusFinished("Loading Character");
             if (characterProfilerChoice != null)
             {
+                _loadingCharacter = true; // suppress item changed event
                 this.EnsureItemsLoaded(characterProfilerChoice.Character.GetAllEquippedAndAvailableGearIds());
+                _loadingCharacter = false;
                 _characterPath = null;
                 e.Result = characterProfilerChoice.Character;
             }
@@ -1952,7 +1962,9 @@ namespace Rawr
             StatusMessaging.UpdateStatusFinished("Load Character");
             if (characterProfilerCharacter.Character != null)
             {
+                _loadingCharacter = true; // suppress item changed event
                 EnsureItemsLoaded(characterProfilerCharacter.Character.GetAllEquippedAndAvailableGearIds());
+                _loadingCharacter = false;
             }
             else
             {
