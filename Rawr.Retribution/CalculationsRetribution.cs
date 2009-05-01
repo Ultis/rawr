@@ -438,12 +438,12 @@ namespace Rawr.Retribution
                         {
                             trigger = 1f / rot.GetPhysicalAttacksPerSec();
                         }
-                        else if (effect.Trigger == Trigger.CrusaderStrike)
+                        else if (effect.Trigger == Trigger.CrusaderStrikeHit)
                         {
                             trigger = rot.GetCrusaderStrikeCD();
                             procChance = rot.CS.ChanceToLand();
                         }
-                        else if (effect.Trigger == Trigger.Judgement)
+                        else if (effect.Trigger == Trigger.JudgementHit)
                         {
                             trigger = rot.GetJudgementCD();
                             procChance = rot.Judge.ChanceToLand();
@@ -615,8 +615,8 @@ namespace Rawr.Retribution
         public bool HasRelevantSpecialEffect(SpecialEffect effect)
         {
             if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit|| effect.Trigger == Trigger.MeleeHit
-                || effect.Trigger == Trigger.CrusaderStrike || effect.Trigger == Trigger.PhysicalCrit
-                || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.Judgement)
+                || effect.Trigger == Trigger.CrusaderStrikeHit || effect.Trigger == Trigger.PhysicalCrit
+                || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit)
             {
                 Stats stats = effect.Stats;
                 return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating

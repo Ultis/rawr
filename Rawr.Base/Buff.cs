@@ -2763,7 +2763,7 @@ namespace Rawr
                 SetName = "Aegis Plate",
                 SetThreshold = 4
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Judgement, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 3.0f, 10.0f, 1.0f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 3.0f, 10.0f, 1.0f));
 
             //Retribution T8
             defaultBuffs.Add(new Buff()

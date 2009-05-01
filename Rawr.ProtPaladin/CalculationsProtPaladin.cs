@@ -906,7 +906,7 @@ focus on Survival Points.",
                     case Trigger.DamageDone:
                         statsTotal += effect.GetAverageStats(triggerMeleeInterval / 2f, 1f, 2.5f);
                         break;
-                    case Trigger.Judgement:
+                    case Trigger.JudgementHit:
                         Stats test = new Stats();
                         statsTotal += effect.GetAverageStats((-talents.ImprovedJudgements *1.0f), 1.0f);
                         break;
@@ -1356,7 +1356,7 @@ focus on Survival Points.",
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
                 || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.Judgement)
+                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1442,7 +1442,7 @@ focus on Survival Points.",
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.Judgement)
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.JudgementHit)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;
@@ -1514,7 +1514,7 @@ focus on Survival Points.",
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.Judgement)
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.JudgementHit)
                 {
                     hasRelevantBuffStats |= HasRelevantStats(effect.Stats);
                     if (hasRelevantBuffStats && !notClassSetBonus) break;

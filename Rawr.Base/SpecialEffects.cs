@@ -875,7 +875,7 @@ namespace Rawr
             }
             else if ((match = new Regex("Your Crusader Strike ability also grants you (?<amount>\\d\\d*) attack power for 10 sec.").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrike, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrikeHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f));
             }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
@@ -899,7 +899,7 @@ namespace Rawr
             }
             else if ((match = new Regex(@"Causes your Judgements to increase your Critical Strike Rating by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Judgement, new Stats() { CritRating = int.Parse(match.Groups["amount"].Value) }, 5f, 0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { CritRating = int.Parse(match.Groups["amount"].Value) }, 5f, 0f));
             }
             else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
             {
@@ -908,7 +908,7 @@ namespace Rawr
             #region Added by Rawr.ProtPaladin
             else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Judgement, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 5f, 10.0f, 1.0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 5f, 10.0f, 1.0f));
             }
             else if (line == "Increases your block value by 272 while Holy Shield is active.")
             {
