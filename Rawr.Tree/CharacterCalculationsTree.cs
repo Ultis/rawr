@@ -77,10 +77,27 @@ namespace Rawr.Tree
             spell = new Lifebloom(this, BasicStats);
             dictValues.Add("Lifebloom Global CD", Math.Round(spell.CastTime, 2) + " sec*" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until Lifebloom (GotEM) gcd cap");
 
-            dictValues.Add("Result", Simulation.TotalTime - Simulation.TimeToOOM > 1.0 ? "OOM from tank HoTs" : Simulation.UnusedMana > 0 ? "Cast time limited" : "Mana limited");
-            dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString());
-            dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString());
-            dictValues.Add("Unused cast time fraction", Math.Round(Simulation.UnusedCastTimeFrac, 2).ToString());
+            if (Simulation.TotalTime - Simulation.TimeToOOM > 1.0)
+            {
+                dictValues.Add("Result", "OOM from tank HoTs");
+                dictValues.Add("Time until OOM", Math.Round(Simulation.TimeToOOM,1).ToString() + " sec*" + "Keeping HoTs on the tank(s) will cause you to go OOM");
+                dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString());
+                dictValues.Add("Unused cast time percentage", Math.Round(Simulation.UnusedCastTimeFrac*100.0f, 0).ToString()+"%");
+            }
+            else if (Simulation.UnusedMana == 0)
+            {
+                dictValues.Add("Result", "Mana limited*This isn't neccesarily a problem, but means you cannot cast every available second, your mana needs to be managed to last");
+                dictValues.Add("Time until OOM", "End of Fight*" + Simulation.TimeToOOM.ToString() + " sec");
+                dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString());
+                dictValues.Add("Unused cast time percentage", Math.Round(Simulation.UnusedCastTimeFrac*100.0f, 0).ToString()+"%* This indicates what percentage of the total fight time, you cannot cast your primary heals in order to avoid going out of mana");
+            }
+            else
+            {
+                dictValues.Add("Result", "Cast time limited*Mana shouldn't be a problem. You can cast as much as possible");
+                dictValues.Add("Time until OOM", "Not during fight*" + Simulation.TimeToOOM.ToString() + " sec");
+                dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString()+"* Indicates wasted mana you couldn't get time to spend");
+                dictValues.Add("Unused cast time percentage", Math.Round(Simulation.UnusedCastTimeFrac*100.0f, 0).ToString()+"%");
+            }
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
             dictValues.Add("HPS for primary heal", Math.Round(Simulation.HPSFromPrimary,2).ToString());
             dictValues.Add("HPS for tank HoTs", Math.Round(Simulation.HPSFromHots,2).ToString());

@@ -479,6 +479,8 @@ namespace Rawr.Tree
         private float stackScaling = 1.0f;
         private float stackSize = 1.0f;
 
+        protected float manaRefund = 0.0f;
+
         public override float PeriodicTick
         { get { return stackScaling * (periodicTick + (idolHoTBonus + healingBonus) * coefHoT); } }
 
@@ -492,6 +494,12 @@ namespace Rawr.Tree
             set { healingBonus = value; }
         }
 
+        public override float ManaCost
+        {
+            get { return (base.ManaCost - manaRefund); }
+            //            set { manaCost = value; }
+        }
+
         public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats)
         {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -503,7 +511,8 @@ namespace Rawr.Tree
             periodicTickTime = 1f;
             coefDH = 0.645f; 
             coefHoT = 0.6684f / 7f;
-            manaCost = 0.14f * TreeConstants.BaseMana;      // manaCost after refund, for continuous stack (LifebloomStack), scaled there
+            manaCost = 0.28f * TreeConstants.BaseMana;      // manaCost without refund
+            manaRefund = 0.14f * TreeConstants.BaseMana;    // 
             healingBonus = calculatedStats.SpellPower;
             critPercent = calculatedStats.SpellCrit;
 
@@ -544,6 +553,7 @@ namespace Rawr.Tree
             {
                 float newPeriodicTicks = periodicTicks * 2 - 1;  // Double number of ticks, but lose 1
                 manaCost *= 2;
+                manaRefund *= 2;
                   // N-1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
                 stackScaling = ( (periodicTicks-1)+2*periodicTicks ) / newPeriodicTicks;
 
@@ -557,6 +567,7 @@ namespace Rawr.Tree
             {
                 float newPeriodicTicks = periodicTicks * 3 - 2;  // Triple number of ticks, but lose 1 each time
                 manaCost *= 3;
+                manaRefund *= 3;
                 // N-1 ticks of 1 stack + N -1 ticks of 2 stacks, averaged over total ticks
                 stackScaling = ( (periodicTicks - 1) + 2 * (periodicTicks - 1) + 3 * periodicTicks )/ newPeriodicTicks;
 
@@ -626,7 +637,7 @@ namespace Rawr.Tree
 
 //            CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 //            if (calcOpts.newManaRegen) 
-            manaCost *= 2;       // manaCost without refund   
+            manaRefund = 0;       // manaCost is now without refund   
 
         }
     }

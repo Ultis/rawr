@@ -170,7 +170,7 @@ namespace Rawr.Tree
                         "Simulation:Result",
                         "Simulation:Time until OOM",
                         "Simulation:Unused Mana Remaining",
-                        "Simulation:Unused cast time fraction",
+                        "Simulation:Unused cast time percentage",
                         "Simulation:Total healing done",
                         "Simulation:HPS for tank HoTs",
                         "Simulation:MPS for tank HoTs",
@@ -986,7 +986,7 @@ namespace Rawr.Tree
             statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f);
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (character.DruidTalents.Dreamstate > 0 ? character.DruidTalents.Dreamstate * 0.03f + 0.01f : 0f));
 
-            statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
+            statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + (statsTotal.SpellCrit*100.0f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
             statsTotal.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
 
             // SpellPower (actually healing only, but we have no damaging spells, so np)
@@ -1091,6 +1091,7 @@ namespace Rawr.Tree
                 CritRating = stats.CritRating,
                 HasteRating = stats.HasteRating,
                 SpellHaste = stats.SpellHaste,
+                SpellCrit = stats.SpellCrit,
                 //Health = stats.Health,
                 Mana = stats.Mana,
                 Mp5 = stats.Mp5,
@@ -1176,7 +1177,7 @@ namespace Rawr.Tree
                 return true;
             }
 
-            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating
+            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
                 + stats.BonusManaPotion + stats.ExtraSpiritWhileCasting
