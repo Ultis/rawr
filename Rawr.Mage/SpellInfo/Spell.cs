@@ -374,7 +374,7 @@ namespace Rawr.Mage
                 }
             }
             CastTime *= (1 - channelReduction);
-            CostPerSecond = CalculateCost(mageTalents, round) / CastTime;
+            CostPerSecond = CalculateCost(castingState.Calculations, round) / CastTime;
 
             if (outOfFiveSecondRule)
             {
@@ -404,7 +404,7 @@ namespace Rawr.Mage
             return averageDamage + damagePerSpellPower * spellPower;
         }
 
-        private float CalculateCost(MageTalents mageTalents, bool round)
+        private float CalculateCost(CharacterCalculationsMage calculations, bool round)
         {
             float cost;
             if (round)
@@ -416,17 +416,20 @@ namespace Rawr.Mage
                 cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * calculations.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
 
-            cost *= (1 - 0.02f * mageTalents.ArcaneConcentration);
+            cost *= (1 - 0.02f * calculations.MageTalents.ArcaneConcentration);
 
             // from what I know MOE works on base cost
             // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
-            cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements;
+            if (!calculations.CalculationOptions.EffectDisableManaSources)
+            {
+                cost -= CritRate * BaseCost * 0.1f * calculations.MageTalents.MasterOfElements;
+            }
             return cost;
         }
 
-        public void CalculateManualClearcastingCost(MageTalents mageTalents, bool round, bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
+        public void CalculateManualClearcastingCost(CharacterCalculationsMage calculations, bool round, bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
         {
             float cost;
             if (round)
@@ -438,11 +441,11 @@ namespace Rawr.Mage
                 cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * calculations.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
 
             if (!manualClearcasting || clearcastingAveraged)
             {
-                cost *= (1 - 0.02f * mageTalents.ArcaneConcentration);
+                cost *= (1 - 0.02f * calculations.MageTalents.ArcaneConcentration);
             }
             else if (clearcastingActive)
             {
@@ -451,7 +454,10 @@ namespace Rawr.Mage
 
             // from what I know MOE works on base cost
             // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
-            cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements;
+            if (!calculations.CalculationOptions.EffectDisableManaSources)
+            {
+                cost -= CritRate * BaseCost * 0.1f * calculations.MageTalents.MasterOfElements;
+            }
             CostPerSecond = cost / CastTime;
         }
 

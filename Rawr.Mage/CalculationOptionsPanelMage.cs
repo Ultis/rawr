@@ -69,6 +69,18 @@ namespace Rawr.Mage
 
             loading = true;
             calculationOptionsMageBindingSource.DataSource = calculationOptions;
+
+            //BindingSource bs = calculationOptionsMageBindingSource;
+            //bs.AddingNew += (s, ev) => System.Diagnostics.Trace.WriteLine("AddingNew");
+            //bs.BindingComplete += (s, ev) => System.Diagnostics.Trace.WriteLine("BindingComplete");
+            //bs.CurrentChanged += (s, ev) => System.Diagnostics.Trace.WriteLine("CurrentChanged");
+            //bs.CurrentItemChanged += (s, ev) => System.Diagnostics.Trace.WriteLine("CurrentItemChanged");
+            //bs.DataError += (s, ev) => System.Diagnostics.Trace.WriteLine("DataError");
+            //bs.DataMemberChanged += (s, ev) => System.Diagnostics.Trace.WriteLine("DataMemberChanged");
+            //bs.DataSourceChanged += (s, ev) => System.Diagnostics.Trace.WriteLine("DataSourceChanged");
+            //bs.ListChanged += (s, ev) => System.Diagnostics.Trace.WriteLine("ListChanged");
+            //bs.PositionChanged += (s, ev) => System.Diagnostics.Trace.WriteLine("PositionChanged");
+
             if (cooldownRestrictions != null && !cooldownRestrictions.IsDisposed)
             {
                 cooldownRestrictions.Character = Character;

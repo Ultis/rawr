@@ -216,6 +216,7 @@ namespace Rawr.Mage
         public float EffectHasteMultiplier { get; set; }
         public float EffectCostMultiplier { get; set; }
         public float EffectRegenMultiplier { get; set; }
+        public bool EffectDisableManaSources { get; set; }
         public float EffectShadowSilenceFrequency { get; set; }
         public float EffectShadowSilenceDuration { get; set; }
         public float EffectShadowManaDrainFrequency { get; set; }

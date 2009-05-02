@@ -679,14 +679,14 @@ namespace Rawr.Mage
 
             if (integralMana)
             {
-                if (calculationOptions.ManaPotionEnabled && !ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0)) return false;
+                if (manaPotionAvailable && !ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0)) return false;
                 if (calculationOptions.ManaGemEnabled && !ValidateIntegralConsumableOverall(VariableType.ManaGem, 1.0)) return false;
-                if (calculationOptions.EvocationEnabled && !ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed)) return false;
+                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed)) return false;
                 if (calculationOptions.EnableHastedEvocation)
                 {
-                    if (calculationOptions.EvocationEnabled && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, 2.0 / calculationResult.BaseState.CastingSpeed / 1.2)) return false;
-                    if (calculationOptions.EvocationEnabled && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, 2.0 / calculationResult.BaseState.CastingSpeed / 1.3)) return false;
-                    if (calculationOptions.EvocationEnabled && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, 2.0 / calculationResult.BaseState.CastingSpeed / 1.2 / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, 2.0 / calculationResult.BaseState.CastingSpeed / 1.2)) return false;
+                    if (evocationAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, 2.0 / calculationResult.BaseState.CastingSpeed / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, 2.0 / calculationResult.BaseState.CastingSpeed / 1.2 / 1.3)) return false;
                 }
                 if (conjureManaGem && !ValidateIntegralConsumableOverall(VariableType.ConjureManaGem, calculationResult.ConjureManaGem.CastTime)) return false;
             }
@@ -721,15 +721,15 @@ namespace Rawr.Mage
                 // mana gem effect
                 if (manaGemEffectAvailable && !ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
                 // evocation
-                if (calculationOptions.EvocationEnabled && !ValidateCooldown(Cooldown.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
-                if (calculationOptions.EvocationEnabled && calculationOptions.EnableHastedEvocation)
+                if (evocationAvailable && !ValidateCooldown(Cooldown.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (!ValidateHastedEvocation()) return false;
                     if (icyVeinsAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, Cooldown.Evocation | Cooldown.IcyVeins)) return false;
                 }
                 // heroism
                 if (heroismAvailable && !ValidateCooldown(Cooldown.Heroism, 40, -1)) return false;
-                if (calculationOptions.EvocationEnabled && calculationOptions.EnableHastedEvocation)
+                if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, Cooldown.Evocation | Cooldown.Heroism)) return false;
                     if (icyVeinsAvailable && heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism)) return false;
@@ -770,18 +770,18 @@ namespace Rawr.Mage
                 // mana gem effect
                 if (manaGemEffectAvailable && !ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
                 // evocation
-                if (calculationOptions.EvocationEnabled && !ValidateCooldown(Cooldown.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
-                if (calculationOptions.EvocationEnabled && calculationOptions.EnableHastedEvocation)
+                if (evocationAvailable && !ValidateCooldown(Cooldown.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (!ValidateHastedEvocation()) return false;
                     if (icyVeinsAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, Cooldown.Evocation | Cooldown.IcyVeins)) return false;
                 }
                 // mana
-                if (calculationOptions.EvocationEnabled && !ValidateEvocation()) return false;
+                if (evocationAvailable && !ValidateEvocation()) return false;
                 if (manaGemEffectAvailable && !ValidateManaGemEffect()) return false;
                 // heroism
                 if (heroismAvailable && !ValidateCooldown(Cooldown.Heroism, 40, -1)) return false;
-                if (calculationOptions.EvocationEnabled && calculationOptions.EnableHastedEvocation)
+                if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, Cooldown.Evocation | Cooldown.Heroism)) return false;
                     if (icyVeinsAvailable && heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism)) return false;
@@ -794,7 +794,7 @@ namespace Rawr.Mage
 
             if (integralMana && advancedConstraintsLevel >= 2)
             {
-                if (calculationOptions.ManaPotionEnabled && !ValidateIntegralConsumable(VariableType.ManaPotion)) return false;
+                if (manaPotionAvailable && !ValidateIntegralConsumable(VariableType.ManaPotion)) return false;
                 if (calculationOptions.ManaGemEnabled && !ValidateIntegralConsumable(VariableType.ManaGem)) return false;
             }
 
@@ -805,7 +805,7 @@ namespace Rawr.Mage
                 if (!ValidateSupergroupCycles()) return false;
                 if (!ValidateSupergroupFragmentation()) return false;
 
-                if (calculationOptions.EvocationEnabled && calculationOptions.EnableHastedEvocation)
+                if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (icyVeinsAvailable && !ValidateActivationAdvanced(Cooldown.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, Cooldown.Evocation | Cooldown.IcyVeins)) return false;
                     if (heroismAvailable && !ValidateActivationAdvanced(Cooldown.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, Cooldown.Evocation | Cooldown.Heroism)) return false;

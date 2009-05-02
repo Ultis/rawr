@@ -293,6 +293,7 @@ namespace Rawr.Mage
 
         private void CalculateManaRegen()
         {
+            if (CastingState.CalculationOptions.EffectDisableManaSources) return;
             Stats baseStats = CastingState.BaseStats;
             manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
             float fight = CastingState.CalculationOptions.FightDuration;
@@ -361,6 +362,7 @@ namespace Rawr.Mage
 
         public virtual void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
         {
+            if (CastingState.CalculationOptions.EffectDisableManaSources) return;
             dict["Intellect/Spirit"] += duration * (CastingState.SpiritRegen * CastingState.BaseStats.SpellCombatManaRegeneration + OO5SR * (CastingState.SpiritRegen - CastingState.SpiritRegen * CastingState.BaseStats.SpellCombatManaRegeneration));
             dict["MP5"] += duration * CastingState.BaseStats.Mp5 / 5f;
             dict["Innervate"] += duration * ((CastingState.SpiritRegen * 4 * 20 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration) * (OO5SR) + (CastingState.SpiritRegen * (5 - CastingState.BaseStats.SpellCombatManaRegeneration) * 20 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration) * (1 - OO5SR));

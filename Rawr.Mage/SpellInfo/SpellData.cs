@@ -269,7 +269,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.CalculateDerivedStats(castingState);
-            spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, false, clearcastingActive);
+            spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, false, clearcastingActive);
             return spell;
         }
 
@@ -413,7 +413,7 @@ namespace Rawr.Mage
                 spell.CritRate += fingersOfFrostCritRate;
             }
             spell.CalculateDerivedStats(castingState, false, pom, false);
-            if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, false, clearcastingActive);
+            if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, false, clearcastingActive);
             return spell;
         }
 
@@ -858,7 +858,7 @@ namespace Rawr.Mage
             spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, pom, false, true, false, false);
-            if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, false, clearcastingActive);
+            if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, false, clearcastingActive);
             return spell;
         }
 
@@ -1060,7 +1060,7 @@ namespace Rawr.Mage
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime) * (1 + arcaneBlastDamageMultiplier * arcaneBlastDebuff);
             spell.SpellModifier *= ticks / 5.0f;
             spell.CalculateDerivedStats(castingState);
-            spell.CalculateManualClearcastingCost(castingState.MageTalents, false, true, clearcastingAveraged, clearcastingActive);
+            spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, clearcastingAveraged, clearcastingActive);
             return spell;
         }
 

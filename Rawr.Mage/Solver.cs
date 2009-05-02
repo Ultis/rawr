@@ -67,6 +67,8 @@ namespace Rawr.Mage
         private bool waterElementalAvailable;
         private bool manaGemEffectAvailable;
         private bool powerInfusionAvailable;
+        private bool evocationAvailable;
+        private bool manaPotionAvailable;
 
         private Cooldown availableCooldownMask = 0;
 
@@ -391,6 +393,8 @@ namespace Rawr.Mage
             calculationResult.ActiveBuffs = activeBuffs;
             calculationResult.NeedsDisplayCalculations = needsDisplayCalculations;
 
+            evocationAvailable = calculationOptions.EvocationEnabled && !calculationOptions.EffectDisableManaSources;
+            manaPotionAvailable = calculationOptions.ManaPotionEnabled && !calculationOptions.EffectDisableManaSources;
             restrictThreat = segmentCooldowns && calculationOptions.TpsLimit > 0f;
             powerInfusionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PowerInfusionAvailable;
             heroismAvailable = !calculationOptions.DisableCooldowns && calculationOptions.HeroismAvailable;
@@ -417,25 +421,28 @@ namespace Rawr.Mage
             calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.EnduringWinter;
             calculationResult.PowerInfusionDuration = 15.0;
             calculationResult.PowerInfusionCooldown = 120.0;
-            if (calculationOptions.PlayerLevel < 77)
+            if (!calculationOptions.EffectDisableManaSources)
             {
-                calculationResult.ManaGemValue = 2400.0;
-                calculationResult.MaxManaGemValue = 2460.0;
-            }
-            else
-            {
-                calculationResult.ManaGemValue = 3415.0;
-                calculationResult.MaxManaGemValue = 3500.0;
-            }
-            if (calculationOptions.PlayerLevel <= 70)
-            {
-                calculationResult.ManaPotionValue = 2400.0;
-                calculationResult.MaxManaPotionValue = 3000.0;
-            }
-            else
-            {
-                calculationResult.ManaPotionValue = 4300.0;
-                calculationResult.MaxManaPotionValue = 4400.0;
+                if (calculationOptions.PlayerLevel < 77)
+                {
+                    calculationResult.ManaGemValue = 2400.0;
+                    calculationResult.MaxManaGemValue = 2460.0;
+                }
+                else
+                {
+                    calculationResult.ManaGemValue = 3415.0;
+                    calculationResult.MaxManaGemValue = 3500.0;
+                }
+                if (calculationOptions.PlayerLevel <= 70)
+                {
+                    calculationResult.ManaPotionValue = 2400.0;
+                    calculationResult.MaxManaPotionValue = 3000.0;
+                }
+                else
+                {
+                    calculationResult.ManaPotionValue = 4300.0;
+                    calculationResult.MaxManaPotionValue = 4400.0;
+                }
             }
 
             #region Effects Setup
@@ -653,9 +660,12 @@ namespace Rawr.Mage
             calculationResult.BaseHolyCritRate = spellCrit;
 
             float levelScalingFactor = calculationOptions.LevelScalingFactor;
-            calculationResult.SpiritRegen = (0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect)) * calculationOptions.EffectRegenMultiplier;
-            calculationResult.ManaRegen = calculationResult.SpiritRegen + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
-            calculationResult.ManaRegen5SR = calculationResult.SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * (5 - baseStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+            if (!calculationOptions.EffectDisableManaSources)
+            {
+                calculationResult.SpiritRegen = (0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect)) * calculationOptions.EffectRegenMultiplier;
+                calculationResult.ManaRegen = calculationResult.SpiritRegen + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+                calculationResult.ManaRegen5SR = calculationResult.SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * (5 - baseStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+            }
             calculationResult.HealthRegen = 0.0312f * baseStats.Spirit + baseStats.Hp5 / 5f;
             calculationResult.HealthRegenCombat = baseStats.Hp5 / 5f;
             if (playerLevel < 75)
@@ -829,7 +839,7 @@ namespace Rawr.Mage
                 {
                     // variable segment durations to get a better grasp on varied cooldown durations
                     // create ticks in intervals of half cooldown duration
-                    if (potionOfSpeedAvailable || potionOfWildMagicAvailable || calculationOptions.ManaPotionEnabled)
+                    if (potionOfSpeedAvailable || potionOfWildMagicAvailable || manaPotionAvailable)
                     {
                         AddSegmentTicks(ticks, 120.0);
                     }
@@ -1098,7 +1108,7 @@ namespace Rawr.Mage
                 #endregion
                 #region Evocation
                 calculationResult.EvocationStats = calculationResult.BaseStats;
-                if (calculationOptions.EvocationEnabled)
+                if (evocationAvailable)
                 {
                     int evocationSegments = (restrictManaUse) ? segmentList.Count : 1;
                     double evocationDuration = (8f + baseStats.EvocationExtension) / calculationResult.BaseState.CastingSpeed;
@@ -1452,7 +1462,7 @@ namespace Rawr.Mage
                 #endregion
                 #region Mana Potion
                 calculationResult.MaxManaPotion = 1;
-                if (calculationOptions.ManaPotionEnabled)
+                if (manaPotionAvailable)
                 {
                     int manaPotionSegments = (segmentCooldowns && (potionOfWildMagicAvailable || restrictManaUse)) ? segmentList.Count : 1;
                     manaRegen = -(1 + baseStats.BonusManaPotion) * calculationResult.ManaPotionValue;
@@ -2189,7 +2199,7 @@ namespace Rawr.Mage
                         lp.SetRHSUnsafe(constraint.Row, manaGemEffectDuration);
                     }
                 }
-                if (calculationOptions.EvocationEnabled)
+                if (evocationAvailable)
                 {
                     foreach (SegmentConstraint constraint in rowSegmentEvocation)
                     {
@@ -2225,27 +2235,27 @@ namespace Rawr.Mage
 
             if (!calculationOptions.UnlimitedMana) rowManaRegen = rowCount++;
             rowFightDuration = rowCount++;
-            if (calculationOptions.EvocationEnabled && (needsTimeExtension || restrictManaUse || integralMana || calculationOptions.EnableHastedEvocation)) rowEvocation = rowCount++;
+            if (evocationAvailable && (needsTimeExtension || restrictManaUse || integralMana || calculationOptions.EnableHastedEvocation)) rowEvocation = rowCount++;
             if (calculationOptions.EnableHastedEvocation)
             {
-                if (calculationOptions.EvocationEnabled && icyVeinsAvailable)
+                if (evocationAvailable && icyVeinsAvailable)
                 {
                     if (needsTimeExtension || restrictManaUse || integralMana) rowEvocationIV = rowCount++;
                     //rowEvocationIVActivation = rowCount++;
                 }
-                if (calculationOptions.EvocationEnabled && heroismAvailable)
+                if (evocationAvailable && heroismAvailable)
                 {
                     if (needsTimeExtension || restrictManaUse || integralMana) rowEvocationHero = rowCount++;
                     //rowEvocationHeroActivation = rowCount++;
                 }
-                if (calculationOptions.EvocationEnabled && icyVeinsAvailable && heroismAvailable)
+                if (evocationAvailable && icyVeinsAvailable && heroismAvailable)
                 {
                     if (needsTimeExtension || restrictManaUse || integralMana) rowEvocationIVHero = rowCount++;
                     //rowEvocationIVHeroActivation = rowCount++;
                 }
             }
-            if (calculationOptions.ManaPotionEnabled || effectPotionAvailable) rowPotion = rowCount++;
-            if (calculationOptions.ManaPotionEnabled && integralMana) rowManaPotion = rowCount++;
+            if (manaPotionAvailable || effectPotionAvailable) rowPotion = rowCount++;
+            if (manaPotionAvailable && integralMana) rowManaPotion = rowCount++;
             if (calculationOptions.ManaGemEnabled)
             {
                 rowManaGem = rowCount++;
@@ -2506,7 +2516,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (calculationOptions.EvocationEnabled)
+                if (evocationAvailable)
                 {
                     List<SegmentConstraint> list = rowSegmentEvocation;
                     double cool = calculationResult.EvocationCooldown;
