@@ -234,7 +234,7 @@ namespace Rawr
                         float maxOverallPoints = 0f;
                         foreach (ComparisonCalculationBase calc in ItemCalculations)
                         {
-                            if (DisplayMode == GraphDisplayMode.Overall)
+                            if (DisplayMode == GraphDisplayMode.Overall || (DisplayMode == GraphDisplayMode.CustomSubpoints && (Sort == ComparisonSort.Alphabetical || Sort == ComparisonSort.Overall)))
                             {
                                 if (!float.IsNaN(calc.OverallPoints))
                                 {
@@ -242,7 +242,7 @@ namespace Rawr
                                     minOverallPoints = Math.Min(minOverallPoints, calc.OverallPoints);
                                 }
                             }
-                            else if (DisplayMode != GraphDisplayMode.Subpoints && Sort != ComparisonSort.Alphabetical && Sort != ComparisonSort.Overall)
+                            else if (DisplayMode == GraphDisplayMode.CustomSubpoints && Sort != ComparisonSort.Alphabetical && Sort != ComparisonSort.Overall)
                             {
                                 if (!float.IsNaN(calc.SubPoints[(int)Sort]))
                                 {
