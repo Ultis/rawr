@@ -817,8 +817,12 @@ focus on Survival Points.",
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
+                // PhysicalCrit += ((character.ActiveBuffsConflictingBuffContains("Critical Strike Chance Taken") ? 0 : talents.HeartOfTheCrusader * 0.01f)),
                 SpellCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
+                // SpellCrit += ((character.ActiveBuffsConflictingBuffContains("Critical Strike Chance Taken") ? 0 : talents.HeartOfTheCrusader * 0.01f)),
                 BonusStrengthMultiplier = talents.DivineStrength * 0.03f,
+                // BossAttackSpeedMultiplier = ((character.ActiveBuffsConflictingBuffContains("Boss Attack Speed") ? 0 : talents.JudgementsOfTheJust * -0.1f)), 
+                // BonusArmor = (character.ActiveBuffsContains("Improved Devotion Aura (Armor)") ? 0 : (talents.ImprovedDevotionAura == 3 ? 0.5f : (talents.ImprovedDevotionAura * 0.17f))) * 1250f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsBase + statsItems + statsBuffs + statsTalents;
@@ -1293,6 +1297,12 @@ focus on Survival Points.",
             // Filters out Death Knight and Two-Hander Enchants
             if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == Item.ItemSlot.TwoHand) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+        {
+            if (slot == Character.CharacterSlot.OffHand && (item.Slot == Item.ItemSlot.OneHand || item.Type == Item.ItemType.None)) return false;
+            return base.ItemFitsInSlot(item, character, slot);
         }
 
         public override Stats GetRelevantStats(Stats stats)
