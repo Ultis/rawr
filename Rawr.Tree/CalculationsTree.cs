@@ -12,8 +12,10 @@ namespace Rawr.Tree
         public float HPSFromPrimary;
         public float HPSFromHots;
         public float HPSFromWildGrowth;
+        public float HPSFromSwiftmend;
         public float MPSFromPrimary;
         public float MPSFromHots;
+        public float MPSFromSwiftmend;
         public float HotsFraction;
         public float CastsPerMinute;
         public float CritsPerMinute;
@@ -176,6 +178,8 @@ namespace Rawr.Tree
                         "Simulation:MPS for tank HoTs",
                         "Simulation:HPS for Wild Growth",
                         "Simulation:MPS for Wild Growth",
+                        "Simulation:HPS for Swiftmend",
+                        "Simulation:MPS for Swiftmend",
                         "Simulation:HoT refresh fraction",
                         "Simulation:HPS for primary heal",
                         "Simulation:MPS for primary heal",
@@ -227,6 +231,17 @@ namespace Rawr.Tree
                         "Nourish:N (3 HoTs) Heal",
                         "Nourish:N (3 HoTs) HPM",
                         "Nourish:N (3 HoTs) HPS",
+
+                        "Swiftmend:SM Rejuv Heal",
+                        "Swiftmend:SM Rejuv HPM",
+                        "Swiftmend:SM Rejuv Lost Ticks",
+                        "Swiftmend:SM Regrowth Heal",
+                        "Swiftmend:SM Regrowth HPM",
+                        "Swiftmend:SM Regrowth Lost Ticks",
+                        "Swiftmend:SM Both Heal",
+                        "Swiftmend:SM Both HPM",
+                        "Swiftmend:SM Both Rejuv Lost Ticks",
+                        "Swiftmend:SM Both Regrowth Lost Ticks",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -319,7 +334,7 @@ namespace Rawr.Tree
             return new CharacterCalculationsTree();
         }
 
-        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastFraction, float HealFraction, float CritsFraction, out float Healing)
+        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, out float Healing)
         {
             #region New_SpecialEffect_Handling
 
@@ -330,14 +345,18 @@ namespace Rawr.Tree
                 {
                   resultNew += effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration);   // 0 cooldown, 100% chance to use
                 }
-                else if (effect.Trigger == Trigger.SpellCast ||  effect.Trigger == Trigger.SpellHit
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
+                else if (effect.Trigger == Trigger.SpellCast ||  effect.Trigger == Trigger.SpellHit)
                 {
-                    resultNew += effect.GetAverageStats(1.0f/CastFraction,1.0f,1.0f/CastFraction,FightDuration);
+                    resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
+                }
+                else if ( effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    // Heal interval measures time between HoTs as well, direct heals are a different interval
+                    resultNew += effect.GetAverageStats(HealInterval, 1.0f, CastInterval, FightDuration);
                 }
                 else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit )
                 {
-                    resultNew += effect.GetAverageStats(1.0f / CastFraction, 1.0f / CritsFraction, 1.0f / CastFraction, FightDuration);
+                    resultNew += effect.GetAverageStats(CastInterval, CritsRatio, CastInterval, FightDuration);
                 }
                 else
                 {
@@ -349,7 +368,7 @@ namespace Rawr.Tree
 
             #region Custom_SpecialEffect_Handling
             SpecialEffects effects = new SpecialEffects(stats);
-            Stats result = effects.estimateAll(FightDuration, CastFraction, HealFraction, CritsFraction, out Healing);
+            Stats result = effects.estimateAll(FightDuration, 1.0f / CastInterval, 1.0f / HealInterval, CritsRatio / CastInterval, out Healing);
             #endregion
 
             Healing = resultNew.Healed;
@@ -367,7 +386,7 @@ namespace Rawr.Tree
             };
         }
         
-        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, int lbOnTank, int nTanks, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
+        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, int lbOnTank, int nTanks, int swiftmendPMin, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
         {
             float lifebloomDuration = 0.0f;
             //Value passed in primaryFrac, not used anymore, this value is calculated to let mana last for the fight duration
@@ -455,6 +474,58 @@ namespace Rawr.Tree
             healsPerMinute += hotsHealsPerMinute;
             #endregion
 
+            #region Swiftmend
+            Swiftmend swift;
+            float swiftHPS = 0.0f;
+            float swiftMPS = 0.0f;
+            float swiftCastTime = 0.0f;
+            if ( (hots > 0) && (swiftmendPMin > 0) )
+            {
+
+                if (rejuvOnTank)
+                    if (rgOnTank)
+                        swift = new Swiftmend(calculatedStats, stats, rejuvenate, regrowth);
+                    else
+                        swift = new Swiftmend(calculatedStats, stats, rejuvenate, null);
+                else
+                    if (rgOnTank)
+                        swift = new Swiftmend(calculatedStats, stats, null, regrowth);
+                    else
+                        swift = new Swiftmend(calculatedStats, stats, null, null);
+
+                swiftCastTime = swift.CastTime * swiftmendPMin /60.0f;
+                swiftHPS = swift.TotalAverageHealing * swiftmendPMin / 60.0f;
+                swiftMPS = swift.ManaCost * swiftmendPMin / 60.0f;
+                castsPerMinute += swiftmendPMin;
+                healsPerMinute += swiftmendPMin;
+                critsPerMinute += swift.CritPercent / 100.0f * swiftmendPMin;
+
+                /* /
+                // Handle consumed HoTs
+                #region Consumed HoTs if not refreshed
+                // Loss of HoTs HPS if not refreshed          // Use only one of these 2 sections
+                hotsHPS -= swift.rejuvUseChance * swift.rejuvTicksLost * rejuvenate.PeriodicTick * swiftmendPMin / 60.0f;
+                hotsHPS -= swift.regrowthUseChance * swift.regrowthTicksLost * regrowth.PeriodicTick * swiftmendPMin / 60.0f;
+                #endregion
+
+                 /* */
+                 
+                /* */
+                #region Replace HoTs if refreshed
+                // Extra MPS if HoTs refreshed                // Use only one of these 2 sections
+                hotsMPS += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.ManaCost * swiftmendPMin / 60.0f;
+                hotsMPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.ManaCost * swiftmendPMin / 60.0f;
+                // Replacing Regrowths gives extra direct heals
+                hotsHPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.AverageHealingwithCrit * swiftmendPMin / 60.0f; 
+                // Replacing HoTs take extra time
+                hotsCastTime += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.CastTime * swiftmendPMin / 60.0f;
+                hotsCastTime += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.CastTime * swiftmendPMin / 60.0f;
+                #endregion
+                 /* */
+
+            }
+            #endregion
+
             #region Mana regeneration
             float spiritRegen = CalculateManaRegen(stats.Intellect, stats.Spirit);
             float spiritRegenPlusMDF = CalculateManaRegen(stats.Intellect, stats.ExtraSpiritWhileCasting + stats.Spirit);
@@ -514,10 +585,10 @@ namespace Rawr.Tree
                 primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);
             } */
 
-            float tpsHealing = 1f - (hotsCastTime + wgCastTime);
+            float tpsHealing = 1f - (hotsCastTime + wgCastTime + swiftCastTime);
 
             // Determine if Mana or GCD limited
-            float effectiveManaBurnTankHots = hotsMPS + wgMPS - manaRegen / 5f;
+            float effectiveManaBurnTankHots = hotsMPS + wgMPS + swiftMPS - manaRegen / 5f;
             float manaAvailForPrimaryHeal = (extraMana + stats.Mana) - effectiveManaBurnTankHots * calcOpts.FightDuration;
             float primaryHealMpsAvail = manaAvailForPrimaryHeal / calcOpts.FightDuration;
             float mpsHealing = tpsHealing * primaryHeal.ManaCost / primaryHeal.CastTime;
@@ -581,11 +652,11 @@ namespace Rawr.Tree
             #endregion
 
             #region Calculate total healing in the fight
-            float mps = hotsMPS + mpsHealing + wgMPS;
-            float hps = hotsHPS + hpsHealing + wgHPS;
+            float mps = hotsMPS + mpsHealing + wgMPS + swiftMPS;
+            float hps = hotsHPS + hpsHealing + wgHPS + swiftHPS;
             float TotalTime = calcOpts.FightDuration;
             float TimeToOOM = TotalTime;
-            float EffectiveManaBurn = hotsMPS + mpsHealing + wgMPS - manaRegen / 5f;
+            float EffectiveManaBurn = hotsMPS + mpsHealing + wgMPS + swiftMPS - manaRegen / 5f;
             if (EffectiveManaBurn > 0f) 
             {
                 TimeToOOM = Math.Min((extraMana + stats.Mana) / EffectiveManaBurn, TotalTime);
@@ -603,14 +674,16 @@ namespace Rawr.Tree
 
             return new Rotation() {
                 HPS = hps,
-                MaxHPS = hotsHPS + hpsHeal100 + wgHPS,
+                MaxHPS = hotsHPS + hpsHeal100 + wgHPS + swiftHPS,
                 MPS = mps,
                 HPSFromPrimary = hpsHealing,
                 HPSFromHots = hotsHPS,
                 HPSFromWildGrowth = wgHPS,
+                HPSFromSwiftmend = swiftHPS,
                 MPSFromPrimary = mpsHealing,
                 MPSFromHots = hotsMPS,
                 MPSFromWildGrowth = wgMPS,
+                MPSFromSwiftmend = swiftMPS,
                 HotsFraction = hotsCastTime,
                 CastsPerMinute = castsPerMinute,
                 CritsPerMinute = critsPerMinute,
@@ -640,6 +713,7 @@ namespace Rawr.Tree
             int lifeBloomStackSize, noTanks;
             Spell primaryHeal;
             HealTargetTypes healTarget;
+            int SwiftmendPerMin = 0;
 
             switch (rotation)
             {
@@ -847,12 +921,24 @@ namespace Rawr.Tree
                         healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
- 
+  /*              case 18:
+                    // 2 Tanks (RJ/RG/3xLB* /RG* /SM)
+                    {
+                        SwiftmendPerMin = 4;
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = true;
+                        lifeBloomStackSize = 3;
+                        primaryHeal = new Regrowth(calculatedStats, stats, true);
+                        healTarget = HealTargetTypes.TankHealing;
+                    }
+                    break;
+ */
             }
-
+            SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
             result = SimulateHealing(
                             calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            rejuvOnTank, rgOnTank, lifeBloomStackSize, noTanks,
+                            rejuvOnTank, rgOnTank, lifeBloomStackSize, noTanks, SwiftmendPerMin,
                             primaryHeal,
                             .01f * calcOpts.MainSpellFraction, healTarget);
             return result;
@@ -875,8 +961,8 @@ namespace Rawr.Tree
             for (k = 0; k < nPasses; k++)
             {
                 Stats procs = getTrinketStats(calculatedStats.LocalCharacter, stats,
-                    rot.TotalTime, rot.TotalCastsPerMinute / 60f,
-                    rot.TotalHealsPerMinute / 60f, rot.TotalCritsPerMinute / 60f,
+                    rot.TotalTime, 60f / rot.TotalCastsPerMinute,
+                    60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
                     out ExtraHPS);
 
                 
@@ -896,7 +982,7 @@ namespace Rawr.Tree
             if (rot.TimeToOOM < rot.TotalTime)
             {
                 float frac = rot.TimeToOOM / rot.TotalTime;
-                float mod = (float)Math.Pow(frac, 1 + 0.05f * calcOpts.OOMPenalty) / frac;
+                float mod = (float)Math.Pow(frac, 1 + 0.05f ) / frac;
                 calculatedStats.SustainedPoints *= mod;
                 if (calcOpts.PenalizeEverything)
                 {
@@ -1047,12 +1133,12 @@ namespace Rawr.Tree
                     List<ComparisonCalculationBase> comparisonsDPS = new List<ComparisonCalculationBase>();
 
                     string[] rotations = new string[] {
-                        "Single target Nourish (plus RJ/RG/LB)",
-                        "Single target Nourish (2 Tanks RJ/RG/LB)",
-                        "Single target Healing Touch (plus RJ/RG/LB)",
-                        "Single target Healing Touch (2 Tanks RJ/RG/LB)",
-                        "Single target Regrowth (plus RJ/RG/LB)",
-                        "Single target Regrowth (2 Tanks RJ/RG/LB)",
+                        "Tank Nourish (plus RJ/RG/LB)",
+                        "Tank Nourish (2 Tanks RJ/RG/LB)",
+                        "Tank Healing Touch (plus RJ/RG/LB)",
+                        "Tank Healing Touch (2 Tanks RJ/RG/LB)",
+                        "Tank Regrowth (plus RJ/RG/LB)",
+                        "STank Regrowth (2 Tanks RJ/RG/LB)",
                         "Raid healing with Regrowth (1 Tank RJ/LB)",
                         "Raid healing with Regrowth (2 Tanks RJ/LB)",
                         "Raid healing with Rejuvenation (1 Tank RJ/LB)",
@@ -1062,9 +1148,10 @@ namespace Rawr.Tree
                         "Nourish spam",
                         "Healing Touch spam",
                         "Regrowth spam",
-                        "Single target Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
-                        "Single target Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
-                        "Single target Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
+                        "Tank Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
+                        "Tank Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
+                        "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
+//                        "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms/SM)",
                     };
 
                     for (int i = 0; i < rotations.Length; i++)

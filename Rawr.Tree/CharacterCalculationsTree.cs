@@ -105,6 +105,8 @@ namespace Rawr.Tree
             dictValues.Add("MPS for tank HoTs", Math.Round(Simulation.MPSFromHots,2).ToString());
             dictValues.Add("MPS for Wild Growth", Math.Round(Simulation.MPSFromWildGrowth, 2).ToString());
             dictValues.Add("HPS for Wild Growth", Math.Round(Simulation.HPSFromWildGrowth, 2).ToString());
+            dictValues.Add("MPS for Swiftmend", Math.Round(Simulation.MPSFromSwiftmend, 2).ToString()+"* Doesn't include possible extra MPS to refresh HoTs, if Glyph of Swiftmend not used");
+            dictValues.Add("HPS for Swiftmend", Math.Round(Simulation.HPSFromSwiftmend, 2).ToString());
             dictValues.Add("Mana regen per second", Math.Round(Simulation.ManaPer5InRotation / 5, 2).ToString());
             dictValues.Add("HoT refresh fraction", Math.Round(Simulation.HotsFraction, 2).ToString());
             dictValues.Add("Casts per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());
@@ -177,6 +179,21 @@ namespace Rawr.Tree
             dictValues.Add("N (3 HoTs) Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
             dictValues.Add("N (3 HoTs) HPM", Math.Round(spell.HPM, 2).ToString());
             dictValues.Add("N (3 HoTs) HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
+
+            Swiftmend swift = new Swiftmend(this, BasicStats, new Rejuvenation(this, BasicStats), null);
+            dictValues.Add("SM Rejuv Heal", Math.Round(swift.AverageHealing, 2) + "*" + Math.Round(swift.MinHeal, 2) + " - " + Math.Round(swift.MaxHeal, 2) + "\n" + Math.Round(swift.MinHeal * 1.5f, 2) + " - " + Math.Round(swift.MaxHeal * 1.5f, 2) + "\n" + Math.Round(swift.CritPercent, 2) + "% Crit");
+            dictValues.Add("SM Rejuv HPM", Math.Round(swift.HPM, 2).ToString());
+            dictValues.Add("SM Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
+            swift = new Swiftmend(this, BasicStats, null, new Regrowth(this, BasicStats));
+            dictValues.Add("SM Regrowth Heal", Math.Round(swift.AverageHealing, 2) + "*" + Math.Round(swift.MinHeal, 2) + " - " + Math.Round(swift.MaxHeal, 2) + "\n" + Math.Round(swift.MinHeal * 1.5f, 2) + " - " + Math.Round(swift.MaxHeal * 1.5f, 2) + "\n" + Math.Round(swift.CritPercent, 2) + "% Crit");
+            dictValues.Add("SM Regrowth HPM", Math.Round(swift.HPM, 2).ToString());
+            dictValues.Add("SM Regrowth Lost Ticks", Math.Round(swift.regrowthTicksLost, 2).ToString());
+            swift = new Swiftmend(this, BasicStats, new Rejuvenation(this, BasicStats), new Regrowth(this, BasicStats));
+            dictValues.Add("SM Both Heal", Math.Round(swift.AverageHealing, 2) + "*" + Math.Round(swift.MinHeal, 2) + " - " + Math.Round(swift.MaxHeal, 2) + "\n" + Math.Round(swift.MinHeal * 1.5f, 2) + " - " + Math.Round(swift.MaxHeal * 1.5f, 2) + "\n" + Math.Round(swift.CritPercent, 2) + "% Crit");
+            dictValues.Add("SM Both HPM", Math.Round(swift.HPM, 2).ToString());
+            dictValues.Add("SM Both Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
+            dictValues.Add("SM Both Regrowth Lost Ticks", Math.Round(swift.regrowthTicksLost, 2).ToString());
+
             return dictValues;
         }
 

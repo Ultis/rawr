@@ -82,8 +82,8 @@ namespace Rawr.Tree
             tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
 
-            tbOOMPenalty.Value = calcOpts.OOMPenalty;
-            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .05f;
+            tbSwiftmendPerMin.Value = calcOpts.SwiftmendPerMinute;
+            lblSwiftMend.Text = "Swiftmends per Minute: " + tbSwiftmendPerMin.Value;
             cbApplyMore.Checked = calcOpts.PenalizeEverything;
 
             loading = false;
@@ -230,12 +230,12 @@ namespace Rawr.Tree
             Character.OnCalculationsInvalidated();
         }
 
-        private void tbOOMPenalty_Scroll(object sender, EventArgs e)
+        private void tbSwiftmend_Scroll(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.OOMPenalty = tbOOMPenalty.Value;
-            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .05f;
+            calcOpts.SwiftmendPerMinute = tbSwiftmendPerMin.Value;
+            lblSwiftMend.Text = "Swiftmends per minute: " + tbSwiftmendPerMin.Value;
             Character.OnCalculationsInvalidated();
         }
 
@@ -268,7 +268,7 @@ namespace Rawr.Tree
         public int MainSpellFraction = 60;
         public int Innervates = 1;
 
-        public int OOMPenalty = 6;
+        public int SwiftmendPerMinute = 0;
 
         public bool PenalizeEverything = false;
 

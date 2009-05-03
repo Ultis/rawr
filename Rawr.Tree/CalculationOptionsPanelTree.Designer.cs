@@ -37,8 +37,8 @@
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.cbApplyMore = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tbOOMPenalty = new System.Windows.Forms.TrackBar();
-            this.lblOOMPenalty = new System.Windows.Forms.Label();
+            this.tbSwiftmendPerMin = new System.Windows.Forms.TrackBar();
+            this.lblSwiftMend = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tbPrimaryHealFrac = new System.Windows.Forms.TrackBar();
             this.lblPrimaryHeal = new System.Windows.Forms.Label();
@@ -85,7 +85,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMPenalty)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSwiftmendPerMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
@@ -169,8 +169,8 @@
             // 
             this.groupBox7.Controls.Add(this.cbApplyMore);
             this.groupBox7.Controls.Add(this.label1);
-            this.groupBox7.Controls.Add(this.tbOOMPenalty);
-            this.groupBox7.Controls.Add(this.lblOOMPenalty);
+            this.groupBox7.Controls.Add(this.tbSwiftmendPerMin);
+            this.groupBox7.Controls.Add(this.lblSwiftMend);
             this.groupBox7.Controls.Add(this.label7);
             this.groupBox7.Controls.Add(this.tbPrimaryHealFrac);
             this.groupBox7.Controls.Add(this.lblPrimaryHeal);
@@ -210,27 +210,24 @@
                 "ling points. Use this to make mana regeneration suddenly very important.";
             this.label1.Visible = false;
             // 
-            // tbOOMPenalty
+            // tbSwiftmendPerMin
             // 
-            this.tbOOMPenalty.BackColor = System.Drawing.SystemColors.Window;
-            this.tbOOMPenalty.Location = new System.Drawing.Point(6, 296);
-            this.tbOOMPenalty.Maximum = 100;
-            this.tbOOMPenalty.Name = "tbOOMPenalty";
-            this.tbOOMPenalty.Size = new System.Drawing.Size(262, 45);
-            this.tbOOMPenalty.TabIndex = 54;
-            this.tbOOMPenalty.TickFrequency = 5;
-            this.tbOOMPenalty.Visible = false;
-            this.tbOOMPenalty.Scroll += new System.EventHandler(this.tbOOMPenalty_Scroll);
+            this.tbSwiftmendPerMin.BackColor = System.Drawing.SystemColors.Window;
+            this.tbSwiftmendPerMin.Location = new System.Drawing.Point(6, 296);
+            this.tbSwiftmendPerMin.Maximum = 4;
+            this.tbSwiftmendPerMin.Name = "tbSwiftmendPerMin";
+            this.tbSwiftmendPerMin.Size = new System.Drawing.Size(262, 45);
+            this.tbSwiftmendPerMin.TabIndex = 54;
+            this.tbSwiftmendPerMin.Scroll += new System.EventHandler(this.tbSwiftmend_Scroll);
             // 
-            // lblOOMPenalty
+            // lblSwiftMend
             // 
-            this.lblOOMPenalty.AutoSize = true;
-            this.lblOOMPenalty.Location = new System.Drawing.Point(6, 280);
-            this.lblOOMPenalty.Name = "lblOOMPenalty";
-            this.lblOOMPenalty.Size = new System.Drawing.Size(148, 13);
-            this.lblOOMPenalty.TabIndex = 53;
-            this.lblOOMPenalty.Text = "Penalty for going out of mana:";
-            this.lblOOMPenalty.Visible = false;
+            this.lblSwiftMend.AutoSize = true;
+            this.lblSwiftMend.Location = new System.Drawing.Point(6, 280);
+            this.lblSwiftMend.Name = "lblSwiftMend";
+            this.lblSwiftMend.Size = new System.Drawing.Size(205, 13);
+            this.lblSwiftMend.TabIndex = 53;
+            this.lblSwiftMend.Text = "Swiftmends cast per minute (Experimental)";
             // 
             // label7
             // 
@@ -279,12 +276,12 @@
             this.cbRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRotation.FormattingEnabled = true;
             this.cbRotation.Items.AddRange(new object[] {
-            "Single target Nourish (plus RJ/RG/LB)",
-            "Single target Nourish (2 Tanks RJ/RG/LB)",
-            "Single target Healing Touch (plus RJ/RG/LB)",
-            "Single target Healing Touch (2 Tanks RJ/RG/LB)",
-            "Single target Regrowth (plus RJ/RG/LB)",
-            "Single target Regrowth (2 Tanks RJ/RG/LB)",
+            "Tank Nourish (plus RJ/RG/LB)",
+            "Tank Nourish (2 Tanks RJ/RG/LB)",
+            "Tank Healing Touch (plus RJ/RG/LB)",
+            "Tank Healing Touch (2 Tanks RJ/RG/LB)",
+            "Tank Regrowth (plus RJ/RG/LB)",
+            "Tank Regrowth (2 Tanks RJ/RG/LB)",
             "Raid healing with Regrowth (1 Tank RJ/LB)",
             "Raid healing with Regrowth (2 Tanks RJ/LB)",
             "Raid healing with Rejuvenation (1 Tank RJ/LB)",
@@ -294,9 +291,11 @@
             "Nourish spam",
             "Healing Touch spam",
             "Regrowth spam",
-            "Single target Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
-            "Single target Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
-            "Single target Regrowth (2 Tanks RJ/RG/3xLB Blooms)"});
+            "Tank Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
+            "Tank Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
+            "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
+//            "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms/SM)"
+            });
             this.cbRotation.Location = new System.Drawing.Point(9, 34);
             this.cbRotation.MaxDropDownItems = 10;
             this.cbRotation.Name = "cbRotation";
@@ -736,7 +735,7 @@
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMPenalty)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSwiftmendPerMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
@@ -799,8 +798,8 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbInnervate;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TrackBar tbOOMPenalty;
-        private System.Windows.Forms.Label lblOOMPenalty;
+        private System.Windows.Forms.TrackBar tbSwiftmendPerMin;
+        private System.Windows.Forms.Label lblSwiftMend;
         private System.Windows.Forms.CheckBox cbApplyMore;
         private System.Windows.Forms.Label label2;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
