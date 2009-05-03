@@ -1120,9 +1120,9 @@ namespace Rawr
                     stats.ManaregenOver12SecOnUse5Min += 900;
                 // stats.Mp5 += 5f * 900f / 300f;
             }
-            else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
+            else if ((match = new Regex(@"Increases the block value of your shield by (?<amount>\d\d*) for 20 sec.").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = 200f }, 20.0f, 120.0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 20.0f, 120.0f));
             }
 			else if (line.StartsWith("Your heals each cost "))
 			{

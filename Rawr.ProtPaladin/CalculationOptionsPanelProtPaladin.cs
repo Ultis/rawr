@@ -60,6 +60,10 @@ namespace Rawr.ProtPaladin
             // Stupid hack since you can't put in newlines into the VS editor properties
             extendedToolTipUseParryHaste.ToolTipText =
                 extendedToolTipUseParryHaste.ToolTipText.Replace("May not", Environment.NewLine + "May not");
+            extendedToolTipDamageTakenMode.ToolTipText =
+                extendedToolTipDamageTakenMode.ToolTipText.Replace("10", Environment.NewLine + "10");
+            extendedToolTipMitigationScale.ToolTipText =
+                extendedToolTipMitigationScale.ToolTipText.Replace("Mitigation", Environment.NewLine + "Mitigation");
 
             // Ranking System
             if (calcOpts.ThreatScale > 30.0f) // Old scale value being saved, reset to default

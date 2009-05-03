@@ -50,7 +50,7 @@ namespace Rawr.ProtPaladin
 			this.extendedToolTipDamageOutput = new Rawr.CustomControls.ExtendedToolTipLabel();
 			this.radioButtonDamageOutput = new System.Windows.Forms.RadioButton();
 			this.extendedToolTipBurstTime = new Rawr.CustomControls.ExtendedToolTipLabel();
-			this.extendedToolTipMitigtionScale = new Rawr.CustomControls.ExtendedToolTipLabel();
+			this.extendedToolTipMitigationScale = new Rawr.CustomControls.ExtendedToolTipLabel();
 			this.extendedToolTipTankPoints = new Rawr.CustomControls.ExtendedToolTipLabel();
 			this.radioButtonBurstTime = new System.Windows.Forms.RadioButton();
 			this.radioButtonTankPoints = new System.Windows.Forms.RadioButton();
@@ -283,7 +283,7 @@ namespace Rawr.ProtPaladin
 			this.groupBox1.Controls.Add(this.extendedToolTipDamageOutput);
 			this.groupBox1.Controls.Add(this.radioButtonDamageOutput);
 			this.groupBox1.Controls.Add(this.extendedToolTipBurstTime);
-			this.groupBox1.Controls.Add(this.extendedToolTipMitigtionScale);
+			this.groupBox1.Controls.Add(this.extendedToolTipMitigationScale);
 			this.groupBox1.Controls.Add(this.extendedToolTipTankPoints);
 			this.groupBox1.Controls.Add(this.radioButtonBurstTime);
 			this.groupBox1.Controls.Add(this.radioButtonTankPoints);
@@ -308,7 +308,8 @@ namespace Rawr.ProtPaladin
 			this.extendedToolTipDamageTakenMode.TabIndex = 18;
 			this.extendedToolTipDamageTakenMode.Text = "Damage Taken Mode *";
 			this.extendedToolTipDamageTakenMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.extendedToolTipDamageTakenMode.ToolTipText = "Amount Damage taken of Boss Attack Value (%DamageTaken * BossAttackValue)";
+			this.extendedToolTipDamageTakenMode.ToolTipText = "Amount Damage taken in HP of Boss Attack Value (%DamageTaken * BossAttackValue) 1" +
+			"0^scale Mitigation Points = 1 Damage Taken.";
 			this.extendedToolTipDamageTakenMode.Click += new System.EventHandler(this.extendedToolTipDamageTakenMode_Click);
 			// 
 			// extendedToolTipProtWarrMode
@@ -319,7 +320,8 @@ namespace Rawr.ProtPaladin
 			this.extendedToolTipProtWarrMode.TabIndex = 17;
 			this.extendedToolTipProtWarrMode.Text = "ProtWarr Mode *";
 			this.extendedToolTipProtWarrMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.extendedToolTipProtWarrMode.ToolTipText = "Amount Damage mitigated of BossAttackValue (%Mitigation * BossAttackValue)";
+			this.extendedToolTipProtWarrMode.ToolTipText = "Amount Damage mitigated of BossAttackValue (%Mitigation * BossAttackValue * scale" +
+			" * 100 * 0.125)";
 			this.extendedToolTipProtWarrMode.Click += new System.EventHandler(this.extendedToolProtWarrMode_Click);
 			// 
 			// radioButtonDamageTakenMode
@@ -375,17 +377,17 @@ namespace Rawr.ProtPaladin
 			"own the player.";
 			this.extendedToolTipBurstTime.Click += new System.EventHandler(this.extendedToolTipBurstTime_Click);
 			// 
-			// extendedToolTipMitigtionScale
+			// extendedToolTipMitigationScale
 			// 
-			this.extendedToolTipMitigtionScale.Location = new System.Drawing.Point(108, 120);
-			this.extendedToolTipMitigtionScale.Name = "extendedToolTipMitigtionScale";
-			this.extendedToolTipMitigtionScale.Size = new System.Drawing.Size(96, 15);
-			this.extendedToolTipMitigtionScale.TabIndex = 11;
-			this.extendedToolTipMitigtionScale.Text = "Mitigation Scale *";
-			this.extendedToolTipMitigtionScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.extendedToolTipMitigtionScale.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
-			"fault)";
-			this.extendedToolTipMitigtionScale.Click += new System.EventHandler(this.extendedToolTipMitigtionScale_Click);
+			this.extendedToolTipMitigationScale.Location = new System.Drawing.Point(108, 120);
+			this.extendedToolTipMitigationScale.Name = "extendedToolTipMitigationScale";
+			this.extendedToolTipMitigationScale.Size = new System.Drawing.Size(96, 15);
+			this.extendedToolTipMitigationScale.TabIndex = 11;
+			this.extendedToolTipMitigationScale.Text = "Mitigation Scale *";
+			this.extendedToolTipMitigationScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.extendedToolTipMitigationScale.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
+			"fault) Mitigation Points = (17000 * scale) / %DamageTaken";
+			this.extendedToolTipMitigationScale.Click += new System.EventHandler(this.extendedToolTipMitigtionScale_Click);
 			// 
 			// extendedToolTipTankPoints
 			// 
@@ -856,6 +858,7 @@ namespace Rawr.ProtPaladin
 			this.tabPageAbilities.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
+		private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipMitigationScale;
 		private System.Windows.Forms.ComboBox comboBoxTrinketOnUseHandling;
 		private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel3;
 		private System.Windows.Forms.GroupBox groupBox5;
@@ -890,7 +893,6 @@ namespace Rawr.ProtPaladin
         private System.Windows.Forms.RadioButton radioButtonTankPoints;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipTankPoints;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipBurstTime;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipMitigtionScale;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipDamageOutput;
         private System.Windows.Forms.RadioButton radioButtonDamageOutput;
         private System.Windows.Forms.RadioButton radioButtonSoR;

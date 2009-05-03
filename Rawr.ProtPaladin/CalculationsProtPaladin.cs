@@ -426,22 +426,22 @@ focus on Survival Points.",
                 case 5:
                     // ProtWarr Model (Average damage mitigated - EvanM Model)
                     calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
+                    scale = (calcOpts.MitigationScale / 17000.0f) * 0.125f * 100.0f;
                     calculatedStats.MitigationPoints = dm.Mitigation * calcOpts.BossAttackValue * scale;
-                    //calculatedStats.MitigationPoints = 0.0f;
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 6:
                     // Damage Taken of Boss Attack Value Mode
                     calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale);
+                    scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
+                    calculatedStats.MitigationPoints = dm.DamageTaken * calcOpts.BossAttackValue * scale;
                     calculatedStats.OverallPoints = -calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 7:
                     // Damage Taken of Boss Attack Value Mode
                     // Note: Will crash Rawr when you optimize for Mitigation Points
                     calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = -dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, calcOpts.MitigationScale);
+                    calculatedStats.MitigationPoints = -dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 8:
@@ -757,41 +757,6 @@ focus on Survival Points.",
 /*
             float abilityPerSecond = 1.0f / 6.0f; // one HotR every 6seconds
             float hitRate = 0.85f;
-            
-
-            //Mongoose
-            if (character.MainHand != null && statsItems.MongooseProc > 0)
-            {
-                float procRate = 1.0f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / ProtPaladin.HasteRatingToPhysicalHaste) * procUptime;
-            }
-
-            //Executioner
-            if (character.MainHand != null && statsItems.ExecutionerProc > 0)
-            {
-                float procRate = 1.2f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.ArmorPenetrationRating += 120.0f * procUptime;
-            }
-*/
-/*
-            // Libram of the Sacred Shield
-            if (character.Ranged != null && character.Ranged.Item.Id == 45145)
-                statsItems.ShieldOfRighteousnessBlockValue += 272.0f;
-            // Tome of the Lightbringer
-            if (character.Ranged != null && character.Ranged.Item.Id == 32368)
-                statsItems.JudgementBlockValue += 186.0f;
-            // Libram of Obstruction
-            if (character.Ranged != null && character.Ranged.Item.Id == 40707)
-                statsItems.JudgementBlockValue += 352.0f;
 */
             return statsItems;
         }
@@ -900,7 +865,7 @@ focus on Survival Points.",
                             else
                             {
                                 effectsToAdd += effect.GetAverageStats();
-                                effectsToAdd.Health = 0.0f;
+                                effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
                                 statsTotal += effectsToAdd;
                             }
                         //else
@@ -912,21 +877,21 @@ focus on Survival Points.",
                     {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
-                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, 1f, 2.5f);
+                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, 1f - anyMiss, 2.4f);
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
-                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, statsTotal.PhysicalCrit, 2.5f);
+                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, triggerPhysicalCrit, 2.4f);
                             break;
                         case Trigger.DoTTick:
-                            statsTotal += effect.GetAverageStats(3f, 1f, 2.5f);
+                            statsTotal += effect.GetAverageStats(3f, 1f, 2.5f); //TODO: SpellHit chance and different interval for consecration
                             break;
                         case Trigger.DamageDone:
-                            statsTotal += effect.GetAverageStats(triggerMeleeInterval / 2f, 1f, 2.5f);
+                            statsTotal += effect.GetAverageStats(triggerMeleeInterval / 2f, 1f, 2.4f);
                             break;
                         case Trigger.JudgementHit:
                             Stats test = new Stats();
-                            statsTotal += effect.GetAverageStats((-talents.ImprovedJudgements *1.0f), 1.0f);
+                            statsTotal += effect.GetAverageStats((-talents.ImprovedJudgements *1.0f), 1.0f); //FIXME: dirty code, implement Judgement cd somewhere else
                             break;
                     }
                 }
@@ -1409,12 +1374,10 @@ focus on Survival Points.",
 
         public bool hasRelevantTrinketGemStats(Stats stats)
         {
-            return (
+            bool trinketStats = (
                 //Trinket+Gem Stats
                 stats.Strength +
                 stats.Stamina +
-                //Trinket Stats
-                stats.BlockValue +
                 //Gem Stats
                 stats.BonusArmorMultiplier +
                 stats.BonusBlockValueMultiplier +
@@ -1427,30 +1390,45 @@ focus on Survival Points.",
                 stats.DodgeRating +
                 stats.Resilience +
                 //Threat Stats
+                stats.AttackPower +
                 stats.CritRating +
                 stats.HitRating +
                 stats.ExpertiseRating
                 ) != 0;
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.JudgementHit)
+                {
+                    trinketStats |= HasRelevantStats(effect.Stats);
+                    if (trinketStats) break;
+                }
+            }
+            return trinketStats;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
             bool relevant = (
+                //Tanking Stats
                 stats.DefenseRating +
                 stats.DodgeRating +
                 stats.ParryRating +
+                stats.BlockValue +
                 stats.BlockRating +
-
                 stats.BonusArmor +
                 stats.Health +
+                //Threat Stats
                 stats.ArmorPenetrationRating +
                 stats.ArmorPenetration +
+                stats.AttackPower +
 
                 stats.JudgementBlockValue +
                 stats.ShieldOfRighteousnessBlockValue +
                 stats.ConsecrationSpellPower +
  
-                //// Resistances
+                // Resistances
                 stats.AllResist +
                 stats.ArcaneResistance + 
                 stats.NatureResistance + 
@@ -1485,7 +1463,7 @@ focus on Survival Points.",
                 stats.Agility +
                 stats.BonusArmor +
                 stats.Health +
-
+                //Threat Stats
                 stats.PhysicalCrit +
                 stats.SpellCrit +
                 stats.PhysicalHaste +
@@ -1524,6 +1502,7 @@ focus on Survival Points.",
                 stats.FrostResistanceBuff +
                 stats.ShadowResistanceBuff +
 
+                //stats.Bonus
                 stats.BonusHammerOfTheRighteousMultiplier +
                 stats.ConsecrationSpellPower +
                 stats.ShieldOfRighteousnessBlockValue +
