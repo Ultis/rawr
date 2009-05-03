@@ -76,7 +76,8 @@ namespace Rawr.ProtPaladin
             radioButtonDamageTakenMode.Checked = (calcOpts.RankingMode == 6);
             trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
             trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5) || (calcOpts.RankingMode == 6);
-
+            comboBoxTrinketOnUseHandling.SelectedItem = calcOpts.TrinketOnUseHandling.ToString();
+            
             // Seal Choice
             radioButtonSoR.Checked = (calcOpts.SealChoice == "Seal of Righteousness");
             radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
@@ -171,7 +172,7 @@ namespace Rawr.ProtPaladin
                     trackBarThreatScale.Value = 10;
                 }
                 trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
-                trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
+                trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5);
 
                 Character.OnCalculationsInvalidated();
             }
@@ -268,10 +269,20 @@ namespace Rawr.ProtPaladin
                 calcOpts.MagicDamageType = comboBoxMagicDamageType.SelectedItem.ToString();
                 Character.OnCalculationsInvalidated();
             }
-
         }
 
-    }
+		
+		private void ComboBoxTrinketOnUseHandling_SelectedIndexChanged(object sender, EventArgs e)
+		{
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.TrinketOnUseHandling = comboBoxTrinketOnUseHandling.SelectedItem.ToString();
+                Character.OnCalculationsInvalidated();
+            }
+		}
+
+	}
 
 	[Serializable]
 	public class CalculationOptionsProtPaladin : ICalculationOptionBase
@@ -301,6 +312,7 @@ namespace Rawr.ProtPaladin
         public string SealChoice = "Seal of Vengeance";
         public string TargetType = "Unspecified";
         public string MagicDamageType = "None";
+        public string TrinketOnUseHandling = "Ignore";
         public PaladinTalents talents = null;
 	}
 }

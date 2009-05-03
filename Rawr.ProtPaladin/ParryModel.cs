@@ -18,12 +18,12 @@ namespace Rawr.ProtPaladin
 
         private void Calculate()
         {
-            float baseBossAttackSpeed   = Options.BossAttackSpeed;
+            float baseBossAttackSpeed   = Options.BossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
 
-            BossAttackSpeed             = baseBossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
+            BossAttackSpeed             = baseBossAttackSpeed ;
             WeaponSpeed                 = baseWeaponSpeed;
 
             if (Options.UseParryHaste)
@@ -42,6 +42,7 @@ namespace Rawr.ProtPaladin
             {
                 // Simple adjust to the defender's speed if the attacker isn't parry hasted
                 WeaponSpeed /= (1.0f + (DefendTable.Parry * 0.24f * (WeaponSpeed / BossAttackSpeed)));
+                BossAttackSpeed = baseBossAttackSpeed;
             }
         }
 

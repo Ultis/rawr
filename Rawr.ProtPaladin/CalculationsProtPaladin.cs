@@ -396,6 +396,8 @@ focus on Survival Points.",
             calculatedStats.BurstTime = dm.BurstTime;
             calculatedStats.RankingMode = calcOpts.RankingMode;
             calculatedStats.ThreatPoints = calcOpts.ThreatScale * calculatedStats.ThreatPerSecond;
+            
+            float scale = 0.0f;
             switch (calcOpts.RankingMode)
             {
                 #region Alternative Ranking Modes
@@ -424,7 +426,9 @@ focus on Survival Points.",
                 case 5:
                     // ProtWarr Model (Average damage mitigated - EvanM Model)
                     calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = dm.Mitigation * calcOpts.BossAttackValue * 17000.0f / calcOpts.MitigationScale;
+                    scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
+                    calculatedStats.MitigationPoints = dm.Mitigation * calcOpts.BossAttackValue * scale;
+                    //calculatedStats.MitigationPoints = 0.0f;
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 6:
@@ -603,10 +607,6 @@ focus on Survival Points.",
             statsBase.Intellect  = ClassStats[3, 3] + LevelStats[3, 3];
             statsBase.Spirit     = ClassStats[3, 4] + LevelStats[3, 4];
             switch (character.Race)
-//              foreach (int Race = 0; in RaceStats)
-//              {
-//                  statsBase.Attribute += RaceStats[Race, Value];
-//              };
                 {
                 case Character.CharacterRace.Human:
 
@@ -885,31 +885,46 @@ focus on Survival Points.",
             float triggerPhysicalCrit = chanceCrit * (1.0f - anyMiss);
             float triggerMeleeInterval = Lookup.WeaponSpeed(character, statsTotal);
             
+            Stats effectsToAdd = new Stats();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
-                switch (effect.Trigger)
+                if (effect.Trigger == Trigger.Use)
+                    {
+                        if (calcOpts.TrinketOnUseHandling != "Ignore")
+                            if (calcOpts.TrinketOnUseHandling == "Active")
+                                statsTotal += effect.Stats;
+                            else
+                            {
+                                effectsToAdd += effect.GetAverageStats();
+                                effectsToAdd.Health = 0.0f;
+                                statsTotal += effectsToAdd;
+                            }
+                        //else
+                            //statsTotal = statsTotal;
+                    }
+                else
                 {
-                    case Trigger.Use:
-                        statsTotal += effect.GetAverageStats(0f, 1f, 2.5f);
-                        break;
-                    case Trigger.MeleeHit:
-                    case Trigger.PhysicalHit:
-                        statsTotal += effect.GetAverageStats(triggerMeleeInterval, 1f, 2.5f);
-                        break;
-                    case Trigger.MeleeCrit:
-                    case Trigger.PhysicalCrit:
-                        statsTotal += effect.GetAverageStats(triggerMeleeInterval, statsTotal.PhysicalCrit, 2.5f);
-                        break;
-                    case Trigger.DoTTick:
-                        statsTotal += effect.GetAverageStats(3f, 1f, 2.5f);
-                        break;
-                    case Trigger.DamageDone:
-                        statsTotal += effect.GetAverageStats(triggerMeleeInterval / 2f, 1f, 2.5f);
-                        break;
-                    case Trigger.JudgementHit:
-                        Stats test = new Stats();
-                        statsTotal += effect.GetAverageStats((-talents.ImprovedJudgements *1.0f), 1.0f);
-                        break;
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.MeleeHit:
+                        case Trigger.PhysicalHit:
+                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, 1f, 2.5f);
+                            break;
+                        case Trigger.MeleeCrit:
+                        case Trigger.PhysicalCrit:
+                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, statsTotal.PhysicalCrit, 2.5f);
+                            break;
+                        case Trigger.DoTTick:
+                            statsTotal += effect.GetAverageStats(3f, 1f, 2.5f);
+                            break;
+                        case Trigger.DamageDone:
+                            statsTotal += effect.GetAverageStats(triggerMeleeInterval / 2f, 1f, 2.5f);
+                            break;
+                        case Trigger.JudgementHit:
+                            Stats test = new Stats();
+                            statsTotal += effect.GetAverageStats((-talents.ImprovedJudgements *1.0f), 1.0f);
+                            break;
+                    }
                 }
             }
 
