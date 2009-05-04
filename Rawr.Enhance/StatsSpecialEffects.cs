@@ -63,6 +63,10 @@ namespace Rawr.Enhance
                             trigger = 1f / cs.GetSpellMissesPerSec();
                             chance = 1 - cs.ChanceSpellHit;
                             break;
+                        case Trigger.ShamanLightningBolt :
+                            trigger = 1f / cs.SecondsToFiveStack;
+                            chance = 0.15f;
+                            break;
                     }
                     if (effect.MaxStack > 1)
                     {
@@ -71,7 +75,7 @@ namespace Rawr.Enhance
                     }
                     else
                     {
-                        statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed);
+                        statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, cs.FightLength);
                     }
                 }
             }

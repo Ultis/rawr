@@ -27,7 +27,12 @@ namespace Rawr
         MageNukeCast,
         JudgementHit,
         CrusaderStrikeHit,
-        InsectSwarmTick
+        InsectSwarmTick,
+        ShamanLightningBolt,
+        ShamanLavaLash,
+        ShamanShock,
+        ShamanStormStrike,
+        ShamanWindFury
     }
 
     [Serializable]

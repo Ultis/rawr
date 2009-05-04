@@ -126,7 +126,7 @@ namespace Rawr
 					_customChartNames = new string[] {
 					"Combat Table (White)",
 					"Combat Table (Yellow)",
-					"Relative Stat Values"
+					"Relative Gem Values"
 					};
 				return _customChartNames;
 			}
@@ -244,7 +244,6 @@ namespace Rawr
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
             
             //totem procs
-            stats.HasteRating += stats.LightningBoltHasteProc_15_45 * 10f / 55f; // exact copy of Elemental usage for totem (relic)
             stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
@@ -748,7 +747,7 @@ namespace Rawr
 					}
 					return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
 
-				case "Relative Stat Values":
+				case "Relative Gem Values":
 					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
 					float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 16 } }).OverallPoints - dpsBase);
 					float dpsAgi =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 16 } }).OverallPoints - dpsBase);
@@ -860,7 +859,6 @@ namespace Rawr
 					SpellPower = stats.SpellPower,
                     SpellCritRating = stats.SpellCritRating,
                     CritMeleeRating = stats.CritMeleeRating,
-					LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
                     LightningSpellPower = stats.LightningSpellPower,
                     TotemLLAttackPower = stats.TotemLLAttackPower,
                     TotemShockAttackPower = stats.TotemShockAttackPower,
@@ -923,7 +921,7 @@ namespace Rawr
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + 
                 stats.ShatteredSunMightProc + stats.MongooseProc + stats.BerserkingProc + stats.GreatnessProc +
                 stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
-                stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
+                stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +
                 stats.BonusLSDamage + stats.BonusLLSSDamage + stats.TotemSSDamage) > 0
 

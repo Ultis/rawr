@@ -865,6 +865,7 @@ namespace Rawr
                 if (m.Success)
                 {
                     stats.LightningBoltHasteProc_15_45 += (float)int.Parse(m.Groups["haste"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLightningBolt, new Stats() { HasteRating = int.Parse(m.Groups["haste"].Value) }, 10f, 45f, 0.15f));
                 }
             }
             else if (line.StartsWith("Increases the damage dealt by your Lava Burst by "))
