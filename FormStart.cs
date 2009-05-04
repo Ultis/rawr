@@ -18,25 +18,21 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.1.0
+			labelVersionHistory.Text = @"v2.2.2.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
- - Updated to the new ArPen model for 3.1
- - New Load from Wowhead Filter feature in the Tools menu
- - Fix for a few bugs with the Optimizer
- - Fix for parsing several items
- - Fix for CharacterProfiler support in foreign languages
- - Rawr.Cat: More 3.1 updates
- - Rawr.Bear: More 3.1 updates
- - Rawr.Moonkin: More 3.1 updates
- - Rawr.HolyPriest: More 3.1 updates
- - Rawr.ShadowPriest: More 3.1 updates
- - Rawr.Mage: More 3.1 updates
- - Rawr.EnhSham: More 3.1 updates
- - Rawr.Tree: More 3.1 updates
- - Rawr.Retribution: More 3.1 updates
- - Rawr.ProtPaladin: More 3.1 updates
- - Rawr.DPSWarr: More 3.1 updates
- - Rawr.DPSDK: More 3.1 updates";
+ - Fix for a couple armory/wowhead parsing bugs (currently, Armory STILL doesn't return socket bonus info; use Wowhead to get socket bonus data)
+ - Chart items with negative values will now be displayed properly
+ - Rawr.Healadin: Fix for Icewalker not being relevant
+ - Rawr.Tree: Added support for spell mana reduction. Added Wild Growth healing. More trinket support
+ - Rawr.Mage: Further updates for 3.1 changes
+ - Rawr.Enhance: Further calculation improvements
+ - Rawr.DPSDK: More 3.1 updates
+ - Rawr.ShadowPriest: Updated to 3.1
+ - Rawr.HolyPriest: Updated built-in rotations
+ - Rawr.Retribution: Better proc support
+ - Rawr.Moonkin: Updated set bonuses, glyphs, innervate calculations, added support for more trinkets 
+ - Rawr.ProtPaladin: Support for a few more buffs, calculation improvements
+ - Rawr.DPSWarr: Added support for Mace Specialization";
 			labelVersionHistory.Height = 560;
 
 			this.DoubleBuffered = true;

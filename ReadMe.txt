@@ -1,8 +1,24 @@
-Rawr v2.2.1.0
+Rawr v2.2.2.0
 ------------
-Welcome to Rawr 2.2.1.0.
+Welcome to Rawr 2.2.2.0.
    
 Recent Changes:
+v2.2.2.0
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
+ - Fix for a couple armory/wowhead parsing bugs (currently, Armory STILL doesn't return socket bonus info; use Wowhead to get socket bonus data)
+ - Chart items with negative values will now be displayed properly
+ - Rawr.Healadin: Fix for Icewalker not being relevant
+ - Rawr.Tree: Added support for spell mana reduction. Added Wild Growth healing. More trinket support
+ - Rawr.Mage: Further updates for 3.1 changes
+ - Rawr.Enhance: Further calculation improvements
+ - Rawr.DPSDK: More 3.1 updates
+ - Rawr.ShadowPriest: Updated to 3.1
+ - Rawr.HolyPriest: Updated built-in rotations
+ - Rawr.Retribution: Better proc support
+ - Rawr.Moonkin: Updated set bonuses, glyphs, innervate calculations, added support for more trinkets 
+ - Rawr.ProtPaladin: Support for a few more buffs, calculation improvements
+ - Rawr.DPSWarr: Added support for Mace Specialization
+
 v2.2.1.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
  - Updated to the new ArPen model for 3.1
