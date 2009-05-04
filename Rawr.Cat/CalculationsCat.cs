@@ -154,7 +154,8 @@ namespace Rawr.Cat
 			{
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
-					//"Relative Stat Values",
+					//"Hit Test",
+						//"Relative Stat Values",
 					};
 				return _customChartNames;
 			}
@@ -801,23 +802,36 @@ namespace Rawr.Cat
 				//    return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
 				case "Hit Test":
 					float dpsBaseHit = GetCharacterCalculations(character).OverallPoints;
-					float dps1 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBaseHit);
-					float dps2 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 2 } }).OverallPoints - dpsBaseHit);
-					float dps3 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 3 } }).OverallPoints - dpsBaseHit);
-					float dps4 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 4 } }).OverallPoints - dpsBaseHit);
-					float dps5 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 5 } }).OverallPoints - dpsBaseHit);
-					float dps10 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10 } }).OverallPoints - dpsBaseHit);
-					float dps15 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 15 } }).OverallPoints - dpsBaseHit);
-					float dps20 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 20 } }).OverallPoints - dpsBaseHit);
-					float dps25 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 25 } }).OverallPoints - dpsBaseHit);
-					float dps50 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 50 } }).OverallPoints - dpsBaseHit);
-					float dps75 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 75 } }).OverallPoints - dpsBaseHit);
-					float dps83 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 83 } }).OverallPoints - dpsBaseHit);
-					float dps100 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 100 } }).OverallPoints - dpsBaseHit);
-					float dps200 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 200 } }).OverallPoints - dpsBaseHit);
-					float dps300 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 300 } }).OverallPoints - dpsBaseHit);
-					float dps400 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 400 } }).OverallPoints - dpsBaseHit);
-					float dps500 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 500 } }).OverallPoints - dpsBaseHit);
+					float dpsBaseAgi = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = -50 } }).OverallPoints);
+					ComparisonCalculationCat[] calcs = new ComparisonCalculationCat[101];
+					for (int i = -50; i <= 50; i++)
+					{
+						float dps = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = i } }).OverallPoints - dpsBaseAgi);
+						calcs[i + 50] = new ComparisonCalculationCat() { Name = "dps" + i.ToString(), OverallPoints = dps, DPSPoints = dps };
+					}
+					return calcs;
+
+					float dps1 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }).OverallPoints - dpsBaseHit);
+					float dps2 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 2 } }).OverallPoints - dpsBaseHit);
+					float dps3 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 3 } }).OverallPoints - dpsBaseHit);
+					float dps4 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 4 } }).OverallPoints - dpsBaseHit);
+					float dps5 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 5 } }).OverallPoints - dpsBaseHit);
+					float dps6 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 6 } }).OverallPoints - dpsBaseHit);
+					float dps7 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 7 } }).OverallPoints - dpsBaseHit);
+					float dps8 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 8 } }).OverallPoints - dpsBaseHit);
+					float dps9 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 9 } }).OverallPoints - dpsBaseHit);
+					float dps10 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }).OverallPoints - dpsBaseHit);
+					float dps15 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 15 } }).OverallPoints - dpsBaseHit);
+					float dps20 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 20 } }).OverallPoints - dpsBaseHit);
+					float dps25 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 25 } }).OverallPoints - dpsBaseHit);
+					float dps50 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 50 } }).OverallPoints - dpsBaseHit);
+					float dps75 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 75 } }).OverallPoints - dpsBaseHit);
+					float dps83 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 83 } }).OverallPoints - dpsBaseHit);
+					float dps100 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 100 } }).OverallPoints - dpsBaseHit);
+					float dps200 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 200 } }).OverallPoints - dpsBaseHit);
+					float dps300 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 300 } }).OverallPoints - dpsBaseHit);
+					float dps400 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 400 } }).OverallPoints - dpsBaseHit);
+					float dps500 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 500 } }).OverallPoints - dpsBaseHit);
 
 					return new ComparisonCalculationBase[] { 
 						new ComparisonCalculationCat() { Name = "dps1", OverallPoints = dps1, DPSPoints = dps1 },
@@ -825,6 +839,10 @@ namespace Rawr.Cat
 						new ComparisonCalculationCat() { Name = "dps3", OverallPoints = dps3, DPSPoints = dps3 },
 						new ComparisonCalculationCat() { Name = "dps4", OverallPoints = dps4, DPSPoints = dps4 },
 						new ComparisonCalculationCat() { Name = "dps5", OverallPoints = dps5, DPSPoints = dps5 },
+						new ComparisonCalculationCat() { Name = "dps6", OverallPoints = dps6, DPSPoints = dps6 },
+						new ComparisonCalculationCat() { Name = "dps7", OverallPoints = dps7, DPSPoints = dps7 },
+						new ComparisonCalculationCat() { Name = "dps8", OverallPoints = dps8, DPSPoints = dps8 },
+						new ComparisonCalculationCat() { Name = "dps9", OverallPoints = dps9, DPSPoints = dps9 },
 						new ComparisonCalculationCat() { Name = "dps10", OverallPoints = dps10, DPSPoints = dps10 },
 						new ComparisonCalculationCat() { Name = "dps15", OverallPoints = dps15, DPSPoints = dps15 },
 						new ComparisonCalculationCat() { Name = "dps20", OverallPoints = dps20, DPSPoints = dps20 },
@@ -1200,12 +1218,12 @@ namespace Rawr.Cat
 			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
 
 			string attackFormat = "{0}%*Damage Per Hit: {1}, Damage Per Swing: {2}";
-			dictValues.Add("Melee Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MeleeDamageTotal / HighestDPSRotation.DamageTotal, MeleeDamagePerHit, MeleeDamagePerSwing));
-			dictValues.Add("Mangle Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MangleDamageTotal / HighestDPSRotation.DamageTotal, MangleDamagePerHit, MangleDamagePerSwing));
-			dictValues.Add("Shred Damage", string.Format(attackFormat, 100f * HighestDPSRotation.ShredDamageTotal / HighestDPSRotation.DamageTotal, ShredDamagePerHit, ShredDamagePerSwing));
-			dictValues.Add("Rake Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RakeDamageTotal / HighestDPSRotation.DamageTotal, RakeDamagePerHit, RakeDamagePerSwing));
-			dictValues.Add("Rip Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RipDamageTotal / HighestDPSRotation.DamageTotal, RipDamagePerHit, RipDamagePerSwing));
-			dictValues.Add("Bite Damage", string.Format(attackFormat, 100f * HighestDPSRotation.BiteDamageTotal / HighestDPSRotation.DamageTotal, BiteDamagePerHit, BiteDamagePerSwing));
+			dictValues.Add("Melee Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MeleeDamageTotal / HighestDPSRotation.DamageTotal, MeleeDamagePerHit, MeleeDamagePerSwing, HighestDPSRotation.MeleeDamageTotal));
+			dictValues.Add("Mangle Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MangleDamageTotal / HighestDPSRotation.DamageTotal, MangleDamagePerHit, MangleDamagePerSwing, HighestDPSRotation.MangleDamageTotal));
+			dictValues.Add("Shred Damage", string.Format(attackFormat, 100f * HighestDPSRotation.ShredDamageTotal / HighestDPSRotation.DamageTotal, ShredDamagePerHit, ShredDamagePerSwing, HighestDPSRotation.ShredDamageTotal));
+			dictValues.Add("Rake Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RakeDamageTotal / HighestDPSRotation.DamageTotal, RakeDamagePerHit, RakeDamagePerSwing, HighestDPSRotation.RakeDamageTotal));
+			dictValues.Add("Rip Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RipDamageTotal / HighestDPSRotation.DamageTotal, RipDamagePerHit, RipDamagePerSwing, HighestDPSRotation.RipDamageTotal));
+			dictValues.Add("Bite Damage", string.Format(attackFormat, 100f * HighestDPSRotation.BiteDamageTotal / HighestDPSRotation.DamageTotal, BiteDamagePerHit, BiteDamagePerSwing, HighestDPSRotation.BiteDamageTotal));
 
 			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\n{2}{3}{4}{5}Use {6} for combo points.",
 				HighestDPSRotation.Name.Replace(" + ", "+"), HighestDPSRotation.RoarCP,

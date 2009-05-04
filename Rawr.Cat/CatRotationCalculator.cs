@@ -147,9 +147,9 @@ namespace Rawr.Cat
 				mangleCount = Duration / MangleDuration;
 				mangleTotalEnergy = mangleCount * MangleEnergy;
 				mangleCP = mangleCount * CPPerCPG;
+				totalCPAvailable += mangleCP;
+				totalEnergyAvailable -= mangleTotalEnergy;
 			}
-			totalCPAvailable += mangleCP;
-			totalEnergyAvailable -= mangleTotalEnergy;
 			#endregion
 
 			#region Combo Point Generator

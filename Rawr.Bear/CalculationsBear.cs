@@ -114,7 +114,7 @@ namespace Rawr.Bear
 
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		/// <summary>
-		/// Ppanel to be placed on the Options tab of the main form
+		/// Panel to be placed on the Options tab of the main form
 		/// </summary>
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
