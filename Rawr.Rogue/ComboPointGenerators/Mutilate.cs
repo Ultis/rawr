@@ -70,5 +70,10 @@ namespace Rawr.Rogue.ComboPointGenerators
         {
             return combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus;
         }
+
+        public override float OhHitsNeeded(float numCpg)
+        {
+            return MhHitsNeeded(numCpg);
+        }
     }
 }

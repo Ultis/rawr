@@ -14,7 +14,7 @@ namespace Rawr.Rogue
             AddDisplayValue(DisplayValue.Strength, stats.Strength.ToString());
             AddDisplayValue(DisplayValue.Agility, stats.Agility.ToString());
             AddDisplayValue(DisplayValue.AttackPower, stats.AttackPower.ToString());
-            AddDisplayValue(DisplayValue.TotalDPS, "0");
+            AddDisplayValue(DisplayValue.TotalDps, "0");
         }
 
         private readonly Dictionary<DisplayValue, StatAndToolTip> _dictValues = new Dictionary<DisplayValue, StatAndToolTip>();
@@ -37,10 +37,10 @@ namespace Rawr.Rogue
             get 
             {
                 float value;
-                float.TryParse(_dictValues[DisplayValue.TotalDPS].Stat, out value);
+                float.TryParse(_dictValues[DisplayValue.TotalDps].Stat, out value);
                 return value;
             }
-            set { _dictValues[DisplayValue.TotalDPS].Stat = Round(value); }
+            set { _dictValues[DisplayValue.TotalDps].Stat = Round(value); }
         }
 
         public void AddDisplayValue(DisplayValue key, string value)

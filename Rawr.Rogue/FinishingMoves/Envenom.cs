@@ -40,12 +40,12 @@ namespace Rawr.Rogue.FinishingMoves
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison)
             {
                 totalHits += whiteAttacks.MhHits;
-                totalHits += calcOpts.CpGenerator.HitsNeeded(rank);
+                totalHits += calcOpts.CpGenerator.MhHitsNeeded(rank);
             }
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison)
             {
                 totalHits += whiteAttacks.OhHits;
-                totalHits += (calcOpts.CpGenerator.Name == new Mutilate().Name ? calcOpts.CpGenerator.HitsNeeded(rank) : 0);
+                totalHits += calcOpts.CpGenerator.OhHitsNeeded(rank);
             }
 
             return Math.Min(rank, Math.Min(5, totalHits / DeadlyPoison.ChanceToApplyPoison));

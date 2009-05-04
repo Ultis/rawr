@@ -19,12 +19,17 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public virtual float CalcDuration(float numCpg, float regen, CombatFactors combatFactors)
         {
-            return HitsNeeded(numCpg) * EnergyCost(combatFactors) / regen;
+            return MhHitsNeeded(numCpg) * EnergyCost(combatFactors) / regen;
         }
 
-        public virtual float HitsNeeded(float numCpg)
+        public virtual float MhHitsNeeded(float numCpg)
         {
             return numCpg / ComboPointsGeneratedPerAttack;    
+        }
+
+        public virtual float OhHitsNeeded(float numCpg)
+        {
+            return 0f;
         }
 
         protected abstract float EnergyCost(CombatFactors combatFactors);

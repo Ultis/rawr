@@ -7,6 +7,7 @@ namespace Rawr.Rogue
         //This class keeps the UI labels and calculations in sync in a single class.  
         //By simply adding a new "public static readonly DisplayValue..." we automatically add it to the UI, and make it 
         //availble in our list of values to be displayed.
+        //ALSO:  the order of the items in this list will be the order of appearance in the UI
         private DisplayValue(string grouping, string name)            
         {
             Grouping = grouping;
@@ -31,16 +32,16 @@ namespace Rawr.Rogue
         public static readonly DisplayValue HitRating = new DisplayValue("Base Stats", "Hit Rating");
         public static readonly DisplayValue BaseExpertise = new DisplayValue("Base Stats", "Base Expertise");
 
-        public static readonly DisplayValue CPG = new DisplayValue("DPS Breakdown", "CPG");
         public static readonly DisplayValue EnergyRegen = new DisplayValue("DPS Breakdown", "Energy Regen");
-        public static readonly DisplayValue CpgCrit = new DisplayValue("DPS Breakdown", "CPG Crit %");
         public static readonly DisplayValue CycleTime = new DisplayValue("DPS Breakdown", "Cycle Time (in seconds)");
-        public static readonly DisplayValue CPGDPS = new DisplayValue("DPS Breakdown", "CPG DPS");
-        public static readonly DisplayValue FinisherDPS = new DisplayValue("DPS Breakdown", "Finisher DPS");
-        public static readonly DisplayValue SwordSpecDPS = new DisplayValue("DPS Breakdown", "Sword Spec DPS");
-        public static readonly DisplayValue PoisonDPS = new DisplayValue("DPS Breakdown", "Poison DPS");
-        public static readonly DisplayValue WhiteDPS = new DisplayValue("DPS Breakdown", "White DPS");
-        public static readonly DisplayValue TotalDPS = new DisplayValue("DPS Breakdown", "Total DPS");
+        public static readonly DisplayValue Cpg = new DisplayValue("DPS Breakdown", "CPG");
+        public static readonly DisplayValue CpgCrit = new DisplayValue("DPS Breakdown", "CPG Crit %");
+        public static readonly DisplayValue CpgDps = new DisplayValue("DPS Breakdown", "CPG DPS");
+        public static readonly DisplayValue FinisherDps = new DisplayValue("DPS Breakdown", "Finisher DPS");
+        public static readonly DisplayValue SwordSpecDps = new DisplayValue("DPS Breakdown", "Sword Spec DPS");
+        public static readonly DisplayValue PoisonDps = new DisplayValue("DPS Breakdown", "Poison DPS");
+        public static readonly DisplayValue WhiteDps = new DisplayValue("DPS Breakdown", "White DPS");
+        public static readonly DisplayValue TotalDps = new DisplayValue("DPS Breakdown", "Total DPS");
 
         public override string ToString()
         {

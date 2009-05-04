@@ -114,12 +114,12 @@ namespace Rawr.Rogue
             foreach (var component in calcOpts.DpsCycle.Components)
             {
                 var finisherDps = component.CalcFinisherDPS(talents, calcOpts, stats, combatFactors, cycleTime, whiteAttacks);
-                calculatedStats.AddToolTip(DisplayValue.FinisherDPS, component + ": " + finisherDps);
+                calculatedStats.AddToolTip(DisplayValue.FinisherDps, component + ": " + finisherDps);
                 totalFinisherDps += finisherDps;
             }
 
             var swordSpecDps = new SwordSpec().CalcDPS(combatFactors, whiteAttacks, numCpg, cycleTime);
-            var poisonDps = CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks, calculatedStats);
+            var poisonDps = CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks, calculatedStats, numCpg, cycleTime);
 
             //------------------------------------------------------------------------------------
             // ADD CALCULATED OUTPUTS TO DISPLAY
@@ -127,13 +127,14 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
 
-            calculatedStats.AddDisplayValue(DisplayValue.CPG, calcOpts.CpGenerator.Name);
+            calculatedStats.AddDisplayValue(DisplayValue.Cpg, calcOpts.CpGenerator.Name);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
 
             calculatedStats.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.HitRating, "Total % Hit: ", combatFactors.HitPercent);
+            calculatedStats.AddPercentageToolTip(DisplayValue.HitRating, "Poison % Hit: ", combatFactors.PoisonHitPercent);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CritRating, stats.CritRating);
             calculatedStats.AddToolTip(DisplayValue.CritRating, "Crit % from Rating: " + combatFactors.CritFromCritRating);
@@ -156,14 +157,14 @@ namespace Rawr.Rogue
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
-            calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
-            calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDps, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
+            calculatedStats.AddToolTip(DisplayValue.WhiteDps, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
+            calculatedStats.AddToolTip(DisplayValue.WhiteDps, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDps);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, totalFinisherDps);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDPS, swordSpecDps);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDPS, poisonDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgDps, cpgDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDps, totalFinisherDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDps, swordSpecDps);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDps, poisonDps);
 
             calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
@@ -197,18 +198,18 @@ namespace Rawr.Rogue
             return cpgDuration + (finisherEnergyCost / energyRegen);
         }
 
-        private static float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CharacterCalculationsRogue calculatedStats )
+        private static float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CharacterCalculationsRogue calculatedStats, float numCpg, float cycleTime)
         {
-            var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDPS(stats, calcOpts, combatFactors, 0f);
-            calculatedStats.AddToolTip(DisplayValue.PoisonDPS, "MH Poison DPS: " + Math.Round(mhPoisonDps, 2));
+            var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.MhHits + calcOpts.CpGenerator.MhHitsNeeded(numCpg), cycleTime);
+            calculatedStats.AddToolTip(DisplayValue.PoisonDps, "MH Poison DPS: " + Math.Round(mhPoisonDps, 2));
 
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
             {
                 return mhPoisonDps;
             }
 
-            var ohPoisonDps = calcOpts.TempOffHandEnchant.CalcPoisonDPS(stats, calcOpts, combatFactors, whiteAttacks.OhHits);
-            calculatedStats.AddToolTip(DisplayValue.PoisonDPS, "OH Poison DPS: " + Math.Round(ohPoisonDps, 2));
+            var ohPoisonDps = calcOpts.TempOffHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.OhHits, cycleTime);
+            calculatedStats.AddToolTip(DisplayValue.PoisonDps, "OH Poison DPS: " + Math.Round(ohPoisonDps, 2));
 
             return mhPoisonDps + ohPoisonDps;
         }

@@ -12,8 +12,9 @@ namespace Rawr.Rogue.Poisons
 
         public override bool IsDeadlyPoison { get { return true; } }
 
-        public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        public override float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, float cycleTime)
         {
+            //TODO:  model loss of stacks due to envenom
             return STACK_SIZE * (296f + .12f * stats.AttackPower) * Talents.VilePoisons.Multiplier / DURATION;
         }
 
@@ -23,3 +24,4 @@ namespace Rawr.Rogue.Poisons
         }
     }
 }
+

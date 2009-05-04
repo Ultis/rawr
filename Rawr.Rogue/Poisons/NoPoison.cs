@@ -9,7 +9,7 @@ namespace Rawr.Rogue.Poisons
 
         public override bool IsDeadlyPoison { get { return false; } }
 
-        public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        public override float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, float cycleTime)
         {
             return 0f;
         }

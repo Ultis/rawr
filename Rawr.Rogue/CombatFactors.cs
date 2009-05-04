@@ -9,7 +9,6 @@ namespace Rawr.Rogue
             _stats = stats;
 			_mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
 			_offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
-			//_talents = character.RogueTalents;
             _calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             _characterRace = character.Race;
         }
@@ -17,7 +16,6 @@ namespace Rawr.Rogue
         private readonly Stats _stats;
         private readonly Item _mainHand;
         private readonly Item _offHand;
-        //private readonly RogueTalents _talents;
         private readonly CalculationOptionsRogue _calcOpts;
         private readonly Character.CharacterRace _characterRace;
 
@@ -175,15 +173,6 @@ namespace Rawr.Rogue
             get { return 2f * BonusWhiteCritDmg; }
         }
 
-        public float ProbPoisonHit
-        {
-            get
-            {
-                var missChance = .17f - (_stats.PhysicalHit / 100f) - (_stats.HitRating * RogueConversions.HitRatingToSpellHit / 100f) ;
-                return missChance < 0f ? 0f : 1f - missChance / 100f;
-            }
-        }
-
         public float BaseEnergyRegen
         {
             get
@@ -209,6 +198,23 @@ namespace Rawr.Rogue
         public float HitPercent
         {
             get { return _stats.PhysicalHit/100f + _stats.HitRating*RogueConversions.HitRatingToHit/100f; }
+        }
+
+        public float ProbPoisonHit
+        {
+            get
+            {
+                if(PoisonHitPercent > .17f)
+                {
+                    return 1f;
+                }
+                return 1f + PoisonHitPercent - .17f;
+            }
+        }
+
+        public float PoisonHitPercent
+        {
+            get { return (_stats.PhysicalHit/100f) + (_stats.HitRating*RogueConversions.HitRatingToSpellHit/100f); }
         }
 
         public float CritFromCritRating
