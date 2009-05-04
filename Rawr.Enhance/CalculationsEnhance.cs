@@ -480,7 +480,8 @@ namespace Rawr
             calculatedStats.MeleeCrit = (float)Math.Floor((cs.ChanceWhiteCrit - cs.EDBonusCrit) * 10000f) / 100f;
             calculatedStats.YellowCrit = (float)Math.Floor((cs.ChanceYellowCrit - cs.EDBonusCrit) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor(cs.ChanceSpellCrit * 10000f) / 100f;
-			calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
+		    calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
+            calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
             calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;
@@ -499,7 +500,7 @@ namespace Rawr
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
             calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.ChanceYellowHit, -1, -1, cs.ChanceYellowCrit);
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
-
+            
 			return calculatedStats;
         }
 
@@ -723,7 +724,7 @@ namespace Rawr
 						calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsEnhanceWhite.MissedAttacks;
 						calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
 						calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
-						calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = 25f;
+                        calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
 						calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
 						                             calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
 					}
@@ -1122,6 +1123,13 @@ namespace Rawr
 			get { return _meleeDamage; }
 			set { _meleeDamage = value; }
 		}
+
+        private float _glancingBlows;
+        public float GlancingBlows
+        {
+            get { return _glancingBlows; }
+            set { _glancingBlows = value; }
+        }
 
         private DPSAnalysis _swingDamage;
         public DPSAnalysis SwingDamage
