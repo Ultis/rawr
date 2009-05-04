@@ -31,8 +31,7 @@ namespace Rawr
         ShamanLightningBolt,
         ShamanLavaLash,
         ShamanShock,
-        ShamanStormStrike,
-        ShamanWindFury
+        ShamanStormStrike
     }
 
     [Serializable]
@@ -748,6 +747,16 @@ namespace Rawr
                         return "on Judgement";
                     case Trigger.CrusaderStrikeHit:
                         return "on Crusader Strike";
+                    case Trigger.InsectSwarmTick :
+                        return "on Insect Swarm Tick";
+                    case Trigger.ShamanLightningBolt:
+                        return "on Lightning Bolt Cast";
+                    case Trigger.ShamanLavaLash:
+                        return "on Lava Lash Hit";
+                    case Trigger.ShamanShock:
+                        return "on Shock Hit";
+                    case Trigger.ShamanStormStrike:
+                        return "on Stormstrike Hit";
                     default:
                         return Trigger.ToString();
                 }

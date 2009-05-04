@@ -64,7 +64,7 @@ namespace Rawr.Enhance
                             chance = 1 - cs.ChanceSpellHit;
                             break;
                         case Trigger.ShamanLightningBolt :
-                            trigger = 1f / cs.SecondsToFiveStack;
+                            trigger = cs.SecondsToFiveStack;
                             chance = 0.15f;
                             break;
                     }
