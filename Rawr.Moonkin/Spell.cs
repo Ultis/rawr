@@ -1106,7 +1106,7 @@ namespace Rawr.Moonkin
                 });
             }
             // Je'Tze's Bell (10% chance of 100 mp5 for 15 sec)
-            if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
+/*            if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
             {
                 procEffects.Add(new ProcEffect()
                 {
@@ -1117,7 +1117,7 @@ namespace Rawr.Moonkin
                         return 300.0f / timeBetweenProcs * 5.0f;
                     }
                 });
-            }
+            }*/
         }
 
         // Non-rotation-specific mana calculations
