@@ -48,6 +48,10 @@ namespace Rawr.DPSWarr
         public float MhCrit { get; set; }
         public float OhCrit { get; set; }
         // Offensive
+        public float ArmorPenetrationMaceSpec { get; set; }
+        public float ArmorPenetrationStance { get; set; }
+        public float ArmorPenetrationRating { get; set; }
+        public float ArmorPenetrationRating2Perc { get; set; }
         public float ArmorPenetration { get; set; }
         public float buffedArmorPenetration { get; set; }
         public float HasteRating { get; set; }
@@ -100,7 +104,7 @@ namespace Rawr.DPSWarr
             if (SkillAttacks == null){SkillAttacks = new Skills(character,talents, BasicStats, combatFactors, whiteAttacks);}
 
             dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
-                , BasicStats.Health, BaseHealth, BasicStats.Stamina * DPSWarr.StaminaToHP));
+                ,BasicStats.Health, BaseHealth, BasicStats.Stamina * DPSWarr.StaminaToHP));
             dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}"
                 ,BasicStats.Stamina,BasicStats.Stamina*DPSWarr.StaminaToHP));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
@@ -116,10 +120,14 @@ namespace Rawr.DPSWarr
                 Environment.NewLine + "MH Crit {3:0.00%}" +
                 Environment.NewLine + "OH Crit {4:0.00%}",
                 CritPercent, BasicStats.CritRating, BasicStats.CritRating*DPSWarr.CritRatingToCrit/100.00f, MhCrit, OhCrit));
-            dictValues.Add("Armor Penetration", 
-                string.Format("{0:0.00%}*Armor Penetration Rating {1}",
+            dictValues.Add("Armor Penetration",  string.Format("{0:0.00%}*Armor Penetration Rating {1}- {2:0.00%}" +
+                Environment.NewLine + "Arms Stance- +{3:0.00%}" +
+                Environment.NewLine + "Mace Spec- +{4:0.00%}",
                                 ArmorPenetration,
-                                BasicStats.ArmorPenetrationRating));
+                                BasicStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
+                                ArmorPenetrationStance,
+                                ArmorPenetrationMaceSpec));
+            dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
             dictValues.Add("Hit Rating",
                 string.Format("{0}*{1:0.00%} Increased Chance to hit" + Environment.NewLine + "Note: This does not include Precision"
                 ,BasicStats.HitRating,BasicStats.HitRating*DPSWarr.HitRatingToHit/100.00f));

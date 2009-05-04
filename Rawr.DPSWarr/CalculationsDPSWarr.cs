@@ -79,6 +79,7 @@ namespace Rawr.DPSWarr
                         "Base Stats:Haste",
                         "Base Stats:Crit",
                         "Base Stats:Armor Penetration",
+                        "Base Stats:Damage Reduction*Should be exact opposite of ArP in Percentage (%)",
                         @"Base Stats:Hit Rating*8.00% chance to miss base for Yellow Attacks
 Precision 0- 8%-0%=8%=263 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
@@ -261,7 +262,13 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
             teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
             teethbonus /= 180.0f;
             calculatedStats.TeethBonus = (int)teethbonus;
-            calculatedStats.ArmorPenetration = (stats.ArmorPenetrationRating * DPSWarr.ArPToArmorPenetration) / 100.0f + ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
+            calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
+            calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
+            calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
+            calculatedStats.ArmorPenetrationRating2Perc = (stats.ArmorPenetrationRating * DPSWarr.ArPToArmorPenetration) / 100.0f;
+            calculatedStats.ArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
+                + calculatedStats.ArmorPenetrationStance
+                + calculatedStats.ArmorPenetrationRating2Perc;
             calculatedStats.HasteRating = stats.HasteRating;
             calculatedStats.HastePercent = stats.HasteRating * DPSWarr.HasteRatingToHaste / 100.0f;
             // DPS
@@ -592,8 +599,9 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
             statsTotal.PhysicalHaste *= (1 + 0.03f * character.WarriorTalents.BloodFrenzy);
 
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration + ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
-            statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
+            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration
+                + ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f)
+                + ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.PhysicalCrit = statsRace.PhysicalCrit;

@@ -1,3 +1,5 @@
+using System;
+
 namespace Rawr.DPSWarr {
     public class CombatFactors {
         public CombatFactors(Character character, Stats stats) {
@@ -22,9 +24,9 @@ namespace Rawr.DPSWarr {
         public float DamageReduction {
             get {
                 if(_calcOpts==null){
-				    return 1f - StatConversion.GetArmorDamageReduction(80,12900,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating);
+				    return Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(80,12900,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }else{
-                    return 1f - StatConversion.GetArmorDamageReduction(80,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating) + ((!_calcOpts.FuryStance) ? 0.10f:0.00f);
+                    return Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }
                 //return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
             }
