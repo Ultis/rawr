@@ -146,6 +146,8 @@ namespace Rawr
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
         public float FightLength = 6.0f;
+        public int TargetFireResistance = 0;
+        public int TargetNatureResistance = 0;
         
     }
 }

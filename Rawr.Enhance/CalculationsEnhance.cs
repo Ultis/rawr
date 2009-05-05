@@ -192,6 +192,7 @@ namespace Rawr
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
             float callOfThunder = .05f * character.ShamanTalents.CallOfThunder;
+            float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
                     windfuryWeaponBonus += windfuryWeaponBonus * .13f;
@@ -249,7 +250,7 @@ namespace Rawr
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
 
             // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
-            stats.SpellPower += character.ShamanTalents.MentalQuickness * .1f * (stats.AttackPower - initialAP);
+            stats.SpellPower += mentalQuickness * (stats.AttackPower - initialAP);
             #endregion
 
 
@@ -259,16 +260,20 @@ namespace Rawr
 
 			#region Damage Model
             CombatStats cs = new CombatStats(character, stats); // calculate the combat stats using modified stats
-            float attackPower = stats.AttackPower + (stats.AttackPower * unleashedRage * cs.URUptime);
-
+            float URattackPower = (stats.AttackPower * unleashedRage * cs.URUptime);
+            float attackPower = stats.AttackPower + URattackPower;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
-            float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
+            float spellPower = (stats.SpellPower + URattackPower * mentalQuickness) * (1 + stats.BonusSpellPowerMultiplier);
+            float apspRatio = spellPower / attackPower;
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) - 1f;
             float bonusLSDamage = stats.BonusLSDamage; // 2 piece T7 set bonus
+            int baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
+            float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
+            float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
 
             #endregion
 
@@ -356,8 +361,8 @@ namespace Rawr
                 float swingDPS = damageMHSwing * cs.HitsPerSMHSS + damageOHSwing * cs.HitsPerSOHSS;
                 float SSnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * swingDPS;
                 float SScrit = swingDPS * cs.ChanceYellowCrit * critMultiplierMelee;
-                dpsSS = (SSnormal + SScrit) * weaponMastery * cs.DamageReduction * 
-                        (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
+                dpsSS = (SSnormal + SScrit) * weaponMastery * cs.DamageReduction *
+                        (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage) * bossNatureResistance;
             }
 
             //3: Lavalash DPS
@@ -365,7 +370,7 @@ namespace Rawr
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
             {
                 dpsLL = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSLL
-                      * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery; //and no armor reduction yeya!
+                      * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery * bossFireResistance; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
                 {  // 25% bonus dmg if FT imbue in OH
                     if (character.ShamanTalents.GlyphofLavaLash)
@@ -380,18 +385,18 @@ namespace Rawr
             float stormstrikeMultiplier = 1.2f + ssGlyphBonus;
             float damageESBase = 872f;
             float coefES = .3858f;
-            float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellDamage);
+            float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
             float spellHitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
-            float dpsES = (spellHitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage);
+            float dpsES = (spellHitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage) * bossNatureResistance;
 
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
-            float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
+            float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
             float lbHitRollMultiplier = cs.ChanceSpellHit + (cs.ChanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
-            float dpsLB = (lbHitRollMultiplier * damageLB / cs.SecondsToFiveStack) * (1 + bonusNatureDamage);
+            float dpsLB = (lbHitRollMultiplier * damageLB / cs.SecondsToFiveStack) * (1 + bonusNatureDamage) * bossNatureResistance;
             if (character.ShamanTalents.GlyphofLightningBolt)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             
@@ -408,32 +413,32 @@ namespace Rawr
             float staticShockProcsPerS = (cs.HitsPerSMH + cs.HitsPerSOH) * staticShockChance;
             float damageLSBase = 380;
             float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
-            float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
-            float dpsLS = cs.ChanceSpellHit * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage);
+            float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
+            float dpsLS = cs.ChanceSpellHit * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage) * bossNatureResistance;
             if (character.ShamanTalents.GlyphofLightningShield)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
             //8: Searing/Magma Totem DPS
             float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
             float damageSTMTCoef = calcOpts.Magma ? .1f : .1667f;
-            float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellDamage) * callofFlameBonus;
-            float dpsSTMT = (spellHitRollMultiplier * damageSTMT / 2) * (1 + bonusFireDamage);
+            float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellPower) * callofFlameBonus;
+            float dpsSTMT = (spellHitRollMultiplier * damageSTMT / 2) * (1 + bonusFireDamage) * bossFireResistance;
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
             if (calcOpts.MainhandImbue == "Flametongue")
             {
-                float damageFTBase = 274 * cs.UnhastedMHSpeed / 4.0f;
+                float damageFTBase = 274f * cs.UnhastedMHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedMHSpeed;
-                float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT += spellHitRollMultiplier * damageFT * cs.HitsPerSMH * (1 + bonusFireDamage);
+                float damageFT = damageFTBase + damageFTCoef * spellPower;
+                dpsFT += spellHitRollMultiplier * damageFT * cs.HitsPerSMH * (1 + bonusFireDamage) * bossFireResistance;
             }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
-                float damageFTBase = 274 * cs.UnhastedOHSpeed / 4.0f;
+                float damageFTBase = 274f * cs.UnhastedOHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedOHSpeed;
-                float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT += spellHitRollMultiplier * damageFT * cs.HitsPerSOH * (1 + bonusFireDamage);
+                float damageFT = damageFTBase + damageFTCoef * spellPower;
+                dpsFT += spellHitRollMultiplier * damageFT * cs.HitsPerSOH * (1 + bonusFireDamage) * bossFireResistance;
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
