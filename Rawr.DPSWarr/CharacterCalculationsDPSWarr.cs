@@ -175,6 +175,8 @@ namespace Rawr.DPSWarr
                 case "Crit Rating": return BasicStats.CritRating;
                 case "Agility": return BasicStats.Agility;
                 case "Attack Power": return BasicStats.AttackPower;
+                case "Armor Penetration": return BasicStats.ArmorPenetration;
+                case "Armor Penetration Rating": return BasicStats.ArmorPenetrationRating;
             }
             return 0.0f;
         }

@@ -76,6 +76,7 @@ namespace Rawr.DPSWarr {
                 var totalHaste = 1f;
                 totalHaste *= (1f + flurryHaste) * (1f + (_stats.HasteRating * DPSWarr.HasteRatingToHaste) / 100);
                 totalHaste *= 1f + _stats.PhysicalHaste;
+                totalHaste *= 1f + 0.03f * _talents.BloodFrenzy;
                 return totalHaste;
             }
         }

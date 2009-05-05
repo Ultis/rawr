@@ -78,7 +78,12 @@ namespace Rawr.DPSWarr
                         "Base Stats:Agility",
                         "Base Stats:Haste",
                         "Base Stats:Crit",
-                        "Base Stats:Armor Penetration",
+                        @"Base Stats:Armor Penetration*Rating to Cap with buffs/debuffs applied
+1232-None
+1074-Sndr
+1039-Sndr+FF
+0916-Sndr+FF+Arms
+0731-Sndr+FF+Arms+Mace",
                         "Base Stats:Damage Reduction*Should be exact opposite of ArP in Percentage (%)",
                         @"Base Stats:Hit Rating*8.00% chance to miss base for Yellow Attacks
 Precision 0- 8%-0%=8%=263 Rating soft cap
@@ -91,24 +96,6 @@ Weapon Mastery 1- 6.50%-1%=6.50%=181 Rating Cap
 Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
 
 Don't forget your weapons used matched with races can affect these numbers.",
-                        /*@"Base Stats:MH Expertise*6.50% chance to dodge/parry for attacks
-Weapon Mastery 0- 6.50%-0%=6.50%=214 Rating Cap
-Weapon Mastery 1- 6.50%-1%=6.50%=181 Rating Cap
-Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
-
-Don't forget your weapons used matched with races can affect these numbers.",
-                    @"Base Stats:OH Expertise*6.50% chance to dodge/parry for attacks
-Weapon Mastery 0- 6.50%-0%=6.50%=214 Rating Cap
-Weapon Mastery 1- 6.50%-1%=6.50%=181 Rating Cap
-Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
-
-Don't forget your weapons used matched with races can affect these numbers.",*/
-                        //"Base Stats:Missed Attacks",
-
-                        //"Buffed Stats:Base MH Crit",
-                        //"Buffed Stats:Base OH Crit",
-                        //"Buffed Stats:Boss Armor Reduction %",
-                        //"Buffed Stats:Effective Damage Dealt",
                         
                         "DPS Breakdown (Fury):Bloodsurge",
                         "DPS Breakdown (Fury):Bloodthirst",
@@ -148,6 +135,8 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
 					"Crit Rating",
 					"Agility",
 					"Attack Power",
+					"Armor Penetration",
+					"Armor Penetration Rating",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -751,6 +740,7 @@ Don't forget your weapons used matched with races can affect these numbers.",*/
                 stats.HasteRating +
                 stats.ExpertiseRating +
                 stats.ArmorPenetration +
+                stats.ArmorPenetrationRating +
                 stats.WeaponDamage +
                 stats.BonusCritMultiplier +
                 stats.BonusDamageMultiplier +
