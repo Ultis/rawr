@@ -87,9 +87,9 @@ namespace Rawr.Enhance
             //trinket procs
             if (_stats.GreatnessProc > 0)
             {
-                float expectedAgi = (float)Math.Floor(_stats.Agility * (1 + _stats.BonusAgilityMultiplier));
-                float expectedStr = (float)Math.Floor(_stats.Strength * (1 + _stats.BonusStrengthMultiplier));
-                float expectedInt = (float)Math.Floor(_stats.Intellect * (1 + _stats.BonusIntellectMultiplier));
+                float expectedAgi = (float)Math.Floor((float)(_stats.Agility * (1 + _stats.BonusAgilityMultiplier)));
+                float expectedStr = (float)Math.Floor((float)(_stats.Strength * (1 + _stats.BonusStrengthMultiplier)));
+                float expectedInt = (float)Math.Floor((float)(_stats.Intellect * (1 + _stats.BonusIntellectMultiplier)));
                 float intfromAP = _character.ShamanTalents.MentalDexterity / 3;
                 // Highest stat
                 if (expectedAgi > expectedStr)

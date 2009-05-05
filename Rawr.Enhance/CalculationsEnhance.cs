@@ -240,9 +240,9 @@ namespace Rawr
                 stats.AttackPower += 39.13f;
 
             if (calcOpts.MainhandImbue == "Flametongue")
-                stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
+                stats.SpellPower += (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
-                stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
+                stats.SpellPower += (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
             
             //totem procs
             stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
@@ -483,12 +483,12 @@ namespace Rawr
 			calculatedStats.AvoidedAttacks = (1 - cs.ChanceWhiteHit) * 100f;
 			calculatedStats.DodgedAttacks = cs.ChanceDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
-            calculatedStats.YellowHit = (float)Math.Floor(cs.ChanceYellowHit * 10000f) / 100f;
-            calculatedStats.SpellHit = (float)Math.Floor(cs.ChanceSpellHit * 10000f) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor(cs.ChanceWhiteHit * 10000f) / 100f; 
-            calculatedStats.MeleeCrit = (float)Math.Floor((cs.ChanceWhiteCrit - cs.EDBonusCrit) * 10000f) / 100f;
-            calculatedStats.YellowCrit = (float)Math.Floor((cs.ChanceYellowCrit - cs.EDBonusCrit) * 10000f) / 100f;
-            calculatedStats.SpellCrit = (float)Math.Floor(cs.ChanceSpellCrit * 10000f) / 100f;
+            calculatedStats.YellowHit = (float)Math.Floor((float)(cs.ChanceYellowHit * 10000f)) / 100f;
+            calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
+            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.ChanceWhiteHit * 10000f)) / 100f; 
+            calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.ChanceWhiteCrit - cs.EDBonusCrit)) * 10000f) / 100f;
+            calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.ChanceYellowCrit - cs.EDBonusCrit)) * 10000f) / 100f;
+            calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
 		    calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
             calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
@@ -498,7 +498,7 @@ namespace Rawr
             calculatedStats.URUptime = cs.URUptime  * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
-            calculatedStats.TotalExpertise = (float) Math.Floor(cs.ExpertiseBonus * 400f + 0.0001);
+            calculatedStats.TotalExpertise = (float) Math.Floor((float)(cs.ExpertiseBonus * 400f));
 
             calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.ChanceWhiteHit, cs.ChanceDodge, cs.GlancingRate, cs.ChanceMeleeCrit);
             calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
@@ -581,16 +581,16 @@ namespace Rawr
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             int AK = character.ShamanTalents.AncestralKnowledge;
-            float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
-            float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsBaseGear.BonusAgilityMultiplier));
-			float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsBaseGear.BonusStrengthMultiplier));
-            float intBase = (float)Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK)+ .0001f); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
-            float intBonus = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsBaseGear.BonusIntellectMultiplier) * (1 + .02f * AK));
-            float staBase = (float)Math.Floor(statsRace.Stamina);  
-			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
-            float spiBase = (float)Math.Floor(statsRace.Spirit);  
-			float spiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Spirit);
+            float agiBase = (float)Math.Floor((float)(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)));
+            float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility * (1 + statsBaseGear.BonusAgilityMultiplier)));
+			float strBase = (float)Math.Floor((float)(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)));
+            float strBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Strength * (1 + statsBaseGear.BonusStrengthMultiplier)));
+            float intBase = (float)Math.Floor((float)(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK)));
+            float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect * (1 + statsBaseGear.BonusIntellectMultiplier) * (1 + .02f * AK)));
+            float staBase = (float)Math.Floor((float)(statsRace.Stamina));  
+			float staBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Stamina));
+            float spiBase = (float)Math.Floor((float)(statsRace.Spirit));  
+			float spiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Spirit));
 						
 			Stats statsTotal = GetRelevantStats(statsRace + statsGearEnchantsBuffs);
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
@@ -601,14 +601,14 @@ namespace Rawr
 			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsRace.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
             statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-            statsTotal.Agility = (float)Math.Floor((agiBase + agiBonus) * (1 + statsBuffs.BonusAgilityMultiplier));
-			statsTotal.Strength = (float)Math.Floor((strBase + strBonus) * (1 + statsBuffs.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor((float)((agiBase + agiBonus) * (1 + statsBuffs.BonusAgilityMultiplier)));
+			statsTotal.Strength = (float)Math.Floor((float)((strBase + strBonus) * (1 + statsBuffs.BonusStrengthMultiplier)));
 			statsTotal.Stamina = (float)Math.Round((staBase + staBonus) * (1 + statsBuffs.BonusStaminaMultiplier));
 			statsTotal.Health = (float)Math.Round((statsRace.Health + statsGearEnchantsBuffs.Health) * (1 + statsRace.BonusStaminaMultiplier) );
-            statsTotal.Intellect = (float)Math.Floor((intBase + intBonus) * (1 + statsBuffs.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor((spiBase + spiBonus) * (1 + statsBuffs.BonusSpiritMultiplier)); 
+            statsTotal.Intellect = (float)Math.Floor((float)((intBase + intBonus) * (1 + statsBuffs.BonusIntellectMultiplier)));
+            statsTotal.Spirit = (float)Math.Floor((float)((spiBase + spiBonus) * (1 + statsBuffs.BonusSpiritMultiplier))); 
             statsTotal.Mana = statsRace.Mana + statsGearEnchantsBuffs.Mana;
-            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsTotal.AttackPower = (float)Math.Floor((float)((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier)));
 			statsTotal.SpellPower = (statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower) * (1f + statsTotal.BonusSpellPowerMultiplier);
             statsTotal = ApplyTalents(character, statsTotal, null);
             return statsTotal;
@@ -629,7 +629,7 @@ namespace Rawr
                     intBonusToAP = 1f * intellect;
                     break;
             }
-            return (float)Math.Floor(strength + agility + intBonusToAP);
+            return (float)Math.Floor((float)(strength + agility + intBonusToAP));
         }
 
         private Stats ApplyTalents(Character character, Stats stats, Stats gear) // also includes basic class benefits
@@ -637,10 +637,10 @@ namespace Rawr
             if (gear != null)
             {
                 int AK = character.ShamanTalents.AncestralKnowledge;
-                float intBase = (float)Math.Floor(stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1 + .02f * AK) + .0001f); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
-                float intBonus = (float)Math.Floor(gear.Intellect * (1 + gear.BonusIntellectMultiplier) * (1 + .02f * AK));
+                float intBase = (float)Math.Floor((float)(stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1 + .02f * AK))); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
+                float intBonus = (float)Math.Floor((float)(gear.Intellect * (1 + gear.BonusIntellectMultiplier) * (1 + .02f * AK)));
                 stats += gear;
-                stats.Intellect = (float)Math.Floor((intBase + intBonus));
+                stats.Intellect = (float)Math.Floor((float)(intBase + intBonus));
             }
             
             stats.Mana += 15f * stats.Intellect;
@@ -649,8 +649,8 @@ namespace Rawr
             
             int MQ = character.ShamanTalents.MentalQuickness;
             stats.AttackPower += AddAPFromStrAgiInt(character, stats.Strength, stats.Agility, stats.Intellect); 
-            stats.AttackPower = (float)Math.Floor(stats.AttackPower * (1f + stats.BonusAttackPowerMultiplier));
-            stats.SpellPower = (float)Math.Floor(stats.SpellPower + (stats.AttackPower * .1f * MQ * (1f + stats.BonusSpellPowerMultiplier)));
+            stats.AttackPower = (float)Math.Floor((float)(stats.AttackPower * (1f + stats.BonusAttackPowerMultiplier)));
+            stats.SpellPower = (float)Math.Floor((float)(stats.SpellPower + (stats.AttackPower * .1f * MQ * (1f + stats.BonusSpellPowerMultiplier))));
             return stats;
         }
         #endregion
