@@ -445,6 +445,7 @@ namespace Rawr
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
+            // my analysis reveals they get 31% of shaman AP + 2*their str
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
             {
@@ -456,15 +457,16 @@ namespace Rawr
                 float dogsAP = (dogsStr * 2 - 20) + .31f * attackPower + FSglyphAP;
                 float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * character.ShamanTalents.DualWieldSpecialization) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
-                float dogsHitsPerS = 1f / (1.5f / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
-                float dogsBaseDPS = 206.17f + dogsAP / 14f;
+                float dogsBaseSpeed = 1.5f;
+                float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
+                float dogsBaseDamage = (206.17f + dogsAP / 14f) * dogsBaseSpeed;
 
-                float dogsMeleeNormal = dogsBaseDPS * (1 - dogsMissrate - dogsCrit - cs.GlancingRate);
-                float dogsMeleeCrits = dogsBaseDPS * dogsCrit * critMultiplierMelee;
-                float dogsMeleeGlances = dogsBaseDPS * cs.GlancingHitModifier;
+                float dogsMeleeNormal = dogsBaseDamage * (1 - dogsMissrate - dogsCrit - cs.GlancingRate);
+                float dogsMeleeCrits = dogsBaseDamage * dogsCrit * critMultiplierMelee;
+                float dogsMeleeGlances = dogsBaseDamage * cs.GlancingHitModifier;
 
                 float dogsTotalDPS = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
-                float dogsMultipliers = cs.DamageReduction * (1 - dogsMissrate) * (1 + bonusPhysicalDamage);
+                float dogsMultipliers = cs.DamageReduction * (1 + bonusPhysicalDamage);
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
                 calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit);
