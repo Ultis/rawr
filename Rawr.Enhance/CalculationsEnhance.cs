@@ -679,11 +679,6 @@ namespace Rawr
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)")); // add both the Agi Str one 
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Spell Power)")); // and the spellpower one
             }
-
-            character.ShamanTalents.GlyphofStormstrike = true;
-            character.ShamanTalents.GlyphofFlametongueWeapon = true;
-            character.ShamanTalents.GlyphofWindfuryWeapon = true;
-
         }
 
         #region RelevantGlyphs
