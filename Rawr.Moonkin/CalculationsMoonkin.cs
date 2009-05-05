@@ -509,7 +509,7 @@ namespace Rawr.Moonkin
                 statsTotal.CritRating += statsTotal.IdolCritRating;
                 if (character.ActiveBuffsContains("Improved Moonkin Form"))
                 {
-                    statsTotal.SpellDamageFromSpiritPercentage += (0.05f * character.DruidTalents.ImprovedMoonkinForm);
+                    statsTotal.SpellDamageFromSpiritPercentage += (0.1f * character.DruidTalents.ImprovedMoonkinForm);
                 }
             }
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
