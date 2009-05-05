@@ -682,7 +682,22 @@ namespace Rawr.Optimizer
             public int Yellow;
             public int Blue;
             public int Jeweler;
-            public string SetName;
+
+            private string setName;
+
+            public string SetName
+            {
+                get
+                {
+                    return setName;
+                }
+                set
+                {
+                    setName = value;
+                    if (setName == null) setName = "";
+                }
+            }
+
             public bool ItemIsJewelersGem;
 
             public ArrayUtils.CompareResult CompareTo(StatsColors other)
@@ -716,6 +731,19 @@ namespace Rawr.Optimizer
                 if (compareResult == ArrayUtils.CompareResult.Unequal) return ArrayUtils.CompareResult.Unequal;
                 haveLessThan |= compareResult == ArrayUtils.CompareResult.LessThan;
                 haveGreaterThan |= compareResult == ArrayUtils.CompareResult.GreaterThan;
+
+                if (Item != null && (Item.Slot == Item.ItemSlot.MainHand || Item.Slot == Item.ItemSlot.OneHand || Item.Slot == Item.ItemSlot.TwoHand))
+                {
+                    if (Item.Slot == Item.ItemSlot.TwoHand && other.Item.Slot != Item.ItemSlot.TwoHand && haveGreaterThan)
+                    {
+                        return ArrayUtils.CompareResult.Unequal;
+                    }
+                    if (Item.Slot != Item.ItemSlot.TwoHand && other.Item.Slot == Item.ItemSlot.TwoHand && haveLessThan)
+                    {
+                        return ArrayUtils.CompareResult.Unequal;
+                    }
+                }
+
                 if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
                 else if (haveGreaterThan) return ArrayUtils.CompareResult.GreaterThan;
                 else if (haveLessThan) return ArrayUtils.CompareResult.LessThan;
