@@ -710,17 +710,17 @@ namespace Rawr.Mage
             float statsTalentBonusSpiritMultiplier = 0.0f;
             if (character.MageTalents.StudentOfTheMind > 0)
             {
-                statsTalentBonusSpiritMultiplier = 0.03f * character.MageTalents.StudentOfTheMind;
+                statsTalentBonusSpiritMultiplier = 0.01f + 0.03f * character.MageTalents.StudentOfTheMind;
             }
             if (calculationOptions.EffectSpiritMultiplier != 1.0f)
             {
                 statsTotal.BonusSpiritMultiplier = (1 + statsTotal.BonusSpiritMultiplier) * calculationOptions.EffectSpiritMultiplier - 1;
             }
-            statsTotal.Strength = (float)Math.Round((statsRaceStrength + statsTotal.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Round((statsRaceAgility + statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Intellect = (float)Math.Round((Math.Floor(0.00001 + Math.Floor(statsRaceIntellect * (1 + statsRaceBonusIntellectMultiplier)) * (1 + statsTalentBonusIntellectMultiplier)) + Math.Floor(0.00001 + statsTotal.Intellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier))) * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Stamina = (float)Math.Round((statsRaceStamina + statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + Math.Floor(statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier)) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.Strength = (float)Math.Round((statsRaceStrength + statsTotal.Strength) * (1 + statsTotal.BonusStrengthMultiplier) - 0.00001);
+            statsTotal.Agility = (float)Math.Round((statsRaceAgility + statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier) - 0.00001);
+            statsTotal.Intellect = (float)Math.Round((Math.Floor(0.00001 + Math.Floor(statsRaceIntellect * (1 + statsRaceBonusIntellectMultiplier)) * (1 + statsTalentBonusIntellectMultiplier)) + Math.Floor(0.00001 + statsTotal.Intellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier))) * (1 + statsTotal.BonusIntellectMultiplier) - 0.00001);
+            statsTotal.Stamina = (float)Math.Round((statsRaceStamina + statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier) - 0.00001);
+            statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + Math.Floor(statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier)) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
             statsTotal.Health = (float)Math.Round(((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect);

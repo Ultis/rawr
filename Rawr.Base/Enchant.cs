@@ -645,7 +645,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3859, "Springy Arachnoweave", Item.ItemSlot.Back, new Stats() { SpellPower = 18f }));
 
             // Tailoring enchant
-            Stats stats = new Stats();
+            Stats stats = new Stats() { Spirit = 1 };
             stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 250 }, 15, 45, 0.5f));
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, stats));
 
