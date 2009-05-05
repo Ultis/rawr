@@ -405,8 +405,11 @@ namespace Rawr
             if (calcOpts.MainhandImbue == "Windfury")
             {
                 float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * cs.UnhastedMHSpeed);
-                dpsWF = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * cs.HitsPerSWF
-                        * cs.DamageReduction * cs.ChanceYellowHit * (1 + bonusPhysicalDamage);
+                float WFnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * damageWFHit;
+                float WFcrit = cs.ChanceYellowCrit * critMultiplierMelee * damageWFHit;
+                dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.HitsPerSWF * cs.DamageReduction * (1 + bonusPhysicalDamage);
+//                dpsWF = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * cs.HitsPerSWF
+//                        * cs.DamageReduction * cs.ChanceYellowHit * (1 + bonusPhysicalDamage);
             }
 
             //7: Lightning Shield DPS
