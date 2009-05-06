@@ -18,6 +18,7 @@ namespace Rawr.Enhance
         private float yellowCritDepression = 0.018f;
         private float bloodlustHaste = 0f;
         private float chanceDodge = 0f;
+        private float chanceCrit = 0f;
         private float expertiseBonus = 0f;
 
         private float chanceSpellMiss = 0f;
@@ -45,6 +46,7 @@ namespace Rawr.Enhance
         private float flurryUptime = 1f;
         private float edUptime = 0f;
         private float edBonusCrit = 0f;
+        private float ftBonusCrit = 0f;
         private float urUptime = 0f;
 
         private float meleeAttacksPerSec = 0f;
@@ -101,7 +103,8 @@ namespace Rawr.Enhance
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
 
-        public float EnhSimWhiteCrit { get { return chanceWhiteCrit - edBonusCrit + whiteCritDepression; } }
+        public float EnhSimWhiteCrit { get { return chanceCrit; } }
+        public float EnhSimSpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
@@ -116,7 +119,7 @@ namespace Rawr.Enhance
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
-            float chanceCrit = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            chanceCrit = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             chanceWhiteMiss = Math.Max(0f, 0.27f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
             chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
@@ -124,12 +127,13 @@ namespace Rawr.Enhance
             chanceYellowCrit = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMiss);
 
             // Spells
-            float spellCritModifier = _stats.SpellCrit;
+            ftBonusCrit = 0f;
             if (_calcOpts.MainhandImbue == "Flametongue")
-                spellCritModifier += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
+                ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
             if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
-                spellCritModifier += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
-
+                ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
+        
+            float spellCritModifier = _stats.SpellCrit + ftBonusCrit;
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
             chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - .17f);

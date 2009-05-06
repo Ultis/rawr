@@ -63,7 +63,7 @@ namespace Rawr.Enhance
             sb.AppendLine("int                             " + stats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spi                             " + stats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spellpower                      " + stats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-            float chanceSpellCrit = cs.ChanceSpellCrit * 100f;
+            float chanceSpellCrit = cs.EnhSimSpellCrit * 100f;
             sb.AppendLine("spell_crit                      " + chanceSpellCrit.ToString("F2", CultureInfo.InvariantCulture));
             hitBonus = StatConversion.GetSpellHitFromRating(stats.HitRating) * 100f;
             sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
