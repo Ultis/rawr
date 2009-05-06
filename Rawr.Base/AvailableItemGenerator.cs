@@ -573,6 +573,7 @@ namespace Rawr.Optimizer
                 {
                     Item = item,
                     ItemIsJewelersGem = item.IsJewelersGem,
+                    ItemIsStormjewel = item.IsStormjewel,
                     SetName = item.SetName,
                     Stats = item.Stats,
                 };
@@ -614,6 +615,7 @@ namespace Rawr.Optimizer
                     continue;
                 }
                 int meta = 0, red = 0, yellow = 0, blue = 0, jeweler = 0;
+                bool ignore = false;
                 foreach (Item gem in new Item[] { gemmedItem.Gem1, gemmedItem.Gem2, gemmedItem.Gem3 })
                     if (gem != null)
                     {
@@ -628,7 +630,14 @@ namespace Rawr.Optimizer
                             case Item.ItemSlot.Purple: blue++; red++; break;
                             case Item.ItemSlot.Prismatic: red++; yellow++; blue++; break;
                         }
-                        if (gem.IsJewelersGem) jeweler++;
+                        if (gem.IsJewelersGem)
+                        {
+                            jeweler++;
+                        }
+                        if (gem.IsStormjewel || gem.Unique)
+                        {
+                            ignore = true;
+                        }
                     }
 
                 StatsColors statsColorsA = new StatsColors()
@@ -641,7 +650,8 @@ namespace Rawr.Optimizer
                     Red = red,
                     Yellow = yellow,
                     Blue = blue,
-                    Jeweler = jeweler
+                    Jeweler = jeweler,
+                    Ignore = ignore
                 };
                 bool addItem = true;
                 List<StatsColors> removeItems = new List<StatsColors>();
@@ -682,6 +692,7 @@ namespace Rawr.Optimizer
             public int Yellow;
             public int Blue;
             public int Jeweler;
+            public bool Ignore;
 
             private string setName;
 
@@ -699,10 +710,13 @@ namespace Rawr.Optimizer
             }
 
             public bool ItemIsJewelersGem;
+            public bool ItemIsStormjewel;
 
             public ArrayUtils.CompareResult CompareTo(StatsColors other)
             {
+                if (Ignore || other.Ignore) return ArrayUtils.CompareResult.Unequal;
                 if (ItemIsJewelersGem != other.ItemIsJewelersGem) return ArrayUtils.CompareResult.Unequal;
+                if (ItemIsStormjewel != other.ItemIsStormjewel) return ArrayUtils.CompareResult.Unequal;
                 if (Jeweler != other.Jeweler) return ArrayUtils.CompareResult.Unequal;
 
                 if (this.SetName != other.SetName) return ArrayUtils.CompareResult.Unequal;
