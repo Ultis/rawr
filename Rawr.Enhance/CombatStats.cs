@@ -116,8 +116,8 @@ namespace Rawr.Enhance
             chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             chanceWhiteMiss = Math.Max(0f, 0.27f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
             chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
-            chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss - whiteCritDepression);
-            chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss - yellowCritDepression);
+            chanceWhiteCrit = Math.Min(chanceCrit - whiteCritDepression, 1f - glancingRate - chanceWhiteMiss);
+            chanceYellowCrit = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMiss);
 
             // Spells
             float spellCritModifier = _stats.SpellCrit;
