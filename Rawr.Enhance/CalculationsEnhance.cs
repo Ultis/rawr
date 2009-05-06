@@ -219,20 +219,17 @@ namespace Rawr
                     break;
             }
             float unleashedRage = 0f;
-            if (calculatedStats.BuffStats.BonusAttackPowerMultiplier != .1f)
-            {  // only apply unleashed rage talent if not already applied Unleashed Rage buff.
-                switch (character.ShamanTalents.UnleashedRage)
-                {
-                    case 1:
-                        unleashedRage = .04f;
-                        break;
-                    case 2:
-                        unleashedRage = .07f;
-                        break;
-                    case 3:
-                        unleashedRage = .1f;
-                        break;
-                }
+            switch (character.ShamanTalents.UnleashedRage)
+            {
+                case 1:
+                    unleashedRage = .04f;
+                    break;
+                case 2:
+                    unleashedRage = .07f;
+                    break;
+                case 3:
+                    unleashedRage = .1f;
+                    break;
             }
 
             //gear stuff
@@ -260,7 +257,9 @@ namespace Rawr
 
 			#region Damage Model
             CombatStats cs = new CombatStats(character, stats); // calculate the combat stats using modified stats
-            float URattackPower = (stats.AttackPower * unleashedRage * cs.URUptime);
+            // only apply unleashed rage talent if not already applied Unleashed Rage buff.
+            float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f : 
+                                                    (stats.AttackPower * unleashedRage * cs.URUptime);
             float attackPower = stats.AttackPower + URattackPower;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
@@ -445,7 +444,7 @@ namespace Rawr
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
-            // my analysis reveals they get 31% of shaman AP + 2*their str
+            // my analysis reveals they get 31% of shaman AP + 2 * their STR and base 206.17 dps.
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
             {
@@ -454,7 +453,7 @@ namespace Rawr
                 float soeBuff = IsBuffChecked("Strength of Earth Totem") ? 155f : 0f;
                 float enhTotems = IsBuffChecked("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 and assume SoE totem giving 178 str buff
-                float dogsAP = (dogsStr * 2 - 20) + .31f * attackPower + FSglyphAP;
+                float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
                 float dogsMissrate = Math.Max(0f, 0.08f - hitBonus - .02f * character.ShamanTalents.DualWieldSpecialization) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
