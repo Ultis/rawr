@@ -485,6 +485,7 @@ namespace Rawr
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
             calculatedStats.YellowHit = (float)Math.Floor((float)(cs.ChanceYellowHit * 10000f)) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
+            calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
             calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.ChanceWhiteHit * 10000f)) / 100f; 
             calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.ChanceWhiteCrit - cs.EDBonusCrit)) * 10000f) / 100f;
             calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.ChanceYellowCrit - cs.EDBonusCrit)) * 10000f) / 100f;
@@ -1064,7 +1065,14 @@ namespace Rawr
             set { _spellHit = value; }
         }
 
-		private float _armorMitigation;
+        private float _overSpellHitCap;
+        public float OverSpellHitCap
+        {
+            get { return _overSpellHitCap; }
+            set { _overSpellHitCap = value; }
+        }
+
+        private float _armorMitigation;
 		public float ArmorMitigation
 		{
 			get { return _armorMitigation; }
@@ -1219,7 +1227,12 @@ namespace Rawr
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            if (OverSpellHitCap > 0.38f) // only warn if more than .38% over cap (equivalent to 10 hit rating)
+                dictValues.Add("Spell Hit", String.Format("{0}% (Over Cap)*Over Spell Hit Cap by {1}%",
+                    SpellHit.ToString("F2", CultureInfo.InvariantCulture),
+                    OverSpellHitCap.ToString("F2", CultureInfo.InvariantCulture)));
+            else
+                dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Melee Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
                 MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
                 (BasicStats.CritMeleeRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),

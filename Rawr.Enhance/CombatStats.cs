@@ -27,6 +27,7 @@ namespace Rawr.Enhance
         private float chanceSpellCrit = 0f;
         private float chanceWhiteCrit = 0f;
         private float chanceMeleeHit = 0f;
+        private float overSpellHitCap = 0f;
         
         private float unhastedMHSpeed = 0f;
         private float hastedMHSpeed = 0f;
@@ -80,6 +81,7 @@ namespace Rawr.Enhance
         public float ChanceYellowCrit { get { return chanceYellowCrit; } }
         public float ChanceMeleeHit { get { return chanceMeleeHit; } }
         public float ChanceMeleeCrit { get { return chanceWhiteCrit; } }
+        public float OverSpellHitCap { get { return overSpellHitCap; } }
 
         public float UnhastedMHSpeed { get { return unhastedMHSpeed; } }
         public float HastedMHSpeed { get { return hastedMHSpeed; } }
@@ -128,6 +130,7 @@ namespace Rawr.Enhance
 
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
             chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
+            overSpellHitCap = Math.Max(0f, hitBonusSpell - .17f);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.SpellCritRating + _stats.CritRating) + 
                                   StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * _talents.ThunderingStrikes;
             chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
