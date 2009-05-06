@@ -1171,7 +1171,7 @@ namespace Rawr.Moonkin
             float damagePerHit = (398.8f + attackPower / 14.0f) * 1.7f;
             float critRate = 0.05f + meleeCrit;
             float glancingRate = 0.2f;
-            float bossArmor = 10645f * (1.0f - armorPen);
+            float bossArmor = StatConversion.NPC_BOSS_ARMOR * (1.0f - armorPen);
             float damageReduction = bossArmor / (bossArmor + 15232.5f);
             damagePerHit *= 1.0f - damageReduction;
             damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate) * damagePerHit);

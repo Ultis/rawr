@@ -149,7 +149,7 @@
 			this.numericUpDownTargetArmor.TabIndex = 3;
 			this.numericUpDownTargetArmor.ThousandsSeparator = true;
 			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
-            10645,
+            (int) StatConversion.NPC_BOSS_ARMOR,
             0,
             0,
             0});

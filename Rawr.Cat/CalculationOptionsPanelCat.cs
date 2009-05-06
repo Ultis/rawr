@@ -71,7 +71,7 @@ namespace Rawr
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 10645;
+		public int TargetArmor = (int) StatConversion.NPC_BOSS_ARMOR;
 		public bool CustomUseShred = false;
 		public bool CustomUseRip = false;
 		public bool CustomUseRake = false;

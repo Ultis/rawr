@@ -140,7 +140,7 @@ namespace Rawr
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 10645;
+		public int TargetArmor = (int) StatConversion.NPC_BOSS_ARMOR;
 		public int NumberOfFerociousInspirations = 2;
 		public string ShattrathFaction = "Aldor";
         public string MainhandImbue = "Windfury";

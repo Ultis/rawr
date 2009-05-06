@@ -257,7 +257,7 @@
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 24;
             this.trackBarTargetArmor.TickFrequency = 300;
-            this.trackBarTargetArmor.Value = 10645;
+            this.trackBarTargetArmor.Value = (int) StatConversion.NPC_BOSS_ARMOR;
             // 
             // label2
             // 
