@@ -360,17 +360,18 @@ namespace Rawr
                 float swingDPS = damageMHSwing * cs.HitsPerSMHSS + damageOHSwing * cs.HitsPerSOHSS;
                 float SSnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * swingDPS;
                 float SScrit = swingDPS * cs.ChanceYellowCrit * critMultiplierMelee;
-                dpsSS = (SSnormal + SScrit) * weaponMastery * cs.DamageReduction *
-                        (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage) * bossNatureResistance;
+                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage) * bossNatureResistance;
             }
 
             //3: Lavalash DPS
             float dpsLL = 0f;
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
             {
-                dpsLL = (1 + cs.ChanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * cs.HitsPerSLL
-                      * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * weaponMastery * bossFireResistance; //and no armor reduction yeya!
-                if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
+                float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
+                float LLnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * lavalashDPS;
+                float LLcrit = lavalashDPS * cs.ChanceYellowCrit * critMultiplierMelee;
+                dpsLL = (LLnormal + LLcrit) * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * bossFireResistance; //and no armor reduction yeya!
+                if (calcOpts.OffhandImbue == "Flametongue")
                 {  // 25% bonus dmg if FT imbue in OH
                     if (character.ShamanTalents.GlyphofLavaLash)
                         dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
