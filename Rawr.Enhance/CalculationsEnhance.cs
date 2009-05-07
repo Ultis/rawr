@@ -177,7 +177,8 @@ namespace Rawr
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
-
+            float initialAP = stats.AttackPower;
+            
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats);
             Stats specialEffects = se.getSpecialEffects();
@@ -185,7 +186,6 @@ namespace Rawr
             if (stats.GreatnessProc > 0)
                 se.GreatnessProc();
             //Set up some talent variables
-            float initialAP = stats.AttackPower;
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
@@ -264,7 +264,7 @@ namespace Rawr
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
             float spellPower = (stats.SpellPower + URattackPower * mentalQuickness) * (1 + stats.BonusSpellPowerMultiplier);
-            float apspRatio = spellPower / attackPower;
+            float AP_SP_Ratio = (spellPower-274) / attackPower;
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
