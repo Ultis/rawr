@@ -32,7 +32,7 @@ namespace Rawr.Healadin
         public float HPS() { return AverageHealed() / CastTime(); }
         public float MPS() { return AverageCost() / CastTime(); }
         public float HPM() { return AverageHealed() / AverageCost(); }
-        public float CastTime() { return (BaseCastTime - AbilityCastTimeReduction()) / (1f + Stats.SpellHaste);}
+        public float CastTime() { return (float)Math.Max(1f, (BaseCastTime - AbilityCastTimeReduction()) / (1f + Stats.SpellHaste));}
 
         public float AverageCost()
         {
@@ -262,7 +262,7 @@ namespace Rawr.Healadin
 
         public float CastTime()
         {
-            return 1.5f / (1f + Stats.SpellHaste);
+            return (float)Math.Max(1f, 1.5f / (1f + Stats.SpellHaste));
         }
 
         public virtual float Time()

@@ -414,6 +414,7 @@ namespace Rawr
         GreatnessProc,
         HighestStat,
         ManacostReduceWithin15OnUse1Min,
+        ShieldFromHealed
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
@@ -2150,6 +2151,16 @@ namespace Rawr
         {
             get { return _rawNoStackData[(int)NonStackingStat.GreatnessProc]; }
             set { _rawNoStackData[(int)NonStackingStat.GreatnessProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Shield from Heal Amount")]
+        [Percentage]
+        [Category("Equipment Effects")]
+        public float ShieldFromHealed
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.ShieldFromHealed]; }
+            set { _rawNoStackData[(int)NonStackingStat.ShieldFromHealed] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

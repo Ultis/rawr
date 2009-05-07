@@ -198,8 +198,12 @@ namespace Rawr.Healadin
             }
 
             calc.TotalHealed += calc.HealedGHL = hl.GlyphOfHolyLight(calc.HealedHL);
+            
+            calc.HealedOther = Stats.Healed;
+            calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealed;
+
+            calc.TotalHealed += calc.HealedOther;
             calc.TotalHealed += calc.HealedSS;
-            calc.TotalHealed += calc.HealedOther = Stats.Healed;
 
             calc.AvgHPS = calc.TotalHealed / FightLength;
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;

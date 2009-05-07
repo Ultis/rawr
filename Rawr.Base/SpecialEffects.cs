@@ -906,6 +906,10 @@ namespace Rawr
             {
                 stats.CrusaderStrikeMultiplier = .05f;
             }
+            else if (line == "Your healing spells have a chance to cause Blessing of Ancient Kings for 15 seconds allowing your heals to shield the target absorbing damage equal to 15% of the amount healed.")
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ShieldFromHealed = .15f }, 15f, 45f, .1f));
+            }
             #region Added by Rawr.ProtPaladin
             else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {

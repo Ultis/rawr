@@ -524,7 +524,7 @@ namespace Rawr.Healadin
                 || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
             {
                 Stats stats = effect.Stats;
-                if ((stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating
+                if ((stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ShieldFromHealed
                     + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0)
                 {
                     return true;
