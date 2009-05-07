@@ -551,11 +551,6 @@ namespace Rawr
 					stats.Armor = baseArmor;
 				}
 
-                if (name.StartsWith("Ashtongue Talisman"))
-				{
-					stats.AshtongueTrinketProc = 1;
-				}
-				
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
 				{
 					bool isEquip = false;

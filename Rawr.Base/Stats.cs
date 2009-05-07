@@ -2465,14 +2465,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        public float AshtongueTrinketProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
-        }
-
         /* Regen trinkets */
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mana each sec. for 8 sec. (5 min cd)")]

@@ -332,7 +332,6 @@ namespace Rawr.Hunter
 				ScopeDamage = stats.ScopeDamage,
 				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
 				ShatteredSunMightProc = stats.ShatteredSunMightProc,
-				AshtongueTrinketProc = stats.AshtongueTrinketProc,
 				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
 				BonusSteadyShotDamageMultiplier = stats.BonusSteadyShotDamageMultiplier
 			};
@@ -373,7 +372,6 @@ namespace Rawr.Hunter
 			stats.ScopeDamage +
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
-			stats.AshtongueTrinketProc +
 			stats.BonusSteadyShotCrit +
 			stats.BonusSteadyShotDamageMultiplier +
             stats.ManaRestoreFromMaxManaPerSecond) > 0;
@@ -686,7 +684,6 @@ namespace Rawr.Hunter
 			statsTotal.Mp5 = statsRace.Mp5 + statsGearEnchantsBuffs.Mp5;
 			statsTotal.BonusPetCritChance = statsGearEnchantsBuffs.BonusPetCritChance;
 			statsTotal.ScopeDamage = statsGearEnchantsBuffs.ScopeDamage;
-			statsTotal.AshtongueTrinketProc = statsGearEnchantsBuffs.AshtongueTrinketProc;
 			statsTotal.BonusSteadyShotCrit = statsGearEnchantsBuffs.BonusSteadyShotCrit;
 
             statsTotal.BonusDamageMultiplier = 1.0f + statsGearEnchantsBuffs.BonusDamageMultiplier;
