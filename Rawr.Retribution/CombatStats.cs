@@ -78,7 +78,7 @@ namespace Rawr.Retribution
             float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
             AttackSpeed = BaseWeaponSpeed / ((1f + _stats.PhysicalHaste) * bloodlustHaste);
             WeaponDamage = baseWeaponDamage + _stats.AttackPower * BaseWeaponSpeed / 14f;
-            NormalWeaponDamage = WeaponDamage * 3.3f / BaseWeaponSpeed;
+            NormalWeaponDamage = baseWeaponDamage + _stats.AttackPower * 3.3f / 14f;
         }
     }
 }
