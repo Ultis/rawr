@@ -239,7 +239,7 @@ namespace Rawr.Retribution
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] { "Seals" };
+                    _customChartNames = new string[] { "Seals", "Weapon Speed" };
                 }
                 return _customChartNames;
             }
@@ -527,6 +527,68 @@ namespace Rawr.Retribution
                 Vengeance.Item = null;
 
                 return new ComparisonCalculationBase[] { Blood, Command, Righteousness, Vengeance };
+            }
+            if (chartName == "Weapon Speed")
+            {
+
+                CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+
+                CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
+
+                Item newMH;
+                float baseSpeed = character.MainHand.Speed;
+                int minDamage = character.MainHand.MinDamage;
+                int maxDamage = character.MainHand.MaxDamage;
+
+                Character deltaChar = character.Clone();
+
+                ComparisonCalculationBase three;
+                newMH = character.MainHand.Item.Clone();
+                newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.3f);
+                newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.3f);
+                newMH.Speed = 3.3f;
+                deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                three = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.3 Speed", baseSpeed == newMH.Speed);
+                three.Item = null;
+
+                ComparisonCalculationBase four;
+                newMH = character.MainHand.Item.Clone();
+                newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.4f);
+                newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.4f);
+                newMH.Speed = 3.4f;
+                deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                four = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.4 Speed", baseSpeed == newMH.Speed);
+                four.Item = null;
+
+                ComparisonCalculationBase five;
+                newMH = character.MainHand.Item.Clone();
+                newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.5f);
+                newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.5f);
+                newMH.Speed = 3.5f;
+                deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                five = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.5 Speed", baseSpeed == newMH.Speed);
+                five.Item = null;
+                
+                ComparisonCalculationBase six;
+                newMH = character.MainHand.Item.Clone();
+                newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.6f);
+                newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.6f);
+                newMH.Speed = 3.6f;
+                deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                six = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.6 Speed", baseSpeed == newMH.Speed);
+                six.Item = null;
+                
+                ComparisonCalculationBase seven;
+                newMH = character.MainHand.Item.Clone();
+                newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.7f);
+                newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.7f);
+                newMH.Speed = 3.7f;
+                deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                seven = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.7 Speed", baseSpeed == newMH.Speed);
+                seven.Item = null;
+
+                
+                return new ComparisonCalculationBase[] { three, four, five, six, seven };
             }
             else
             {
