@@ -4641,7 +4641,7 @@ namespace Rawr
         }
         public static bool operator >(Stats x, Stats y)
         {
-            return AllCompare(x, y, ArrayUtils.CompareOption.GreaterThan);
+			return x >= y && x != y;
         }
         public static bool operator >=(Stats x, Stats y)
         {
@@ -4649,7 +4649,7 @@ namespace Rawr
         }
         public static bool operator <(Stats x, Stats y)
         {
-            return AllCompare(x, y, ArrayUtils.CompareOption.LessThan);
+			return x <= y && x != y;
         }
         public static bool operator <=(Stats x, Stats y)
         {
