@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-using System.Globalization;
 using System.Windows.Forms;
 using Rawr.Enhance;
 
@@ -45,9 +44,7 @@ namespace Rawr
 			get
 			{
 				if (_calculationOptionsPanel == null)
-				{
 					_calculationOptionsPanel = new CalculationOptionsPanelEnhance();
-				}
 				return _calculationOptionsPanel;
 			}
         }
@@ -126,7 +123,9 @@ namespace Rawr
 					_customChartNames = new string[] {
 					"Combat Table (White)",
 					"Combat Table (Yellow)",
-					"Relative Gem Values"
+					"Relative Gem Values",
+                    "MH Weapon Speeds",
+                    "OH Weapon Speeds",
 					};
 				return _customChartNames;
 			}
@@ -275,54 +274,6 @@ namespace Rawr
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
 
             #endregion
-
-            #region Old Enchants
-            /*                   
-            if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
-            {
-                if (character.MainHandEnchant != null)
-                {
-                    float whiteAttacksPerSecond = swingsPerSMHMelee * (1f - chanceWhiteMiss - chanceDodge);
-                    if (character.MainHandEnchant.Id == 2673) // Mongoose Enchant
-                    {
-                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
-                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
-                        basecs.HastedMHSpeed /= 1f + (0.02f * mongooseUptime);
-                    }
-                    if (character.MainHandEnchant.Id == 3789) // Berserker Enchant
-                    {
-                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
-                    }
-                }
-                if (character.OffHandEnchant != null && character.ShamanTalents.DualWield == 1)
-                {
-                    float whiteAttacksPerSecond = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge);
-                    if (character.OffHandEnchant.Id == 2673)  // Mongoose Enchant
-                    {
-                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
-                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
-                        basecs.HastedOHSpeed /= 1f + (0.02f * mongooseUptime);
-                    }
-                    if (character.OffHandEnchant.Id == 3789) // Berserker Enchant
-                    {
-                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
-                    }
-                }
-            }
- */
-            #endregion
-
-        #endregion
 
             #region Individual DPS
             //1: Melee DPS
@@ -513,6 +464,7 @@ namespace Rawr
             
 			return calculatedStats;
         }
+        #endregion
 
 
         #region Get Race Stats
@@ -712,83 +664,6 @@ namespace Rawr
         }
         #endregion
 
-        #region Custom Chart Data
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-		{
-			switch (chartName)
-			{
-				case "Combat Table (White)":
-					CharacterCalculationsEnhance currentCalculationsEnhanceWhite = GetCharacterCalculations(character) as CharacterCalculationsEnhance;
-					ComparisonCalculationEnhance calcMissWhite = new ComparisonCalculationEnhance()		{ Name = "    Miss    " };
-					ComparisonCalculationEnhance calcDodgeWhite = new ComparisonCalculationEnhance()	{ Name = "   Dodge   " };
-					ComparisonCalculationEnhance calcCritWhite = new ComparisonCalculationEnhance()		{ Name = "  Crit  " };
-					ComparisonCalculationEnhance calcGlanceWhite = new ComparisonCalculationEnhance()	{ Name = " Glance " };
-					ComparisonCalculationEnhance calcHitWhite = new ComparisonCalculationEnhance()		{ Name = "Hit" };
-					if (currentCalculationsEnhanceWhite != null)
-					{
-						calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsEnhanceWhite.MissedAttacks;
-						calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
-						calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
-                        calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
-						calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
-						                             calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
-					}
-					return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
-
-				case "Combat Table (Yellow)":
-					CharacterCalculationsEnhance currentCalculationsEnhanceYellow = GetCharacterCalculations(character) as CharacterCalculationsEnhance;
-					ComparisonCalculationEnhance calcMissYellow = new ComparisonCalculationEnhance()	{ Name = "    Miss    " };
-					ComparisonCalculationEnhance calcDodgeYellow = new ComparisonCalculationEnhance()	{ Name = "   Dodge   " };
-					ComparisonCalculationEnhance calcCritYellow = new ComparisonCalculationEnhance()	{ Name = "  Crit  " };
-					ComparisonCalculationEnhance calcGlanceYellow = new ComparisonCalculationEnhance()	{ Name = " Glance " };
-					ComparisonCalculationEnhance calcHitYellow = new ComparisonCalculationEnhance()		{ Name = "Hit" };
-					if (currentCalculationsEnhanceYellow != null)
-					{
-						calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = currentCalculationsEnhanceYellow.MissedAttacks;
-						calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsEnhanceYellow.DodgedAttacks;
-						calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsEnhanceYellow.YellowCrit;
-						calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
-						calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
-						calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
-					}
-					return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
-
-				case "Relative Gem Values":
-					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
-					float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 16 } }).OverallPoints - dpsBase);
-					float dpsAgi =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 16 } }).OverallPoints - dpsBase);
-				    float dpsAP  =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 32 } }).OverallPoints - dpsBase);
-                    float dpsInt =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 16 } }).OverallPoints - dpsBase);
-                    float dpsCrit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 16} }).OverallPoints - dpsBase);
-					float dpsExp =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 16 } }).OverallPoints - dpsBase);
-					float dpsHaste =	(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 16 } }).OverallPoints - dpsBase);
-					float dpsHit =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 16 } }).OverallPoints - dpsBase);
-					float dpsDmg =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
-					float dpsPen =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 16 } }).OverallPoints - dpsBase);
-                    float dpsSpd =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 19 } }).OverallPoints - dpsBase);
-                    float dpsSta =      (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 24 } }).OverallPoints - dpsBase);
-
-					return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationEnhance() { Name = "24 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "16 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "16 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-						new ComparisonCalculationEnhance() { Name = "32 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
-						new ComparisonCalculationEnhance() { Name = "16 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
-						new ComparisonCalculationEnhance() { Name = "16 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-						new ComparisonCalculationEnhance() { Name = "16 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
-						new ComparisonCalculationEnhance() { Name = "16 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-						new ComparisonCalculationEnhance() { Name = "16 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
-//						new ComparisonCalculationEnhance() { Name = "Weapon Damage", OverallPoints = dpsDmg, DPSPoints = dpsDmg },
-						new ComparisonCalculationEnhance() { Name = "16 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
-                        new ComparisonCalculationEnhance() { Name = "19 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
-					};
-
-				default:
-					return new ComparisonCalculationBase[0];
-			}
-        }
-        #endregion
-
         #region Relevant Stats
         private List<Item.ItemType> _relevantItemTypes = null;
         public override List<Item.ItemType> RelevantItemTypes
@@ -936,471 +811,146 @@ namespace Rawr
                 stats.TigersFuryCooldownReduction == 0;
         }
         #endregion
-    }
 
-    #region Char Calcs Get/Set
-    public class CharacterCalculationsEnhance : CharacterCalculationsBase
-    {
-		private float _overallPoints = 0f;
-		public override float OverallPoints
-		{
-			get { return _overallPoints; }
-			set { _overallPoints = value; }
-		}
-
-		private float[] _subPoints = new float[] { 0f, 0f };
-		public override float[] SubPoints
-		{
-			get { return _subPoints; }
-			set { _subPoints = value; }
-		}
-
-		public float DPSPoints
-		{
-			get { return _subPoints[0]; }
-			set { _subPoints[0] = value; }
-		}
-
-		public float SurvivabilityPoints
-		{
-			get { return _subPoints[1]; }
-			set { _subPoints[1] = value; }
-		}
-
-		private Stats _basicStats;
-		public Stats BasicStats
-		{
-			get { return _basicStats; }
-			set { _basicStats = value; }
-		}
-
-        private Stats _baseStats;
-        public Stats BaseStats
+        #region Custom Chart Data
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            get { return _baseStats; }
-            set { _baseStats = value; }
+            switch (chartName)
+            {
+                case "Combat Table (White)":
+                    CharacterCalculationsEnhance currentCalculationsEnhanceWhite = GetCharacterCalculations(character) as CharacterCalculationsEnhance;
+                    ComparisonCalculationEnhance calcMissWhite = new ComparisonCalculationEnhance() { Name = "    Miss    " };
+                    ComparisonCalculationEnhance calcDodgeWhite = new ComparisonCalculationEnhance() { Name = "   Dodge   " };
+                    ComparisonCalculationEnhance calcCritWhite = new ComparisonCalculationEnhance() { Name = "  Crit  " };
+                    ComparisonCalculationEnhance calcGlanceWhite = new ComparisonCalculationEnhance() { Name = " Glance " };
+                    ComparisonCalculationEnhance calcHitWhite = new ComparisonCalculationEnhance() { Name = "Hit" };
+                    if (currentCalculationsEnhanceWhite != null)
+                    {
+                        calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsEnhanceWhite.MissedAttacks;
+                        calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
+                        calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
+                        calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
+                        calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints -
+                                                     calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
+                    }
+                    return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
+
+                case "Combat Table (Yellow)":
+                    CharacterCalculationsEnhance currentCalculationsEnhanceYellow = GetCharacterCalculations(character) as CharacterCalculationsEnhance;
+                    ComparisonCalculationEnhance calcMissYellow = new ComparisonCalculationEnhance() { Name = "    Miss    " };
+                    ComparisonCalculationEnhance calcDodgeYellow = new ComparisonCalculationEnhance() { Name = "   Dodge   " };
+                    ComparisonCalculationEnhance calcCritYellow = new ComparisonCalculationEnhance() { Name = "  Crit  " };
+                    ComparisonCalculationEnhance calcGlanceYellow = new ComparisonCalculationEnhance() { Name = " Glance " };
+                    ComparisonCalculationEnhance calcHitYellow = new ComparisonCalculationEnhance() { Name = "Hit" };
+                    if (currentCalculationsEnhanceYellow != null)
+                    {
+                        calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = currentCalculationsEnhanceYellow.MissedAttacks;
+                        calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsEnhanceYellow.DodgedAttacks;
+                        calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsEnhanceYellow.YellowCrit;
+                        calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
+                        calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
+                        calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
+                    }
+                    return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
+
+                case "Relative Gem Values":
+                    float dpsBase = GetCharacterCalculations(character).OverallPoints;
+                    float dpsStr = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 16 } }).OverallPoints - dpsBase);
+                    float dpsAgi = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 16 } }).OverallPoints - dpsBase);
+                    float dpsAP = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 32 } }).OverallPoints - dpsBase);
+                    float dpsInt = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 16 } }).OverallPoints - dpsBase);
+                    float dpsCrit = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsExp = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsHaste = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsHit = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsDmg = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
+                    float dpsPen = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsSpd = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 19 } }).OverallPoints - dpsBase);
+                    float dpsSta = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 24 } }).OverallPoints - dpsBase);
+
+                    return new ComparisonCalculationBase[] { 
+						new ComparisonCalculationEnhance() { Name = "24 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "16 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "16 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
+						new ComparisonCalculationEnhance() { Name = "32 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
+						new ComparisonCalculationEnhance() { Name = "16 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
+						new ComparisonCalculationEnhance() { Name = "16 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
+						new ComparisonCalculationEnhance() { Name = "16 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
+						new ComparisonCalculationEnhance() { Name = "16 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
+						new ComparisonCalculationEnhance() { Name = "16 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
+						new ComparisonCalculationEnhance() { Name = "16 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
+                        new ComparisonCalculationEnhance() { Name = "19 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
+					};
+
+                case "MH Weapon Speeds":
+                    if (character.MainHand == null)
+                        return new ComparisonCalculationBase[0];
+                    ComparisonCalculationBase MHonePointFour = CheckWeaponSpeedEffect(character, 1.4f, true);
+                    ComparisonCalculationBase MHonePointFive = CheckWeaponSpeedEffect(character, 1.5f, true);
+                    ComparisonCalculationBase MHonePointSix = CheckWeaponSpeedEffect(character, 1.6f, true);
+                    ComparisonCalculationBase MHonePointSeven = CheckWeaponSpeedEffect(character, 1.7f, true);
+                    ComparisonCalculationBase MHtwoPointFour = CheckWeaponSpeedEffect(character, 2.4f, true);
+                    ComparisonCalculationBase MHtwoPointFive = CheckWeaponSpeedEffect(character, 2.5f, true);
+                    ComparisonCalculationBase MHtwoPointSix = CheckWeaponSpeedEffect(character, 2.6f, true);
+                    ComparisonCalculationBase MHtwoPointSeven = CheckWeaponSpeedEffect(character, 2.7f, true);
+                    return new ComparisonCalculationBase[] { MHonePointFour, MHonePointFive, MHonePointSix, MHonePointSeven, 
+                                                             MHtwoPointFour, MHtwoPointFive, MHtwoPointSix, MHtwoPointSeven };
+
+                case "OH Weapon Speeds":
+                    if (character.OffHand == null || character.ShamanTalents.DualWield != 1)
+                        return new ComparisonCalculationBase[0];
+                    ComparisonCalculationBase OHonePointFour = CheckWeaponSpeedEffect(character, 1.4f, false);
+                    ComparisonCalculationBase OHonePointFive = CheckWeaponSpeedEffect(character, 1.5f, false);
+                    ComparisonCalculationBase OHonePointSix = CheckWeaponSpeedEffect(character, 1.6f, false);
+                    ComparisonCalculationBase OHonePointSeven = CheckWeaponSpeedEffect(character, 1.7f, false);
+                    ComparisonCalculationBase OHtwoPointFour = CheckWeaponSpeedEffect(character, 2.4f, false);
+                    ComparisonCalculationBase OHtwoPointFive = CheckWeaponSpeedEffect(character, 2.5f, false);
+                    ComparisonCalculationBase OHtwoPointSix = CheckWeaponSpeedEffect(character, 2.6f, false);
+                    ComparisonCalculationBase OHtwoPointSeven = CheckWeaponSpeedEffect(character, 2.7f, false);
+                    return new ComparisonCalculationBase[] { OHonePointFour, OHonePointFive, OHonePointSix, OHonePointSeven, 
+                                                             OHtwoPointFour, OHtwoPointFive, OHtwoPointSix, OHtwoPointSeven };
+
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
         }
 
-        private Stats _buffStats;
-        public Stats BuffStats
+        private ComparisonCalculationBase CheckWeaponSpeedEffect(Character character, float newSpeed, bool mainHand)
         {
-            get { return _buffStats; }
-            set { _buffStats = value; }
-        }
+            float baseSpeed = 0f;
+            int minDamage = 0;
+            int maxDamage = 0;
+            Item newWeapon;
+            CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
+            Character deltaChar = character.Clone();
 
-        private int _targetLevel;
-		public int TargetLevel
-		{
-			get { return _targetLevel; }
-			set { _targetLevel = value; }
-		}
-
-        private float _totalExpertise;
-        public float TotalExpertise
-        {
-            get { return _totalExpertise; }
-            set { _totalExpertise = value; }
-        }
-        
-        private float _avoidedAttacks;
-		public float AvoidedAttacks
-		{
-			get { return _avoidedAttacks; }
-			set { _avoidedAttacks = value; }
-		}
-
-		private float _dodgedAttacks;
-		public float DodgedAttacks
-		{
-			get { return _dodgedAttacks; }
-			set { _dodgedAttacks = value; }
-		}
-
-		private float _missedAttacks;
-		public float MissedAttacks
-		{
-			get { return _missedAttacks; }
-			set { _missedAttacks = value; }
-		}
-
-		private float _whiteCrit;
-		public float MeleeCrit
-		{
-			get { return _whiteCrit; }
-			set { _whiteCrit = value; }
-		}
-
-		private float _yellowCrit;
-		public float YellowCrit
-		{
-			get { return _yellowCrit; }
-			set { _yellowCrit = value; }
-		}
-
-        private float _spellCrit;
-        public float SpellCrit
-        {
-            get { return _spellCrit; }
-            set { _spellCrit = value; }
-        }
-
-        private float _whiteHit;
-        public float WhiteHit
-        {
-            get { return _whiteHit; }
-            set { _whiteHit = value; }
-        }
-
-        private float _yellowHit;
-        public float YellowHit
-        {
-            get { return _yellowHit; }
-            set { _yellowHit = value; }
-        }
-
-        private float _spellHit;
-        public float SpellHit
-        {
-            get { return _spellHit; }
-            set { _spellHit = value; }
-        }
-
-        private float _overSpellHitCap;
-        public float OverSpellHitCap
-        {
-            get { return _overSpellHitCap; }
-            set { _overSpellHitCap = value; }
-        }
-
-        private float _armorMitigation;
-		public float ArmorMitigation
-		{
-			get { return _armorMitigation; }
-			set { _armorMitigation = value; }
-		}
-
-        private float _urUptime;
-        public float URUptime
-        {
-            get { return _urUptime; }
-            set { _urUptime = value; }
-        }
-
-        private float _edUptime;
-        public float EDUptime
-        {
-            get { return _edUptime; }
-            set { _edUptime = value; }
-        }
-
-        private float _edBonusCrit;
-        public float EDBonusCrit
-        {
-            get { return _edBonusCrit; }
-            set { _edBonusCrit = value; }
-        }
-
-        private float _flurryUptime;
-        public float FlurryUptime
-        {
-            get { return _flurryUptime; }
-            set { _flurryUptime = value; }
-        }
-
-        private float _secondsTo5Stack;
-        public float SecondsTo5Stack
-        {
-            get { return _secondsTo5Stack; }
-            set { _secondsTo5Stack = value; }
-        }
-
-        private float _avMHSpeed;
-        public float AvMHSpeed
-        {
-            get { return _avMHSpeed; }
-            set { _avMHSpeed = value; }
-        }
-
-        private float _avOHSpeed;
-        public float AvOHSpeed
-        {
-            get { return _avOHSpeed; }
-            set { _avOHSpeed = value; }
-        }
-
-        private float _meleeDamage;
-		public float MeleeDamage
-		{
-			get { return _meleeDamage; }
-			set { _meleeDamage = value; }
-		}
-
-        private float _glancingBlows;
-        public float GlancingBlows
-        {
-            get { return _glancingBlows; }
-            set { _glancingBlows = value; }
-        }
-
-        private DPSAnalysis _swingDamage;
-        public DPSAnalysis SwingDamage
-        {
-            get { return _swingDamage; }
-            set { _swingDamage = value; }
-        }
-
-        private DPSAnalysis _windfuryAttack;
-        public DPSAnalysis WindfuryAttack
-        {
-            get { return _windfuryAttack; }
-            set { _windfuryAttack = value; }
-        }
-
-        private DPSAnalysis _flametongueAttack;
-        public DPSAnalysis FlameTongueAttack
-        {
-            get { return _flametongueAttack; }
-            set { _flametongueAttack = value; }
-        }
-
-        private DPSAnalysis _lightningBolt;
-        public DPSAnalysis LightningBolt
-        {
-            get { return _lightningBolt; }
-            set { _lightningBolt = value; }
-        }
-
-        private DPSAnalysis _earthShock;
-        public DPSAnalysis EarthShock
-        {
-            get { return _earthShock; }
-            set { _earthShock = value; }
-        }
-
-        private DPSAnalysis _searingMagma;
-        public DPSAnalysis SearingMagma
-        {
-            get { return _searingMagma; }
-            set { _searingMagma = value; }
-        }
-
-        private DPSAnalysis _stormstrike;
-        public DPSAnalysis Stormstrike
-        {
-            get { return _stormstrike; }
-            set { _stormstrike = value; }
-        }
-
-        private DPSAnalysis _spiritWolf;
-        public DPSAnalysis SpiritWolf
-        {
-            get { return _spiritWolf; }
-            set { _spiritWolf = value; }
-        }
-
-        private DPSAnalysis _lightningShield;
-        public DPSAnalysis LightningShield
-        {
-            get { return _lightningShield; }
-            set { _lightningShield = value; }
-        }
-
-        private DPSAnalysis _lavaLash;
-        public DPSAnalysis LavaLash
-        {
-            get { return _lavaLash; }
-            set { _lavaLash = value; }
-        }
-
-        public List<Buff> ActiveBuffs { get; set; }
-        #endregion
-
-		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-		{
-			Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            dictValues.Add("Health", BasicStats.Health.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Mana", BasicStats.Mana.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Agility", BasicStats.Agility.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Strength", BasicStats.Strength.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
-
-            dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            if (OverSpellHitCap > 0.38f) // only warn if more than .38% over cap (equivalent to 10 hit rating)
-                dictValues.Add("Spell Hit", String.Format("{0}% (Over Cap)*Over Spell Hit Cap by {1}%",
-                    SpellHit.ToString("F2", CultureInfo.InvariantCulture),
-                    OverSpellHitCap.ToString("F2", CultureInfo.InvariantCulture)));
+            if (mainHand)
+            {
+                newWeapon = character.MainHand.Item.Clone();
+                baseSpeed = character.MainHand.Speed;
+                minDamage = character.MainHand.MinDamage;
+                maxDamage = character.MainHand.MaxDamage;
+            }
             else
-                dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Melee Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
-                MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
-                (BasicStats.CritMeleeRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetCritFromRating(BasicStats.CritMeleeRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Spell Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
-                SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
-                (BasicStats.SpellCritRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellCritFromRating(BasicStats.SpellCritRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-
-            dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Total Expertise",
-                String.Format((TotalExpertise > 26 ? "{0} (Cap Exceeded)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged" :
-                                                     "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged"),
-                TotalExpertise.ToString("F0", CultureInfo.InvariantCulture),
-                BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
-                BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
-                DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste\r\n{2}% Spell Haste", 
-                BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, Character.CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, Character.CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit",
-                BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Armour Pen Rating", String.Format("{0}*{1}% Armour Penetration",
-                BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            float spellMiss = 100 - SpellHit;
-            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Spell Misses\r\n{3}% White Misses",
-                        AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
-                        DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture),
-                        spellMiss.ToString("F2", CultureInfo.InvariantCulture), 
-                        MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Avg MH Speed", AvMHSpeed.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Avg OH Speed", AvOHSpeed.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            					
-            dictValues.Add("UR Uptime", URUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("ED Uptime", String.Format("{0}%*{1}% ED Bonus Crit",
-                EDUptime.ToString("F2", CultureInfo.InvariantCulture),
-                EDBonusCrit.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Flurry Uptime", FlurryUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Avg Time to 5 Stack", SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture) + " sec");
-
-            dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
-
-            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage,DPSPoints));
-            dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack,DPSPoints));
-            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack,DPSPoints));
-            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt,DPSPoints));
-            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock,DPSPoints));
-            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma,DPSPoints));
-            dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike,DPSPoints));
-            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints));
-            dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield,DPSPoints));
-            dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints));
-            dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
-            
-            dictValues.Add("Enhance Version", typeof(CalculationsEnhance).Assembly.GetName().Version.ToString());
-
-            dictValues.Add("Status", String.Format("Enhance Model : DPS Points {0}, Survivability Points {1}, Overall Points {2}",
-                DPSPoints.ToString("F2", CultureInfo.InvariantCulture),
-                SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture),
-                OverallPoints.ToString("F2", CultureInfo.InvariantCulture)));
-
-            return dictValues;
-		}
-
-        private String dpsOutputFormat(DPSAnalysis dpsStat, float totaldps)
-        {
-            float percent = dpsStat.dps / totaldps * 100f;
-            return string.Format("{0}\r\n{1}% of total dps",
-                dpsStat, percent.ToString("F2", CultureInfo.InvariantCulture));
-        }
-        
-        private String dpsOutputFormat(float dps, float totaldps)
-        {
-            float percent = dps / totaldps * 100f;
-            return string.Format("{0}*{1}% of total dps", 
-                dps.ToString("F2", CultureInfo.InvariantCulture),
-                percent.ToString("F2", CultureInfo.InvariantCulture));
+            {
+                newWeapon = character.OffHand.Item.Clone();
+                baseSpeed = character.OffHand.Speed;
+                minDamage = character.OffHand.MinDamage;
+                maxDamage = character.OffHand.MaxDamage;
+            }
+            newWeapon.MinDamage = (int)Math.Round(minDamage / baseSpeed * newSpeed);
+            newWeapon.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * newSpeed);
+            newWeapon.Speed = newSpeed;
+            String speed = newSpeed.ToString() + " Speed";
+            if (mainHand)
+                deltaChar.MainHand = new ItemInstance(newWeapon, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+            else
+                deltaChar.OffHand = new ItemInstance(newWeapon, character.OffHand.Gem1, character.OffHand.Gem2, character.OffHand.Gem3, character.OffHand.Enchant);
+            ComparisonCalculationBase result = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, speed, baseSpeed == newWeapon.Speed);
+            result.Item = null;
+            return result;
         }
 
-		public override float GetOptimizableCalculationValue(string calculation)
-		{
-			switch (calculation)
-			{
-				case "Health": return BasicStats.Health;
-                case "DPS Points": return DPSPoints;
-				case "Nature Resist": return BasicStats.NatureResistance;
-				case "Fire Resist": return BasicStats.FireResistance;
-				case "Frost Resist": return BasicStats.FrostResistance;
-				case "Shadow Resist": return BasicStats.ShadowResistance;
-				case "Arcane Resist": return BasicStats.ArcaneResistance;
-			}
-			return 0f;
-		}
+        #endregion
     }
-
-    #region Comparison Calcs
-    public class ComparisonCalculationEnhance : ComparisonCalculationBase
-	{
-		private string _name = string.Empty;
-		public override string Name
-		{
-			get { return _name; }
-			set { _name = value; }
-		}
-
-		private float _overallPoints = 0f;
-		public override float OverallPoints
-		{
-			get { return _overallPoints; }
-			set { _overallPoints = value; }
-		}
-
-		private float[] _subPoints = new float[] { 0f };
-		public override float[] SubPoints
-		{
-			get { return _subPoints; }
-			set { _subPoints = value; }
-		}
-
-		public float DPSPoints
-		{
-			get { return _subPoints[0]; }
-			set { _subPoints[0] = value; }
-		}
-
-		private Item _item = null;
-		public override Item Item
-		{
-			get { return _item; }
-			set { _item = value; }
-		}
-
-        private ItemInstance _itemInstance = null;
-        public override ItemInstance ItemInstance
-        {
-            get { return _itemInstance; }
-            set { _itemInstance = value; }
-        }
-
-		private bool _equipped = false;
-		public override bool Equipped
-		{
-			get { return _equipped; }
-			set { _equipped = value; }
-		}
-
-        public override String BaseStat
-        {
-            get { return " Attack Power"; }
-        }
-
-        public override bool getBaseStatOption(Character character) 
-        {
-            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            return calcOpts.BaseStatOption;
-        }
-
-       	public override string ToString()
-		{
-			return string.Format("{0}: ({1}O {2}DPS)", Name, Math.Round(OverallPoints), Math.Round(DPSPoints));
-		}
-    }
-    #endregion
 }
