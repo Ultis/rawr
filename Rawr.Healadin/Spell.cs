@@ -34,7 +34,7 @@ namespace Rawr.Healadin
         public float HPM() { return AverageHealed() / AverageCost(); }
         public float CastTime() { return (float)Math.Max(1f, (BaseCastTime - AbilityCastTimeReduction()) / (1f + Stats.SpellHaste));}
 
-        public virtual float AverageCost()
+        public float AverageCost()
         {
             return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
                 * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)))
@@ -171,13 +171,6 @@ namespace Rawr.Healadin
 
         public override float BaseCastTime { get { return 1.5f; } }
         public override float BaseMana { get { return 790f; } }
-
-        public override float AverageCost()
-        {
-            return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
-                * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)))
-                - (BaseMana * (.12f * Talents.Illumination - (Stats.HolyShockHoTOnCrit > 0 ? .19f : 0f))) * ChanceToCrit();
-        }
 
         protected override float AbilityCritChance()
         {
