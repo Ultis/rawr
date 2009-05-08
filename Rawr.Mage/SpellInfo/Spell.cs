@@ -89,6 +89,13 @@ namespace Rawr.Mage
         }
     }
 
+    public class AbsorbSpell : Spell
+    {
+        public AbsorbSpell(SpellTemplate template) : base(template) { }
+
+        public float Absorb;
+    }
+
     public class Spell
     {
         public SpellId SpellId;

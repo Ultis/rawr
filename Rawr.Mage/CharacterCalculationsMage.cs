@@ -582,6 +582,32 @@ namespace Rawr.Mage
             }
         }
 
+        private FireWardTemplate _FireWardTemplate;
+        public FireWardTemplate FireWardTemplate
+        {
+            get
+            {
+                if (_FireWardTemplate == null)
+                {
+                    _FireWardTemplate = new FireWardTemplate(this);
+                }
+                return _FireWardTemplate;
+            }
+        }
+
+        private FrostWardTemplate _FrostWardTemplate;
+        public FrostWardTemplate FrostWardTemplate
+        {
+            get
+            {
+                if (_FrostWardTemplate == null)
+                {
+                    _FrostWardTemplate = new FrostWardTemplate(this);
+                }
+                return _FrostWardTemplate;
+            }
+        }
+
         private ConjureManaGemTemplate _ConjureManaGemTemplate;
         public ConjureManaGemTemplate ConjureManaGemTemplate
         {
@@ -851,6 +877,10 @@ namespace Rawr.Mage
             dictValues.Add("Arcane Blast(3)", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.ABCost));
             bs = BaseState.GetSpell(SpellId.ArcaneMissilesMB);
             dictValues.Add("MBAM", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
+            AbsorbSpell abss = (AbsorbSpell)BaseState.GetSpell(SpellId.FireWard);
+            dictValues.Add("Fire Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - BaseState.Latency, abss.ABCost));
+            abss = (AbsorbSpell)BaseState.GetSpell(SpellId.FrostWard);
+            dictValues.Add("Frost Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - BaseState.Latency, abss.ABCost));
             float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : DpsRating * CalculationOptions.FightDuration;
             dictValues.Add("Total Damage", String.Format("{0:F}*Upper Bound: {1:F}\r\nLower Bound: {2:F}", totalDamage, UpperBound, LowerBound));
             dictValues.Add("Score", String.Format("{0:F}", OverallPoints));

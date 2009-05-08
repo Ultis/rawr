@@ -830,6 +830,12 @@ namespace Rawr.Mage
                 case SpellId.LivingBomb:
                     s = Calculations.LivingBombTemplate.GetSpell(this);
                     break;
+                case SpellId.FireWard:
+                    s = Calculations.FireWardTemplate.GetSpell(this);
+                    break;
+                case SpellId.FrostWard:
+                    s = Calculations.FrostWardTemplate.GetSpell(this);
+                    break;
             }
             if (s != null)
             {

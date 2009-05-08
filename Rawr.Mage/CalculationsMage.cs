@@ -163,6 +163,8 @@ namespace Rawr.Mage
                     "Spell Info:Flamestrike*Spammed",
                     "Spell Info:Blast Wave*Requires talent points",
                     "Spell Info:Dragon's Breath*Requires talent points",
+                    "Spell Info:Fire Ward*Set incoming fire damage under survivability settings",
+                    "Spell Info:Frost Ward*Set incoming frost damage under survivability settings",
                     "Regeneration:MP5",
                     "Regeneration:Mana Regen",
                     "Regeneration:Health Regen",

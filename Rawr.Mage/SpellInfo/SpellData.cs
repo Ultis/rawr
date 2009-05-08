@@ -94,7 +94,9 @@ namespace Rawr.Mage
         [Description("Dragon's Breath")]
         DragonsBreath,
         [Description("Cone of Cold")]
-        ConeOfCold
+        ConeOfCold,
+        FireWard,
+        FrostWard,
     }
 
     public class WaterboltTemplate : SpellTemplate
@@ -346,6 +348,96 @@ namespace Rawr.Mage
 
         public ConjureManaGemTemplate(CharacterCalculationsMage calculations)
             : base("Conjure Mana Gem", false, false, false, 0, 3, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
+        {
+            Calculate(calculations);
+        }
+    }
+
+    public class FireWardTemplate : SpellTemplate
+    {
+        public static SpellData[] SpellData = new SpellData[11];
+        static FireWardTemplate()
+        {
+            SpellData[0] = new SpellData() { Cost = (int)(0.16 * BaseMana[70]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[1] = new SpellData() { Cost = (int)(0.16 * BaseMana[71]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[2] = new SpellData() { Cost = (int)(0.16 * BaseMana[72]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[3] = new SpellData() { Cost = (int)(0.16 * BaseMana[73]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[4] = new SpellData() { Cost = (int)(0.16 * BaseMana[74]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[5] = new SpellData() { Cost = (int)(0.16 * BaseMana[75]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[6] = new SpellData() { Cost = (int)(0.16 * BaseMana[76]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[7] = new SpellData() { Cost = (int)(0.16 * BaseMana[77]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[8] = new SpellData() { Cost = (int)(0.16 * BaseMana[78]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[9] = new SpellData() { Cost = (int)(0.16 * BaseMana[79]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[10] = new SpellData() { Cost = (int)(0.16 * BaseMana[80]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[options.PlayerLevel - 70];
+        }
+
+        private const float spellPowerCoefficient = 1.5f / 3.5f * 0.855f / 0.455f;
+
+        public override Spell GetSpell(CastingState castingState)
+        {
+            AbsorbSpell spell = new AbsorbSpell(this);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState);
+            // 70% absorbed, 30% negated
+            // number of negates until absorb is distributed negative binomial
+            // mean number of negated is then (1-p)/p = 0.3 / 0.7 times the absorb value
+            // however on average it can't be more than (1-p) * incoming damage
+            float q = 0.15f * castingState.MageTalents.FrostWarding;
+            float absorb = 1950f + spellPowerCoefficient * castingState.FireSpellPower;
+            spell.Absorb = absorb;
+            spell.CostPerSecond -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire) / spell.CastTime;
+            return spell;
+        }
+
+        public FireWardTemplate(CharacterCalculationsMage calculations)
+            : base("Fire Ward", false, true, false, 0, 0, 30, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
+        {
+            Calculate(calculations);
+        }
+    }
+
+    public class FrostWardTemplate : SpellTemplate
+    {
+        public static SpellData[] SpellData = new SpellData[11];
+        static FrostWardTemplate()
+        {
+            SpellData[0] = new SpellData() { Cost = (int)(0.16 * BaseMana[70]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[1] = new SpellData() { Cost = (int)(0.16 * BaseMana[71]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[2] = new SpellData() { Cost = (int)(0.16 * BaseMana[72]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[3] = new SpellData() { Cost = (int)(0.16 * BaseMana[73]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[4] = new SpellData() { Cost = (int)(0.16 * BaseMana[74]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[5] = new SpellData() { Cost = (int)(0.16 * BaseMana[75]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[6] = new SpellData() { Cost = (int)(0.16 * BaseMana[76]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[7] = new SpellData() { Cost = (int)(0.16 * BaseMana[77]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[8] = new SpellData() { Cost = (int)(0.16 * BaseMana[78]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[9] = new SpellData() { Cost = (int)(0.16 * BaseMana[79]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellData[10] = new SpellData() { Cost = (int)(0.16 * BaseMana[80]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[options.PlayerLevel - 70];
+        }
+
+        private const float spellPowerCoefficient = 1.5f / 3.5f * 0.855f / 0.455f;
+
+        public override Spell GetSpell(CastingState castingState)
+        {
+            AbsorbSpell spell = new AbsorbSpell(this);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState);
+            float q = 0.15f * castingState.MageTalents.FrostWarding;
+            float absorb = 1950f + spellPowerCoefficient * castingState.FrostSpellPower;
+            spell.Absorb = absorb;
+            spell.CostPerSecond -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFrost) / spell.CastTime;
+            return spell;
+        }
+
+        public FrostWardTemplate(CharacterCalculationsMage calculations)
+            : base("Frost Ward", false, true, false, 0, 0, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
         {
             Calculate(calculations);
         }
