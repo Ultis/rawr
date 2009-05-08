@@ -50,6 +50,7 @@ namespace Rawr.Mage
         private bool restrictManaUse;
         private bool needsTimeExtension;
         private bool conjureManaGem;
+        private bool wardsAvailable;
 
         private bool heroismAvailable;
         private bool arcanePowerAvailable;
@@ -98,6 +99,7 @@ namespace Rawr.Mage
         private int rowPotion = -1;
         private int rowManaPotion = -1;
         private int rowConjureManaGem = -1;
+        private int rowWard = -1;
         private int rowManaGem = -1;
         private int rowManaGemMax = -1;
         private int rowHeroism = -1;
@@ -960,6 +962,7 @@ namespace Rawr.Mage
             needsTimeExtension = false;
             bool afterFightRegen = calculationOptions.FarmingMode;
             conjureManaGem = calculationOptions.ManaGemEnabled && calculationOptions.FightDuration > 500.0f;
+            wardsAvailable = calculationResult.IncomingDamageDpsFire + calculationResult.IncomingDamageDpsFrost > 0.0 && talents.FrostWarding > 0;
 
             minimizeTime = false;
             if (calculationOptions.TargetDamage > 0)
@@ -1884,6 +1887,50 @@ namespace Rawr.Mage
                     }
                 }
                 #endregion
+                #region Fire/Frost Ward
+                if (wardsAvailable)
+                {
+
+                    int wardSegments = (restrictManaUse) ? segmentList.Count : 1;
+                    Cycle fireWard = calculationResult.FireWardTemplate.GetSpell(calculationResult.BaseState);
+                    Cycle frostWard = calculationResult.FrostWardTemplate.GetSpell(calculationResult.BaseState);
+                    Cycle spell = fireWard.CostPerSecond < frostWard.CostPerSecond ? fireWard : frostWard;
+                    calculationResult.Ward = spell;
+                    calculationResult.MaxWards = (int)((calculationOptions.FightDuration - 15.0f) / 30.0f) + 1;
+                    manaRegen = spell.ManaPerSecond;
+                    for (int segment = 0; segment < wardSegments; segment++)
+                    {
+                        column = lp.AddColumnUnsafe();
+                        lp.SetColumnUpperBound(column, spell.CastTime * ((wardSegments > 1) ? 1 : calculationResult.MaxWards));
+                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Ward, Cycle = spell, Segment = segment, State = calculationResult.BaseState });
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                        lp.SetElementUnsafe(rowWard, column, 1.0);
+                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                        lp.SetElementUnsafe(rowThreat, column, tps = spell.ThreatPerSecond);
+                        lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
+                        lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
+                        if (needsDisplayCalculations) tpsList.Add(tps);
+                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                            }
+                        }
+                        if (restrictThreat)
+                        {
+                            for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                            }
+                        }
+                    }
+                }
+                #endregion
                 #region Spells
                 if (useIncrementalOptimizations)
                 {
@@ -2022,6 +2069,7 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGem, Math.Min(3, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem));
             lp.SetRHSUnsafe(rowManaGemMax, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, calculationResult.MaxConjureManaGem * calculationResult.ConjureManaGem.CastTime);
+            if (wardsAvailable) lp.SetRHSUnsafe(rowWard, calculationResult.MaxWards * calculationResult.Ward.CastTime);
             if (heroismAvailable)
             {
                 lp.SetRHSUnsafe(rowHeroism, 40.0);
@@ -2264,6 +2312,10 @@ namespace Rawr.Mage
             if (conjureManaGem)
             {
                 rowConjureManaGem = rowCount++;
+            }
+            if (wardsAvailable)
+            {
+                rowWard = rowCount++;
             }
             if (heroismAvailable) rowHeroism = rowCount++;
             if (arcanePowerAvailable) rowArcanePower = rowCount++;

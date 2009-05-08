@@ -3755,6 +3755,10 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     label = "Conjure Mana Gem";
                 }
+                else if (type == VariableType.Ward)
+                {
+                    label = SequenceItem.Calculations.Ward.Name;
+                }
                 else if (type == VariableType.Spell)
                 {
                     label = cycle.Name;
