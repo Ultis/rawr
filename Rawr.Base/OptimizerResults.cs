@@ -43,8 +43,17 @@ namespace Rawr
                 {
                     ItemInstance before = beforeItems[i] ?? noItemInstance;
                     ItemInstance after = afterItems[i] ?? noItemInstance;
-
-                    if (!(before == noItemInstance && after == noItemInstance) && !before.Equals(after))
+                    bool swappedRingTrinket = false;
+                    if (slot == Character.CharacterSlot.Finger1 || slot == Character.CharacterSlot.Trinket1)
+                    {
+                        ItemInstance after2 = afterItems[i+1] ?? noItemInstance;
+                        if (before != noItemInstance && after2 != noItemInstance && before.Equals(after2))
+                        {
+                            swappedRingTrinket = true;
+                            i++; // force skip over finger2 and trinket2.
+                        }
+                    }
+                    if (!(before == noItemInstance && after == noItemInstance) && !before.Equals(after) && !swappedRingTrinket)
                     {
                         string itemname = (before.Item ?? noItem).Name;
                         string gem1name = before.Gem1 == null ? "" : "with " + before.Gem1.Name;
