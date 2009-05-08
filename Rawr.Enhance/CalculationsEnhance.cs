@@ -38,17 +38,6 @@ namespace Rawr
         }
         #endregion
 
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		public override CalculationOptionsPanelBase CalculationOptionsPanel
-		{
-			get
-			{
-				if (_calculationOptionsPanel == null)
-					_calculationOptionsPanel = new CalculationOptionsPanelEnhance();
-				return _calculationOptionsPanel;
-			}
-        }
-
         #region Display labels
         private string[] _characterDisplayCalculationLabels = null;
 		public override string[] CharacterDisplayCalculationLabels
@@ -132,6 +121,18 @@ namespace Rawr
         }
         #endregion 
 
+        #region Overrides
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
+        {
+            get
+            {
+                if (_calculationOptionsPanel == null)
+                    _calculationOptionsPanel = new CalculationOptionsPanelEnhance();
+                return _calculationOptionsPanel;
+            }
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
@@ -159,6 +160,7 @@ namespace Rawr
 			CalculationOptionsEnhance calcOpts = serializer.Deserialize(reader) as CalculationOptionsEnhance;
 			return calcOpts;
         }
+        #endregion
 
         #region Main Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
@@ -466,7 +468,6 @@ namespace Rawr
         }
         #endregion
 
-
         #region Get Race Stats
         private Stats GetRaceStats(Character character)
         {
@@ -607,7 +608,8 @@ namespace Rawr
             return stats;
         }
         #endregion
-        
+
+        #region Buff Functions
         private bool IsBuffChecked(string buffName)
         {
             TabControl tabs = Calculations.CalculationOptionsPanel.Parent.Parent as TabControl;
@@ -643,6 +645,7 @@ namespace Rawr
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Spell Power)")); // and the spellpower one
             }
         }
+        #endregion
 
         #region RelevantGlyphs
         private static List<string> _relevantGlyphs;
