@@ -47,7 +47,7 @@ namespace Rawr.Mage
             }
         }
 
-        public const float SetBonus4T8ProcRate = 0.2f;
+        public const float SetBonus4T8ProcRate = 0.25f;
 
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
