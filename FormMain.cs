@@ -167,6 +167,7 @@ namespace Rawr
 			Calculations_ModelChanged(null, null);
 
 			//_loadingCharacter = true;
+            SetDraeneiHitBuff();
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 			//_loadingCharacter = false;
@@ -1106,11 +1107,19 @@ namespace Rawr
 			//}   //...Fire!
 		}
 
+        public static event EventHandler RaceChanged;
+        protected static void OnRaceChanged()
+        {
+            if (RaceChanged != null)
+                RaceChanged(null, EventArgs.Empty);
+        }
+
 		private void comboBoxRace_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter)
 			{
 				Character.Race = (Character.CharacterRace)Enum.Parse(typeof(Character.CharacterRace), comboBoxRace.Text);
+                SetDraeneiHitBuff();
 				Character.OnCalculationsInvalidated();
 			}
 		}
@@ -1396,6 +1405,15 @@ namespace Rawr
         public bool IsUsingPTR()
         {
             return usePTRDataToolStripMenuItem.Checked;
+        }
+
+        private void SetDraeneiHitBuff()
+        {
+            if (Character.Race == Character.CharacterRace.Draenei)
+                Character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+            else if (Character.Faction == Character.CharacterFaction.Horde)
+                Character.ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
+            OnRaceChanged();
         }
 
         private void StartProcessing()

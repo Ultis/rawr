@@ -20,6 +20,8 @@ namespace Rawr //O O . .
 		public Character.CharacterRegion _region = CharacterRegion.US;
         [XmlElement("Race")]
         public CharacterRace _race = CharacterRace.NightElf;
+        [XmlElement("Faction")]
+        private CharacterFaction _faction = CharacterFaction.Alliance;
         [XmlElement("Class")]
         public CharacterClass _class = CharacterClass.Druid;
         [XmlIgnore]
@@ -306,11 +308,16 @@ namespace Rawr //O O . .
                 if (_race != value)
                 {
                     _race = value;
+                    SetFaction();
                     OnCalculationsInvalidated();
                 }
             }
         }
-
+        [XmlIgnore]
+        public Character.CharacterFaction Faction
+        {
+            get { return _faction; }
+        }
         [XmlIgnore]
         public Character.CharacterClass Class
         {
@@ -1498,6 +1505,14 @@ namespace Rawr //O O . .
             return cslot;
         }
 
+        private void SetFaction()
+        {
+            if (_race == CharacterRace.Draenei || _race == CharacterRace.Dwarf || _race == CharacterRace.Gnome || _race == CharacterRace.Human || _race == CharacterRace.NightElf)
+                _faction = CharacterFaction.Alliance;
+            else
+                _faction = CharacterFaction.Horde;
+        }
+
         public enum CharacterClass
         {
             Warrior = 1,
@@ -1510,6 +1525,12 @@ namespace Rawr //O O . .
             Mage = 8,
             Warlock = 9,
             Druid = 11,
+        }
+
+        public enum CharacterFaction
+        {
+            Alliance = 1,
+            Horde = 2,
         }
 
         public enum ItemAvailability
@@ -1560,6 +1581,7 @@ namespace Rawr //O O . .
 			_projectileBag = projectileBag;
 
             WaistBlacksmithingSocketEnabled = true;
+            SetFaction();
             IsLoading = false;
             RecalculateSetBonuses();
         }
@@ -1602,6 +1624,7 @@ namespace Rawr //O O . .
             Ranged = ranged;
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
+            SetFaction();
             IsLoading = false;
             RecalculateSetBonuses();
         }
@@ -1639,6 +1662,7 @@ namespace Rawr //O O . .
             _item[(int)CharacterSlot.Ranged] = ranged;
             _item[(int)CharacterSlot.Projectile] = projectile;
             _item[(int)CharacterSlot.ProjectileBag] = projectileBag;
+            SetFaction();
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);
             CurrentModel = model;
@@ -1653,6 +1677,7 @@ namespace Rawr //O O . .
             _region = region;
             _race = race;
             Array.Copy(items, _item, count);
+            SetFaction();
 
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);
@@ -1668,6 +1693,7 @@ namespace Rawr //O O . .
             _region = region;
             _race = race;
             Array.Copy(items, _item, items.Length);
+            SetFaction();
 
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);

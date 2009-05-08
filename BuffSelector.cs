@@ -21,6 +21,7 @@ namespace Rawr
 				BuildControls();
 				Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
                 Rawr.UserControls.Options.GeneralSettings.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
+                FormMain.RaceChanged += new EventHandler(Character_RaceChanged);
                 ScrollHook.hookRec(this);
 			}
 		}
@@ -53,6 +54,13 @@ namespace Rawr
 			LoadBuffsFromCharacter();
             ScrollHook.hookRec(this);
 		}
+
+        void Character_RaceChanged(object sender, EventArgs e)
+        {
+            BuildControls();
+            LoadBuffsFromCharacter();
+            ScrollHook.hookRec(this);
+        }
 
         void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
         {
@@ -125,8 +133,17 @@ namespace Rawr
 				checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
 				GroupBoxes[buff.Group].Controls.Add(checkBox);
 				checkBox.BringToFront();
-				CheckBoxes.Add(buff, checkBox);
-
+                // only add Draenei Heroic Presence buff if Alliance
+                if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
+                {
+                    if(FormMain.Instance.Character.Faction == Character.CharacterFaction.Alliance)
+                        CheckBoxes.Add(buff, checkBox);
+                    else
+                        checkBox.Enabled=false;
+                }
+                else
+                    CheckBoxes.Add(buff, checkBox);
+                
 				foreach (Buff improvement in buff.Improvements)
 				{
 					ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
