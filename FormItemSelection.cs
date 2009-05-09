@@ -240,6 +240,8 @@ namespace Rawr
                     emptyCalcs.Name = "Empty";
                     emptyCalcs.Item = new Item();
                     emptyCalcs.Item.Name = "Empty";
+                    emptyCalcs.ItemInstance = new ItemInstance();
+                    emptyCalcs.ItemInstance.Id = -1;
                     emptyCalcs.Equipped = this.Character[slot] == null;
                     itemCalculations.Add(emptyCalcs);
                 }
@@ -269,6 +271,8 @@ namespace Rawr
                     emptyCalcs.Name = "Empty";
                     emptyCalcs.Item = new Item();
                     emptyCalcs.Item.Name = "Empty";
+                    emptyCalcs.ItemInstance = new ItemInstance();
+                    emptyCalcs.ItemInstance.Id = -1;
                     if (_button != null && _button.SelectedItem != null)
                     {
                         emptyCalcs.Equipped = _button.SelectedItem == null;
@@ -280,7 +284,20 @@ namespace Rawr
                     itemCalculations.Add(emptyCalcs);
                 }
 				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
-				ItemCalculations = itemCalculations.ToArray();
+                Dictionary<int, int> countItem = new Dictionary<int, int>();
+                List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
+
+                foreach (ComparisonCalculationBase itemCalculation in itemCalculations)
+                {
+                    int itemId = itemCalculation.ItemInstance.Id;
+                    if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
+                    if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
+                        itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
+                    {
+                        filteredItemCalculations.Add(itemCalculation);
+                    }
+                }
+                ItemCalculations = filteredItemCalculations.ToArray();
 			}
 		}
 
