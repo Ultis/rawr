@@ -12,7 +12,7 @@ namespace Rawr.ShadowPriest
         {
             get
             {
-                // Interesting Gem Choices for a Holy & Discipline Priest
+                // Interesting Gem Choices for a Shadow Priest
                 // Red
                 int[] runed = { 39911, 39998, 40113, 42144 }; // +spp
 
@@ -115,15 +115,26 @@ namespace Rawr.ShadowPriest
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Epic", // PvP
                         RedId = glowing[2], YellowId = steady[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = powerful[0] },
                     
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler", // Forced Hit
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // Forced Hit
+                        RedId = rigid[3], YellowId = rigid[1], BlueId = rigid[3], PrismaticId = rigid[1], MetaId = chaotic[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // Full Power
+                        RedId = runed[1], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[1], MetaId = chaotic[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // Haste
+                        RedId = quick[3], YellowId = quick[1], BlueId = quick[3], PrismaticId = quick[1], MetaId = chaotic[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // Crit
+                        RedId = smooth[3], YellowId = smooth[1], BlueId = smooth[3], PrismaticId = smooth[1], MetaId = chaotic[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // PvP                        
+                        RedId = solid[3], YellowId = solid[3], BlueId = solid[1], PrismaticId = solid[1], MetaId = powerful[0] },
+
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // Forced Hit
                         RedId = rigid[3], YellowId = rigid[2], BlueId = rigid[3], PrismaticId = rigid[2], MetaId = chaotic[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler", // Full Power
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // Full Power
                         RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = chaotic[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler", // Haste
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // Haste
                         RedId = quick[3], YellowId = quick[2], BlueId = quick[3], PrismaticId = quick[2], MetaId = chaotic[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler", // Crit
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // Crit
                         RedId = smooth[3], YellowId = smooth[2], BlueId = smooth[3], PrismaticId = smooth[2], MetaId = chaotic[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler", // PvP
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // PvP
                         RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = powerful[0] },
                 };
             }
