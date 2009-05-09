@@ -82,6 +82,9 @@ namespace Rawr.ProtWarr
                     baseDamage = 300.0f + (Stats.AttackPower * 0.12f);
                     DamageMultiplier *= (1.0f + Talents.ImprovedThunderClap * 0.1f);
                     break;
+                case Ability.Vigilance:
+                    baseDamage = 0.0f;
+                    break;
             }
 
             // All damage multipliers
@@ -109,7 +112,7 @@ namespace Rawr.ProtWarr
                     abilityThreat += 225.0f;
                     break;
                 case Ability.Devastate:
-                    if(Options.GlyphOfDevastate)
+                    if(Talents.GlyphOfDevastate)
                         abilityThreat += (Stats.AttackPower * 0.1f);
                     else
                         abilityThreat += (Stats.AttackPower * 0.05f);
@@ -138,9 +141,17 @@ namespace Rawr.ProtWarr
                 case Ability.ThunderClap:
                     abilityThreat *= 1.85f;
                     break;
+                case Ability.Vigilance:
+                    if (Talents.GlyphOfVigilance)
+                        abilityThreat = (Options.VigilanceValue * 0.15f) * Talents.Vigilance;
+                    else
+                        abilityThreat = (Options.VigilanceValue * 0.1f) * Talents.Vigilance;
+                    break;
             }
 
-            abilityThreat *= Lookup.StanceThreatMultipler(Character, Stats);
+            // All abilities other than Vigilance are affected by Defensive Stance
+            if(Ability != Ability.Vigilance)
+                abilityThreat *= Lookup.StanceThreatMultipler(Character, Stats);
 
             Threat = abilityThreat;
         }

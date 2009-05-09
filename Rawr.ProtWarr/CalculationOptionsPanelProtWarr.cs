@@ -63,11 +63,10 @@ namespace Rawr.ProtWarr
             trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
             trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
 
-            // Glyphs
-            checkBoxGlyphOfBlocking.Checked = calcOpts.GlyphOfBlocking;
-            checkBoxGlyphOfDevastate.Checked = calcOpts.GlyphOfDevastate;
-
             // Warrior Abilities
+            trackBarVigilanceValue.Value = (int)calcOpts.VigilanceValue;
+            checkBoxUseVigilance.Checked = calcOpts.UseVigilance;
+            trackBarVigilanceValue.Enabled = calcOpts.UseVigilance;
             trackBarShieldBlockUptime.Value = (int)calcOpts.ShieldBlockUptime;
             checkBoxUseShieldBlock.Checked = calcOpts.UseShieldBlock;
 			
@@ -97,6 +96,8 @@ namespace Rawr.ProtWarr
                 labelThreatScale.Text = String.Format("{0:0.0}", ((float)(trackBarThreatScale.Value) * 0.1f));
 				labelMitigationScale.Text = String.Format("{0:0.0}", ((float)(trackBarMitigationScale.Value) * 0.1f));
                 // Warrior Abilities
+                trackBarVigilanceValue.Value = 500 * (trackBarVigilanceValue.Value / 500);
+                labelVigilanceValue.Text = trackBarVigilanceValue.Value.ToString();
                 labelShieldBlockUptime.Text = trackBarShieldBlockUptime.Value.ToString() + "%";
 
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
@@ -105,6 +106,7 @@ namespace Rawr.ProtWarr
                 calcOpts.BossAttackSpeed = ((float)(trackBarBossAttackSpeed.Value) * 0.25f);
                 calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value) * 0.1f * 8.0f);
                 calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 0.1f / 8.0f);
+                calcOpts.VigilanceValue = trackBarVigilanceValue.Value;
                 calcOpts.ShieldBlockUptime = trackBarShieldBlockUptime.Value;
 
 				Character.OnCalculationsInvalidated();
@@ -153,32 +155,23 @@ namespace Rawr.ProtWarr
             }
         }
 
+        private void checkBoxUseVigilance_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+                calcOpts.UseVigilance = checkBoxUseVigilance.Checked;
+                trackBarVigilanceValue.Enabled = checkBoxUseVigilance.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
 		private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
                 calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void checkBoxGlyphOfBlocking_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-                calcOpts.GlyphOfBlocking = checkBoxGlyphOfBlocking.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void checkBoxGlyphOfDevastate_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-                calcOpts.GlyphOfDevastate = checkBoxGlyphOfDevastate.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -229,10 +222,10 @@ namespace Rawr.ProtWarr
 		public float ThreatScale = 8.0f;
         public float MitigationScale = 0.125f;
         public int RankingMode = 1;
+        public bool UseVigilance = true;
+        public int VigilanceValue = 5000;
         public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
-        public bool GlyphOfBlocking = false;
-        public bool GlyphOfDevastate = false;
 		public WarriorTalents talents = null;
 	}
 }

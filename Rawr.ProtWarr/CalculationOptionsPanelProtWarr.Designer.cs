@@ -62,8 +62,11 @@ namespace Rawr.ProtWarr
             this.labelBossAttackSpeed = new System.Windows.Forms.Label();
             this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.checkBoxGlyphOfDevastate = new System.Windows.Forms.CheckBox();
-            this.checkBoxGlyphOfBlocking = new System.Windows.Forms.CheckBox();
+            this.labelVigilanceThreat = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.labelVigilanceValue = new System.Windows.Forms.Label();
+            this.trackBarVigilanceValue = new System.Windows.Forms.TrackBar();
+            this.extendedToolTipUseVigilance = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.checkBoxUseVigilance = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxWarriorSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).BeginInit();
@@ -74,6 +77,7 @@ namespace Rawr.ProtWarr
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarVigilanceValue)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -146,7 +150,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 520);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 544);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -497,36 +501,79 @@ namespace Rawr.ProtWarr
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.checkBoxGlyphOfDevastate);
-            this.groupBox3.Controls.Add(this.checkBoxGlyphOfBlocking);
+            this.groupBox3.Controls.Add(this.labelVigilanceThreat);
+            this.groupBox3.Controls.Add(this.labelVigilanceValue);
+            this.groupBox3.Controls.Add(this.trackBarVigilanceValue);
+            this.groupBox3.Controls.Add(this.extendedToolTipUseVigilance);
+            this.groupBox3.Controls.Add(this.checkBoxUseVigilance);
             this.groupBox3.Location = new System.Drawing.Point(3, 450);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(364, 64);
+            this.groupBox3.Size = new System.Drawing.Size(364, 88);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Glyphs";
+            this.groupBox3.Text = "Vigilance";
+            this.groupBox3.UseCompatibleTextRendering = true;
             // 
-            // checkBoxGlyphOfDevastate
+            // labelVigilanceThreat
             // 
-            this.checkBoxGlyphOfDevastate.AutoSize = true;
-            this.checkBoxGlyphOfDevastate.Location = new System.Drawing.Point(95, 42);
-            this.checkBoxGlyphOfDevastate.Name = "checkBoxGlyphOfDevastate";
-            this.checkBoxGlyphOfDevastate.Size = new System.Drawing.Size(117, 17);
-            this.checkBoxGlyphOfDevastate.TabIndex = 6;
-            this.checkBoxGlyphOfDevastate.Text = "Glyph of Devastate";
-            this.checkBoxGlyphOfDevastate.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfDevastate.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfDevastate_CheckedChanged);
+            this.labelVigilanceThreat.Location = new System.Drawing.Point(6, 34);
+            this.labelVigilanceThreat.Name = "labelVigilanceThreat";
+            this.labelVigilanceThreat.Size = new System.Drawing.Size(83, 45);
+            this.labelVigilanceThreat.TabIndex = 12;
+            this.labelVigilanceThreat.Text = "Target TPS: * (Default: 5000)";
+            this.labelVigilanceThreat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelVigilanceThreat.ToolTipText = "Base friendly target TPS to use.";
             // 
-            // checkBoxGlyphOfBlocking
+            // labelVigilanceValue
             // 
-            this.checkBoxGlyphOfBlocking.AutoSize = true;
-            this.checkBoxGlyphOfBlocking.Location = new System.Drawing.Point(95, 19);
-            this.checkBoxGlyphOfBlocking.Name = "checkBoxGlyphOfBlocking";
-            this.checkBoxGlyphOfBlocking.Size = new System.Drawing.Size(109, 17);
-            this.checkBoxGlyphOfBlocking.TabIndex = 5;
-            this.checkBoxGlyphOfBlocking.Text = "Glyph of Blocking";
-            this.checkBoxGlyphOfBlocking.UseVisualStyleBackColor = true;
-            this.checkBoxGlyphOfBlocking.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfBlocking_CheckedChanged);
+            this.labelVigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelVigilanceValue.AutoSize = true;
+            this.labelVigilanceValue.Location = new System.Drawing.Point(95, 66);
+            this.labelVigilanceValue.Name = "labelVigilanceValue";
+            this.labelVigilanceValue.Size = new System.Drawing.Size(31, 13);
+            this.labelVigilanceValue.TabIndex = 11;
+            this.labelVigilanceValue.Text = "5000";
+            // 
+            // trackBarVigilanceValue
+            // 
+            this.trackBarVigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarVigilanceValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarVigilanceValue.LargeChange = 5000;
+            this.trackBarVigilanceValue.Location = new System.Drawing.Point(89, 34);
+            this.trackBarVigilanceValue.Maximum = 15000;
+            this.trackBarVigilanceValue.Minimum = 1000;
+            this.trackBarVigilanceValue.Name = "trackBarVigilanceValue";
+            this.trackBarVigilanceValue.Size = new System.Drawing.Size(272, 45);
+            this.trackBarVigilanceValue.SmallChange = 500;
+            this.trackBarVigilanceValue.TabIndex = 13;
+            this.trackBarVigilanceValue.TickFrequency = 500;
+            this.trackBarVigilanceValue.Value = 5000;
+            this.trackBarVigilanceValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // extendedToolTipUseVigilance
+            // 
+            this.extendedToolTipUseVigilance.Location = new System.Drawing.Point(111, 16);
+            this.extendedToolTipUseVigilance.Name = "extendedToolTipUseVigilance";
+            this.extendedToolTipUseVigilance.Size = new System.Drawing.Size(134, 14);
+            this.extendedToolTipUseVigilance.TabIndex = 10;
+            this.extendedToolTipUseVigilance.Text = "Use Vigilance Threat *";
+            this.extendedToolTipUseVigilance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipUseVigilance.ToolTipText = "Adds Vigilance threat to the total threat generation statistics if available.";
+            // 
+            // checkBoxUseVigilance
+            // 
+            this.checkBoxUseVigilance.AutoSize = true;
+            this.checkBoxUseVigilance.Checked = true;
+            this.checkBoxUseVigilance.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUseVigilance.Location = new System.Drawing.Point(95, 17);
+            this.checkBoxUseVigilance.Name = "checkBoxUseVigilance";
+            this.checkBoxUseVigilance.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.checkBoxUseVigilance.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxUseVigilance.TabIndex = 9;
+            this.checkBoxUseVigilance.UseVisualStyleBackColor = true;
+            this.checkBoxUseVigilance.CheckedChanged += new System.EventHandler(this.checkBoxUseVigilance_CheckedChanged);
             // 
             // CalculationOptionsPanelProtWarr
             // 
@@ -538,7 +585,7 @@ namespace Rawr.ProtWarr
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxWarriorSkills);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(370, 630);
+            this.Size = new System.Drawing.Size(370, 639);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxWarriorSkills.ResumeLayout(false);
             this.groupBoxWarriorSkills.PerformLayout();
@@ -553,6 +600,7 @@ namespace Rawr.ProtWarr
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarVigilanceValue)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -591,9 +639,12 @@ namespace Rawr.ProtWarr
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipBurstTime;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipMitigtionScale;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfDevastate;
-        private System.Windows.Forms.CheckBox checkBoxGlyphOfBlocking;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipDamageOutput;
         private System.Windows.Forms.RadioButton radioButtonDamageOutput;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipUseVigilance;
+        private System.Windows.Forms.CheckBox checkBoxUseVigilance;
+        private Rawr.CustomControls.ExtendedToolTipLabel labelVigilanceThreat;
+        private System.Windows.Forms.Label labelVigilanceValue;
+        private System.Windows.Forms.TrackBar trackBarVigilanceValue;
 	}
 }

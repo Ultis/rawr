@@ -204,7 +204,7 @@ namespace Rawr
 
     public partial class WarriorTalents
     {
-        private bool[] _glyphData = new bool[27];
+        private bool[] _glyphData = new bool[28];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         [GlyphData(0, "Glyph of Battle", false, @"Increases the duration of your Battle Shout by 1 min.")]
@@ -261,6 +261,8 @@ namespace Rawr
         public bool GlyphOfEnduringVictory { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         [GlyphData(26, "Glyph of Intervene", true, @"Increases the number of attacks you intercept for your intervene target by 1.")]
         public bool GlyphOfIntervene { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        [GlyphData(27, "Glyph of Vigilance", true, @"Your Vigilance ability transfers an additional 5% of your target's threat to you.")]
+        public bool GlyphOfVigilance { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
     }
 
     public partial class ShamanTalents

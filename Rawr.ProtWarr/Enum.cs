@@ -22,6 +22,7 @@ namespace Rawr.ProtWarr
         Rend,
         Revenge,
         ThunderClap,
+        Vigilance,
     }
 
     public enum HitResult

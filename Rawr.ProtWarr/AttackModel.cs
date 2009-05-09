@@ -210,6 +210,10 @@ namespace Rawr.ProtWarr
             modelThreat += Abilities[Ability.DeepWounds].Threat * modelCrits;
             modelDamage += Abilities[Ability.DeepWounds].Damage * modelCrits;
 
+            // Vigilance
+            if (Options.UseVigilance)
+                modelThreat += Abilities[Ability.Vigilance].Threat * modelLength;
+
             ThreatPerSecond = modelThreat / modelLength;
             DamagePerSecond = modelDamage / modelLength;
         }
@@ -243,6 +247,7 @@ namespace Rawr.ProtWarr
             Abilities.Add(Ability.Shockwave, character, stats);
             Abilities.Add(Ability.Slam, character, stats);
             Abilities.Add(Ability.SunderArmor, character, stats);
+            Abilities.Add(Ability.Vigilance, character, stats);
 
             Calculate();
         }
