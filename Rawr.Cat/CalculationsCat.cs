@@ -217,7 +217,8 @@ namespace Rawr.Cat
 			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
 			int targetLevel = calcOpts.TargetLevel;
 			float targetArmor = calcOpts.TargetArmor;
-			Stats stats = GetCharacterStats(character, additionalItem);
+			float tempArPenRating, tempArPenRatingUptime;
+			Stats stats = GetCharacterStatsWithTemporaryArPen(character, additionalItem, out tempArPenRating, out tempArPenRatingUptime);
 			float levelDifference = (targetLevel - 80f) * 0.2f;
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
@@ -226,13 +227,12 @@ namespace Rawr.Cat
 			stats.BonusBleedDamageMultiplier = 0.3f;
 
 			#region Basic Chances and Constants
-			//float armorReductionPercent = (1f - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
-			//float reducedArmor = (float)targetArmor * (armorReductionPercent);
-			//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
-			//float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, calcOpts.TargetArmor,
-			//	stats.ArmorPenetration, stats.ArmorPenetrationRating);
-            float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
+			float modArmorStatic = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
                 stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+			float modArmorTemporary = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
+                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRating);
+
+			float modArmor = modArmorStatic + (modArmorTemporary - modArmorStatic) * tempArPenRatingUptime;
 
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
@@ -250,33 +250,6 @@ namespace Rawr.Cat
 			{
 				chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
 			}
-
-			//if (stats.TerrorProc > 0)
-			//{
-			//    float terrorUptime = 0.4f; //TODO: Calculate this
-			//    stats.Agility += stats.TerrorProc * terrorUptime * (1 + stats.BonusAgilityMultiplier);
-			//    stats.AttackPower += stats.TerrorProc * terrorUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
-			//}
-
-			//if (stats.MongooseProc > 0)
-			//{
-			//    float whiteAttacksPerSecond = (1f - chanceMiss - chanceDodge) / attackSpeed;
-			//    float yellowAttacksPerSecond = (1f - chanceMiss - chanceDodge) / 3f; //TODO: Calculate this
-			//    float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-			//    float mongooseUptime = 15f / timeBetweenMongooseProcs;
-			//    stats.Agility += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-			//    stats.AttackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
-			//    attackSpeed /= 1f + (0.02f * mongooseUptime);
-			//}
-
-			//if (stats.BerserkingProc > 0)
-			//{
-			//    float whiteAttacksPerSecond = (1f - chanceMiss - chanceDodge) / attackSpeed;
-			//    float yellowAttacksPerSecond = (1f - chanceMiss - chanceDodge) / 3f; //TODO: Calculate this
-			//    float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-			//    float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-			//    stats.AttackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
-			//}
 			
 			float glanceMultiplier = .7f;
 			float chanceAvoided = chanceMiss + chanceDodge;
@@ -397,224 +370,15 @@ namespace Rawr.Cat
 			calculatedStats.SurvivabilityPoints = stats.Health / 100f;
 			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			return calculatedStats;
-			
-			#region OLD - Toskk's DPS calculations from 2.0
-			/*
-			//Begin Toskk's 
-			#region Calculate Basic Chances, Costs, and Damage
-
-			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-			float modArmor = (baseArmor / (baseArmor + 10557.5f )) * 100f;
-
-			float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
-            float physicalCritModifier = 1.0f + ((stats.CritRating / (1148f / 52f)) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
-			float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
-
-			float hitBonus = stats.HitRating * 52f / 82f / 1000f;
-			float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
-
-			float glancingRate = 0.2335774f; // Glancing rate data from Toskk
-
-			float chanceCrit = Math.Min(0.75f, (stats.CritRating / (1148f / 52f) + (stats.Agility / 25f)) / 100f) - 0.042f; // Crit Reduction data from Toskk
-			float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
-			float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
-						
-			float meleeDamage = stats.WeaponDamage + (768f + attackPower) / 14f;
-			float mangleCost = 40f - stats.MangleCatCostReduction;
-			float totalMangleCost = 1f / (1f - chanceMiss) * (mangleCost * (1f - chanceMiss) + mangleCost / 5f * chanceMiss);
-			float mangleDamage = 1.2f * (meleeDamage * 1.6f + 264f + stats.BonusMangleCatDamage);
-
-			float shredCost = 42f;
-			float totalShredCost = chanceMiss * shredCost / 5f + (1f - chanceMiss) * shredCost;
-			float shredDamage = meleeDamage * 2.25f + 405f + stats.BonusShredDamage;
-
-			float ripCost = 30f;
-			float totalRipCost = 1f / (1f - chanceMiss) * ripCost;
-
-			float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceMiss);
-
-			float hasteBonus = stats.HasteRating / 15.76f / 100f;
-			float attackSpeed = (1f - (stats.Bloodlust * bloodlustUptime)) / (1f + hasteBonus);
-			float meleeTicker = attackSpeed;
-
-			#endregion
-
-			float dmgMelee = 0f;
-			float cycleTime = 0f;
-			float segmentTime = 0f;
-			float energyCount = 10f;
-			float terrorTicker = 0f;
-			float comboPoints = 0f;
-			float dmgMangles = 0f;
-
-			#region Mangle
-
-			if (primaryAttack == "Mangle" || primaryAttack == "Both")
-			{
-				// Starting immediately after Ripping, with energy to Mangle and GCD running
-				dmgMelee = 0f;
-				cycleTime = 1.0f;
-				segmentTime = 1.0f;
-				energyCount = mangleCost + 10f;
-
-				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) +
-					critMultiplier * chanceWhiteCrit);
-				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
-
-				//GCD ends, Mangle hits
-
-				energyCount -= totalMangleCost * (1f - segmentTime / 30f);
-				dmgMangles = mangleDamage * ((1f - chanceCrit) + critMultiplier * chanceCrit);
-				comboPoints = 1f + chanceCrit;
-				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
-
-				if (stats.TerrorProc > 0)
-				{
-					attackPower += 65f * 0.85f * (1f + stats.BonusAgilityMultiplier) * (1f + stats.BonusAttackPowerMultiplier);
-					chanceCrit += 65f * 0.85f * stats.BonusAgilityMultiplier / 25 / 100;
-					terrorTicker = 10;
-				}
-			}
-
-			#endregion
-
-			#region Shreds
-
-			float numberAttacks = (4f - 3f * chanceCrit + 2f * (float)Math.Pow(chanceCrit, 2) - (float)Math.Pow(chanceCrit, 3)) / (1f - chanceMiss);
-			float numberShreds = (numberAttacks - (1f / (1f - chanceMiss)));
-
-			// Mangle Debuff running, waiting for energy to Shred number_shreds times
-
-			energyCount += (numberShreds - 1f) * stats.BloodlustProc;
-
-			segmentTime = (numberShreds * totalShredCost * (1f - numberShreds * totalShredCost / 10f / numberShreds / 30f)
-				- energyCount) / 10f;
-			segmentTime -= segmentTime / attackSpeed * stats.BloodlustProc / 10f;
-			cycleTime += segmentTime;
-
-			terrorTicker -= segmentTime;
-
-			dmgMelee += segmentTime / attackSpeed * (stats.WeaponDamage + (768f + attackPower) / 14f) *
-				(0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) + critMultiplier * chanceWhiteCrit);
-
-			float dmgPerShred = ((stats.WeaponDamage + (768f + attackPower) / 14f) * 2.25f + 405f + stats.BonusShredDamage);
-			float dmgShreds = 0;
-			if (segmentTime <= 12f)
-				dmgShreds = numberShreds * dmgPerShred * 1.3f * ((1f - chanceMiss) * (1f - chanceCrit) + critMultiplier *
-					(1f - chanceMiss) * chanceCrit);
-			else
-				dmgShreds = ((12f / segmentTime) * numberShreds * dmgPerShred * 1.3f * ((1f - chanceMiss) * (1f - chanceCrit) + 
-					critMultiplier * (1f - chanceMiss) * chanceCrit)) + ((1f - 12f / segmentTime) * numberShreds * 
-					dmgPerShred * ((1f - chanceMiss) * (1f - chanceCrit) + critMultiplier * (1f - chanceMiss) * chanceCrit));
-
-			energyCount = 0;
-			energyCount += stats.BloodlustProc;
-			
-			#endregion
-
-			#region Powershifting
-
-			if (powershift > 0)
-			{
-				energyCount = 17f / powershift;
-			}
-			//Ignoring the wolf helm since it's pretty craptacular
-
-			// 5 Combo points generated, waiting for energy to Rip + Mangle
-
-			segmentTime = (((primaryAttack == "Mangle" || primaryAttack == "Both") ? mangleCost : 0) + totalRipCost * (1f - totalRipCost / 10f / 30f) - energyCount) / 10f;
-			segmentTime -= segmentTime / attackSpeed * stats.BloodlustProc / 10f;
-
-			cycleTime += segmentTime;
-
-			if (terrorTicker > segmentTime) terrorTicker = segmentTime;
-
-			if (stats.TerrorProc > 0)
-				dmgMelee += (terrorTicker / segmentTime) * (segmentTime / attackSpeed * (stats.WeaponDamage + (768f +
-					attackPower) / 14f) * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) + critMultiplier *
-					chanceWhiteCrit)) + (1f - terrorTicker / segmentTime) * (segmentTime / attackSpeed * meleeDamage *
-					(0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) + critMultiplier * chanceWhiteCrit));
-			else
-				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss -
-					chanceWhiteCrit) + critMultiplier * chanceWhiteCrit);
-			#endregion
-
-			#region Rip
-
-			float rip5 = (chanceCrit - (float)Math.Pow(chanceCrit, 2) + (float)Math.Pow(chanceCrit, 3) - (float)Math.Pow(chanceCrit, 4));
-			float rip4 = 1f - rip5;
-
-			// Checking on the possibility of completing the cycle too quickly
-
-			if (cycleTime < 12f)
-			{
-				segmentTime = 12f - cycleTime;
-				cycleTime += segmentTime;
-				energyCount = segmentTime * 10f;
-
-				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) +
-					critMultiplier * chanceWhiteCrit);
-
-				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
-
-				float extraShred = energyCount / (totalShredCost * (1f - segmentTime / 30f));
-
-				dmgShreds += extraShred * shredDamage * 1.3f * ((1f - chanceMiss) * (1 - chanceCrit) +
-					critMultiplier * (1f - chanceMiss) * chanceCrit);
-
-				rip5 += extraShred * rip4;
-				rip4 -= extraShred * rip4;
-
-				numberShreds += extraShred;
-			}
-
-			float dmgRips = (rip5 * (attackPower * 0.24f + 1553f + (stats.BonusRipDamagePerCPPerTick * 6f * 5f)) + rip4 * 
-				(attackPower * 0.24f + 1272f + (stats.BonusRipDamagePerCPPerTick * 6f * 4f))) * 1.3f * (1f + stats.BonusRipDamageMultiplier);
-
-			#endregion
-
-            float ssoNeckProcDPS = 0f;
-            
-            if (stats.ShatteredSunMightProc > 0)
-            {
-                switch (shattrathFaction)
-                {
-                    case "Scryer":
-                        //Need to factor in partial resists.
-                        ssoNeckProcDPS = 350f * (1 + stats.BonusSpellPowerMultiplier) *
-                            (1 + stats.BonusArcaneDamageMultiplier) * physicalCritModifier / 50f;
-                        break;
-                }
-            }
-            float dps = ((1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime)) 
-				* (1 + stats.BonusDamageMultiplier)) + ssoNeckProcDPS;
-
-			calculatedStats.DPSPoints = dps;
-			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
-			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
-			calculatedStats.AvoidedAttacks = chanceMiss * 100f;
-			calculatedStats.DodgedAttacks = chanceDodge * 100f;
-			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
-			calculatedStats.WhiteCrit = chanceWhiteCrit * 100f;
-			calculatedStats.YellowCrit = (1f - chanceMiss) * chanceCrit * 100f;
-			calculatedStats.ShredsPerCycle = numberShreds;
-			calculatedStats.AttackSpeed = attackSpeed;
-			calculatedStats.ArmorMitigation = modArmor;
-			calculatedStats.MangleDamage = dmgMangles * (1f - modArmor / 100f) / ((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) * 100f;
-			calculatedStats.MeleeDamage = dmgMelee * (1f - modArmor / 100f) / ((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) * 100f;
-			calculatedStats.RipDamage = dmgRips / ((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) * 100f;
-			calculatedStats.Finishers4cp = rip4 * 100f;
-			calculatedStats.Finishers5cp = rip5 * 100f;
-			calculatedStats.ShredDamage = dmgShreds * (1f - modArmor / 100f) / ((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) * 100f;
-			calculatedStats.CycleTime = cycleTime;
-
-			
-
-			*/
-			#endregion
 		}
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
+		{
+			float arPenRating, arPenRatingUptime;
+			return GetCharacterStatsWithTemporaryArPen(character, additionalItem, out arPenRating, out arPenRatingUptime);
+		}
+
+		private Stats GetCharacterStatsWithTemporaryArPen(Character character, Item additionalItem, out float tempArPenRating, out float tempArPenRatingUptime)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 
@@ -723,29 +487,69 @@ namespace Rawr.Cat
 				- (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
 			Stats statsProcs = new Stats();
+			tempArPenRating = 0f;
+			tempArPenRatingUptime = 0f;
+			int arPenRatingCount = 0;
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
-				switch (effect.Trigger)
+				if (effect.Stats.ArmorPenetrationRating == 0)
 				{
-					case Trigger.Use:
-						statsProcs += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
-						break;
-					case Trigger.MeleeHit:
-					case Trigger.PhysicalHit:
-						statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
-						break;
-					case Trigger.MeleeCrit:
-					case Trigger.PhysicalCrit:
-						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
-						break;
-					case Trigger.DoTTick:
-						statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
-						break;
-					case Trigger.DamageDone:
-						statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
-						break;
+					switch (effect.Trigger)
+					{
+						case Trigger.Use:
+							statsProcs += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
+							break;
+						case Trigger.MeleeHit:
+						case Trigger.PhysicalHit:
+							statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
+							break;
+						case Trigger.MeleeCrit:
+						case Trigger.PhysicalCrit:
+							statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
+							break;
+						case Trigger.DoTTick:
+							statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
+							break;
+						case Trigger.DamageDone:
+							statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
+							break;
+					}
+				}
+				else
+				{
+					switch (effect.Trigger)
+					{
+						case Trigger.Use:
+							tempArPenRating += effect.Stats.ArmorPenetrationRating;
+							tempArPenRatingUptime += effect.GetAverageUptime(0f, 1f, 1f, calcOpts.Duration);
+							arPenRatingCount++;
+							break;
+						case Trigger.MeleeHit:
+						case Trigger.PhysicalHit:
+							tempArPenRating += effect.Stats.ArmorPenetrationRating;
+							tempArPenRatingUptime += effect.GetAverageUptime(meleeHitInterval, 1f, 1f, calcOpts.Duration);
+							arPenRatingCount++;
+							break;
+						case Trigger.MeleeCrit:
+						case Trigger.PhysicalCrit:
+							tempArPenRating += effect.Stats.ArmorPenetrationRating;
+							tempArPenRatingUptime += effect.GetAverageUptime(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
+							arPenRatingCount++;
+							break;
+						case Trigger.DoTTick:
+							tempArPenRating += effect.Stats.ArmorPenetrationRating;
+							tempArPenRatingUptime += effect.GetAverageUptime(1.5f, 1f, 1f, calcOpts.Duration);
+							arPenRatingCount++;
+							break;
+						case Trigger.DamageDone:
+							tempArPenRating += effect.Stats.ArmorPenetrationRating;
+							tempArPenRatingUptime += effect.GetAverageUptime(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
+							arPenRatingCount++;
+							break;
+					}
 				}
 			}
+			tempArPenRatingUptime /= Math.Max(1f, arPenRatingCount);
 
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
@@ -1225,13 +1029,21 @@ namespace Rawr.Cat
 			dictValues.Add("Rip Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RipDamageTotal / HighestDPSRotation.DamageTotal, RipDamagePerHit, RipDamagePerSwing, HighestDPSRotation.RipDamageTotal));
 			dictValues.Add("Bite Damage", string.Format(attackFormat, 100f * HighestDPSRotation.BiteDamageTotal / HighestDPSRotation.DamageTotal, BiteDamagePerHit, BiteDamagePerSwing, HighestDPSRotation.BiteDamageTotal));
 
-			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\n{2}{3}{4}{5}Use {6} for combo points.",
-				HighestDPSRotation.Name.Replace(" + ", "+"), HighestDPSRotation.RoarCP,
-				HighestDPSRotation.Name.Contains("Rake") ? "Keep Rake up.\r\n" : "",
-				HighestDPSRotation.Name.Contains("Rip") ? "Keep 5cp Rip up.\r\n" : "",
-				HighestDPSRotation.Name.Contains("Mangle") ? "Keep Mangle up.\r\n" : "",
-				HighestDPSRotation.Name.Contains("Bite") ? "Use Ferocious Bite to use up extra combo points.\r\n" : "",
-				HighestDPSRotation.Name.Contains("Shred") ? "Shred" : "Mangle");
+			string rotationDescription = string.Empty;
+			try
+			{
+				rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\n{2}{3}{4}{5}Use {6} for combo points.",
+					HighestDPSRotation.Name.Replace(" + ", "+"), HighestDPSRotation.RoarCP,
+					HighestDPSRotation.Name.Contains("Rake") ? "Keep Rake up.\r\n" : "",
+					HighestDPSRotation.Name.Contains("Rip") ? "Keep 5cp Rip up.\r\n" : "",
+					HighestDPSRotation.Name.Contains("Mangle") ? "Keep Mangle up.\r\n" : "",
+					HighestDPSRotation.Name.Contains("Bite") ? "Use Ferocious Bite to use up extra combo points.\r\n" : "",
+					HighestDPSRotation.Name.Contains("Shred") ? "Shred" : "Mangle");
+			}
+			catch (Exception ex)
+			{
+				ex.ToString();
+			}
 
 			dictValues.Add("Optimal Rotation", rotationDescription);
 			dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());

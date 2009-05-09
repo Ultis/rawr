@@ -234,12 +234,12 @@ namespace Rawr.Cat
 				if (ripCycleCount > 0 && totalEnergyAvailable / ripCycleCount > BiteEnergy)
 				{
 					float energyAvailablePerRipCycle = totalEnergyAvailable / ripCycleCount;
-					float biteCycleCP = CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy);
-					float biteDamageMultiplier = Math.Min(5f, (1f + biteCycleCP) / 6f); //A 1pt Bite does 2/6 of full dmaage, 2pt does 3/6, 3pt does 4/6, 4pt does 5/6, 5pt does 6/6
+					float biteCycleCP = Math.Min(5f, CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy));
+					float biteDamageMultiplier = Math.Min(1f, (1f + biteCycleCP) / 6f); //A 1pt Bite does 2/6 of full dmaage, 2pt does 3/6, 3pt does 4/6, 4pt does 5/6, 5pt does 6/6
 
 					biteCount += ripCycleCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
 					cpgCount += ripCycleCount * (biteCycleCP / CPPerCPG);
-					totalEnergyAvailable = 0f;
+					totalEnergyAvailable = totalEnergyAvailable -= ripCycleCount * (BiteEnergy + (biteCycleCP / CPPerCPG) * cpgEnergy);
 				}
 				#endregion
 			}
