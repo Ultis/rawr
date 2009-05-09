@@ -184,4 +184,36 @@
     <Tree2>17</Tree2>
     <Tree3>54</Tree3>
   </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Holy</Name>
+    <Class>Priest</Class>
+    <Spec>0503203100000000000000000000235051002302152530005301351000000000000000000000000000.000000000000000000000000000000000</Spec>
+    <Tree1>14</Tree1>
+    <Tree2>57</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Disc</Name>
+    <Class>Priest</Class>
+    <Spec>0503203130300512331323231251005051030000000000000000000000000000000000000000000000.000000000000000000000000000000000</Spec>
+    <Tree1>57</Tree1>
+    <Tree2>14</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Shadow</Name>
+    <Class>Priest</Class>
+    <Spec>0503203000000000000000000000000000000000000000000000000325023051223012323150301351.000000000000000000000000000000000</Spec>
+    <Tree1>13</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>58</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Holy AoE</Name>
+    <Class>Priest</Class>
+    <Spec>0503203100000000000000000000235401032002152530320311351000000000000000000000000000.000000000000000000000000000000000</Spec>
+    <Tree1>14</Tree1>
+    <Tree2>57</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>
