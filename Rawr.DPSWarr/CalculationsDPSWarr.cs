@@ -233,16 +233,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Attack Table
             calculatedStats.Miss = stats.Miss;
             calculatedStats.HitRating = stats.HitRating;
-            calculatedStats.HitPercent = stats.HitRating * DPSWarr.HitRatingToHit;
+            calculatedStats.HitPercent = StatConversion.GetHitFromRating(stats.HitRating);
             calculatedStats.ExpertiseRating = stats.ExpertiseRating;
-            calculatedStats.Expertise = stats.ExpertiseRating * DPSWarr.ExpertiseRatingToExpertise;
+            calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating,character.Class);
             calculatedStats.MhExpertise = combatFactors.MhExpertise;
             calculatedStats.OhExpertise = combatFactors.OhExpertise;
-            calculatedStats.AgilityCritBonus = stats.Agility * DPSWarr.AgilityToCrit / 100.0f;
+            calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility,character.Class);
             calculatedStats.CritRating = stats.CritRating;
             float stancecritbonus = 0.0f;
             if (calcOpts.FuryStance) { stancecritbonus = 3.0f; }
-            calculatedStats.CritPercent = (stats.CritRating * DPSWarr.CritRatingToCrit + character.WarriorTalents.Cruelty + stancecritbonus) / 100.0f
+            calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + (character.WarriorTalents.Cruelty + stancecritbonus) / 100.0f
                 + calculatedStats.AgilityCritBonus + statsRace.PhysicalCrit;
             calculatedStats.MhCrit = combatFactors.MhCrit;// +stancecritbonus / 100.0f;
             calculatedStats.OhCrit = combatFactors.OhCrit;// +stancecritbonus / 100.0f;
@@ -254,12 +254,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
             calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
             calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
-            calculatedStats.ArmorPenetrationRating2Perc = (stats.ArmorPenetrationRating * DPSWarr.ArPToArmorPenetration) / 100.0f;
+            calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
             calculatedStats.ArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
                 + calculatedStats.ArmorPenetrationStance
                 + calculatedStats.ArmorPenetrationRating2Perc;
             calculatedStats.HasteRating = stats.HasteRating;
-            calculatedStats.HastePercent = stats.HasteRating * DPSWarr.HasteRatingToHaste / 100.0f;
+            calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating,Character.CharacterClass.Warrior);
             // DPS
             calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
             calculatedStats.WhiteDPSOH = whiteAttacks.CalcOhWhiteDPS();
@@ -462,7 +462,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Assuming a GCD every 1.5s
             float abilityPerSecond = 1.0f / 1.5f;
             // Assumes 15% miss rate as we don't know the stats here--need to find a better solution
-            float hitRate = 1.0f - (28.0f - statsItems.HitRating * DPSWarr.HitRatingToHit) * 0.01f;
+            float hitRate = 1.0f - (28.0f - StatConversion.GetHitFromRating(statsItems.HitRating));
             
             //Mongoose
             if (character.MainHand != null && statsItems.MongooseProc > 0) {
@@ -472,7 +472,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float procUptime = procDuration * procPerSecond;
 
                 statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / DPSWarr.HasteRatingToHaste) * procUptime;
+                statsItems.HasteRating += (2.0f / StatConversion.RATING_PER_PHYSICALHASTE) * procUptime;
             }
             if (character.MainHand != null && statsItems.MongooseProc > 1) {
                 float procRate = 1.0f; // PPM
@@ -481,7 +481,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float procUptime = procDuration * procPerSecond;
 
                 statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / DPSWarr.HasteRatingToHaste) * procUptime;
+                statsItems.HasteRating += (2.0f / StatConversion.RATING_PER_PHYSICALHASTE) * procUptime;
             }
 
             //Executioner
@@ -583,10 +583,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.Expertise += 2 * character.WarriorTalents.StrengthOfArms;
+            //statsTotal.Expertise += 2 * character.WarriorTalents.StrengthOfArms;
+            //statsTotal.Expertise += (character.MainHand != null ? CombatFactors.GetRacialExpertiseFromWeapon(character.Race, character.MainHand.Item) : 0f);
+
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
-            statsTotal.PhysicalHaste *= (1 + 0.03f * character.WarriorTalents.BloodFrenzy);
+            statsTotal.PhysicalHaste += statsTalents.PhysicalHaste;
+            //statsTotal.PhysicalHaste *= (1 + 0.03f * character.WarriorTalents.BloodFrenzy);
 
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration
                 + ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f)
@@ -594,7 +597,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.PhysicalCrit = statsRace.PhysicalCrit;
-            statsTotal.PhysicalCrit += statsTotal.Agility * DPSWarr.AgilityToCrit / 100;
+            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,character.Class);
             statsTotal.PhysicalCrit += character.WarriorTalents.Cruelty * 0.01f;
             statsTotal.PhysicalCrit += statsGearEnchantsBuffs.PhysicalCrit;
 
@@ -608,6 +611,54 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
             statsTotal.BonusSlamDamage = statsGearEnchantsBuffs.BonusSlamDamage;
             statsTotal.DreadnaughtBonusRageProc = statsGearEnchantsBuffs.DreadnaughtBonusRageProc;
+
+
+
+
+            // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
+            // such as Berserking, Mirror of Truth, Grim Toll, etc.
+            float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+            hasteBonus = (1f + hasteBonus) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
+            float meleeHitInterval = 1f / ((1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) + 1f / 3.5f);
+            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit +
+                StatConversion.GetCritFromAgility(statsTotal.Agility, Character.CharacterClass.Warrior) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
+                - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+            Stats statsProcs = new Stats();
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            {
+                switch (effect.Trigger)
+                {
+                    case Trigger.Use:
+                        statsProcs += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
+                        break;
+                    case Trigger.MeleeHit:
+                    case Trigger.PhysicalHit:
+                        statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
+                        break;
+                    case Trigger.MeleeCrit:
+                    case Trigger.PhysicalCrit:
+                        statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
+                        break;
+                    case Trigger.DoTTick:
+                        statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
+                        break;
+                    case Trigger.DamageDone:
+                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
+                        break;
+                }
+            }
+
+            statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+            statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
+            statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+            statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility;
+            statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
+            statsProcs.Armor += 2f * statsProcs.Agility;
+            statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal += statsProcs;
+
+
 
             return statsTotal;
         }
@@ -816,7 +867,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calcOpts.talents = character.WarriorTalents;
         }
     }
-    public class DPSWarr {
+    /*public class DPSWarr {
         // Offensive
         public static readonly float StrengthToAP = 2.0f;
         public static readonly float AgilityToCrit = 1.0f / 62.5f;
@@ -824,8 +875,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
         public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
         public static readonly float CritToCritRating = 45.90598f; //14*82/52
         public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
-        public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
-        public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
+        //public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
+        //public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
         public static readonly float ArPToArmorPenetration = 1.0f / (4.69512177f * 3.27899877899878f / 1.25f);// 1.0f / 15.395298f;
         // Neutral
         public static readonly float StaminaToHP = 10.0f;
@@ -845,5 +896,5 @@ Don't forget your weapons used matched with races can affect these numbers.",
         public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
         // PvP
         public static readonly float ResilienceRatingToCritReduction = 1.0f / 81.97497559f;
-    }
+    }*/
 }

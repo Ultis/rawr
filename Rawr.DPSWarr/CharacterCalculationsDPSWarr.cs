@@ -104,22 +104,22 @@ namespace Rawr.DPSWarr
             if (SkillAttacks == null){SkillAttacks = new Skills(character,talents, BasicStats, combatFactors, whiteAttacks);}
 
             dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
-                ,BasicStats.Health, BaseHealth, BasicStats.Stamina * DPSWarr.StaminaToHP));
+                ,BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}"
-                ,BasicStats.Stamina,BasicStats.Stamina*DPSWarr.StaminaToHP));
+                ,BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
-            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*DPSWarr.StrengthToAP));
+            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
             dictValues.Add("Agility",string.Format("{0}*Base Crit at lvl 80 3.192%"+
                 Environment.NewLine+"Increases Crit by {1:0.00%}"+
                 Environment.NewLine+"Total Crit increase of {2:0.00%}"+
                 Environment.NewLine+"Increases Armor by {3:0}",
-                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + .03192f, BasicStats.Agility * DPSWarr.AgilityToArmor));
+                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + .03192f, StatConversion.GetArmorFromAgility(BasicStats.Agility)));
             dictValues.Add("Haste",string.Format("{0:0.00%}*Haste Rating {1}", HastePercent, BasicStats.HasteRating));
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1} (+{2:0.00%})" +
                 Environment.NewLine + "MH Crit {3:0.00%}" +
                 Environment.NewLine + "OH Crit {4:0.00%}",
-                CritPercent, BasicStats.CritRating, BasicStats.CritRating*DPSWarr.CritRatingToCrit/100.00f, MhCrit, OhCrit));
+                CritPercent, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating), MhCrit, OhCrit));
             dictValues.Add("Armor Penetration",  string.Format("{0:0.00%}*Armor Penetration Rating {1}- {2:0.00%}" +
                 Environment.NewLine + "Arms Stance- +{3:0.00%}" +
                 Environment.NewLine + "Mace Spec- +{4:0.00%}",
@@ -130,15 +130,20 @@ namespace Rawr.DPSWarr
             dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
             dictValues.Add("Hit Rating",
                 string.Format("{0}*{1:0.00%} Increased Chance to hit" + Environment.NewLine + "Note: This does not include Precision"
-                ,BasicStats.HitRating,BasicStats.HitRating*DPSWarr.HitRatingToHit/100.00f));
+                ,BasicStats.HitRating,StatConversion.GetHitFromRating(BasicStats.HitRating)));
             dictValues.Add("Expertise", 
-                string.Format("{0:0.00}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}." +
-                                Environment.NewLine + "Main Hand Exp- {3:0.00} / {4:0.00%}" + Environment.NewLine + "Off Hand Exp- {5:0.00} / {6:0.00%}" +
-                                Environment.NewLine + "Note: This does not include Weapon Mastery or Strength of Arms", 
-                                BasicStats.ExpertiseRating * DPSWarr.ExpertiseRatingToExpertise + BasicStats.Expertise,
-                                BasicStats.ExpertiseRating, Expertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f,
-                                MhExpertise, MhExpertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f,
-                                OhExpertise, OhExpertise * DPSWarr.ExpertiseToDodgeParryReduction / 100.00f));
+                string.Format("{0:0.00}*Expertise Rating {1}" +
+                                Environment.NewLine + "Num Displayed is Rating Converted + Strength of Arms" +
+                                Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}." +
+                                Environment.NewLine + "Main Hand Exp- {3:0.00} / {4:0.00%} [Includes Racial]" +
+                                Environment.NewLine + "Off Hand Exp- {5:0.00} / {6:0.00%} [Includes Racial]" +
+                                Environment.NewLine + Environment.NewLine + "You can free up {7:0} Expertise ({8:0} Rating)",
+                                Expertise + BasicStats.Expertise,
+                                BasicStats.ExpertiseRating, StatConversion.GetDodgeParryReducFromExpertise(Expertise),
+                                MhExpertise, StatConversion.GetDodgeParryReducFromExpertise(MhExpertise),
+                                OhExpertise, StatConversion.GetDodgeParryReducFromExpertise(OhExpertise),
+                                (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1,
+                                StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1)));
             // DPS ind
             dictValues.Add("Bloodsurge",    string.Format("{0:0.00}",SkillAttacks.Bloodsurge()));
             dictValues.Add("Bloodthirst",   string.Format("{0:0.00}",SkillAttacks.Bloodthirst()));

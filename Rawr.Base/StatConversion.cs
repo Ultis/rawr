@@ -48,6 +48,9 @@ namespace Rawr
         public const float RATING_PER_SPELLCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_SPELLHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_SPELLHIT = 2623.1990f; //8f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_ARMOR = 2.00f; //2 Armor per 1 AGI;
+        public const float RATING_PER_HEALTH = 10.00f; //10 Health per 1 STA;
+        public const float RATING_PER_DODGEPARRYREDUC = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 166.66667f;
@@ -96,14 +99,33 @@ namespace Rawr
 
         #region Functions for Plain Rating Conversions
 
+        public static float GetArmorFromAgility(float Rating, Character.CharacterClass Class) { return GetArmorFromAgility(Rating); }
+        /// <summary>
+        /// Returns a Value (2 = 2 extra Armor)
+        /// </summary>
+        /// <param name="Rating">Agility</param>
+        /// <returns>A Value (2 = 2 extra Armor)</returns>
+        public static float GetArmorFromAgility(float Rating) {
+            return Rating * RATING_PER_ARMOR;
+        }
+
+        public static float GetHealthFromStamina(float Rating, Character.CharacterClass Class) { return GetHealthFromStamina(Rating); }
+        /// <summary>
+        /// Returns a Value (1000 = 1000 extra Health)
+        /// </summary>
+        /// <param name="Rating">Stamina</param>
+        /// <returns>A Value (1000 = 1000 extra Health)</returns>
+        public static float GetHealthFromStamina(float Rating) {
+            return Rating * RATING_PER_HEALTH;
+        }
+
         public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% Armor Ignored)
         /// </summary>
         /// <param name="Rating">Armor Penetration Rating</param>
         /// <returns>A Percentage (0.05 = 5% Armor Ignored)</returns>
-        public static float GetArmorPenetrationFromRating(float Rating)
-        {
+        public static float GetArmorPenetrationFromRating(float Rating) {
             return Rating / RATING_PER_ARMORPENETRATION;
         }
 
@@ -146,10 +168,29 @@ namespace Rawr
         /// </summary>
         /// <param name="Rating">Expertise Rating</param>
         /// <returns>A Value (6.34 = 6.34 extra Expertise)</returns>
-        public static float GetExpertiseFromRating(float Rating)
-        {
-            return Rating / RATING_PER_EXPERTISE;
-        }
+        public static float GetExpertiseFromRating(float Rating) { return Rating / RATING_PER_EXPERTISE; }
+        public static float GetRatingFromExpertise(float value, Character.CharacterClass Class) { return GetRatingFromExpertise(value); }
+        /// <summary>
+        /// Returns a Value (6.34 = 6.34 extra Expertise)
+        /// </summary>
+        /// <param name="Rating">Expertise Rating</param>
+        /// <returns>A Value (6.34 = 6.34 extra Expertise)</returns>
+        public static float GetRatingFromExpertise(float value) { return value * RATING_PER_EXPERTISE; }
+
+        public static float GetDodgeParryReducFromExpertise(float Rating, Character.CharacterClass Class) { return GetDodgeParryReducFromExpertise(Rating); }
+        /// <summary>
+        /// Returns a Percentage (1.00 = 1% extra Dodge/Parry Reduction)
+        /// </summary>
+        /// <param name="Rating">Expertise</param>
+        /// <returns>A Percentage (1.00 = 1% extra Dodge/Parry Reduction)</returns>
+        public static float GetDodgeParryReducFromExpertise(float Rating) { return Rating * RATING_PER_DODGEPARRYREDUC; }
+        public static float GetExpertiseFromDodgeParryReduc(float value, Character.CharacterClass Class) { return GetExpertiseFromDodgeParryReduc(value); }
+        /// <summary>
+        /// Returns a Value (1 = 1 extra Expertise)
+        /// </summary>
+        /// <param name="Rating">DodgeParryReduc %</param>
+        /// <returns>A Value (1 = 1 extra Expertise)</returns>
+        public static float GetExpertiseFromDodgeParryReduc(float value) { return value / RATING_PER_DODGEPARRYREDUC; }
 
         public static float GetParryFromRating(float Rating, Character.CharacterClass Class) { return GetParryFromRating(Rating); }
         /// <summary>

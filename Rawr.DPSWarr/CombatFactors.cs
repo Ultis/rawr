@@ -51,8 +51,7 @@ namespace Rawr.DPSWarr {
         public float YellowMissChance { get { var missChance = 8f - HitPercent; return missChance < 0f ? 0f : missChance/100; } }
         public float WhiteMissChance {
             get {
-                var missChance = 27f;
-                if (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1) { missChance = 8f; }
+                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1 ? 8f : 27f );
                 missChance -= HitPercent;
                 return missChance < 0f ? 0f : missChance/100; 
             }
@@ -74,9 +73,9 @@ namespace Rawr.DPSWarr {
                 float flurryHaste = _talents.Flurry * 0.05f * flurryUptime;
 
                 var totalHaste = 1f;
-                totalHaste *= (1f + flurryHaste) * (1f + (_stats.HasteRating * DPSWarr.HasteRatingToHaste) / 100);
+                totalHaste *= (1f + flurryHaste) * (1f + StatConversion.GetHasteFromRating(_stats.HasteRating,Character.CharacterClass.Warrior));
                 totalHaste *= 1f + _stats.PhysicalHaste;
-                totalHaste *= 1f + 0.03f * _talents.BloodFrenzy;
+                // BloodFrenzy is handled in GetCharacterStats
                 return totalHaste;
             }
         }
@@ -90,7 +89,7 @@ namespace Rawr.DPSWarr {
             }
         }
         public float BonusYellowCritDmg { get { return BonusWhiteCritDmg*(1+_talents.Impale*0.1f); } }
-        public float HitPercent { get { return _stats.PhysicalHit + _stats.HitRating * DPSWarr.HitRatingToHit; } }
+        public float HitPercent { get { return _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating,Character.CharacterClass.Warrior); } }
         public float DamageBonus {
             get {
                 return (1+_talents.TwoHandedWeaponSpecialization * 0.02f)*(1+_stats.BonusPhysicalDamageMultiplier)*
@@ -98,7 +97,8 @@ namespace Rawr.DPSWarr {
             }
         }
         private float CalcCrit(Item weapon) {
-            var crit = _stats.PhysicalCrit + _stats.CritRating * DPSWarr.CritRatingToCrit / 100.00f;
+            if (weapon == null || weapon.MaxDamage == 0) { return 0f; }
+            var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
             if (_calcOpts != null) {
                 //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
                 if (_calcOpts.FuryStance) { crit += 0.03f; }
@@ -110,7 +110,7 @@ namespace Rawr.DPSWarr {
             return crit;
         }
         private float CalcYellowCrit(Item weapon) {
-            var crit = _stats.PhysicalCrit + _stats.CritRating * DPSWarr.CritRatingToCrit / 100.00f;
+            var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
             crit *= (1 - YellowMissChance - MhDodgeChance);
             if (_calcOpts != null) {
                 //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
@@ -122,23 +122,28 @@ namespace Rawr.DPSWarr {
 
             return crit;
         }
-        private float CalcExpertise(Item weapon) {
-            float baseExpertise = _stats.Expertise + _stats.ExpertiseRating * DPSWarr.ExpertiseRatingToExpertise;
-            
-            if (_characterRace == Character.CharacterRace.Human) {
+        public static float GetRacialExpertiseFromWeapon(Character.CharacterRace r, Item weapon) {
+            if (r == Character.CharacterRace.Human) {
                 if (weapon != null && (weapon.Type == Item.ItemType.OneHandSword || weapon.Type == Item.ItemType.OneHandMace
                     || weapon.Type == Item.ItemType.TwoHandSword || weapon.Type == Item.ItemType.TwoHandMace)) {
-                    baseExpertise += 3f;
+                    return 3f;
                 }
-            } else if (_characterRace == Character.CharacterRace.Dwarf) {
+            } else if (r == Character.CharacterRace.Dwarf) {
                 if (weapon != null && (weapon.Type == Item.ItemType.OneHandMace || weapon.Type == Item.ItemType.TwoHandMace)) {
-                    baseExpertise += 5f;
+                    return 5f;
                 }
-            } else if (_characterRace == Character.CharacterRace.Orc) {
+            } else if (r == Character.CharacterRace.Orc) {
                 if (weapon != null && (weapon.Type == Item.ItemType.OneHandAxe || weapon.Type == Item.ItemType.TwoHandAxe)) {
-                    baseExpertise += 5f;
+                    return 5f;
                 }
             }
+            return 0f;
+        }
+        private float CalcExpertise(Item weapon) {
+            if (weapon == null|| weapon.MaxDamage == 0) { return 0f; }
+            float baseExpertise = _stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating);
+
+            baseExpertise += GetRacialExpertiseFromWeapon(_characterRace,weapon);
 
             return baseExpertise;
         }
@@ -163,7 +168,7 @@ namespace Rawr.DPSWarr {
             float weaponDiff = OffHand.Speed/MainHand.Speed;
             float mhpercent = weaponDiff/(1+weaponDiff);
             float ohpercent = 1-mhpercent;
-            float consumeRate = (1 + _talents.Flurry * 0.05f) * (1f + (_stats.HasteRating * DPSWarr.HasteRatingToHaste) / 100) * (1f + _stats.PhysicalHaste)
+            float consumeRate = (1 + _talents.Flurry * 0.05f) * (1f + StatConversion.GetHasteFromRating(_stats.HasteRating,Character.CharacterClass.Warrior)) * (1f + _stats.PhysicalHaste)
                                 * (1 / MainHand.Speed + 1 / OffHand.Speed);
 
             float BTperSec = 0.1875f;

@@ -22,10 +22,12 @@
             return (3.0f / 16)*_talents.Bloodthirst;//*(1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance);
         }
         public float WhirlWindHits() {
-            float wwCount = 1.0f / 8;
-            if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1) {
-                wwCount = 0;
-            }
+            if (!_calcOpts.FuryStance) { return 0; } // cant WW from Arms Stance
+            float wwCount = 1.0f / (10f-(_talents.GlyphOfWhirlwind?2f:0f));
+            // much as the below thing does make sense, ppl may jump to fury stance even tho they are arms specked
+            //if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1) {
+                //wwCount = 0;
+            //}
             return wwCount;/* * ((1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance)
                             + (1 - _combatFactors.YellowMissChance - _combatFactors.OhDodgeChance));*/
         }
@@ -50,17 +52,28 @@
         #region Arms Skill Hits
         public float TraumaHits() {
             if (_talents.Trauma == 0) { return 0.0f;  }
-            return _combatFactors.MhCrit * _combatFactors.ProbMhWhiteHit /* * (1 - (15.0f/60.0f))*/; // last part is to calc uptime but not sure if that's accurate
+            return _combatFactors.MhCrit * _combatFactors.ProbMhWhiteHit /* * (1 - (15.0f/60.0f))*/;
+            // last part is to calc uptime but not sure if that's accurate
         }
         public float MortalStrikeHits() {
             if (_talents.MortalStrike == 0) { return 0.0f; }
-            return (1.0f / 5) * _talents.MortalStrike;//*(1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance);
+            return (1.0f / (5f - .334f * _talents.ImprovedMortalStrike));//*(1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance);
         }
         public float OverpowerHits() {
             if (_calcOpts != null && _calcOpts.FuryStance) { return 0.0f; }
-            double chance = 0.1*_talents.TasteForBlood;
-            // 5 sec cooldown - (_talents.UnrelentingAssault*2.0f)
-            float procs = (1f - (float)System.Math.Pow(1 - chance, 6)) / 18;
+            {
+                // TODO: 5 sec cooldown - (_talents.UnrelentingAssault*2.0f)
+            }
+            {
+                // TODO: GlyphofOverpower "100% chance to activate when attacks are parried"
+                // thereby making it so that it will activate on both Dodges and Parries instead of Dodges alone,
+                // which are invalidated by the Expertise mechanic
+            }
+            double chance; float procs;
+            { // TasteFoorBlood
+                chance = 0.1 * _talents.TasteForBlood;
+                procs = (1f - (float)System.Math.Pow(1 - chance, 6)) / 18;
+            }
             return procs;
         }
         public float SuddenDeathHits() {
@@ -72,13 +85,7 @@
             float hits = (1f - (float)System.Math.Pow(1 - chance, totalHits)) / 18;
             return 2*hits;
         }
-        public float SlamHits() {
-            if (_talents.ImprovedSlam == 2) {
-                return (1.5f / 5);
-            } else {
-                return 0;
-            }
-        }
+        public float SlamHits() { return (_talents.ImprovedSlam == 2 ? (1.5f /*- (0.5f * _talents.ImprovedSlam)*/ / 5) : 0); }
         public float SwordSpecHits() {
             if (_combatFactors.MainHand.Type != Item.ItemType.TwoHandSword) { return 0.0f; }
             float missChance = (1 - _combatFactors.WhiteMissChance - _combatFactors.MhDodgeChance);
@@ -92,10 +99,21 @@
             attacks *= (MortalStrikeHits() + SlamHits() + OverpowerHits() + SuddenDeathHits() + whiteHits);
             return attacks;
         }
-        public float BladestormHits() {return 6.0f / 90*_talents.Bladestorm;}
+        public float BladestormHits() {
+            return (6.0f / (90-(_talents.GlyphOfBladestorm?15:0))) * _talents.Bladestorm;
+        }
+        public float RendHits() { return 6.0f / (15f+(_talents.GlyphOfRending?6f:0f)); }
+        public float SweepingHits() {
+            if (_calcOpts!=null && _calcOpts.MultipleTargets) {
+                return 6.0f / 30 * _talents.SweepingStrikes;
+            } else {
+                return 0.0f;
+            }
+        }
         #endregion
 
         #region Rage Calculations
+        // Returns the value for every one second
         public float neededRage() {
             float BTRage = BloodThirstHits() * 30;
             float WWRage = WhirlWindHits() * 30;
@@ -103,23 +121,26 @@
             float OPRage = OverpowerHits() * 5;
             float SDRage = SuddenDeathHits() * 10;
             float SlamRage = SlamHits() * 15;
-            float SweepingRage = _talents.SweepingStrikes * 30 * 0.5f; // 30 rage every half minute
-            float rage = BTRage+WWRage+MSRage+OPRage+SDRage+SlamRage;
+            float BladestormRage = BladestormHits() * 30;
+            float SweepingRage = SweepingHits() * (_talents.GlyphOfSweepingStrikes?0:30);
+            float RendRage = RendHits() * 10;
+            float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage
+                + SweepingRage + BladestormRage + RendRage;
             return rage;  
         }
-
+        // Returns the value for every one second
         public float BloodRageGain() {
             return (20+5*_talents.ImprovedBloodrage)/(60*(1-0.11f*_talents.IntensifyRage));
         }
-
+        // Returns the value for every one second
         public float AngerManagementGain() {
             return _talents.AngerManagement/3.0f;
         }
-
+        // Returns the value for every one second
         public float ImprovedBerserkerRage() {
             return _talents.ImprovedBerserkerRage * 10 / (30 * (1 - 0.11f * _talents.IntensifyRage));
         }
-
+        // Returns the value for every one second
         public float OtherRage() {
             float rage = (14.0f / 8.0f*(1+_combatFactors.MhCrit-(1.0f-_combatFactors.ProbMhWhiteHit)));
             if(_combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1))
@@ -131,9 +152,7 @@
             return rage;
         }
 
-        public float freeRage() {
-            return _whiteStats.whiteRageGen() + OtherRage() + SuddenDeathHits()*10 - neededRage()/*/(1.25f*_talents.EndlessRage)*/;
-        }
+        public float freeRage() { return _whiteStats.whiteRageGen() + OtherRage() + SuddenDeathHits() * 10 - neededRage(); }
 
         public float heroicStrikeRage() {
             //MHAverageDamage*ArmorDeal*15/4/cVal*(1+mhCritBonus*mhCrit-glanceChance*glanceReduc-whiteMiss-dodgeMH)+7/2*(1+mhCrit-whiteMiss-whiteDodge)
@@ -155,7 +174,7 @@
             btDamage *= BloodThirstHits();
 
             if (btDamage < 0) { btDamage = 0; }
-
+            // Here would be where Bloodthirst healing would take effect, also adding in GlyphOfBloodthirst (+100% healing)
             return _combatFactors.DamageReduction*btDamage*_talents.Bloodthirst;
         }
         public float Whirlwind() {
@@ -172,11 +191,7 @@
         }
         public float HeroicStrike() {
             heroicStrikePercent = _combatFactors.MainHandSpeed*HeroicStrikeHits(0);
-            if (heroicStrikePercent > 1)
-                heroicStrikePercent = 1;
-            //if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1)
-            //    heroicStrikePercent = 0;
-
+            if (heroicStrikePercent > 1) { heroicStrikePercent = 1; }
             float damageIncrease = heroicStrikePercent* _combatFactors.DamageReduction*((_combatFactors.DamageBonus*495)
                                    + _combatFactors.DamageReduction*_combatFactors.AvgMhWeaponDmg*(((_combatFactors.MhYellowCrit)-(_combatFactors.MhCrit))*
                                    (1+(_combatFactors.BonusYellowCritDmg-_combatFactors.BonusWhiteCritDmg))+(_combatFactors.WhiteMissChance-_combatFactors.YellowMissChance)+(0.25f*0.35f)));
@@ -198,7 +213,7 @@
             msDamage *= (_combatFactors.NormalizedMhWeaponDmg * (1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance
                          + _combatFactors.MhYellowCrit * _combatFactors.BonusYellowCritDmg)+380);
             msDamage *= MortalStrikeHits();
-            msDamage *= (_talents.GlyphOfMortalStrike ? 1.10f : 0.00f);
+            msDamage *= (_talents.GlyphOfMortalStrike ? 1.10f : 1.00f);
             return msDamage * _combatFactors.DamageReduction;
         }
         public float Overpower() {
@@ -212,19 +227,13 @@
             overpowerDamage *= OverpowerHits();
             return overpowerDamage * _combatFactors.DamageReduction * (1+_talents.UnrelentingAssault*0.10f);
         }
-        public float Slam() {
-            float slamDamage = _combatFactors.DamageBonus*(1+_stats.BonusSlamDamage);
-            slamDamage *= (_combatFactors.AvgMhWeaponDmg * (1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance
-                         + _combatFactors.MhYellowCrit * _combatFactors.BonusYellowCritDmg)+250);
-            slamDamage *= SlamHits();
-
-            return slamDamage*_combatFactors.DamageReduction;
-        }
         public float SuddenDeath() {
-            if (_talents.SuddenDeath==0) { return 0.0f; }
-            float executeRage = freeRage()*18 + (_talents.GlyphOfExecution ? 10.00f : 0.00f);
+            if (_talents.SuddenDeath==0) { return 0.0f; }                                   // No Sudden Death talent = 0 damage
+            float freerage = freeRage(); if (freerage < 0) { return 0.0f; }                 // No Free Rage = 0 damage
+            float executeRage = freerage*18;
             executeRage -= (15 - 2.5f * _talents.ImprovedExecute);
             if (executeRage > 30){executeRage = 30;}
+            executeRage += (_talents != null && _talents.GlyphOfExecution ? 10.00f : 0.00f);
             float executeDamage = _combatFactors.DamageBonus;
             executeDamage *= ((_stats.AttackPower * 0.2f) + 1456 + executeRage * 38);
             executeDamage *= SuddenDeathHits();
@@ -260,6 +269,15 @@
             return _combatFactors.DamageReduction * wwDamage;
         }
         #endregion
+        #region General Skills Damage
+        public float Slam() {
+            float slamDamage = _combatFactors.DamageBonus * (1 + _stats.BonusSlamDamage);
+            slamDamage *= (_combatFactors.AvgMhWeaponDmg * (1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance
+                         + _combatFactors.MhYellowCrit * _combatFactors.BonusYellowCritDmg) + 250);
+            slamDamage *= SlamHits();
+
+            return slamDamage * _combatFactors.DamageReduction;
+        }
 
         public float Deepwounds() {
             float mhCrits = (1 / _combatFactors.MainHandSpeed) * _combatFactors.MhCrit * (1 - heroicStrikePercent);
@@ -294,6 +312,7 @@
 
             return deepWoundsDamage;
         }
+        #endregion
     }
 }
 
