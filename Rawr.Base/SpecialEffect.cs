@@ -44,6 +44,14 @@ namespace Rawr
         public float Chance { get; set; }
         public int MaxStack { get; set; }
 
+        public enum CalculationMode
+        {
+            Simple,
+            Advanced
+        }
+
+        public static CalculationMode Mode = CalculationMode.Advanced;
+
         public SpecialEffect()
         {
             Chance = 1.0f;
@@ -335,7 +343,7 @@ namespace Rawr
 
                     // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
                     //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
-                    if (triggerInterval > 0)
+                    if (triggerInterval > 0 && Mode == CalculationMode.Advanced)
                     {
                         if (fightDuration <= Duration)
                         {
