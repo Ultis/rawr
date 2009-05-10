@@ -898,9 +898,13 @@ namespace Rawr
             {
                 stats.DivineStormDamage = 81;
             }
-            else if ((match = new Regex(@"Causes your Judgements to increase your Critical Strike Rating by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
+            else if (line == "Causes your Judgements to increase your Critical Strike rating by 53 for 5 sec.")
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { CritRating = int.Parse(match.Groups["amount"].Value) }, 5f, 0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { CritRating = 53 }, 5f, 0f, 1f));
+            }
+            else if (line == "Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec.")
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { CritRating = 61 }, 5f, 0f, 1f));
             }
             else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%.")
             {
@@ -913,11 +917,23 @@ namespace Rawr
             #region Added by Rawr.ProtPaladin
             else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 5f, 10.0f, 1.0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 5f, 0f, 1f));
+            }
+            else if ((match = new Regex(@"Your Judgement ability also grants you (?<amount>\d\d*) resilience rating for 6 sec.").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { Resilience = (float)int.Parse(match.Groups["amount"].Value) }, 6f, 0f, 1f));
+            }
+            else if ((match = new Regex(@"Your Holy Shield ability also grants you (?<amount>\d\d*) resilience rating for 6 sec.").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { Resilience = (float)int.Parse(match.Groups["amount"].Value) }, 6f, 0f, 1f));
             }
             else if (line == "Increases your block value by 272 while Holy Shield is active.")
             {
                 stats.ShieldOfRighteousnessBlockValue = 272;
+            }
+            else if (line == "Your Shield of Righteousness deals an additional 96 damage.")
+            {
+                stats.ShieldOfRighteousnessBlockValue = 96;
             }
             #endregion
             #region Added by Rawr.Enhance

@@ -158,18 +158,18 @@ namespace Rawr.ProtPaladin
                                 "{4:0.00%} of incoming damage", DPSTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit, DamageTaken));
 
             dictValues.Add("Resilience",
-                string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1}%." + Environment.NewLine +
-                                "Reduces the effect of mana-drains and the damage of critical strikes by {2}%.",
+                string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1:0.00%}." + Environment.NewLine +
+                                "Reduces the effect of mana-drains and the damage of critical strikes by {2:0.00%}.",
                                 BasicStats.Resilience,
                                 BasicStats.Resilience * ProtPaladin.ResilienceRatingToCritReduction,
                                 BasicStats.Resilience * ProtPaladin.ResilienceRatingToCritReduction * 2));
 
             if (CritVulnerability > 0.0001f)
             {
-                double defenseNeeded = Math.Ceiling((CritVulnerability / (ProtPaladin.DefenseToCritReduction / 100.0f)) / ProtPaladin.DefenseRatingToDefense);
-                double resilienceNeeded = Math.Ceiling(CritVulnerability / (ProtPaladin.ResilienceRatingToCritReduction / 100.0f));
+                double defenseNeeded = Math.Ceiling((CritVulnerability / (ProtPaladin.DefenseToCritReduction)) / ProtPaladin.DefenseRatingToDefense);
+                double resilienceNeeded = Math.Ceiling(CritVulnerability / (ProtPaladin.ResilienceRatingToCritReduction));
                 dictValues.Add("Chance to be Crit",
-                    string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense or {2:0} resilience to be uncrittable.",
+                    string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense rating or {2:0} resilience rating to be uncrittable.",
                                     CritVulnerability, defenseNeeded, resilienceNeeded));
             }
             else
@@ -285,6 +285,7 @@ namespace Rawr.ProtPaladin
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "Defense Skill": return Defense;
                 case "Block Value": return StaticBlockValue;
+                case "% Block Chance": return Block * 100.0f;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
                 case "% Hit Chance": return Hit * 100.0f;
                 case "% Spell Hit Chance": return SpellHit * 100.0f;

@@ -554,15 +554,22 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3794, "Inscription of Dominance", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 23, Resilience = 15 }));
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
-			Stats mongoose = new Stats() { MongooseProc = 1f };
-			mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120f, PhysicalHaste = 0.02f }, 15f, 0f, -1f));
-			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, mongoose));
+            Stats bladeWard = new Stats();
+            bladeWard.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ParryRating = 200 }, 10f, 0f, -1f));
+            defaultEnchants.Add(new Enchant(3869, "Blade Ward", Item.ItemSlot.OneHand, bladeWard));
 
             Stats berserking = new Stats() { BerserkingProc = 1f };
-            berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400f, BonusArmorMultiplier = -.05f }, 15f, 0f, -1f));
+            berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400, BonusArmorMultiplier = -.05f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, berserking));
             
-            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { ExecutionerProc = 1 }));
+            Stats executioner = new Stats() { ExecutionerProc = 1f};
+            executioner.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetrationRating = 120 }, 15f, 0f, -1f));
+            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, executioner));
+            
+            Stats mongoose = new Stats(){ MongooseProc = 1f };
+            mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, PhysicalHaste = 0.02f }, 15f, 0f, -1f));
+            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, mongoose));
+            
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Hands, new Stats() { ShadowResistance = 8 }));
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Feet, new Stats() { ShadowResistance = 8 }));
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Chest, new Stats() { ShadowResistance = 8 }));
@@ -608,6 +615,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.OffHand, new Stats() { BlockRating = 15 }));
             defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.OffHand, new Stats() { BlockValue = 18 }));
             defaultEnchants.Add(new Enchant(1952, "Defense", Item.ItemSlot.OffHand, new Stats() { DefenseRating = 20 }));
+            defaultEnchants.Add(new Enchant(3229, "Resilience", Item.ItemSlot.OffHand, new Stats() {Resilience = 12 }));
 
             //scopes
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));

@@ -90,6 +90,7 @@ namespace Rawr
         MoonfireDmg,
         MoonfireExtension,
         MongooseProc,
+        BladeWardProc,
         BerserkingProc,
         MongooseProcAverage,
         MongooseProcConstant,
@@ -370,6 +371,7 @@ namespace Rawr
         BonusGHHealingMultiplier,
         BonusMindBlastMultiplier,
         PhysicalHaste,
+        RangedHaste,
         SpellHaste,
         HealingReceivedMultiplier,
         DamageTakenMultiplier,
@@ -1100,6 +1102,17 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste] = value; }
+        }
+
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Ranged Haste")]
+        public float RangedHaste
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.RangedHaste]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.RangedHaste] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2043,6 +2056,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MongooseProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.MongooseProc] = value; }
+        }
+
+        [DisplayName("Blade Ward Proc")]
+        [Category("Old Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BladeWardProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BladeWardProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BladeWardProc] = value; }
         }
 
         [DisplayName("Berserking Proc")]

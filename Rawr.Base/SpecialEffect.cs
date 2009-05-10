@@ -26,6 +26,8 @@ namespace Rawr
         DamageDone,
         MageNukeCast,
         JudgementHit,
+        HolyShield,
+        ShieldofRighteousness,
         CrusaderStrikeHit,
         InsectSwarmTick,
         ShamanLightningBolt,
@@ -787,6 +789,10 @@ namespace Rawr
                         return "on Mage Nuke Cast";
                     case Trigger.JudgementHit:
                         return "on Judgement";
+                    case Trigger.HolyShield:
+                        return "on Holy Shield cast";
+                    case Trigger.ShieldofRighteousness:
+                        return "on ShoR cast";
                     case Trigger.CrusaderStrikeHit:
                         return "on Crusader Strike";
                     case Trigger.InsectSwarmTick :

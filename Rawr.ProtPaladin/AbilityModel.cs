@@ -7,8 +7,8 @@ namespace Rawr.ProtPaladin
     public class AbilityModel
     {
         private Ability Ability;
-        private DamageType DamageType;
-        private AttackType AttackType;
+        //private DamageType DamageType;
+        //private AttackType AttackType;
         private Character Character;
         private Stats Stats;
         private PaladinTalents Talents;
@@ -28,7 +28,7 @@ namespace Rawr.ProtPaladin
 
         private void CalculateDamage()
         {
-            float baseDamage        = 0.0f;
+            float baseDamage = 0.0f;
             float critMultiplier = 0.0f;
             float duration = 0.0f;
             float AP = Stats.AttackPower;
@@ -41,6 +41,7 @@ namespace Rawr.ProtPaladin
                 case Ability.None:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false);
                     // Glancing blow reduction
+                    DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier);
                     DamageMultiplier *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
                     critMultiplier = 2.0f;
                     DamageMultiplier *= (1.0f - ArmorReduction);

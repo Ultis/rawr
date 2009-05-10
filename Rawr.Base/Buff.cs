@@ -400,14 +400,14 @@ namespace Rawr
                 Name = "Improved Moonkin Form",
                 Source = "Moonkin Druid",
                 Group = "Haste (%)",
-                Stats = { PhysicalHaste = 0.03f, SpellHaste = 0.03f }
+                Stats = { PhysicalHaste = 0.03f, RangedHaste = 0.03f, SpellHaste = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Swift Retribution",
                 Source = "Ret Paladin",
                 Group = "Haste (%)",
-                Stats = { PhysicalHaste = 0.03f, SpellHaste = 0.03f }
+                Stats = { PhysicalHaste = 0.03f, RangedHaste = 0.03f, SpellHaste = 0.03f }
             });
             #endregion
 
@@ -1452,6 +1452,18 @@ namespace Rawr
             #endregion
 
             #region Potion
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Potion of Speed",
+                Group = "Potion",
+                Stats = { HasteRating = 500 },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Indestructible Potion",
+                Group = "Potion",
+                Stats = { BonusArmor = 3500 },
+            });
             //defaultBuffs.Add(new Buff()
             //{
             //    Name = "Haste Potion",
@@ -2764,7 +2776,7 @@ namespace Rawr
                 SetName = "Aegis Plate",
                 SetThreshold = 4
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 3.0f, 10.0f, 1.0f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ShieldofRighteousness, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 3.0f, 0.0f, 1.0f));
 
             //Retribution T8
             defaultBuffs.Add(new Buff()
@@ -2903,6 +2915,13 @@ namespace Rawr
                 Name = "Stomp",
                 Group = "Temporary Buffs",
                 Stats = { BonusArmorMultiplier = -0.5f },
+                ConflictingBuffs = new List<string>(new string[] { })
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Unbalancing Strike",
+                Group = "Temporary Buffs",
+                Stats = { Defense = -200.0f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()

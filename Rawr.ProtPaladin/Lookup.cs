@@ -31,10 +31,20 @@ namespace Rawr.ProtPaladin
             return ArPCap;
         }
         
-        public static float LevelModifier(Character character)
+        /// <summary>
+        /// A mob's or player's crit chance is modified by the difference between the attacker's Attack Rating 
+        /// and the defender's Defense. The attack rating equals the skill with the currently equipped weapon 
+        /// (WS = Weapon Skill), being level * 5 for mobs and the same for player chars with maximum weapon skill. 
+        /// Each point of AR exceeding the target's Defense will increase chance to crit by 0.04%.
+        /// </summary>
+        /// <returns>Returns the modifier of chance for two combatants. (0.006 = 0.6%)</returns>
+        public static float CombatRatingModifier(Character character, Stats stats)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return (calcOpts.TargetLevel - character.Level) * 0.2f;
+            float AttackerAttackRating = calcOpts.TargetLevel * 5.0f;
+            float DefenderDefenseSkill = stats.Defense;
+            float Modifier = (AttackerAttackRating - DefenderDefenseSkill) * 0.0004f;
+            return Modifier;
         }
 
         public static float TargetArmorReduction(Character character, Stats stats)
@@ -57,7 +67,8 @@ namespace Rawr.ProtPaladin
 
         public static float TargetCritChance(Character character, Stats stats)
         {
-            return Math.Max(0.0f, ((5.0f + Lookup.LevelModifier(character)) / 100.0f) - AvoidanceChance(character, stats, HitResult.Crit));
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            return Math.Max(0.0f, (0.05f + CombatRatingModifier(character, stats)) - AvoidanceChance(character, stats, HitResult.Crit));
         }
 
         public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
@@ -176,29 +187,29 @@ namespace Rawr.ProtPaladin
 
         public static float BonusArmorPenetrationPercentage(Character character, Stats stats)
         {
-            return ((stats.ArmorPenetrationRating * ProtPaladin.ArPToArmorPenetration) / 100.0f);
+            return (stats.ArmorPenetrationRating * ProtPaladin.ArPToArmorPenetration);
         }
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
         {
-        	return ((stats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + stats.Expertise)
-                    * ProtPaladin.ExpertiseToDodgeParryReduction) / 100.0f;
+        	return (stats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + stats.Expertise)
+                    * ProtPaladin.ExpertiseToDodgeParryReduction;
         }
 
         public static float BonusPhysicalHastePercentage(Character character, Stats stats)
         {
-            return ((stats.HasteRating * ProtPaladin.HasteRatingToPhysicalHaste) / 100.0f) + stats.PhysicalHaste;
+            return (stats.HasteRating * ProtPaladin.HasteRatingToPhysicalHaste) + stats.PhysicalHaste;
         }
 
         public static float BonusSpellHastePercentage(Character character, Stats stats)
         {
-            return ((stats.HasteRating * ProtPaladin.HasteRatingToSpellHaste) / 100.0f) + stats.SpellHaste;
+            return (stats.HasteRating * ProtPaladin.HasteRatingToSpellHaste) + stats.SpellHaste;
         }
 
 
         public static float HitChance(Character character, Stats stats)
         {
-            float physicalHit = ((stats.HitRating * ProtPaladin.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
+            float physicalHit = (stats.HitRating * ProtPaladin.HitRatingToHit) + stats.PhysicalHit;
             
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             
@@ -215,7 +226,7 @@ namespace Rawr.ProtPaladin
 
         public static float SpellHitChance(Character character, Stats stats)
         {
-            float spellHit = ((stats.HitRating * ProtPaladin.HitRatingToSpellHit) / 100.0f) + stats.SpellHit;
+            float spellHit = (stats.HitRating * ProtPaladin.HitRatingToSpellHit) + stats.SpellHit;
             
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             
@@ -236,17 +247,17 @@ namespace Rawr.ProtPaladin
             if ((calcOpts.TargetLevel - character.Level) < 3)
                 // This formula may or may not be accurate anymore, as the modifier on +1/2 mobs is untested
                 return Math.Min(1.0f, (((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Agility * ProtPaladin.AgilityToCrit)
-                                    - LevelModifier(character)) / 100.0f) + stats.PhysicalCrit);
+                                    - CombatRatingModifier(character, stats))) + stats.PhysicalCrit);
             else
                 // 4.8% chance to crit reduction as tested on bosses
-                return Math.Min(1.0f, (((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Agility * ProtPaladin.AgilityToCrit)
-                                    - 4.8f) / 100.0f) + stats.PhysicalCrit);
+                return Math.Min(1.0f, ((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Agility * ProtPaladin.AgilityToCrit)
+                                    - 0.048f) + stats.PhysicalCrit);
         }
 
         public static float SpellCritChance(Character character, Stats stats)
         {
             //CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            float spellCrit = Math.Min(1.0f, (((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Intellect * ProtPaladin.IntellectToCrit)) / 100.0f) + stats.SpellCrit);
+            float spellCrit = Math.Min(1.0f, ((stats.CritRating * ProtPaladin.CritRatingToCrit) + (stats.Intellect * ProtPaladin.IntellectToCrit)) + stats.SpellCrit);
             
             /*
              * Unlike the melee combat system, spell crit makes absolutely no difference to hit chance. 
@@ -410,40 +421,42 @@ namespace Rawr.ProtPaladin
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
         {
-            float defSkill = (float)Math.Floor(stats.DefenseRating * ProtPaladin.DefenseRatingToDefense);
+            float defSkillFomRating = (float)Math.Floor(stats.DefenseRating * ProtPaladin.DefenseRatingToDefense);
             float baseAvoid = 0.0f;
             float modifiedAvoid = 0.0f;
+            float modifier = CombatRatingModifier(character, stats);
 
             switch (avoidanceType)
             {
                 case HitResult.Dodge:
-                    baseAvoid = stats.Dodge + (stats.BaseAgility * ProtPaladin.AgilityToDodge) - LevelModifier(character);
+                    baseAvoid = stats.Dodge + (stats.BaseAgility * ProtPaladin.AgilityToDodge) - modifier;
                     modifiedAvoid = ((stats.Agility - stats.BaseAgility) * ProtPaladin.AgilityToDodge) +
-                                        (stats.DodgeRating * ProtPaladin.DodgeRatingToDodge) + (defSkill * ProtPaladin.DefenseToDodge);
-                    modifiedAvoid = 1.0f / (1.0f / 88.1290208866f + 0.9560f / modifiedAvoid);
+                                        (stats.DodgeRating * ProtPaladin.DodgeRatingToDodge) + (defSkillFomRating * ProtPaladin.DefenseToDodge);
+                    modifiedAvoid *= 100.0f;
+                    modifiedAvoid = 0.01f / (1.0f / 88.1290208866f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Parry:
-                    baseAvoid = stats.Parry - LevelModifier(character);
-                    modifiedAvoid = (stats.ParryRating * ProtPaladin.ParryRatingToParry) + (defSkill * ProtPaladin.DefenseToParry);
-                    modifiedAvoid = 1.0f / (1.0f / 47.003525644f + 0.9560f / modifiedAvoid);
+                    baseAvoid = stats.Parry - modifier;
+                    modifiedAvoid = (stats.ParryRating * ProtPaladin.ParryRatingToParry) + (defSkillFomRating * ProtPaladin.DefenseToParry);
+                    modifiedAvoid *= 100.0f;
+                    modifiedAvoid = 0.01f / (1.0f / 47.003525644f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Miss:
-                    baseAvoid = stats.Miss * 100f - LevelModifier(character);
-                    modifiedAvoid = (defSkill * ProtPaladin.DefenseToMiss);
-                    modifiedAvoid = 1.0f / (1.0f / 16.0f + 0.9560f / modifiedAvoid);
+                    baseAvoid = stats.Miss - modifier;
+                    modifiedAvoid = (defSkillFomRating * ProtPaladin.DefenseToMiss);
+                    modifiedAvoid *= 100.0f;
+                    modifiedAvoid = 0.01f / (1.0f / 16.0f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Block:
-                    baseAvoid = stats.Block - LevelModifier(character);
-                    modifiedAvoid = (stats.BlockRating * ProtPaladin.BlockRatingToBlock) + (defSkill * ProtPaladin.DefenseToBlock);
+                    baseAvoid = stats.Block - modifier;
+                    modifiedAvoid = (stats.BlockRating * ProtPaladin.BlockRatingToBlock) + (defSkillFomRating * ProtPaladin.DefenseToBlock);
                     break;
                 case HitResult.Crit:
-                    modifiedAvoid = (defSkill * ProtPaladin.DefenseToCritReduction) + (stats.Resilience * ProtPaladin.ResilienceRatingToCritReduction);
+                    modifiedAvoid = (defSkillFomRating * ProtPaladin.DefenseToCritReduction) + (stats.Resilience * ProtPaladin.ResilienceRatingToCritReduction);
                     break;
             }
-
-            // Many of the base values are whole numbers, so need to get it back to decimal. 
-            // May want to look at making this more consistant in the future.
-            return (baseAvoid + modifiedAvoid) / 100.0f;
+            float avoidanceChance = baseAvoid + modifiedAvoid;
+            return avoidanceChance;
         }
 
         // Combination nCk
