@@ -366,11 +366,6 @@ namespace Rawr.Tree
             }
             #endregion
 
-            #region Custom_SpecialEffect_Handling
-            SpecialEffects effects = new SpecialEffects(stats);
-            Stats result = effects.estimateAll(FightDuration, 1.0f / CastInterval, 1.0f / HealInterval, CritsRatio / CastInterval, out Healing);
-            #endregion
-
             Healing = resultNew.Healed;
             return new Stats()
             {
@@ -1256,12 +1251,6 @@ namespace Rawr.Tree
                     }
 
                 }
-            }
-
-            if (SpecialEffects.HasRelevantStats(stats))
-            {
-                // Should already have been caught, means we missing a relevant trigger or not setup as a special effect
-                return true;
             }
 
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit
