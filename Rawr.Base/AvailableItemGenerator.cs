@@ -21,8 +21,8 @@ namespace Rawr.Optimizer
         private bool overrideRegem;
         private bool overrideReenchant;
         private bool slotFiltering;
-        private Character character;
-        private CalculationsBase model;
+        private Character[] characters;
+        private CalculationsBase[] models;
 
         private const int slotCount = 19;
         private List<ItemInstance>[] slotItems = new List<ItemInstance>[slotCount];
@@ -62,14 +62,16 @@ namespace Rawr.Optimizer
             }
         }
 
-        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model)
+        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, overrideRegem, overrideReenchant, slotFiltering, new Character[] { character }, new CalculationsBase[] { model }) { }
+
+        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character[] characters, CalculationsBase[] models)
         {
             this.availableItems = availableItems;
             this.overrideRegem = overrideRegem;
             this.overrideReenchant = overrideReenchant;
             this.slotFiltering = slotFiltering;
-            this.character = character;
-            this.model = model;
+            this.characters = characters;
+            this.models = models;
 
             bool oldVolatility = Item.OptimizerManagedVolatiliy;
             try
@@ -86,7 +88,7 @@ namespace Rawr.Optimizer
         public int GetItemGemCount(Item item)
         {
             int gemCount = 0;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && character.WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
             switch (item.SocketColor1)
             {
                 case Item.ItemSlot.Meta:
@@ -209,18 +211,18 @@ namespace Rawr.Optimizer
                 slotItems[i] = new List<ItemInstance>();
             }
 
-            slotAvailableEnchants[(int)Character.CharacterSlot.Back] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Back, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Chest] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Chest, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Feet] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Feet, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Finger1] = slotAvailableEnchants[(int)Character.CharacterSlot.Finger2] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Finger, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Hands] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Hands, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Head] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Head, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Legs] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Legs, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Shoulders] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Shoulders, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.MainHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.MainHand, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.OffHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.OffHand, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Ranged] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Ranged, character, availableItems, model));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Wrist] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Wrist, character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Back] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Back, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Chest] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Chest, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Feet] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Feet, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Finger1] = slotAvailableEnchants[(int)Character.CharacterSlot.Finger2] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Finger, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Hands] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Hands, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Head] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Head, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Legs] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Legs, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Shoulders] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Shoulders, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.MainHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.MainHand, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.OffHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.OffHand, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Ranged] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Ranged, characters, availableItems, models));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Wrist] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Wrist, characters, availableItems, models));
 
             Item item = null;
             List<ItemInstance> possibleGemmedItems = null;
@@ -256,7 +258,17 @@ namespace Rawr.Optimizer
 
                 // disallow non-equippable items, this can happen for example when loading from character profiler
 
-                if (item != null && model.RelevantItemTypes.Contains(item.Type))
+                bool isRelevant = false;
+                foreach (CalculationsBase model in models)
+                {
+                    if (item != null && model.RelevantItemTypes.Contains(item.Type))
+                    {
+                        isRelevant = true;
+                        break;
+                    }
+                }
+
+                if (isRelevant)
                 {
                     int slot = (int)Character.GetCharacterSlotByItemSlot(item.Slot);
                     if (slot < 0 || slot >= slotCount) continue;
@@ -288,7 +300,16 @@ namespace Rawr.Optimizer
                     item.AvailabilityInformation.ItemList = possibleGemmedItems;
                     for (int i = 0; i < slotCount; i++)
                     {
-                        if (item.FitsInSlot((Character.CharacterSlot)i, character))
+                        bool fits = false;
+                        foreach (Character character in characters)
+                        {
+                            if (item.FitsInSlot((Character.CharacterSlot)i, character))
+                            {
+                                fits = true;
+                                break;
+                            }
+                        }
+                        if (fits)
                         {
                             slotItems[i].AddRange(possibleGemmedItems);
                         }
@@ -329,7 +350,7 @@ namespace Rawr.Optimizer
             string[] ids = gemmedId.Split('.');
             Item[] possibleGem1s, possibleGem2s, possibleGem3s = null;
             Enchant[] possibleEnchants = null;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && character.WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
 
             if (ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*"))
             {

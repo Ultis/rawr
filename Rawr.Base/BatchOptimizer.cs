@@ -174,7 +174,7 @@ namespace Rawr.Optimizer
                 List<string> templateGems = new List<string>();
                 // this could actually be empty, but in practice they will populate it at least once before
                 // however as a sanity check if it is null fetch the template from the model
-                if (GemmingTemplate.AllTemplates.Count == 0 || GemmingTemplate.AllTemplates[modelList[0].Name] == null)
+                if (GemmingTemplate.AllTemplates.Count == 0 || !GemmingTemplate.AllTemplates.ContainsKey(modelList[0].Name))
                 {
                     GemmingTemplate.AllTemplates[modelList[0].Name] = new List<GemmingTemplate>(Calculations.Instance.DefaultGemmingTemplates);
                 }
@@ -696,7 +696,7 @@ namespace Rawr.Optimizer
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, false, batchList[0], modelList[0]);
+            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, false, batchList.ToArray(), modelList.ToArray());
             List<ItemInstance>[] slotList = itemGenerator.SlotItems;
             slotItemList = new List<object>[characterSlots];
 
@@ -766,9 +766,14 @@ namespace Rawr.Optimizer
                     ItemInstance itemInstance = batchList[c]._item[i];
                     if (itemInstance != null && itemInstance.Id != 0)
                     {
-                        items[indexFromId[itemInstance.Id]] = itemInstance;
+                        int index;
+                        if (indexFromId.TryGetValue(itemInstance.Id, out index))
+                        {
+                            // only set the item if it's marked as available, otherwise leave it empty
+                            items[index] = itemInstance;
+                            items[itemList.Count + 1 + c * characterSlots + i] = (itemInstance == null) ? null : itemInstance.Item;
+                        }
                     }
-                    items[itemList.Count + 1 + c * characterSlots + i] = (itemInstance == null) ? null : itemInstance.Item;
                 }
             }
             startIndividual = new BatchIndividual(items, itemList.Count, indexFromId, null, batchList);

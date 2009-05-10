@@ -239,6 +239,27 @@ namespace Rawr
             ));
         }
 
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character[] characters, List<string> availableIds, CalculationsBase[] models)
+        {
+            return AllEnchants.FindAll(new Predicate<Enchant>(
+                delegate(Enchant enchant)
+                {
+                    bool isRelevant = false;
+                    for (int i = 0; i < models.Length; i++)
+                    {
+                        if (models[i].IsEnchantRelevant(enchant) && (enchant.FitsInSlot(slot, characters[i]) || slot == Item.ItemSlot.None))
+                        {
+                            isRelevant = true;
+                            break;
+                        }
+                    }
+                    return ((isRelevant || enchant.Slot == Item.ItemSlot.None)
+                        && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
+                        || enchant.Id == 0;
+                }
+            ));
+        }
+
         private static void SaveEnchants()
         {
             try
