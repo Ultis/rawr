@@ -51,15 +51,13 @@ namespace Rawr
     {
         // Machine constants
 
-        private const double MACHEP = 1.11022302462515654042E-16;
+        public static double MACHEP = 5.9604645E-8; // 1.11022302462515654042E-16
         private const double MAXLOG = 7.09782712893383996732E2;
         private const double MINLOG = -7.451332191019412076235E2;
         private const double MAXGAM = 171.624376956302725;
         private const double SQTPI = 2.50662827463100050242E0;
         private const double SQRTH = 7.07106781186547524401E-1;
         private const double LOGPI = 1.14472988584940017414;
-
-        private static double BetaThreshold = 3 * MACHEP;
 
         /// <summary>
         /// Don't let anyone instantiate this class. 

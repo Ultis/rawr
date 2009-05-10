@@ -50,7 +50,30 @@ namespace Rawr
             Advanced
         }
 
-        public static CalculationMode Mode = CalculationMode.Advanced;
+        private static CalculationMode Mode = CalculationMode.Advanced;
+
+        static SpecialEffect()
+        {
+            UpdateCalculationMode();
+        }
+
+        public static void UpdateCalculationMode()
+        {
+            switch (Properties.GeneralSettings.Default.ProcEffectMode)
+            {
+                case 0:
+                    Mode = CalculationMode.Simple;
+                    break;
+                case 1:
+                    Mode = CalculationMode.Advanced;
+                    SpecialFunction.MACHEP = 5.9604645E-8;
+                    break;
+                case 2:
+                    Mode = CalculationMode.Advanced;
+                    SpecialFunction.MACHEP = 1.11022302462515654042E-16;
+                    break;
+            }
+        }
 
         public SpecialEffect()
         {
@@ -383,7 +406,7 @@ namespace Rawr
                     else
                     {
                         float p = triggerChance * GetChance(attackSpeed);
-                        // just an approximation for now, accurate symbolic solution on todo list
+                        // simple approximation
                         float t = fightDuration - triggerInterval / p;
                         float cc = Cooldown + triggerInterval / p;
                         float total = (float)Math.Floor(t / cc) * Duration;
@@ -639,21 +662,32 @@ namespace Rawr
                 return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
             }
 
-            double c = Cooldown / triggerInterval;
-            if (c < 1.0) c = 1.0;
-            double n = fightDuration / triggerInterval;
-            double x = n;
-            double p = triggerChance * GetChance(attackSpeed);
-
-            double averageProcs = 0.0;
-            int r = 1;
-            while (x > 0)
+            if (Mode == CalculationMode.Advanced)
             {
-                averageProcs += SpecialFunction.Ibeta(r, x, p);
-                r++;
-                x -= c;
+                double c = Cooldown / triggerInterval;
+                if (c < 1.0) c = 1.0;
+                double n = fightDuration / triggerInterval;
+                double x = n;
+                double p = triggerChance * GetChance(attackSpeed);
+
+                double averageProcs = 0.0;
+                int r = 1;
+                while (x > 0)
+                {
+                    averageProcs += SpecialFunction.Ibeta(r, x, p);
+                    r++;
+                    x -= c;
+                }
+                return (float)(averageProcs / fightDuration);
             }
-            return (float)(averageProcs / fightDuration);
+            else
+            {
+                float p = triggerChance * GetChance(attackSpeed);
+                // simple approximation
+                float t = fightDuration - triggerInterval / p;
+                float cc = Cooldown + triggerInterval / p;
+                return (1 + (float)Math.Floor(t / cc)) / fightDuration;
+            }
         }
 
         public bool UsesPPM()

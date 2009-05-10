@@ -20,6 +20,7 @@ namespace Rawr.UserControls.Options
             checkBoxUseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
             chbBuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
             chbGemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
+            comboBoxProcEffectCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ProcEffectMode;
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
 
@@ -56,6 +57,7 @@ namespace Rawr.UserControls.Options
             Rawr.Properties.GeneralSettings.Default.DisplayBuffSource = chbBuffSource.Checked;
             Rawr.Properties.GeneralSettings.Default.DisplayGemNames = chbGemNames.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
+            Rawr.Properties.GeneralSettings.Default.ProcEffectMode = comboBoxProcEffectCalculationMode.SelectedIndex;
 			Rawr.Properties.GeneralSettings.Default.Save();
             switch(_locale)
             {
@@ -79,7 +81,9 @@ namespace Rawr.UserControls.Options
             if (!_locale.Equals("en"))
                 System.Windows.Forms.MessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.OK);
             OnDisplayBuffChanged();
-            ItemCache.OnItemsChanged();
+            SpecialEffect.UpdateCalculationMode();
+            //ItemCache.OnItemsChanged();
+            FormMain.Instance.Character.OnCalculationsInvalidated();
 		}
 
 		public void Cancel()

@@ -40,6 +40,8 @@
             this.rbEnglish = new System.Windows.Forms.RadioButton();
             this.chbBuffSource = new System.Windows.Forms.CheckBox();
             this.chbGemNames = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -107,10 +109,28 @@
             this.chbGemNames.Name = "chbGemNames";
             this.chbGemNames.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
+            // 
+            // comboBoxProcEffectCalculationMode
+            // 
+            this.comboBoxProcEffectCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProcEffectCalculationMode.FormattingEnabled = true;
+            this.comboBoxProcEffectCalculationMode.Items.AddRange(new object[] {
+            resources.GetString("comboBoxProcEffectCalculationMode.Items"),
+            resources.GetString("comboBoxProcEffectCalculationMode.Items1"),
+            resources.GetString("comboBoxProcEffectCalculationMode.Items2")});
+            resources.ApplyResources(this.comboBoxProcEffectCalculationMode, "comboBoxProcEffectCalculationMode");
+            this.comboBoxProcEffectCalculationMode.Name = "comboBoxProcEffectCalculationMode";
+            // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBoxProcEffectCalculationMode);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.chbGemNames);
             this.Controls.Add(this.chbBuffSource);
             this.Controls.Add(this.rbEnglish);
@@ -139,6 +159,8 @@
         private System.Windows.Forms.RadioButton rbGerman;
         private System.Windows.Forms.CheckBox chbBuffSource;
         private System.Windows.Forms.CheckBox chbGemNames;
+        private System.Windows.Forms.ComboBox comboBoxProcEffectCalculationMode;
+        private System.Windows.Forms.Label label2;
 
 
 	}
