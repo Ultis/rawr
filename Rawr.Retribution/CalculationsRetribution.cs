@@ -365,40 +365,19 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
-            Stats statsRace;
-            switch (character.Race)
-            {
-                case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats() { Strength = 19f, Agility = 22f, Stamina = 20f, Intellect = 24f, Spirit = 20f };
-                    break;
-                case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 23f, Agility = 17f, Stamina = 21f, Intellect = 21f, Spirit = 20f };
-                    break;
-                case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 22f, Agility = 20f, Stamina = 22f, Intellect = 20f, Spirit = 22f };
-                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
-                        statsRace.Expertise = 3f;
-                    break;
-                default: //defaults to Dwarf stats
-                    statsRace = new Stats() { Strength = 24f, Agility = 16f, Stamina = 25f, Intellect = 19f, Spirit = 20f, };
-                    if (character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace)
-                        statsRace.Expertise = 5f;
-                    break;
-            }
-            statsRace.Strength += 129f;
-            statsRace.Agility += 70f;
-            statsRace.Stamina += 122f;
-            statsRace.Intellect += 78f;
-            statsRace.AttackPower = 220f;
-            statsRace.Health = 6754f;
-            statsRace.Mana = 4114;
-            statsRace.PhysicalCrit = .0327f;
-            statsRace.SpellCrit = .0334f;
 
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, Character.CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
+            if (character.Race == Character.CharacterRace.Dwarf && character.MainHand != null &&
+                character.MainHand.Type == Item.ItemType.TwoHandMace) stats.Expertise = 5f;
+            if (character.Race == Character.CharacterRace.Human && character.MainHand != null &&
+                (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
+                stats.Expertise = 3f;
+            stats.Health -= 180f;
+            stats.Mana -= 280f;
 
             if (computeAverageStats)
             {

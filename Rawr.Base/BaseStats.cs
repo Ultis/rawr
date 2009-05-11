@@ -339,7 +339,7 @@ namespace Rawr
                             S.Spirit = 107;
                             break;
                         case Character.CharacterRace.Dwarf:
-                            S.Strength = 175;
+                            S.Strength = 153;
                             S.Agility = 86;
                             S.Stamina = 149;
                             S.Intellect = 97;
@@ -353,8 +353,6 @@ namespace Rawr
                             S.Spirit = 108;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Paladin class", characterRace));
                             break;
                     }
                     break;

@@ -281,28 +281,14 @@ namespace Rawr.Healadin
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             float fightLength = calcOpts.Length * 60;
 
-            Stats statsRace;
-            if (character.Race == Character.CharacterRace.Draenei)
-            {
-                statsRace = new Stats() { Health = 6754, Mana = 4114, Stamina = 146, Intellect = 99 };
-            }
-            else if (character.Race == Character.CharacterRace.Dwarf)
-            {
-                statsRace = new Stats() { Health = 6754, Mana = 4114, Stamina = 152, Intellect = 97 };
-            }
-            else if (character.Race == Character.CharacterRace.Human)
-            {
-                statsRace = new Stats() { Health = 6754, Mana = 4114, Stamina = 149, Intellect = 98 };
-            }
-            else
-            {
-                statsRace = new Stats() { Health = 6754, Mana = 4114, Stamina = 141, Intellect = 102 };
-            }
-
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, Character.CharacterClass.Paladin, character.Race);
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats stats = statsBaseGear + statsBuffs + statsRace;
+            stats.Health -= 180f;
+            stats.Mana -= 280f;
+
             ConvertRatings(stats, talents, calcOpts);
             if (computeAverageStats)
             {
