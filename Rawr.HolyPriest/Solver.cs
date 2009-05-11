@@ -9,7 +9,6 @@ namespace Rawr.HolyPriest
     {
         public Character character;
         public Stats stats;
-        public float baseMana;
         public CalculationOptionsPriest calculationOptions;
 
         public string Role { get; protected set; }
@@ -34,11 +33,10 @@ namespace Rawr.HolyPriest
             return EffCooldown;
         }
 
-        public BaseSolver(Stats _stats, Character _char, float _baseMana)
+        public BaseSolver(Stats _stats, Character _char)
         {
             stats = _stats;
             character = _char;
-            baseMana = _baseMana;
             calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
 
             Role = string.Empty;
@@ -56,8 +54,8 @@ namespace Rawr.HolyPriest
     {
         private int Rotation;
       
-        public Solver(Stats _stats, Character _char, float _baseMana)
-            : base(_stats, _char, _baseMana)
+        public Solver(Stats _stats, Character _char)
+            : base(_stats, _char)
         {
             Rotation = calculationOptions.Rotation;
 
@@ -540,8 +538,8 @@ namespace Rawr.HolyPriest
 
     public class AdvancedSolver : BaseSolver
     {
-        public AdvancedSolver(Stats _stats, Character _char, float _baseMana)
-            : base(_stats, _char, _baseMana)
+        public AdvancedSolver(Stats _stats, Character _char)
+            : base(_stats, _char)
         {
             Role = "Custom";
         }

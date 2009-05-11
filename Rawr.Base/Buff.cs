@@ -862,6 +862,14 @@ namespace Rawr
                 Stats = { WarlockGrandFirestone = 1f },
                 ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Inner Fire",
+                Group = "Class Buffs",
+                Stats = { PriestInnerFire = 1f },
+                ConflictingBuffs = new List<string>(new string[] { })
+            });
+
             #endregion
 
             #region Racial Buffs
@@ -2580,6 +2588,47 @@ namespace Rawr
                 SetName = "Gladiator's Raiment",
                 SetThreshold = 4
             });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PrayerOfHealingExtraCrit = 0.1f },
+                SetName = "Sanctification Regalia",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PWSBonusSpellPowerProc = 250 },
+                SetName = "Sanctification Regalia",
+                SetThreshold = 4
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DevouringPlagueBonusDamage = 0.15f },
+                SetName = "Sanctification Garb",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MindBlastHasteProc = 240 },
+                SetName = "Sanctification Garb",
+                SetThreshold = 4
+            });
+
 
             #region Rogue set bonuses
             

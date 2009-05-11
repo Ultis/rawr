@@ -144,7 +144,7 @@ namespace Rawr.HolyPriest
             GraphColor = col;
             CritChance = stats.SpellCrit;
             CritCoef = 1.5f * (1f + stats.BonusCritHealMultiplier);
-            BaseMana = CalculationsHolyPriest.GetRaceStats(character).Mana;
+            BaseMana = BaseStats.GetBaseStats(character.Level, character.Class, character.Race).Mana;
         }
       
         public override string ToString()
@@ -232,8 +232,8 @@ namespace Rawr.HolyPriest
                           MinHeal.ToString("0"),
                           HpS.ToString("0.00"),
                           HpM.ToString("0.00"),
-                          InstantHealEffect.ToString("0"),
                           (MinHeal/HotDuration*3).ToString("0"),
+                          InstantHealEffect.ToString("0"),
                           ManaCost.ToString("0"),
                           Name);
         }
@@ -438,7 +438,9 @@ namespace Rawr.HolyPriest
                 * (1 - stats.BonusPoHManaCostReductionMultiplier));
 
             CastTime = Math.Max(1.0f, (BaseCastTime * (1f - haste)) / (1 + stats.SpellHaste));
-            CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
+            CritChance = stats.SpellCrit
+                + character.PriestTalents.HolySpecialization * 0.01f
+                + stats.PrayerOfHealingExtraCrit;
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
         }
 

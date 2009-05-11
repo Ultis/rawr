@@ -67,6 +67,7 @@ namespace Rawr.HolyPriest
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
+            Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
@@ -82,7 +83,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
             dictValues.Add("Spell Power", string.Format("{0}*{1} from Inner Fire",
                 Math.Floor(BasicStats.SpellPower).ToString("0"),
-                CalculationsHolyPriest.GetInnerFireSpellPowerBonus(character)));
+                BasicStats.PriestInnerFire * CalculationsHolyPriest.GetInnerFireSpellPowerBonus(character)));
             //dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
             dictValues.Add("In FSR MP5", string.Format("{0}*{1} from MP5\r\n{2} from Meditation\r\n{3} Outside FSR\r\n{4} OFSR w/MP5",
                 (BasicStats.Mp5 + RegenInFSR).ToString("0"),
@@ -91,7 +92,7 @@ namespace Rawr.HolyPriest
                 RegenOutFSR.ToString("0"),
                 (BasicStats.Mp5 + RegenOutFSR).ToString("0")));
             dictValues.Add("Spell Crit", string.Format("{0}%*{1}% from Intellect\r\n{2}% from {6} Crit rating\r\n{3}% from Focused Will\r\n{4}% Class Base\r\n{5}% from Buffs",
-                (BasicStats.SpellCrit * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), character.PriestTalents.FocusedWill.ToString("0"), 1.24f, (BasicStats.SpellCrit * 100f - 1.24f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - character.PriestTalents.FocusedWill * 1f).ToString("0.00"), BasicStats.CritRating));
+                (BasicStats.SpellCrit * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), character.PriestTalents.FocusedWill.ToString("0"), (baseStats.SpellCrit * 100f).ToString("0.00"), (BasicStats.SpellCrit * 100f - baseStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - character.PriestTalents.FocusedWill * 1f).ToString("0.00"), BasicStats.CritRating));
             dictValues.Add("Healing Crit", string.Format("{0}%*{1} ({1}%) points in Holy Specialization\r\n{2} ({3}%) points in Renewed Hope",
                 ((BasicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f).ToString("0.00"),
                 character.PriestTalents.HolySpecialization, character.PriestTalents.RenewedHope, character.PriestTalents.RenewedHope * 2));
@@ -151,9 +152,9 @@ namespace Rawr.HolyPriest
 
             BaseSolver solver;
             if ((character.CalculationOptions as CalculationOptionsPriest).Rotation == 10)
-                solver = new AdvancedSolver(BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+                solver = new AdvancedSolver(BasicStats, character);
             else
-                solver = new Solver(BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+                solver = new Solver(BasicStats, character);
             solver.Calculate(this);
 
             dictValues.Add("Role", string.Format("{0}*{1}", solver.Role, solver.ActionList));

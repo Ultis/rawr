@@ -164,6 +164,7 @@ namespace Rawr.HolyPriest
 
         public override void SetDefaults(Character character)
         {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Inner Fire"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Tree of Life Aura"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
@@ -373,7 +374,7 @@ namespace Rawr.HolyPriest
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             Stats stats = GetCharacterStats(character, additionalItem);
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);  // GetRaceStats(character);
             CharacterCalculationsHolyPriest calculatedStats = new CharacterCalculationsHolyPriest();
             CalculationOptionsPriest calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
             if (calculationOptions == null)
@@ -389,9 +390,9 @@ namespace Rawr.HolyPriest
 
             BaseSolver solver;
             if (calculationOptions.Rotation == 10)
-                solver = new AdvancedSolver(stats, character, statsRace.Mana);
+                solver = new AdvancedSolver(stats, character);
             else
-                solver = new Solver(stats, character, statsRace.Mana);
+                solver = new Solver(stats, character);
             solver.Calculate(calculatedStats);
 
             return calculatedStats;
@@ -414,7 +415,7 @@ namespace Rawr.HolyPriest
             return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
-        public static Stats GetRaceStats(Character character)
+        public static Stats GetBaseRaceStats(Character character)
         {
             Stats stats = new Stats();
             if (character.Level >= 70 && character.Level <= 80)
@@ -542,7 +543,7 @@ namespace Rawr.HolyPriest
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -564,15 +565,14 @@ namespace Rawr.HolyPriest
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + GetInnerFireSpellPowerBonus(character);
+                + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += (statsTotal.Stamina - 20f) * 10f + 20f;
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
-                + 0.0124f;
+                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
-            statsTotal.BonusArmor += statsTotal.Agility * 2f + GetInnerFireArmorBonus(character);    
+            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
             return statsTotal;
         }
 
@@ -591,9 +591,9 @@ namespace Rawr.HolyPriest
                     CharacterCalculationsHolyPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     BaseSolver mssolver;
                     if ((character.CalculationOptions as CalculationOptionsPriest).Rotation == 10)
-                        mssolver = new AdvancedSolver(mscalcs.BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+                        mssolver = new AdvancedSolver(mscalcs.BasicStats, character);
                     else
-                        mssolver = new Solver(mscalcs.BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+                        mssolver = new Solver(mscalcs.BasicStats, character);
                     mssolver.Calculate(mscalcs);
                     foreach (Solver.ManaSource Source in mssolver.ManaSources)
                     {
@@ -819,6 +819,7 @@ namespace Rawr.HolyPriest
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                PriestInnerFire = stats.PriestInnerFire,
 
                 ManaGainOnGreaterHealOverheal = stats.ManaGainOnGreaterHealOverheal,
                 RenewDurationIncrease = stats.RenewDurationIncrease,
@@ -827,6 +828,8 @@ namespace Rawr.HolyPriest
                 PrayerOfMendingExtraJumps = stats.PrayerOfMendingExtraJumps,
                 GreaterHealCostReduction = stats.GreaterHealCostReduction,
                 WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
+                PrayerOfHealingExtraCrit = stats.PrayerOfHealingExtraCrit,
+                PWSBonusSpellPowerProc = stats.PWSBonusSpellPowerProc,
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
@@ -881,9 +884,11 @@ namespace Rawr.HolyPriest
                 + stats.HasteRating + stats.CritRating
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
-                + stats.ManaRestoreFromMaxManaPerSecond
+                + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
 
                 + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
+                + stats.PrayerOfHealingExtraCrit + stats.PWSBonusSpellPowerProc
+
                 + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
                 + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
                 + stats.WeakenedSoulDurationDecrease

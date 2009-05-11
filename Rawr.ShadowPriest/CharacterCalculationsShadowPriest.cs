@@ -77,6 +77,7 @@ namespace Rawr.ShadowPriest
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             CalculationOptionsShadowPriest calcOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
+            Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetResilienceFromRating(1);
@@ -94,7 +95,7 @@ namespace Rawr.ShadowPriest
                 Math.Floor(BasicStats.SpellPower), 
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellShadowDamageRating), 
                 Math.Floor(BasicStats.SpellPower /*+ BasicStats.SpellHolyDamageRating*/),
-                CalculationsShadowPriest.GetInnerFireSpellPowerBonus(character)));
+                BasicStats.PriestInnerFire * CalculationsShadowPriest.GetInnerFireSpellPowerBonus(character)));
             dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
 
             dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Focused Will\r\n{5}% from Base Crit\r\n{6}% from Buffs\r\n{7}% on Mind Blast, Mind Flay and Mind Sear.\r\n{8}% on VT, SW:P and DP\r\n{9}% on Smite, Holy Fire and Penance.",
@@ -103,8 +104,8 @@ namespace Rawr.ShadowPriest
                 BasicStats.CritRating.ToString("0"),
                 (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"),
                 character.PriestTalents.FocusedWill,
-                "1,24",
-                (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - 1.24f - character.PriestTalents.FocusedWill).ToString("0.00"),
+                (baseStats.SpellCrit * 100f).ToString("0.00"), 
+                (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - baseStats.SpellCrit * 100f - character.PriestTalents.FocusedWill).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 2f).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 3f).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00")));

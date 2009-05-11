@@ -185,14 +185,6 @@ namespace Rawr
         BangleProc,
         FullManaRegenFor15SecOnSpellcast,
         SpellPower,
-        RenewDurationIncrease,
-        SWPDurationIncrease,
-        MindBlastCostReduction,
-        ShadowWordDeathCritIncrease,
-        ManaGainOnGreaterHealOverheal,
-        PrayerOfMendingExtraJumps,
-        GreaterHealCostReduction,
-        WeakenedSoulDurationDecrease,
         BonusRageOnCrit,
         BonusCPOnCrit,
         BonusEnergyOnTigersFury,
@@ -205,6 +197,23 @@ namespace Rawr
         BonusNukeCritChance,
         BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
+        #region Added by Rawr.HolyPriest
+        PriestInnerFire,
+        RenewDurationIncrease,
+        ManaGainOnGreaterHealOverheal,
+        PrayerOfMendingExtraJumps,
+        GreaterHealCostReduction,
+        WeakenedSoulDurationDecrease,
+        PrayerOfHealingExtraCrit,
+        PWSBonusSpellPowerProc,
+        #endregion
+        #region Added by Rawr.ShadowPriest
+        SWPDurationIncrease,
+        MindBlastCostReduction,
+        ShadowWordDeathCritIncrease,
+        DevouringPlagueBonusDamage,
+        MindBlastHasteProc,
+        #endregion
         #region Added by Rawr.Mage
         AldorRegaliaInterruptProtection,
         ArcaneBlastBonus,
@@ -367,14 +376,18 @@ namespace Rawr
         BonusRangedAttackPowerMultiplier,
         BonusSteadyShotDamageMultiplier,
         BonusManaregenWhileCastingMultiplier,
-        BonusPoHManaCostReductionMultiplier,
-        BonusGHHealingMultiplier,
-        BonusMindBlastMultiplier,
         PhysicalHaste,
         RangedHaste,
         SpellHaste,
         HealingReceivedMultiplier,
         DamageTakenMultiplier,
+        #region Added by Rawr.HolyPriest
+        BonusPoHManaCostReductionMultiplier,
+        BonusGHHealingMultiplier,
+        #endregion
+        #region Added by Rawr.ShadowPriest
+        BonusMindBlastMultiplier,
+        #endregion
         #region Added by Rawr.Elemental
         BonusLavaBurstDamage,
         #endregion        
@@ -3577,6 +3590,15 @@ namespace Rawr
         }*/
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Inner Fire")]
+        [Category("Priest")]
+        public float PriestInnerFire
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestInnerFire]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestInnerFire] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName(" seconds increased duration of Shadow Word: Pain")]
         [Category("Priest")]
         public float SWPDurationIncrease
@@ -3614,6 +3636,26 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.ShadowWordDeathCritIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.ShadowWordDeathCritIncrease] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Priest")]
+        [DisplayName("% increased damage on Devouring Plague.")]
+        public float DevouringPlagueBonusDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DevouringPlagueBonusDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DevouringPlagueBonusDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Priest")]
+        [DisplayName(" extra haste rating for 4 seconds after casting Mind Blast.")]
+        public float MindBlastHasteProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MindBlastHasteProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MindBlastHasteProc] = value; }
+        }
+
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -3681,6 +3723,24 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.WeakenedSoulDurationDecrease] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% increased critical chance on Prayer of Healing.")]
+        [Category("Priest")]
+        [Percentage]
+        public float PrayerOfHealingExtraCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PrayerOfHealingExtraCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PrayerOfHealingExtraCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName(" bonus spell power for 5 seconds after casting Power Word: Shield.")]
+        [Category("Priest")]
+        public float PWSBonusSpellPowerProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PWSBonusSpellPowerProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PWSBonusSpellPowerProc] = value; }
+        }
 
 
         #region Added by Rawr.Elemental

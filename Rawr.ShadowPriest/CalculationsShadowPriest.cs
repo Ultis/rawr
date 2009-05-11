@@ -142,6 +142,7 @@ namespace Rawr.ShadowPriest
 
         public override void SetDefaults(Character character)
         {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Inner Fire"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Vampiric Touch"));
@@ -494,7 +495,7 @@ namespace Rawr.ShadowPriest
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             Stats stats = GetCharacterStats(character, additionalItem);
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
             CalculationOptionsShadowPriest calculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
             
@@ -512,7 +513,7 @@ namespace Rawr.ShadowPriest
             return calculatedStats;
         }
 
-        public static Stats GetRaceStats(Character character)
+        public static Stats GetBaseRaceStats(Character character)
         {
             Stats stats = new Stats();
             if (character.Level >= 70 && character.Level <= 80)
@@ -640,7 +641,7 @@ namespace Rawr.ShadowPriest
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -662,15 +663,14 @@ namespace Rawr.ShadowPriest
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + GetInnerFireSpellPowerBonus(character);
+                + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += (statsTotal.Stamina - 20f) * 10f + 20f;
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
-                + 0.0124f;
+                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
-            statsTotal.BonusArmor += statsTotal.Agility * 2f + GetInnerFireArmorBonus(character);    
+            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
 
             return statsTotal;
         }
@@ -723,11 +723,14 @@ namespace Rawr.ShadowPriest
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
+                PriestInnerFire = stats.PriestInnerFire,
                 SWPDurationIncrease = stats.SWPDurationIncrease,
                 BonusMindBlastMultiplier = stats.BonusMindBlastMultiplier,
                 MindBlastCostReduction = stats.MindBlastCostReduction,
                 ShadowWordDeathCritIncrease = stats.ShadowWordDeathCritIncrease,
                 WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
+                DevouringPlagueBonusDamage = stats.DevouringPlagueBonusDamage,
+                MindBlastHasteProc = stats.MindBlastHasteProc,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
@@ -771,11 +774,12 @@ namespace Rawr.ShadowPriest
                 + stats.BonusIntellectMultiplier + stats.BonusManaPotion
                 + stats.ThreatReductionMultiplier + stats.BonusDamageMultiplier
                 + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
-                + stats.BonusDiseaseDamageMultiplier
+                + stats.BonusDiseaseDamageMultiplier + stats.PriestInnerFire
                 
                 + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
                 + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
                 + stats.WeakenedSoulDurationDecrease + stats.ManaRestoreOnCast_5_15
+                + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
                 + stats.ManaRestoreFromBaseManaPerHit + stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
                 + stats.HasteRatingFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse5Min

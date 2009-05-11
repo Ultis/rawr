@@ -346,6 +346,11 @@ namespace Rawr.ShadowPriest
                 switch (spell.Name)
                 {
                     case "Vampiric Touch":
+                        // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of 1 GCD worth of MF)
+                        Damage -= MF.DpS * MF.GlobalCooldown * (1f - ShadowHitChance / 100f);
+                        // Also invokes a mana penalty by needing to cast it again.
+                        Cost *= (2f - ShadowHitChance / 100f);
+                        break;
                     case "Mind Flay":
                         // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of 1 GCD worth of MF)
                         Damage -= MF.DpS * MF.GlobalCooldown * (1f - ShadowHitChance / 100f);

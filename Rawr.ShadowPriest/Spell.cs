@@ -674,7 +674,8 @@ namespace Rawr.ShadowPriest
                 * (1 + character.PriestTalents.Darkness * 0.02f)
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.ImprovedDevouringPlague * 0.05f)
-                * (1 + character.PriestTalents.Shadowform * 0.15f);
+                * (1 + character.PriestTalents.Shadowform * 0.15f)
+                * (1 + stats.DevouringPlagueBonusDamage);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
