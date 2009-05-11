@@ -45,6 +45,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 220;
                     S.PhysicalCrit = 0.0319f;
+                    S.Dodge = 0.034636f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0f;
                     switch (characterRace)
@@ -66,7 +67,7 @@ namespace Rawr
                         case Character.CharacterRace.Dwarf:
                             S.Strength = 177;
                             S.Agility = 108;
-                            S.Stamina = 213;
+                            S.Stamina = 163;
                             S.Intellect = 34;
                             S.Spirit = 58;
                             break;
@@ -80,14 +81,14 @@ namespace Rawr
                         case Character.CharacterRace.Human:
                             S.Strength = 175;
                             S.Agility = 112;
-                            S.Stamina = 210;
+                            S.Stamina = 160;
                             S.Intellect = 35;
                             S.Spirit = 58;  // 60/1.03 = 58.25 ~58.
                             break;
                         case Character.CharacterRace.NightElf:
                             S.Strength = 172;
                             S.Agility = 117;
-                            S.Stamina = 209;
+                            S.Stamina = 159;
                             S.Intellect = 35;
                             S.Spirit = 59;
                             break;
@@ -108,7 +109,7 @@ namespace Rawr
                         case Character.CharacterRace.Troll:
                             S.Strength = 176;
                             S.Agility = 114;
-                            S.Stamina = 215;
+                            S.Stamina = 165;
                             S.Intellect = 31;
                             S.Spirit = 60;
                             break;
@@ -140,7 +141,7 @@ namespace Rawr
                         case DruidForm.Caster:
                             S.AttackPower = -10;
                             S.PhysicalCrit = 0.0743f;
-                            S.Dodge = 0.05f; //??
+                            S.Dodge = 0.04951f; //??
                             break;
                         case DruidForm.Bear:
                             S.AttackPower = 220;
@@ -188,6 +189,7 @@ namespace Rawr
                     S.AttackPower = 140;
                     S.RangedAttackPower = 150;
                     S.PhysicalCrit = -0.0153f;
+                    S.Dodge = -0.0545f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0360f;
                     switch (characterRace)
@@ -256,6 +258,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = -10;
                     S.PhysicalCrit = 0.03f;
+                    S.Dodge = 0.034575f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0091f;
                     switch (characterRace)
@@ -318,6 +321,7 @@ namespace Rawr
                     S.PhysicalCrit = 0.0327f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0345f;
+                    S.Dodge = 0.032685f;
                     switch (characterRace)
                     {
                         case Character.CharacterRace.BloodElf:
@@ -330,7 +334,7 @@ namespace Rawr
                         case Character.CharacterRace.Draenei:
                             S.Strength = 152;
                             S.Agility = 87;
-                            S.Stamina = 192;
+                            S.Stamina = 142;
                             S.Intellect = 99;
                             S.Spirit = 107;
                             break;
@@ -344,7 +348,7 @@ namespace Rawr
                         case Character.CharacterRace.Human:
                             S.Strength = 151;
                             S.Agility = 90;
-                            S.Stamina = 193;
+                            S.Stamina = 143;
                             S.Intellect = 98;
                             S.Spirit = 108;
                             break;
@@ -362,8 +366,8 @@ namespace Rawr
                     S.Health = 6960;
                     S.Armor = 0;
                     S.AttackPower = -10;
-                    S.Dodge = 0.024f;
                     S.PhysicalCrit = 0.027f;
+                    S.Dodge = 0.03183f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0124f;
                     switch (characterRace)
@@ -431,6 +435,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.047f;
+                    S.Dodge = -0.0059f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0f;
                     switch (characterRace)
@@ -438,7 +443,7 @@ namespace Rawr
                         case Character.CharacterRace.BloodElf:
                             S.Strength = 110;
                             S.Agility = 191;
-                            S.Stamina = 153;
+                            S.Stamina = 103;
                             S.Intellect = 47;
                             S.Spirit = 66;
                             break;
@@ -506,6 +511,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.0292f;
+                    S.Dodge = 0.01675f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.022f;
                     switch (characterRace)
@@ -553,6 +559,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = -10;
                     S.PhysicalCrit = 0.028f;
+                    S.Dodge = 0.02035f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.017f;
                     switch (characterRace)
@@ -607,6 +614,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 220;
                     S.PhysicalCrit = 0.03192f;
+                    S.Dodge = 0.034636f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0f;
                     switch (characterRace)
@@ -614,14 +622,14 @@ namespace Rawr
                         case Character.CharacterRace.Draenei:
                             S.Strength = 182;
                             S.Agility = 110;
-                            S.Stamina = 216;
+                            S.Stamina = 166;
                             S.Intellect = 37;
                             S.Spirit = 61;
                             break;
                         case Character.CharacterRace.Dwarf:
                             S.Strength = 176;
                             S.Agility = 109;
-                            S.Stamina = 212;
+                            S.Stamina = 162;
                             S.Intellect = 35;
                             S.Spirit = 58;
                             break;
@@ -635,7 +643,7 @@ namespace Rawr
                         case Character.CharacterRace.Human:
                             S.Strength = 184;
                             S.Agility = 113;
-                            S.Stamina = 221;
+                            S.Stamina = 161;
                             S.Intellect = 36;
                             S.Spirit = 58;  // 60/1.03 = 58.25 ~58
                             break;
@@ -663,7 +671,7 @@ namespace Rawr
                         case Character.CharacterRace.Troll:
                             S.Strength = 185;
                             S.Agility = 115;
-                            S.Stamina = 222;
+                            S.Stamina = 162;
                             S.Intellect = 32;
                             S.Spirit = 60;
                             break;
