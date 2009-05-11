@@ -548,7 +548,7 @@ namespace Rawr //O O . .
                 // add custom instances
                 foreach (ItemInstance item in CustomItemInstances)
                 {
-                    if (item.Item.FitsInSlot(slot, this))
+                    if (item.Item != null && item.Item.FitsInSlot(slot, this)) // item.Item can be null if you're loading character with custom items that are not present on this install
                     {
                         if (!items.Contains(item)) items.Add(item);
                     }

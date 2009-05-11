@@ -2237,7 +2237,7 @@ namespace Rawr.Mage
                 {
                     foreach (SegmentConstraint constraint in rowSegmentTrinket2)
                     {
-                        lp.SetRHSUnsafe(constraint.Row, trinket2Cooldown);
+                        lp.SetRHSUnsafe(constraint.Row, trinket2Duration);
                     }
                 }
                 if (manaGemEffectAvailable)
