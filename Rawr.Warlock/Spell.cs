@@ -175,6 +175,7 @@ namespace Rawr.Warlock
 
         public float Cooldown { get; protected set; }
         public float GlobalCooldown { get; protected set; }
+        public float BaseGlobalCooldown { get; protected set; }
         public Color GraphColor { get; protected set; }
 
         public SpellStatistics SpellStatistics { get; protected set; }
@@ -302,8 +303,15 @@ namespace Rawr.Warlock
             Cooldown = cooldown;
             SpellStatistics = new SpellStatistics();
             if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of"))
+            {
                 GlobalCooldown = (float)Math.Max(0.5f, 1.0f / (1 + stats.SpellHaste));
-            else GlobalCooldown = (float)Math.Max(1.0f, 1.5f / (1 + stats.SpellHaste));
+                BaseGlobalCooldown = 1.0f;
+            }
+            else
+            {
+                GlobalCooldown = (float)Math.Max(1.0f, 1.5f / (1 + stats.SpellHaste));
+                BaseGlobalCooldown = 1.5f;
+            }
             MagicSchool = magicSchool;
             SpellTree = spelltree;
             if (character.Level >= 70 && character.Level <= 80)

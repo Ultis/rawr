@@ -348,6 +348,15 @@ namespace Rawr.Warlock
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void tbox1_dclick(object sender, MouseEventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                textBox1.Text = calcOpts.castseq;
+            }
+        }
     }
     [Serializable]
 	public class CalculationOptionsWarlock : ICalculationOptionBase
@@ -363,6 +372,8 @@ namespace Rawr.Warlock
             Type t = typeof(CalculationOptionsWarlock);
             t.GetProperty(name).SetValue(this, value, null);
         }
+
+        public String castseq { get; set; }
 
         public int TargetLevel { get; set; }
         public int AffEffectsNumber { get; set; }

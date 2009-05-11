@@ -71,6 +71,7 @@
             this.bChangePriority = new System.Windows.Forms.Button();
             this.lsSpellPriopity = new System.Windows.Forms.ListBox();
             this.tabPet = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbPet = new System.Windows.Forms.ComboBox();
             this.tabGlyphs = new System.Windows.Forms.TabPage();
@@ -408,7 +409,7 @@
             this.tabFight.Location = new System.Drawing.Point(4, 22);
             this.tabFight.Name = "tabFight";
             this.tabFight.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFight.Size = new System.Drawing.Size(289, 672);
+            this.tabFight.Size = new System.Drawing.Size(289, 579);
             this.tabFight.TabIndex = 1;
             this.tabFight.Text = "Fight";
             this.tabFight.UseVisualStyleBackColor = true;
@@ -516,7 +517,7 @@
             this.tabChar.Location = new System.Drawing.Point(4, 22);
             this.tabChar.Name = "tabChar";
             this.tabChar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabChar.Size = new System.Drawing.Size(289, 672);
+            this.tabChar.Size = new System.Drawing.Size(289, 579);
             this.tabChar.TabIndex = 2;
             this.tabChar.Text = "Character";
             this.tabChar.UseVisualStyleBackColor = true;
@@ -552,16 +553,27 @@
             // 
             // tabPet
             // 
+            this.tabPet.Controls.Add(this.textBox1);
             this.tabPet.Controls.Add(this.chbUseInfernal);
             this.tabPet.Controls.Add(this.label1);
             this.tabPet.Controls.Add(this.cbPet);
             this.tabPet.Location = new System.Drawing.Point(4, 22);
             this.tabPet.Name = "tabPet";
             this.tabPet.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPet.Size = new System.Drawing.Size(289, 672);
+            this.tabPet.Size = new System.Drawing.Size(289, 579);
             this.tabPet.TabIndex = 3;
             this.tabPet.Text = "Pet";
             this.tabPet.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(9, 64);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox1.Size = new System.Drawing.Size(274, 388);
+            this.textBox1.TabIndex = 67;
+            this.textBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tbox1_dclick);
             // 
             // label1
             // 
@@ -687,5 +699,6 @@
         private System.Windows.Forms.CheckBox chbGlyphCoA;
         private System.Windows.Forms.CheckBox chbGlyphConflag;
         private System.Windows.Forms.CheckBox chbImmoAura;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
