@@ -1425,15 +1425,15 @@ focus on Survival Points.",
                 stats.ExpertiseRating
                 ) != 0;
 
-//            foreach (SpecialEffect effect in stats.SpecialEffects())
-//            {
-//                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-//                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.JudgementHit)
-//                {
-//                    trinketStats |= HasRelevantStats(effect.Stats);
-//                    if (trinketStats) break;
-//                }
-//            }
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.JudgementHit)
+                {
+                    trinketStats |= HasRelevantStats(effect.Stats);
+                    if (trinketStats) break;
+                }
+            }
             return trinketStats;
         }
 
