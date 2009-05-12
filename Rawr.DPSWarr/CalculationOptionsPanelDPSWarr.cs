@@ -38,6 +38,7 @@ namespace Rawr.DPSWarr {
                 CB_Duration.Value = (decimal)calcOpts.Duration;
                 RB_StanceArms.Checked = !calcOpts.FuryStance;
                 RB_TargSingle.Checked = !calcOpts.MultipleTargets;
+                RB_TargsStand.Checked = !calcOpts.MovingTargets;
             }
         }
         private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
@@ -85,6 +86,11 @@ namespace Rawr.DPSWarr {
             calcOpts.MultipleTargets = RB_TargMultiple.Checked;
             Character.OnCalculationsInvalidated();
         }
+        private void RB_TargStanding_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.MovingTargets = RB_TargsMove.Checked;
+            Character.OnCalculationsInvalidated();
+        }
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
@@ -94,6 +100,7 @@ namespace Rawr.DPSWarr {
         public float Duration = 300;
         public bool FuryStance = true;
         public bool MultipleTargets = false;
+        public bool MovingTargets = false;
         public WarriorTalents talents = null;
         public string GetXml() {
             var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));

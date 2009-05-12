@@ -408,7 +408,7 @@ namespace Rawr
         public int IntensifyRage { get { return _data[48]; } set { _data[48] = value; } }
 
         [TalentData(49, "Bloodthirst", 1, 1, 2, 7, 44, new string[] {
-@"Instantly attack the target causing 13 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.",}, "spell_nature_bloodlust")]
+@"Instantly attack the target causing [AP*50/100] damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.",}, "spell_nature_bloodlust")]
         public int Bloodthirst { get { return _data[49]; } set { _data[49] = value; } }
 
         [TalentData(50, "Improved Whirlwind", 2, 1, 4, 7, -1, new string[] {

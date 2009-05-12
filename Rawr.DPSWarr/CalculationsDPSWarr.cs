@@ -97,24 +97,46 @@ Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
 
 Don't forget your weapons used matched with races can affect these numbers.",
                         
-                        "DPS Breakdown (Fury):Bloodsurge",
-                        "DPS Breakdown (Fury):Bloodthirst",
-                        "DPS Breakdown (Fury):Whirlwind",
-                        "DPS Breakdown (Arms):Mortal Strike",
-                        "DPS Breakdown (Arms):Slam",
-                        "DPS Breakdown (Arms):Rend",
-                        "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
-                        "DPS Breakdown (Arms):Overpower",
-                        "DPS Breakdown (Arms):Bladestorm",
-                        "DPS Breakdown (Arms):Sword Spec",
-                        "DPS Breakdown (General):Heroic Strike",
-                        "DPS Breakdown (General):Deep Wounds",
+                        "DPS Breakdown (Fury):Bloodsurge DPS",
+                        "DPS Breakdown (Fury):Bloodsurge DMG",
+                        "DPS Breakdown (Fury):Bloodthirst DPS",
+                        "DPS Breakdown (Fury):Bloodthirst DMG",
+                        "DPS Breakdown (Fury):Whirlwind DPS",
+                        "DPS Breakdown (Fury):Whirlwind DMG",
+                        "DPS Breakdown (Arms):Mortal Strike DPS",
+                        "DPS Breakdown (Arms):Mortal Strike DMG",
+                        "DPS Breakdown (Arms):Slam DPS",
+                        "DPS Breakdown (Arms):Slam DMG",
+                        "DPS Breakdown (Arms):Rend DPS",
+                        "DPS Breakdown (Arms):Rend DMG",
+                        "DPS Breakdown (Arms):Sudden Death DPS*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
+                        "DPS Breakdown (Arms):Sudden Death DMG*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
+                        "DPS Breakdown (Arms):Overpower DPS",
+                        "DPS Breakdown (Arms):Overpower DMG",
+                        "DPS Breakdown (Arms):Bladestorm DPS",
+                        "DPS Breakdown (Arms):Bladestorm DMG",
+                        "DPS Breakdown (Arms):Sword Spec DPS",
+                        "DPS Breakdown (Arms):Sword Spec DMG",
+                        "DPS Breakdown (General):Heroic Strike DPS",
+                        "DPS Breakdown (General):Heroic Strike DMG",
+                        "DPS Breakdown (General):Deep Wounds DPS",
+                        "DPS Breakdown (General):Deep Wounds DMG",
                         "DPS Breakdown (General):White DPS",
                         "DPS Breakdown (General):Total DPS",
                       
-                        "Rage Details:White DPS Rage",
-                        "Rage Details:Other Rage",
-                        "Rage Details:Free Rage",
+                        "Rage Details:Generated White DPS Rage",
+                        "Rage Details:Generated Other Rage",
+                        "Rage Details:Ability's Rage Used (BT)",
+                        "Rage Details:Ability's Rage Used (WW)",
+                        "Rage Details:Ability's Rage Used (MS)",
+                        "Rage Details:Ability's Rage Used (OP)",
+                        "Rage Details:Ability's Rage Used (SD)",
+                        "Rage Details:Ability's Rage Used (SL)",
+                        "Rage Details:Ability's Rage Used (BS)",
+                        "Rage Details:Ability's Rage Used (BLS)",
+                        "Rage Details:Ability's Rage Used (SW)",
+                        "Rage Details:Ability's Rage Used (RND)",
+                        "Rage Details:Available Free Rage",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -261,21 +283,23 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.HasteRating = stats.HasteRating;
             calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating,Character.CharacterClass.Warrior);
             // DPS
+
             calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
             calculatedStats.WhiteDPSOH = whiteAttacks.CalcOhWhiteDPS();
             calculatedStats.WhiteDPS   = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-            calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
-            calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
-            calculatedStats.SlamDPS = skillAttacks.Slam();
-            calculatedStats.RendDPS = skillAttacks.Rend();
-            calculatedStats.MortalStrikeDPS = skillAttacks.MortalStrike();
-            calculatedStats.OverpowerDPS = skillAttacks.Overpower();
-            calculatedStats.SwordSpecDPS = skillAttacks.SwordSpec();
-            calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
-            calculatedStats.BloodsurgeDPS = skillAttacks.Bloodsurge();
-            calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
-            calculatedStats.BloodthirstDPS = skillAttacks.Bloodthirst();
-            calculatedStats.WhirlwindDPS = skillAttacks.Whirlwind();
+            calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
+            calculatedStats.DW = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
+            calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.RND = new Skills.Rend(character, stats, combatFactors, whiteAttacks);//calculatedStats.RendDPS = skillAttacks.Rend();
+            calculatedStats.MS = new Skills.Mortalstrike(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.OP = new Skills.OverPower(character, stats, combatFactors, whiteAttacks); //calculatedStats.OverpowerDPS = skillAttacks.Overpower();
+            calculatedStats.SS = new Skills.Swordspec(character, stats, combatFactors, whiteAttacks); //calculatedStats.SwordSpecDPS = skillAttacks.SwordSpec();
+            calculatedStats.SW = new Skills.SweepingStrikes(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.BLS = new Skills.Bladestorm(character, stats, combatFactors, whiteAttacks); //calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
+            calculatedStats.BS = new Skills.BloodSurge(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
+            calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
@@ -285,9 +309,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.OtherRage = skillAttacks.OtherRage();
             calculatedStats.FreeRage = skillAttacks.freeRage();
 
-            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + skillAttacks.Bloodthirst() + skillAttacks.Whirlwind() +
-                                       skillAttacks.HeroicStrike() + skillAttacks.Bloodsurge() + skillAttacks.Deepwounds() +
-                                       skillAttacks.MortalStrike() + skillAttacks.SuddenDeath() + skillAttacks.Slam() + skillAttacks.Overpower() + skillAttacks.Rend() + skillAttacks.SwordSpec() + skillAttacks.BladeStorm();
+            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + calculatedStats.BT.GetAvgDamageOnUse()
+                + calculatedStats.WW.GetAvgDamageOnUse() + calculatedStats.HS.GetAvgDamageOnUse() + calculatedStats.BS.GetAvgDamageOnUse()
+                + calculatedStats.DW.GetAvgDamageOnUse() + calculatedStats.MS.GetAvgDamageOnUse() + calculatedStats.SD.GetAvgDamageOnUse()
+                + calculatedStats.SL.GetAvgDamageOnUse() + calculatedStats.OP.GetAvgDamageOnUse() + calculatedStats.RND.GetAvgDamageOnUse()
+                + calculatedStats.SS.GetAvgDamageOnUse() + calculatedStats.BLS.GetAvgDamageOnUse();
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
             return calculatedStats;
@@ -457,76 +483,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
         #endregion
 
         public override Stats GetItemStats(Character character, Item additionalItem) {
-            Stats statsItems = base.GetItemStats(character,additionalItem);// new Stats();
-
-            // Assuming a GCD every 1.5s
-            float abilityPerSecond = 1.0f / 1.5f;
-            // Assumes 15% miss rate as we don't know the stats here--need to find a better solution
-            float hitRate = 1.0f - (28.0f - StatConversion.GetHitFromRating(statsItems.HitRating));
-            
-            //Mongoose
-            if (character.MainHand != null && statsItems.MongooseProc > 0) {
-                float procRate = 1.0f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / StatConversion.RATING_PER_PHYSICALHASTE) * procUptime;
-            }
-            if (character.MainHand != null && statsItems.MongooseProc > 1) {
-                float procRate = 1.0f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / StatConversion.RATING_PER_PHYSICALHASTE) * procUptime;
-            }
-
-            //Executioner
-            if (character.MainHand != null && statsItems.ExecutionerProc > 0) {
-                float procRate = 1.2f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.ArmorPenetrationRating += 120.0f * procUptime;
-            }
-            if (character.MainHand != null && statsItems.ExecutionerProc > 1) {
-                float procRate = 1.2f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.ArmorPenetrationRating += 120.0f * procUptime;
-            }
-
-            //Berserking
-            if (character.MainHand != null && statsItems.BerserkingProc > 0) {
-                float procRate = 1.2f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.AttackPower += 400.0f * procUptime;
-                statsItems.Armor -= (statsItems.Armor * .05f) * procUptime;
-            }
-            if (character.MainHand != null && statsItems.BerserkingProc > 1) {
-                float procRate = 1.2f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.AttackPower += 400.0f * procUptime;
-                statsItems.Armor -= (statsItems.Armor * .05f) * procUptime;
-            }
-
+            Stats statsItems = base.GetItemStats(character,additionalItem);
             return statsItems;
         }
 
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents talents = character.WarriorTalents;
 
@@ -614,36 +575,35 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
 
 
+            CombatFactors combatFactors = new CombatFactors(character, statsTotal);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, statsTotal, combatFactors);
 
+            Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
             // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
             // such as Berserking, Mirror of Truth, Grim Toll, etc.
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
             float meleeHitInterval = 1f / ((1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) + 1f / 3.5f);
-            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit +
-                StatConversion.GetCritFromAgility(statsTotal.Agility, Character.CharacterClass.Warrior) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
-                - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) //+  /100f
+                + statsTotal.PhysicalCrit //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
+                - (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
             Stats statsProcs = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-            {
-                switch (effect.Trigger)
-                {
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
+                switch (effect.Trigger) {
                     case Trigger.Use:
-                        statsProcs += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
+                        statsProcs += effect.GetAverageStats(0f, 1f, 1f, fake.GetRotation()/*calcOpts.Duration*/);
                         break;
-                    case Trigger.MeleeHit:
-                    case Trigger.PhysicalHit:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
+                    case Trigger.MeleeHit: case Trigger.PhysicalHit:
+                        statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, fake.GetRotation()/*calcOpts.Duration*/);
                         break;
-                    case Trigger.MeleeCrit:
-                    case Trigger.PhysicalCrit:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
+                    case Trigger.MeleeCrit: case Trigger.PhysicalCrit:
+                        statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, fake.GetRotation()/*calcOpts.Duration*/);
                         break;
                     case Trigger.DoTTick:
-                        statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
+                        statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, fake.GetRotation()/*calcOpts.Duration*/);
                         break;
                     case Trigger.DamageDone:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
+                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, fake.GetRotation()/*calcOpts.Duration*/);
                         break;
                 }
             }
@@ -651,7 +611,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility;
+            statsProcs.AttackPower += statsProcs.Strength * 2f;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
             statsProcs.Armor += 2f * statsProcs.Agility;
