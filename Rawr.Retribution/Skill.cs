@@ -296,7 +296,8 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower) * (Talents.GlyphOfConsecration ? 10f : 8f);
+            return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower)
+                * (Talents.GlyphOfConsecration ? 10f : 8f) * (CalcOpts.ConsEff);
         }
 
         public override float AbilityCritChance()

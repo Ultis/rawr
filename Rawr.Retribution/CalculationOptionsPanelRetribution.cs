@@ -33,6 +33,7 @@ namespace Rawr.Retribution
 
             nudTimeUnder20.Value = (decimal)(calcOpts.TimeUnder20 * 100);
             nudInFront.Value = (decimal)(calcOpts.InFront * 100);
+            nudConsEff.Value = (decimal)(calcOpts.ConsEff * 100);
             nudTargets.Value = (decimal)calcOpts.Targets;
 
             nudDelay.Value = (decimal)calcOpts.Delay;
@@ -428,6 +429,16 @@ namespace Rawr.Retribution
             }
         }
 
+        private void nudConsEff_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.ConsEff = (float)nudConsEff.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -451,7 +462,8 @@ namespace Rawr.Retribution
         public float Delay = .05f;
         public float Wait = .05f;
         public float Targets = 1f;
-        public float InFront = 0f;        
+        public float InFront = 0f;
+        public float ConsEff = 1f;       
 
         public int StackTrinketReset = 0;
 
