@@ -14,12 +14,12 @@ namespace Rawr.Rogue.ComboPointGenerators
     public abstract class ComboPointGenerator 
     {
         public abstract string Name { get; }
-        public abstract float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime);
+        public abstract float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime);
         public abstract float Crit(CombatFactors combatFactors);
 
-        public virtual float CalcDuration(float numCpg, float regen, CombatFactors combatFactors)
+        public virtual float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
         {
-            return MhHitsNeeded(numCpg) * EnergyCost(combatFactors) / regen;
+            return MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()) * EnergyCost(combatFactors) / regen;
         }
 
         public virtual float MhHitsNeeded(float numCpg)

@@ -17,8 +17,6 @@ namespace Rawr.Rogue
             AddDisplayValue(DisplayValue.TotalDps, "0");
         }
 
-        private readonly Dictionary<DisplayValue, StatAndToolTip> _dictValues = new Dictionary<DisplayValue, StatAndToolTip>();
-        
         public Stats BasicStats { get; private set; }
 
         public override float OverallPoints
@@ -42,6 +40,24 @@ namespace Rawr.Rogue
             }
             set { _dictValues[DisplayValue.TotalDps].Stat = Round(value); }
         }
+
+        //---------------------------------------------------------------------
+        // Hack/Workaround
+        // the base class is looking for the display values in a dictionary 
+        // with a "*" splitting up the values bewteen the value and tooltip.
+        // Formatting a string like that is a pain, so I stuff it in a object
+        // that does the tranlations for me.
+        // The DisplayValue class groups the stat and which box it goes in,
+        // then this class keeps track of the tooltips for each of the 
+        // DisplayValues.  The GetCharacterDisplayCalculationValues override
+        // then translates the DisplayValues and Tooltips into the format
+        // the UI is expecting
+
+        // the _dictValues is a horrible name, since it describes what the
+        // object is, instead of what the object does.  I just can't think
+        // of a good name for it yet
+        //---------------------------------------------------------------------
+        private readonly Dictionary<DisplayValue, StatAndToolTip> _dictValues = new Dictionary<DisplayValue, StatAndToolTip>();
 
         public void AddDisplayValue(DisplayValue key, string value)
         {

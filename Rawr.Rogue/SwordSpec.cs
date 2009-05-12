@@ -1,16 +1,18 @@
+using Rawr.Rogue.ComboPointGenerators;
+
 namespace Rawr.Rogue
 {
     public class SwordSpec
     {
-        public float CalcDPS(CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCPG, float cycleTime)
+        public float CalcDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CycleTime cycleTime)
         {
             var ssHits = 0f;
             if (combatFactors.MainHand.Type == Item.ItemType.OneHandSword)
             {
                 //MH hits + CPG + finisher
                 ssHits += whiteAttacks.MhHits * Talents.SwordSpecialization.Bonus;
-                ssHits += (numCPG / cycleTime) * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
-                ssHits += 1f / cycleTime * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
+                ssHits += calcOpts.CpGenerator.MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()) * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
+                ssHits += 1f / cycleTime.Duration * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
             }
             if (combatFactors.OffHand.Type == Item.ItemType.OneHandSword)
             {

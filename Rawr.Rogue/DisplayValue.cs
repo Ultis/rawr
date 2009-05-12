@@ -4,10 +4,14 @@ namespace Rawr.Rogue
 {
     public class DisplayValue
     {
-        //This class keeps the UI labels and calculations in sync in a single class.  
-        //By simply adding a new "public static readonly DisplayValue..." we automatically add it to the UI, and make it 
-        //availble in our list of values to be displayed.
-        //ALSO:  the order of the items in this list will be the order of appearance in the UI
+        //---------------------------------------------------------------------
+        //This class keeps the UI labels and calculations in sync in a single 
+        //class.  By simply adding a new "public static readonly DisplayValue..." 
+        //we automatically add it to the UI, and make it availble in our list 
+        //of values to be displayed.
+        //ALSO:  the order of the items in this list will be the order of 
+        //appearance in the UI
+        //---------------------------------------------------------------------
         private DisplayValue(string grouping, string name)            
         {
             Grouping = grouping;

@@ -34,5 +34,10 @@ namespace Rawr.Rogue
 		public PoisonBase TempMainHandEnchant = new NoPoison();
 		public PoisonBase TempOffHandEnchant = new NoPoison();
         public ComboPointGenerator CpGenerator = new SinisterStrike();
+
+        public float ComboPointsNeededForCycle()
+        {
+            return DpsCycle.TotalComboPoints - (DpsCycle.Components.Count * Talents.Ruthlessness.Bonus);
+        }
     }
 }

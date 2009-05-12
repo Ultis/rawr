@@ -18,7 +18,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             get { return "HAT"; }
         }
 
-        public override float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
+        public override float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
         {
             return 0f;
         }
@@ -33,9 +33,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return 0;
         }
 
-        public override float CalcDuration(float numCpg, float regen, CombatFactors combatFactors)
+        public override float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
         {
-            return numCpg /_cpsPersecond;
+            return calcOpts.ComboPointsNeededForCycle() /_cpsPersecond;
         }
     }
 }

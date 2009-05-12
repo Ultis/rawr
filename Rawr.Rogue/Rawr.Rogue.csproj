@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicStats\BaseRogueStats.cs" />
     <Compile Include="CalculationOptionsPanelRogue.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -103,6 +104,7 @@
     <Compile Include="ComboPointGenerators\SinisterStrike.cs" />
     <Compile Include="ComparisonCalculationsRogue.cs" />
     <Compile Include="Cycle.cs" />
+    <Compile Include="CycleTime.cs" />
     <Compile Include="DisplayValue.cs" />
     <Compile Include="FinishingMoves\Envenom.cs" />
     <Compile Include="FinishingMoves\Evis.cs" />

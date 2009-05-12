@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
-using Rawr.Rogue.ComboPointGenerators;
+using Rawr.Rogue.BasicStats;
+using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue
 {
@@ -102,24 +103,20 @@ namespace Rawr.Rogue
             // CALCULATE OUTPUTS
             //------------------------------------------------------------------------------------
             var calculatedStats = new CharacterCalculationsRogue(stats);
-           
-            var numCpg = CalcComboPointsNeededForCycle(calcOpts);
-            //var cpg = ComboPointGenerator.Get(talents, combatFactors);
-
             var whiteAttacks = new WhiteAttacks(combatFactors);
-            var cycleTime = CalcCycleTime(calcOpts, combatFactors, whiteAttacks, numCpg);
-            var cpgDps = calcOpts.CpGenerator.CalcCpgDPS(stats, combatFactors, calcOpts, numCpg, cycleTime);
+            var cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
+            var cpgDps = calcOpts.CpGenerator.CalcCpgDPS(calcOpts, combatFactors, stats, cycleTime);
 
             var totalFinisherDps = 0f;
             foreach (var component in calcOpts.DpsCycle.Components)
             {
-                var finisherDps = component.CalcFinisherDPS(talents, calcOpts, stats, combatFactors, cycleTime, whiteAttacks);
+                var finisherDps = component.CalcFinisherDPS(calcOpts, combatFactors, stats, whiteAttacks, cycleTime);
                 calculatedStats.AddToolTip(DisplayValue.FinisherDps, component + ": " + finisherDps);
                 totalFinisherDps += finisherDps;
             }
 
-            var swordSpecDps = new SwordSpec().CalcDPS(combatFactors, whiteAttacks, numCpg, cycleTime);
-            var poisonDps = CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks, calculatedStats, numCpg, cycleTime);
+            var swordSpecDps = new SwordSpec().CalcDPS(calcOpts, combatFactors, whiteAttacks, cycleTime);
+            var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, calculatedStats, cycleTime);
 
             //------------------------------------------------------------------------------------
             // ADD CALCULATED OUTPUTS TO DISPLAY
@@ -128,7 +125,7 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
 
             calculatedStats.AddDisplayValue(DisplayValue.Cpg, calcOpts.CpGenerator.Name);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime.Duration);
 
             calculatedStats.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
 
@@ -172,55 +169,12 @@ namespace Rawr.Rogue
             return calculatedStats;
         }
 
-        private static float CalcComboPointsNeededForCycle(CalculationOptionsRogue calcOpts)
-        {
-            return calcOpts.DpsCycle.TotalComboPoints - (calcOpts.DpsCycle.Components.Count * Talents.Ruthlessness.Bonus);
-        }
-
-        private static float CalcCycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCpg)
-        {
-            var energyRegen = combatFactors.BaseEnergyRegen;
-            energyRegen += Talents.CombatPotency.Bonus * whiteAttacks.OhHits;
-            energyRegen += Talents.FocusedAttacks.Bonus * ( whiteAttacks.MhCrits + whiteAttacks.OhCrits );
-
-            if(calcOpts.TempMainHandEnchant.IsDeadlyPoison || calcOpts.TempOffHandEnchant.IsDeadlyPoison)
-            {
-                energyRegen += combatFactors.Tier8TwoPieceEnergyBonus;    
-            }
-
-            var cpgDuration = calcOpts.CpGenerator.CalcDuration(numCpg, energyRegen, combatFactors);
-
-            var finisherEnergyCost = 0f;
-            foreach(var component in calcOpts.DpsCycle.Components)
-            {
-                finisherEnergyCost += component.Finisher.EnergyCost(combatFactors, component.Rank);
-            }
-            return cpgDuration + (finisherEnergyCost / energyRegen);
-        }
-
-        private static float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CharacterCalculationsRogue calculatedStats, float numCpg, float cycleTime)
-        {
-            var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.MhHits + calcOpts.CpGenerator.MhHitsNeeded(numCpg), cycleTime);
-            calculatedStats.AddToolTip(DisplayValue.PoisonDps, "MH Poison DPS: " + Math.Round(mhPoisonDps, 2));
-
-            if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
-            {
-                return mhPoisonDps;
-            }
-
-            var ohPoisonDps = calcOpts.TempOffHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.OhHits, cycleTime);
-            calculatedStats.AddToolTip(DisplayValue.PoisonDps, "OH Poison DPS: " + Math.Round(ohPoisonDps, 2));
-
-            return mhPoisonDps + ohPoisonDps;
-        }
-
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            Stats statsRace = GetRaceStats(character.Race);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
+            var statsRace = new BaseRogueStats(character.Race);
+            var statsBaseGear = GetItemStats(character, additionalItem);
+            var statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            var statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             //TalentTree tree = character.AllTalents;
 
@@ -441,43 +395,6 @@ namespace Rawr.Rogue
                                                                  Item.ItemType.OneHandMace,
                                                                  Item.ItemType.OneHandSword
                                                              });
-        }
-
-
-        private static readonly Dictionary<Character.CharacterRace, float[]> BaseRogueRaceStats = new Dictionary<Character.CharacterRace, float[]>
-                                                                  {
-                                                                    // Agility,Strength,Stamina
-                                                                    { Character.CharacterRace.Human, new [] {158f, 95f, 89f}},
-                                                                    { Character.CharacterRace.Orc, new [] {155f, 98f, 91f}},
-                                                                    { Character.CharacterRace.Dwarf, new [] {154f, 97f, 92f,}},
-                                                                    { Character.CharacterRace.NightElf, new [] {194f, 110f, 104f}},
-                                                                    { Character.CharacterRace.Undead, new [] {156f, 94f, 90f}},
-                                                                    { Character.CharacterRace.Tauren, new [] {0f, 0f, 0f}},
-                                                                    { Character.CharacterRace.Gnome, new [] {161f, 90f, 88f}},
-                                                                    { Character.CharacterRace.Troll, new [] {160f, 96f, 90f}},
-                                                                    { Character.CharacterRace.BloodElf, new [] {160f, 92f, 87f}},
-                                                                    { Character.CharacterRace.Draenei, new [] {0f, 0f, 0f}}
-                                                                  };
-
-        private static Stats GetRaceStats(Character.CharacterRace race)
-        {
-            if (race == Character.CharacterRace.Tauren || race == Character.CharacterRace.Draenei)
-                return new Stats();
-
-            var statsRace = new Stats
-                                {
-                                    Health = 7924f,
-                                    Agility = BaseRogueRaceStats[race][0],
-                                    Strength = BaseRogueRaceStats[race][1],
-                                    Stamina = BaseRogueRaceStats[race][2],
-                                    AttackPower = 140,
-                                    PhysicalCrit = 3.73f,
-                                    DodgeRating = (float) (-0.59*18.92f),
-                                };
-
-            statsRace.Health += statsRace.Stamina*10f;
-
-            return statsRace;
         }
     }
 }
