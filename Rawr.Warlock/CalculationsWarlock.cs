@@ -194,7 +194,7 @@ namespace Rawr.Warlock
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", "Glyphs", "Haste Rating Gain" };
+                    _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", /*"Glyphs", */"Haste Rating Gain" };
                 return _customChartNames;
             }
         }
@@ -220,8 +220,8 @@ namespace Rawr.Warlock
             }
         }
 
-        private static string[] GlyphList = { "GlyphChaosBolt", "GlyphConflag", "GlyphCorruption", "GlyphCoA", "GlyphFelguard", "GlyphHaunt", "GlyphImmolate", "GlyphImp", "GlyphIncinerate", "GlyphLifeTap", "GlyphMetamorphosis", "GlyphSearingPain", "GlyphSB", "GlyphShadowburn", "GlyphSiphonLife", "GlyphUA" };
-        private static string[] GlyphListFriendly = { "Glyph of Chaos Bolt", "Glyph of Conflagrate", "Glyph of Corruption", "Glyph of Curse of Agony", "Glyph of Felguard", "Glyph of Haunt", "Glyph of Immolate", "Glyph of Imp", "Glyph of Incinerate", "Glyph of Life Tap", "Glyph of Metamorphosis", "Glyph of Searing Pain", "Glyph of Shadowbolt", "Glyph of Shadowburn", "Glyph of Siphon Life", "Glyph of Unstable Affliction" };
+//        private static string[] GlyphList = { "GlyphChaosBolt", "GlyphConflag", "GlyphCorruption", "GlyphCoA", "GlyphFelguard", "GlyphHaunt", "GlyphImmolate", "GlyphImp", "GlyphIncinerate", "GlyphLifeTap", "GlyphMetamorphosis", "GlyphSearingPain", "GlyphSB", "GlyphShadowburn", "GlyphSiphonLife", "GlyphUA" };
+//        private static string[] GlyphListFriendly = { "Glyph of Chaos Bolt", "Glyph of Conflagrate", "Glyph of Corruption", "Glyph of Curse of Agony", "Glyph of Felguard", "Glyph of Haunt", "Glyph of Immolate", "Glyph of Imp", "Glyph of Incinerate", "Glyph of Life Tap", "Glyph of Metamorphosis", "Glyph of Searing Pain", "Glyph of Shadowbolt", "Glyph of Shadowburn", "Glyph of Siphon Life", "Glyph of Unstable Affliction" };
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
@@ -296,44 +296,6 @@ namespace Rawr.Warlock
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();
-                case "Glyphs":
-                    CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
-                    CharacterCalculationsWarlock glyphcalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-
-                    for (int index = 0; index < GlyphList.Length; index++)
-                    {
-                        string glyph = GlyphList[index];
-                        bool glyphEnabled = calcOpts.GetGlyphByName(glyph);
-
-                        if (glyphEnabled)
-                        {
-                            calcOpts.SetGlyphByName(glyph, false);
-                            CharacterCalculationsWarlock calc = GetCharacterCalculations(character, null) as CharacterCalculationsWarlock;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = GlyphListFriendly[index];
-                            comparison.Equipped = true;
-                            comparison.SubPoints[0] = (glyphcalcs.DpsPoints - calc.DpsPoints);
-                            comparison.SubPoints[1] = (glyphcalcs.PetDPSPoints - calc.PetDPSPoints);
-                            comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
-                            comparisonList.Add(comparison);
-                        }
-                        else
-                        {
-                            calcOpts.SetGlyphByName(glyph, true);
-                            CharacterCalculationsWarlock calc = GetCharacterCalculations(character, null) as CharacterCalculationsWarlock;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = GlyphListFriendly[index];
-                            comparison.Equipped = false;
-                            comparison.SubPoints[0] = (calc.DpsPoints - glyphcalcs.DpsPoints);
-                            comparison.SubPoints[1] = (calc.PetDPSPoints - glyphcalcs.PetDPSPoints);
-                            comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
-                            comparisonList.Add(comparison);
-                        }
-                        calcOpts.SetGlyphByName(glyph, glyphEnabled);
                     }
                     return comparisonList.ToArray();
                 case "Haste Rating Gain":
@@ -564,7 +526,7 @@ namespace Rawr.Warlock
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Stamina = stats.Stamina,
                 Health = stats.Health,
@@ -612,10 +574,61 @@ namespace Rawr.Warlock
                 Warlock2T8 = stats.Warlock2T8,
                 Warlock4T8 = stats.Warlock4T8
             };
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.DamageSpellCast ||
+                    effect.Trigger == Trigger.DamageSpellCrit ||
+                    effect.Trigger == Trigger.DamageSpellHit ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.SpellMiss ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
+                {
+                    if (effect.Stats.SpellPower > 0 ||
+                        effect.Stats.CritRating > 0 ||
+                        effect.Stats.HasteRating > 0 ||
+                        effect.Stats.HighestStat > 0 ||
+                        effect.Stats.ShadowDamage > 0 ||
+                        effect.Stats.Spirit > 0 ||
+                        effect.Stats.Mp5 > 0)
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            return s;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.DamageSpellCast ||
+                    effect.Trigger == Trigger.DamageSpellCrit ||
+                    effect.Trigger == Trigger.DamageSpellHit ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.SpellMiss ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
+                {
+                    if (effect.Stats.SpellPower > 0 ||
+                        effect.Stats.CritRating > 0 ||
+                        effect.Stats.HasteRating > 0 ||
+                        effect.Stats.HighestStat > 0 ||
+                        effect.Stats.ShadowDamage > 0 ||
+                        effect.Stats.Spirit > 0 ||
+                        effect.Stats.Mp5 > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
             return (
 //                  stats.Stamina
                 stats.Health
@@ -668,6 +681,34 @@ namespace Rawr.Warlock
                 + stats.Warlock4T8
                 ) > 0;
         }
+
+        #region RelevantGlyphs
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Chaos Bolt");
+                _relevantGlyphs.Add("Glyph of Conflagrate");
+                _relevantGlyphs.Add("Glyph of Corruption");
+                _relevantGlyphs.Add("Glyph of Curse of Agony");
+                _relevantGlyphs.Add("Glyph of Felguard");
+                _relevantGlyphs.Add("Glyph of Haunt");
+                _relevantGlyphs.Add("Glyph of Immolate");
+                _relevantGlyphs.Add("Glyph of Imp");
+                _relevantGlyphs.Add("Glyph of Incinerate");
+                _relevantGlyphs.Add("Glyph of Life Tap");
+                _relevantGlyphs.Add("Glyph of Metamorphosis");
+                _relevantGlyphs.Add("Glyph of Searing Pain");
+                _relevantGlyphs.Add("Glyph of Shadowbolt");
+                _relevantGlyphs.Add("Glyph of Shadowburn");
+                _relevantGlyphs.Add("Glyph of Siphon Life");
+                _relevantGlyphs.Add("Glyph of Unstable Affliction");
+            }
+            return _relevantGlyphs;
+        }
+        #endregion
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
