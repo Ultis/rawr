@@ -122,8 +122,7 @@ namespace Rawr
                             S.Spirit = 64;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Death Knight class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -155,8 +154,7 @@ namespace Rawr
                             S.Dodge = 0.04951f;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterForm",
-                                string.Format("Invalid form {0} for Druid class", characterForm));
+                            break;
                     }
                     if (characterRace == Character.CharacterRace.NightElf)
                     {
@@ -174,15 +172,12 @@ namespace Rawr
                         S.Intellect = 140;
                         S.Spirit = 185;
                     }
-                    else
-                        throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Druid class", characterRace));
-
                     break;
                 #endregion
                 #region Hunter
                 case Character.CharacterClass.Hunter:
                     // Blood Elf, Draenei, Dwarf, Night Elf, Orc, Tauren, Troll
+
                     S.Mana = 5046;
                     S.Health = 7324;
                     S.Armor = 0;
@@ -204,7 +199,7 @@ namespace Rawr
                         case Character.CharacterRace.Draenei:
                             S.Strength = 75;
                             S.Agility = 178;
-                            S.Stamina = 127;
+                            S.Stamina = 129;
                             S.Intellect = 91;
                             S.Spirit = 99;
                             break;
@@ -231,8 +226,8 @@ namespace Rawr
                             break;
                         case Character.CharacterRace.Tauren:
                             S.Strength = 79;
-                            S.Agility = 202;
-                            S.Stamina = 143;
+                            S.Agility = 176;
+                            S.Stamina = 130;
                             S.Intellect = 85;
                             S.Spirit = 99;
                             break;
@@ -244,8 +239,7 @@ namespace Rawr
                             S.Spirit = 98;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Hunter class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -305,8 +299,7 @@ namespace Rawr
                             S.Spirit = 179;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Mage class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -419,8 +412,7 @@ namespace Rawr
                             S.Spirit = 186;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Priest class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -494,8 +486,7 @@ namespace Rawr
                             S.Spirit = 72;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Rogue class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -541,8 +532,7 @@ namespace Rawr
                             S.Spirit = 144;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Shaman class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -595,8 +585,7 @@ namespace Rawr
                             S.Spirit = 171;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Warlock class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
@@ -677,15 +666,13 @@ namespace Rawr
                             S.Spirit = 64;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("characterRace",
-                                string.Format("Invalid race {0} for Warrior class", characterRace));
+                            break;
                     }
                     break;
                 #endregion
                 #region No Class
                 default:
-                    throw new ArgumentOutOfRangeException("characterClass",
-                        string.Format("Invalid class {0}.", characterClass));
+                    break;
                 #endregion
             }
             #endregion
