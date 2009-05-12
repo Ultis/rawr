@@ -50,6 +50,7 @@ namespace Rawr
         public const float RATING_PER_SPELLHIT = 2623.1990f; //8f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_ARMOR = 2.00f; //2 Armor per 1 AGI;
         public const float RATING_PER_HEALTH = 10.00f; //10 Health per 1 STA;
+        public const float RATING_PER_MANA = 15.00f; //15 Mana per 1 INT;
         public const float RATING_PER_DODGEPARRYREDUC = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
 
         // Same for all classes
@@ -117,6 +118,17 @@ namespace Rawr
         /// <returns>A Value (1000 = 1000 extra Health)</returns>
         public static float GetHealthFromStamina(float Rating) {
             return Rating <= 20 ? Rating : (Rating - 20) * RATING_PER_HEALTH + 20; // first 20 stamina is 1 health
+        }
+
+        public static float GetManaFromIntellect(float Rating, Character.CharacterClass Class) { return GetManaFromIntellect(Rating); }
+        /// <summary>
+        /// Returns a Value (1000 = 1000 extra Mana)
+        /// </summary>
+        /// <param name="Rating">Intellect</param>
+        /// <returns>A Value (1000 = 1000 extra Mana)</returns>
+        public static float GetManaFromIntellect(float Rating)
+        {
+            return Rating <= 20 ? Rating : (Rating - 20) * RATING_PER_MANA + 20; // first 20 intellect is 1 mana
         }
 
         public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
