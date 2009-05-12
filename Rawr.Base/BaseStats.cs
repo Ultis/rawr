@@ -26,7 +26,7 @@ namespace Rawr
                 && characterClass == _lastClass
                 && characterRace == _lastRace
                 && characterForm == _lastForm)
-                return _lastStats;
+                return _lastStats.Clone() ;
             _lastLevel = level;
             _lastClass = characterClass;
             _lastRace = characterRace;
@@ -686,7 +686,7 @@ namespace Rawr
                 S.Health = S.Health * 1.05f;
             #endregion
 
-            _lastStats = S;
+            _lastStats = S.Clone();
             return S;
         }
     }
