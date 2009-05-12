@@ -17,6 +17,7 @@ namespace Rawr
         private static DruidForm _lastForm;
         #endregion
 
+        public static Stats GetBaseStats(Character character) { return GetBaseStats(character.Level, character.Class, character.Race, DruidForm.Caster); }
         public static Stats GetBaseStats(int level, Character.CharacterClass characterClass, Character.CharacterRace characterRace) { return GetBaseStats(level, characterClass, characterRace, DruidForm.Caster); }
         public static Stats GetBaseStats(int level, Character.CharacterClass characterClass, Character.CharacterRace characterRace, DruidForm characterForm)
         {   // Health, Mana and some other things are same for every race.
@@ -123,7 +124,6 @@ namespace Rawr
                         default:
                             throw new ArgumentOutOfRangeException("characterRace",
                                 string.Format("Invalid race {0} for Death Knight class", characterRace));
-                            break;
                     }
                     break;
                 #endregion
@@ -246,7 +246,6 @@ namespace Rawr
                         default:
                             throw new ArgumentOutOfRangeException("characterRace",
                                 string.Format("Invalid race {0} for Hunter class", characterRace));
-                            break;
                     }
                     break;
                 #endregion
@@ -497,7 +496,6 @@ namespace Rawr
                         default:
                             throw new ArgumentOutOfRangeException("characterRace",
                                 string.Format("Invalid race {0} for Rogue class", characterRace));
-                            break;
                     }
                     break;
                 #endregion
@@ -545,7 +543,6 @@ namespace Rawr
                         default:
                             throw new ArgumentOutOfRangeException("characterRace",
                                 string.Format("Invalid race {0} for Shaman class", characterRace));
-                            break;
                     }
                     break;
                 #endregion
@@ -600,7 +597,6 @@ namespace Rawr
                         default:
                             throw new ArgumentOutOfRangeException("characterRace",
                                 string.Format("Invalid race {0} for Warlock class", characterRace));
-                            break;
                     }
                     break;
                 #endregion
@@ -683,7 +679,6 @@ namespace Rawr
                         default:
                             throw new ArgumentOutOfRangeException("characterRace",
                                 string.Format("Invalid race {0} for Warrior class", characterRace));
-                            break;
                     }
                     break;
                 #endregion
@@ -691,7 +686,6 @@ namespace Rawr
                 default:
                     throw new ArgumentOutOfRangeException("characterClass",
                         string.Format("Invalid class {0}.", characterClass));
-                    break;
                 #endregion
             }
             #endregion

@@ -525,13 +525,11 @@ namespace Rawr
         #region Get Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character); // GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
 			// Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs; // +statsEnchants;
-            statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             int AK = character.ShamanTalents.AncestralKnowledge;
