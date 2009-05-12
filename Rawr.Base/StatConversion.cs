@@ -116,7 +116,7 @@ namespace Rawr
         /// <param name="Rating">Stamina</param>
         /// <returns>A Value (1000 = 1000 extra Health)</returns>
         public static float GetHealthFromStamina(float Rating) {
-            return Rating * RATING_PER_HEALTH;
+            return Rating <= 20 ? Rating : (Rating - 20) * RATING_PER_HEALTH + 20; // first 20 stamina is 1 health
         }
 
         public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
