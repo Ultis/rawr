@@ -36,6 +36,8 @@ namespace Rawr.Retribution
             nudConsEff.Value = (decimal)(calcOpts.ConsEff * 100);
             nudTargets.Value = (decimal)calcOpts.Targets;
 
+            chkBloodlust.Checked = calcOpts.Bloodlust;
+
             nudDelay.Value = (decimal)calcOpts.Delay;
             nudWait.Value = (decimal)calcOpts.Wait;
             nudStackTrinket.Value = (decimal)calcOpts.StackTrinketReset;
@@ -439,6 +441,16 @@ namespace Rawr.Retribution
             }
         }
 
+        private void chkBloodlust_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.Bloodlust = chkBloodlust.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -463,8 +475,8 @@ namespace Rawr.Retribution
         public float Wait = .05f;
         public float Targets = 1f;
         public float InFront = 0f;
-        public float ConsEff = 1f;       
-
+        public float ConsEff = 1f;
+        public bool Bloodlust = true;
         public int StackTrinketReset = 0;
 
         public bool SimulateRotation = true;

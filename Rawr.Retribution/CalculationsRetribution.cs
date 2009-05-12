@@ -427,7 +427,9 @@ namespace Rawr.Retribution
                             trigger = rot.GetJudgementCD();
                             procChance = rot.Judge.ChanceToLand();
                         }
-                        statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
+                        if (effect.MaxStack > 1) statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance,
+                            combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset);
+                        else statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
                     }
                 }
 

@@ -191,6 +191,21 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public float GetAverageStackSize(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
+            return GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration, 1);
+        }
+
+        /// <summary>
+        /// Computes average stack size given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="stackReset">Number of times the stack resets.</param>
+        public float GetAverageStackSize(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, int stackReset)
+        {
             float averageStack = 0;
             if ((MaxStack > 1) && (Cooldown == 0f))
             {
@@ -205,7 +220,7 @@ namespace Rawr
                     else
                     {
                         // For now, assume it stacks to max, if it can stack at all
-                        float buildTime = triggerInterval / triggerChance * MaxStack;
+                        float buildTime = triggerInterval / triggerChance * MaxStack * stackReset;
                         float value;
                         if (fightDuration > buildTime)
                             value = buildTime * (MaxStack - 1) / 2 + (fightDuration - buildTime) * MaxStack;

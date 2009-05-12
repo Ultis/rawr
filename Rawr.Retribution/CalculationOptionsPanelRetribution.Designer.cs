@@ -82,6 +82,8 @@
             this.nudConsEff = new System.Windows.Forms.NumericUpDown();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chkBloodlust = new System.Windows.Forms.CheckBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
@@ -917,6 +919,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chkBloodlust);
+            this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Controls.Add(this.label12);
             this.tabPage1.Controls.Add(this.label10);
             this.tabPage1.Controls.Add(this.cmbMobType);
@@ -946,6 +950,25 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fight Parameters";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // chkBloodlust
+            // 
+            this.chkBloodlust.AutoSize = true;
+            this.chkBloodlust.Location = new System.Drawing.Point(146, 243);
+            this.chkBloodlust.Name = "chkBloodlust";
+            this.chkBloodlust.Size = new System.Drawing.Size(15, 14);
+            this.chkBloodlust.TabIndex = 46;
+            this.chkBloodlust.UseVisualStyleBackColor = true;
+            this.chkBloodlust.CheckedChanged += new System.EventHandler(this.chkBloodlust_CheckedChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(87, 243);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(53, 13);
+            this.label14.TabIndex = 45;
+            this.label14.Text = "Bloodlust:";
             // 
             // tabPage2
             // 
@@ -1078,6 +1101,8 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.CheckBox chkBloodlust;
+        private System.Windows.Forms.Label label14;
 
     }
 }
