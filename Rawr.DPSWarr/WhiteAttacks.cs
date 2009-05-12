@@ -32,7 +32,7 @@
             float constant = 320.6f;
             float whiteRage = 15 * (CalcOhWhiteDPS() + CalcMhWhiteDPS()) / 4 / constant;
             whiteRage *= 1 + _talents.EndlessRage * 0.25f;
-            whiteRage += 1 * _talents.UnbridledWrath * 0.20f; //assuming a 20% chance to proc per talent point, no evidence to back this up tho
+            //whiteRage += 1 * _talents.UnbridledWrath * 0.20f; //assuming a 20% chance to proc per talent point, no evidence to back this up tho
 
             /*whiteRage += ((14/8.0f*(1+_combatFactors.MhCrit-_combatFactors.WhiteMissChance-_combatFactors.MhDodgeChance)+
                          7/8.0f*(1+_combatFactors.OhCrit-_combatFactors.WhiteMissChance-_combatFactors.OhDodgeChance))*

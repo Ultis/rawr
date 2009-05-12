@@ -146,21 +146,21 @@ namespace Rawr.DPSWarr
                                 (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1,
                                 StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1)));
             // DPS ind
-            dictValues.Add("Bloodsurge DPS",    string.Format("{0:0.00}",BS.GetAvgDamageOnUse())); dictValues.Add("Bloodsurge DMG",    string.Format("{0:0.00}",BS.GetDamageOnUse()*BS.GetRotation()));
-            dictValues.Add("Bloodthirst DPS",   string.Format("{0:0.00}",BT.GetAvgDamageOnUse())); dictValues.Add("Bloodthirst DMG",   string.Format("{0:0.00}",BT.GetDamageOnUse()*BT.GetRotation()));
-            dictValues.Add("Whirlwind DPS",     string.Format("{0:0.00}",WW.GetAvgDamageOnUse())); dictValues.Add("Whirlwind DMG",     string.Format("{0:0.00}",WW.GetDamageOnUse()*WW.GetRotation()));
-            dictValues.Add("Mortal Strike DPS", string.Format("{0:0.00}",MS.GetAvgDamageOnUse())); dictValues.Add("Mortal Strike DMG", string.Format("{0:0.00}",MS.GetDamageOnUse()*MS.GetRotation()));
-            dictValues.Add("Slam DPS",          string.Format("{0:0.00}",SL.GetAvgDamageOnUse())); dictValues.Add("Slam DMG",          string.Format("{0:0.00}",SL.GetDamageOnUse()*SL.GetRotation()));
-            dictValues.Add("Rend DPS",          string.Format("{0:0.00}",RND.GetAvgDamageOnUse()));dictValues.Add("Rend DMG",          string.Format("{0:0.00}",RND.GetDamageOnUse()*RND.GetRotation()));
-            dictValues.Add("Sudden Death DPS",  string.Format("{0:0.00}",SD.GetAvgDamageOnUse())); dictValues.Add("Sudden Death DMG",  string.Format("{0:0.00}",SD.GetDamageOnUse()*SD.GetRotation()));
-            dictValues.Add("Overpower DPS",     string.Format("{0:0.00}",OP.GetAvgDamageOnUse())); dictValues.Add("Overpower DMG",     string.Format("{0:0.00}",OP.GetDamageOnUse()*OP.GetRotation()));
-            dictValues.Add("Bladestorm DPS",    string.Format("{0:0.00}",BLS.GetAvgDamageOnUse()));dictValues.Add("Bladestorm DMG",    string.Format("{0:0.00}",BLS.GetDamageOnUse()*BLS.GetRotation()));
-            dictValues.Add("Sword Spec DPS",    string.Format("{0:0.00}",SS.GetAvgDamageOnUse())); dictValues.Add("Sword Spec DMG",    string.Format("{0:0.00}",SS.GetDamageOnUse()*SS.GetRotation()));
+            dictValues.Add("Bloodsurge",    string.Format("{0:0.00} : {1:0.00}",BS.GetAvgDamageOnUse(),BS.GetDamageOnUse()*BS.GetRotation()));
+            dictValues.Add("Bloodthirst",   string.Format("{0:0.00} : {1:0.00}",BT.GetAvgDamageOnUse(),BT.GetDamageOnUse()*BT.GetRotation()));
+            dictValues.Add("Whirlwind",     string.Format("{0:0.00} : {1:0.00}",WW.GetAvgDamageOnUse(),WW.GetDamageOnUse()*WW.GetRotation()));
+            dictValues.Add("Mortal Strike", string.Format("{0:0.00} : {1:0.00}",MS.GetAvgDamageOnUse(),MS.GetDamageOnUse()*MS.GetRotation()));
+            dictValues.Add("Slam",          string.Format("{0:0.00} : {1:0.00}",SL.GetAvgDamageOnUse(),SL.GetDamageOnUse()*SL.GetRotation()));
+            dictValues.Add("Rend",          string.Format("{0:0.00} : {1:0.00}",RND.GetAvgDamageOnUse(),RND.GetDamageOnUse()*RND.GetRotation()));
+            dictValues.Add("Sudden Death",  string.Format("{0:0.00} : {1:0.00}",SD.GetAvgDamageOnUse(),SD.GetDamageOnUse()*SD.GetRotation()));
+            dictValues.Add("Overpower",     string.Format("{0:0.00} : {1:0.00}",OP.GetAvgDamageOnUse(),OP.GetDamageOnUse()*OP.GetRotation()));
+            dictValues.Add("Bladestorm",    string.Format("{0:0.00} : {1:0.00}",BLS.GetAvgDamageOnUse(),BLS.GetDamageOnUse()*BLS.GetRotation()));
+            dictValues.Add("Sword Spec",    string.Format("{0:0.00} : {1:0.00}",SS.GetAvgDamageOnUse(),SS.GetDamageOnUse()*SS.GetRotation()));
             // DPS
-            dictValues.Add("Heroic Strike DPS", string.Format("{0:0.00}",HS.GetAvgDamageOnUse())); dictValues.Add("Heroic Strike DMG", string.Format("{0:0.00}",HS.GetDamageOnUse()*HS.GetRotation()));
-            dictValues.Add("Deep Wounds DPS",   string.Format("{0:0.00}",DW.GetAvgDamageOnUse())); dictValues.Add("Deep Wounds DMG",   string.Format("{0:0.00}",DW.GetDamageOnUse()*DW.GetRotation()));
-            dictValues.Add("White DPS",         string.Format("{0:0.00}*Main Hand-{1:0.00}"+Environment.NewLine+"Off Hand- {2:0.00}",WhiteDPS, WhiteDPSMH, WhiteDPSOH));
-            dictValues.Add("Total DPS", string.Format("{0:0.00}", TotalDPS));
+            dictValues.Add("Heroic Strike", string.Format("{0:0.00} : {1:0.00}",HS.GetAvgDamageOnUse(),HS.GetDamageOnUse()*HS.GetRotation()));
+            dictValues.Add("Deep Wounds",   string.Format("{0:0.00} : {1:0.00}",DW.GetAvgDamageOnUse(),DW.GetDamageOnUse()*DW.GetRotation()));
+            dictValues.Add("White DPS",     string.Format("{0:0.00}*Main Hand-{1:0.00}"+Environment.NewLine+"Off Hand- {2:0.00}",WhiteDPS, WhiteDPSMH, WhiteDPSOH));
+            dictValues.Add("Total DPS",     string.Format("{0:0.00}", TotalDPS));
             // Rage
             dictValues.Add("Generated White DPS Rage", WhiteRage.ToString());
             dictValues.Add("Generated Other Rage", SkillAttacks.OtherRage().ToString());

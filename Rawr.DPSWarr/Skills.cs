@@ -17,7 +17,7 @@
         private CalculationOptionsDPSWarr _calcOpts;
         //private float heroicStrikePercent;
         //private float heroicStrikesPerSecond;
-        public const float ROTATION_LENGTH_FURY = 18.0f;
+        public const float ROTATION_LENGTH_FURY = 16.0f;
         public const float ROTATION_LENGTH_ARMS = 30.0f;
         #endregion
 
@@ -710,12 +710,13 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
             public float BloodRageGain() { return (20 + 5 * Talents.ImprovedBloodrage) / (60 * (1 - 0.11f * Talents.IntensifyRage)); }
             public float AngerManagementGain() { return Talents.AngerManagement / 3.0f; }
             public float ImprovedBerserkerRage() { return Talents.ImprovedBerserkerRage * 10 / (30 * (1 - 0.11f * Talents.IntensifyRage)); }
+            public float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
             public float OtherRage() {
                 float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
                 if (combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
                     rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
                 rage *= combatFactors.TotalHaste;
-                rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain();
+                rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
                 rage *= 1 + Talents.EndlessRage * 0.25f;
 
                 return rage;
@@ -1249,12 +1250,13 @@ Causes 173.25 additional damage against Dazed targets";
             public float BloodRageGain() { return (20 + 5 * Talents.ImprovedBloodrage) / (60 * (1 - 0.11f * Talents.IntensifyRage)); }
             public float AngerManagementGain() { return Talents.AngerManagement / 3.0f; }
             public float ImprovedBerserkerRage() { return Talents.ImprovedBerserkerRage * 10 / (30 * (1 - 0.11f * Talents.IntensifyRage)); }
+            public float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
             public float OtherRage() {
                 float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
                 if (combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
                     rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
                 rage *= combatFactors.TotalHaste;
-                rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain();
+                rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
                 rage *= 1 + Talents.EndlessRage * 0.25f;
 
                 return rage;
@@ -1348,8 +1350,7 @@ Causes 173.25 additional damage against Dazed targets";
                 //if (damageIncrease < 0) { damageIncrease = 0; }
                 //return damageIncrease;
             }
-            public override float GetDamageOnUse()
-            {
+            public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
@@ -1524,7 +1525,9 @@ average damage over 6 sec.";
         // Returns the value for every one second
         public float BloodRageGain() {return (20+5*_talents.ImprovedBloodrage)/(60*(1-0.11f*_talents.IntensifyRage));}
         // Returns the value for every one second
-        public float AngerManagementGain() {return _talents.AngerManagement/3.0f;}
+        public float AngerManagementGain() {return _talents.AngerManagement / 3.0f;}
+        // Returns the value for every one second
+        public float UnbridledWrathGain() { return _talents.UnbridledWrath*3.0f / 60.0f; }
         // Returns the value for every one second
         public float ImprovedBerserkerRage() {return _talents.ImprovedBerserkerRage * 10 / (30 * (1 - 0.11f * _talents.IntensifyRage));}
         // Returns the value for every one second
@@ -1533,7 +1536,7 @@ average damage over 6 sec.";
             if(_combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1))
                 rage += 7.0f/8.0f*(1+_combatFactors.OhCrit-(1.0f-_combatFactors.ProbOhWhiteHit));
             rage *= _combatFactors.TotalHaste;
-            rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain();
+            rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
             rage *= 1 + _talents.EndlessRage * 0.25f;
 
             return rage;

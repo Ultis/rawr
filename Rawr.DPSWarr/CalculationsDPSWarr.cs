@@ -97,30 +97,18 @@ Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
 
 Don't forget your weapons used matched with races can affect these numbers.",
                         
-                        "DPS Breakdown (Fury):Bloodsurge DPS",
-                        "DPS Breakdown (Fury):Bloodsurge DMG",
-                        "DPS Breakdown (Fury):Bloodthirst DPS",
-                        "DPS Breakdown (Fury):Bloodthirst DMG",
-                        "DPS Breakdown (Fury):Whirlwind DPS",
-                        "DPS Breakdown (Fury):Whirlwind DMG",
-                        "DPS Breakdown (Arms):Mortal Strike DPS",
-                        "DPS Breakdown (Arms):Mortal Strike DMG",
-                        "DPS Breakdown (Arms):Slam DPS",
-                        "DPS Breakdown (Arms):Slam DMG",
-                        "DPS Breakdown (Arms):Rend DPS",
-                        "DPS Breakdown (Arms):Rend DMG",
-                        "DPS Breakdown (Arms):Sudden Death DPS*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
-                        "DPS Breakdown (Arms):Sudden Death DMG*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
-                        "DPS Breakdown (Arms):Overpower DPS",
-                        "DPS Breakdown (Arms):Overpower DMG",
-                        "DPS Breakdown (Arms):Bladestorm DPS",
-                        "DPS Breakdown (Arms):Bladestorm DMG",
-                        "DPS Breakdown (Arms):Sword Spec DPS",
-                        "DPS Breakdown (Arms):Sword Spec DMG",
-                        "DPS Breakdown (General):Heroic Strike DPS",
-                        "DPS Breakdown (General):Heroic Strike DMG",
-                        "DPS Breakdown (General):Deep Wounds DPS",
-                        "DPS Breakdown (General):Deep Wounds DMG",
+                        "DPS Breakdown (Fury):Bloodsurge*The First number is per second or per tick. The second number is the normal damage (factoring mitigation and hit/miss and crits)",
+                        "DPS Breakdown (Fury):Bloodthirst",
+                        "DPS Breakdown (Fury):Whirlwind",
+                        "DPS Breakdown (Arms):Mortal Strike",
+                        "DPS Breakdown (Arms):Slam",
+                        "DPS Breakdown (Arms):Rend",
+                        "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
+                        "DPS Breakdown (Arms):Overpower",
+                        "DPS Breakdown (Arms):Bladestorm",
+                        "DPS Breakdown (Arms):Sword Spec",
+                        "DPS Breakdown (General):Heroic Strike",
+                        "DPS Breakdown (General):Deep Wounds",
                         "DPS Breakdown (General):White DPS",
                         "DPS Breakdown (General):Total DPS",
                       
@@ -237,8 +225,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
         #endregion
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             CharacterCalculationsDPSWarr    calculatedStats = new CharacterCalculationsDPSWarr();
             CalculationOptionsDPSWarr       calcOpts        = character.CalculationOptions as CalculationOptionsDPSWarr;
             Stats                           stats           = GetCharacterStats(character, additionalItem);
