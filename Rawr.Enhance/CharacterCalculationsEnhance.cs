@@ -41,11 +41,11 @@ namespace Rawr.Enhance
 			set { _basicStats = value; }
 		}
 
-        private Stats _baseStats;
-        public Stats BaseStats
+        private Stats _enhsimStats;
+        public Stats EnhSimStats
         {
-            get { return _baseStats; }
-            set { _baseStats = value; }
+            get { return _enhsimStats; }
+            set { _enhsimStats = value; }
         }
 
         private Stats _buffStats;

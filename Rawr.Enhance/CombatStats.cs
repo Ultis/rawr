@@ -82,7 +82,7 @@ namespace Rawr.Enhance
         public float ChanceWhiteCrit { get { return chanceWhiteCrit; } }
         public float ChanceYellowCrit { get { return chanceYellowCrit; } }
         public float ChanceMeleeHit { get { return chanceMeleeHit; } }
-        public float ChanceMeleeCrit { get { return chanceWhiteCrit; } }
+        public float ChanceMeleeCrit { get { return chanceCrit; } }
         public float OverSpellHitCap { get { return overSpellHitCap; } }
 
         public float UnhastedMHSpeed { get { return unhastedMHSpeed; } }
@@ -103,12 +103,16 @@ namespace Rawr.Enhance
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
 
-        public float EnhSimWhiteCrit { get { return chanceCrit; } }
+        public float EnhSimMeleeCrit { get { return chanceCrit; } }
         public float EnhSimSpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
         }
+
+        private const float DODGE = 0.065f;
+        private const float WHITE_MISS = 0.27f;
+        private const float YELLOW_MISS = 0.08f;
 
         public void UpdateCalcs()
         {
@@ -120,9 +124,9 @@ namespace Rawr.Enhance
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
             chanceCrit = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
-            chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
-            chanceWhiteMiss = Math.Max(0f, 0.27f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
-            chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
+            chanceDodge = Math.Max(0f, DODGE - expertiseBonus);
+            chanceWhiteMiss = Math.Max(0f, WHITE_MISS - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
+            chanceYellowMiss = Math.Max(0f, YELLOW_MISS - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
             chanceWhiteCrit = Math.Min(chanceCrit - whiteCritDepression, 1f - glancingRate - chanceWhiteMiss);
             chanceYellowCrit = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMiss);
 

@@ -22,12 +22,13 @@ namespace Rawr.Enhance
             CalculationsEnhance ce = new CalculationsEnhance();
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
-            Stats stats = calcs.BaseStats;
+            Stats stats = calcs.EnhSimStats;
             CombatStats cs = new CombatStats(character, stats);
             
             getSpecialsNames(character, stats);
 
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine();
             sb.AppendLine("##########################################");
             sb.AppendLine("### Rawr.Enhance Data Export to EnhSim ###");
             sb.AppendLine("##########################################");
@@ -45,7 +46,7 @@ namespace Rawr.Enhance
             sb.AppendLine("oh_speed                        " + OHSpeed.ToString());
             sb.AppendLine("mh_dps                          " + wdpsMH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
-            float chanceCrit = cs.EnhSimWhiteCrit * 100f;
+            float chanceCrit = cs.EnhSimMeleeCrit * 100f;
             sb.AppendLine("mh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             float hitBonus = StatConversion.GetHitFromRating(stats.HitRating) * 100f;
@@ -123,9 +124,10 @@ namespace Rawr.Enhance
             sb.AppendLine("glyph_minor2                    -");
             sb.AppendLine("glyph_minor3                    -");
             sb.AppendLine();
-            sb.AppendLine("###########");
-            sb.AppendLine("# Talents #");
-            sb.AppendLine("###########");
+            sb.AppendLine();
+            sb.AppendLine("#############");
+            sb.AppendLine("## Talents ##");
+            sb.AppendLine("#############");
             sb.AppendLine();
             sb.AppendLine("ancestral_knowledge             " + character.ShamanTalents.AncestralKnowledge + "/5");
             sb.AppendLine("improved_shields                " + character.ShamanTalents.ImprovedShields + "/3");
