@@ -99,5 +99,15 @@ namespace Rawr.Retribution
 
             return dictValues;
         }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Health": return BasicStats.Health;
+                case "Melee Avoid %": return (WhiteSkill.Combats.GetMeleeAvoid() * 100f);
+            }
+            return 0f;
+        }
     }
 }

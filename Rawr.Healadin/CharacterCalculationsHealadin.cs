@@ -85,7 +85,6 @@ namespace Rawr.Healadin
             set { _basicStats = value; }
         }
 
-
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -95,44 +94,57 @@ namespace Rawr.Healadin
                 BurstPoints.ToString("N0")));
 
             //Basic Stats
-            dictValues.Add("Health", BasicStats.Health.ToString("N00"));
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString("N00"));
-            dictValues.Add("Mana", BasicStats.Mana.ToString("N00"));
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString("N00"));
-            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("N00"));
-            dictValues.Add("Mp5", BasicStats.Mp5.ToString("N00"));
-            dictValues.Add("Spell Crit", string.Format("{0}%*{1} Crit Rating", (BasicStats.SpellCrit * 100).ToString("N02"), BasicStats.CritRating));
-            dictValues.Add("Spell Haste", string.Format("{0}%*{1} Haste Rating", (BasicStats.SpellHaste * 100).ToString("N02"), BasicStats.HasteRating));
+            dictValues["Health"] = BasicStats.Health.ToString("N00");
+            dictValues["Stamina"] = BasicStats.Stamina.ToString("N00");
+            dictValues["Mana"] = BasicStats.Mana.ToString("N00");
+            dictValues["Intellect"] = BasicStats.Intellect.ToString("N00");
+            dictValues["Spell Power"] = BasicStats.SpellPower.ToString("N00");
+            dictValues["Mp5"] = BasicStats.Mp5.ToString("N00");
+            dictValues["Spell Crit"] = string.Format("{0}%*{1} Crit Rating", (BasicStats.SpellCrit * 100).ToString("N02"), BasicStats.CritRating);
+            dictValues["Spell Haste"] = string.Format("{0}%*{1} Haste Rating", (BasicStats.SpellHaste * 100).ToString("N02"), BasicStats.HasteRating);
 
             // Cycle Stats
-            dictValues.Add("Total Healed", string.Format("{0} healing", TotalHealed.ToString("N00")));
-            dictValues.Add("Total Mana", string.Format("{0} mana", TotalMana.ToString("N00")));
-            dictValues.Add("Average Healing per sec", string.Format("{0} hps", AvgHPS.ToString("N00")));
-            dictValues.Add("Average Healing per mana", string.Format("{0} hpm", AvgHPM.ToString("N02")));
+            dictValues["Total Healed"] = string.Format("{0} healing", TotalHealed.ToString("N00"));
+            dictValues["Total Mana"] = string.Format("{0} mana", TotalMana.ToString("N00"));
+            dictValues["Average Healing per sec"] = string.Format("{0} hps", AvgHPS.ToString("N00"));
+            dictValues["Average Healing per mana"] = string.Format("{0} hpm", AvgHPM.ToString("N02"));
 
             // Rotation Info
-            dictValues.Add("Holy Light Time", string.Format("{0} sec", RotationHL.ToString("N1")));
-            dictValues.Add("Flash of Light Time", string.Format("{0} sec", RotationFoL.ToString("N1")));
-            dictValues.Add("Holy Shock Time", string.Format("{0} sec", RotationHS.ToString("N1")));
-            dictValues.Add("Sacred Shield Time", string.Format("{0} sec", RotationSS.ToString("N1")));
-            dictValues.Add("Beacon of Light Time", string.Format("{0} sec", RotationBoL.ToString("N1")));
-            dictValues.Add("Judgement Time", string.Format("{0} sec", RotationJotP.ToString("N1")));
+            dictValues["Holy Light Time"] = string.Format("{0} sec", RotationHL.ToString("N1"));
+            dictValues["Flash of Light Time"] = string.Format("{0} sec", RotationFoL.ToString("N1"));
+            dictValues["Holy Shock Time"] = string.Format("{0} sec", RotationHS.ToString("N1"));
+            dictValues["Sacred Shield Time"] = string.Format("{0} sec", RotationSS.ToString("N1"));
+            dictValues["Beacon of Light Time"] = string.Format("{0} sec", RotationBoL.ToString("N1"));
+            dictValues["Judgement Time"] = string.Format("{0} sec", RotationJotP.ToString("N1"));
 
             // Healing Breakdown
-            dictValues.Add("Holy Light Healed", string.Format("{0} healed", HealedHL.ToString("N00")));
-            dictValues.Add("Flash of Light Healed", string.Format("{0} healed", HealedFoL.ToString("N00")));
-            dictValues.Add("Holy Shock Healed", string.Format("{0} healed", HealedHS.ToString("N00")));
-            dictValues.Add("Sacred Shield Healed", string.Format("{0} healed", HealedSS.ToString("N00")));
-            dictValues.Add("Beacon of Light Healed", string.Format("{0} healed", HealedBoL.ToString("N00")));
-            dictValues.Add("Glyph of HL Healed", string.Format("{0} healed", HealedGHL.ToString("N00")));
-            dictValues.Add("Other Healed", string.Format("{0} healed", HealedOther.ToString("N00")));
+            dictValues["Holy Light Healed"] = string.Format("{0} healed", HealedHL.ToString("N00"));
+            dictValues["Flash of Light Healed"] = string.Format("{0} healed", HealedFoL.ToString("N00"));
+            dictValues["Holy Shock Healed"] = string.Format("{0} healed", HealedHS.ToString("N00"));
+            dictValues["Sacred Shield Healed"] = string.Format("{0} healed", HealedSS.ToString("N00"));
+            dictValues["Beacon of Light Healed"] = string.Format("{0} healed", HealedBoL.ToString("N00"));
+            dictValues["Glyph of HL Healed"] = string.Format("{0} healed", HealedGHL.ToString("N00"));
+            dictValues["Other Healed"] = string.Format("{0} healed", HealedOther.ToString("N00"));
 
-            dictValues.Add("Holy Light", "*" + HL.ToString());
-            dictValues.Add("Flash of Light", "*" + FoL.ToString());
-            dictValues.Add("Holy Shock", "*" + HS.ToString());
-            dictValues.Add("Sacred Shield", "*" + SS.ToString());
+            dictValues["Holy Light"] = "*" + HL.ToString();
+            dictValues["Flash of Light"] = "*" + FoL.ToString();
+            dictValues["Holy Shock"] = "*" + HS.ToString();
+            dictValues["Sacred Shield"] = "*" + SS.ToString();
 
             return dictValues;
         }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+		{
+			switch (calculation)
+			{
+				case "Health": return BasicStats.Health;
+				case "Holy Light Cast Time": return HL.CastTime();
+                case "Holy Light Cast HPS": return HL.HPS();
+				case "Flash of Light Cast Time": return FoL.CastTime();
+                case "Flash of Light HPS": return FoL.HPS();
+			}
+			return 0f;
+		}
     }
 }

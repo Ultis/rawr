@@ -7,6 +7,7 @@ namespace Rawr.Healadin
 	public class CalculationsHealadin : CalculationsBase
     {
 
+        #region Model Properties
         public CalculationsHealadin()
             : base()
         {
@@ -104,6 +105,26 @@ namespace Rawr.Healadin
                 _relevantGlyphs.Add("Glyph of Lay on Hands");
             }
             return _relevantGlyphs;
+        }
+
+        private string[] _optimizableCalculationLabels = null;
+        /// <summary>
+        /// Labels of the stats available to the Optimizer 
+        /// </summary>
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+					"Health",
+                    "Holy Light Cast Time",
+                    "Holy Light HPS",
+                    "Flash of Light Cast Time",
+                    "Flash of Light HPS",
+					};
+                return _optimizableCalculationLabels;
+            }
         }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
@@ -248,6 +269,7 @@ namespace Rawr.Healadin
 			CalculationOptionsHealadin calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealadin;
 			return calcOpts;
 		}
+        #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -270,6 +292,7 @@ namespace Rawr.Healadin
             return calc;
         }
 
+        #region Stat Calculation
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             return GetCharacterStats(character, additionalItem, true, null);
@@ -364,7 +387,9 @@ namespace Rawr.Healadin
             stats.Health = stats.Health + stats.Stamina * 10f;
             stats.PhysicalHit += stats.HitRating / 3278.998947f;
         }
+        #endregion
 
+        #region Custom Charts
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             if (chartName == "Mana Pool Breakdown")
@@ -460,7 +485,9 @@ namespace Rawr.Healadin
             }
             return new ComparisonCalculationBase[] {};
         }
+        #endregion Custom Charts
 
+        #region Relevancy Methods
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
@@ -522,7 +549,7 @@ namespace Rawr.Healadin
         private bool HasWantedStats(Stats stats)
         {
             return (stats.SpellCrit + stats.SpellHaste
-                + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
+                + stats.PhysicalHit + stats.GreatnessProc + stats.BonusHoTOnDirectHeals + stats.Mana
                 + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit +
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
@@ -550,6 +577,10 @@ namespace Rawr.Healadin
 
         public override bool IsBuffRelevant(Buff buff)
         {
+            foreach (SpecialEffect effect in buff.Stats.SpecialEffects())
+            {
+                if (HasRelevantSpecialEffect(effect)) return true;
+            }
             return HasWantedStats(buff.Stats) || HasMaybeStats(buff.Stats) || HasSurvivalStats(buff.Stats);
         }
 
@@ -581,5 +612,6 @@ namespace Rawr.Healadin
             }
             return wantedStats || ((specialEffect || (maybeStats && (!hasSpecialEffect || specialEffect)) || (survivalStats && !ignoreStats)) && !ignoreStats);
         }
+        #endregion
     }
 }

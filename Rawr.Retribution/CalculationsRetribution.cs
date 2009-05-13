@@ -150,6 +150,23 @@ namespace Rawr.Retribution
             return _relevantGlyphs;
         }
 
+        private string[] _optimizableCalculationLabels = null;
+        /// <summary>
+        /// Labels of the stats available to the Optimizer 
+        /// </summary>
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+					"Health",
+                    "Melee Avoid %",
+					};
+                return _optimizableCalculationLabels;
+            }
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
