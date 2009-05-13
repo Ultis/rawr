@@ -241,12 +241,15 @@ namespace Rawr
                 stats.SpellPower += FTspellpower;
             
             //totem procs
-            stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
+            stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // last 6 seconds per 8 seconds SS CD
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
-            float addedAttackPower = (float) Math.Floor((float)(stats.AttackPower - initialAP) * (1 + stats.BonusAttackPowerMultiplier));
-            // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
-            stats.SpellPower += mentalQuickness * addedAttackPower * (1 + stats.BonusSpellPowerMultiplier);
+            float addedAttackPower = stats.AttackPower - initialAP;
+            float MQSpellPower = mentalQuickness * addedAttackPower * (1 + stats.BonusAttackPowerMultiplier);
+            // make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
+            stats.SpellPower += MQSpellPower * (1 + stats.BonusSpellPowerMultiplier);
+            // also add in bonus attack power
+            stats.AttackPower += addedAttackPower * stats.BonusAttackPowerMultiplier;
             #endregion
 
             #region Damage Model
