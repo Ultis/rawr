@@ -202,8 +202,8 @@ namespace Rawr
                     windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
             }
-            float critMultiplierMelee = 2f + stats.BonusCritMultiplier;
-            float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury + stats.BonusSpellCritMultiplier;
+            float critMultiplierMelee = 2f * (1 + stats.BonusCritMultiplier);
+            float critMultiplierSpell = (1.5f + .1f * character.ShamanTalents.ElementalFury) * (1 + stats.BonusSpellCritMultiplier);
             float weaponMastery = 1f;
             switch (character.ShamanTalents.WeaponMastery){
                 case 1:
@@ -234,16 +234,17 @@ namespace Rawr
             if (stats.ShatteredSunMightProc > 0 && calcOpts.ShattrathFaction == "Aldor")
                 stats.AttackPower += 39.13f;
 
+            float FTspellpower = (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
             if (calcOpts.MainhandImbue == "Flametongue")
-                stats.SpellPower += (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
+                stats.SpellPower += FTspellpower;
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
-                stats.SpellPower += (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
+                stats.SpellPower += FTspellpower;
             
             //totem procs
             stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
-            float addedAttackPower = (stats.AttackPower - initialAP) * (1 + stats.BonusAttackPowerMultiplier);
+            float addedAttackPower = (float) Math.Floor((float)(stats.AttackPower - initialAP) * (1 + stats.BonusAttackPowerMultiplier));
             // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
             stats.SpellPower += mentalQuickness * addedAttackPower * (1 + stats.BonusSpellPowerMultiplier);
             #endregion
@@ -265,12 +266,13 @@ namespace Rawr
             float spellPower = (float) Math.Floor(stats.SpellPower);
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
-            float AP_SP_Ratio = (spellPower-274) / attackPower;
-            float bonusSpellDamage = stats.BonusDamageMultiplier;
-            float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
-            float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
-            float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) - 1f;
-            float bonusLSDamage = stats.BonusLSDamage; // 2 piece T7 set bonus
+            float AP_SP_Ratio = (spellPower-274-211) / attackPower;
+            float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
+            float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
+            float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
+            float bonusLSDamage = 1f + stats.BonusLSDamage; // 2 piece T7 set bonus
+            float bonusLLSSDamage = 1 + stats.BonusLLSSDamage;
+            float bonusSSDamage = stats.TotemSSDamage;
             int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
@@ -288,7 +290,7 @@ namespace Rawr
             float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifier;
             float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
 
-            float meleeMultipliers = weaponMastery * cs.DamageReduction * cs.ChanceWhiteHit * (1 + bonusPhysicalDamage);
+            float meleeMultipliers = weaponMastery * cs.DamageReduction * cs.ChanceWhiteHit * bonusPhysicalDamage;
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
 
             if (character.ShamanTalents.DualWield == 1 && cs.HastedOHSpeed != 0)
@@ -303,17 +305,17 @@ namespace Rawr
             float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
                               
             //2: Stormstrike DPS
-            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed + stats.TotemSSDamage;
+            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed + bonusSSDamage;
             float damageOHSwing = 0f;
             if (character.ShamanTalents.DualWield == 1)
-                damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed + stats.TotemSSDamage;
+                damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed + bonusSSDamage;
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1)
             {
                 float swingDPS = damageMHSwing * cs.HitsPerSMHSS + damageOHSwing * cs.HitsPerSOHSS;
                 float SSnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * swingDPS;
                 float SScrit = swingDPS * cs.ChanceYellowCrit * critMultiplierMelee;
-                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage) * bossNatureResistance;
+                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * bonusNatureDamage * bonusLLSSDamage * bossNatureResistance;
             }
 
             //3: Lavalash DPS
@@ -323,7 +325,7 @@ namespace Rawr
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * lavalashDPS;
                 float LLcrit = lavalashDPS * cs.ChanceYellowCrit * critMultiplierMelee;
-                dpsLL = (LLnormal + LLcrit) * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage) * bossFireResistance; //and no armor reduction yeya!
+                dpsLL = (LLnormal + LLcrit) * bonusFireDamage * bonusLLSSDamage * bossFireResistance; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {  // 25% bonus dmg if FT imbue in OH
                     if (character.ShamanTalents.GlyphofLavaLash)
@@ -343,7 +345,7 @@ namespace Rawr
             float shockdps = damageES / shockSpeed;
             float shockNormal = (cs.ChanceSpellHit - cs.ChanceSpellCrit) * shockdps;
             float shockCrit = shockdps * cs.ChanceSpellCrit * critMultiplierSpell;
-            float dpsES = (shockNormal + shockCrit) * (1 + bonusNatureDamage) * bossNatureResistance;
+            float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance;
 
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
@@ -353,7 +355,7 @@ namespace Rawr
             float lbdps = damageLB / cs.SecondsToFiveStack;
             float lbNormal = (cs.ChanceSpellHit - cs.ChanceSpellCrit - callOfThunder) * lbdps;
             float lbCrit = lbdps * (cs.ChanceSpellCrit + callOfThunder) * critMultiplierSpell;
-            float dpsLB = (lbNormal + lbCrit) * (1 + bonusNatureDamage) * bossNatureResistance;
+            float dpsLB = (lbNormal + lbCrit) * bonusNatureDamage * bossNatureResistance;
             if (character.ShamanTalents.GlyphofLightningBolt)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             
@@ -364,7 +366,7 @@ namespace Rawr
                 float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * cs.UnhastedMHSpeed);
                 float WFnormal = (cs.ChanceYellowHit - cs.ChanceYellowCrit) * damageWFHit;
                 float WFcrit = cs.ChanceYellowCrit * critMultiplierMelee * damageWFHit;
-                dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.HitsPerSWF * cs.DamageReduction * (1 + bonusPhysicalDamage);
+                dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.HitsPerSWF * cs.DamageReduction * bonusPhysicalDamage;
             }
 
             //7: Lightning Shield DPS
@@ -373,7 +375,7 @@ namespace Rawr
             float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
             // no crit needed as LS can't crit
-            float dpsLS = cs.ChanceSpellHit * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage) * bossNatureResistance;
+            float dpsLS = cs.ChanceSpellHit * staticShockProcsPerS * damageLS * bonusNatureDamage * bonusLSDamage * bossNatureResistance;
             if (character.ShamanTalents.GlyphofLightningShield)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
@@ -384,7 +386,7 @@ namespace Rawr
             float STMTdps = damageSTMT / 2;
             float STMTNormal = (cs.ChanceSpellHit - cs.ChanceSpellCrit) * STMTdps;
             float STMTCrit = STMTdps * cs.ChanceSpellCrit * critMultiplierSpell;
-            float dpsSTMT = (STMTNormal + STMTCrit) * (1 + bonusFireDamage) * bossFireResistance;
+            float dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
@@ -396,7 +398,7 @@ namespace Rawr
                 float FTdps = damageFT * cs.HitsPerSMH;
                 float FTNormal = (cs.ChanceSpellHit - cs.ChanceSpellCrit) * FTdps;
                 float FTCrit = FTdps * cs.ChanceSpellCrit * critMultiplierSpell; 
-                dpsFT += (FTNormal + FTCrit) * (1 + bonusFireDamage) * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
             {
@@ -406,7 +408,7 @@ namespace Rawr
                 float FTdps = damageFT * cs.HitsPerSOH;
                 float FTNormal = (cs.ChanceSpellHit - cs.ChanceSpellCrit) * FTdps;
                 float FTCrit = FTdps * cs.ChanceSpellCrit * critMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit) * (1 + bonusFireDamage) * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
@@ -431,7 +433,7 @@ namespace Rawr
                 float dogsMeleeGlances = dogsBaseDamage * cs.GlancingHitModifier;
 
                 float dogsTotalDPS = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
-                float dogsMultipliers = cs.DamageReduction * (1 + bonusPhysicalDamage);
+                float dogsMultipliers = cs.DamageReduction * bonusPhysicalDamage;
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
                 calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit);
