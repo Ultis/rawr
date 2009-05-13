@@ -287,9 +287,11 @@ namespace Rawr
                 Dictionary<int, int> countItem = new Dictionary<int, int>();
                 List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
 
-                foreach (ComparisonCalculationBase itemCalculation in itemCalculations)
+                for (int i = itemCalculations.Count - 1; i >= 0; i--)
+                //foreach (ComparisonCalculationBase itemCalculation in itemCalculations)
                 {
-                    int itemId = itemCalculation.ItemInstance.Id;
+                    ComparisonCalculationBase itemCalculation = itemCalculations[i];
+                    int itemId = (itemCalculation.ItemInstance == null ? itemCalculation.Item.Id : itemCalculation.ItemInstance.Id);
                     if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
                     if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
                         itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
