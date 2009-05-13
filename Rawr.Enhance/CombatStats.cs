@@ -141,7 +141,7 @@ namespace Rawr.Enhance
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
             chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - .17f);
-            float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.SpellCritRating + _stats.CritRating) + 
+            float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) + 
                                   StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * _talents.ThunderingStrikes;
             chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
 

@@ -306,8 +306,8 @@ namespace Rawr.Enhance
                 (StatConversion.GetCritFromRating(BasicStats.CritMeleeRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Spell Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
                 SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
-                (BasicStats.SpellCritRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellCritFromRating(BasicStats.SpellCritRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Total Expertise",

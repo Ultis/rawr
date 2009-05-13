@@ -243,9 +243,9 @@ namespace Rawr
             stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
-
+            float addedAttackPower = (stats.AttackPower - initialAP) * stats.BonusAttackPowerMultiplier;
             // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
-            stats.SpellPower += mentalQuickness * (stats.AttackPower - initialAP);
+            stats.SpellPower += mentalQuickness * addedAttackPower * stats.BonusSpellPowerMultiplier;
             #endregion
 
             #region Damage Model
@@ -257,17 +257,21 @@ namespace Rawr
             // only apply unleashed rage talent if not already applied Unleashed Rage buff.
             float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f : 
                                                     (stats.AttackPower * unleashedRage * cs.URUptime);
-            float attackPower = stats.AttackPower + URattackPower;
+            stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
+            stats.SpellPower += mentalQuickness * URattackPower * stats.BonusSpellPowerMultiplier;
+            
+            // assign basic variables for calcs
+            float attackPower = stats.AttackPower;
+            float spellPower = stats.SpellPower;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
-            float spellPower = (stats.SpellPower + URattackPower * mentalQuickness) * (1 + stats.BonusSpellPowerMultiplier);
             float AP_SP_Ratio = (spellPower-274) / attackPower;
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) - 1f;
             float bonusLSDamage = stats.BonusLSDamage; // 2 piece T7 set bonus
-            int baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
+            int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
 
@@ -477,28 +481,35 @@ namespace Rawr
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             int AK = character.ShamanTalents.AncestralKnowledge;
-            float agiBase = (float)Math.Floor((float)(statsBase.Agility * (1 + statsBase.BonusAgilityMultiplier)));
-            float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility * (1 + statsBaseGear.BonusAgilityMultiplier)));
-			float strBase = (float)Math.Floor((float)(statsBase.Strength * (1 + statsBase.BonusStrengthMultiplier)));
-            float strBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Strength * (1 + statsBaseGear.BonusStrengthMultiplier)));
-            float intBase = (float)Math.Floor((float)(statsBase.Intellect * (1 + statsBase.BonusIntellectMultiplier) * (1 + .02f * AK)));
-            float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect * (1 + statsBaseGear.BonusIntellectMultiplier) * (1 + .02f * AK)));
+            float agiBase = (float)Math.Floor((float)(statsBase.Agility));
+            float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility));
+			float strBase = (float)Math.Floor((float)(statsBase.Strength));
+            float strBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Strength));
+            float intBase = (float)Math.Floor((float)(statsBase.Intellect * (1 + .02f * AK)));
+            float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect * (1 + .02f * AK)));
             float staBase = (float)Math.Floor((float)(statsBase.Stamina));  
 			float staBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Stamina));
             float spiBase = (float)Math.Floor((float)(statsBase.Spirit));  
 			float spiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Spirit));
 						
 			Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusIntellectMultiplier = ((1 + statsBase.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsBase.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
 			statsTotal.BonusStrengthMultiplier = ((1 + statsBase.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
 			statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsBase.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
             statsTotal.BonusCritMultiplier = ((1 + statsBase.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.BonusSpellCritMultiplier = ((1 + statsBase.BonusSpellCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellCritMultiplier)) - 1;
-
+            statsTotal.BonusPhysicalDamageMultiplier = ((1 + statsBase.BonusPhysicalDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier)) - 1;
+            statsTotal.BonusNatureDamageMultiplier = ((1 + statsBase.BonusNatureDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusNatureDamageMultiplier)) - 1;
+            statsTotal.BonusFireDamageMultiplier = ((1 + statsBase.BonusFireDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusFireDamageMultiplier)) - 1;
+            statsTotal.BonusHealthMultiplier = ((1 + statsBase.BonusHealthMultiplier) * (1 + statsGearEnchantsBuffs.BonusHealthMultiplier)) - 1;
+            statsTotal.BonusManaMultiplier = ((1 + statsBase.BonusManaMultiplier) * (1 + statsGearEnchantsBuffs.BonusManaMultiplier)) - 1;
+            statsTotal.PhysicalHaste = ((1 + statsBase.PhysicalHaste) * (1 + statsGearEnchantsBuffs.PhysicalHaste)) - 1;
+            statsTotal.SpellHaste = ((1 + statsBase.SpellHaste) * (1 + statsGearEnchantsBuffs.SpellHaste)) - 1;
+            
             statsTotal.Agility =   (float)Math.Floor((float)((agiBase + agiBonus) * (1 + statsTotal.BonusAgilityMultiplier)));
             statsTotal.Strength =  (float)Math.Floor((float)((strBase + strBonus) * (1 + statsTotal.BonusStrengthMultiplier)));
             statsTotal.Stamina =   (float)Math.Floor((float)((staBase + staBonus) * (1 + statsTotal.BonusStaminaMultiplier)));
@@ -506,28 +517,29 @@ namespace Rawr
             statsTotal.Spirit =    (float)Math.Floor((float)((spiBase + spiBonus) * (1 + statsTotal.BonusSpiritMultiplier)));
             statsTotal.Health = statsBase.Health + statsGearEnchantsBuffs.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.Mana =   statsBase.Mana   + statsGearEnchantsBuffs.Mana   + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
+            statsTotal.Health = (float)Math.Floor((float)(statsTotal.Health * (1 + statsTotal.BonusHealthMultiplier)));
+            statsTotal.Mana   = (float)Math.Floor((float)(statsTotal.Mana   * (1 + statsTotal.BonusManaMultiplier)));
             statsTotal.Expertise += 3 * character.ShamanTalents.UnleashedRage;
 
-            int MQ = character.ShamanTalents.MentalQuickness;
             float intBonusToAP = 0.0f;
             switch (character.ShamanTalents.MentalDexterity)
             {
                 case 1:
-                    intBonusToAP = .33f * statsTotal.Intellect;
+                    intBonusToAP = (float) Math.Floor((float)(.33f * statsTotal.Intellect));
                     break;
                 case 2:
-                    intBonusToAP = .66f * statsTotal.Intellect;
+                    intBonusToAP = (float) Math.Floor((float)(.66f * statsTotal.Intellect));
                     break;
                 case 3:
                     intBonusToAP = 1f * statsTotal.Intellect;
                     break;
             }
-            statsTotal.AttackPower = statsBase.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Strength + statsTotal.Agility 
-                                   + (float) Math.Floor((float)(intBonusToAP));
+            statsTotal.AttackPower = statsBase.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Strength + statsTotal.Agility + intBonusToAP;
+            float SPfromAP = (float) Math.Floor((float)(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness));
+            statsTotal.SpellPower = statsBase.SpellPower + statsGearEnchantsBuffs.SpellPower + SPfromAP;
+
             statsTotal.AttackPower = (float)Math.Floor((float)(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier)));
-            statsTotal.SpellPower = statsBase.SpellPower + statsGearEnchantsBuffs.SpellPower 
-                                   + (float) Math.Floor((float)(statsTotal.AttackPower * .1f * MQ));
-            statsTotal.SpellPower = (float) Math.Floor((float)(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier)));
+            statsTotal.SpellPower = (float)Math.Floor((float)(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier)));
 
             return statsTotal;
 		}
@@ -587,6 +599,10 @@ namespace Rawr
             result.Stats.BonusPhysicalDamageMultiplier = 1 / (1 - result.Stats.BonusPhysicalDamageMultiplier) - 1;
             result.Stats.BonusFireDamageMultiplier = 1 / (1 - result.Stats.BonusFireDamageMultiplier) - 1;
             result.Stats.BonusNatureDamageMultiplier = 1 / (1 - result.Stats.BonusNatureDamageMultiplier) - 1;
+            result.Stats.BonusHealthMultiplier = 1 / (1 - result.Stats.BonusHealthMultiplier) - 1;
+            result.Stats.BonusManaMultiplier = 1 / (1 - result.Stats.BonusManaMultiplier) - 1;
+            result.Stats.PhysicalHaste = 1 / (1 - result.Stats.PhysicalHaste) - 1;
+            result.Stats.SpellHaste = 1 / (1 - result.Stats.SpellHaste) - 1;
             return result; 
         }
         #endregion
@@ -680,13 +696,14 @@ namespace Rawr
                     BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                     BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                     BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                    BonusHealthMultiplier = stats.BonusHealthMultiplier,
+                    BonusManaMultiplier = stats.BonusManaMultiplier,
                     Health = stats.Health,
                     Mana = stats.Mana,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					ShatteredSunMightProc = stats.ShatteredSunMightProc,
 					SpellPower = stats.SpellPower,
-                    SpellCritRating = stats.SpellCritRating,
                     CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
                     TotemLLAttackPower = stats.TotemLLAttackPower,
@@ -745,11 +762,11 @@ namespace Rawr
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.ExposeWeakness + stats.Bloodlust +
+                stats.ExposeWeakness + stats.Bloodlust + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + 
                 stats.ShatteredSunMightProc + stats.MongooseProc + stats.BerserkingProc + stats.GreatnessProc +
-                stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
+                stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +
                 stats.BonusLSDamage + stats.BonusLLSSDamage + stats.TotemSSDamage) > 0
