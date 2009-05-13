@@ -243,9 +243,9 @@ namespace Rawr
             stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // 8 = SS speed
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
-            float addedAttackPower = (stats.AttackPower - initialAP) * stats.BonusAttackPowerMultiplier;
+            float addedAttackPower = (stats.AttackPower - initialAP) * (1 + stats.BonusAttackPowerMultiplier);
             // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
-            stats.SpellPower += mentalQuickness * addedAttackPower * stats.BonusSpellPowerMultiplier;
+            stats.SpellPower += mentalQuickness * addedAttackPower * (1 + stats.BonusSpellPowerMultiplier);
             #endregion
 
             #region Damage Model
@@ -258,11 +258,11 @@ namespace Rawr
             float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f : 
                                                     (stats.AttackPower * unleashedRage * cs.URUptime);
             stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
-            stats.SpellPower += mentalQuickness * URattackPower * stats.BonusSpellPowerMultiplier;
+            stats.SpellPower += mentalQuickness * URattackPower * (1 + stats.BonusSpellPowerMultiplier);
             
             // assign basic variables for calcs
-            float attackPower = stats.AttackPower;
-            float spellPower = stats.SpellPower;
+            float attackPower = (float) Math.Floor(stats.AttackPower);
+            float spellPower = (float) Math.Floor(stats.SpellPower);
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
             float AP_SP_Ratio = (spellPower-274) / attackPower;
