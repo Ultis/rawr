@@ -739,15 +739,31 @@ namespace Rawr
 				};
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger != Trigger.ManaGem || effect.Trigger != Trigger.HealingSpellCast || effect.Trigger != Trigger.HealingSpellCrit ||
-                    effect.Trigger != Trigger.HealingSpellHit)
-                {
-                    if (relevantStats(effect.Stats))
+                if (HasRelevantTrigger(effect.Trigger) && relevantStats(effect.Stats))
                         s.AddSpecialEffect(effect);
-                }
             }
             return s;
 		}
+
+        public bool HasRelevantTrigger(Trigger trigger)
+        {
+            return (trigger == Trigger.Use ||
+                    trigger == Trigger.SpellHit ||
+                    trigger == Trigger.SpellCrit ||
+                    trigger == Trigger.SpellCast ||
+                    trigger == Trigger.DamageSpellHit ||
+                    trigger == Trigger.DamageSpellCrit ||
+                    trigger == Trigger.DamageSpellCast ||
+                    trigger == Trigger.MeleeHit ||
+                    trigger == Trigger.MeleeCrit ||
+                    trigger == Trigger.PhysicalHit ||
+                    trigger == Trigger.PhysicalCrit ||
+                    trigger == Trigger.DamageDone ||
+                    trigger == Trigger.ShamanLightningBolt ||
+                    trigger == Trigger.ShamanLavaLash ||
+                    trigger == Trigger.ShamanShock ||
+                    trigger == Trigger.ShamanStormStrike);
+        }
 
 		public override bool HasRelevantStats(Stats stats)
 		{
@@ -755,12 +771,8 @@ namespace Rawr
                 return true;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger != Trigger.ManaGem || effect.Trigger != Trigger.HealingSpellCast || effect.Trigger != Trigger.HealingSpellCrit ||
-                    effect.Trigger != Trigger.HealingSpellHit)
-                {
-                    if (relevantStats(effect.Stats))
-                        return true;
-                }
+                if (HasRelevantTrigger(effect.Trigger) && relevantStats(effect.Stats))
+                    return true;
             }
             return false;
         }
