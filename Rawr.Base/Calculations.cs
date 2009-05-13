@@ -1083,6 +1083,14 @@ namespace Rawr
 
 		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
 		{
+            if (item.Unique) {
+                if (slot == Character.CharacterSlot.Finger1) { if (item.Id == character[Character.CharacterSlot.Finger2].Item.Id) return false; }
+                else if (slot == Character.CharacterSlot.Finger2) { if (item.Id == character[Character.CharacterSlot.Finger1].Item.Id) return false; }
+                else if (slot == Character.CharacterSlot.Trinket1) { if (item.Id == character[Character.CharacterSlot.Trinket2].Item.Id) return false; }
+                else if (slot == Character.CharacterSlot.Trinket2) { if (item.Id == character[Character.CharacterSlot.Trinket1].Item.Id) return false; }
+                else if (slot == Character.CharacterSlot.MainHand) { if (item.Id == character[Character.CharacterSlot.OffHand].Item.Id) return false; }
+                else if (slot == Character.CharacterSlot.OffHand) { if (item.Id == character[Character.CharacterSlot.MainHand].Item.Id) return false; }
+            }
 			return item.FitsInSlot(slot);
 		}
 
