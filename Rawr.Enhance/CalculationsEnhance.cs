@@ -575,18 +575,18 @@ namespace Rawr
             Item result = new Item();
             result.Stats = addedBuffs * -1;
             // to this point works fine for additive stats doesn't work for multiplicative ones.
-            addedBuffs.BonusAgilityMultiplier = 1 / (1 + addedBuffs.BonusAgilityMultiplier) - 1;
-            addedBuffs.BonusStrengthMultiplier = 1 / (1 + addedBuffs.BonusStrengthMultiplier) - 1;
-            addedBuffs.BonusIntellectMultiplier = 1 / (1 + addedBuffs.BonusIntellectMultiplier) - 1;
-            addedBuffs.BonusSpiritMultiplier = 1 / (1 + addedBuffs.BonusSpiritMultiplier) - 1;
-            addedBuffs.BonusAttackPowerMultiplier = 1 / (1 + addedBuffs.BonusAttackPowerMultiplier) - 1;
-            addedBuffs.BonusSpellPowerMultiplier = 1 / (1 + addedBuffs.BonusSpellPowerMultiplier) - 1;
-            addedBuffs.BonusCritMultiplier = 1 / (1 + addedBuffs.BonusCritMultiplier) - 1;
-            addedBuffs.BonusSpellCritMultiplier = 1 / (1 + addedBuffs.BonusSpellCritMultiplier) - 1;
-            addedBuffs.BonusDamageMultiplier = 1 / (1 + addedBuffs.BonusDamageMultiplier) - 1;
-            addedBuffs.BonusPhysicalDamageMultiplier = 1 / (1 + addedBuffs.BonusPhysicalDamageMultiplier) - 1;
-            addedBuffs.BonusFireDamageMultiplier = 1 / (1 + addedBuffs.BonusFireDamageMultiplier) - 1;
-            addedBuffs.BonusNatureDamageMultiplier = 1 / (1 + addedBuffs.BonusNatureDamageMultiplier) - 1;
+            result.Stats.BonusAgilityMultiplier = 1 / (1 - result.Stats.BonusAgilityMultiplier) - 1;
+            result.Stats.BonusStrengthMultiplier = 1 / (1 - result.Stats.BonusStrengthMultiplier) - 1;
+            result.Stats.BonusIntellectMultiplier = 1 / (1 - result.Stats.BonusIntellectMultiplier) - 1;
+            result.Stats.BonusSpiritMultiplier = 1 / (1 - result.Stats.BonusSpiritMultiplier) - 1;
+            result.Stats.BonusAttackPowerMultiplier = 1 / (1 - result.Stats.BonusAttackPowerMultiplier) - 1;
+            result.Stats.BonusSpellPowerMultiplier = 1 / (1 - result.Stats.BonusSpellPowerMultiplier) - 1;
+            result.Stats.BonusCritMultiplier = 1 / (1 - result.Stats.BonusCritMultiplier) - 1;
+            result.Stats.BonusSpellCritMultiplier = 1 / (1 - result.Stats.BonusSpellCritMultiplier) - 1;
+            result.Stats.BonusDamageMultiplier = 1 / (1 - result.Stats.BonusDamageMultiplier) - 1;
+            result.Stats.BonusPhysicalDamageMultiplier = 1 / (1 - result.Stats.BonusPhysicalDamageMultiplier) - 1;
+            result.Stats.BonusFireDamageMultiplier = 1 / (1 - result.Stats.BonusFireDamageMultiplier) - 1;
+            result.Stats.BonusNatureDamageMultiplier = 1 / (1 - result.Stats.BonusNatureDamageMultiplier) - 1;
             return result; 
         }
         #endregion
