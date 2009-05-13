@@ -384,17 +384,18 @@ namespace Rawr
         /// <param name="bPvP">Set to True if Player vs Player combat</param>
         /// <returns>The chance to miss (0.09 = 9% chance to miss)</returns>
         public static float GetSpellMiss(int LevelDelta, bool bPvP)
-        {
-            if (LevelDelta <= -3)
-            {// No guarantee that 75% miss is the cap!!!
+        { //http://www.wow-dark-destiny.com/images/spellhit.png
+            if (-LevelDelta <= 2)
+                return (float)Math.Min(0.0f, - (LevelDelta + 4) * 0.01f);
+            
+            if (-LevelDelta > 2)
+            //{
                 if (bPvP)
-                    return (float)Math.Min(0.75f, 0.13f - (LevelDelta + 3) * 0.07f);
-                else
-                    return (float)Math.Min(0.75f, 0.17f - (LevelDelta + 3) * 0.09f);
-            }
-            if (LevelDelta >= 4)
-                return 0.0f;
-            return 0.04f - (LevelDelta * 0.01f);
+                    return (float)Math.Min(0.62f, (-LevelDelta * 7 - 8) * 0.01f);
+                //else
+                    //break;
+            //}
+            return (float)Math.Min(0.94f, (-LevelDelta * 11 - 16) * 0.01f);
         }
 
         private static float AttackerResistancePenalty(int LevelDelta)

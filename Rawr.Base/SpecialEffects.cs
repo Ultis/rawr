@@ -225,6 +225,14 @@ namespace Rawr
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 16f }, 10f, 0f, 1f, 20));
                 //stats.AttackPower += 320; //Fury of the Five Flights = 320ap
             }
+            else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times."))
+            {
+                // Darkmoon Card: Crusade
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 6f }, 10f, 0f, 1f, 20));
+                //stats.AttackPower += 120;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 8f }, 10f, 0f, 1f, 10));
+                //stats.SpellPower += 80;
+            }
             else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times.")).Success)
             {
                 // Illustration of the Dragon Soul and similar
@@ -788,6 +796,11 @@ namespace Rawr
                 // Spark of Life
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 176f }, 15f, 45f, .10f));
                 stats.ManaRestoreOnCast_10_45 += 176 * 3;
+            }
+            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain 290 spell power."))
+            {
+                // Tome of Fiery Redemption, T5 Paladin Class Tinket
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 290 }, 15f, 45f, .15f));
             }
             else if ((match = new Regex("Each time you cast a spell, there is a chance you will gain up to (?<amount>\\d\\d*) mana per 5 for 15 sec.").Match(line)).Success)
             {

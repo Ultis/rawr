@@ -844,25 +844,44 @@ focus on Survival Points.",
             statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal, false);
             //statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness; // Nerfed in 3.1
 
+            #region Triggers
             // temporary combat table, used for the implementation of special effects.
-            float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
+            float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
+            float hitBonusSpell = StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + statsTotal.SpellHit;
             float expertiseBonus = (StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating) + statsTotal.Expertise) * 0.0025f;
-            float chanceMiss = Math.Max(0f, 0.08f - hitBonus);;
-            float chanceDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
-            float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus);
-            if (calcOpts.TargetLevel < 83) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonus);
-            float anyMiss = chanceMiss + chanceDodge + chanceParry;
-            float chanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
+            float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - calcOpts.TargetLevel, false) - hitBonusSpell);
+            float chanceMissPhysical = Math.Max(0f, 0.08f - hitBonusPhysical);
+            float chanceMissDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
+            float chanceMissParry = Math.Max(0f, 0.1375f - expertiseBonus);
+            if (calcOpts.TargetLevel < 83) chanceMissPhysical = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonusPhysical);
+            float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
+            float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
                                         StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, Character.CharacterClass.Paladin) +
                                         statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + 
                                         (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
-            float triggerPhysicalCrit = chanceCrit * (1.0f - anyMiss);
-            float triggerMeleeInterval = Lookup.WeaponSpeed(character, statsTotal);
-             // * judgement hit chance ? I personally believe it triggers even on a miss.
+            float chanceCritSpell = StatConversion.GetSpellCritFromRating(statsTotal.CritRating) +
+                                        StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect, Character.CharacterClass.Paladin) +
+                                        statsTotal.SpellCrit - (0.006f * (calcOpts.TargetLevel - character.Level) +
+                                        (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
+            float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
+            float chanceHitSpell = 1.0f - chanceMissSpell;
+            float chanceDoTTick = chanceHitSpell * 16.0f / 18.0f;// 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
+            
+            float intervalRotation = 18.0f;
+            float intervalDoTTick = 1.0f;
+            float intervalPhysical = Lookup.WeaponSpeed(character, statsTotal); // + calcOptsTargetsHotR / intervalHotR;
+            //float intervalHitPhysical = intervalPhysical / chanceHitPhysical;
+            float intervalSpellCast = 1.5f; // 9696 assumes casting a spell every gcd. Changing auras, and casting a blessing is disregarded.
+            //float intervalHitSpell = intervalSpellCast / chanceHitSpell;
+            float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spells casts in 18 seconds.
+            float intervalDamageDone = 1.0f / (1.0f / intervalPhysical + 1.0f / intervalSpellCast);
+            float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
+            float intervalJudgement = (10.0f - talents.ImprovedJudgements * 1.0f);
+            float intervalShoR = 6.0f;
+            float intervalHolyShield = 9.0f;
+
+             // * judgement hit chance ? I personally believe the effect triggers even on a miss.
              // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
-            float triggerJudgementInterval = (10.0f - talents.ImprovedJudgements * 1.0f);
-            float triggerShoRInterval = 6.0f;
-            float triggerHolyShieldInterval = 9.0f;
             
             Stats effectsToAdd = new Stats();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
@@ -887,34 +906,47 @@ focus on Survival Points.",
                     {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
-                            effectsToAdd += effect.GetAverageStats(triggerMeleeInterval, 1f - anyMiss, 2.4f);
+                            effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, 2.4f);
                             effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
                             statsTotal += effectsToAdd;
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
-                            statsTotal += effect.GetAverageStats(triggerMeleeInterval, triggerPhysicalCrit, 2.4f);
+                            statsTotal += effect.GetAverageStats(intervalPhysical, chanceCritPhysical, 2.4f);
                             break;
                         case Trigger.DoTTick:
-                            statsTotal += effect.GetAverageStats(3f, 1f, 2.5f); //TODO: SpellHit chance and different interval for consecration
+                            statsTotal += effect.GetAverageStats(intervalDoTTick, chanceDoTTick);
                             break;
                         case Trigger.DamageDone:
-                            statsTotal += effect.GetAverageStats(triggerMeleeInterval / 2f, 1f, 2.4f);
+                            statsTotal += effect.GetAverageStats(intervalDamageDone, chanceDamageDone);
                             break;
                         case Trigger.JudgementHit:
                             Stats test = new Stats();
-                            statsTotal += effect.GetAverageStats(triggerJudgementInterval, 1.0f);
+                            statsTotal += effect.GetAverageStats(intervalJudgement);
                             break;
                         case Trigger.ShieldofRighteousness:
-                            statsTotal += effect.GetAverageStats(triggerShoRInterval, 1.0f);
+                            statsTotal += effect.GetAverageStats(intervalShoR);
                             break;
                         case Trigger.HolyShield:
-                            statsTotal += effect.GetAverageStats(triggerHolyShieldInterval, 1.0f);
+                            statsTotal += effect.GetAverageStats(intervalHolyShield);
+                            break;
+                        case Trigger.SpellCast:
+                            statsTotal += effect.GetAverageStats(intervalSpellCast);
+                            break;
+                        case Trigger.DamageSpellCast:
+                            statsTotal += effect.GetAverageStats(intervalDamageSpellCast);
+                            break;
+                        case Trigger.DamageSpellHit:
+                            statsTotal += effect.GetAverageStats(intervalDamageSpellCast, chanceHitSpell);
+                            break;
+                        case Trigger.DamageSpellCrit:
+                            statsTotal += effect.GetAverageStats(intervalSpellCast, chanceCritSpell);
                             break;
                     }
                 }
             }
 
+            
             if ((calcOpts.UseHolyShield)&&character.OffHand != null &&(character.OffHand.Type == Item.ItemType.Shield))
             {
                 statsTotal.JudgementBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
@@ -927,7 +959,7 @@ focus on Survival Points.",
                 statsTotal.ShieldOfRighteousnessBlockValue = 0.0f;
                 statsTotal.JudgementBlockValue = 0.0f;
             }
-
+            #endregion
 
             return statsTotal;
         }
@@ -1283,12 +1315,15 @@ focus on Survival Points.",
             if ((slot == Item.ItemSlot.OffHand && enchant.Slot != Item.ItemSlot.OffHand) || slot == Item.ItemSlot.Ranged) return false;
             // Filters out Death Knight and Two-Hander Enchants
             if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == Item.ItemSlot.TwoHand) return false;
+            // Warrior ZG enchant
+            if (enchant.Name.Contains("Presence of Might") && (enchant.Slot == Item.ItemSlot.Legs || enchant.Slot == Item.ItemSlot.Head)) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
         {
             if (slot == Character.CharacterSlot.OffHand && (item.Slot == Item.ItemSlot.OneHand || item.Type == Item.ItemType.None)) return false;
+            
             return base.ItemFitsInSlot(item, character, slot);
         }
 
@@ -1350,12 +1385,6 @@ focus on Survival Points.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
 
-                //MongooseProc = stats.MongooseProc,
-                //MongooseProcAverage = stats.MongooseProcAverage,
-                //MongooseProcConstant = stats.MongooseProcConstant,
-
-                //ExecutionerProc = stats.ExecutionerProc,
-                //Remove those that are special effects ?
                 JudgementBlockValue = stats.JudgementBlockValue,
                 BonusHammerOfTheRighteousMultiplier = stats.BonusHammerOfTheRighteousMultiplier,
                 ShieldOfRighteousnessBlockValue = stats.ShieldOfRighteousnessBlockValue,
@@ -1366,12 +1395,14 @@ focus on Survival Points.",
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+//                if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness)
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.DamageSpellHit)
                 {
-                    if (HasRelevantStats(effect.Stats))
+                    if (hasRelevantSpecialEffect(effect.Stats))
                     //if (effect.Stats != null)
                     {
                         s.AddSpecialEffect(effect);
@@ -1395,6 +1426,50 @@ focus on Survival Points.",
             {
                 return false;
             }
+        }
+
+        public bool hasRelevantSpecialEffect(Stats stats)
+        {
+            bool relevant = (
+
+                //Basic Stats
+                stats.Health +
+                stats.Strength +
+                stats.Agility +
+
+                //Tanking Stats
+                stats.DefenseRating +
+                stats.DodgeRating +
+                stats.ParryRating +
+                stats.BlockValue +
+                stats.BlockRating +
+                stats.BonusArmor +
+                stats.Resilience +
+
+                //Threat Stats
+                stats.ArmorPenetrationRating +
+                stats.ArmorPenetration +
+                stats.AttackPower +
+                stats.SpellPower +
+                stats.CritRating +
+                stats.PhysicalCrit +
+                stats.SpellCrit +
+                stats.HasteRating +
+                stats.PhysicalHaste +
+
+                stats.PhysicalHaste +
+
+                // Special Stats
+                stats.HighestStat +
+                stats.Healed +
+                stats.ArcaneDamage +
+                stats.ShadowDamage +
+                stats.JudgementBlockValue +
+                stats.ShieldOfRighteousnessBlockValue
+                //stats.HolyDamage
+                //stats.DamageShields +
+                ) != 0;
+            return relevant;
         }
 
         public bool hasRelevantTrinketGemStats(Stats stats)
@@ -1427,10 +1502,14 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.JudgementHit)
+//                if (effect.Trigger != null)
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
+                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
+                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.DamageSpellHit)
                 {
-                    trinketStats |= HasRelevantStats(effect.Stats);
+                    trinketStats |= hasRelevantSpecialEffect(effect.Stats);
                     if (trinketStats) break;
                 }
             }
@@ -1453,20 +1532,10 @@ focus on Survival Points.",
                 stats.BlockRating +
                 stats.BonusArmor +
 
-                stats.Resilience + // *** TEMPORARY ***
-
                 //Threat Stats
                 stats.ArmorPenetrationRating +
                 stats.ArmorPenetration +
                 stats.AttackPower +
-                stats.SpellPower + // *** TEMPORARY ***
-                stats.HasteRating + // *** TEMPORARY ***
-                stats.PhysicalHaste + // *** TEMPORARY ***
-                stats.CritRating + // *** TEMPORARY ***
-                stats.PhysicalCrit + // *** TEMPORARY ***
-                stats.SpellCrit + // *** TEMPORARY ***
-                
-                
 
                 // Special Stats
                 stats.JudgementBlockValue +
@@ -1477,7 +1546,6 @@ focus on Survival Points.",
                 stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.ConsecrationSpellPower +
                 stats.HighestStat +
-                stats.SpellsManaReduction + // *** TEMPORARY ***
 
                 // Resistances
                 stats.AllResist +
@@ -1495,13 +1563,14 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+//                if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness)
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
                 {
-                    if (effect.Stats != null)
-//                    if (HasRelevantStats(effect.Stats)) 
+//                    if (effect.Stats != null)
+                    if (hasRelevantSpecialEffect(effect.Stats)) 
                     {
                         return true;
                         //break;
@@ -1591,12 +1660,13 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+//                if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness)
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast)
                 {
-                    if (HasRelevantStats(effect.Stats)) 
+                    if (hasRelevantSpecialEffect(effect.Stats)) 
                     {
                         return true;
                         //break;
@@ -1642,12 +1712,13 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+//                if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness)
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
                 {
-                    if (HasRelevantStats(effect.Stats))
+                    if (hasRelevantSpecialEffect(effect.Stats))
                     {
                         return true;
                         //break;

@@ -957,6 +957,8 @@ namespace Rawr
                 {
                     case Trigger.DamageSpellCast:
                         return "on Damaging Spell Cast";
+                    case Trigger.DamageDone:
+                        return "on Damage Dealt";
                     case Trigger.DamageSpellCrit:
                         return "on Damaging Spell Crit";
                     case Trigger.DamageSpellHit:
