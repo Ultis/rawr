@@ -18,21 +18,22 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.2.0
+			labelVersionHistory.Text = @"v2.2.3.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
- - Fix for a couple armory/wowhead parsing bugs (currently, Armory STILL doesn't return socket bonus info; use Wowhead to get socket bonus data)
- - Chart items with negative values will now be displayed properly
- - Rawr.Healadin: Fix for Icewalker not being relevant
- - Rawr.Tree: Added support for spell mana reduction. Added Wild Growth healing. More trinket support
- - Rawr.Mage: Further updates for 3.1 changes
- - Rawr.Enhance: Further calculation improvements
- - Rawr.DPSDK: More 3.1 updates
- - Rawr.ShadowPriest: Updated to 3.1
- - Rawr.HolyPriest: Updated built-in rotations
- - Rawr.Retribution: Better proc support
- - Rawr.Moonkin: Updated set bonuses, glyphs, innervate calculations, added support for more trinkets 
- - Rawr.ProtPaladin: Support for a few more buffs, calculation improvements
- - Rawr.DPSWarr: Added support for Mace Specialization";
+ - Batch Optimizer supports using multiple models
+ - Optimizer doesn't report changes where it just swapped ring or trinket slots.
+ - Rawr.Cat: Fixes and improvements to rotations
+ - Rawr.Enhance: Lots of fixes for calculations
+ - Rawr.ProtPaladin: Support for more procs and effects
+ - Rawr.Retribution: Added some optimizable values, support for more procs and effects, and a Consecration effectiveness option
+ - Rawr.Healadin: Added some optimizable values
+ - Rawr.Warlock: Support for glyphs, and fix for Supression double dipping, lots of haste fixes
+ - Rawr.DPSWarr: Many calculation improvements
+ - Rawr.HolyPriest: Support for 2T8, new default talents
+ - Rawr.ShadowPriest: Support for 2T8, gemmings fixed
+ - Rawr.Mage: Improvements to the advanced solver, updated 4T8 to 25% chance, and added support for Frost Warding as a mana regen source
+ - Rawr.ProtWarr: Added support for Vigilance threat and glyph.
+ - Rawr.Moonkin: Updated Spirit->SpellPower conversion for 3.1.2";
 			labelVersionHistory.Height = 560;
 
 			this.DoubleBuffered = true;
