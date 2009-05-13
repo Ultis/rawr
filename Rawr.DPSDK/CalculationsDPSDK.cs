@@ -453,6 +453,7 @@ namespace Rawr.DPSDK
 
                 float OHMult = .05f * (float)talents.NervesOfColdSteel;
                 OH.damage *= .5f + OHMult;
+                DW = true;
 
                 //need this for weapon swing procs
                 //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
@@ -669,21 +670,20 @@ namespace Rawr.DPSDK
 
             #region Blood Caked Blade
             {
+                float dpsMHBCB = 0f;
+                float dpsOHBCB = 0f;
                 if (OH.damage != 0)
                 {
-                    float MHBCBDmg = MH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
                     float OHBCBDmg = OH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
-                    float dpsMHBCB = MHBCBDmg / MH.hastedSpeed;
-                    float dpsOHBCB = OHBCBDmg / OH.hastedSpeed;
-                    dpsBCB = dpsMHBCB + dpsOHBCB;
-                    dpsBCB *= .1f * (float)talents.BloodCakedBlade;
+                    dpsOHBCB = OHBCBDmg / OH.hastedSpeed;
                 }
-                else if (MH.damage != 0)
+                if (MH.damage != 0)
                 {
-                    float BCBDmg = MH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
-                    dpsBCB = BCBDmg / MH.hastedSpeed;
-                    dpsBCB *= .1f * (float)talents.BloodCakedBlade;
+                    float MHBCBDmg = MH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
+                    dpsMHBCB = MHBCBDmg / MH.hastedSpeed;
                 }
+                dpsBCB = dpsMHBCB + dpsOHBCB;
+                dpsBCB *= .1f * (float)talents.BloodCakedBlade;
             }
             #endregion
 
@@ -757,7 +757,7 @@ namespace Rawr.DPSDK
 
             #region Frost Fever
             {
-                if (calcOpts.rotation.IcyTouch > 0f)
+                if (calcOpts.rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) || (talents.GlyphofPestilence))
                 {
                     // Frost Fever is renewed with every Icy Touch and starts a new cd
                     float ITCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.IcyTouch;
@@ -776,7 +776,7 @@ namespace Rawr.DPSDK
 
             #region Blood Plague
             {
-                if (calcOpts.rotation.PlagueStrike > 0f)
+                if (calcOpts.rotation.PlagueStrike > 0f || talents.GlyphofPestilence)
                 {
                     // Blood Plague is renewed with every Plague Strike and starts a new cd
                     float PSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.PlagueStrike;
@@ -1022,7 +1022,11 @@ namespace Rawr.DPSDK
                     if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Attack Power Food"))) GhoulAP -= 80f;
                     if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Fish Feast"))) GhoulAP -= 80f;
 
-                    float GhoulhastedSpeed = (MH.hastedSpeed / MH.baseSpeed) * GhoulBaseSpeed;
+                    float GhoulhastedSpeed = 0f;
+                    if(MH != null)
+                        GhoulhastedSpeed = ((MH.hastedSpeed == 0 ? 1.0f : MH.hastedSpeed) / (MH.baseSpeed == 0 ? 1.0f : MH.baseSpeed)) * GhoulBaseSpeed;
+                    else
+                        GhoulhastedSpeed = (2.0f) * GhoulBaseSpeed;
                     GhoulhastedSpeed /= 1f + statsBuffs.PhysicalHaste;
 
                     float dmgSwing = GhoulWeaponBaseDamage + (GhoulAP / GhoulAPdivisor) * GhoulBaseSpeed;
@@ -1107,7 +1111,7 @@ namespace Rawr.DPSDK
             #region Apply Elemental Strike Mitigation
             {
                 float strikeMit = /*missedSpecial **/ partialResist;
-                strikeMit *= (!DW ? 1f + .02f * talents.TwoHandedWeaponSpecialization : 0f);
+                strikeMit *= (!DW ? 1f + .02f * talents.TwoHandedWeaponSpecialization : 1f);
 
                 dpsScourgeStrike *= strikeMit;
                 // dpsScourgeStrike *= 1f - dodgedSpecial;

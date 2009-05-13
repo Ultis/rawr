@@ -231,6 +231,13 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
+        private void cbGhoul_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.Ghoul = cbGhoul.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+        
         private void btnRotation_Click(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
@@ -277,6 +284,8 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
+
+
     }
 
 	[Serializable]
@@ -310,7 +319,7 @@ namespace Rawr.DPSDK
 	    public bool MagicVuln = false;
 	    public bool CryptFever = false;
         public bool HammerOfWrath = false;
-        public bool Ghoul = false;
+        public bool Ghoul = true;
         public Presence presence = Presence.Blood;
 
         public bool GlyphofOblit = false;

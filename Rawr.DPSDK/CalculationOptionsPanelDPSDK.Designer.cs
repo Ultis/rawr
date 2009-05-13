@@ -227,6 +227,7 @@
             this.cbGhoul.TabIndex = 41;
             this.cbGhoul.Text = "Ghoul (on CD)";
             this.cbGhoul.UseVisualStyleBackColor = true;
+            this.cbGhoul.CheckedChanged += new System.EventHandler(this.cbGhoul_CheckedChanged);
             // 
             // CalculationOptionsPanelDPSDK
             // 
