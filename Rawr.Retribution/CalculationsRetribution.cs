@@ -387,14 +387,15 @@ namespace Rawr.Retribution
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats stats = statsBaseGear + statsBuffs + statsRace;
             if (character.Race == Character.CharacterRace.Dwarf && character.MainHand != null &&
-                character.MainHand.Type == Item.ItemType.TwoHandMace) stats.Expertise = 5f;
+                character.MainHand.Type == Item.ItemType.TwoHandMace) statsRace.Expertise += 5f;
             if (character.Race == Character.CharacterRace.Human && character.MainHand != null &&
                 (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
-                stats.Expertise = 3f;
-            stats.Health -= 180f;
-            stats.Mana -= 280f;
+                statsRace.Expertise += 3f;
+            statsRace.Health -= 180f;
+            statsRace.Mana -= 280f;
+
+            Stats stats = statsBaseGear + statsBuffs + statsRace;
 
             if (computeAverageStats)
             {
