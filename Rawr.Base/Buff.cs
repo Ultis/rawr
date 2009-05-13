@@ -3050,20 +3050,6 @@ namespace Rawr
                 Stats = { Health = 1250 },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Mongoose Proc (Constant)",
-                Group = "Temporary Buffs",
-                Stats = { MongooseProcConstant = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Mongoose" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Mongoose Proc (Average)",
-                Group = "Temporary Buffs",
-                Stats = { MongooseProcAverage = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Mongoose" })
-            });
             #endregion
 
             return defaultBuffs;

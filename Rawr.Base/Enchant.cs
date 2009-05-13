@@ -558,15 +558,15 @@ namespace Rawr
             bladeWard.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ParryRating = 200 }, 10f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3869, "Blade Ward", Item.ItemSlot.OneHand, bladeWard));
 
-            Stats berserking = new Stats() { BerserkingProc = 1f };
+            Stats berserking = new Stats();
             berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400, BonusArmorMultiplier = -.05f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, berserking));
             
-            Stats executioner = new Stats() { ExecutionerProc = 1f};
+            Stats executioner = new Stats();
             executioner.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetrationRating = 120 }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, executioner));
             
-            Stats mongoose = new Stats(){ MongooseProc = 1f };
+            Stats mongoose = new Stats();
             mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, PhysicalHaste = 0.02f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, mongoose));
             

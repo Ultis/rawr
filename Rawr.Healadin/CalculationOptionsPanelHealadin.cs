@@ -261,11 +261,11 @@ namespace Rawr.Healadin
 			return xml.ToString();
 		}
 
-		public float Length = 6;
+		public float Length = 7;
 		public float ManaAmt = 4300;
 		public float Activity = .85f;
         public float Replenishment = .9f;
-        public float DivinePlea = 1.25f;
+        public float DivinePlea = 2f;
         public float BoLUp = 1f;
         public float BoLEff = .2f;
         public float HolyShock = .15f;

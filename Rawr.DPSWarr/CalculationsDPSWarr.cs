@@ -711,10 +711,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
-                MongooseProc = stats.MongooseProc,
-                MongooseProcAverage = stats.MongooseProcAverage,
-                MongooseProcConstant = stats.MongooseProcConstant,
-                ExecutionerProc = stats.ExecutionerProc,
+                //MongooseProc = stats.MongooseProc,
+                //MongooseProcAverage = stats.MongooseProcAverage,
+                //MongooseProcConstant = stats.MongooseProcConstant,
+                //ExecutionerProc = stats.ExecutionerProc,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 Armor = stats.Armor,
                 PhysicalCrit = stats.PhysicalCrit,
@@ -723,7 +723,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusSlamDamage = stats.BonusSlamDamage,
                 DreadnaughtBonusRageProc = stats.DreadnaughtBonusRageProc,
-                BerserkingProc = stats.BerserkingProc
+                //BerserkingProc = stats.BerserkingProc
             };
         }
         public override bool HasRelevantStats(Stats stats)
@@ -743,10 +743,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.WeaponDamage +
                 stats.BonusCritMultiplier +
                 stats.BonusDamageMultiplier +
-                stats.MongooseProc +
-                stats.MongooseProcAverage +
-                stats.MongooseProcConstant +
-                stats.ExecutionerProc +
+                //stats.MongooseProc +
+                //stats.MongooseProcAverage +
+                //stats.MongooseProcConstant +
+                //stats.ExecutionerProc +
                 stats.BonusBleedDamageMultiplier +
                 stats.BonusCritChance +
                 stats.Armor +
@@ -754,8 +754,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalCrit +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.DreadnaughtBonusRageProc +
-                stats.BonusSlamDamage +
-                stats.BerserkingProc) != 0;
+                stats.BonusSlamDamage
+                //stats.BerserkingProc
+                ) != 0;
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot) {

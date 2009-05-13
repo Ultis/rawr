@@ -1378,8 +1378,8 @@ namespace Rawr.DPSDK
             Stats statsGearEnchantsBuffs = new Stats();
 
             // Mongoose  **ASSUMPTION: Mongoose has a 40% uptime
-            if (statsBaseGear.MongooseProc > 0)
-                statsBaseGear.Agility += 120f * 0.4f;
+            //if (statsBaseGear.MongooseProc > 0)
+            //    statsBaseGear.Agility += 120f * 0.4f;
 
             // Ferocious Inspiriation  **Temp fix - FI increases all damage, not just physical damage
             if (character.ActiveBuffsContains("Ferocious Inspiration"))

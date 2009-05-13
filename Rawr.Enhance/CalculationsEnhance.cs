@@ -698,8 +698,8 @@ namespace Rawr
 					ExpertiseRating = stats.ExpertiseRating,
                     ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
-					MongooseProc = stats.MongooseProc,
-                    BerserkingProc = stats.BerserkingProc,
+					//MongooseProc = stats.MongooseProc,
+                    //BerserkingProc = stats.BerserkingProc,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -794,7 +794,7 @@ namespace Rawr
                 stats.ExposeWeakness + stats.Bloodlust + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + 
-                stats.ShatteredSunMightProc + stats.MongooseProc + stats.BerserkingProc + stats.GreatnessProc +
+                stats.ShatteredSunMightProc + /*stats.MongooseProc + stats.BerserkingProc +*/ stats.GreatnessProc +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +

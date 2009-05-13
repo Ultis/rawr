@@ -49,7 +49,6 @@ namespace Rawr
         DodgeRating,
         DrumsOfBattle,
         DrumsOfWar,
-        ExecutionerProc,
         Expertise,
         ExpertiseRating,
         ExposeWeakness,
@@ -89,11 +88,7 @@ namespace Rawr
         Miss,
         MoonfireDmg,
         MoonfireExtension,
-        MongooseProc,
         BladeWardProc,
-        BerserkingProc,
-        MongooseProcAverage,
-        MongooseProcConstant,
         Mp5,
         Mp5OnCastFor20SecOnUse2Min,
         NatureResistance,
@@ -2053,24 +2048,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
         }
 
-        [DisplayName("Executioner Proc")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ExecutionerProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExecutionerProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExecutionerProc] = value; }
-        }
-
-        [DisplayName("Mongoose Proc")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MongooseProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MongooseProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MongooseProc] = value; }
-        }
-
         [DisplayName("Blade Ward Proc")]
         [Category("Old Equipment Procs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2080,15 +2057,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.BladeWardProc] = value; }
         }
 
-        [DisplayName("Berserking Proc")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BerserkingProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BerserkingProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BerserkingProc] = value; }
-        }
-
         [DisplayName("Bonus Healing Received")]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2096,24 +2064,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived] = value; }
-        }
-
-        [DisplayName("Mongoose Proc Average")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MongooseProcAverage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MongooseProcAverage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MongooseProcAverage] = value; }
-        }
-
-        [DisplayName("Mongoose Proc Constant")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MongooseProcConstant
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MongooseProcConstant]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MongooseProcConstant] = value; }
         }
 
         [DisplayName("Shattered Sun Caster Neck proc")]

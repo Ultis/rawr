@@ -574,7 +574,7 @@ threat and limited threat scaled by the threat scale.",
             float hitRate = 0.85f;  
 
             //Mongoose
-            if (character.MainHand != null && statsItems.MongooseProc > 0)
+            /*if (character.MainHand != null && statsItems.MongooseProc > 0)
             {
                 float procRate = 1.0f; // PPM
                 float procDuration = 15.0f;
@@ -594,7 +594,7 @@ threat and limited threat scaled by the threat scale.",
                 float procUptime = procDuration * procPerSecond;
 
                 statsItems.ArmorPenetrationRating += 120.0f * procUptime;
-            }
+            }*/
 
             return statsItems;
         }
@@ -1004,11 +1004,11 @@ threat and limited threat scaled by the threat scale.",
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
 
-                MongooseProc = stats.MongooseProc,
-                MongooseProcAverage = stats.MongooseProcAverage,
-                MongooseProcConstant = stats.MongooseProcConstant,
+                //MongooseProc = stats.MongooseProc,
+                //MongooseProcAverage = stats.MongooseProcAverage,
+                //MongooseProcConstant = stats.MongooseProcConstant,
 
-                ExecutionerProc = stats.ExecutionerProc,
+                //ExecutionerProc = stats.ExecutionerProc,
 
                 BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
@@ -1034,8 +1034,8 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.BonusBleedDamageMultiplier + 
-                    stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
-                    stats.ExecutionerProc +
+                    //stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
+                    //stats.ExecutionerProc +
                     stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease
                    ) != 0;
 		}
