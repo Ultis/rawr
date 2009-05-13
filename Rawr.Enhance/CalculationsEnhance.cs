@@ -274,7 +274,8 @@ namespace Rawr
             int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
-
+            float spellHitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
+            
             #endregion
 
             #region Individual DPS
@@ -339,7 +340,6 @@ namespace Rawr
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
-            float spellHitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
             float dpsES = (spellHitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage) * bossNatureResistance;
 
