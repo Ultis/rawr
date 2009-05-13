@@ -547,10 +547,10 @@ namespace Rawr
                     break;
             }
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility + intBonusToAP;
+            statsTotal.AttackPower = (float)Math.Floor((float)(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier)));
             float SPfromAP = (float) Math.Floor((float)(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness));
             statsTotal.SpellPower += SPfromAP;
 
-            statsTotal.AttackPower = (float)Math.Floor((float)(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier)));
             statsTotal.SpellPower = (float)Math.Floor((float)(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier)));
 
             return statsTotal;
