@@ -225,7 +225,7 @@ namespace Rawr
 					g.FillRectangle(Brushes.White, 0, 0, _prerenderedGraph.Width, _prerenderedGraph.Height);
                     if (CustomRendered)
                     {
-                        Calculations.RenderCustomChart(_character, CustomRenderedChartName, g, _prerenderedGraph.Width, _prerenderedGraph.Height);
+                        Calculations.RenderChart(_character, CustomRenderedChartName, g, _prerenderedGraph.Width, _prerenderedGraph.Height);
                     }
                     else if (ItemCalculations.Length > 0)
                     {

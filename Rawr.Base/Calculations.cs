@@ -192,6 +192,10 @@ namespace Rawr
 		{
 			get { return Instance.TargetClass; }
 		}
+		public static StatGraphRenderer StatGraphRenderer
+		{
+			get { return Instance.StatGraphRenderer; }
+		}
 
 
 		public static ComparisonCalculationBase CreateNewComparisonCalculation()
@@ -268,9 +272,9 @@ namespace Rawr
 		{
 			return Instance.GetCustomChartData(character, chartName);
 		}
-        public static void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
+        public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
-            Instance.RenderCustomChart(character, chartName, g, width, height);
+            Instance.RenderChart(character, chartName, g, width, height);
         }
         public static Stats GetRelevantStats(Stats stats)
 		{
@@ -363,6 +367,12 @@ namespace Rawr
 		protected Character.CharacterSlot _cachedSlot = Character.CharacterSlot.Shirt;
 		protected Character _cachedCharacter = null;
 		public virtual Character CachedCharacter { get { return _cachedCharacter; } }
+		
+		protected StatGraphRenderer _statGraphRenderer = null;
+		public StatGraphRenderer StatGraphRenderer
+		{
+			get { return _statGraphRenderer = _statGraphRenderer ?? new StatGraphRenderer(); }
+		}
 		
 		/// <summary>
 		/// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -504,17 +514,38 @@ namespace Rawr
 		/// <returns>The data for the custom chart.</returns>
 		public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
 
-        /// <summary>
-        /// Render custom chart, based on the chart name, as defined in CustomRenderedChartNames.
-        /// </summary>
-        /// <param name="character">The character to build the chart for.</param>
-        /// <param name="chartName">The name of the custom chart to get data for.</param>
-        /// <param name="g">Graphics object used to render the chart.</param>
-        /// <param name="width">Width of the graph.</param>
-        /// <param name="height">Height of the graph.</param>
-        public virtual void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height) { }
+		/// <summary>
+		/// Render a chart, based on the chart name, either Stat Graph, or defined in CustomRenderedChartNames.
+		/// </summary>
+		/// <param name="character">The character to build the chart for.</param>
+		/// <param name="chartName">The name of the custom chart to get data for.</param>
+		/// <param name="g">Graphics object used to render the chart.</param>
+		/// <param name="width">Width of the graph.</param>
+		/// <param name="height">Height of the graph.</param>
+		public void RenderChart(Character character, string chartName,
+			System.Drawing.Graphics g, int width, int height)
+		{
+			if (chartName == "Stat Graph")
+				StatGraphRenderer.Render(character, g, width, height);
+			else
+				RenderCustomChart(character, chartName, g, width, height);
+		}
 
-        /// <summary>
+		/// <summary>
+		/// Render custom chart, based on the chart name, as defined in CustomRenderedChartNames.
+		/// </summary>
+		/// <param name="character">The character to build the chart for.</param>
+		/// <param name="chartName">The name of the custom chart to get data for.</param>
+		/// <param name="g">Graphics object used to render the chart.</param>
+		/// <param name="width">Width of the graph.</param>
+		/// <param name="height">Height of the graph.</param>
+		public virtual void RenderCustomChart(Character character, string chartName,
+			System.Drawing.Graphics g, int width, int height)
+		{
+
+		}
+
+		/// <summary>
         /// List of default gemming templates recommended by the model
         /// </summary>
         public abstract List<GemmingTemplate> DefaultGemmingTemplates

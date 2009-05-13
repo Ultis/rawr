@@ -150,6 +150,7 @@
     <Compile Include="SpecialEffects.cs" />
     <Compile Include="SpecialFunction.cs" />
     <Compile Include="StatConversion.cs" />
+    <Compile Include="StatGraphRenderer.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="StatusMessaging.cs" />
     <Compile Include="Utilities.cs" />

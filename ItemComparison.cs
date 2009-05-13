@@ -505,7 +505,7 @@ namespace Rawr
 			_characterSlot = Character.CharacterSlot.None;
         }
 
-        internal void LoadCustomRenderedChart(string chartName)
+        public void LoadCustomRenderedChart(string chartName)
         {
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = true;
@@ -514,5 +514,5 @@ namespace Rawr
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
 			_characterSlot = Character.CharacterSlot.None;
         }
-    }
+	}
 }

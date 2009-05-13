@@ -1304,6 +1304,7 @@ namespace Rawr
 			copyPawnStringToClipboardToolStripMenuItem.Visible = viewUpgradesOnLootRankToolStripMenuItem.Visible =
 				viewUpgradesOnWowheadToolStripMenuItem.Visible = labelRelativeStatValuesWarning.Visible =
 				tag[0] == "Relative Stat Values";
+			panelStatGraph.Visible = tag[0] == "Stat Graph";
             copyEnhSimConfigToClipboardToolStripMenuItem.Visible = _character.CurrentModel == "Enhance";
 			switch (tag[0])
 			{
@@ -1342,6 +1343,10 @@ namespace Rawr
 
 				case "Relative Stat Values":
 					itemComparison1.LoadRelativeStatValues();
+					break;
+
+				case "Stat Graph":
+					itemComparison1.LoadCustomRenderedChart(tag[0]);
 					break;
 
 				case "Custom":
@@ -1829,6 +1834,10 @@ namespace Rawr
 
 		private void FormMain_KeyDown(object sender, KeyEventArgs e)
 		{
+			if (e.KeyCode == (Keys)192 && e.Modifiers == (Keys.Alt | Keys.Control))
+			{
+				statGraphToolStripMenuItem.Visible = true;
+			}
 #if DEBUG
 			if (e.KeyCode == (Keys)192 && e.Modifiers == Keys.Alt)
 			{
@@ -2247,5 +2256,18 @@ namespace Rawr
             }
             _itemComparison.Show();
         }
+
+		private void buttonStatGraph_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				Calculations.Instance.StatGraphRenderer.MinimumX = int.Parse(textBox1.Text);
+				Calculations.Instance.StatGraphRenderer.MaximumX = int.Parse(textBox2.Text);
+				Calculations.Instance.StatGraphRenderer.GranularityX = int.Parse(textBox3.Text);
+				Calculations.Instance.StatGraphRenderer.StatX = textBox4.Text;
+				itemComparison1.Refresh();
+			}
+			catch { }
+		}
     }
 }
