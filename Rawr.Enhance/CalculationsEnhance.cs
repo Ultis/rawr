@@ -274,7 +274,6 @@ namespace Rawr
             int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
-            float spellHitRollMultiplier = cs.ChanceSpellHit + cs.ChanceSpellCrit * (critMultiplierSpell - 1);
             
             #endregion
 
@@ -547,9 +546,9 @@ namespace Rawr
                     intBonusToAP = 1f * statsTotal.Intellect;
                     break;
             }
-            statsTotal.AttackPower = statsBase.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Strength + statsTotal.Agility + intBonusToAP;
+            statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility + intBonusToAP;
             float SPfromAP = (float) Math.Floor((float)(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness));
-            statsTotal.SpellPower = statsBase.SpellPower + statsGearEnchantsBuffs.SpellPower + SPfromAP;
+            statsTotal.SpellPower += SPfromAP;
 
             statsTotal.AttackPower = (float)Math.Floor((float)(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier)));
             statsTotal.SpellPower = (float)Math.Floor((float)(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier)));
