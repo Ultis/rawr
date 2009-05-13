@@ -361,10 +361,10 @@ namespace Rawr.Rogue
                            WeaponDamage = stats.WeaponDamage,
                            BonusCritMultiplier = stats.BonusCritMultiplier,
                            WindfuryAPBonus = stats.WindfuryAPBonus,
-                           MongooseProc = stats.MongooseProc,
-                           MongooseProcAverage = stats.MongooseProcAverage,
-                           MongooseProcConstant = stats.MongooseProcConstant,
-                           ExecutionerProc = stats.ExecutionerProc,
+//                           MongooseProc = stats.MongooseProc,
+//                           MongooseProcAverage = stats.MongooseProcAverage,
+//                           MongooseProcConstant = stats.MongooseProcConstant,
+//                           ExecutionerProc = stats.ExecutionerProc,
                            BonusSnDDuration = stats.BonusSnDDuration,
                            CPOnFinisher = stats.CPOnFinisher,
                            BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
@@ -377,7 +377,8 @@ namespace Rawr.Rogue
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
+            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
+            //return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
         }
 
         private void SetupRelevantItemTypes()
