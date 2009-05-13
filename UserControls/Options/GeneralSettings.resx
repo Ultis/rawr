@@ -136,6 +136,9 @@
   <data name="comboBoxProcEffectCalculationMode.Items2" xml:space="preserve">
     <value>Advanced - High Precision</value>
   </data>
+  <data name="comboBoxProcEffectCalculationMode.Items3" xml:space="preserve">
+    <value>Advanced - Interpolation</value>
+  </data>
   <data name="comboBoxProcEffectCalculationMode.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 216</value>
   </data>

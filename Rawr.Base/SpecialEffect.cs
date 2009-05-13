@@ -46,13 +46,171 @@ namespace Rawr
         public float Chance { get; set; }
         public int MaxStack { get; set; }
 
+        private abstract class Interpolator
+        {
+            protected float[,] grid;
+            protected float procChanceMin;
+            protected float procChanceMax;
+            protected const int procChanceN = 100;
+            protected float intervalMin;
+            protected float intervalMax;
+            protected const int intervalN = 100;
+            protected float fightDuration;
+            protected SpecialEffect effect;
+
+            public Interpolator(SpecialEffect effect, float fightDuration)
+            {
+                this.effect = effect;
+                this.fightDuration = fightDuration;
+            }
+
+            public float this[float procChance, float interval]
+            {
+                get
+                {
+                    bool updateGrid = false;
+                    if (grid == null)
+                    {
+                        procChanceMin = 0.5f * procChance;
+                        procChanceMax = Math.Min(1.0f, 1.5f * procChance);
+                        intervalMin = 0.5f * interval;
+                        intervalMax = 1.5f * interval;
+                        grid = new float[procChanceN + 1, intervalN + 1];
+                        updateGrid = true;
+                    }
+                    if (procChance < procChanceMin)
+                    {
+                        procChanceMin = 0.5f * procChance;
+                        updateGrid = true;
+                    }
+                    if (procChance > procChanceMax)
+                    {
+                        procChanceMax = Math.Min(1.0f, 1.5f * procChance);
+                        updateGrid = true;
+                    }
+                    if (interval < intervalMin)
+                    {
+                        intervalMin = 0.5f * interval;
+                        updateGrid = true;
+                    }
+                    if (interval > intervalMax)
+                    {
+                        intervalMax = 1.5f * interval;
+                        updateGrid = true;
+                    }
+                    if (updateGrid)
+                    {
+                        UpdateGrid();
+                    }
+                    float p = (procChance - procChanceMin) / (procChanceMax - procChanceMin);
+                    float x = p * procChanceN;
+                    int i = (int)x;
+                    x -= i;
+                    float ivl = (interval - intervalMin) / (intervalMax - intervalMin);
+                    float y = ivl * intervalN;
+                    int j = (int)y;
+                    y -= j;
+                    float v0 = grid[i, j] + x * (grid[i + 1, j] - grid[i, j]);
+                    float v1 = grid[i, j + 1] + x * (grid[i + 1, j + 1] - grid[i, j + 1]);
+                    return v0 + y * (v1 - v0);
+                }
+            }
+
+            private void UpdateGrid()
+            {
+                for (int i = 0; i <= procChanceN; i++)
+                {
+                    for (int j = 0; j <= intervalN; j++)
+                    {
+                        grid[i, j] = Evaluate(procChanceMin + (float)i / procChanceN * (procChanceMax - procChanceMin), intervalMin + (float)j / intervalN * (intervalMax - intervalMin));
+                    }
+                }
+            }
+
+            protected abstract float Evaluate(float procChance, float interval);
+        }
+
+        private class UptimeInterpolator : Interpolator
+        {
+            public UptimeInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration) { }
+
+            protected override float Evaluate(float procChance, float interval)
+            {
+                if (fightDuration <= effect.Duration)
+                {
+                    double n = fightDuration / interval;
+                    double p = procChance;
+                    return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
+                }
+                else if (fightDuration <= effect.Cooldown)
+                {
+                    double D = effect.Duration / interval;
+                    double n = fightDuration / interval - D;
+                    double p = procChance;
+                    return (float)((D - Math.Pow(1 - p, n) * (1 - p) / p * (1 - Math.Pow(1 - p, D))) / (fightDuration / interval));
+                }
+                else
+                {
+                    // X : number of intervals under proc effect
+                    // Pr(X >= r*d + i) = Pr(NegBin(r,p) <= n - r*c - i) = I_p(r, n - r*c - i)
+                    // E(X) = sum_i i * Pr(X == i) = sum_i i * (Pr(X >= i) - Pr(X >= i+1))
+                    //      = sum_i Pr(X >= i) = sum_r sum_i=1..d I_p(r, n - r*c - i)
+                    double d = effect.Duration / interval;
+                    double n = fightDuration / interval;
+                    double p = procChance;
+
+                    double c = effect.Cooldown / interval;
+                    if (c < 1.0) c = 1.0;
+                    double x = n;
+
+                    double averageUptime = 0.0;
+                    int r = 1;
+                    while (x > 0)
+                    {
+                        averageUptime += SpecialFunction.Ibeta(r, x, p) * Math.Min(d, x);
+                        // TODO: consider replacing with sum/integral over d
+                        r++;
+                        x -= c;
+                    }
+                    return (float)(averageUptime / n);
+                }
+            }
+        }
+
+        private class ProcsPerSecondInterpolator : Interpolator
+        {
+            public ProcsPerSecondInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration) { }
+
+            protected override float Evaluate(float procChance, float interval)
+            {
+                double c = effect.Cooldown / interval;
+                if (c < 1.0) c = 1.0;
+                double n = fightDuration / interval;
+                double x = n;
+                double p = procChance;
+
+                double averageProcs = 0.0;
+                int r = 1;
+                while (x > 0)
+                {
+                    averageProcs += SpecialFunction.Ibeta(r, x, p);
+                    r++;
+                    x -= c;
+                }
+                return (float)(averageProcs / fightDuration);
+            }
+        }
+
+        private Dictionary<float, Interpolator> interpolator;
+
         public enum CalculationMode
         {
             Simple,
-            Advanced
+            Advanced,
+            Interpolation
         }
 
-        private static CalculationMode Mode = CalculationMode.Advanced;
+        private static CalculationMode Mode = CalculationMode.Interpolation;
 
         static SpecialEffect()
         {
@@ -72,6 +230,10 @@ namespace Rawr
                     break;
                 case 2:
                     Mode = CalculationMode.Advanced;
+                    SpecialFunction.MACHEP = 1.11022302462515654042E-16;
+                    break;
+                case 3:
+                    Mode = CalculationMode.Interpolation;
                     SpecialFunction.MACHEP = 1.11022302462515654042E-16;
                     break;
             }
@@ -400,7 +562,10 @@ namespace Rawr
                         }
                         else
                         {
-                            // approximation based on average proc computation (see GetAverageProcs for derivation)
+                            // X : number of intervals under proc effect
+                            // Pr(X >= r*d + i) = Pr(NegBin(r,p) <= n - r*c - i) = I_p(r, n - r*c - i)
+                            // E(X) = sum_i i * Pr(X == i) = sum_i i * (Pr(X >= i) - Pr(X >= i+1))
+                            //      = sum_i Pr(X >= i) = sum_r sum_i=1..d I_p(r, n - r*c - i)
                             double d = Duration / triggerInterval;
                             double n = fightDuration / triggerInterval;
                             double p = triggerChance * GetChance(attackSpeed);
@@ -419,6 +584,17 @@ namespace Rawr
                             }
                             return (float)(averageUptime / n);
                         }
+                    }
+                    else if (triggerInterval > 0 && Mode == CalculationMode.Interpolation)
+                    {
+                        if (interpolator == null) interpolator = new Dictionary<float, Interpolator>();
+                        Interpolator i;
+                        if (!interpolator.TryGetValue(fightDuration, out i))
+                        {
+                            i = new UptimeInterpolator(this, fightDuration);
+                            interpolator[fightDuration] = i;
+                        }
+                        return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                     }
                     else
                     {
@@ -696,6 +872,17 @@ namespace Rawr
                     x -= c;
                 }
                 return (float)(averageProcs / fightDuration);
+            }
+            else if (Mode == CalculationMode.Interpolation)
+            {
+                if (interpolator == null) interpolator = new Dictionary<float, Interpolator>();
+                Interpolator i;
+                if (!interpolator.TryGetValue(fightDuration, out i))
+                {
+                    i = new ProcsPerSecondInterpolator(this, fightDuration);
+                    interpolator[fightDuration] = i;
+                }
+                return i[triggerChance * GetChance(attackSpeed), triggerInterval];
             }
             else
             {

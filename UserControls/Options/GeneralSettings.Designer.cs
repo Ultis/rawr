@@ -121,7 +121,8 @@
             this.comboBoxProcEffectCalculationMode.Items.AddRange(new object[] {
             resources.GetString("comboBoxProcEffectCalculationMode.Items"),
             resources.GetString("comboBoxProcEffectCalculationMode.Items1"),
-            resources.GetString("comboBoxProcEffectCalculationMode.Items2")});
+            resources.GetString("comboBoxProcEffectCalculationMode.Items2"),
+            resources.GetString("comboBoxProcEffectCalculationMode.Items3")});
             resources.ApplyResources(this.comboBoxProcEffectCalculationMode, "comboBoxProcEffectCalculationMode");
             this.comboBoxProcEffectCalculationMode.Name = "comboBoxProcEffectCalculationMode";
             // 
