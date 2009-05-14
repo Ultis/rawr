@@ -338,5 +338,57 @@ z = remaining time on Missile Barrage
             TalentScoreForm form = new TalentScoreForm(calculationOptions.TalentScore);
             form.ShowDialog(this);
         }
+
+        private void buttonComputeOptimalFrostCycles_Click(object sender, EventArgs e)
+        {
+            string armor = "Molten Armor";
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
+            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
+            Stats rawStats;
+            Stats baseStats;
+            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
+            CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
+
+            Cycle wand = null;
+            if (Character.Ranged != null)
+            {
+                wand = new WandTemplate(calculationResult, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed).GetSpell(baseState);
+            }
+
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("Optimal Cycle Palette:");
+            sb.AppendLine("");
+            sb.AppendLine("Cycle Code Legend: 0 = FrB, 1 = IL, 2 = FB");
+            sb.AppendLine(@"State Descriptions: BFx+-,FOFy+-(z)
+x = remaining time on Brain Freeze
++ = Brain Freeze proc visible
+- = Brain Freeze proc not visible
+y = visible count on Fingers of Frost
++ = ghost Fingers of Frost charge for instant available
+- = ghost Fingers of Frost charge for instant not available
+z = actual count on Fingers of Frost
+");
+
+            sb.AppendLine("Base:");
+
+            FrostCycleGenerator generator = new FrostCycleGenerator(baseState);
+
+            sb.AppendLine("");
+            for (int i = 0; i < generator.ControlOptions.Length; i++)
+            {
+                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
+            }
+            sb.AppendLine("");
+
+            foreach (Cycle cycle in generator.Analyze(baseState, wand))
+            {
+                sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
+            }
+
+            MessageBox.Show(sb.ToString());
+        }
 	}
 }

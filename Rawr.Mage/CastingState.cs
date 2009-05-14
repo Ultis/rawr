@@ -587,6 +587,12 @@ namespace Rawr.Mage
                 case CycleId.FrBFBIL:
                     c = new FrBFBIL(Calculations.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.FrBILFB:
+                    c = new FrBILFB(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.FrBIL:
+                    c = new FrBIL(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.FrBFB:
                     c = new FrBFB(Calculations.NeedsDisplayCalculations, this);
                     break;

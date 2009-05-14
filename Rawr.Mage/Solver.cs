@@ -2964,7 +2964,9 @@ namespace Rawr.Mage
                             {
                                 list.Add(CycleId.FrBFB);
                                 list.Add(CycleId.FrBFBIL);
+                                list.Add(CycleId.FrBILFB);
                             }
+                            list.Add(CycleId.FrBIL);
                             list.Add(CycleId.FrostboltFOF);
                         }
                         else if (talents.ArcaneEmpowerment > 0)
@@ -3014,7 +3016,15 @@ namespace Rawr.Mage
                         if (talents.LivingBomb > 0) list.Add(CycleId.FBLBPyro);
                         list.Add(CycleId.FrostboltFOF);
                         if (talents.BrainFreeze > 0) list.Add(CycleId.FrBFB);
-                        if (talents.FingersOfFrost > 0) list.Add(CycleId.FrBFBIL);
+                        if (talents.FingersOfFrost > 0)
+                        {
+                            if (talents.BrainFreeze > 0)
+                            {
+                                list.Add(CycleId.FrBFBIL);
+                                list.Add(CycleId.FrBILFB);
+                            }
+                            list.Add(CycleId.FrBIL);
+                        }
                         list.Add(CycleId.ArcaneBlastSpam);
                         list.Add(CycleId.ABAM);
                         list.Add(CycleId.AB3AM);
