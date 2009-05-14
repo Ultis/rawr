@@ -65,6 +65,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtPaladin", "Rawr.ProtPaladin\Rawr.ProtPaladin.csproj", "{08032A2F-C280-4316-8B1D-4044C07F54E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UnitTests", "Rawr.UnitTests\Rawr.UnitTests.csproj", "{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFCA06A8-B40B-4A80-B76F-BA2722AB555A}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		Rawr1.vsmdi = Rawr1.vsmdi
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 23
@@ -136,6 +144,9 @@ Global
 		SccProjectUniqueName22 = Rawr.ProtPaladin\\Rawr.ProtPaladin.csproj
 		SccProjectName22 = Rawr.ProtPaladin
 		SccLocalPath22 = Rawr.ProtPaladin
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Rawr1.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -315,6 +326,12 @@ Global
 		{08032A2F-C280-4316-8B1D-4044C07F54E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08032A2F-C280-4316-8B1D-4044C07F54E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08032A2F-C280-4316-8B1D-4044C07F54E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
