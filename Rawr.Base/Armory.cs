@@ -1044,6 +1044,9 @@ namespace Rawr
 				case "Ammo Pouch":
 					return Item.ItemType.AmmoPouch;
 
+				case "Sigil":
+					return Item.ItemType.Sigil;
+
 				default:
 					return Item.ItemType.None;
 			}
