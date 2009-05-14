@@ -402,6 +402,12 @@ namespace Rawr.Enhance
         {
             if (isBuffChecked(checkBoxes, "Potion of Speed"))
                 return "potion_of_speed";
+            if (isBuffChecked(checkBoxes, "Potion of Wild Magic"))
+                return "potion_of_wild_magic";
+            if (isBuffChecked(checkBoxes, "Heroic Potion"))
+                return "heroic_potion";
+            if (isBuffChecked(checkBoxes, "Insane Strength Potion"))
+                return "insane_strength_potion";
             return "-";
         }
 

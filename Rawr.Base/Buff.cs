@@ -1460,14 +1460,35 @@ namespace Rawr
             #endregion
 
             #region Potion
+            // potions set to be 1 hr cooldown to ensure its treated as once per combat.
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Potion of Speed",
                 Group = "Potion",
                 Stats = new Stats(),
             });
-            // potion set to be 1 hr cooldown to ensure its treated as once per combat.
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, 3600f));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Potion of Wild Magic",
+                Group = "Potion",
+                Stats = new Stats(),
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, 3600f));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Heroic Potion",
+                Group = "Potion",
+                Stats = new Stats(),
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f, 3600f));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Insane Strength Potion",
+                Group = "Potion",
+                Stats = new Stats(),
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75f }, 15f, 3600f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Indestructible Potion",
