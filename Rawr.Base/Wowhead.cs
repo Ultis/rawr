@@ -1473,6 +1473,9 @@ namespace Rawr
 				case "11.3":
 					return Item.ItemType.AmmoPouch;
 
+				case "4.10":
+					return Item.ItemType.Sigil;
+
 				default:
 					return Item.ItemType.None;
 			}
