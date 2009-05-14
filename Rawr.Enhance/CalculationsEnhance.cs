@@ -112,6 +112,7 @@ namespace Rawr
 					_customChartNames = new string[] {
 					"Combat Table (White)",
 					"Combat Table (Yellow)",
+                    "Combat Table (Spell)",
 					"Relative Gem Values",
                     "MH Weapon Speeds",
                     "OH Weapon Speeds",
@@ -458,8 +459,8 @@ namespace Rawr
             calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
             calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
             calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.ChanceWhiteHit * 10000f)) / 100f; 
-            calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.ChanceMeleeCrit)) * 10000f) / 100f;
-            calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.ChanceYellowCrit)) * 10000f) / 100f;
+            calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.DisplayMeleeCrit)) * 10000f) / 100f;
+            calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
 		    calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
             calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
@@ -820,7 +821,7 @@ namespace Rawr
                     ComparisonCalculationEnhance calcHitWhite = new ComparisonCalculationEnhance() { Name = "Hit" };
                     if (currentCalculationsEnhanceWhite != null)
                     {
-                        calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsEnhanceWhite.MissedAttacks;
+                        calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = 100 - currentCalculationsEnhanceWhite.WhiteHit;
                         calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
                         calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
                         calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
@@ -834,18 +835,29 @@ namespace Rawr
                     ComparisonCalculationEnhance calcMissYellow = new ComparisonCalculationEnhance() { Name = "    Miss    " };
                     ComparisonCalculationEnhance calcDodgeYellow = new ComparisonCalculationEnhance() { Name = "   Dodge   " };
                     ComparisonCalculationEnhance calcCritYellow = new ComparisonCalculationEnhance() { Name = "  Crit  " };
-                    ComparisonCalculationEnhance calcGlanceYellow = new ComparisonCalculationEnhance() { Name = " Glance " };
                     ComparisonCalculationEnhance calcHitYellow = new ComparisonCalculationEnhance() { Name = "Hit" };
                     if (currentCalculationsEnhanceYellow != null)
                     {
-                        calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = currentCalculationsEnhanceYellow.MissedAttacks;
+                        calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = 100f - currentCalculationsEnhanceYellow.YellowHit;
                         calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsEnhanceYellow.DodgedAttacks;
                         calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsEnhanceYellow.YellowCrit;
-                        calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
                         calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
-                        calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
+                        calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints);
                     }
-                    return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
+                    return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcHitYellow };
+
+                case "Combat Table (Spell)":
+                    CharacterCalculationsEnhance currentCalculationsEnhanceSpell = GetCharacterCalculations(character) as CharacterCalculationsEnhance;
+                    ComparisonCalculationEnhance calcMissSpell = new ComparisonCalculationEnhance() { Name = "    Miss    " };
+                    ComparisonCalculationEnhance calcCritSpell = new ComparisonCalculationEnhance() { Name = "  Crit  " };
+                    ComparisonCalculationEnhance calcHitSpell = new ComparisonCalculationEnhance() { Name = "Hit" };
+                    if (currentCalculationsEnhanceSpell != null)
+                    {
+                        calcMissSpell.OverallPoints = calcMissSpell.DPSPoints = 100f - currentCalculationsEnhanceSpell.SpellHit;
+                        calcCritSpell.OverallPoints = calcCritSpell.DPSPoints = currentCalculationsEnhanceSpell.SpellCrit;
+                        calcHitSpell.OverallPoints = calcHitSpell.DPSPoints = (100f - calcMissSpell.OverallPoints - calcCritSpell.OverallPoints);
+                    }
+                    return new ComparisonCalculationBase[] { calcMissSpell, calcCritSpell, calcHitSpell };
 
                 case "Relative Gem Values":
                     float dpsBase = GetCharacterCalculations(character).OverallPoints;

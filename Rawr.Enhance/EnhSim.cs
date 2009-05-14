@@ -46,7 +46,7 @@ namespace Rawr.Enhance
             sb.AppendLine("oh_speed                        " + OHSpeed.ToString());
             sb.AppendLine("mh_dps                          " + wdpsMH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
-            float chanceCrit = cs.EnhSimMeleeCrit * 100f;
+            float chanceCrit = cs.DisplayMeleeCrit * 100f;
             sb.AppendLine("mh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             float hitBonus = StatConversion.GetHitFromRating(stats.HitRating) * 100f;
@@ -64,7 +64,7 @@ namespace Rawr.Enhance
             sb.AppendLine("int                             " + stats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spi                             " + stats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spellpower                      " + stats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-            float chanceSpellCrit = cs.EnhSimSpellCrit * 100f;
+            float chanceSpellCrit = cs.DisplaySpellCrit * 100f;
             sb.AppendLine("spell_crit                      " + chanceSpellCrit.ToString("F2", CultureInfo.InvariantCulture));
             hitBonus = StatConversion.GetSpellHitFromRating(stats.HitRating) * 100f;
             sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));

@@ -114,8 +114,9 @@ namespace Rawr.Enhance
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
 
-        public float EnhSimMeleeCrit { get { return chanceCrit; } }
-        public float EnhSimSpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
+        public float DisplayMeleeCrit { get { return chanceCrit; } }
+        public float DisplayYellowCrit { get { return chanceYellowCrit + yellowCritDepression; } }
+        public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
