@@ -997,6 +997,127 @@ namespace Rawr
                 line = line.Substring("Reduces the mana cost of your spells by ".Length);
                 stats.SpellsManaReduction = float.Parse(line);
             }
+            #region Prototype Sigil Code:
+            /* Prototype Sigil Code:
+
+             Sigil of the Unfaltering Knight:
+               Your Icy Touch will also increase your defense rating by 53.
+             * Your [ability] will also increase your [stat] by [amount].
+             Furious Gladiator's Sigil of Strife
+               Your Plague Strike ability also grants you 144 attack power for 10 sec.
+             * Your [ability] ability also grants you [amount] [stat] for [duration] sec.
+             Sigil of Deflection
+               Your Rune Strike ability grants 136 dodge rating for 5 sec.
+             * Your [ability] ability also grants you [amount] [stat] for [duration] sec.
+             Sigil of the Vengeful Heart
+               Increases the damage done by your Death Coil and Frost Strike abilities by 380.
+             * Increases the damage done by your [ability] and [ability] abilities by [amount].
+             Deadly Gladiator's Sigil of Strife
+               Your Plague Strike ability also grants you 120 attack power for 10 sec.
+             * Your [ability] ability also grants you [amount] [stat] for [duration] sec.
+            Sigil of Awareness
+                Increases the base damage dealt by your Scourge Strike by 189, your Obliterate by 336, and your Death Strike by 315.
+             * Increases the base damage dealt by your [ability1] by [amount1], your [ability2] by [amount2], and your [ability3] by [amount3].
+            Hateful Gladiator's Sigil of Strife
+                Your Plague Strike ability also grants you 106 attack power for 6 sec.
+             * Your [ability] ability also grants you [amount] [stat] for [duration] sec.
+            Sigil of Haunted Dreams
+                Your Blood Strike and Heart Strikes have a chance to grant 173 critical strike rating for 10 sec.
+             * Your [ability] and [ability] have a chance to grant [amount] [stat] for [duration] sec.
+             * Key point (chance) means proc rate factoring
+            Savage Gladiator's Sigil of Strife
+                Your Plague Strike ability also grants you 94 attack power for 6 sec.
+             * Your [ability] ability also grants you [amount] [stat] for [duration] sec.
+            Sigil of Arthritic Binding
+                Increases the damage dealt by your Scourge Strike ability by 91.35.
+             * Increases the damage dealt by your [ability] ability by [amount].
+            Sigil of the Frozen Conscience
+                Increases the damage dealt by your Icy Touch ability by 111.
+             * Increases the damage dealt by your [ability] ability by [amount].
+            Sigil of the Wild Buck
+                Increases the damage dealt by your Death Coil ability by 80.
+             * Increases the damage dealt by your [ability] ability by [amount].
+            Sigil of the Dark Rider
+                Increases the damage dealt by your Blood Strike and Heart Strike by 90.
+             * Increases the damage dealt by your [ability] and [ability] by [amount].
+            */
+            // Single Ability.
+            Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec.");
+            match = regex.Match(line);
+            if (match.Success)
+            {
+                string statName = match.Groups["stat"].Value;
+                float amount = int.Parse(match.Groups["amount"].Value);
+                float duration = int.Parse(match.Groups["duration"].Value);
+                //string ability = match.Groups["ability"].Value;
+
+                stats.AddSpecialEffect(EvalRegex(statName, amount, duration, Trigger.SpellCast, 0f));
+            }
+            regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(will )?(also )?increase (your )?(?<stat>\w+\s*\w*) by (?<amount>\d*).");
+            match = regex.Match(line);
+            if (match.Success)
+            {
+                string statName = match.Groups["stat"].Value;
+                float amount = int.Parse(match.Groups["amount"].Value);
+
+                EvalRegex(stats, statName, amount);
+            }
+ 
+            regex = new Regex(@"Your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?have a chance to grant (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
+            match = regex.Match(line);
+            if (match.Success)
+            {
+                string statName = match.Groups["stat"].Value;
+                float amount = int.Parse(match.Groups["amount"].Value);
+                float duration = int.Parse(match.Groups["duration"].Value);
+                //string ability = match.Groups["ability"].Value;
+
+                stats.AddSpecialEffect(EvalRegex(statName, amount, duration, Trigger.SpellCast, 0f));
+            }
+            // Single Ability damage increase.
+            regex = new Regex(@"Increases the damage dealt by your (?<ability>\w+\s*\w*) (ability )?by (?<amount>\d+[.]*\d*).");
+            match = regex.Match(line);
+            if (match.Success)
+            {
+                string statName = match.Groups["stat"].Value;
+                float amount = float.Parse(match.Groups["amount"].Value);
+                string ability = match.Groups["ability"].Value;
+                //string ability2 = match.Groups["ability2"].Value;
+
+                EvalAbility(ability, stats, amount);
+            }
+            // 2 Abilities damage increase.
+            regex = new Regex(@"Increases the damage (dealt |done )?by your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?by (?<amount>\d+).");
+            match = regex.Match(line);
+            if (match.Success)
+            {
+                string statName = match.Groups["stat"].Value;
+                float amount = int.Parse(match.Groups["amount"].Value);
+                string ability = match.Groups["ability"].Value;
+                string ability2 = match.Groups["ability2"].Value;
+
+                EvalAbility(ability, stats, amount);
+                EvalAbility(ability2, stats, amount);
+            }
+            // 3 Abilities damage increase.
+            regex = new Regex(@"Increases the (base )?damage (dealt |done )?by your (?<ability>\w+\s*\w*) by (?<amount>\d+), your (?<ability2>\w+\s*\w*) by (?<amount2>\d+), and your (?<ability3>\w+\s*\w*) by (?<amount3>\d+).");
+            match = regex.Match(line);
+            if (match.Success)
+            {
+                string statName = match.Groups["stat"].Value;
+                float amount = int.Parse(match.Groups["amount"].Value);
+                float amount2 = int.Parse(match.Groups["amount2"].Value);
+                float amount3 = int.Parse(match.Groups["amount3"].Value);
+                string ability = match.Groups["ability"].Value;
+                string ability2 = match.Groups["ability2"].Value;
+                string ability3 = match.Groups["ability3"].Value;
+
+                EvalAbility(ability, stats, amount);
+                EvalAbility(ability2, stats, amount2);
+                EvalAbility(ability3, stats, amount3);
+            }
+            #endregion Prototype Sigil Code
+
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)
@@ -1227,5 +1348,127 @@ namespace Rawr
                 stats.Heal1Min = 2710;
             }
         }
-	}
+
+        /// <summary>
+        /// For those objects that have a special effect trigger (As opposed to just straight stat upgrades)
+        /// This allows you to pass in a statName, amount, duration, trigger type, and cooldown and get a SpecialEffect back.
+        /// </summary>
+        /// <param name="statName">What stat does the special effect target</param>
+        /// <param name="amount">By what amount?</param>
+        /// <param name="duration">How long in seconds?</param>
+        /// <param name="trigger">What is the trigger type? Use? Spellcast? Etc.</param>
+        /// <param name="cooldown">How long in seconds?</param>
+        /// <returns>A new SpecialEffect instance that can be used in Stats.AddSpecialEffect()</returns>
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, Trigger trigger, float cooldown)
+        {
+            Stats s = new Stats();
+
+            if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+            else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
+            else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
+            else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
+            else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
+            else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
+            else if (statName.Equals("defense rating", StringComparison.InvariantCultureIgnoreCase)) { s.DefenseRating = amount; }
+            else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+            else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+            else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+            else if (statName.Equals("haste rating", StringComparison.InvariantCultureIgnoreCase)) { s.HasteRating = amount; }
+            else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
+            else if (statName.Equals("parry", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+            else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+            else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
+            else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
+
+            return new SpecialEffect(trigger, s, duration, cooldown);
+ 
+        }
+
+        /// <summary>
+        /// Using the Regex functions above, update the passed in stat value of a given statName by the amount appropriate.
+        /// </summary>
+        /// <param name="s">the Stats instance to be updated.</param>
+        /// <param name="statName">The stat to update.</param>
+        /// <param name="amount">The amount to update the stat by.</param>
+        public static void EvalRegex(Stats s, string statName, float amount)
+        {
+            if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+            else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
+            else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
+            else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
+            else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
+            else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
+            else if (statName.Equals("defense rating", StringComparison.InvariantCultureIgnoreCase)) { s.DefenseRating = amount; }
+            else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+            else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+            else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+            else if (statName.Equals("haste rating", StringComparison.InvariantCultureIgnoreCase)) { s.HasteRating = amount; }
+            else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
+            else if (statName.Equals("parry", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+            else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+            else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
+            else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
+
+        }
+
+        /// <summary>
+        /// Eval the Bonus damage values of given sigils and assign the bonus damage.
+        /// This is specifically for DKs, but could be expanded as necessary.
+        /// Hell, it probably could use a re-write once the whole Stats class is restructured.
+        /// </summary>
+        /// <param name="ability">What ability is having it's damage boosted?</param>
+        /// <param name="s">The Stats instance to be updated.</param>
+        /// <param name="amount">The amount by which the bonSus should be applied.</param>
+        public static void EvalAbility(string ability, Stats s, float amount)
+        {
+            switch (ability)
+            {
+                case "Blood Strike":
+                    {
+                        s.BonusDamageBloodStrike += amount;
+                        break;
+                    }
+                case "Heart Strike":
+                    {
+                        s.BonusDamageHeartStrike += amount;
+                        break;
+                    }
+                case "Death Coil":
+                    {
+                        s.BonusDamageDeathCoil += amount;
+                        break;
+                    }
+                case "Frost Strike":
+                    {
+                        s.BonusDamageFrostStrike += amount;
+                        break;
+                    }
+                case "Obliterate":
+                    {
+                        s.BonusObliterateDamage += amount;
+                        break;
+                    }
+                case "Scourge Strike":
+                    {
+                        s.BonusScourgeStrikeDamage += amount;
+                        break;
+                    }
+                case "Death Strike":
+                    {
+                        s.BonusDamageDeathStrike += amount;
+                        break;
+                    }
+                case "Icy Touch":
+                    {
+                        s.BonusDamageIcyTouch += amount;
+                        break;
+                    }
+                default:
+                    {
+                        // Error.
+                        break;
+                    }
+            }
+        }
+    }
 }

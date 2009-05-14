@@ -321,6 +321,15 @@ namespace Rawr
         RogueComboMoveEnergyReduction,
         RogueRuptureDamageBonus,
         #endregion
+        #region DK Sigil Bonuses
+        BonusDamageBloodStrike,
+        BonusDamageDeathCoil,
+        BonusDamageDeathStrike,
+        BonusDamageFrostStrike,
+        BonusDamageHeartStrike,
+        BonusDamageIcyTouch,
+        BonusDamagePlagueStrike,
+        #endregion 
         ArcaneDamage,
         FireDamage,
         ShadowDamage,
@@ -1292,7 +1301,55 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage] = value; }
         }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusDamageBloodStrike
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageBloodStrike]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageBloodStrike] = value; }
+        }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusDamageHeartStrike
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageHeartStrike]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageHeartStrike] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusDamageDeathCoil
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathCoil]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathCoil] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusDamageFrostStrike
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageFrostStrike]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageFrostStrike] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusDamageDeathStrike
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathStrike]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathStrike] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusDamageIcyTouch
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageIcyTouch]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageIcyTouch] = value; }
+        }
+        
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Warrior")]
         [DisplayName("Bonus Commanding Shout HP")]
