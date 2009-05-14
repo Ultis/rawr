@@ -944,7 +944,7 @@ namespace Rawr
         {
             get
             {
-                if (Chance < 0) return (-Chance).ToString("N1") + " PPM";
+                if (Chance < 0) return (-Chance).ToString("N2") + " PPM";
                 else return (Chance * 100).ToString("N0") + "%";
             }
         }

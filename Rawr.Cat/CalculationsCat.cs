@@ -487,9 +487,11 @@ namespace Rawr.Cat
 				- (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
 			Stats statsProcs = new Stats();
+
 			tempArPenRating = 0f;
 			tempArPenRatingUptime = 0f;
-			int arPenRatingCount = 0;
+			List<float> tempArPenRatings = new List<float>();
+			List<float> tempArPenRatingUptimes = new List<float>();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
 				if (effect.Stats.ArmorPenetrationRating == 0)
@@ -520,36 +522,41 @@ namespace Rawr.Cat
 					switch (effect.Trigger)
 					{
 						case Trigger.Use:
-							tempArPenRating += effect.Stats.ArmorPenetrationRating;
-							tempArPenRatingUptime += effect.GetAverageUptime(0f, 1f, 1f, calcOpts.Duration);
-							arPenRatingCount++;
+							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
+							tempArPenRatingUptimes.Add(effect.GetAverageUptime(0f, 1f, 1f, calcOpts.Duration));
 							break;
 						case Trigger.MeleeHit:
 						case Trigger.PhysicalHit:
-							tempArPenRating += effect.Stats.ArmorPenetrationRating;
-							tempArPenRatingUptime += effect.GetAverageUptime(meleeHitInterval, 1f, 1f, calcOpts.Duration);
-							arPenRatingCount++;
+							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
+							tempArPenRatingUptimes.Add(effect.GetAverageUptime(meleeHitInterval, 1f, 1f, calcOpts.Duration));
 							break;
 						case Trigger.MeleeCrit:
 						case Trigger.PhysicalCrit:
-							tempArPenRating += effect.Stats.ArmorPenetrationRating;
-							tempArPenRatingUptime += effect.GetAverageUptime(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
-							arPenRatingCount++;
+							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
+							tempArPenRatingUptimes.Add(effect.GetAverageUptime(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration));
 							break;
 						case Trigger.DoTTick:
-							tempArPenRating += effect.Stats.ArmorPenetrationRating;
-							tempArPenRatingUptime += effect.GetAverageUptime(1.5f, 1f, 1f, calcOpts.Duration);
-							arPenRatingCount++;
+							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
+							tempArPenRatingUptimes.Add(effect.GetAverageUptime(1.5f, 1f, 1f, calcOpts.Duration));
 							break;
 						case Trigger.DamageDone:
-							tempArPenRating += effect.Stats.ArmorPenetrationRating;
-							tempArPenRatingUptime += effect.GetAverageUptime(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
-							arPenRatingCount++;
+							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
+							tempArPenRatingUptimes.Add(effect.GetAverageUptime(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration));
 							break;
 					}
 				}
 			}
-			tempArPenRatingUptime /= Math.Max(1f, arPenRatingCount);
+			float totalTempArPenRating = 0f, totalTempArPenRatingUptime = 0f;
+			for (int i = 0; i < tempArPenRatings.Count; i++)
+			{
+				totalTempArPenRating += tempArPenRatings[i];
+				totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
+			}
+			tempArPenRating = totalTempArPenRating;
+			for (int i = 0; i < tempArPenRatings.Count; i++)
+			{
+				tempArPenRatingUptime += tempArPenRatingUptimes[i] * (tempArPenRatings[i] / totalTempArPenRating);
+			}
 
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));

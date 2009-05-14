@@ -553,17 +553,16 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3793, "Inscription of Triumph", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, Resilience = 15 }));
             defaultEnchants.Add(new Enchant(3794, "Inscription of Dominance", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 23, Resilience = 15 }));
 
-            //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
             Stats bladeWard = new Stats();
-            bladeWard.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ParryRating = 200 }, 10f, 0f, -1f));
+            bladeWard.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ParryRating = 200f }, 10f, 0f, -1f));
             defaultEnchants.Add(new Enchant(3869, "Blade Ward", Item.ItemSlot.OneHand, bladeWard));
 
             Stats berserking = new Stats();
-            berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400, BonusArmorMultiplier = -.05f }, 15f, 0f, -1f));
+            berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400f, BonusArmorMultiplier = -.05f }, 15f, 0f, -1.2f));
             defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, berserking));
             
             Stats executioner = new Stats();
-            executioner.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetrationRating = 120 }, 15f, 0f, -1f));
+            executioner.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetrationRating = 120f }, 15f, 0f, -1.25f));
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, executioner));
             
             Stats mongoose = new Stats();
