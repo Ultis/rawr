@@ -32,7 +32,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             return 0f;
         }
 
-        protected abstract float EnergyCost(CombatFactors combatFactors);
+        public abstract float EnergyCost(CombatFactors combatFactors);
         protected virtual float ComboPointsGeneratedPerAttack
         {
             get { return 1; }
@@ -47,7 +47,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             Add(new Backstab());
             Add(new SinisterStrike());
             Add(new Hemo());
-            Add(new HonorAmongThieves(0));
+            Add(new HonorAmongThieves(0f,0f));
         }
 
         public static ComboPointGenerator Get(string name)

@@ -51,6 +51,8 @@
             this.ComboBoxCpGenerator = new System.Windows.Forms.ComboBox();
             this.HatStepper = new System.Windows.Forms.NumericUpDown();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.HemoPerCycleLabel = new System.Windows.Forms.Label();
+            this.HemoPerCycle = new System.Windows.Forms.NumericUpDown();
             this.CpPerSecLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBoxCycles.SuspendLayout();
@@ -58,6 +60,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HatStepper)).BeginInit();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HemoPerCycle)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBoxTargetLevel
@@ -65,7 +68,7 @@
             this.comboBoxTargetLevel.FormattingEnabled = true;
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(92, 14);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(105, 21);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(181, 21);
             this.comboBoxTargetLevel.TabIndex = 0;
             this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
@@ -91,7 +94,7 @@
             // 
             this.labelTargetArmorDescription.Location = new System.Drawing.Point(26, 87);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(157, 26);
+            this.labelTargetArmorDescription.Size = new System.Drawing.Size(241, 26);
             this.labelTargetArmorDescription.TabIndex = 5;
             // 
             // groupBoxCycles
@@ -105,7 +108,7 @@
             this.groupBoxCycles.Controls.Add(this.comboBoxComboPoints1);
             this.groupBoxCycles.Location = new System.Drawing.Point(15, 214);
             this.groupBoxCycles.Name = "groupBoxCycles";
-            this.groupBoxCycles.Size = new System.Drawing.Size(182, 107);
+            this.groupBoxCycles.Size = new System.Drawing.Size(258, 107);
             this.groupBoxCycles.TabIndex = 6;
             this.groupBoxCycles.TabStop = false;
             this.groupBoxCycles.Text = "Cycles";
@@ -176,10 +179,10 @@
             // comboBoxFinisher3
             // 
             this.comboBoxFinisher3.FormattingEnabled = true;
-            this.comboBoxFinisher3.Location = new System.Drawing.Point(78, 75);
+            this.comboBoxFinisher3.Location = new System.Drawing.Point(104, 76);
             this.comboBoxFinisher3.Name = "comboBoxFinisher3";
-            this.comboBoxFinisher3.Size = new System.Drawing.Size(98, 21);
-            this.comboBoxFinisher3.TabIndex = 5;
+            this.comboBoxFinisher3.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxFinisher3.TabIndex = 10;
             this.comboBoxFinisher3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxComboPoints3
@@ -187,17 +190,17 @@
             this.comboBoxComboPoints3.FormattingEnabled = true;
             this.comboBoxComboPoints3.Location = new System.Drawing.Point(11, 76);
             this.comboBoxComboPoints3.Name = "comboBoxComboPoints3";
-            this.comboBoxComboPoints3.Size = new System.Drawing.Size(60, 21);
-            this.comboBoxComboPoints3.TabIndex = 4;
+            this.comboBoxComboPoints3.Size = new System.Drawing.Size(87, 21);
+            this.comboBoxComboPoints3.TabIndex = 9;
             this.comboBoxComboPoints3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxFinisher2
             // 
             this.comboBoxFinisher2.FormattingEnabled = true;
-            this.comboBoxFinisher2.Location = new System.Drawing.Point(78, 47);
+            this.comboBoxFinisher2.Location = new System.Drawing.Point(104, 47);
             this.comboBoxFinisher2.Name = "comboBoxFinisher2";
-            this.comboBoxFinisher2.Size = new System.Drawing.Size(98, 21);
-            this.comboBoxFinisher2.TabIndex = 3;
+            this.comboBoxFinisher2.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxFinisher2.TabIndex = 8;
             this.comboBoxFinisher2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxComboPoints2
@@ -205,17 +208,17 @@
             this.comboBoxComboPoints2.FormattingEnabled = true;
             this.comboBoxComboPoints2.Location = new System.Drawing.Point(11, 48);
             this.comboBoxComboPoints2.Name = "comboBoxComboPoints2";
-            this.comboBoxComboPoints2.Size = new System.Drawing.Size(60, 21);
-            this.comboBoxComboPoints2.TabIndex = 2;
+            this.comboBoxComboPoints2.Size = new System.Drawing.Size(87, 21);
+            this.comboBoxComboPoints2.TabIndex = 7;
             this.comboBoxComboPoints2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxFinisher1
             // 
             this.comboBoxFinisher1.FormattingEnabled = true;
-            this.comboBoxFinisher1.Location = new System.Drawing.Point(78, 19);
+            this.comboBoxFinisher1.Location = new System.Drawing.Point(104, 19);
             this.comboBoxFinisher1.Name = "comboBoxFinisher1";
-            this.comboBoxFinisher1.Size = new System.Drawing.Size(98, 21);
-            this.comboBoxFinisher1.TabIndex = 1;
+            this.comboBoxFinisher1.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxFinisher1.TabIndex = 6;
             this.comboBoxFinisher1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxComboPoints1
@@ -223,8 +226,8 @@
             this.comboBoxComboPoints1.FormattingEnabled = true;
             this.comboBoxComboPoints1.Location = new System.Drawing.Point(11, 20);
             this.comboBoxComboPoints1.Name = "comboBoxComboPoints1";
-            this.comboBoxComboPoints1.Size = new System.Drawing.Size(60, 21);
-            this.comboBoxComboPoints1.TabIndex = 0;
+            this.comboBoxComboPoints1.Size = new System.Drawing.Size(87, 21);
+            this.comboBoxComboPoints1.TabIndex = 5;
             this.comboBoxComboPoints1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // groupBox1
@@ -235,7 +238,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(15, 333);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(181, 77);
+            this.groupBox1.Size = new System.Drawing.Size(258, 77);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Poisons";
@@ -247,16 +250,16 @@
             this.comboBoxOHPoison.Items.AddRange(new object[] {
             "Deadly Poison",
             "Instant Poison"});
-            this.comboBoxOHPoison.Location = new System.Drawing.Point(72, 46);
+            this.comboBoxOHPoison.Location = new System.Drawing.Point(104, 48);
             this.comboBoxOHPoison.Name = "comboBoxOHPoison";
-            this.comboBoxOHPoison.Size = new System.Drawing.Size(96, 21);
-            this.comboBoxOHPoison.TabIndex = 3;
+            this.comboBoxOHPoison.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxOHPoison.TabIndex = 12;
             this.comboBoxOHPoison.SelectedIndexChanged += new System.EventHandler(this.OnOHPoisonChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 51);
+            this.label4.Location = new System.Drawing.Point(45, 51);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 13);
             this.label4.TabIndex = 2;
@@ -266,16 +269,16 @@
             // 
             this.comboBoxMHPoison.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMHPoison.FormattingEnabled = true;
-            this.comboBoxMHPoison.Location = new System.Drawing.Point(72, 19);
+            this.comboBoxMHPoison.Location = new System.Drawing.Point(104, 16);
             this.comboBoxMHPoison.Name = "comboBoxMHPoison";
-            this.comboBoxMHPoison.Size = new System.Drawing.Size(96, 21);
-            this.comboBoxMHPoison.TabIndex = 1;
+            this.comboBoxMHPoison.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxMHPoison.TabIndex = 11;
             this.comboBoxMHPoison.SelectedIndexChanged += new System.EventHandler(this.OnMHPoisonChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 24);
+            this.label3.Location = new System.Drawing.Point(36, 24);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(62, 13);
             this.label3.TabIndex = 0;
@@ -291,15 +294,15 @@
             "80"});
             this.comboBoxArmorBosses.Location = new System.Drawing.Point(91, 44);
             this.comboBoxArmorBosses.Name = "comboBoxArmorBosses";
-            this.comboBoxArmorBosses.Size = new System.Drawing.Size(105, 21);
-            this.comboBoxArmorBosses.TabIndex = 8;
+            this.comboBoxArmorBosses.Size = new System.Drawing.Size(182, 21);
+            this.comboBoxArmorBosses.TabIndex = 1;
             this.comboBoxArmorBosses.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmorBosses_SelectedIndexChanged);
             // 
             // groupBox3
             // 
             this.groupBox3.Location = new System.Drawing.Point(15, 71);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(181, 45);
+            this.groupBox3.Size = new System.Drawing.Size(258, 45);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Bosses";
@@ -309,8 +312,8 @@
             this.ComboBoxCpGenerator.FormattingEnabled = true;
             this.ComboBoxCpGenerator.Location = new System.Drawing.Point(10, 41);
             this.ComboBoxCpGenerator.Name = "ComboBoxCpGenerator";
-            this.ComboBoxCpGenerator.Size = new System.Drawing.Size(106, 21);
-            this.ComboBoxCpGenerator.TabIndex = 8;
+            this.ComboBoxCpGenerator.Size = new System.Drawing.Size(86, 21);
+            this.ComboBoxCpGenerator.TabIndex = 2;
             this.ComboBoxCpGenerator.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCpGenerator_SelectedIndexChanged);
             // 
             // HatStepper
@@ -321,7 +324,7 @@
             0,
             0,
             65536});
-            this.HatStepper.Location = new System.Drawing.Point(122, 41);
+            this.HatStepper.Location = new System.Drawing.Point(102, 41);
             this.HatStepper.Maximum = new decimal(new int[] {
             10,
             0,
@@ -333,8 +336,8 @@
             0,
             65536});
             this.HatStepper.Name = "HatStepper";
-            this.HatStepper.Size = new System.Drawing.Size(53, 20);
-            this.HatStepper.TabIndex = 10;
+            this.HatStepper.Size = new System.Drawing.Size(73, 20);
+            this.HatStepper.TabIndex = 3;
             this.HatStepper.Value = new decimal(new int[] {
             1,
             0,
@@ -345,21 +348,51 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.HemoPerCycleLabel);
+            this.groupBox4.Controls.Add(this.HemoPerCycle);
             this.groupBox4.Controls.Add(this.CpPerSecLabel);
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.HatStepper);
             this.groupBox4.Controls.Add(this.ComboBoxCpGenerator);
             this.groupBox4.Location = new System.Drawing.Point(17, 122);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(179, 76);
+            this.groupBox4.Size = new System.Drawing.Size(256, 76);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Combo Point Generator";
             // 
+            // HemoPerCycleLabel
+            // 
+            this.HemoPerCycleLabel.AutoSize = true;
+            this.HemoPerCycleLabel.Location = new System.Drawing.Point(178, 24);
+            this.HemoPerCycleLabel.Name = "HemoPerCycleLabel";
+            this.HemoPerCycleLabel.Size = new System.Drawing.Size(66, 13);
+            this.HemoPerCycleLabel.TabIndex = 14;
+            this.HemoPerCycleLabel.Text = "Hemo/Cycle";
+            // 
+            // HemoPerCycle
+            // 
+            this.HemoPerCycle.DecimalPlaces = 1;
+            this.HemoPerCycle.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.HemoPerCycle.Location = new System.Drawing.Point(181, 40);
+            this.HemoPerCycle.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.HemoPerCycle.Name = "HemoPerCycle";
+            this.HemoPerCycle.Size = new System.Drawing.Size(69, 20);
+            this.HemoPerCycle.TabIndex = 4;
+            this.HemoPerCycle.ValueChanged += new System.EventHandler(this.HatStepper_ValueChanged);
+            // 
             // CpPerSecLabel
             // 
             this.CpPerSecLabel.AutoSize = true;
-            this.CpPerSecLabel.Location = new System.Drawing.Point(125, 25);
+            this.CpPerSecLabel.Location = new System.Drawing.Point(99, 25);
             this.CpPerSecLabel.Name = "CpPerSecLabel";
             this.CpPerSecLabel.Size = new System.Drawing.Size(48, 13);
             this.CpPerSecLabel.TabIndex = 12;
@@ -388,7 +421,7 @@
             this.Controls.Add(this.labelTargetArmorDescription);
             this.Controls.Add(this.groupBox3);
             this.Name = "CalculationOptionsPanelRogue";
-            this.Size = new System.Drawing.Size(209, 432);
+            this.Size = new System.Drawing.Size(294, 432);
             this.groupBoxCycles.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -396,6 +429,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.HatStepper)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HemoPerCycle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -433,5 +467,7 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label CpPerSecLabel;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label HemoPerCycleLabel;
+        private System.Windows.Forms.NumericUpDown HemoPerCycle;
     }
 }

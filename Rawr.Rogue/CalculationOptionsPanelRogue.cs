@@ -120,22 +120,31 @@ namespace Rawr.Rogue
 
         private void ComboBoxCpGenerator_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(ComboBoxCpGenerator.Text == new HonorAmongThieves(0f).Name)
+            if(ComboBoxCpGenerator.Text == new HonorAmongThieves(0f, 0f).Name)
             {
-                CpPerSecLabel.Visible = HatStepper.Visible = true;
+                SetHatVisibility(true);
                 HatStepper_ValueChanged(sender, e);
                 return;
             }
 
-            CpPerSecLabel.Visible = HatStepper.Visible = false;
+            SetHatVisibility(false);
+            
             _calcOpts.CpGenerator = ComboPointGeneratorList.Get(ComboBoxCpGenerator.Text);
             UpdateCalculations();
         }
 
         private void HatStepper_ValueChanged(object sender, EventArgs e)
         {
-            _calcOpts.CpGenerator = new HonorAmongThieves((float) HatStepper.Value);
+            _calcOpts.CpGenerator = new HonorAmongThieves((float) HatStepper.Value, (float)HemoPerCycle.Value);
             UpdateCalculations();
+        }
+
+        private void SetHatVisibility(bool visible)
+        {
+            HemoPerCycleLabel.Visible = visible;
+            CpPerSecLabel.Visible = visible;
+            HatStepper.Visible = visible;
+            HemoPerCycle.Visible = visible;
         }
     }
 }

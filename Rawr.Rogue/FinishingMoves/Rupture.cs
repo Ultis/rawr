@@ -17,7 +17,7 @@ namespace Rawr.Rogue.FinishingMoves
             return baseCost + missCost + dodgeCost;
         }
 
-        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, float cycleTime, WhiteAttacks whiteAttacks )
+        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
         {
             float finisherDmg;
             switch (rank)
@@ -52,7 +52,7 @@ namespace Rawr.Rogue.FinishingMoves
             finisherDmg *= combatFactors.Tier8FourPieceRuptureCrit;
             if (!Talents.SurpriseAttacks.HasPoints)
                 finisherDmg *= (1f - combatFactors.MhDodgeChance);
-            return finisherDmg / cycleTime;
+            return finisherDmg / cycleTime.Duration;
         }
     }
 }

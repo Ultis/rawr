@@ -63,7 +63,7 @@ namespace Rawr.Rogue
 
         public float CalcFinisherDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CycleTime cycleTime)
         {
-            return _finisher.CalcFinisherDPS(calcOpts, stats, combatFactors, _rank, cycleTime.Duration, whiteAttacks);
+            return _finisher.CalcFinisherDPS(calcOpts, stats, combatFactors, _rank, cycleTime, whiteAttacks);
         }
 
         public override string ToString()

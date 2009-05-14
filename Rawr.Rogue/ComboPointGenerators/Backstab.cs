@@ -7,7 +7,7 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public override string Name { get { return "Backstab"; } }
 
-        protected override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors)
         {
             return 60f * combatFactors.Tier7FourPieceEnergyCostReduction
                 - Talents.SlaughterFromTheShadows.BackstabAndAmbushEnergyCost.Bonus 

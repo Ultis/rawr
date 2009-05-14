@@ -7,7 +7,7 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public override string Name { get { return "Hemo"; } }
 
-        protected override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors)
         {
             return 35f * combatFactors.Tier7FourPieceEnergyCostReduction
                 - Talents.SlaughterFromTheShadows.HemoEnergyCost.Bonus 

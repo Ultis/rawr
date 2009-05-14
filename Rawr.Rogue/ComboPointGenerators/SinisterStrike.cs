@@ -7,7 +7,7 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public override string Name { get { return "Sinister Strike"; } }
 
-        protected override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors)
         {
             return 45f * combatFactors.Tier7FourPieceEnergyCostReduction
                 - Talents.ImprovedSinisterStrike.Bonus 

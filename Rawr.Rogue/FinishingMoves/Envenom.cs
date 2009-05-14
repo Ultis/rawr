@@ -25,13 +25,13 @@ namespace Rawr.Rogue.FinishingMoves
             return baseCost + missCost + dodgeCost;
         }
 
-        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, float cycleTime, WhiteAttacks whiteAttacks )
+        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
         {
             var dpAverageStackSize = CalcAverageStackSize(calcOpts, whiteAttacks, rank);
             var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;
             damage *= Talents.VilePoisons.Multiplier;
             damage *= Talents.FindWeakness.Multiplier;
-            return damage / cycleTime;
+            return damage / cycleTime.Duration;
         }
 
         private static float CalcAverageStackSize(CalculationOptionsRogue calcOpts, WhiteAttacks whiteAttacks, int rank)

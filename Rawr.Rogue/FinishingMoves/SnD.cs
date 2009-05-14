@@ -11,7 +11,7 @@ namespace Rawr.Rogue.FinishingMoves
         {
             return 25f - Talents.RelentlessStrikes.Bonus;
         }
-        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, float cycleTime, WhiteAttacks whiteAttacks )
+        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
         {
             return 0f;
         }

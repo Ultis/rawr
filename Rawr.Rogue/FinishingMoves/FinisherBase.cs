@@ -14,6 +14,6 @@ namespace Rawr.Rogue.FinishingMoves
         public abstract char Id { get; }
         public abstract string Name { get; }
         public abstract float EnergyCost(CombatFactors combatFactors, int rank);
-        public abstract float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, float cycleTime, WhiteAttacks whiteAttacks );
+        public abstract float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks );
     }
 }

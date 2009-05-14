@@ -17,7 +17,7 @@ namespace Rawr.Rogue.FinishingMoves
             return baseCost + missCost + dodgeCost;
         }
 
-        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, float cycleTime, WhiteAttacks whiteAttacks )
+        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
         {
             var evisMod = stats.AttackPower*rank*.03f;
             var evisMin = 245f + (rank - 1f)*185f + evisMod;
@@ -34,7 +34,7 @@ namespace Rawr.Rogue.FinishingMoves
                 finisherDmg *= (1f - (combatFactors.MhDodgeChance / 100f));
 
             finisherDmg *= combatFactors.DamageReduction;
-            return finisherDmg / cycleTime;
+            return finisherDmg / cycleTime.Duration;
         }
     }
 }

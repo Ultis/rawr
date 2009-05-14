@@ -19,15 +19,10 @@ namespace Rawr.Rogue
             }
         }
 
-        public CalculationsRogue()
-        {
-            SetupRelevantItemTypes();
-        }
-        
+        public CalculationsRogue(){}
         private readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelRogue();
         private readonly string[] _customChartNames = new[] {"Combat Table"};
         private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.Red}};
-        private List<Item.ItemType> _relevantItemTypes;
 
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {
@@ -51,7 +46,7 @@ namespace Rawr.Rogue
 
         public override List<Item.ItemType> RelevantItemTypes
         {
-            get { return _relevantItemTypes; }
+            get { return RelevantItems.List; }
         }
 
         public override Character.CharacterClass TargetClass
@@ -94,10 +89,10 @@ namespace Rawr.Rogue
             var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var combatFactors = new CombatFactors(character, stats);
-            return GetCalculations(combatFactors, stats, calcOpts, character.RogueTalents);
+            return GetCalculations(calcOpts, combatFactors, stats);
         }
 
-        public static CharacterCalculationsBase GetCalculations(CombatFactors combatFactors, Stats stats, CalculationOptionsRogue calcOpts, RogueTalents talents)
+        public static CharacterCalculationsBase GetCalculations(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats)
         {
             //------------------------------------------------------------------------------------
             // CALCULATE OUTPUTS
@@ -379,23 +374,6 @@ namespace Rawr.Rogue
         {
             return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
             //return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
-        }
-
-        private void SetupRelevantItemTypes()
-        {
-            _relevantItemTypes = new List<Item.ItemType>(new[]
-                                                             {
-                                                                 Item.ItemType.None,
-                                                                 Item.ItemType.Leather,
-                                                                 Item.ItemType.Bow,
-                                                                 Item.ItemType.Crossbow,
-                                                                 Item.ItemType.Gun,
-                                                                 Item.ItemType.Thrown,
-                                                                 Item.ItemType.Dagger,
-                                                                 Item.ItemType.FistWeapon,
-                                                                 Item.ItemType.OneHandMace,
-                                                                 Item.ItemType.OneHandSword
-                                                             });
         }
     }
 }
