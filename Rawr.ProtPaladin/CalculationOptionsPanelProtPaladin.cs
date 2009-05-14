@@ -28,10 +28,10 @@ namespace Rawr.ProtPaladin
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
 			armorBosses.Add(8800, ": Void Reaver");
-			armorBosses.Add(9729, ": Level 80 Warior Type Creature");
-			armorBosses.Add(10026, ": Level 81 Warior Type Creature");
-			armorBosses.Add(10331, ": Level 82 Warior Type Creature");
-            armorBosses.Add(10643, ": Wrath Bosses in 3.1");
+			armorBosses.Add((int)StatConversion.NPC_80_ARMOR, ": Level 80 Warior Type Creature");//9729
+			armorBosses.Add((int)StatConversion.NPC_81_ARMOR, ": Level 81 Warior Type Creature");//10026 own value
+			armorBosses.Add((int)StatConversion.NPC_82_ARMOR, ": Level 82 Warior Type Creature");//10331 own value
+            armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, ": Wotlk Bosses in 3.1");
             armorBosses.Add(13100, ": Tier 7 Bosses in 3.08");
 		}
 
@@ -251,6 +251,16 @@ namespace Rawr.ProtPaladin
             {
                 CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
                 calcOpts.TargetLevel = (int)numericUpDownTargetLevel.Value;
+                if (calcOpts.TargetLevel == 83)
+                    trackBarTargetArmor.Value = (int)StatConversion.NPC_BOSS_ARMOR;
+                else if (calcOpts.TargetLevel == 82)
+                    trackBarTargetArmor.Value = (int)StatConversion.NPC_82_ARMOR;
+                else if (calcOpts.TargetLevel == 81)
+                    trackBarTargetArmor.Value = (int)StatConversion.NPC_81_ARMOR;
+                else if (calcOpts.TargetLevel == 80)
+                    trackBarTargetArmor.Value = (int)StatConversion.NPC_80_ARMOR;
+//                else if (calcOpts.TargetLevel == custom)
+//                    calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -302,7 +312,7 @@ namespace Rawr.ProtPaladin
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 10643;
+		public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
 		public int BossAttackValue = 25000;
         public float BossAttackSpeed = 2.0f;
 

@@ -109,10 +109,11 @@ namespace Rawr.ProtPaladin
 			// 
 			this.label2.Location = new System.Drawing.Point(3, 45);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(83, 45);
+			this.label2.Size = new System.Drawing.Size(83, 60);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Target Armor:  (Default: 10643)";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.label2.Text = "Target Armor:  doubleclick (here)\r\nto reset";
+			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.label2.DoubleClick += new System.EventHandler(this.numericUpDownTargetLevel_ValueChanged);
 			// 
 			// trackBarTargetArmor
 			// 

@@ -563,29 +563,6 @@ focus on Survival Points.",
             /*Draenei*/     {   21f,        17f,        19f,        21f,        22f,   },
             /*BloodElf*/    {   17f,        22f,        18f,        24f,        19f,   },
         };
-            /*
-            Stats uniform to all races of paladins:
-            I plan to pull those variables out of the switch case to make the Race gains more distinct from Class attributes
-            something like:
-            ClassStats = new Stats()
-            {
-                Health = 6934f,             // Base Health for a level 80 paladin. (tauren get 5% bonus on this value)
-                Mana = 4394f,               // Base Mana for a level 80 paladin
-                AttackPower = 220f,         // Base Attack Power for level 80  (AP = (LVL * 3f) - 20f)
-                PhysicalCrit = 0.032685f,   // Base PhysicalCrit for paladins TODO: Check if this is different for other classes
-                SpellCrit = 0.03336f,       // Base SpellCrit for paladins
-                Miss = 0.05f,               // Base Miss for a character with maxed out defense skill
-                Dodge = 3.2685f,            // Base Dodge for a paladin
-                Parry = 5f,                 // Base Parry for a chracter with maxed out defense skill
-                Block = 5f,                 // Base Block for character with maxed out defense skill
-            };
-            Stats statsBase = RaceStats + StatsClass + StatsLevel;
-            
-            later in the code, the following arrays of stats are used,
-            
-            Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsBase + statsItems + statsBuffs + statsTalents;
-            */
 
         private Stats GetRaceStats(Character character)
         {
@@ -753,13 +730,8 @@ focus on Survival Points.",
 
         public override Stats GetItemStats(Character character, Item additionalItem)
         {
-
             Stats statsItems = base.GetItemStats(character, additionalItem);
             AttackTable attackTable= new AttackTable(character, statsItems);
-/*
-            float abilityPerSecond = 1.0f / 6.0f; // one HotR every 6seconds
-            float hitRate = 0.85f;
-*/
             return statsItems;
         }
 
@@ -873,7 +845,7 @@ focus on Survival Points.",
             //float intervalHitPhysical = intervalPhysical / chanceHitPhysical;
             float intervalSpellCast = 1.5f; // 9696 assumes casting a spell every gcd. Changing auras, and casting a blessing is disregarded.
             //float intervalHitSpell = intervalSpellCast / chanceHitSpell;
-            float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spells casts in 18 seconds.
+            float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spell casts in 18 seconds.
             float intervalDamageDone = 1.0f / (1.0f / intervalPhysical + 1.0f / intervalSpellCast);
             float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
             float intervalJudgement = (10.0f - talents.ImprovedJudgements * 1.0f);
@@ -940,7 +912,7 @@ focus on Survival Points.",
                             statsTotal += effect.GetAverageStats(intervalDamageSpellCast, chanceHitSpell);
                             break;
                         case Trigger.DamageSpellCrit:
-                            statsTotal += effect.GetAverageStats(intervalSpellCast, chanceCritSpell);
+                            statsTotal += effect.GetAverageStats(intervalDamageSpellCast, chanceCritSpell);
                             break;
                     }
                 }
