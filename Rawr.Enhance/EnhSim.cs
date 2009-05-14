@@ -161,6 +161,9 @@ namespace Rawr.Enhance
             sb.AppendLine();
 
             addBuffs(character, sb);
+            // add extras
+            sb.AppendLine();
+            sb.AppendLine("combat_length                   " + calcOpts.FightLength.ToString("F2", CultureInfo.InvariantCulture));
             _configText = sb.ToString();
         }
 
@@ -308,6 +311,14 @@ namespace Rawr.Enhance
                     sb.AppendLine("intellect_buff                  60/60");
                 else
                     sb.AppendLine("intellect_buff                  0/60");
+                if (isBuffChecked(checkBoxes, "Bloodlust"))
+                    sb.AppendLine("bloodlust_casters               1");
+                else
+                    sb.AppendLine("bloodlust_casters               0");
+                sb.AppendLine("flask_elixir                    " + addFlask(checkBoxes));
+                sb.AppendLine("guardian_elixir                 " + addGuardianElixir(checkBoxes));
+                sb.AppendLine("potion                          " + addPotion(checkBoxes));
+                sb.AppendLine("food                            " + addFood(checkBoxes));
             }
             else
             {
@@ -343,6 +354,78 @@ namespace Rawr.Enhance
                     return checkbox.Checked;
             }
             return false;
+        }
+
+        private string addFlask(Dictionary<Buff, CheckBox> checkBoxes)
+        {
+            if(isBuffChecked(checkBoxes, "Flask of Endless Rage"))
+                return "flask_of_endless_rage";
+            if (isBuffChecked(checkBoxes, "Flask of the Frost Wyrm"))
+                return "flask_of_the_frost_wyrm";
+            if (isBuffChecked(checkBoxes, "Elixir of Demonslaying"))
+                return "elixir_of_demonslaying";
+            if (isBuffChecked(checkBoxes, "Elixir of Major Agility"))
+                return "elixir_of_major_agility";
+            if (isBuffChecked(checkBoxes, "Elixir of Mighty Agility"))
+                return "elixir_of_mighty_agility";
+            if (isBuffChecked(checkBoxes, "Elixir of Mighty Strength"))
+                return "elixir_of_mighty_strength";
+            if (isBuffChecked(checkBoxes, "Elixir of Accuracy"))
+                return "elixir_of_accuracy";
+            if (isBuffChecked(checkBoxes, "Elixir of Armor Piercing"))
+                return "elixir_of_armor_piercing";
+            if (isBuffChecked(checkBoxes, "Elixir of Deadly Strikes"))
+                return "elixir_of_deadly_strikes";
+            if (isBuffChecked(checkBoxes, "Elixir of Expertise"))
+                return "elixir_of_expertise";
+            if (isBuffChecked(checkBoxes, "Elixir of Lightning Speed"))
+                return "elixir_of_lightning_speed";
+            if (isBuffChecked(checkBoxes, "Guru's Elixir"))
+                return "gurus_elixir";
+            if (isBuffChecked(checkBoxes, "Spellpower Elixir"))
+                return "spellpower_elixir";
+            if (isBuffChecked(checkBoxes, "Wrath Elixir"))
+                return "wrath_elixir";
+            return "-";
+        }
+
+        private string addGuardianElixir(Dictionary<Buff, CheckBox> checkBoxes)
+        {
+            if (isBuffChecked(checkBoxes, "Elixir of Draenic Wisdom"))
+                return "elixir_of_draenic_wisdom";
+            if (isBuffChecked(checkBoxes, "Elixir of Mighty Thoughts"))
+                return "elixir_of_mighty_thoughts";
+            return "-";
+        }
+
+        private string addPotion(Dictionary<Buff, CheckBox> checkBoxes)
+        {
+            if (isBuffChecked(checkBoxes, "Potion of Speed"))
+                return "haste_potion";
+            return "-";
+        }
+
+        private string addFood(Dictionary<Buff, CheckBox> checkBoxes)
+        {
+            if (isBuffChecked(checkBoxes, "Agility Food"))
+                return "blackened_dragonfin";
+            if (isBuffChecked(checkBoxes, "Armor Pen Food"))
+                return "hearty_rhino";
+            if (isBuffChecked(checkBoxes, "Expertise Food"))
+                return "rhinolicious_wormsteak";
+            if (isBuffChecked(checkBoxes, "Hit Food"))
+                return "snapper_extreme";
+            if (isBuffChecked(checkBoxes, "Spell Power Food"))
+                return "firecracker_salmon";
+            if (isBuffChecked(checkBoxes, "Haste Food"))
+                return "imperial_manta_steak";
+            if (isBuffChecked(checkBoxes, "Attack Power Food"))
+                return "poached_northern_sculpin";
+            if (isBuffChecked(checkBoxes, "Crit Food"))
+                return "spiced_wyrm_burger";
+            if (isBuffChecked(checkBoxes, "Fish Feast"))
+                return "fish_feast";
+            return "-";
         }
 
         private void addGlyphs(Character character, System.Text.StringBuilder sb)
