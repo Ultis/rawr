@@ -1083,13 +1083,32 @@ namespace Rawr
 
 		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
 		{
-            if (item.Unique) {
-                if (slot == Character.CharacterSlot.Finger1) { if (item.Id == character[Character.CharacterSlot.Finger2].Item.Id) return false; }
-                else if (slot == Character.CharacterSlot.Finger2) { if (item.Id == character[Character.CharacterSlot.Finger1].Item.Id) return false; }
-                else if (slot == Character.CharacterSlot.Trinket1) { if (item.Id == character[Character.CharacterSlot.Trinket2].Item.Id) return false; }
-                else if (slot == Character.CharacterSlot.Trinket2) { if (item.Id == character[Character.CharacterSlot.Trinket1].Item.Id) return false; }
-                else if (slot == Character.CharacterSlot.MainHand) { if (item.Id == character[Character.CharacterSlot.OffHand].Item.Id) return false; }
-                else if (slot == Character.CharacterSlot.OffHand) { if (item.Id == character[Character.CharacterSlot.MainHand].Item.Id) return false; }
+            if (item != null && item.Unique)
+            {
+                if (slot == Character.CharacterSlot.Finger1)
+                {
+                    if (character[Character.CharacterSlot.Finger2] != null && item.Id == character[Character.CharacterSlot.Finger2].Item.Id) return false;
+                }
+                else if (slot == Character.CharacterSlot.Finger2)
+                {
+                    if (character[Character.CharacterSlot.Finger1] != null && item.Id == character[Character.CharacterSlot.Finger1].Item.Id) return false;
+                }
+                else if (slot == Character.CharacterSlot.Trinket1)
+                {
+                    if (character[Character.CharacterSlot.Trinket2] != null && item.Id == character[Character.CharacterSlot.Trinket2].Item.Id) return false;
+                }
+                else if (slot == Character.CharacterSlot.Trinket2)
+                {
+                    if (character[Character.CharacterSlot.Trinket1] != null && item.Id == character[Character.CharacterSlot.Trinket1].Item.Id) return false;
+                }
+                else if (slot == Character.CharacterSlot.MainHand)
+                {
+                    if (character[Character.CharacterSlot.OffHand] != null && item.Id == character[Character.CharacterSlot.OffHand].Item.Id) return false;
+                }
+                else if (slot == Character.CharacterSlot.OffHand)
+                {
+                    if (character[Character.CharacterSlot.MainHand] != null && item.Id == character[Character.CharacterSlot.MainHand].Item.Id) return false;
+                }
             }
 			return item.FitsInSlot(slot);
 		}

@@ -698,25 +698,6 @@ namespace Rawr
             Stats rockets = new Stats();
             rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1600f }, 0f, 45f));
             defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", Item.ItemSlot.Hands, rockets));
-            
-            #region Enchants to Delete
-            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.MainHand, null));
-            defaultEnchants.Add(new Enchant(9001, "Major Defense", Item.ItemSlot.Chest, null));
-            defaultEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, null));
-            #endregion
             return defaultEnchants;
         }
     }

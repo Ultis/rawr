@@ -71,7 +71,13 @@ namespace Rawr.Retribution
             float awUptime = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f)) * 20f / fightLength;
             AvengingWrathMulti = 1f + awUptime * .2f;
 
-            float dr = StatConversion.GetArmorDamageReduction(Character.Level, StatConversion.NPC_BOSS_ARMOR, Stats.ArmorPenetration, 0f, Stats.ArmorPenetrationRating);
+            float targetArmor;
+            if (CalcOpts.TargetLevel == 80) targetArmor = StatConversion.NPC_80_ARMOR;
+            else if (CalcOpts.TargetLevel == 81) targetArmor = StatConversion.NPC_81_ARMOR;
+            else if (CalcOpts.TargetLevel == 82) targetArmor = StatConversion.NPC_82_ARMOR;
+            else targetArmor = StatConversion.NPC_BOSS_ARMOR;
+
+            float dr = StatConversion.GetArmorDamageReduction(Character.Level, targetArmor, Stats.ArmorPenetration, 0f, Stats.ArmorPenetrationRating);
             ArmorReduction = 1f - dr * ((1 - awUptime) + .25f * _talents.SanctifiedWrath * awUptime);
 
             BaseWeaponSpeed = _character.MainHand == null ? 3.5f : _character.MainHand.Speed;
