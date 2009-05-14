@@ -401,7 +401,7 @@ namespace Rawr.Enhance
         private string addPotion(Dictionary<Buff, CheckBox> checkBoxes)
         {
             if (isBuffChecked(checkBoxes, "Potion of Speed"))
-                return "haste_potion";
+                return "potion_of_speed";
             return "-";
         }
 
