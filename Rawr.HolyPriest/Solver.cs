@@ -89,12 +89,41 @@ namespace Rawr.HolyPriest
         {
             Stats simstats = calculatedStats.BasicStats.Clone();
 
-            Stats UseProcs = new Stats();
+            float valanyrProc = 0f;
 
             // Pre calc Procs (Power boosting Procs)
+            Stats UseProcs = new Stats();
             if (calculationOptions.ModelProcs)
             {
-                if (simstats.SpiritFor20SecOnUse2Min > 0)
+                foreach (SpecialEffect se in simstats.SpecialEffects())
+                {
+                    if (se.Stats.ManaRestore == 0 && se.Stats.Mp5 == 0)
+                    {   // We handle mana restoration stats later.
+                        if (se.Trigger == Trigger.Use)
+                            UseProcs += se.GetAverageStats(2f, 1f);
+                        else if (se.Trigger == Trigger.SpellCast
+                            || se.Trigger == Trigger.HealingSpellCast
+                            || se.Trigger == Trigger.HealingSpellHit)
+                        {
+                            if (se.Stats.ShieldFromHealed > 0)
+                            {
+                                valanyrProc = se.GetAverageUptime(2f, 1f) * se.Stats.ShieldFromHealed;
+                            }
+                            if (se.Stats.HighestStat > 0)
+                            {
+                                float greatnessProc = se.GetAverageStats(2f, 1f).HighestStat;
+                                if (simstats.Spirit > simstats.Intellect)
+                                    UseProcs.Spirit += greatnessProc;
+                                else
+                                    UseProcs.Intellect += greatnessProc;
+                            }
+                            else
+                                UseProcs += se.GetAverageStats(2f, 1f);
+                        }
+                    }
+                }
+                #region old stuff
+                /*                if (simstats.SpiritFor20SecOnUse2Min > 0)
                     // Trinkets with Use: Increases Spirit with. (Like Earring of Soulful Meditation / Bangle of Endless blessings)
                     UseProcs.Spirit += simstats.SpiritFor20SecOnUse2Min * 20f / 120f;
                 //                if (simstats.BangleProc > 0)
@@ -109,16 +138,21 @@ namespace Rawr.HolyPriest
                 if (simstats.HasteRatingFor20SecOnUse5Min > 0)
                     UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f;
                 if (simstats.HasteRatingFor20SecOnUse2Min > 0)
-                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f;
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f;*/
+                #endregion
+
+                // Juggle out the original spell haste and put in new.
+                if (UseProcs.HasteRating > 0)
+                {
+                    simstats.SpellHaste -= StatConversion.GetSpellHasteFromRating(simstats.HasteRating);
+                    simstats.SpellHaste += StatConversion.GetSpellHasteFromRating(UseProcs.HasteRating + simstats.HasteRating);
+                }
+                UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
+                UseProcs.Intellect = (float)Math.Round(UseProcs.Intellect * (1 + simstats.BonusIntellectMultiplier));
+                UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
+                simstats += UseProcs;
             }
 
-            UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
-            UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
-
-            simstats += UseProcs;
-
-            // Insightful Earthstorm Diamond.
-            float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + simstats.HealingReceivedMultiplier);
@@ -248,7 +282,7 @@ namespace Rawr.HolyPriest
             foreach (Spell s in sr)
                 ActionList += "\r\n- " + s.Name;
 
-            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, holyconccast = 0, holyconccrit = 0, pwscasts = 0, metareductiontot = 0;
+            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, holyconccast = 0, holyconccrit = 0, pwscasts = 0;
             for (int x = 0; x < sr.Count; x++)
             {
                 float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
@@ -324,6 +358,8 @@ namespace Rawr.HolyPriest
                     clen = pws.GlobalCooldown;
                     absorb = pws.AvgTotHeal;
                     mcost = pws.ManaCost;
+                    if (character.PriestTalents.GlyphofPowerWordShield)
+                        heal = absorb * 0.2f;   // Not entirely right, but close enough.
                     castctr++;
                     pwscasts++;
                 }
@@ -336,11 +372,11 @@ namespace Rawr.HolyPriest
                     castctr += sr[x].Targets;
                     crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, sr[x].Targets);
                 }
-
+                absorb += valanyrProc * (heal + rheal);
                 cyclelen += clen;
                 healamount += heal + rheal + absorb;
                 manacost += mcost;
-                metareductiontot += metaSpellCostReduction;
+                //metareductiontot += metaSpellCostReduction;
             }
 
             float avgcastlen = cyclelen / castctr;
@@ -398,7 +434,39 @@ namespace Rawr.HolyPriest
             regen += tmpregen;
             if (calculationOptions.ModelProcs)
             {
-                if (simstats.BangleProc > 0)
+                foreach (SpecialEffect se in simstats.SpecialEffects())
+                {
+                    tmpregen = 0f;
+                    if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
+                    {
+                        if (se.Trigger == Trigger.SpellCast
+                            || se.Trigger == Trigger.HealingSpellCast
+                            || se.Trigger == Trigger.HealingSpellHit)
+                        {
+                            tmpregen = se.GetAverageStats(avgcastlen, 1f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                + se.GetAverageStats(avgcastlen, 1f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                        }
+                        else if (se.Trigger == Trigger.SpellCrit
+                            || se.Trigger == Trigger.HealingSpellCrit)
+                        {
+                            tmpregen = se.GetAverageStats(avgcastlen, avgcritcast / avgcastlen, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                + se.GetAverageStats(avgcastlen, avgcritcast / avgcastlen, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                        }
+                        else if (se.Trigger == Trigger.Use)
+                        {
+                            tmpregen = se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                + se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+
+                        }
+                    }
+                    if (tmpregen > 0)
+                    {
+                        ManaSources.Add(new ManaSource(se.ToString(), tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+                #region old procs
+                /*if (simstats.BangleProc > 0)
                 {
                     float BangleLevelMod = 0.15f - (character.Level - 70f) / 200f;
                     tmpregen = periodicRegenOutFSR * BangleLevelMod * 15f / 60f * (1f - (float)Math.Pow(1f - BangleLevelMod, 15f / avgcastlen));
@@ -442,9 +510,10 @@ namespace Rawr.HolyPriest
                             ManaSources.Add(new ManaSource("MP5 Proc Trinket", tmpregen));
                         regen += tmpregen;
                     }
-                }
+                }*/
 
-                float trinketmp5 = 0;
+                /*float trinketmp5 = 0;
+                
                 if (simstats.Mp5OnCastFor20SecOnUse2Min > 0)
                     trinketmp5 += (20f / avgcastlen) * 21f / 2f * 20f / 120f;
                 if (simstats.ManacostReduceWithin15OnHealingCast > 0)
@@ -459,6 +528,8 @@ namespace Rawr.HolyPriest
                 }
                 if (simstats.ManacostReduceWithin15OnUse1Min > 0)
                     manacost -= simstats.ManacostReduceWithin15OnUse1Min * (float)Math.Floor(15f / cyclelen * sr.Count) / 60f;
+                 */
+                #endregion
             }
 
             // External and Other mana sources.
@@ -468,14 +539,7 @@ namespace Rawr.HolyPriest
                 ManaSources.Add(new ManaSource("Replenishment", tmpregen));
                 regen += tmpregen;
             }
-
-            if (metareductiontot > 0f)
-            {
-                tmpregen = metareductiontot / cyclelen;
-                ManaSources.Add(new ManaSource("Metagem", tmpregen));
-                regen += tmpregen;
-            }
-
+          
             ActionList += "\r\n\r\nMana Options:";
 
             // Real Cyclelen also has time for FSR. To get 80% FSR, a cycle of 20 seconds needs to include:
@@ -547,9 +611,10 @@ namespace Rawr.HolyPriest
         public override void Calculate(CharacterCalculationsHolyPriest calculatedStats)
         {
             Stats simstats = calculatedStats.BasicStats.Clone();
+            float valanyrProc = 0f;
 
-            Stats UseProcs = new Stats();
-
+            #region old old old
+            /*
             // Pre calc Procs (Power boosting Procs)
             if (calculationOptions.ModelProcs)
             {
@@ -574,10 +639,70 @@ namespace Rawr.HolyPriest
             UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
             UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
 
-            simstats += UseProcs;
+            simstats += UseProcs;*/
+            #endregion
+            Stats UseProcs = new Stats();
+            if (calculationOptions.ModelProcs)
+            {
+                foreach (SpecialEffect se in simstats.SpecialEffects())
+                {
+                    if (se.Stats.ManaRestore == 0 && se.Stats.Mp5 == 0)
+                    {   // We handle mana restoration stats later.
+                        if (se.Trigger == Trigger.Use)
+                            UseProcs += se.GetAverageStats(2f, 1f);
+                        else if (se.Trigger == Trigger.SpellCast
+                            || se.Trigger == Trigger.HealingSpellCast
+                            || se.Trigger == Trigger.HealingSpellHit)
+                        {
+                            if (se.Stats.ShieldFromHealed > 0)
+                            {
+                                valanyrProc = se.GetAverageUptime(2f, 1f) * se.Stats.ShieldFromHealed;
+                            }
+                            if (se.Stats.HighestStat > 0)
+                            {
+                                float greatnessProc = se.GetAverageStats(2f, 1f).HighestStat;
+                                if (simstats.Spirit > simstats.Intellect)
+                                    UseProcs.Spirit += greatnessProc;
+                                else
+                                    UseProcs.Intellect += greatnessProc;
+                            }
+                            else
+                                UseProcs += se.GetAverageStats(2f, 1f);
+                        }
+                    }
+                }
+                #region old stuff
+                /*                if (simstats.SpiritFor20SecOnUse2Min > 0)
+                    // Trinkets with Use: Increases Spirit with. (Like Earring of Soulful Meditation / Bangle of Endless blessings)
+                    UseProcs.Spirit += simstats.SpiritFor20SecOnUse2Min * 20f / 120f;
+                //                if (simstats.BangleProc > 0)
+                // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd.
+                //UseProcs.Spirit += 130f * 20f / 120f;              
+                if (simstats.SpellPowerFor15SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse2Min * 15f / 120f;
+                if (simstats.SpellPowerFor15SecOnUse90Sec > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
+                if (simstats.SpellPowerFor20SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
+                if (simstats.HasteRatingFor20SecOnUse5Min > 0)
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f;
+                if (simstats.HasteRatingFor20SecOnUse2Min > 0)
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f;*/
+                #endregion
+
+                // Juggle out the original spell haste and put in new.
+                if (UseProcs.HasteRating > 0)
+                {
+                    simstats.SpellHaste -= StatConversion.GetSpellHasteFromRating(simstats.HasteRating);
+                    simstats.SpellHaste += StatConversion.GetSpellHasteFromRating(UseProcs.HasteRating + simstats.HasteRating);
+                }
+                UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
+                UseProcs.Intellect = (float)Math.Round(UseProcs.Intellect * (1 + simstats.BonusIntellectMultiplier));
+                UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
+                simstats += UseProcs;
+            }
 
             // Insightful Earthstorm Diamond.
-            float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.045f) * (1 + simstats.HealingReceivedMultiplier);
             float divineaegis = character.PriestTalents.DivineAegis * 0.1f;
 
@@ -867,32 +992,69 @@ namespace Rawr.HolyPriest
                 ManaSources.Add(new ManaSource("Intellect", tmpregen));
                 regen += tmpregen;
 
-                // TODO: Trinkets here.
-                if (simstats.ManaRestoreOnCrit_25_45 > 0)
-                {   // X mana back every 25%*critchance spell every 45seconds.
-                    float avgcritcast = CritCounter / TotalCasts;
-                    tmpregen = simstats.ManaRestoreOnCrit_25_45 / ProcInterval(0.25f * avgcritcast, avgcritcast, 45f);
-                    if (tmpregen > 0f)
-                    {
-                        ManaSources.Add(new ManaSource("Soul of the Dead", tmpregen));
-                        regen += tmpregen;
-                    }
-                }
-                if (simstats.ManaRestoreOnCast_10_45 > 0)
+                if (calculationOptions.ModelProcs)
                 {
-                    tmpregen = simstats.ManaRestoreOnCast_10_45 / ProcInterval(0.1f, TimeUsed / TotalCasts, 45f);
-                    if (tmpregen > 0f)
+                    foreach (SpecialEffect se in simstats.SpecialEffects())
                     {
-                        if (simstats.ManaRestoreOnCast_10_45 == 300)
-                            ManaSources.Add(new ManaSource("Je'Tze's Bell", tmpregen));
-                        else if (simstats.ManaRestoreOnCast_10_45 == 528)
-                            ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
-                        else if (simstats.ManaRestoreOnCast_10_45 == 228)
-                            ManaSources.Add(new ManaSource("Memento of Tyrande", tmpregen));
-                        else
-                            ManaSources.Add(new ManaSource("MP5 Proc Trinket", tmpregen));
-                        regen += tmpregen;
+                        tmpregen = 0f;
+                        if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
+                        {
+                            if (se.Trigger == Trigger.SpellCast
+                                || se.Trigger == Trigger.HealingSpellCast
+                                || se.Trigger == Trigger.HealingSpellHit)
+                            {
+                                tmpregen = se.GetAverageStats(TimeUsed / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                    + se.GetAverageStats(TimeUsed / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                            }
+                            else if (se.Trigger == Trigger.SpellCrit
+                                || se.Trigger == Trigger.HealingSpellCrit)
+                            {
+                                tmpregen = se.GetAverageStats(TimeUsed / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                    + se.GetAverageStats(TimeUsed / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                            }
+                            else if (se.Trigger == Trigger.Use)
+                            {
+                                tmpregen = se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                    + se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+
+                            }
+                        }
+                        if (tmpregen > 0)
+                        {
+                            ManaSources.Add(new ManaSource(se.ToString(), tmpregen));
+                            regen += tmpregen;
+                        }
                     }
+                    #region old procs
+                    /*
+                    // TODO: Trinkets here.
+                    if (simstats.ManaRestoreOnCrit_25_45 > 0)
+                    {   // X mana back every 25%*critchance spell every 45seconds.
+                        float avgcritcast = CritCounter / TotalCasts;
+                        tmpregen = simstats.ManaRestoreOnCrit_25_45 / ProcInterval(0.25f * avgcritcast, avgcritcast, 45f);
+                        if (tmpregen > 0f)
+                        {
+                            ManaSources.Add(new ManaSource("Soul of the Dead", tmpregen));
+                            regen += tmpregen;
+                        }
+                    }
+                    if (simstats.ManaRestoreOnCast_10_45 > 0)
+                    {
+                        tmpregen = simstats.ManaRestoreOnCast_10_45 / ProcInterval(0.1f, TimeUsed / TotalCasts, 45f);
+                        if (tmpregen > 0f)
+                        {
+                            if (simstats.ManaRestoreOnCast_10_45 == 300)
+                                ManaSources.Add(new ManaSource("Je'Tze's Bell", tmpregen));
+                            else if (simstats.ManaRestoreOnCast_10_45 == 528)
+                                ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
+                            else if (simstats.ManaRestoreOnCast_10_45 == 228)
+                                ManaSources.Add(new ManaSource("Memento of Tyrande", tmpregen));
+                            else
+                                ManaSources.Add(new ManaSource("MP5 Proc Trinket", tmpregen));
+                            regen += tmpregen;
+                        }
+                    }*/
+                    #endregion
                 }
 
                 // External and Other mana sources.
@@ -900,13 +1062,6 @@ namespace Rawr.HolyPriest
                 if (tmpregen > 0f)
                 {
                     ManaSources.Add(new ManaSource("Replenishment", tmpregen));
-                    regen += tmpregen;
-                }
-
-                if (metaSpellCostReduction > 0f)
-                {
-                    tmpregen = (metaSpellCostReduction * TotalCasts) / calculationOptions.FightLengthSeconds;
-                    ManaSources.Add(new ManaSource("Metagem", tmpregen));
                     regen += tmpregen;
                 }
 

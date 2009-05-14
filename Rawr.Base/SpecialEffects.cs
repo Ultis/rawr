@@ -254,15 +254,15 @@ namespace Rawr
             }
             else if (line.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec."))
                 stats.Strength += 32f; //LivingRoot = 32str
-/*            else if (line.StartsWith("Chance on critical hit to increase your attack power by "))
-            {
-                line = line.Substring("Chance on critical hit to increase your attack power by ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = ((float)int.Parse(line))
-                stats.AttackPower += ((float)int.Parse(line)) / 6f;
-            }
-*/
+            /*            else if (line.StartsWith("Chance on critical hit to increase your attack power by "))
+                        {
+                            line = line.Substring("Chance on critical hit to increase your attack power by ".Length);
+                            if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+                            if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = ((float)int.Parse(line))
+                            stats.AttackPower += ((float)int.Parse(line)) / 6f;
+                        }
+            */
             else if ((match = Regex.Match(line, @"Chance on critical hit to increase your attack power by (?<attackPower>\d+) for (?<duration>\d+) secs.")).Success)
             {
                 int ap = int.Parse(match.Groups["attackPower"].Value);
@@ -1228,6 +1228,12 @@ namespace Rawr
                         stats.SpiritFor20SecOnUse2Min += spi;
                     }
                 }
+            }
+            else if (Regex.IsMatch(line, "When the shield is removed by any means, you regain (\\d{4}) mana."))
+            {
+                string[] inputs = Regex.Split(line, "When the shield is removed by any means, you regain (\\d{4}) mana.");
+                float restore = float.Parse(inputs[1]);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = restore }, 0f, 5 * 60f));
             }
             else if (line.StartsWith("For the next 20 sec, your direct heals increase healing received by their target by up to 58."))
             {

@@ -221,7 +221,7 @@ namespace Rawr.HolyPriest
             InstantHealEffect = character.PriestTalents.EmpoweredRenew * 0.05f * MinHeal;
             MaxHeal = MinHeal;
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
             CastTime = 0;
         }
@@ -283,7 +283,7 @@ namespace Rawr.HolyPriest
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f
                 + character.PriestTalents.ImprovedFlashHeal * 0.04f * calcOpts.TestOfFaith / 100f;
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.ImprovedFlashHeal * 0.05f - (character.PriestTalents.GlyphofFlashHeal ? 0.1f : 0.0f)));
         }
 
@@ -346,7 +346,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.BlessedResilience * 0.01f)
                 * (1 + stats.BonusGHHealingMultiplier);
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f)
                 * (1 - stats.GreaterHealCostReduction));
 
@@ -433,7 +433,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
                 * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
                 * (1 - stats.BonusPoHManaCostReductionMultiplier));
 
@@ -537,7 +537,7 @@ namespace Rawr.HolyPriest
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
             
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
@@ -645,7 +645,7 @@ namespace Rawr.HolyPriest
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
             
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
@@ -729,7 +729,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
                 * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
@@ -813,7 +813,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
                 * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
@@ -883,7 +883,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f 
                      - character.PriestTalents.SoulWarding * 0.15f) );
 
@@ -944,7 +944,7 @@ namespace Rawr.HolyPriest
             CritChance = 0f;
             CritCoef = 1.0f;
 
-            ManaCost =(int)Math.Floor(ManaCost / 100f * BaseMana);
+            ManaCost =(int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction));
 
             CastTime = 0;
             Cooldown = 3.0f * 60.0f;
@@ -1000,7 +1000,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
 
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
@@ -1101,7 +1101,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
                 * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f));
 
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
@@ -1132,7 +1132,7 @@ namespace Rawr.HolyPriest
         protected void Calculate(Stats stats, Character character)
         {
             MinHeal = MaxHeal = 0;
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f)
                 * (1 - character.PriestTalents.Absolution * 0.05f));
             CritChance = 0.0f;
@@ -1160,7 +1160,7 @@ namespace Rawr.HolyPriest
         protected void Calculate(Stats stats, Character character)
         {
             MinHeal = MaxHeal = 0;
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (character.PriestTalents.GlyphofMassDispel ? 0.7f : 1.0f) );
             CritChance = 0.0f;
             CritCoef = 1.0f;

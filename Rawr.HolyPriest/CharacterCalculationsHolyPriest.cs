@@ -67,7 +67,7 @@ namespace Rawr.HolyPriest
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            Stats baseStats = BaseStats.GetBaseStats(character);
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
