@@ -56,6 +56,8 @@ namespace Rawr.Enhance
         private float spellCastsPerSec = 0f;
         private float spellMissesPerSec = 0f;
 
+        private float callOfThunder = 0f;
+            
         public CombatStats(Character character, Stats stats)
         {
             _stats = stats;
@@ -74,6 +76,15 @@ namespace Rawr.Enhance
         public float NormalHitModifier { get { return 1 - chanceWhiteCrit - glancingRate; } }
         public float CritHitModifier { get { return chanceWhiteCrit * (2f + _stats.BonusCritMultiplier); } }
         public float GlancingHitModifier { get { return glancingRate * .7f; } }
+
+        public float YellowHitModifier { get { return ChanceYellowHit * (1 - chanceYellowCrit); } }
+        public float YellowCritModifier { get { return ChanceYellowHit * chanceYellowCrit; } }
+
+        public float SpellHitModifier { get { return ChanceSpellHit * (1 - chanceSpellCrit); } }
+        public float SpellCritModifier { get { return ChanceSpellHit * chanceSpellCrit; } }
+
+        public float LBHitModifier { get { return ChanceSpellHit * (1 - chanceSpellCrit - callOfThunder); } }
+        public float LBCritModifier { get { return ChanceSpellHit * (chanceSpellCrit + callOfThunder); } }
 
         public float ChanceSpellHit { get { return 1 - chanceSpellMiss; } }
         public float ChanceWhiteHit { get { return 1 - chanceWhiteMiss; } }
@@ -116,6 +127,9 @@ namespace Rawr.Enhance
 
         public void UpdateCalcs()
         {
+            // talents
+            callOfThunder = .05f * _character.ShamanTalents.CallOfThunder;
+
             // Melee
             float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating);
             expertiseBonus = 0.0025f * (_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
