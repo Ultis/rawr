@@ -1460,12 +1460,14 @@ namespace Rawr
             #endregion
 
             #region Potion
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Potion of Speed",
                 Group = "Potion",
-                Stats = { HasteRating = 500 },
+                Stats = new Stats(),
             });
+            // potion set to be 1 hr cooldown to ensure its treated as once per combat.
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, 3600f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Indestructible Potion",
