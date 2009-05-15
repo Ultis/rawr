@@ -260,19 +260,19 @@ namespace Rawr
             float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f : 
                                                     (stats.AttackPower * unleashedRage * cs.URUptime);
             stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
-            stats.SpellPower += mentalQuickness * URattackPower * (1 + stats.BonusSpellPowerMultiplier);
+            stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
             
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
-            float AP_SP_Ratio = (spellPower-274-211) / attackPower;
+            float AP_SP_Ratio = (spellPower-274f-211f) / attackPower;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float bonusLSDamage = 1f + stats.BonusLSDamage; // 2 piece T7 set bonus
-            float bonusLLSSDamage = 1 + stats.BonusLLSSDamage;
+            float bonusLLSSDamage = 1f + stats.BonusLLSSDamage;
             float bonusSSDamage = stats.TotemSSDamage;
             int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
@@ -337,8 +337,7 @@ namespace Rawr
             }
 
             //4: Earth Shock DPS
-            float ssGlyphBonus = character.ShamanTalents.GlyphofStormstrike ? .08f : 0f;
-            float stormstrikeMultiplier = 1.2f + ssGlyphBonus;
+            float stormstrikeMultiplier = 1.2f + (character.ShamanTalents.GlyphofStormstrike ? .08f : 0f);
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
