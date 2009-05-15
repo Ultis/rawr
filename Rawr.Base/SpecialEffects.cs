@@ -997,8 +997,10 @@ namespace Rawr
                 line = line.Substring("Reduces the mana cost of your spells by ".Length);
                 stats.SpellsManaReduction = float.Parse(line);
             }
-            #region Prototype Sigil Code:
-            /* Prototype Sigil Code:
+            else
+            {
+                #region Prototype Sigil Code:
+                /* Prototype Sigil Code:
 
              Sigil of the Unfaltering Knight:
                Your Icy Touch will also increase your defense rating by 53.
@@ -1041,90 +1043,90 @@ namespace Rawr
                 Increases the damage dealt by your Blood Strike and Heart Strike by 90.
              * Increases the damage dealt by your [ability] and [ability] by [amount].
             */
-            // Single Ability.
-            Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec.");
-            match = regex.Match(line);
-            if (match.Success)
-            {
-                string statName = match.Groups["stat"].Value;
-                float amount = int.Parse(match.Groups["amount"].Value);
-                float duration = int.Parse(match.Groups["duration"].Value);
-                string ability = match.Groups["ability"].Value;
-
-                stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f));
-            }
-            regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(will )?(also )?increase (your )?(?<stat>\w+\s*\w*) by (?<amount>\d*).");
-            match = regex.Match(line);
-            if (match.Success)
-            {
-                string statName = match.Groups["stat"].Value;
-                float amount = int.Parse(match.Groups["amount"].Value);
-
-                EvalRegex(stats, statName, amount);
-            }
- 
-            regex = new Regex(@"Your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?have a chance to grant (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
-            match = regex.Match(line);
-            if (match.Success)
-            {
-                string statName = match.Groups["stat"].Value;
-                float amount = int.Parse(match.Groups["amount"].Value);
-                float duration = int.Parse(match.Groups["duration"].Value);
-                string ability = match.Groups["ability"].Value;
-                string ability2 = match.Groups["ability2"].Value;
-
-                SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f);
-                stats.AddSpecialEffect(SE1);
-                SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f);
-                if (SE1.ToString() != SE2.ToString())
+                // Single Ability.
+                Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec.");
+                match = regex.Match(line);
+                if (match.Success)
                 {
-                    stats.AddSpecialEffect(SE2);
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float duration = int.Parse(match.Groups["duration"].Value);
+                    string ability = match.Groups["ability"].Value;
+
+                    stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f));
                 }
-            }
-            // Single Ability damage increase.
-            regex = new Regex(@"Increases the damage dealt by your (?<ability>\w+\s*\w*) (ability )?by (?<amount>\d+[.]*\d*).");
-            match = regex.Match(line);
-            if (match.Success)
-            {
-                string statName = match.Groups["stat"].Value;
-                float amount = float.Parse(match.Groups["amount"].Value);
-                string ability = match.Groups["ability"].Value;
-                //string ability2 = match.Groups["ability2"].Value;
+                regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(will )?(also )?increase (your )?(?<stat>\w+\s*\w*) by (?<amount>\d*).");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
 
-                EvalAbility(ability, stats, amount);
-            }
-            // 2 Abilities damage increase.
-            regex = new Regex(@"Increases the damage (dealt |done )?by your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?by (?<amount>\d+).");
-            match = regex.Match(line);
-            if (match.Success)
-            {
-                string statName = match.Groups["stat"].Value;
-                float amount = int.Parse(match.Groups["amount"].Value);
-                string ability = match.Groups["ability"].Value;
-                string ability2 = match.Groups["ability2"].Value;
+                    EvalRegex(stats, statName, amount);
+                }
 
-                EvalAbility(ability, stats, amount);
-                EvalAbility(ability2, stats, amount);
-            }
-            // 3 Abilities damage increase.
-            regex = new Regex(@"Increases the (base )?damage (dealt |done )?by your (?<ability>\w+\s*\w*) by (?<amount>\d+), your (?<ability2>\w+\s*\w*) by (?<amount2>\d+), and your (?<ability3>\w+\s*\w*) by (?<amount3>\d+).");
-            match = regex.Match(line);
-            if (match.Success)
-            {
-                string statName = match.Groups["stat"].Value;
-                float amount = int.Parse(match.Groups["amount"].Value);
-                float amount2 = int.Parse(match.Groups["amount2"].Value);
-                float amount3 = int.Parse(match.Groups["amount3"].Value);
-                string ability = match.Groups["ability"].Value;
-                string ability2 = match.Groups["ability2"].Value;
-                string ability3 = match.Groups["ability3"].Value;
+                regex = new Regex(@"Your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?have a chance to grant (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float duration = int.Parse(match.Groups["duration"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
 
-                EvalAbility(ability, stats, amount);
-                EvalAbility(ability2, stats, amount2);
-                EvalAbility(ability3, stats, amount3);
-            }
-            #endregion Prototype Sigil Code
+                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f);
+                    stats.AddSpecialEffect(SE1);
+                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f);
+                    if (SE1.ToString() != SE2.ToString())
+                    {
+                        stats.AddSpecialEffect(SE2);
+                    }
+                }
+                // Single Ability damage increase.
+                regex = new Regex(@"Increases the damage dealt by your (?<ability>\w+\s*\w*) (ability )?by (?<amount>\d+[.]*\d*).");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = float.Parse(match.Groups["amount"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    //string ability2 = match.Groups["ability2"].Value;
 
+                    EvalAbility(ability, stats, amount);
+                }
+                // 2 Abilities damage increase.
+                regex = new Regex(@"Increases the damage (dealt |done )?by your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?by (?<amount>\d+).");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
+
+                    EvalAbility(ability, stats, amount);
+                    EvalAbility(ability2, stats, amount);
+                }
+                // 3 Abilities damage increase.
+                regex = new Regex(@"Increases the (base )?damage (dealt |done )?by your (?<ability>\w+\s*\w*) by (?<amount>\d+), your (?<ability2>\w+\s*\w*) by (?<amount2>\d+), and your (?<ability3>\w+\s*\w*) by (?<amount3>\d+).");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float amount2 = int.Parse(match.Groups["amount2"].Value);
+                    float amount3 = int.Parse(match.Groups["amount3"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
+                    string ability3 = match.Groups["ability3"].Value;
+
+                    EvalAbility(ability, stats, amount);
+                    EvalAbility(ability2, stats, amount2);
+                    EvalAbility(ability3, stats, amount3);
+                }
+                #endregion Prototype Sigil Code
+            }
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)

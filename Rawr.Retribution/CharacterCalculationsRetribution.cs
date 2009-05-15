@@ -58,44 +58,36 @@ namespace Rawr.Retribution
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            dictValues.Add("Status", string.Format("{0} dps", DPSPoints.ToString("N0")));
-            dictValues.Add("Health", BasicStats.Health.ToString("N0"));
-            dictValues.Add("Strength", BasicStats.Strength.ToString("N0"));
-            dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, (BasicStats.Agility / 6250f)));
-			dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("N0"));
-            dictValues.Add("Crit Chance", string.Format("{0:P}*{1:0} crit rating", BasicStats.PhysicalCrit, BasicStats.CritRating));
-			dictValues.Add("Miss Chance", string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating));
-			dictValues.Add("Dodge Chance", string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating));
-            dictValues.Add("Melee Haste", string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating));
+            dictValues["Status"] = string.Format("{0} dps", DPSPoints.ToString("N0"));
+            dictValues["Health"] = BasicStats.Health.ToString("N0");
+            dictValues["Strength"] = BasicStats.Strength.ToString("N0");
+            dictValues["Agility"] = string.Format("{0:0}", BasicStats.Agility);
+			dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
+            dictValues["Crit Chance"] = string.Format("{0:P}*{1:0} crit rating", BasicStats.PhysicalCrit, BasicStats.CritRating);
+			dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
+			dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
+            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating);
 
-            dictValues.Add("Weapon Damage", WeaponDamage.ToString("N2"));
-            dictValues.Add("Attack Speed", AttackSpeed.ToString("N2"));
+            dictValues["Weapon Damage"] = WeaponDamage.ToString("N2");
+            dictValues["Attack Speed"] = AttackSpeed.ToString("N2");
 
-            dictValues.Add("White", string.Format("{0}*{1}",
-                WhiteDPS.ToString("N0"), WhiteSkill.ToString()));
-            dictValues.Add("Seal", string.Format("{0}*{1}",
-                SealDPS.ToString("N0"), SealSkill.ToString()));
-            dictValues.Add("Crusader Strike", string.Format("{0}*{1}",
-                CrusaderStrikeDPS.ToString("N0"), CrusaderStrikeSkill.ToString()));
-            dictValues.Add("Judgement", string.Format("{0}*{1}",
-                JudgementDPS.ToString("N0"), JudgementSkill.ToString()));
-            dictValues.Add("Consecration", string.Format("{0}*{1}",
-                ConsecrationDPS.ToString("N0"), ConsecrationSkill.ToString()));
-            dictValues.Add("Exorcism", string.Format("{0}*{1}",
-                ExorcismDPS.ToString("N0"), ExorcismSkill.ToString()));
-            dictValues.Add("Divine Storm", string.Format("{0}*{1}",
-                DivineStormDPS.ToString("N0"), DivineStormSkill.ToString()));
-            dictValues.Add("Hammer of Wrath", string.Format("{0}*{1}",
-                HammerOfWrathDPS.ToString("N0"), HammerOfWrathSkill.ToString()));
-            dictValues.Add("Other", OtherDPS.ToString("N0"));
-            dictValues.Add("Total DPS", OverallPoints.ToString("N0"));
+            dictValues["White"] = string.Format("{0}*{1}", WhiteDPS.ToString("N0"), WhiteSkill.ToString());
+            dictValues["Seal"] = string.Format("{0}*{1}", SealDPS.ToString("N0"), SealSkill.ToString());
+            dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeDPS.ToString("N0"), CrusaderStrikeSkill.ToString());
+            dictValues["Judgement"] = string.Format("{0}*{1}", JudgementDPS.ToString("N0"), JudgementSkill.ToString());
+            dictValues["Consecration"] = string.Format("{0}*{1}", ConsecrationDPS.ToString("N0"), ConsecrationSkill.ToString());
+            dictValues["Exorcism"] = string.Format("{0}*{1}", ExorcismDPS.ToString("N0"), ExorcismSkill.ToString());
+            dictValues["Divine Storm"] = string.Format("{0}*{1}", DivineStormDPS.ToString("N0"), DivineStormSkill.ToString());
+            dictValues["Hammer of Wrath"] = string.Format("{0}*{1}", HammerOfWrathDPS.ToString("N0"), HammerOfWrathSkill.ToString());
+            dictValues["Other"] = OtherDPS.ToString("N0");
+            dictValues["Total DPS"] = OverallPoints.ToString("N0");
 
-            dictValues.Add("Crusader Strike CD", Rotation.CrusaderStrikeCD.ToString("N2"));
-            dictValues.Add("Judgement CD", Rotation.JudgementCD.ToString("N2"));
-            dictValues.Add("Consecration CD", Rotation.ConsecrationCD.ToString("N2"));
-            dictValues.Add("Exorcism CD", Rotation.ExorcismCD.ToString("N2"));
-            dictValues.Add("Divine Storm CD", Rotation.DivineStormCD.ToString("N2"));
-            dictValues.Add("Hammer of Wrath CD", Rotation.HammerOfWrathCD.ToString("N2"));
+            dictValues["Crusader Strike CD"] = Rotation.CrusaderStrikeCD.ToString("N2");
+            dictValues["Judgement CD"] = Rotation.JudgementCD.ToString("N2");
+            dictValues["Consecration CD"] = Rotation.ConsecrationCD.ToString("N2");
+            dictValues["Exorcism CD"] = Rotation.ExorcismCD.ToString("N2");
+            dictValues["Divine Storm CD"] = Rotation.DivineStormCD.ToString("N2");
+            dictValues["Hammer of Wrath CD"] = Rotation.HammerOfWrathCD.ToString("N2");
 
             return dictValues;
         }
