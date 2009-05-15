@@ -21,6 +21,9 @@ namespace Rawr.Enhance
         private float chanceCrit = 0f;
         private float expertiseBonus = 0f;
 
+        float critMultiplierMelee = 0f;
+        float critMultiplierSpell = 0f;
+
         private float chanceSpellMiss = 0f;
         private float chanceWhiteMiss = 0f;
         private float chanceYellowMiss = 0f;
@@ -76,15 +79,15 @@ namespace Rawr.Enhance
         public float NormalHitModifier { get { return 1 - chanceWhiteCrit - glancingRate; } }
         public float CritHitModifier { get { return chanceWhiteCrit * (2f + _stats.BonusCritMultiplier); } }
         public float GlancingHitModifier { get { return glancingRate * .7f; } }
-
         public float YellowHitModifier { get { return ChanceYellowHit * (1 - chanceYellowCrit); } }
         public float YellowCritModifier { get { return ChanceYellowHit * chanceYellowCrit; } }
-
         public float SpellHitModifier { get { return ChanceSpellHit * (1 - chanceSpellCrit); } }
         public float SpellCritModifier { get { return ChanceSpellHit * chanceSpellCrit; } }
-
         public float LBHitModifier { get { return ChanceSpellHit * (1 - chanceSpellCrit - callOfThunder); } }
         public float LBCritModifier { get { return ChanceSpellHit * (chanceSpellCrit + callOfThunder); } }
+
+        public float CritMultiplierMelee { get { return critMultiplierMelee; } }
+        public float CritMultiplierSpell { get { return critMultiplierSpell; } }
 
         public float ChanceSpellHit { get { return 1 - chanceSpellMiss; } }
         public float ChanceWhiteHit { get { return 1 - chanceWhiteMiss; } }
@@ -125,14 +128,17 @@ namespace Rawr.Enhance
         private const float DODGE = 0.065f;
         private const float WHITE_MISS = 0.27f;
         private const float YELLOW_MISS = 0.08f;
+  //      private const float SPELL_MISS = 0.17f;
 
         public void UpdateCalcs()
         {
             // talents
             callOfThunder = .05f * _character.ShamanTalents.CallOfThunder;
+            critMultiplierMelee = 2f * (1 + _stats.BonusCritMultiplier);
+            critMultiplierSpell = (1.5f + .1f * _character.ShamanTalents.ElementalFury) * (1 + _stats.BonusSpellCritMultiplier);
 
             // Melee
-            float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating);
+            float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + .02f * _talents.DualWieldSpecialization;
             expertiseBonus = 0.0025f * (_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
 
             float meleeCritModifier = _stats.PhysicalCrit;
@@ -140,8 +146,8 @@ namespace Rawr.Enhance
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
             chanceCrit = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             chanceDodge = Math.Max(0f, DODGE - expertiseBonus);
-            chanceWhiteMiss = Math.Max(0f, WHITE_MISS - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge;
-            chanceYellowMiss = Math.Max(0f, YELLOW_MISS - hitBonus - .02f * _talents.DualWieldSpecialization) + chanceDodge; // base miss 8% now
+            chanceWhiteMiss = Math.Max(0f, WHITE_MISS - hitBonus) + chanceDodge;
+            chanceYellowMiss = Math.Max(0f, YELLOW_MISS - hitBonus) + chanceDodge; // base miss 8% now
             chanceWhiteCrit = Math.Min(chanceCrit - whiteCritDepression, 1f - glancingRate - chanceWhiteMiss);
             chanceYellowCrit = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMiss);
 
@@ -154,6 +160,7 @@ namespace Rawr.Enhance
         
             float spellCritModifier = _stats.SpellCrit + ftBonusCrit;
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
+            // chanceSpellMiss = Math.Max(0f, SPELL_MISS - hitBonusSpell);
             chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - .17f);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) + 
