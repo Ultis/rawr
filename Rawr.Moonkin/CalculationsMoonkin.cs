@@ -264,7 +264,8 @@ namespace Rawr.Moonkin
                     "Talent DPS Comparison",
                     "Talent MP5 Comparison",
                     "Mana Gains",
-					"Relative Stat Values"
+                    "Damage per Cast Time"
+					//"Relative Stat Values"
                     };
                 }
                 return customChartNames;
@@ -721,7 +722,26 @@ namespace Rawr.Moonkin
                     });
 
                     return manaGainsList.ToArray();
-                case "Relative Stat Values":
+                case "Damage per Cast Time":
+                    CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    ComparisonCalculationMoonkin sf = new ComparisonCalculationMoonkin() { Name = "Starfire" };
+                    ComparisonCalculationMoonkin mf = new ComparisonCalculationMoonkin() { Name = "Moonfire" };
+                    ComparisonCalculationMoonkin iSw = new ComparisonCalculationMoonkin() { Name = "Insect Swarm " };
+                    ComparisonCalculationMoonkin wr = new ComparisonCalculationMoonkin() { Name = "Wrath" };
+                    sf.DamagePoints = calcsBase.SelectedRotation.Solver.Starfire.DamagePerHit / calcsBase.SelectedRotation.Solver.Starfire.CastTime;
+                    sf.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.Starfire.DamagePerHit / calcsBase.BurstDPSRotation.Solver.Starfire.CastTime;
+                    sf.OverallPoints = sf.DamagePoints + sf.RawDamagePoints;
+                    mf.DamagePoints = (calcsBase.SelectedRotation.Solver.Moonfire.DamagePerHit + calcsBase.SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) / calcsBase.SelectedRotation.Solver.Moonfire.CastTime;
+                    mf.RawDamagePoints = (calcsBase.BurstDPSRotation.Solver.Moonfire.DamagePerHit + calcsBase.BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) / calcsBase.BurstDPSRotation.Solver.Moonfire.CastTime;
+                    mf.OverallPoints = mf.DamagePoints + mf.RawDamagePoints;
+                    iSw.DamagePoints = calcsBase.SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit / calcsBase.SelectedRotation.Solver.InsectSwarm.CastTime;
+                    iSw.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit / calcsBase.BurstDPSRotation.Solver.InsectSwarm.CastTime;
+                    iSw.OverallPoints = iSw.DamagePoints + iSw.RawDamagePoints;
+                    wr.DamagePoints = calcsBase.SelectedRotation.Solver.Wrath.DamagePerHit / calcsBase.SelectedRotation.Solver.Wrath.CastTime;
+                    wr.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.Wrath.DamagePerHit / calcsBase.BurstDPSRotation.Solver.Wrath.CastTime;
+                    wr.OverallPoints = wr.DamagePoints + wr.RawDamagePoints;
+                    return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr };
+/*                case "Relative Stat Values":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 1 } }) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }) as CharacterCalculationsMoonkin;
@@ -800,7 +820,7 @@ namespace Rawr.Moonkin
                             OverallPoints = calcsCrit.OverallPoints - calcsBase.OverallPoints,
                             DamagePoints = calcsCrit.SubPoints[0] - calcsBase.SubPoints[0],
                             RawDamagePoints = calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]
-                        }};
+                        }};*/
             }
             return new ComparisonCalculationBase[0];
         }
@@ -896,27 +916,8 @@ namespace Rawr.Moonkin
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 Mana = stats.Mana,
-                //SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
-                //SpellNatureDamageRating = stats.SpellNatureDamageRating,
                 Armor = stats.Armor,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
-                /*SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
-                SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
-                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
-                ManaRestorePerCast = stats.ManaRestorePerCast,
-                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
-                SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
-                SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
-                SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
-                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
-                SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
-                SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
-                SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
-                SpellPowerFor10SecOnCast_10_45 = stats.SpellPowerFor10SecOnCast_10_45,
-                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
-                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,*/
                 StarfireDmg = stats.StarfireDmg,
                 MoonfireDmg = stats.MoonfireDmg,
                 WrathDmg = stats.WrathDmg,
@@ -930,10 +931,6 @@ namespace Rawr.Moonkin
                 BonusNukeCritChance = stats.BonusNukeCritChance,
                 StarfireCritChance = stats.StarfireCritChance,
                 BonusManaPotion = stats.BonusManaPotion,
-                /*ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
-                TimbalsProc = stats.TimbalsProc,
-                DruidAshtongueTrinket = stats.DruidAshtongueTrinket,
-				ThreatReductionMultiplier = stats.ThreatReductionMultiplier,*/
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 ManaRestoreFromBaseManaPerHit  = stats.ManaRestoreFromBaseManaPerHit,
                 SpellHaste = stats.SpellHaste,
@@ -941,16 +938,9 @@ namespace Rawr.Moonkin
                 SpellHit = stats.SpellHit,
                 ArmorPenetration = stats.ArmorPenetration,
                 Bloodlust = stats.Bloodlust,
-                /*DrumsOfBattle = stats.DrumsOfBattle,
-                DrumsOfWar = stats.DrumsOfWar,*/
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
-                /*PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
-                ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
-                GreatnessProc = stats.GreatnessProc,*/
                 EclipseBonus = stats.EclipseBonus,
-                InsectSwarmDmg = stats.InsectSwarmDmg,
-                //LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc
+                InsectSwarmDmg = stats.InsectSwarmDmg
             };
             // Add special effects that meet the following criteria:
             // 1) On-use OR
@@ -1025,7 +1015,7 @@ namespace Rawr.Moonkin
                     }
                 }
             }
-            //return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse5Min + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration + stats.Bloodlust + stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreOnCrit_25_45 + stats.ThunderCapacitorProc + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc + stats.DarkmoonCardDeathProc + stats.GreatnessProc + stats.EclipseBonus + stats.StarfireProc + stats.InsectSwarmDmg + stats.LightweaveEmbroideryProc) > 0;
+
             return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health
                 + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.HasteRating + stats.SpellHaste
                 + stats.HitRating + stats.SpellHit + stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier

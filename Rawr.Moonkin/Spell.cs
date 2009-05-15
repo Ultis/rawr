@@ -53,7 +53,7 @@ namespace Rawr.Moonkin
             this.Duration = copy.Duration;
             this.TickDamage = copy.TickDamage;
             this.TickLength = copy.TickLength;
-            //this.SpellDamageModifier = copy.SpellDamageModifier;
+
             this.SpellDamageModifierPerTick = copy.SpellDamageModifierPerTick;
         }
         public float Duration { get; set; }
@@ -79,16 +79,6 @@ namespace Rawr.Moonkin
             }
         }
         public float SpellDamageModifierPerTick { get; set; }
-        /*{
-            get
-            {
-                return SpellDamageModifier / NumberOfTicks;
-            }
-            set
-            {
-                SpellDamageModifier += value * NumberOfTicks;
-            }
-        }*/
         public float BaseDamage
         {
             get
@@ -901,7 +891,7 @@ namespace Rawr.Moonkin
             float baseHit = GetSpellHit(calcs);
             float baseCrit = calcs.SpellCrit;
             float baseHaste = calcs.SpellHaste;
-            //DoOnUseTrinketCalcs(calcs, baseHit, ref baseSpellPower, ref baseCrit, ref baseHaste, ref trinketDPS);
+
             BuildProcList(calcs);
 
             float maxDamageDone = 0.0f;
@@ -1105,19 +1095,6 @@ namespace Rawr.Moonkin
                     }
                 });
             }
-            // Je'Tze's Bell (10% chance of 100 mp5 for 15 sec)
-/*            if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float procsPerRotation = 0.1f * r.CastCount;
-                        float timeBetweenProcs = r.Duration / procsPerRotation + 45.0f;
-                        return 300.0f / timeBetweenProcs * 5.0f;
-                    }
-                });
-            }*/
         }
 
         // Non-rotation-specific mana calculations
