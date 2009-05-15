@@ -159,9 +159,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] {
-                        "Item Budget",
-					};
+                    _customChartNames = new string[] {};
                 }
                 return _customChartNames;
             }
@@ -546,12 +544,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
 
 
+            // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
+            // such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             WhiteAttacks whiteAttacks = new WhiteAttacks(talents, statsTotal, combatFactors);
 
             Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
-            // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
-            // such as Berserking, Mirror of Truth, Grim Toll, etc.
 
             float fightDuration = 600f;  //TODO: Assuming 10min fight for now
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
@@ -567,24 +565,25 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit 
 				- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
+            float baseWeaponSped = character.MainHand != null ? character.MainHand.Speed : 2f;
 
             Stats statsProcs = new Stats();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 switch (effect.Trigger) {
                     case Trigger.Use:
-                        statsProcs += effect.GetAverageStats(0f, 1f, 1f, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
+                        statsProcs += effect.GetAverageStats(0f, 1f, baseWeaponSped, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
                         break;
                     case Trigger.MeleeHit: case Trigger.PhysicalHit:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
+                        statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, baseWeaponSped, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
                         break;
                     case Trigger.MeleeCrit: case Trigger.PhysicalCrit:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
+                        statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, baseWeaponSped, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
                         break;
                     case Trigger.DoTTick:
-                        statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
+                        statsProcs += effect.GetAverageStats(1.5f, 1f, baseWeaponSped, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
                         break;
                     case Trigger.DamageDone:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
+                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, baseWeaponSped, 600f/*fake.GetRotation()*//*calcOpts.Duration*/);
                         break;
                 }
             }
@@ -613,62 +612,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             switch (chartName)
             {
-                case "Item Budget":
-                    Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10f } },
-                        new Item() { Stats = new Stats() { Agility = 10f } },
-                        new Item() { Stats = new Stats() { AttackPower = 20f } },
-                        new Item() { Stats = new Stats() { CritRating = 10f } },
-                        new Item() { Stats = new Stats() { HitRating = 10f } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 8.19f } },
-                        new Item() { Stats = new Stats() { HasteRating = 10f } },
-                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10f } },
-                    };
-                    string[] statList = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Attack Power",
-                        "Crit Rating",
-                        "Hit Rating",
-                        "Expertise Rating",
-                        "Haste Rating",
-                        "Armor Penetration Rating",
-                    };
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSWarr;
-
-                    float mod = 1;
-                    for (int index = 0; index < itemList.Length; index++) {
-                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsDPSWarr;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = (calc.OverallPoints - baseCalc.OverallPoints) / 10;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++){
-                            if (comparison.Name == "Strength"){
-                                subPoints[i] = 1;
-                            }else{
-                                subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                                subPoints[i] /= 10;
-                                subPoints[i] /= mod;
-                            }
-                        }
-                        comparison.SubPoints = subPoints;
-                        if (comparison.Name == "Strength"){
-                            mod = comparison.OverallPoints;
-                            comparison.OverallPoints = 1;
-                        }else if (comparison.Name == "Expertise Rating"){
-                            comparison.OverallPoints /= mod;
-                            comparison.OverallPoints /= 8.197f;
-                        }else{
-                            comparison.OverallPoints /= mod;
-                        }
-
-                        comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();
                 default:
                     return new ComparisonCalculationBase[0];
             }
