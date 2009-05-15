@@ -45,7 +45,7 @@ namespace Rawr
         public bool GlyphOfMageArmor { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
         [GlyphData(6, "Glyph of Mana Gem", true, @"Increases the mana recieved from using a mana gem by 40%.")]
         public bool GlyphOfManaGem { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        [GlyphData(7, "Glyph of Molten Armor", true, @"Your Molten Armor spell grants an additional 15% of your spirit as critical strike rating.")]
+        [GlyphData(7, "Glyph of Molten Armor", true, @"Your Molten Armor spell grants an additional 20% of your spirit as critical strike rating.")]
         public bool GlyphOfMoltenArmor { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         [GlyphData(8, "Glyph of Water Elemental", true, @"Reduces the cooldown of your Summon Water Elemental spell by 30 sec.")]
         public bool GlyphOfWaterElemental { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
