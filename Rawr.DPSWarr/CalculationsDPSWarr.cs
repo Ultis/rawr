@@ -229,7 +229,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats                           stats           = GetCharacterStats(character, additionalItem);
 
             CombatFactors combatFactors = new CombatFactors(character, stats);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(character.WarriorTalents, stats, combatFactors);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(character.WarriorTalents, stats, combatFactors, character);
             Skills skillAttacks = new Skills(character,character.WarriorTalents, stats, combatFactors, whiteAttacks);
             Stats statsRace = GetRaceStats(character);
 
@@ -270,7 +270,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
             calculatedStats.WhiteDPSOH = whiteAttacks.CalcOhWhiteDPS();
             calculatedStats.WhiteDPS   = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-            calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
+            //calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
             calculatedStats.DW = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
             calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
             calculatedStats.RND = new Skills.Rend(character, stats, combatFactors, whiteAttacks);//calculatedStats.RendDPS = skillAttacks.Rend();
@@ -279,7 +279,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.SS = new Skills.Swordspec(character, stats, combatFactors, whiteAttacks); //calculatedStats.SwordSpecDPS = skillAttacks.SwordSpec();
             calculatedStats.SW = new Skills.SweepingStrikes(character, stats, combatFactors, whiteAttacks);
             calculatedStats.BLS = new Skills.Bladestorm(character, stats, combatFactors, whiteAttacks); //calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
-            calculatedStats.BS = new Skills.BloodSurge(character, stats, combatFactors, whiteAttacks);
+
+            Skills.HeroicStrike heroicstrike = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);
+            Skills.BloodSurge bloodsurge = new Skills.BloodSurge(character, stats, combatFactors, whiteAttacks);
+            float oldHSActivates = 0.0f, newHSActivates = heroicstrike.GetActivates();
+            while (Math.Abs(newHSActivates - oldHSActivates) > 0.01f)
+            {
+                oldHSActivates = heroicstrike.GetActivates();
+                bloodsurge.hsActivates = oldHSActivates;
+                heroicstrike.bloodsurgeRPS = bloodsurge.GetRageUsePerSecond();
+                newHSActivates = heroicstrike.GetActivates();
+            }
+            calculatedStats.BS = bloodsurge;
+            calculatedStats.HS = heroicstrike;
             calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
             calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
             calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
@@ -288,7 +300,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.Armor = (int)stats.Armor;
             calculatedStats.damageReduc = combatFactors.DamageReduction;
 
-            calculatedStats.WhiteRage = whiteAttacks.whiteRageGen();
+            calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec();
             calculatedStats.OtherRage = skillAttacks.OtherRage();
             calculatedStats.FreeRage = skillAttacks.freeRage();
 
@@ -547,7 +559,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
             // such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, statsTotal, combatFactors);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, statsTotal, combatFactors, character);
 
             Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
 
@@ -605,11 +617,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            /*List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             CharacterCalculationsDPSWarr baseCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
-
+            */
             switch (chartName)
             {
                 default:
@@ -775,4 +787,34 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calcOpts.talents = character.WarriorTalents;
         }
     }
+    /*public class DPSWarr {
+        // Offensive
+        public static readonly float StrengthToAP = 2.0f;
+        public static readonly float AgilityToCrit = 1.0f / 62.5f;
+        public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
+        public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
+        public static readonly float CritToCritRating = 45.90598f; //14*82/52
+        public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
+        //public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
+        //public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
+        public static readonly float ArPToArmorPenetration = 1.0f / (4.69512177f * 3.27899877899878f / 1.25f);// 1.0f / 15.395298f;
+        // Neutral
+        public static readonly float StaminaToHP = 10.0f;
+        // Defensive
+        public static readonly float AgilityToArmor = 2.0f;
+        public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
+        public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
+        public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
+        public static readonly float DefenseRatingToDefense = 1.0f / 4.918498039f;
+        public static readonly float DefenseToDodge = 0.04f;
+        public static readonly float DefenseToBlock = 0.04f;
+        public static readonly float DefenseToParry = 0.04f;
+        public static readonly float DefenseToMiss = 0.04f;
+        public static readonly float DefenseToCritReduction = 0.04f;
+        public static readonly float DefenseToDazeReduction = 0.04f;
+        public static readonly float ParryRatingToParry = 1.0f / 49.18498611f;
+        public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
+        // PvP
+        public static readonly float ResilienceRatingToCritReduction = 1.0f / 81.97497559f;
+    }*/
 }

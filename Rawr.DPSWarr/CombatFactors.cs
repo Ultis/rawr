@@ -48,7 +48,7 @@ namespace Rawr.DPSWarr {
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MainHand, _stats); } }
         public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OffHand, _stats)*(0.5f+_talents.DualWieldSpecialization*0.025f); } }
         public float NormalizedOhWeaponDmg { get { return CalcNormalizedWeaponDamage(OffHand, _stats); } }
-        public float YellowMissChance { get { var missChance = 8f - HitPercent; return missChance < 0f ? 0f : missChance/100; } }
+        public float YellowMissChance { get { var missChance = 0.08f - HitPercent; return missChance < 0f ? 0f : missChance; } }
         public float WhiteMissChance {
             get {
                 var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1 ? 8f : 27f );
@@ -64,8 +64,9 @@ namespace Rawr.DPSWarr {
         public float MhYellowCrit   { get { return CalcYellowCrit(MainHand); } }
         public float OhCrit         { get { return CalcCrit(OffHand); } }
         public float OhYellowCrit   { get { return CalcYellowCrit(OffHand); } }
-        public float ProbMhWhiteHit { get { return 1f - WhiteMissChance - MhDodgeChance; } }
-        public float ProbOhWhiteHit { get { return 1f - WhiteMissChance - OhDodgeChance; } }
+        public float GlanceChance { get { return 0.25f; } }
+        public float ProbMhWhiteHit { get { return 1f - WhiteMissChance - MhCrit - MhDodgeChance - GlanceChance; } }
+        public float ProbOhWhiteHit { get { return 1f - WhiteMissChance - OhCrit - OhDodgeChance - GlanceChance; } }
         public float TotalHaste {
             get {   
                 //TODO:  Add WindFury Totem (a straight haste bonus as of patch 3.0)
@@ -89,7 +90,7 @@ namespace Rawr.DPSWarr {
             }
         }
         public float BonusYellowCritDmg { get { return BonusWhiteCritDmg*(1+_talents.Impale*0.1f); } }
-        public float HitPercent { get { return _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating,Character.CharacterClass.Warrior); } }
+        public float HitPercent { get { return _stats.PhysicalHit/100f + StatConversion.GetHitFromRating(_stats.HitRating,Character.CharacterClass.Warrior); } }
         public float DamageBonus {
             get {
                 return (1+_talents.TwoHandedWeaponSpecialization * 0.02f)*(1+_stats.BonusPhysicalDamageMultiplier)*

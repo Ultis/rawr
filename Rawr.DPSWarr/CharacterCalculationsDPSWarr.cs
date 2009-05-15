@@ -101,7 +101,7 @@ namespace Rawr.DPSWarr
             Character character = new Character();
             CombatFactors combatFactors = new CombatFactors(character, BasicStats);
 
-            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, BasicStats, combatFactors);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, BasicStats, combatFactors, character);
             if (SkillAttacks == null){SkillAttacks = new Skills(character,talents, BasicStats, combatFactors, whiteAttacks);}
 
             dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
@@ -164,16 +164,16 @@ namespace Rawr.DPSWarr
             // Rage
             dictValues.Add("Generated White DPS Rage", WhiteRage.ToString());
             dictValues.Add("Generated Other Rage", SkillAttacks.OtherRage().ToString());
-            dictValues.Add("Ability's Rage Used (BT)", BT.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (WW)", WW.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (MS)", MS.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (OP)", OP.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (SD)", SD.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (SL)", SL.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (BS)", BS.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (BLS)", BLS.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (SW)", SW.GetAvgRageCost().ToString());
-            dictValues.Add("Ability's Rage Used (RND)", RND.GetAvgRageCost().ToString());
+            dictValues.Add("Ability's Rage Used (BT)", BT.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (WW)", WW.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (MS)", MS.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (OP)", OP.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (SD)", SD.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (SL)", SL.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (BS)", BS.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (BLS)", BLS.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (SW)", SW.GetRageUsePerSecond().ToString());
+            dictValues.Add("Ability's Rage Used (RND)", RND.GetRageUsePerSecond().ToString());
             dictValues.Add("Available Free Rage", SkillAttacks.freeRage().ToString());
             
             return dictValues;
