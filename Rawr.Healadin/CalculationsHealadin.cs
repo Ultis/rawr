@@ -329,34 +329,19 @@ namespace Rawr.Healadin
                         if (calc == null)
                         {
                             trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
-                            if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) { trigger *= stats.SpellCrit; }
+                            if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) trigger *= stats.SpellCrit;
                         }
                         else
                         {
                             if (effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
-                            {
                                 trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
-                            }
                             else if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
-                            {
                                 trigger = 1f / Rotation.GetHealingCritsPerSec(calc);
-                            }
                             else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
-                            {
                                 trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
-                            }
-                            else { continue; }
+                            else continue;
                         }
-
-                        //if (effect.MaxStack > 1)
-                        //{
-                        //    float timeToMax = (float)Math.Min(fightLength, effect.Chance * trigger * effect.MaxStack);
-                        //    statsAverage += effect.Stats * (effect.MaxStack * ((fightLength - .5f * timeToMax) / fightLength));
-                        //}
-                        //else
-                        //{
-                            statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
-                        //}
+                        statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
                     }
                 }
                 statsAverage.ManaRestore *= fightLength;

@@ -388,9 +388,10 @@ namespace Rawr.Retribution
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             if (character.Race == Character.CharacterRace.Dwarf && character.MainHand != null &&
-                character.MainHand.Type == Item.ItemType.TwoHandMace) statsRace.Expertise += 5f;
+                    character.MainHand.Type == Item.ItemType.TwoHandMace)
+                statsRace.Expertise += 5f;
             if (character.Race == Character.CharacterRace.Human && character.MainHand != null &&
-                (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
+                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
                 statsRace.Expertise += 3f;
             statsRace.Health -= 180f;
             statsRace.Mana -= 280f;
@@ -445,6 +446,7 @@ namespace Rawr.Retribution
                             trigger = rot.GetJudgementCD();
                             procChance = rot.Judge.ChanceToLand();
                         }
+                        else continue;
                         if (effect.MaxStack > 1) statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance,
                             combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset);
                         else statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
