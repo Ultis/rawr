@@ -492,8 +492,8 @@ namespace Rawr.DPSDK
 
                 // Crit: Base .65%
                 physCrits = .0065f;
-                physCrits += stats.CritRating / 4591f;
-                physCrits += stats.Agility / 6250f;
+                physCrits += StatConversion.GetPhysicalCritFromRating(stats.CritRating);
+                physCrits += StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.DeathKnight);
                 physCrits += .01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer + talents.Annihilation);
                 physCrits += stats.PhysicalCrit;
                 calcs.CritChance = physCrits;
@@ -528,7 +528,7 @@ namespace Rawr.DPSDK
                 float chanceMiss = 0f;
                 if (character.OffHand == null) chanceMiss = .08f;
                 else chanceMiss = .27f;
-                chanceMiss -= stats.HitRating / 3279f;
+                chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;
                 if (chanceMiss < 0f) chanceMiss = 0f;
@@ -538,7 +538,7 @@ namespace Rawr.DPSDK
                 calcs.AvoidedAttacks = chanceDodged + chanceMiss;
 
                 chanceMiss = .08f;
-                chanceMiss -= stats.HitRating / 3279f;
+                chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;
                 if (chanceMiss < 0f) chanceMiss = 0f;
@@ -548,14 +548,14 @@ namespace Rawr.DPSDK
                 // calcs.MissedAttacks = chanceMiss           
 
                 spellCrits = 0f;
-                spellCrits += stats.CritRating / 4591;
+                spellCrits += StatConversion.GetSpellCritFromRating(stats.CritRating);
                 spellCrits += stats.SpellCrit;
                 spellCrits += .01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer);
                 calcs.SpellCritChance = spellCrits;
 
                 // Resists: Base 17%
                 spellResist = .17f;
-                spellResist -= stats.HitRating / 2624f;
+                spellResist -= StatConversion.GetSpellHitFromRating(stats.HitRating);
                 spellResist -= hitBonus + (.01f * talents.Virulence);
                 spellResist -= stats.SpellHit;
                 if (spellResist < 0f) spellResist = 0f;
@@ -564,16 +564,16 @@ namespace Rawr.DPSDK
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
                 realDuration = calcOpts.rotation.curRotationDuration;
-                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (stats.HasteRating / 3278f) + stats.SpellHaste)));
+                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)));
                 realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (stats.HasteRating / 3278f) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (stats.HasteRating / 3278f) + stats.SpellHaste)))))); //still need to implement spellhaste here
+                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)))))); //still need to implement spellhaste here
             }
             #endregion
 
             #region Killing Machine
             {
-                float KMPpM = (1f * talents.KillingMachine) * (1f + stats.HasteRating / 3278f); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
+                float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight))); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                 float addHastePercent = 1f;
 
                 if (calcOpts.Bloodlust)
@@ -1457,7 +1457,7 @@ namespace Rawr.DPSDK
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsBuffs.ArmorPenetration; // Just statsBuffs, because ArPen doesnt exist anywhere else
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
-            statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
+            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsBaseGear.ExpertiseRating);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             // Haste trinket (Meteorite Whetstone)
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
