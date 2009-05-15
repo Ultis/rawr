@@ -893,10 +893,10 @@ namespace Rawr.DPSDK
             {
                 if (calcOpts.rotation.DeathStrike > 0f)
                 {
-                    // this is missing +crit chance from rime
+                    // TODO: this is missing +crit chance from rime
                     float DSCD = realDuration / calcOpts.rotation.DeathStrike;
-                    float DSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 0.75f) + 222.75f +
-                        (character.Ranged != null && character.Ranged.Id == 40207 ? 315f : 0f);   // Sigil of Awareness
+                    // TODO: This should be changed to make use of the new glyph stats:
+                    float DSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 0.75f) + 222.75f + stats.BonusDeathStrikeDamage;
                     DSDmg *= 1f + 0.15f * (float)talents.ImprovedDeathStrike;
                     DSDmg *= (talents.GlyphofDeathStrike ? 1.25f : 1f);
                     dpsDeathStrike = DSDmg / DSCD;
