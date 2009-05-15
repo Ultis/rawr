@@ -281,7 +281,7 @@ namespace Rawr.DPSDK
 
             //damage multipliers
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
-            float frostSpellPowerMult = spellPowerMult; //implement razorice here later
+            float frostSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f); //implement razorice here later
 
             float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
             // Covers all % physical damage increases.  Blood Frenzy, FI.
@@ -1487,6 +1487,9 @@ namespace Rawr.DPSDK
             statsTotal.BonusIcyTouchDamage = statsGearEnchantsBuffs.BonusIcyTouchDamage;
             statsTotal.BonusObliterateDamage = statsGearEnchantsBuffs.BonusObliterateDamage;
             statsTotal.BonusScourgeStrikeDamage = statsGearEnchantsBuffs.BonusScourgeStrikeDamage;
+
+            statsTotal.BonusShadowDamageMultiplier = statsGearEnchantsBuffs.BonusShadowDamageMultiplier;
+            statsTotal.BonusFrostDamageMultiplier = statsGearEnchantsBuffs.BonusFrostDamageMultiplier;
 
             foreach (SpecialEffect effect in statsGearEnchantsBuffs.SpecialEffects())
             {
