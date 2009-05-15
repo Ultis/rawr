@@ -37,19 +37,13 @@ namespace Rawr.DPSDK
 
             if (calcOpts.rotation == null)
                 calcOpts.rotation = new Rotation();
-            
-            cbWindfuryEffect.Checked = calcOpts.Windfury;
+           
 
             cbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			tbFightLength.Value = calcOpts.FightLength;
 			lblFightLengthNum.Text = tbFightLength.Value.ToString();
 
             nudTargetArmor.Value = calcOpts.BossArmor;
-
-            cbWindfuryEffect.Checked = calcOpts.Windfury;
-            cbUREffect.Checked = calcOpts.UnleashedRage;
-            cbMagicVuln.Checked = calcOpts.MagicVuln;
-            cbCryptFever.Checked = calcOpts.CryptFever;
         }
         
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -199,38 +193,6 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
-        private void cbWindfuryEffect_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbWindfuryEffect.Checked) { calcOpts.Windfury = true; }
-            else { calcOpts.Windfury = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbUREffect_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbUREffect.Checked) { calcOpts.UnleashedRage = true; }
-            else { calcOpts.UnleashedRage = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbMagicVuln_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbMagicVuln.Checked) { calcOpts.MagicVuln = true; }
-            else { calcOpts.MagicVuln = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbCryptFever_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (cbCryptFever.Checked) { calcOpts.CryptFever = true; }
-            else { calcOpts.CryptFever = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
         private void cbGhoul_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
@@ -242,45 +204,23 @@ namespace Rawr.DPSDK
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             RotationViewer RV = new RotationViewer(calcOpts.rotation, calcOpts.talents);
-            RV.ShowDialog();
-            
+            RV.ShowDialog();            
+            Character.OnCalculationsInvalidated();
+        }
 
-            if (calcOpts.rotation.curRotationType == Rotation.Type.Blood)
-            {
-                cbUREffect.Checked = true;
+        private void BloodwormUptime_Scroll(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.BloodwormsUptime = BloodwormUptime.Value / 100f;
+            lbBloodwormTime.Text = (BloodwormUptime.Value / 100f).ToString("P");
+            Character.OnCalculationsInvalidated();
+        }
 
-                cbUREffect.Enabled = false;
-                cbWindfuryEffect.Enabled = true;
-                cbMagicVuln.Enabled = true;
-                cbCryptFever.Enabled = true;
-            }
-            else if (calcOpts.rotation.curRotationType == Rotation.Type.Frost)
-            {
-                cbWindfuryEffect.Checked = true;
-
-                cbUREffect.Enabled = true;
-                cbWindfuryEffect.Enabled = false;
-                cbMagicVuln.Enabled = true;
-                cbCryptFever.Enabled = true;
-            }
-            else if (calcOpts.rotation.curRotationType == Rotation.Type.Unholy)
-            {
-                cbCryptFever.Checked = true;
-                cbMagicVuln.Checked = true;
-
-                cbUREffect.Enabled = true;
-                cbWindfuryEffect.Enabled = true;
-                cbMagicVuln.Enabled = false;
-                cbCryptFever.Enabled = false;
-            }
-            else if (calcOpts.rotation.curRotationType == Rotation.Type.Custom)
-            {
-                cbUREffect.Enabled = true;
-                cbWindfuryEffect.Enabled = true;
-                cbMagicVuln.Enabled = true;
-                cbCryptFever.Enabled = true;
-            }
-            
+        private void GhoulUptime_Scroll(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.GhoulUptime = GhoulUptime.Value / 100f;
+            lbGhoulTime.Text = (GhoulUptime.Value / 100f).ToString("P");
             Character.OnCalculationsInvalidated();
         }
 
@@ -307,25 +247,18 @@ namespace Rawr.DPSDK
         }
 
         public int TargetLevel = 83;
-		public int BossArmor = 13083;
+		public int BossArmor = 10645;
 		public int FightLength = 10;
 		public bool EnforceMetagemRequirements = false;
         public bool Bloodlust = false;
         public bool DrumsOfBattle = false;
         public bool DrumsOfWar = false;
-        public int FerociousInspiration = 2;
-        public bool Windfury = false;
-	    public bool UnleashedRage = false;
-	    public bool MagicVuln = false;
-	    public bool CryptFever = false;
+        public int FerociousInspiration = 1;
         public bool HammerOfWrath = false;
         public bool Ghoul = true;
+        public float BloodwormsUptime = 0.25f;
+        public float GhoulUptime = 1f;
         public Presence presence = Presence.Blood;
-
-        public bool GlyphofOblit = false;
-        public bool GlyphofPS = false;
-        public bool GlyphofGhoul = false;
-        public bool GlyphofDS = false;
 
 	    public DeathKnightTalents talents = null;
 	    public Rotation rotation;

@@ -33,13 +33,6 @@ namespace Rawr.DPSDK
             set { _whiteDPS = value; }
         }
 
-        private float _windfuryDPS;
-        public float WindfuryDPS
-        {
-            get { return _windfuryDPS; }
-            set { _windfuryDPS = value; }
-        }
-
         private float _NecrosisDPS;
         public float NecrosisDPS
         {
@@ -101,6 +94,13 @@ namespace Rawr.DPSDK
         {
             get { return _UnholyBlightDPS; }
             set { _UnholyBlightDPS = value; }
+        }
+
+        private float _BloodwormsDPS;
+        public float BloodwormsDPS
+        {
+            get { return _BloodwormsDPS; }
+            set { _BloodwormsDPS = value; }
         }
 
         private float _OtherDPS;
@@ -374,6 +374,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Wandering Plague", WanderingPlagueDPS.ToString("N2"));
             dictValues.Add("White", WhiteDPS.ToString("N2"));
             dictValues.Add("Ghoul", GhoulDPS.ToString("N2"));
+            dictValues.Add("Bloodworms", BloodwormsDPS.ToString("N2"));
             dictValues.Add("Other", OtherDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 

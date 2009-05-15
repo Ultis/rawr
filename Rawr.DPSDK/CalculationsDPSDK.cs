@@ -136,6 +136,7 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
                         "DPS Breakdown:Ghoul",
+                        "DPS Breakdown:Bloodworms",
                         "DPS Breakdown:Other",
                         "DPS Breakdown:Total DPS",
                     });
@@ -240,7 +241,6 @@ namespace Rawr.DPSDK
             float dpsWhite = 0f;
             float dpsBCB = 0f;
             float dpsNecrosis = 0f;
-            float dpsWindfury = 0f;
             float dpsDeathCoil = 0f;
             float dpsIcyTouch = 0f;
             float dpsPlagueStrike = 0f;
@@ -262,6 +262,7 @@ namespace Rawr.DPSDK
             float dpsGhoul = 0f;
             float dpsOtherShadow = 0f;
             float dpsOtherArcane = 0f;
+            float dpsBloodworms = 0f;
 
             //shared variables
             DeathKnightTalents talents = calcOpts.talents;
@@ -293,7 +294,8 @@ namespace Rawr.DPSDK
             float BloodPlagueAPMult = 0.055f;
             float DeathCoilAPMult = 0.15f;
             float UnholyBlightAPMult = 0.013f;
-            float GargoyleAPMult = 0.3f;   // pre 3.0.8 == 0.42f...now probably ~0.3f                   
+            float GargoyleAPMult = 0.3f;   // pre 3.0.8 == 0.42f...now probably ~0.3f
+            float BloodwormsAPMult = 0.006f;
 
             //for estimating rotation pushback
             float totalMeleeAbilities = 0f;
@@ -576,31 +578,28 @@ namespace Rawr.DPSDK
                 float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight))); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                 float addHastePercent = 1f;
 
-                if (calcOpts.Bloodlust)
-                {
-                    float numLust = fightDuration % 600f;  // bloodlust changed in 3.0, can only have one every 10 minutes.
-                    float fullLustDur = (numLust - 1) * 600f + 40f;
-                    if (fightDuration < fullLustDur) // if the last lust doesn't go its full duration
-                    {
-                        float lastLustFraction = (fullLustDur - fightDuration) / 40f;
-                        numLust -= 1f;
-                        numLust += lastLustFraction;
-                    }
+                /*   if (calcOpts.Bloodlust)
+                   {
+                       float numLust = fightDuration % 600f;  // bloodlust changed in 3.0, can only have one every 10 minutes.
+                       float fullLustDur = (numLust - 1) * 600f + 40f;
+                       if (fightDuration < fullLustDur) // if the last lust doesn't go its full duration
+                       {
+                           float lastLustFraction = (fullLustDur - fightDuration) / 40f;
+                           numLust -= 1f;
+                           numLust += lastLustFraction;
+                       }
 
-                    float bloodlustUptime = (numLust * 40f) / fightDuration;
+                       float bloodlustUptime = (numLust * 40f) / fightDuration;
 
-                    addHastePercent += 0.3f * bloodlustUptime;
-                }
+                       addHastePercent += 0.3f * bloodlustUptime;
+                   }
 
-                if (calcOpts.talents.ImprovedIcyTalons != 0)
-                {
-                    addHastePercent += 0.05f;
-                }
+                   if (calcOpts.talents.ImprovedIcyTalons != 0)
+                   {
+                       addHastePercent += 0.05f;
+                   }*/
 
-                if (calcOpts.Windfury)
-                {
-                    addHastePercent += 0.2f;
-                }
+                addHastePercent += stats.PhysicalHaste;
 
                 KMPpM *= addHastePercent;
 
@@ -687,16 +686,6 @@ namespace Rawr.DPSDK
                 }
                 dpsBCB = dpsMHBCB + dpsOHBCB;
                 dpsBCB *= .1f * (float)talents.BloodCakedBlade;
-            }
-            #endregion
-
-            #region Windfury Contribution
-            {
-                if (calcOpts.Windfury)
-                {
-                    dpsWindfury = (dpsWhite + dpsNecrosis + dpsBCB) * (1f / 6f);
-                    // you're at 120% now, so find what the original 20% was
-                }
             }
             #endregion
 
@@ -837,6 +826,20 @@ namespace Rawr.DPSDK
                     float FSCritDmgMult = (.15f * (float)talents.GuileOfGorefiend);
                     float FSCrit = 1f + physCrits + addedCritFromKM + (numt8 >= 2 ? .05f : 0f);
                     dpsFrostStrike += dpsFrostStrike * FSCrit * FSCritDmgMult;
+                }
+            }
+            #endregion
+
+            #region Bloodworms
+            {
+                if (talents.Bloodworms > 0)
+                {
+                    float BloodwormSwing = 50f + BloodwormsAPMult * stats.AttackPower;
+                    float BloodwormSwingDPS = BloodwormSwing / 2.0f;    // any haste benefits?
+                    float TotalBloodworms = ((fightDuration / MH.hastedSpeed) + calcOpts.rotation.getMeleeSpecialsPerSecond() * fightDuration)
+                        * (0.03f * talents.Bloodworms)
+                        * 3f /*average of 3 bloodworms per proc*/;
+                    dpsBloodworms = ((TotalBloodworms * BloodwormSwingDPS * 20) / fightDuration);
                 }
             }
             #endregion
@@ -1082,6 +1085,7 @@ namespace Rawr.DPSDK
             float FrostStrikeMult = 1f;
             float GargoyleMult = 1f + commandMult;
             float GhoulMult = 1f + commandMult;
+            float BloodwormsMult = 1f + commandMult;
             float HeartStrikeMult = 1f;
             float HowlingBlastMult = 1f;
             float IcyTouchMult = 1f;
@@ -1092,7 +1096,6 @@ namespace Rawr.DPSDK
             float ScourgeStrikeMult = 1f;
             float UnholyBlightMult = 1f;
             float WhiteMult = 1f;
-            float WindfuryMult = 1f;
             float WanderingPlagueMult = 1f;
             float otherShadowMult = 1f;
             float otherArcaneMult = 1f;
@@ -1109,6 +1112,7 @@ namespace Rawr.DPSDK
                 dpsObliterate *= physMit;
                 dpsDeathStrike *= physMit;
                 dpsPlagueStrike *= physMit;
+                dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, stats.ArmorPenetration, 0f, 0f);
 
                 WhiteMult += physPowerMult - 1f;
                 BCBMult += physPowerMult - 1f;
@@ -1233,7 +1237,6 @@ namespace Rawr.DPSDK
                 ScourgeStrikeMult *= 1 + DesecrationMult;
                 UnholyBlightMult *= 1 + DesecrationMult;
                 WhiteMult *= 1 + DesecrationMult;
-                WindfuryMult *= 1 + DesecrationMult;
                 otherShadowMult *= 1 + DesecrationMult;
                 otherArcaneMult *= 1 + DesecrationMult;
 
@@ -1258,10 +1261,16 @@ namespace Rawr.DPSDK
                     ScourgeStrikeMult *= 1 + BoneMult;
                     UnholyBlightMult *= 1 + BoneMult;
                     WhiteMult *= 1 + BoneMult;
-                    WindfuryMult *= 1 + BoneMult;
                     otherShadowMult *= 1 + BoneMult;
                     otherArcaneMult *= 1 + BoneMult;
                 }
+            }
+            #endregion
+
+            #region Pet uptime modifiers
+            {
+                BloodwormsMult *= calcOpts.BloodwormsUptime;
+                GhoulMult *= calcOpts.GhoulUptime;
             }
             #endregion
 
@@ -1275,6 +1284,7 @@ namespace Rawr.DPSDK
             calcs.FrostStrikeDPS = dpsFrostStrike * FrostStrikeMult;
             calcs.GargoyleDPS = dpsGargoyle * GargoyleMult;
             calcs.GhoulDPS = dpsGhoul * GhoulMult;
+            calcs.BloodwormsDPS = dpsBloodworms * BloodwormsMult;
             calcs.HeartStrikeDPS = dpsHeartStrike * HeartStrikeMult;
             calcs.HowlingBlastDPS = dpsHowlingBlast * HowlingBlastMult;
             calcs.IcyTouchDPS = dpsIcyTouch * IcyTouchMult;
@@ -1285,7 +1295,6 @@ namespace Rawr.DPSDK
             calcs.ScourgeStrikeDPS = dpsScourgeStrike * ScourgeStrikeMult;
             calcs.UnholyBlightDPS = dpsUnholyBlight * UnholyBlightMult;
             calcs.WhiteDPS = dpsWhite * WhiteMult;
-            calcs.WindfuryDPS = dpsWindfury * WindfuryMult;
             calcs.WanderingPlagueDPS = dpsWanderingPlague * WanderingPlagueMult;
             calcs.OtherDPS = dpsOtherShadow * otherShadowMult + dpsOtherArcane * otherArcaneMult;
 
@@ -1293,7 +1302,7 @@ namespace Rawr.DPSDK
             calcs.DPSPoints = calcs.BCBDPS + calcs.BloodPlagueDPS + calcs.BloodStrikeDPS + calcs.DeathCoilDPS + calcs.FrostFeverDPS + calcs.FrostStrikeDPS +
                               calcs.GargoyleDPS + calcs.GhoulDPS + calcs.WanderingPlagueDPS + calcs.HeartStrikeDPS + calcs.HowlingBlastDPS + calcs.IcyTouchDPS +
                               calcs.NecrosisDPS + calcs.ObliterateDPS + calcs.DeathStrikeDPS + calcs.PlagueStrikeDPS + calcs.ScourgeStrikeDPS + calcs.UnholyBlightDPS +
-                              calcs.WhiteDPS + calcs.OtherDPS;
+                              calcs.WhiteDPS + calcs.OtherDPS + calcs.BloodwormsDPS;
             //windfury and DRW are handled elsewhere
 
             #region Dancing Rune Weapon
@@ -1301,7 +1310,7 @@ namespace Rawr.DPSDK
                 if (talents.DancingRuneWeapon > 0)
                 {
                     float DRWUptime = (15f + (1.5f * talents.RunicPowerMastery) + (talents.GlyphofDancingRuneWeapon ? 5f : 0)) / 90f;
-                    dpsDancingRuneWeapon = (calcs.DPSPoints - calcs.GhoulDPS) * DRWUptime;
+                    dpsDancingRuneWeapon = (calcs.DPSPoints - calcs.GhoulDPS - calcs.BloodwormsDPS) * DRWUptime;
                     dpsDancingRuneWeapon *= 0.5f; // "doing the same attacks as the Death Knight but for 50% reduced damage."
                     calcs.DPSPoints += dpsDancingRuneWeapon;
                     calcs.DRWDPS = dpsDancingRuneWeapon;
@@ -1435,22 +1444,11 @@ namespace Rawr.DPSDK
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
 
-            if (talents.BladedArmor > 0)
-            {
-                statsTotal.AttackPower += (statsGearEnchantsBuffs.Armor / 180f) * (float)talents.BladedArmor;
-            }
+            statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
 
             statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
             //double check to make sure they dont have it selected in the buffs tab
-            if (calcOpts.UnleashedRage)
-            {
-                statsTotal.AttackPower *= 1.1f;
-            }
-            else  
-            {
-                statsTotal.AttackPower *= 1f + ( .1f * (float)talents.AbominationsMight );
-            }
 
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;

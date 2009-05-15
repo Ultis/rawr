@@ -32,19 +32,23 @@
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.tbFightLength = new System.Windows.Forms.TrackBar();
             this.gbFightInfo = new System.Windows.Forms.GroupBox();
+            this.lbGhoulTime = new System.Windows.Forms.Label();
+            this.GhoulUptime = new System.Windows.Forms.TrackBar();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbBloodwormTime = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.BloodwormUptime = new System.Windows.Forms.TrackBar();
             this.nudTargetArmor = new System.Windows.Forms.NumericUpDown();
             this.lblFightLengthNum = new System.Windows.Forms.Label();
             this.lblTargetArmor = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.btnGraph = new System.Windows.Forms.Button();
             this.btnRotation = new System.Windows.Forms.Button();
-            this.cbWindfuryEffect = new System.Windows.Forms.CheckBox();
-            this.cbUREffect = new System.Windows.Forms.CheckBox();
-            this.cbMagicVuln = new System.Windows.Forms.CheckBox();
-            this.cbCryptFever = new System.Windows.Forms.CheckBox();
             this.cbGhoul = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
             this.gbFightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,7 +81,7 @@
             // tbFightLength
             // 
             this.tbFightLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbFightLength.Location = new System.Drawing.Point(87, 70);
+            this.tbFightLength.Location = new System.Drawing.Point(135, 73);
             this.tbFightLength.Name = "tbFightLength";
             this.tbFightLength.Size = new System.Drawing.Size(86, 45);
             this.tbFightLength.TabIndex = 2;
@@ -86,6 +90,12 @@
             // 
             // gbFightInfo
             // 
+            this.gbFightInfo.Controls.Add(this.lbGhoulTime);
+            this.gbFightInfo.Controls.Add(this.GhoulUptime);
+            this.gbFightInfo.Controls.Add(this.label3);
+            this.gbFightInfo.Controls.Add(this.lbBloodwormTime);
+            this.gbFightInfo.Controls.Add(this.label1);
+            this.gbFightInfo.Controls.Add(this.BloodwormUptime);
             this.gbFightInfo.Controls.Add(this.nudTargetArmor);
             this.gbFightInfo.Controls.Add(this.lblFightLengthNum);
             this.gbFightInfo.Controls.Add(this.lblTargetArmor);
@@ -96,10 +106,72 @@
             this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbFightInfo.Location = new System.Drawing.Point(13, 3);
             this.gbFightInfo.Name = "gbFightInfo";
-            this.gbFightInfo.Size = new System.Drawing.Size(185, 127);
+            this.gbFightInfo.Size = new System.Drawing.Size(227, 245);
             this.gbFightInfo.TabIndex = 4;
             this.gbFightInfo.TabStop = false;
             this.gbFightInfo.Text = "Fight Info";
+            // 
+            // lbGhoulTime
+            // 
+            this.lbGhoulTime.AutoSize = true;
+            this.lbGhoulTime.Location = new System.Drawing.Point(173, 204);
+            this.lbGhoulTime.Name = "lbGhoulTime";
+            this.lbGhoulTime.Size = new System.Drawing.Size(48, 13);
+            this.lbGhoulTime.TabIndex = 34;
+            this.lbGhoulTime.Text = "100.00%";
+            // 
+            // GhoulUptime
+            // 
+            this.GhoulUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.GhoulUptime.Location = new System.Drawing.Point(135, 172);
+            this.GhoulUptime.Maximum = 100;
+            this.GhoulUptime.Name = "GhoulUptime";
+            this.GhoulUptime.Size = new System.Drawing.Size(86, 45);
+            this.GhoulUptime.TabIndex = 33;
+            this.GhoulUptime.TickFrequency = 10;
+            this.GhoulUptime.Value = 100;
+            this.GhoulUptime.Scroll += new System.EventHandler(this.GhoulUptime_Scroll);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(6, 172);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(99, 13);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Ghoul survival time:";
+            // 
+            // lbBloodwormTime
+            // 
+            this.lbBloodwormTime.AutoSize = true;
+            this.lbBloodwormTime.Location = new System.Drawing.Point(173, 153);
+            this.lbBloodwormTime.Name = "lbBloodwormTime";
+            this.lbBloodwormTime.Size = new System.Drawing.Size(42, 13);
+            this.lbBloodwormTime.TabIndex = 31;
+            this.lbBloodwormTime.Text = "25.00%";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(6, 121);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(123, 13);
+            this.label1.TabIndex = 30;
+            this.label1.Text = "Bloodworm survival time:";
+            // 
+            // BloodwormUptime
+            // 
+            this.BloodwormUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BloodwormUptime.Location = new System.Drawing.Point(135, 121);
+            this.BloodwormUptime.Maximum = 100;
+            this.BloodwormUptime.Name = "BloodwormUptime";
+            this.BloodwormUptime.Size = new System.Drawing.Size(86, 45);
+            this.BloodwormUptime.TabIndex = 29;
+            this.BloodwormUptime.TickFrequency = 10;
+            this.BloodwormUptime.Value = 25;
+            this.BloodwormUptime.Scroll += new System.EventHandler(this.BloodwormUptime_Scroll);
             // 
             // nudTargetArmor
             // 
@@ -122,7 +194,7 @@
             // lblFightLengthNum
             // 
             this.lblFightLengthNum.AutoSize = true;
-            this.lblFightLengthNum.Location = new System.Drawing.Point(84, 100);
+            this.lblFightLengthNum.Location = new System.Drawing.Point(202, 105);
             this.lblFightLengthNum.Name = "lblFightLengthNum";
             this.lblFightLengthNum.Size = new System.Drawing.Size(19, 13);
             this.lblFightLengthNum.TabIndex = 2;
@@ -143,14 +215,14 @@
             this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFightLength.Location = new System.Drawing.Point(6, 73);
             this.lblFightLength.Name = "lblFightLength";
-            this.lblFightLength.Size = new System.Drawing.Size(69, 13);
+            this.lblFightLength.Size = new System.Drawing.Size(114, 13);
             this.lblFightLength.TabIndex = 0;
-            this.lblFightLength.Text = "Fight Length:";
+            this.lblFightLength.Text = "Fight Length (minutes):";
             // 
             // btnGraph
             // 
             this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGraph.Location = new System.Drawing.Point(57, 296);
+            this.btnGraph.Location = new System.Drawing.Point(56, 312);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
             this.btnGraph.TabIndex = 5;
@@ -161,7 +233,7 @@
             // btnRotation
             // 
             this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotation.Location = new System.Drawing.Point(39, 136);
+            this.btnRotation.Location = new System.Drawing.Point(39, 254);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
             this.btnRotation.TabIndex = 36;
@@ -169,59 +241,11 @@
             this.btnRotation.UseVisualStyleBackColor = true;
             this.btnRotation.Click += new System.EventHandler(this.btnRotation_Click);
             // 
-            // cbWindfuryEffect
-            // 
-            this.cbWindfuryEffect.AutoSize = true;
-            this.cbWindfuryEffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbWindfuryEffect.Location = new System.Drawing.Point(13, 196);
-            this.cbWindfuryEffect.Name = "cbWindfuryEffect";
-            this.cbWindfuryEffect.Size = new System.Drawing.Size(148, 17);
-            this.cbWindfuryEffect.TabIndex = 37;
-            this.cbWindfuryEffect.Text = "Windfury / Imp Icy Talons";
-            this.cbWindfuryEffect.UseVisualStyleBackColor = true;
-            this.cbWindfuryEffect.CheckedChanged += new System.EventHandler(this.cbWindfuryEffect_CheckedChanged);
-            // 
-            // cbUREffect
-            // 
-            this.cbUREffect.AutoSize = true;
-            this.cbUREffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbUREffect.Location = new System.Drawing.Point(13, 221);
-            this.cbUREffect.Name = "cbUREffect";
-            this.cbUREffect.Size = new System.Drawing.Size(109, 17);
-            this.cbUREffect.TabIndex = 38;
-            this.cbUREffect.Text = "UR / Abom Might";
-            this.cbUREffect.UseVisualStyleBackColor = true;
-            this.cbUREffect.CheckedChanged += new System.EventHandler(this.cbUREffect_CheckedChanged);
-            // 
-            // cbMagicVuln
-            // 
-            this.cbMagicVuln.AutoSize = true;
-            this.cbMagicVuln.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbMagicVuln.Location = new System.Drawing.Point(13, 246);
-            this.cbMagicVuln.Name = "cbMagicVuln";
-            this.cbMagicVuln.Size = new System.Drawing.Size(118, 17);
-            this.cbMagicVuln.TabIndex = 39;
-            this.cbMagicVuln.Text = "Ebon Plague / CoE";
-            this.cbMagicVuln.UseVisualStyleBackColor = true;
-            this.cbMagicVuln.CheckedChanged += new System.EventHandler(this.cbMagicVuln_CheckedChanged);
-            // 
-            // cbCryptFever
-            // 
-            this.cbCryptFever.AutoSize = true;
-            this.cbCryptFever.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbCryptFever.Location = new System.Drawing.Point(13, 271);
-            this.cbCryptFever.Name = "cbCryptFever";
-            this.cbCryptFever.Size = new System.Drawing.Size(80, 17);
-            this.cbCryptFever.TabIndex = 40;
-            this.cbCryptFever.Text = "Crypt Fever";
-            this.cbCryptFever.UseVisualStyleBackColor = true;
-            this.cbCryptFever.CheckedChanged += new System.EventHandler(this.cbCryptFever_CheckedChanged);
-            // 
             // cbGhoul
             // 
             this.cbGhoul.AutoSize = true;
             this.cbGhoul.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbGhoul.Location = new System.Drawing.Point(13, 171);
+            this.cbGhoul.Location = new System.Drawing.Point(13, 289);
             this.cbGhoul.Name = "cbGhoul";
             this.cbGhoul.Size = new System.Drawing.Size(93, 17);
             this.cbGhoul.TabIndex = 41;
@@ -235,18 +259,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.Controls.Add(this.cbGhoul);
-            this.Controls.Add(this.cbCryptFever);
-            this.Controls.Add(this.cbMagicVuln);
-            this.Controls.Add(this.cbUREffect);
-            this.Controls.Add(this.cbWindfuryEffect);
             this.Controls.Add(this.btnRotation);
             this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.gbFightInfo);
             this.Name = "CalculationOptionsPanelDPSDK";
-            this.Size = new System.Drawing.Size(209, 338);
+            this.Size = new System.Drawing.Size(243, 394);
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -265,10 +287,12 @@
         private System.Windows.Forms.Label lblTargetArmor;
         private System.Windows.Forms.NumericUpDown nudTargetArmor;
         private System.Windows.Forms.Button btnRotation;
-        private System.Windows.Forms.CheckBox cbWindfuryEffect;
-        private System.Windows.Forms.CheckBox cbUREffect;
-        private System.Windows.Forms.CheckBox cbMagicVuln;
-        private System.Windows.Forms.CheckBox cbCryptFever;
         private System.Windows.Forms.CheckBox cbGhoul;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TrackBar BloodwormUptime;
+        private System.Windows.Forms.Label lbBloodwormTime;
+        private System.Windows.Forms.Label lbGhoulTime;
+        private System.Windows.Forms.TrackBar GhoulUptime;
+        private System.Windows.Forms.Label label3;
     }
 }
