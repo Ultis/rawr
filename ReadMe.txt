@@ -1,8 +1,16 @@
-Rawr v2.2.3.0
+Rawr v2.2.4.0
 ------------
-Welcome to Rawr 2.2.3.0.
+Welcome to Rawr 2.2.4.0.
    
 Recent Changes:
+v2.2.4.0
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
+ - Fix for crashing bug when editing gemming templates and custom gemmings
+ - Fix for the PPMs of several weapon enchants
+ - Rawr.Retribution: Updated to 3.1 boss armor values
+ - Rawr.Cat: Fix for stacking of temporary ArPen effects, with different uptimes.
+ - Rawr.HolyPriest: Better support for a few trinkets.
+
 v2.2.3.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
  - Batch Optimizer supports using multiple models
