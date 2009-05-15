@@ -496,14 +496,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.03f,
+                ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
+                PhysicalHit = talents.Precision,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
-
-            float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
-            statsTotal.BaseAgility = agiBase;
-            float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
@@ -514,40 +512,28 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) * (1 + 0.02f * character.WarriorTalents.StrengthOfArms) * (1 + character.WarriorTalents.ImprovedBerserkerStance * ((calcOpts.FuryStance) ? 0.04f: 0.00f))) - 1;
             statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
 
-            statsTotal.Agility = (float)Math.Floor(agiBase * (1f + statsTotal.BonusAgilityMultiplier)) + (float)Math.Floor(agiBonus * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Stamina = (float)Math.Floor((staBase) * (1f + statsTotal.BonusStaminaMultiplier)) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
+            statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
+            statsTotal.Health   = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
 
-            statsTotal.Armor = statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2;
+            statsTotal.Armor += statsTotal.Agility * 2;
 
             statsTotal.AttackPower = (statsTotal.Strength * 2 + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
-            statsTotal.AttackPower += (statsTotal.Armor / 180) * character.WarriorTalents.ArmoredToTheTeeth;
+            statsTotal.AttackPower += (statsTotal.Armor / 180) * talents.ArmoredToTheTeeth;
             statsTotal.AttackPower += statsTotal.AttackPower * statsTotal.BonusAttackPowerMultiplier;
 
-            statsTotal.PhysicalHit = character.WarriorTalents.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
-            //statsTotal.Expertise += 2 * character.WarriorTalents.StrengthOfArms;
-            //statsTotal.Expertise += (character.MainHand != null ? CombatFactors.GetRacialExpertiseFromWeapon(character.Race, character.MainHand.Item) : 0f);
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
             statsTotal.PhysicalHaste += statsTalents.PhysicalHaste;
-            //statsTotal.PhysicalHaste *= (1 + 0.03f * character.WarriorTalents.BloodFrenzy);
 
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration
-                + ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f)
-                + ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
+            statsTotal.ArmorPenetration += statsGearEnchantsBuffs.ArmorPenetration + ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
 
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.PhysicalCrit = statsRace.PhysicalCrit;
-            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,character.Class);
-            statsTotal.PhysicalCrit += character.WarriorTalents.Cruelty * 0.01f;
-            statsTotal.PhysicalCrit += statsGearEnchantsBuffs.PhysicalCrit;
+            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,character.Class)/100;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
 

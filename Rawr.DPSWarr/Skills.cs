@@ -753,8 +753,8 @@ increases the damage done by both abilities by (10/20)%. In addition, if you str
 while they are casting, their magical damage and healing will be reduced by (25/50)% for 6 sec.]";
                 GlphsAfctg = @"Glyph of Overpower [+100% chance to enable your Overpower when your attacks are parried.]";
                 Cd = 5f; // In Seconds
-                RageCost = 5;
-                CastTime = -1; // In Seconds
+                RageCost = 5f;
+                CastTime = -1f; // In Seconds
                 StanceOkFury = false;
                 StanceOkArms = true;
                 StanceOkDef = false;
@@ -777,8 +777,8 @@ while they are casting, their magical damage and healing will be reduced by (25/
                 }
                 double chance; float procs;
                 { // TasteFoorBlood
-                    chance = 0.1 * Talents.TasteForBlood;
-                    procs = (1f - (float)System.Math.Pow(1 - chance, 6)) / GetRotation();
+                    chance = 0.33334f * Talents.TasteForBlood;
+                    procs = (1f - (float)System.Math.Pow(1 - chance, 6))/* / GetRotation()*/;
                 }
                 return procs;
 
