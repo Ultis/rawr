@@ -5,19 +5,28 @@ namespace Rawr.Rogue.Poisons
     [Serializable]
     public class InstantPoison : PoisonBase
     {
-        private const float BASE_CHANCE_TO_APPLY = .2f;
+        private const float PROCS_PER_MINUTE = 8.53f;
 
         public override string Name { get { return "Instant Poison"; } }
 
         public override bool IsDeadlyPoison { get { return false; } }
 
-        public override float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, float cycleTime)
+        public override float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon )
         {
-            var damage = hits * (300f + .10f * stats.AttackPower);
-            damage *= (BASE_CHANCE_TO_APPLY + Talents.ImprovedPoisons.InstantPoison.Bonus);
+            var damage = hits * ChanceToApply(weapon) * (300f + .10f * stats.AttackPower);
             damage *= combatFactors.ProbPoisonHit;
             damage *= Talents.VilePoisons.Multiplier;
-            return damage/cycleTime;
+            return damage/cycleTime.Duration;
+        }
+
+        private static float ChanceToApply(Item weapon)
+        {
+            return BaseChanceToApply(weapon) > 1f ? 1f : BaseChanceToApply(weapon);
+        }
+
+        private static float BaseChanceToApply(Item weapon)
+        {
+            return Talents.ImprovedPoisons.InstantPoison.Multiplier * (PROCS_PER_MINUTE / (60 / weapon.Speed));
         }
     }
 }
