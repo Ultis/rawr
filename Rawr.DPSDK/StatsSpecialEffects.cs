@@ -54,15 +54,28 @@ namespace Rawr.DPSDK
                             trigger = 1f /rotation.getSpellSpecialsPerSecond();
                             chance = 1f;
                             break;
+                        case Trigger.BloodStrikeOrHeartStrikeHit:
+                            trigger = (rotation.BloodStrike + rotation.HeartStrike) / rotation.curRotationDuration;
+                            chance = 0.15f;
+                            break;
+                        case Trigger.PlagueStrikeHit:
+                            trigger = rotation.PlagueStrike / rotation.curRotationDuration;
+                            chance = 1f;
+                            break;
+                        case Trigger.DoTTick:
+                            trigger = (rotation.BloodPlague + rotation.FrostFever) / 3;
+                            chance = 1f;
+                            break;
+
                     }
                     if (effect.MaxStack > 1)
                     {
-                        float timeToMax = (float)Math.Min(calcOpts.FightLength, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                        statsAverage += effect.Stats * (effect.MaxStack * ((calcOpts.FightLength - .5f * timeToMax) / calcOpts.FightLength));
+                        float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
+                        statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
                     }
                     else
                     {
-                        statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, calcOpts.FightLength);
+                        statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
                     }
                 }
             

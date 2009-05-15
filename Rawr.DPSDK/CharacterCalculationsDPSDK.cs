@@ -103,6 +103,13 @@ namespace Rawr.DPSDK
             set { _UnholyBlightDPS = value; }
         }
 
+        private float _OtherDPS;
+        public float OtherDPS
+        {
+            get { return _OtherDPS; }
+            set { _OtherDPS = value; }
+        }
+
         private float _FrostStrikeDPS;
         public float FrostStrikeDPS
         {
@@ -314,7 +321,7 @@ namespace Rawr.DPSDK
          /*   if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
                 hitRating -= 15.769f;*/
 
-            float armorPenetration = BasicStats.ArmorPenetration;
+            float armorPenetrationRating = BasicStats.ArmorPenetrationRating;
 			//if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")) ||
 			//    ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")) ||
 			//    ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
@@ -337,7 +344,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, (hitRating / 3279f), (hitRating / 2624)));
             dictValues.Add("Expertise", string.Format("{0:0} // {1:0}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
             dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, ( BasicStats.HasteRating / 3278f )));
-            //dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
+            dictValues.Add("Armor Penetration Rating", armorPenetrationRating.ToString("N0"));
             dictValues.Add("Armor", BasicStats.Armor.ToString("N0"));
 
 
@@ -367,6 +374,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Wandering Plague", WanderingPlagueDPS.ToString("N2"));
             dictValues.Add("White", WhiteDPS.ToString("N2"));
             dictValues.Add("Ghoul", GhoulDPS.ToString("N2"));
+            dictValues.Add("Other", OtherDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
             return dictValues;
