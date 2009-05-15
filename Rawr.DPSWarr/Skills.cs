@@ -177,6 +177,7 @@
             public virtual float GetAvgDamage() { return GetDamage() * GetActivates(); }
             public virtual float GetDamageOnUse() { return 0f; }
             public virtual float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
+            public virtual float GetDPS() { return GetAvgDamageOnUse() / GetRotation(); }
         }
         // Fury Abilities
         public class BloodThirst : Ability {
@@ -437,14 +438,14 @@ your next Slam instant for 5 sec.";
 the effectiveness of any healing by 50% for 10 sec.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
+                MaxRange = 5f; // In Yards 
                 TlntsAfctg = @"Mortal Strike (Requires Talent to use Ability)\n
 Improved Mortal Strike [Increases the dmage caused by your Mortal Strike ability by (3%/6%/10%) and reduces
 the cooldown by (0.333/.666/1) sec.]";
                 GlphsAfctg = @"Glyph of Mortal Strike [+10% to this ability's Damage]";
                 Cd = 6f; // In Seconds
-                RageCost = 30;
-                CastTime = -1; // In Seconds
+                RageCost = 30f;
+                CastTime = -1f; // In Seconds
                 StanceOkFury = true;
                 StanceOkArms = true;
                 StanceOkDef  = true;
@@ -457,7 +458,7 @@ the cooldown by (0.333/.666/1) sec.]";
                 if (!GetValided() || Talents.MortalStrike == 0) { return 0f; }
 
                 // Actual Calcs
-                return (GetRotation() / (Cd - (Talents.ImprovedMortalStrike * 0.334f)));
+                return (float)System.Math.Floor(GetRotation() / (Cd - (Talents.ImprovedMortalStrike * 0.33334f)));
                 // ORIGINAL LINE
                 //return (1.0f / (5f - .334f * _talents.ImprovedMortalStrike));
             }
@@ -473,7 +474,7 @@ the cooldown by (0.333/.666/1) sec.]";
                 Damage *= (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f));
 
                 // Spread this damage over rotaion length (turns it into DPS)
-                Damage /= GetRotation();
+                //Damage /= GetRotation();
 
                 // Ensure that we are not doing negative Damage
                 if (Damage < 0) { Damage = 0; }
@@ -513,13 +514,13 @@ the cooldown by (0.333/.666/1) sec.]";
 (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
+                MaxRange = 5f; // In Yards 
                 TlntsAfctg = @"Improved Rend [Increases the Bleed Damage done by your Rend ability by (10/20)%]\n
 Trauma [Your melee critical strikes increase the effectiveness of Bleed effects on the target by (15/30)% for 15 sec.]";
                 GlphsAfctg = @"Glyph of Rending [+6 sec to bleed time (damage is added to, not spread further)]";
                 Cd = 15f; // In Seconds // adding cd time to sim not using it again until it falls off
-                RageCost = 10;
-                CastTime = 3; // In Seconds // adding cast time to sim the ticks
+                RageCost = 10f;
+                CastTime = 3f; // In Seconds // adding cast time to sim the ticks
                 StanceOkFury = false;
                 StanceOkArms = true;
                 StanceOkDef = true;
@@ -746,7 +747,7 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
 The Overpower cannot be blocked, dodged or parried.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
+                MaxRange = 5f; // In Yards 
                 TlntsAfctg = @"Improved Overpower [Increases the critical strike chance of your overpower ability by (25%/50%)]\n
 Unrelenting Assault [Reduces the cooldown of your Overpower and Revenge abilities by (2/4) sec and
 increases the damage done by both abilities by (10/20)%. In addition, if you strike a player with Overpower
@@ -775,12 +776,12 @@ while they are casting, their magical damage and healing will be reduced by (25/
                     // thereby making it so that it will activate on both Dodges and Parries instead
                     // of Dodges alone, which are pretty much invalidated by the Expertise mechanic
                 }
-                double chance; float procs;
+                /*double chance; float procs;
                 { // TasteFoorBlood
                     chance = 0.33334f * Talents.TasteForBlood;
-                    procs = (1f - (float)System.Math.Pow(1 - chance, 6))/* / GetRotation()*/;
+                    procs = (1f - (float)System.Math.Pow(1 - chance, 6))/* / GetRotation()*//*;
                 }
-                return procs;
+                return (float)System.Math.Floor(procs);*/
 
                 // ORIGINAL LINES
                 //double chance; float procs;
@@ -790,24 +791,45 @@ while they are casting, their magical damage and healing will be reduced by (25/
                 //}
                 //return procs;
 
+                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                // LANDSOUL's VERSION
+                if(combatFactors.MhDodgeChance<=0f&&Talents.TasteForBlood==0f){
+                    return 0f;//999999f;
+                }else{
+                    if (Talents.TasteForBlood == 0f) {
+                        return 1f/
+                            (combatFactors.MhDodgeChance*(1f/combatFactors.MainHandSpeed)+
+                             0.01f*(/*R66 Landed attacks per second no SwdSpk*/0.8868f)*combatFactors.MhExpertise*Talents.SwordSpecialization*54f/60f+
+                             0.03f*(/*AR7 Overpower GCD Percentage*/0.1392f)*(/*M61 Exe overwrite chance*/0.9430f)*(/*R68 Landed attacks per second*/0.8868f)+
+                             1f/(5f+(/*N4 Latency 115f*/0f+/*N3 React 220f*/0f)/1000f)+
+                             1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates());
+                    }else{
+                        if (Talents.TasteForBlood == 2f || Talents.TasteForBlood == 3f) {
+                            return 6f;
+                        }else{
+                            return 9f;
+                        }
+                    }
+                }
+
             }
             public override float GetDamage() {
                 // Invalidators
                 if (!GetValided()) { return 0f; }
 
                 // Base Damage
-                float Damage = combatFactors.NormalizedMhWeaponDmg;
+                //float Damage = combatFactors.NormalizedMhWeaponDmg;
 
                 // Talents/Glyphs Affecting
-                Damage *= (1f + Talents.UnrelentingAssault * 0.10f);
+                //Damage *= (1f + Talents.UnrelentingAssault * 0.10f);
 
                 // Spread this damage over rotaion length (turns it into DPS)
-                Damage /= GetRotation();
+                //Damage /= GetRotation();
 
                 // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
+                //if (Damage < 0) { Damage = 0; }
 
-                return Damage;
+                //return Damage;
 
                 // ORIGINAL LINES
                 //float opCrit = _combatFactors.MhYellowCrit + 0.25f * Talents.ImprovedOverpower;
@@ -816,6 +838,14 @@ while they are casting, their magical damage and healing will be reduced by (25/
                 //overpowerDamage *= (_combatFactors.NormalizedMhWeaponDmg * (1 - _combatFactors.YellowMissChance - _combatFactors.MhDodgeChance
                 //             + opCrit * _combatFactors.BonusYellowCritDmg));
                 //return overpowerDamage * _combatFactors.DamageReduction * (1 + _talents.UnrelentingAssault * 0.10f);
+
+                // LANDSOUL's VERSION
+                return /* C64* */                                      // C64  Damage reduction
+                /* AB54* */                                     // AB54 % Damage Bonus
+                //(1f-combatFactors.HitPercent+(combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower>1f?1f:combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower)*combatFactors.BonusYellowCritDmg)* // AH31 miss chance, AH36 Yellow Crit %, AB60 Crit Bonus Dmg % 1.2720
+                (combatFactors.AvgMhWeaponDmg*combatFactors.MainHandSpeed+StatS.AttackPower/14f*3.3f)*                  // U120 MHNormDPS, S120 MHSpd, Z55 AvgAP, T120 MHNormSpd
+                (1f+0.1f*Talents.UnrelentingAssault) /                              // AR6 Unrelenting Assault
+                GetActivates();                                      // OP Hits
             }
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage

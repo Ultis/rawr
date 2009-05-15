@@ -58,8 +58,8 @@ namespace Rawr.DPSWarr {
         }
         public float MhExpertise    { get { return CalcExpertise(MainHand); } }
         public float OhExpertise    { get { return CalcExpertise(OffHand); } }
-        public float MhDodgeChance  { get { return CalcDodgeChance(MhExpertise)/100; } }
-        public float OhDodgeChance  { get { return CalcDodgeChance(OhExpertise)/100; } }
+        public float MhDodgeChance  { get { return CalcDodgeChance(MhExpertise)/100f; } }
+        public float OhDodgeChance  { get { return CalcDodgeChance(OhExpertise)/100f; } }
         public float MhCrit         { get { return CalcCrit(MainHand); } }
         public float MhYellowCrit   { get { return CalcYellowCrit(MainHand); } }
         public float OhCrit         { get { return CalcCrit(OffHand); } }
@@ -93,7 +93,7 @@ namespace Rawr.DPSWarr {
         public float DamageBonus {
             get {
                 return (1+_talents.TwoHandedWeaponSpecialization * 0.02f)*(1+_stats.BonusPhysicalDamageMultiplier)*
-                        (1+_stats.BonusDamageMultiplier)*(1+ (_talents.DeathWish*0.2f)*(30/(180*(1 - 0.11f*_talents.IntensifyRage))))*(1+0.02f*_talents.WreckingCrew);
+                        (1+_stats.BonusDamageMultiplier)*(1f+ (_talents.DeathWish*0.2f)*(30f/(180f*(1 - 0.11f*_talents.IntensifyRage))))*(1f+0.02f*_talents.WreckingCrew);
             }
         }
         private float CalcCrit(Item weapon) {
@@ -103,7 +103,6 @@ namespace Rawr.DPSWarr {
                 //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
                 if (_calcOpts.FuryStance) { crit += 0.03f; }
             }
-            //crit += 0.01f * _talents.Cruelty;
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
             
@@ -116,7 +115,6 @@ namespace Rawr.DPSWarr {
                 //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
                 if (_calcOpts.FuryStance) { crit += 0.03f; }
             }
-            //crit += 0.01f * _talents.Cruelty;
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
 
