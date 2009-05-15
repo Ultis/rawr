@@ -2112,15 +2112,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
         }
 
-        [DisplayName("Blade Ward Proc")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BladeWardProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BladeWardProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BladeWardProc] = value; }
-        }
-
         [DisplayName("Bonus Healing Received")]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]

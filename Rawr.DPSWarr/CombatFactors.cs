@@ -99,10 +99,11 @@ namespace Rawr.DPSWarr {
         private float CalcCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0) { return 0f; }
             var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-            if (_calcOpts != null) {
+            //if (_calcOpts != null) {
                 //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
-                if (_calcOpts.FuryStance) { crit += 0.03f; }
-            }
+            //    if (_calcOpts.FuryStance) { crit += 0.03f; }
+            //}
+            //crit += 0.01f * _talents.Cruelty;
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
             
@@ -111,10 +112,11 @@ namespace Rawr.DPSWarr {
         private float CalcYellowCrit(Item weapon) {
             var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
             crit *= (1 - YellowMissChance - MhDodgeChance);
-            if (_calcOpts != null) {
+            //if (_calcOpts != null) {
                 //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
-                if (_calcOpts.FuryStance) { crit += 0.03f; }
-            }
+            //    if (_calcOpts.FuryStance) { crit += 0.03f; }
+            //}
+            //crit += 0.01f * _talents.Cruelty;
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
 

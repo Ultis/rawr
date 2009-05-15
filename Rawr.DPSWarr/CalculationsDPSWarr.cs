@@ -249,10 +249,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.OhExpertise = combatFactors.OhExpertise;
             calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility,character.Class);
             calculatedStats.CritRating = stats.CritRating;
-            float stancecritbonus = 0.0f;
-            if (calcOpts.FuryStance) { stancecritbonus = 3.0f; }
-            calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + (character.WarriorTalents.Cruelty + stancecritbonus) / 100.0f
-                + calculatedStats.AgilityCritBonus + statsRace.PhysicalCrit;
+			calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit
+				- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
             calculatedStats.MhCrit = combatFactors.MhCrit;// +stancecritbonus / 100.0f;
             calculatedStats.OhCrit = combatFactors.OhCrit;// +stancecritbonus / 100.0f;
             // Offensive
@@ -484,7 +482,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsTalents = new Stats()
             {
                 //Parry = talents.Deflection * 1.0f,
-                PhysicalCrit = talents.Cruelty * 0.01f,
+                PhysicalCrit = talents.Cruelty * 0.01f + (calcOpts.FuryStance ? 0.03f : 0f),
                 //Dodge = talents.Anticipation * 1.0f,
                 //Block = talents.ShieldSpecialization * 1.0f,
                 //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
@@ -533,7 +531,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             statsTotal.ArmorPenetration += ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
 
-            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,character.Class);
+            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
 
             //statsTotal.BonusCritMultiplier += statsGearEnchantsBuffs.BonusCritMultiplier;
 
@@ -566,9 +564,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float meleeHitInterval = 1f / meleeHitsPerSecond;
             
             
-            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating)
-                + statsTotal.PhysicalCrit
-                /*- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f))*/;
+            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit 
+				- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
 
             Stats statsProcs = new Stats();
@@ -764,7 +761,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 //stats.BerserkingProc
                 // Copied from Cat
                 stats.BloodlustProc +
-                stats.BladeWardProc +
+                //stats.BladeWardProc +
                 stats.DarkmoonCardDeathProc +
                 stats.DreadnaughtBonusRageProc
                 ) != 0;

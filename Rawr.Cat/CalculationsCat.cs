@@ -480,8 +480,8 @@ namespace Rawr.Cat
 			}
             
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
-			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
-			float meleeHitInterval = 1f / ((1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) + 1f / 3.5f);
+			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
+			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / 3.5f);
 			float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit +
 				StatConversion.GetCritFromAgility(statsTotal.Agility, Character.CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
 				- (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
