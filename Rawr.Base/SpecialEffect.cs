@@ -33,7 +33,13 @@ namespace Rawr
         ShamanLightningBolt,
         ShamanLavaLash,
         ShamanShock,
-        ShamanStormStrike
+        ShamanStormStrike,
+        BloodStrikeOrHeartStrikeHit,
+        PlagueStrikeHit,
+        IcyTouchHit,
+        RuneStrikeHit,
+
+        NUM_Trigger // Should always be the last entry.
     }
 
     [Serializable]
@@ -1009,6 +1015,14 @@ namespace Rawr
                         return "on Shock Hit";
                     case Trigger.ShamanStormStrike:
                         return "on Stormstrike Hit";
+                    case Trigger.BloodStrikeOrHeartStrikeHit:
+                        return "on Blood Strike or Heart Strike";
+                    case Trigger.IcyTouchHit:
+                        return "on Icy Touch";
+                    case Trigger.PlagueStrikeHit:
+                        return "on Plague Strike";
+                    case Trigger.RuneStrikeHit:
+                        return "on Rune Strike";
                     default:
                         return Trigger.ToString();
                 }

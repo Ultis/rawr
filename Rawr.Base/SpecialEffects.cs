@@ -1049,9 +1049,9 @@ namespace Rawr
                 string statName = match.Groups["stat"].Value;
                 float amount = int.Parse(match.Groups["amount"].Value);
                 float duration = int.Parse(match.Groups["duration"].Value);
-                //string ability = match.Groups["ability"].Value;
+                string ability = match.Groups["ability"].Value;
 
-                stats.AddSpecialEffect(EvalRegex(statName, amount, duration, Trigger.SpellCast, 0f));
+                stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f));
             }
             regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(will )?(also )?increase (your )?(?<stat>\w+\s*\w*) by (?<amount>\d*).");
             match = regex.Match(line);
@@ -1070,9 +1070,16 @@ namespace Rawr
                 string statName = match.Groups["stat"].Value;
                 float amount = int.Parse(match.Groups["amount"].Value);
                 float duration = int.Parse(match.Groups["duration"].Value);
-                //string ability = match.Groups["ability"].Value;
+                string ability = match.Groups["ability"].Value;
+                string ability2 = match.Groups["ability2"].Value;
 
-                stats.AddSpecialEffect(EvalRegex(statName, amount, duration, Trigger.SpellCast, 0f));
+                SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f);
+                stats.AddSpecialEffect(SE1);
+                SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f);
+                if (SE1.ToString() != SE2.ToString())
+                {
+                    stats.AddSpecialEffect(SE2);
+                }
             }
             // Single Ability damage increase.
             regex = new Regex(@"Increases the damage dealt by your (?<ability>\w+\s*\w*) (ability )?by (?<amount>\d+[.]*\d*).");
@@ -1362,10 +1369,10 @@ namespace Rawr
         /// <param name="statName">What stat does the special effect target</param>
         /// <param name="amount">By what amount?</param>
         /// <param name="duration">How long in seconds?</param>
-        /// <param name="trigger">What is the trigger type? Use? Spellcast? Etc.</param>
+        /// <param name="ability">What is the spell triggering? For right now, this only effects the Sigils.  So we're going to use the ability to setup the trigger.</param>
         /// <param name="cooldown">How long in seconds?</param>
         /// <returns>A new SpecialEffect instance that can be used in Stats.AddSpecialEffect()</returns>
-        public static SpecialEffect EvalRegex(string statName, float amount, float duration, Trigger trigger, float cooldown)
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown)
         {
             Stats s = new Stats();
 
@@ -1385,6 +1392,28 @@ namespace Rawr
             else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
             else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
             else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
+
+            Trigger trigger = new Trigger();
+
+            switch (ability)
+            {
+                case "Icy Touch": 
+                    trigger = Trigger.IcyTouchHit; 
+                    break;
+                case "Plague Strike":
+                    trigger = Trigger.PlagueStrikeHit;
+                    break;
+                case "Rune Strike":
+                    trigger = Trigger.RuneStrikeHit;
+                    break;
+                case "Blood Strike":
+                case "Heart Strikes":
+                    trigger = Trigger.BloodStrikeOrHeartStrikeHit;
+                    break;
+                default:
+                    trigger = Trigger.SpellHit;
+                    break;
+            }
 
             return new SpecialEffect(trigger, s, duration, cooldown);
  
@@ -1431,22 +1460,22 @@ namespace Rawr
             {
                 case "Blood Strike":
                     {
-                        s.BonusDamageBloodStrike += amount;
+                        s.BonusBloodStrikeDamage += amount;
                         break;
                     }
                 case "Heart Strike":
                     {
-                        s.BonusDamageHeartStrike += amount;
+                        s.BonusHeartStrikeDamage += amount;
                         break;
                     }
                 case "Death Coil":
                     {
-                        s.BonusDamageDeathCoil += amount;
+                        s.BonusDeathCoilDamage += amount;
                         break;
                     }
                 case "Frost Strike":
                     {
-                        s.BonusDamageFrostStrike += amount;
+                        s.BonusFrostStrikeDamage += amount;
                         break;
                     }
                 case "Obliterate":
@@ -1461,12 +1490,12 @@ namespace Rawr
                     }
                 case "Death Strike":
                     {
-                        s.BonusDamageDeathStrike += amount;
+                        s.BonusDeathStrikeDamage += amount;
                         break;
                     }
                 case "Icy Touch":
                     {
-                        s.BonusDamageIcyTouch += amount;
+                        s.BonusIcyTouchDamage += amount;
                         break;
                     }
                 default:

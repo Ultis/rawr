@@ -322,17 +322,18 @@ namespace Rawr
         RogueRuptureDamageBonus,
         #endregion
         #region DK Sigil Bonuses
-        BonusDamageBloodStrike,
-        BonusDamageDeathCoil,
-        BonusDamageDeathStrike,
-        BonusDamageFrostStrike,
-        BonusDamageHeartStrike,
-        BonusDamageIcyTouch,
-        BonusDamagePlagueStrike,
+        BonusBloodStrikeDamage,
+        BonusDeathCoilDamage,
+        BonusDeathStrikeDamage,
+        BonusFrostStrikeDamage,
+        BonusHeartStrikeDamage,
+        BonusIcyTouchDamage,
         #endregion 
         ArcaneDamage,
         FireDamage,
         ShadowDamage,
+
+        NUM_AdditiveStat // This should always be the last entry.
     }
 
     enum MultiplicativeStat : int
@@ -411,14 +412,18 @@ namespace Rawr
         BonusSlamDamage,
         #endregion
         #region Boss Stats
-        BossAttackSpeedMultiplier
+        BossAttackSpeedMultiplier,
         #endregion
+
+        NUM_MultiplicativeStat // This should always be the last entry.
     }
 
     enum InverseMultiplicativeStat : int
     {
 		ArmorPenetration,
-		ThreatReductionMultiplier
+		ThreatReductionMultiplier,
+
+        NUM_InverseMultiplicativeStat // This should always be the last entry.
     }
 
     enum NonStackingStat : int
@@ -433,7 +438,9 @@ namespace Rawr
         GreatnessProc,
         HighestStat,
         ManacostReduceWithin15OnUse1Min,
-        ShieldFromHealed
+        ShieldFromHealed,
+
+        NUM_NonStackingStat // This should always be the last entry.
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
@@ -1304,52 +1311,52 @@ namespace Rawr
         
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
-        public float BonusDamageBloodStrike
+        public float BonusBloodStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageBloodStrike]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageBloodStrike] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusBloodStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusBloodStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
-        public float BonusDamageHeartStrike
+        public float BonusHeartStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageHeartStrike]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageHeartStrike] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
-        public float BonusDamageDeathCoil
+        public float BonusDeathCoilDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathCoil]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathCoil] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
-        public float BonusDamageFrostStrike
+        public float BonusFrostStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageFrostStrike]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageFrostStrike] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
-        public float BonusDamageDeathStrike
+        public float BonusDeathStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathStrike]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageDeathStrike] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
-        public float BonusDamageIcyTouch
+        public float BonusIcyTouchDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDamageIcyTouch]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDamageIcyTouch] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusIcyTouchDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusIcyTouchDamage] = value; }
         }
-        
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Warrior")]
         [DisplayName("Bonus Commanding Shout HP")]

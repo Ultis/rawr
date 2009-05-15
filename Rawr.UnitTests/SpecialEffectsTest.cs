@@ -49,8 +49,8 @@ namespace Rawr.UnitTests
             //Sigil of the Dark Rider
             m_TestLineArray[i] = "Increases the damage dealt by your Blood Strike and Heart Strike by 90.";
             m_ExpectedArray[i] = new Stats();
-            m_ExpectedArray[i].BonusDamageBloodStrike = 90f;
-            m_ExpectedArray[i].BonusDamageHeartStrike = 90f;
+            m_ExpectedArray[i].BonusBloodStrikeDamage = 90f;
+            m_ExpectedArray[i].BonusHeartStrikeDamage = 90f;
             i++;
 
             // Sigil of the Unfaltering Knight:
@@ -65,7 +65,7 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.AttackPower = 144;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, tempStat, 10f, 0));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.PlagueStrikeHit, tempStat, 10f, 0));
             m_ExpectedArray[i] = elementStat;
             i++;
 
@@ -74,15 +74,15 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.DodgeRating = 136;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, tempStat, 5f, 0));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.RuneStrikeHit, tempStat, 5f, 0));
             m_ExpectedArray[i] = elementStat;
             i++;
 
             // Sigil of the Vengeful Heart
             m_TestLineArray[i] = "Increases the damage done by your Death Coil and Frost Strike abilities by 380.";
             m_ExpectedArray[i] = new Stats();
-            m_ExpectedArray[i].BonusDamageDeathCoil = 380f;
-            m_ExpectedArray[i].BonusDamageFrostStrike = 380f;
+            m_ExpectedArray[i].BonusDeathCoilDamage = 380f;
+            m_ExpectedArray[i].BonusFrostStrikeDamage = 380f;
             i++;
 
             // Deadly Gladiator's Sigil of Strife
@@ -90,7 +90,7 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.AttackPower = 120;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, tempStat, 10f, 0));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.PlagueStrikeHit, tempStat, 10f, 0));
             m_ExpectedArray[i] = elementStat;
             i++;
 
@@ -99,7 +99,7 @@ namespace Rawr.UnitTests
             m_ExpectedArray[i] = new Stats();
             m_ExpectedArray[i].BonusScourgeStrikeDamage = 189f;
             m_ExpectedArray[i].BonusObliterateDamage = 336f;
-            m_ExpectedArray[i].BonusDamageDeathStrike = 315f;
+            m_ExpectedArray[i].BonusDeathStrikeDamage = 315f;
             i++;
 
             //Hateful Gladiator's Sigil of Strife
@@ -107,7 +107,7 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.AttackPower = 106;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, tempStat, 6f, 0));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.PlagueStrikeHit, tempStat, 6f, 0));
             m_ExpectedArray[i] = elementStat;
             i++;
 
@@ -116,7 +116,7 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.CritRating = 173;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, tempStat, 10f, 0));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeOrHeartStrikeHit, tempStat, 10f, 0));
             m_ExpectedArray[i] = elementStat;
             i++;
 
@@ -125,7 +125,7 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.AttackPower = 94;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, tempStat, 6f, 0));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.PlagueStrikeHit, tempStat, 6f, 0));
             m_ExpectedArray[i] = elementStat;
             i++;
 
@@ -138,13 +138,13 @@ namespace Rawr.UnitTests
             //Sigil of the Frozen Conscience
             m_TestLineArray[i] = "Increases the damage dealt by your Icy Touch ability by 111.";
             m_ExpectedArray[i] = new Stats();
-            m_ExpectedArray[i].BonusDamageIcyTouch = 111f;
+            m_ExpectedArray[i].BonusIcyTouchDamage = 111f;
             i++;
 
             //Sigil of the Wild Buck
             m_TestLineArray[i] = "Increases the damage dealt by your Death Coil ability by 80.";
             m_ExpectedArray[i] = new Stats();
-            m_ExpectedArray[i].BonusDamageDeathCoil = 80f;
+            m_ExpectedArray[i].BonusDeathCoilDamage = 80f;
             i++;
         }
         //
