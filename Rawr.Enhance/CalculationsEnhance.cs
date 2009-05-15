@@ -263,8 +263,8 @@ namespace Rawr
             stats.SpellPower += mentalQuickness * URattackPower * (1 + stats.BonusSpellPowerMultiplier);
             
             // assign basic variables for calcs
-            float attackPower = (float) Math.Floor(stats.AttackPower);
-            float spellPower = (float) Math.Floor(stats.SpellPower);
+            float attackPower = stats.AttackPower;
+            float spellPower = stats.SpellPower;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
             float AP_SP_Ratio = (spellPower-274-211) / attackPower;
@@ -541,21 +541,21 @@ namespace Rawr
             switch (character.ShamanTalents.MentalDexterity)
             {
                 case 1:
-                    intBonusToAP = (float) Math.Floor((float)(.33f * statsTotal.Intellect));
+                    intBonusToAP = .33f * statsTotal.Intellect;
                     break;
                 case 2:
-                    intBonusToAP = (float) Math.Floor((float)(.66f * statsTotal.Intellect));
+                    intBonusToAP = .66f * statsTotal.Intellect;
                     break;
                 case 3:
                     intBonusToAP = 1f * statsTotal.Intellect;
                     break;
             }
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility + intBonusToAP;
-            statsTotal.AttackPower = (float)Math.Floor((float)(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier)));
-            float SPfromAP = (float) Math.Floor((float)(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness));
+            statsTotal.AttackPower = statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier);
+            float SPfromAP = statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness;
             statsTotal.SpellPower += SPfromAP;
 
-            statsTotal.SpellPower = (float)Math.Floor((float)(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier)));
+            statsTotal.SpellPower = statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier);
 
             return statsTotal;
 		}

@@ -128,7 +128,7 @@ namespace Rawr.Enhance
         private const float DODGE = 0.065f;
         private const float WHITE_MISS = 0.27f;
         private const float YELLOW_MISS = 0.08f;
-  //      private const float SPELL_MISS = 0.17f;
+        private const float SPELL_MISS = 0.17f;
 
         public void UpdateCalcs()
         {
@@ -160,9 +160,8 @@ namespace Rawr.Enhance
         
             float spellCritModifier = _stats.SpellCrit + ftBonusCrit;
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
-            // chanceSpellMiss = Math.Max(0f, SPELL_MISS - hitBonusSpell);
-            chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            overSpellHitCap = Math.Max(0f, hitBonusSpell - .17f);
+            chanceSpellMiss = Math.Max(0f, SPELL_MISS - hitBonusSpell);
+            overSpellHitCap = Math.Max(0f, hitBonusSpell - SPELL_MISS);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) + 
                                   StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * _talents.ThunderingStrikes;
             chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
@@ -176,7 +175,6 @@ namespace Rawr.Enhance
 
             // Only MH WF for now
             float chanceToProcWFPerHit = .2f + (_character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
-            // float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
 
             //The Swing Loop
             //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
