@@ -1097,6 +1097,7 @@ namespace Rawr //O O . .
 		private int jewelersGemCount;
 		private int stormjewelCount;
         private bool meetsGemRequirements;
+        private bool meetsNonjewelerGemRequirements;
 
         public int RedGemCount
         {
@@ -1152,6 +1153,16 @@ namespace Rawr //O O . .
             }
         }
 
+        public bool MeetsNonjewelerGemRequirements
+        {
+            get
+            {
+                ComputeGemCount();
+                return meetsNonjewelerGemRequirements;
+            }
+        }
+
+
         public bool IsMetaGemActive
         {
             get
@@ -1175,6 +1186,7 @@ namespace Rawr //O O . .
                 stormjewelCount = 0;
                 Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
                 meetsGemRequirements = true;
+                meetsNonjewelerGemRequirements = true;
                 for (int slot = 0; slot < 19; slot++)
                 {
                     ItemInstance item = _item[slot];
@@ -1193,7 +1205,7 @@ namespace Rawr //O O . .
                             {
                                 if (uniqueMap.ContainsKey(gem.Id))
                                 {
-                                    meetsGemRequirements = false;
+                                    meetsNonjewelerGemRequirements = meetsGemRequirements = false;
                                 }
                                 else
                                 {
@@ -1204,7 +1216,7 @@ namespace Rawr //O O . .
                     }
                 }
                 if (jewelersGemCount > 3) meetsGemRequirements = false;
-                if (stormjewelCount > 1) meetsGemRequirements = false;
+                if (stormjewelCount > 1) meetsNonjewelerGemRequirements = meetsGemRequirements = false;
 
                 gemCountValid = true;
             }

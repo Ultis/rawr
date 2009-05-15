@@ -1268,17 +1268,25 @@ namespace Rawr.Optimizer
 
         public static float GetOptimizationValue(Character character, CalculationsBase model)
         {
-            return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
+            float ignore;
+            return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray(), out ignore);
         }
 
         private float GetOptimizationValue(Character individual, CharacterCalculationsBase valuation)
         {
-            return GetCalculationsValue(individual, valuation, _calculationToOptimize, _requirements);
+            float ignore;
+            return GetCalculationsValue(individual, valuation, _calculationToOptimize, _requirements, out ignore);
         }
 
         protected override float GetOptimizationValue(OptimizerCharacter individual, CharacterCalculationsBase valuation)
         {
-            return GetCalculationsValue(individual.Character, valuation, _calculationToOptimize, _requirements);
+            float ignore;
+            return GetCalculationsValue(individual.Character, valuation, _calculationToOptimize, _requirements, out ignore);
+        }
+
+        protected float GetOptimizationValue(OptimizerCharacter individual, CharacterCalculationsBase valuation, out float nonJewelerValue)
+        {
+            return GetCalculationsValue(individual.Character, valuation, _calculationToOptimize, _requirements, out nonJewelerValue);
         }
 
         protected override CharacterCalculationsBase GetValuation(OptimizerCharacter individual)
@@ -1402,10 +1410,12 @@ namespace Rawr.Optimizer
             return new OptimizerCharacter() { Character = character, Items = items };
         }
 
-        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements)
+        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements, out float nonJewelerValue)
         {
             float gemValue = 0f;
+            float nonJewelerGemValue = 0f;
             if (!character.MeetsGemRequirements) gemValue = -100000;
+            if (!character.MeetsNonjewelerGemRequirements) nonJewelerGemValue = -100000;
             float ret = 0;
             foreach (OptimizationRequirement requirement in requirements)
             {
@@ -1422,8 +1432,17 @@ namespace Rawr.Optimizer
                 }
             }
 
-            if (ret < 0) return ret + gemValue;
-            else return GetCalculationValue(calcs, calculation) + gemValue;
+            if (ret < 0)
+            {
+                nonJewelerValue = ret + nonJewelerGemValue;
+                return ret + gemValue;
+            }
+            else
+            {
+                float value = GetCalculationValue(calcs, calculation);
+                nonJewelerValue = value + nonJewelerGemValue;
+                return value + gemValue;
+            }
         }
 
         private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
@@ -1434,6 +1453,241 @@ namespace Rawr.Optimizer
                 return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
             else
                 return calcs.GetOptimizableCalculationValue(calculation);
+        }
+
+        protected override void LookForDirectItemUpgrades()
+        {
+            KeyValuePair<float, OptimizerCharacter> results;
+            CharacterCalculationsBase directValuation;
+            List<JewelerValue> list = new List<JewelerValue>();
+            for (int slot = 0; slot < slotCount; slot++)
+            {
+                if (slot < characterSlots)
+                {
+                    results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation, list);
+                }
+                else
+                {
+                    results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
+                }
+                if (results.Key > this.bestValue)
+                {
+                    this.bestValue = results.Key;
+                    this.bestValuation = directValuation;
+                    bestIndividual = results.Value;
+                    noImprove = 0;
+                    population[0] = bestIndividual;
+                    //population[0].Geneology = "DirectUpgrade";
+                }
+            }
+            // look for greedy best use of jeweler gems
+            if (list.Count > 0)
+            {
+                list.Sort((a, b) => ((b.Value).CompareTo(a.Value)));
+                // select top 3 uses of jeweler gems
+                // and start constructing the item array
+                object[] itemList = (object[])GetItems(bestIndividual).Clone();
+                // pick best nonjeweler instances
+                Array.Copy(nonJewelerItems, itemList, characterSlots);
+                int remainingJewelers = 3;
+                // pick 3 best jewelers, don't repeat slots
+                for (int i = 0; i < list.Count && remainingJewelers > 0; i++)
+                {
+                    JewelerValue jvi = list[i];
+                    if (jvi.JewelerCount <= remainingJewelers)
+                    {
+                        itemList[jvi.Slot] = jvi.ItemInstance;
+                        remainingJewelers -= jvi.JewelerCount;
+                        for (int j = i + 1; j < list.Count; )
+                        {
+                            if (list[j].Slot == jvi.Slot)
+                            {
+                                list.RemoveAt(j);
+                            }
+                            else
+                            {
+                                j++;
+                            }
+                        }
+                    }
+                }
+                // evaluate
+                OptimizerCharacter greedyIndividual = GenerateIndividual(itemList);
+                CharacterCalculationsBase greedyValuation;
+                float value = GetOptimizationValue(greedyIndividual, greedyValuation = GetValuation(greedyIndividual));
+                // greedy pass
+                for (int slot = 0; slot < slotCount; slot++)
+                {
+                    results = LookForDirectItemUpgrades(slotItems[slot], slot, value, greedyIndividual, out directValuation);
+                    if (results.Key > value)
+                    {
+                        value = results.Key;
+                        greedyValuation = directValuation;
+                        greedyIndividual = results.Value;
+                    }
+                }
+                // is it better than what we have
+                if (value > this.bestValue)
+                {
+                    this.bestValue = value;
+                    this.bestValuation = greedyValuation;
+                    bestIndividual = greedyIndividual;
+                    noImprove = 0;
+                    population[0] = bestIndividual;
+                    //population[0].Geneology = "DirectUpgrade";
+                }
+            }
+        }
+
+        private struct JewelerValue
+        {
+            public int Slot;
+            public ItemInstance ItemInstance;
+            public float Value;
+            public int JewelerCount;
+        }
+
+        private int currentSlot;
+        private float[] jewelerValue = new float[4];
+        private ItemInstance[] jewelerItems = new ItemInstance[4];
+        private ItemInstance[] nonJewelerItems = new ItemInstance[characterSlots];
+
+        protected override void ThreadPoolDirectUpgradeValuation(object state)
+        {
+            OptimizerCharacter swappedIndividual = (OptimizerCharacter)state;
+            CharacterCalculationsBase valuation;
+            float nonJewelerValue;
+            float value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
+            ItemInstance itemInstance = (ItemInstance)swappedIndividual.Items[currentSlot];
+            int jewelerCount = 0;
+            if (itemInstance != null)
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    Item gem = itemInstance.GetGem(i);
+                    if (gem != null && gem.IsJewelersGem)
+                    {
+                        jewelerCount++;
+                    }
+                }
+            }
+            lock (directValuationLock)
+            {
+                directValuationsComplete++;
+                if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                {
+                    jewelerItems[jewelerCount] = itemInstance;
+                    jewelerValue[jewelerCount] = nonJewelerValue;
+                }
+                if (value > bestDirectValue)
+                {
+                    bestDirectValue = value;
+                    bestDirectValuation = valuation;
+                    bestDirectIndividual = swappedIndividual;
+                    directValuationFoundUpgrade = true;
+                }
+                if (directValuationsComplete >= directValuationsQueued) Monitor.Pulse(directValuationLock);
+            }
+        }
+
+        private KeyValuePair<float, OptimizerCharacter> LookForDirectItemUpgrades(List<object> items, int slot, float best, OptimizerCharacter bestIndividual, out CharacterCalculationsBase bestValuation, List<JewelerValue> jewelerInfo)
+        {
+            Array.Clear(jewelerItems, 0, 4);
+            OptimizerCharacter swappedIndividual;
+            bestValuation = null;
+            float value;
+            bool foundUpgrade = false;
+            object[] itemList = (object[])GetItems(bestIndividual).Clone();
+            if (ThreadPoolValuation)
+            {
+                bestDirectValue = best;
+                directValuationFoundUpgrade = false;
+                directValuationsQueued = 0;
+                directValuationsComplete = 0;
+                currentSlot = slot;
+            }
+            foreach (object item in items)
+            {
+                itemList[slot] = item;
+                if (IsIndividualValid(itemList))
+                {
+                    swappedIndividual = GenerateIndividual(itemList);
+                    if (ThreadPoolValuation)
+                    {
+                        directValuationsQueued++;
+                        ThreadPool.QueueUserWorkItem(ThreadPoolDirectUpgradeValuation, swappedIndividual);
+                    }
+                    else
+                    {
+                        CharacterCalculationsBase valuation;
+                        float nonJewelerValue;
+                        value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
+                        ItemInstance itemInstance = (ItemInstance)item;
+                        int jewelerCount = 0;
+                        if (itemInstance != null)
+                        {
+                            for (int i = 1; i <= 3; i++)
+                            {
+                                Item gem = itemInstance.GetGem(i);
+                                if (gem != null && gem.IsJewelersGem)
+                                {
+                                    jewelerCount++;
+                                }
+                            }
+                        }
+                        if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                        {
+                            jewelerItems[jewelerCount] = itemInstance;
+                            jewelerValue[jewelerCount] = nonJewelerValue;
+                        }
+                        if (value > best)
+                        {
+                            best = value;
+                            bestValuation = valuation;
+                            bestIndividual = swappedIndividual;
+                            foundUpgrade = true;
+                        }
+                    }
+                }
+            }
+            if (ThreadPoolValuation)
+            {
+                lock (directValuationLock)
+                {
+                    while (directValuationsComplete < directValuationsQueued) Monitor.Wait(directValuationLock);
+                    if (directValuationFoundUpgrade)
+                    {
+                        best = bestDirectValue;
+                        bestValuation = bestDirectValuation;
+                        bestIndividual = bestDirectIndividual;
+                        foundUpgrade = true;
+                    }
+                    bestDirectIndividual = null;
+                    bestDirectValuation = null;
+                }
+            }
+            int minJeweler;
+            float minValue = 0.0f;
+            nonJewelerItems[slot] = jewelerItems[0];
+            for (minJeweler = 0; minJeweler <= 3; minJeweler++)
+            {
+                if (jewelerItems[minJeweler] != null)
+                {
+                    minValue = jewelerValue[minJeweler];
+                    break;
+                }
+            }
+            for (int i = minJeweler + 1; i <= 3; i++)
+            {
+                ItemInstance itemInstance = jewelerItems[i];
+                if (itemInstance != null)
+                {
+                    jewelerInfo.Add(new JewelerValue() { ItemInstance = itemInstance, Slot = slot, JewelerCount = i, Value = (jewelerValue[i] - minValue) / (i - minJeweler) });
+                }
+            }
+            if (foundUpgrade)
+                return new KeyValuePair<float, OptimizerCharacter>(best, bestIndividual);
+            return new KeyValuePair<float, OptimizerCharacter>(float.NegativeInfinity, null);
         }
 
         protected override object GetRandomItem(int slot, object[] items)

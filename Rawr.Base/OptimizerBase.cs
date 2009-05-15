@@ -217,13 +217,13 @@ namespace Rawr.Optimizer
             return bestIndividual;
         }
 
-        private int noImprove;
+        protected int noImprove;
 
-        private float bestValue;
-        private TValuation bestValuation;
-        private TIndividual bestIndividual;
+        protected float bestValue;
+        protected TValuation bestValuation;
+        protected TIndividual bestIndividual;
 
-        private TIndividual[] population;
+        protected TIndividual[] population;
         private float[] values;
         private object bestValueLock = new object();
         private AutoResetEvent valuationsComplete = new AutoResetEvent(false);
@@ -449,21 +449,7 @@ namespace Rawr.Optimizer
                 else
                 {
                     //last try, look for single direct upgrades
-                    KeyValuePair<float, TIndividual> results;
-                    TValuation directValuation;
-                    for (int slot = 0; slot < slotCount; slot++)
-                    {
-                        results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
-                        if (results.Key > this.bestValue)
-                        {
-                            this.bestValue = results.Key;
-                            this.bestValuation = directValuation; 
-                            bestIndividual = results.Value; 
-                            noImprove = 0;
-                            population[0] = bestIndividual;
-                            //population[0].Geneology = "DirectUpgrade";
-                        }
-                    }
+                    LookForDirectItemUpgrades();
                 }
 			}
 
@@ -485,15 +471,34 @@ namespace Rawr.Optimizer
             return ret;
 		}
 
-        private object directValuationLock = new object();
-        private TIndividual bestDirectIndividual;
-        private TValuation bestDirectValuation;
-        private float bestDirectValue;
-        private int directValuationsComplete;
-        private int directValuationsQueued;
-        private bool directValuationFoundUpgrade;
+        protected virtual void LookForDirectItemUpgrades()
+        {
+            KeyValuePair<float, TIndividual> results;
+            TValuation directValuation;
+            for (int slot = 0; slot < slotCount; slot++)
+            {
+                results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
+                if (results.Key > this.bestValue)
+                {
+                    this.bestValue = results.Key;
+                    this.bestValuation = directValuation;
+                    bestIndividual = results.Value;
+                    noImprove = 0;
+                    population[0] = bestIndividual;
+                    //population[0].Geneology = "DirectUpgrade";
+                }
+            }
+        }
 
-        private void ThreadPoolDirectUpgradeValuation(object state)
+        protected object directValuationLock = new object();
+        protected TIndividual bestDirectIndividual;
+        protected TValuation bestDirectValuation;
+        protected float bestDirectValue;
+        protected int directValuationsComplete;
+        protected int directValuationsQueued;
+        protected bool directValuationFoundUpgrade;
+
+        protected virtual void ThreadPoolDirectUpgradeValuation(object state)
         {
             TIndividual swappedIndividual = (TIndividual)state;
             TValuation valuation;
