@@ -268,6 +268,8 @@ namespace Rawr
                                 }
                             }
                         }
+                        if (minOverallPoints > -.01f && minOverallPoints < 0f) minOverallPoints = 0f;
+                        if (maxOverallPoints < .01f && maxOverallPoints > 0f) maxOverallPoints = 0f;
                         if (maxOverallPoints == 0f && minOverallPoints == 0f) maxOverallPoints = 2f;
                         maxOverallPoints = (float)Math.Ceiling(Math.Round(maxOverallPoints, 2));
                         float maxScale = 10f;
