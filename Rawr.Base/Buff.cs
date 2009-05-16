@@ -1111,7 +1111,7 @@ namespace Rawr
                     BonusNatureDamageMultiplier = 0.13f
                 },
             });
-            defaultBuffs.Add(new Buff
+           /* defaultBuffs.Add(new Buff
             {
                 Name = "Rune of Razorice",
                 Source = "Death Knight",
@@ -1121,7 +1121,7 @@ namespace Rawr
                 {
                     BonusFrostDamageMultiplier = 0.05f,
                 }
-            });
+            }); */
 
             #endregion
 
