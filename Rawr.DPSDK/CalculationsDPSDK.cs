@@ -1409,32 +1409,26 @@ namespace Rawr.DPSDK
 
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
-
-
-            statsTotal.GreatnessProc = statsGearEnchantsBuffs.GreatnessProc;
+            statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
+            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsBaseGear.ExpertiseRating);
 
             if (statsTotal.GreatnessProc > 0)
                 statsGearEnchantsBuffs.Strength += statsTotal.GreatnessProc * 15f / 45f;
-
+/*
             statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
             statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
             statsTotal.BonusStrengthMultiplier = statsGearEnchantsBuffs.BonusStrengthMultiplier;
             statsTotal.BonusStaminaMultiplier = statsGearEnchantsBuffs.BonusStaminaMultiplier;
 
-            statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-            statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
+            statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
-            statsTotal.Armor = (float) Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * 1f);
-            statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
-            statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
-            statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
+            
 
-            statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
 
-            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
             //double check to make sure they dont have it selected in the buffs tab
 
@@ -1493,15 +1487,36 @@ namespace Rawr.DPSDK
 
             statsTotal.BonusShadowDamageMultiplier = statsGearEnchantsBuffs.BonusShadowDamageMultiplier;
             statsTotal.BonusFrostDamageMultiplier = statsGearEnchantsBuffs.BonusFrostDamageMultiplier;
-
-            foreach (SpecialEffect effect in statsGearEnchantsBuffs.SpecialEffects())
+            */
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    statsTotal.AddSpecialEffect(effect);
                     statsTotal += StatsSpecialEffects.getSpecialEffects(calcOpts, effect);
                 }
             }
+            /*
+            statsTotal.Agility = statsGearEnchantsBuffs.Agility;
+            statsTotal.Strength = statsGearEnchantsBuffs.Strength;
+            statsTotal.Stamina = statsGearEnchantsBuffs.Stamina;
+            statsTotal.Intellect = statsGearEnchantsBuffs.Intellect;
+            statsTotal.Spirit = statsGearEnchantsBuffs.Spirit;*/
+
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Mana = (float)Math.Floor(statsTotal.Mana + (statsTotal.Intellect * 15f));
+            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
+            statsTotal.Armor = (float)Math.Floor((statsTotal.Armor + statsTotal.BonusArmor + 2f * statsTotal.Agility) * 1f);
+
+            statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
+
+            statsTotal.BonusSpellPowerMultiplier = statsTotal.BonusShadowDamageMultiplier;
+
+            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
        /*     if (calcOpts.MagicVuln)
             {
                 statsTotal.BonusSpellPowerMultiplier += .13f;
@@ -1599,6 +1614,8 @@ namespace Rawr.DPSDK
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                ArmorPenetration = stats.ArmorPenetration,
+                Expertise = stats.Expertise,
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
@@ -1609,6 +1626,8 @@ namespace Rawr.DPSDK
                 //HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
+                SpellHasteRating = stats.SpellHasteRating,
+                SpellHaste = stats.SpellHaste,
 
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -1616,6 +1635,7 @@ namespace Rawr.DPSDK
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
                 LotPCritRating = stats.LotPCritRating,
                 CritMeleeRating = stats.CritMeleeRating,
@@ -1714,10 +1734,11 @@ namespace Rawr.DPSDK
         private bool relevantStats(Stats stats)
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
+                stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + 
+                stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.ShadowDamage +
-                stats.CritMeleeRating + stats.BonusShadowDamageMultiplier
+                stats.CritMeleeRating + stats.BonusShadowDamageMultiplier + stats.SpellHaste + stats.SpellHasteRating
                 + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
                 + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
                 + stats.BonusBloodStrikeDamage + stats.BonusDeathCoilDamage + stats.BonusDeathStrikeDamage + stats.BonusFrostStrikeDamage

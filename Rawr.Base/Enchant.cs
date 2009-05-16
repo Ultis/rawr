@@ -660,7 +660,9 @@ namespace Rawr
             //Death Knight Rune Enchants
             Stats razorice = new Stats();
             razorice.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusFrostDamageMultiplier = 0.01f }, 20f, 0f, 1f, 5));
-            defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.OneHand, new Stats() { BonusStrengthMultiplier = .075f }));
+            Stats RotFC = new Stats();
+            RotFC.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f));
+            defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.OneHand, RotFC));
             defaultEnchants.Add(new Enchant(3370, "Rune of Razorice", Item.ItemSlot.OneHand, razorice));
             defaultEnchants.Add(new Enchant(3369, "Rune of Cinderglacier", Item.ItemSlot.OneHand, new Stats() { Health = 1f}));
             defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", Item.ItemSlot.TwoHand, new Stats() { Parry = 0.04f }));
