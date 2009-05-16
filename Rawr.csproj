@@ -301,6 +301,9 @@
     <Compile Include="ItemContextualMenu.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ItemFilterTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ItemIcons.cs" />
     <Compile Include="ItemSelectorItem.cs">
       <SubType>UserControl</SubType>
@@ -528,7 +531,7 @@
     <Content Include="DefaultDataFiles\ItemSource.xml" />
     <Content Include="DefaultDataFiles\Talents.xml" />
     <Content Include="RawrIcon.ico" />
-    <None Include="ItemFilterRegexList.datasource" />
+    <None Include="ItemFilterRegex.datasource" />
     <None Include="ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

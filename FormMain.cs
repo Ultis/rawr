@@ -105,6 +105,8 @@ namespace Rawr
             }
         }
 
+        private ItemFilterTreeView itemFilterTreeView;
+
 		private static FormMain _instance;
 		public static FormMain Instance { get { return FormMain._instance; } }
 		public FormMain()
@@ -172,7 +174,14 @@ namespace Rawr
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 			//_loadingCharacter = false;
 
-            UpdateItemFilterDropDown();
+            itemFilterTreeView = new ItemFilterTreeView();
+            itemFilterTreeView.EditMode = false;
+            itemFilterTreeView.BorderStyle = BorderStyle.None;
+            itemFilterTreeView.Size = new Size(200, 400);
+
+            ToolStripDropDown dropDown = new ToolStripDropDown();
+            dropDown.Items.Add(new ToolStripControlHost(itemFilterTreeView));
+            toolStripDropDownButtonFilter.DropDown = dropDown;
 		}
 
 		private bool _checkForUpdatesEnabled = true;
@@ -1782,53 +1791,21 @@ namespace Rawr
 			}
 		}
 
-        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.WaitCursor;
-            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
-            menuItem.Checked = !menuItem.Checked;
-            if (menuItem == toolStripMenuItemFilterOther)
-            {
-                ItemFilter.OtherRegexEnabled = menuItem.Checked;
-            }
-            else
-            {
-                ((ItemFilterRegex)menuItem.Tag).Enabled = menuItem.Checked;
-            }
-            ItemCache.OnItemsChanged();
-            this.Cursor = Cursors.Default;
-        }
-
-        private void UpdateItemFilterDropDown()
-        {
-            toolStripDropDownButtonFilter.DropDownItems.Clear();
-            foreach (ItemFilterRegex regex in ItemFilter.RegexList)
-            {
-                ToolStripMenuItem toolStripMenuItemFilter = new ToolStripMenuItem(regex.Name);
-                toolStripMenuItemFilter.Tag = regex;
-                toolStripMenuItemFilter.Checked = regex.Enabled;
-                toolStripMenuItemFilter.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
-                toolStripDropDownButtonFilter.DropDownItems.Add(toolStripMenuItemFilter);
-            }
-            toolStripMenuItemFilterOther.Checked = ItemFilter.OtherRegexEnabled;
-            toolStripDropDownButtonFilter.DropDownItems.Add(toolStripMenuItemFilterOther);
-        }
-
         private void toolStripMenuItemItemFilterEditor_Click(object sender, EventArgs e)
         {
             // in order to preserve which filters are enabled we have to save the filters before initiating the edit
             ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
-            FormItemFilter.bindingSourceItemFilter.DataSource = ItemFilter.RegexList;
+            FormItemFilter.itemFilterTreeView.GenerateNodes();
             if (FormItemFilter.ShowDialog(this) == DialogResult.OK)
             {
 				ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
-                UpdateItemFilterDropDown();
+                itemFilterTreeView.GenerateNodes();
                 ItemCache.OnItemsChanged();
             }
             else
             {
 				ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
-                UpdateItemFilterDropDown(); // you have to rebuild dropdown, because reloading item filters from file makes Tags on drop down menu invalid
+                itemFilterTreeView.GenerateNodes(); // you have to rebuild dropdown, because reloading item filters from file makes Tags on drop down menu invalid
             }
         }
 

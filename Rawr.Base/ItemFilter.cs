@@ -57,6 +57,9 @@ namespace Rawr
 
         public bool Enabled { get; set; }
 
+        public ItemFilterRegexList RegexList = new ItemFilterRegexList();
+        public bool OtherRegexEnabled = true;
+
         [XmlIgnore]
         private Regex _regex;
 
@@ -92,6 +95,34 @@ namespace Rawr
         public bool AppliesTo(Item item)
         {
             return (item.IsGem && AppliesToGems) || (!item.IsGem && AppliesToItems);
+        }
+
+        public bool IsEnabled(Item item)
+        {
+            if (!Enabled) return false;
+            if (RegexList.Count == 0) return true;
+            bool enabledMatch = false;
+            bool anyMatch = false;
+            foreach (ItemFilterRegex regex in RegexList)
+            {
+                if (regex.AppliesTo(item) && regex.IsMatch(item))
+                {
+                    anyMatch = true;
+                    if (regex.IsEnabled(item))
+                    {
+                        enabledMatch = true;
+                        break;
+                    }
+                }
+            }
+            if (anyMatch)
+            {
+                return enabledMatch;
+            }
+            else
+            {
+                return OtherRegexEnabled;
+            }
         }
     }
 
@@ -154,7 +185,7 @@ namespace Rawr
                     if (regex.AdditiveFilter && regex.AppliesTo(item) && regex.IsMatch(item))
                     {
                         anyMatch = true;
-                        if (regex.Enabled)
+                        if (regex.IsEnabled(item))
                         {
                             enabledMatch = true;
                             break;
@@ -173,7 +204,7 @@ namespace Rawr
                 {
                     foreach (ItemFilterRegex regex in data.RegexList)
                     {
-                        if (!regex.AdditiveFilter && regex.Enabled && regex.AppliesTo(item) && regex.IsMatch(item))
+                        if (!regex.AdditiveFilter && regex.Enabled && regex.AppliesTo(item) && regex.IsMatch(item) && regex.IsEnabled(item))
                         {
                             return false;
                         }
