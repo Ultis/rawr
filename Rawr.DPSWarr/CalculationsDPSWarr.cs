@@ -107,6 +107,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Overpower",
                         "DPS Breakdown (Arms):Bladestorm",
                         "DPS Breakdown (Arms):Sword Spec",
+                        "DPS Breakdown (Arms):Sweeping Strikes",
                         "DPS Breakdown (General):Heroic Strike",
                         "DPS Breakdown (General):Deep Wounds",
                         "DPS Breakdown (General):White DPS",
@@ -114,16 +115,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                       
                         "Rage Details:Generated White DPS Rage",
                         "Rage Details:Generated Other Rage",
-                        "Rage Details:Ability's Rage Used (BT)",
-                        "Rage Details:Ability's Rage Used (WW)",
-                        "Rage Details:Ability's Rage Used (MS)",
-                        "Rage Details:Ability's Rage Used (OP)",
-                        "Rage Details:Ability's Rage Used (SD)",
-                        "Rage Details:Ability's Rage Used (SL)",
-                        "Rage Details:Ability's Rage Used (BS)",
-                        "Rage Details:Ability's Rage Used (BLS)",
-                        "Rage Details:Ability's Rage Used (SW)",
-                        "Rage Details:Ability's Rage Used (RND)",
                         "Rage Details:Available Free Rage",
                     };
                 }
@@ -301,8 +292,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.damageReduc = combatFactors.DamageReduction;
 
             calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec();
-            calculatedStats.OtherRage = skillAttacks.OtherRage();
-            calculatedStats.FreeRage = skillAttacks.freeRage();
+            calculatedStats.OtherRage = bloodsurge.OtherRage();
+            calculatedStats.FreeRage = bloodsurge.freeRage();
 
             calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + calculatedStats.BT.GetDPS()
                 + calculatedStats.WW.GetDPS() + calculatedStats.HS.GetDPS() + calculatedStats.BS.GetDPS()
@@ -550,8 +541,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             //statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
-            //statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
-            //statsTotal.BonusSlamDamage = statsGearEnchantsBuffs.BonusSlamDamage;
+            statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
+            statsTotal.BonusSlamDamage = statsGearEnchantsBuffs.BonusSlamDamage;
             statsTotal.DreadnaughtBonusRageProc = statsGearEnchantsBuffs.DreadnaughtBonusRageProc;
 
 
@@ -618,9 +609,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             /*List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsDPSWarr baseCalc, calc;
-            ComparisonCalculationBase comparison;
-            float[] subPoints;
+            //CharacterCalculationsDPSWarr baseCalc, calc;
+            //ComparisonCalculationBase comparison;
+            //float[] subPoints;
             */
             switch (chartName)
             {
@@ -787,34 +778,4 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calcOpts.talents = character.WarriorTalents;
         }
     }
-    /*public class DPSWarr {
-        // Offensive
-        public static readonly float StrengthToAP = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 62.5f;
-        public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
-        public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
-        public static readonly float CritToCritRating = 45.90598f; //14*82/52
-        public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
-        //public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
-        //public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
-        public static readonly float ArPToArmorPenetration = 1.0f / (4.69512177f * 3.27899877899878f / 1.25f);// 1.0f / 15.395298f;
-        // Neutral
-        public static readonly float StaminaToHP = 10.0f;
-        // Defensive
-        public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
-        public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
-        public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
-        public static readonly float DefenseRatingToDefense = 1.0f / 4.918498039f;
-        public static readonly float DefenseToDodge = 0.04f;
-        public static readonly float DefenseToBlock = 0.04f;
-        public static readonly float DefenseToParry = 0.04f;
-        public static readonly float DefenseToMiss = 0.04f;
-        public static readonly float DefenseToCritReduction = 0.04f;
-        public static readonly float DefenseToDazeReduction = 0.04f;
-        public static readonly float ParryRatingToParry = 1.0f / 49.18498611f;
-        public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
-        // PvP
-        public static readonly float ResilienceRatingToCritReduction = 1.0f / 81.97497559f;
-    }*/
 }

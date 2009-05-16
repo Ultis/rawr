@@ -69,14 +69,13 @@
             return rage;
         }
 
-        public float GetOHSwingRage()
-        {
+        public float GetOHSwingRage() {
             // d = damage amt
             // c = rage conversion value
             // s = weapon speed
             // f = hit factor
 
-            float c, d, s, f, rage;
+            float c, d, s, f, rage; //StatConversion.LEVEL_80_COMBATRATING_MODIFIER;
 
             rage = 0.0f;
             c = 0.0091107836f * _character.Level * _character.Level + 3.225598133f * _character.Level + 4.2652911f;
@@ -108,8 +107,8 @@
         // Rage generated per second
         public float whiteRageGenPerSec() {
 
-            float MHRage = GetMHSwingRage();
-            float OHRage = GetOHSwingRage();
+            float MHRage = (_character.MainHand != null && _character.MainHand.MaxDamage > 0 ? GetMHSwingRage() : 0f);
+            float OHRage = (_character.OffHand  != null && _character.OffHand.MaxDamage  > 0 ? GetOHSwingRage() : 0f);
 
             // Rage per Second
             MHRage /= _combatFactors.MainHandSpeed;
