@@ -2891,7 +2891,110 @@ namespace Rawr
                 SetName = "Aegis Regalia",
                 SetThreshold = 4
             });
-                      
+
+            // DK DPS T7
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { 
+                    BonusDeathStrikeCrit = 0.05f, 
+                    BonusObliterateCrit = 0.05f, 
+                    BonusScourgeStrikeCrit = 0.05f 
+                },
+                SetName = "Scourgeborne Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusRPFromDeathStrike = 10f,
+                    BonusRPFromObliterate = 10f,
+                    BonusRPFromScourgeStrike = 10f
+                },
+                SetName = "Scourgeborne Battlegear",
+                SetThreshold = 4
+            });
+
+            // DK DPS T8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusDeathCoilCrit = 0.05f,
+                    BonusFrostStrikeCrit = 0.05f
+                },
+                SetName = "Darkruned Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusPerDiseaseBloodStrikeDamage = 0.20f,
+                    BonusPerDiseaseHeartStrikeDamage = 0.20f,
+                    BonusPerDiseaseObliterateDamage = 0.20f,
+                    BonusPerDiseaseScourgeStrikeDamage = 0.20f
+                },
+                SetName = "Darkruned Battlegear",
+                SetThreshold = 4
+            });
+
+            // DK Tank T7
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusPlagueStrikeCrit = 0.10f },
+                SetName = "Scourgeborne Plate",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusIceboundFortitudeDuration = 3f },
+                SetName = "Scourgeborne Plate",
+                SetThreshold = 4
+            });
+
+            // DK Tank T8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusRuneStrikeMultiplier = 0.10f },
+                SetName = "Darkruned Plate",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusAntiMagicShellDamageReduction = 0.10f },
+                SetName = "Darkruned Plate",
+                SetThreshold = 4
+            });
+       
 			#endregion
 
             #region Profession Buffs

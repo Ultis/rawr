@@ -328,7 +328,25 @@ namespace Rawr
         BonusFrostStrikeDamage,
         BonusHeartStrikeDamage,
         BonusIcyTouchDamage,
-        #endregion 
+        #endregion
+        #region DK set bonuses
+        BonusAntiMagicShellDamageReduction,
+        BonusDeathCoilCrit,
+        BonusDeathStrikeCrit,
+        BonusFrostStrikeCrit,
+        BonusIceboundFortitudeDuration,
+        BonusObliterateCrit,
+        BonusPerDiseaseBloodStrikeDamage,
+        BonusPerDiseaseHeartStrikeDamage,
+        BonusPerDiseaseObliterateDamage,
+        BonusPerDiseaseScourgeStrikeDamage,
+        BonusPlagueStrikeCrit,
+        BonusRPFromDeathStrike,
+        BonusRPFromObliterate,
+        BonusRPFromScourgeStrike,
+        BonusRuneStrikeMultiplier,
+        BonusScourgeStrikeCrit,
+        #endregion
         ArcaneDamage,
         FireDamage,
         ShadowDamage,
@@ -1355,6 +1373,160 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusIcyTouchDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusIcyTouchDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusAntiMagicShellDamageReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusAntiMagicShellDamageReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusAntiMagicShellDamageReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Death Coil Crit")]
+        public float BonusDeathCoilCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Death Strike Crit")]
+        public float BonusDeathStrikeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Frost Strike Crit")]
+        public float BonusFrostStrikeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusIceboundFortitudeDuration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusIceboundFortitudeDuration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusIceboundFortitudeDuration] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Obliterate Crit")]
+        public float BonusObliterateCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Damage Per Disease For Blood Strike")]
+        public float BonusPerDiseaseBloodStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseBloodStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseBloodStrikeDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Damage Per Disease For Heart Strike")]
+        public float BonusPerDiseaseHeartStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseHeartStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseHeartStrikeDamage] = value; }
+        }
+
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Damage Per Disease For Obliterate")]
+        public float BonusPerDiseaseObliterateDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseObliterateDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseObliterateDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Damage Per Disease For Scourge Strike")]
+        public float BonusPerDiseaseScourgeStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseScourgeStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseScourgeStrikeDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Plague Strike Crit")]
+        public float BonusPlagueStrikeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusPlagueStrikeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusPlagueStrikeCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        [DisplayName("Bonus RP From Death Strike")]
+        public float BonusRPFromDeathStrike
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRPFromDeathStrike]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRPFromDeathStrike] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        [DisplayName("Bonus RP From Obliterate")]
+        public float BonusRPFromObliterate
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRPFromObliterate]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRPFromObliterate] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        [DisplayName("Bonus RP From Scourge Strike")]
+        public float BonusRPFromScourgeStrike
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRPFromScourgeStrike]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRPFromScourgeStrike] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Rune Strike Damage Multiplier")]
+        public float BonusRuneStrikeMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRuneStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRuneStrikeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Bonus Scourge Strike Crit")]
+        public float BonusScourgeStrikeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -262,6 +262,7 @@ namespace Rawr.DPSDK
             float dpsGhoul = 0f;
             float dpsOtherShadow = 0f;
             float dpsOtherArcane = 0f;
+            float dpsOtherFrost = 0f;
             float dpsBloodworms = 0f;
 
             //shared variables
@@ -275,6 +276,7 @@ namespace Rawr.DPSDK
             float fightDuration = calcOpts.FightLength * 60;
             float mitigation, physCrits, spellCrits, spellResist, totalMHMiss, totalOHMiss, realDuration;
             float KMRatio = 0f;
+            float CinderglacierMultiplier = 1f;
 
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
@@ -311,71 +313,7 @@ namespace Rawr.DPSDK
             float commandMult = 0f;
 
             calcOpts.presence = calcOpts.rotation.presence;
-
-            int numt7 = 0;
-            int numt8 = 0;
-
-            #region Tier 7 and 8 set bonuses
-            {
-                // Tier 7&8 set bonus hack
-                if (character.Chest != null && character.Chest.Item != null)
-                {
-                    if (character.Chest.Item.Id == 39618 || character.Chest.Item.Id == 40550)
-                    {
-                        numt7++;
-                    }
-                    if (character.Chest.Item.Id == 46111 || character.Chest.Item.Id == 45340)
-                    {
-                        numt8++;
-                    }
-                }
-                if (character.Head != null && character.Head.Item != null)
-                {
-                    if (character.Head.Item.Id == 39619 || character.Head.Item.Id == 40554)
-                    {
-                        numt7++;
-                    }
-                    if (character.Head.Item.Id == 46115 || character.Head.Item.Id == 45342)
-                    {
-                        numt8++;
-                    }
-                }
-                if (character.Hands != null && character.Hands.Item != null)
-                {
-                    if (character.Hands.Item.Id == 39618 || character.Hands.Item.Id == 40552)
-                    {
-                        numt7++;
-                    }
-                    if (character.Hands.Item.Id == 46113 || character.Hands.Item.Id == 45341)
-                    {
-                        numt8++;
-                    }
-                }
-                if (character.Legs != null && character.Legs.Item != null)
-                {
-                    if (character.Legs.Item.Id == 39620 || character.Legs.Item.Id == 40556)
-                    {
-                        numt7++;
-                    }
-                    if (character.Legs.Item.Id == 46116 || character.Legs.Item.Id == 45343)
-                    {
-                        numt8++;
-                    }
-                }
-                if (character.Shoulders != null && character.Shoulders.Item != null)
-                {
-                    if (character.Shoulders.Item.Id == 39621 || character.Shoulders.Item.Id == 40557)
-                    {
-                        numt7++;
-                    }
-                    if (character.Shoulders.Item.Id == 46117 || character.Shoulders.Item.Id == 45344)
-                    {
-                        numt8++;
-                    }
-                }
-            }
-            #endregion
-
+            
             #region Impurity Application
             {
                 float impurityMult = 1f + (.05f * (float)talents.Impurity);
@@ -609,6 +547,27 @@ namespace Rawr.DPSDK
             }
             #endregion
 
+            #region Cinderglacier (hard-coded because SpecialEffects doesn't support this type of enchant yet)
+            {
+                if (character.GetEnchantBySlot(Character.CharacterSlot.MainHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.MainHand).Id == 3369)
+                {
+                    float shadowFrostAbilitiesPerSecond = (calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
+                        calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) / realDuration;
+                    SpecialEffect temp = new SpecialEffect(Trigger.Use, new Stats(), 0, -1f);
+                    float avgPPS = temp.GetAverageUptime(MH.hastedSpeed, 1f - calcs.AvoidedAttacks, MH.baseSpeed, calcOpts.FightLength * 60f)/60;
+                    CinderglacierMultiplier *= 1f + (avgPPS * 2) / shadowFrostAbilitiesPerSecond;
+                }
+                if (character.GetEnchantBySlot(Character.CharacterSlot.OffHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.OffHand).Id == 3369)
+                {
+                    float shadowFrostAbilitiesPerSecond = (calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
+                        calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) / realDuration;
+                    SpecialEffect temp = new SpecialEffect(Trigger.Use, new Stats(), 0, -1f);
+                    float avgPPS = temp.GetAverageUptime(MH.hastedSpeed, 1f - calcs.AvoidedAttacks, MH.baseSpeed, calcOpts.FightLength * 60f) / 60;
+                    CinderglacierMultiplier *= 1f + (avgPPS * 2) / shadowFrostAbilitiesPerSecond;
+                }
+
+            }
+            #endregion
             /*  StatsSpecialEffects se = new StatsSpecialEffects(character, calcs.BasicStats);
             Stats statsFromSe = se.getSpecialEffects(calcOpts, calcs);
             stats += statsFromSe;
@@ -696,7 +655,7 @@ namespace Rawr.DPSDK
                     float DCCD = realDuration / (calcOpts.rotation.DeathCoil + (0.05f * (float)talents.SuddenDoom));
                     float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower) + stats.BonusDeathCoilDamage;
                     dpsDeathCoil = DCDmg / DCCD;
-                    dpsDeathCoil *= 1f + spellCrits + (numt8 >= 2 ? .05f : 0f);
+                    dpsDeathCoil *= 1f + spellCrits + stats.BonusDeathCoilCrit;
 
                     //sudden doom stuff
                     // this section is no longer relevant after 3.1.x changes
@@ -734,7 +693,7 @@ namespace Rawr.DPSDK
                     float PSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * .5f + 189f;
                     dpsPlagueStrike = PSDmg / PSCD;
                     float PSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes);
-                    float PSCrit = 1f + ((physCrits + (.03f * (float)talents.ViciousStrikes)) * PSCritDmgMult);
+                    float PSCrit = 1f + ((physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusPlagueStrikeCrit) * PSCritDmgMult);
                     dpsPlagueStrike *= PSCrit;
 
                     dpsPlagueStrike *= (talents.GlyphofPlagueStrike ? 1.2f : 1f);
@@ -746,10 +705,10 @@ namespace Rawr.DPSDK
 
             #region Frost Fever
             {
-                if (calcOpts.rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) || (talents.GlyphofPestilence))
+                if (calcOpts.rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) || (talents.GlyphofDisease))
                 {
                     // Frost Fever is renewed with every Icy Touch and starts a new cd
-                    float ITCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.IcyTouch;
+                    float ITCD = calcOpts.rotation.curRotationDuration / (calcOpts.rotation.IcyTouch + (talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
                     float FFCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
                     int tempF = (int)Math.Floor(ITCD / FFCD);
                     FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
@@ -794,11 +753,11 @@ namespace Rawr.DPSDK
                 if (talents.ScourgeStrike > 0 && calcOpts.rotation.ScourgeStrike > 0f)
                 {
                     float SSCD = realDuration / calcOpts.rotation.ScourgeStrike;
-                    float SSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (.45f + 0.11f * .45f * calcOpts.rotation.avgDiseaseMult * (numt8 >= 4 ? 1.2f : 1f)) + 357.188f +
+                    float SSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (.45f + 0.11f * .45f * calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage)) + 357.188f +
                         stats.BonusScourgeStrikeDamage;
                     dpsScourgeStrike = SSDmg / SSCD;
                     float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes);
-                    float SSCrit = 1f + ((physCrits + (.03f * (float)talents.ViciousStrikes) + (numt7 > 1 ? .05f : 0)) * SSCritDmgMult);
+                    float SSCrit = 1f + ((physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                     dpsScourgeStrike = dpsScourgeStrike * SSCrit;
                     dpsScourgeStrike *= 1f + (.07f * (float)talents.Outbreak);
                 }
@@ -824,7 +783,7 @@ namespace Rawr.DPSDK
                         150f + stats.BonusFrostStrikeDamage;
                     dpsFrostStrike = FSDmg / FSCD;
                     float FSCritDmgMult = (.15f * (float)talents.GuileOfGorefiend);
-                    float FSCrit = 1f + physCrits + addedCritFromKM + (numt8 >= 2 ? .05f : 0f);
+                    float FSCrit = 1f + physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit;
                     dpsFrostStrike += dpsFrostStrike * FSCrit * FSCritDmgMult;
                 }
             }
@@ -848,6 +807,18 @@ namespace Rawr.DPSDK
             {
                 dpsOtherArcane = stats.ArcaneDamage;
                 dpsOtherShadow = stats.ShadowDamage;
+                if (character.GetEnchantBySlot(Character.CharacterSlot.MainHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.MainHand).Id == 3370)    //main hand razorice
+                {
+                    float dpsMHglancing = (0.24f * MH.DPS) * 0.75f;
+                    float dpsMHBeforeArmor = ((MH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + physCrits)) + dpsMHglancing;
+                    dpsOtherFrost += (dpsMHBeforeArmor - dpsMHglancing) * .02f;   // presumably doesn't proc off of glancings, like necrosis
+                }
+                if (character.GetEnchantBySlot(Character.CharacterSlot.OffHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.OffHand).Id == 3370)     //off hand 
+                {
+                    float dpsOHglancing = (0.24f * OH.DPS) * 0.75f;
+                    float dpsOHBeforeArmor = ((OH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + physCrits)) + dpsOHglancing;
+                    dpsOtherFrost += (dpsOHBeforeArmor - dpsOHglancing) * .02f;
+                }
                 float OtherCrit = spellCrits;
                 float OtherCritDmgMult = 1.5f;
                 dpsOtherArcane += dpsOtherArcane * OtherCrit * OtherCritDmgMult;
@@ -876,7 +847,7 @@ namespace Rawr.DPSDK
                 {
                     // this is missing +crit chance from rime
                     float OblitCD = realDuration / calcOpts.rotation.Obliterate;
-                    float OblitDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.8f + 0.125f * 0.8f * (float)calcOpts.rotation.avgDiseaseMult * (numt8 >= 4 ? 1.2f : 1f))) +
+                    float OblitDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.8f + 0.125f * 0.8f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage))) +
                         stats.BonusObliterateDamage;
                     dpsObliterate = OblitDmg / OblitCD;
                     //float OblitCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
@@ -885,7 +856,7 @@ namespace Rawr.DPSDK
                     float OblitCrit = 1f + ((physCrits +
                         (.03f * (float)talents.Subversion) +
                         (0.05f * (float)talents.Rime) +
-                        (numt7 > 1 ? .05f : 0f)) * OblitCritDmgMult);
+                        stats.BonusObliterateCrit) * OblitCritDmgMult);
                     dpsObliterate = dpsObliterate * OblitCrit;
                     dpsObliterate *= (talents.GlyphofObliterate ? 1.2f : 1f);
                 }
@@ -908,7 +879,7 @@ namespace Rawr.DPSDK
                     float DSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                     float DSCrit = 1f + ((physCrits +
                         (.03f * (float)talents.ImprovedDeathStrike) +
-                        (numt7 > 1 ? .05f : 0f)) * DSCritDmgMult);
+                        stats.BonusDeathStrikeCrit) * DSCritDmgMult);
                     dpsDeathStrike = dpsDeathStrike * DSCrit;
                     //dpsDeathStrike *= (calcOpts.GlyphofOblit ? 1.2f : 1f);
                 }
@@ -920,7 +891,7 @@ namespace Rawr.DPSDK
                 if (calcOpts.rotation.BloodStrike > 0f)
                 {
                     float BSCD = realDuration / calcOpts.rotation.BloodStrike;
-                    float BSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.4f + 0.125f * 0.4f * (float)calcOpts.rotation.avgDiseaseMult * (numt8 >= 4 ? 1.2f : 1f))) +
+                    float BSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.4f + 0.125f * 0.4f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage))) +
                         305.6f + stats.BonusBloodStrikeDamage;
                     dpsBloodStrike = BSDmg / BSCD;
                     float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
@@ -938,7 +909,7 @@ namespace Rawr.DPSDK
                 if (talents.HeartStrike > 0 && calcOpts.rotation.HeartStrike > 0f)
                 {
                     float HSCD = realDuration / calcOpts.rotation.HeartStrike;
-                    float HSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.5f + 0.1f * 0.5f * (float)calcOpts.rotation.avgDiseaseMult) * (numt8 >= 4 ? 1.2f : 1f)) +
+                    float HSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.5f + 0.1f * 0.5f * (float)calcOpts.rotation.avgDiseaseMult) * (1f + stats.BonusPerDiseaseHeartStrikeDamage)) +
                         368f + stats.BonusHeartStrikeDamage;
                     dpsHeartStrike = HSDmg / HSCD;
                     //float HSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
@@ -1099,6 +1070,7 @@ namespace Rawr.DPSDK
             float WanderingPlagueMult = 1f;
             float otherShadowMult = 1f;
             float otherArcaneMult = 1f;
+            float otherFrostMult = 1f;
 
             #region Apply Physical Mitigation
             {
@@ -1162,6 +1134,17 @@ namespace Rawr.DPSDK
                 UnholyBlightMult += spellPowerMult - 1f;
                 otherShadowMult += spellPowerMult - 1f;
                 otherArcaneMult += spellPowerMult - 1f;
+                otherFrostMult += frostSpellPowerMult - 1f;
+            }
+            #endregion
+
+            #region Cinderglacier multipliers
+            {
+                DeathCoilMult *= CinderglacierMultiplier;
+                HowlingBlastMult *= CinderglacierMultiplier;
+                IcyTouchMult *= CinderglacierMultiplier;
+                ScourgeStrikeMult *= CinderglacierMultiplier;
+                FrostStrikeMult *= CinderglacierMultiplier;
             }
             #endregion
 
@@ -1195,6 +1178,7 @@ namespace Rawr.DPSDK
                 ScourgeStrikeMult *= 1 + BlackIceMult;
                 BloodPlagueMult *= 1 + BlackIceMult;
                 otherShadowMult *= 1 + BlackIceMult;
+                otherFrostMult *= 1 + BlackIceMult;
 
                 float MercilessCombatMult = .315f * 0.06f * (float)talents.MercilessCombat;   // The last 35% of a Boss don't take 35% of the fight-time...say .315 (10% faster)
                 ObliterateMult *= 1 + MercilessCombatMult;
@@ -1239,6 +1223,7 @@ namespace Rawr.DPSDK
                 WhiteMult *= 1 + DesecrationMult;
                 otherShadowMult *= 1 + DesecrationMult;
                 otherArcaneMult *= 1 + DesecrationMult;
+                otherFrostMult *= 1 + DesecrationMult;
 
                 if ((float)talents.BoneShield >= 1f)
                 {
@@ -1263,6 +1248,7 @@ namespace Rawr.DPSDK
                     WhiteMult *= 1 + BoneMult;
                     otherShadowMult *= 1 + BoneMult;
                     otherArcaneMult *= 1 + BoneMult;
+                    otherFrostMult *= 1 + BoneMult;
                 }
             }
             #endregion
@@ -1296,7 +1282,9 @@ namespace Rawr.DPSDK
             calcs.UnholyBlightDPS = dpsUnholyBlight * UnholyBlightMult;
             calcs.WhiteDPS = dpsWhite * WhiteMult;
             calcs.WanderingPlagueDPS = dpsWanderingPlague * WanderingPlagueMult;
-            calcs.OtherDPS = dpsOtherShadow * otherShadowMult + dpsOtherArcane * otherArcaneMult;
+            calcs.OtherDPS = dpsOtherShadow * otherShadowMult + 
+                dpsOtherArcane * otherArcaneMult +
+                dpsOtherFrost * otherFrostMult;
 
 
             calcs.DPSPoints = calcs.BCBDPS + calcs.BloodPlagueDPS + calcs.BloodStrikeDPS + calcs.DeathCoilDPS + calcs.FrostFeverDPS + calcs.FrostStrikeDPS +
@@ -1488,6 +1476,21 @@ namespace Rawr.DPSDK
             statsTotal.BonusObliterateDamage = statsGearEnchantsBuffs.BonusObliterateDamage;
             statsTotal.BonusScourgeStrikeDamage = statsGearEnchantsBuffs.BonusScourgeStrikeDamage;
 
+            statsTotal.BonusDeathCoilCrit = statsGearEnchantsBuffs.BonusDeathCoilCrit;
+            statsTotal.BonusDeathStrikeCrit = statsGearEnchantsBuffs.BonusDeathStrikeCrit;
+            statsTotal.BonusFrostStrikeCrit = statsGearEnchantsBuffs.BonusFrostStrikeCrit;
+            statsTotal.BonusObliterateCrit = statsGearEnchantsBuffs.BonusObliterateCrit;
+            statsTotal.BonusPerDiseaseBloodStrikeDamage = statsGearEnchantsBuffs.BonusPerDiseaseBloodStrikeDamage;
+            statsTotal.BonusPerDiseaseHeartStrikeDamage = statsGearEnchantsBuffs.BonusPerDiseaseHeartStrikeDamage;
+            statsTotal.BonusPerDiseaseObliterateDamage = statsGearEnchantsBuffs.BonusPerDiseaseObliterateDamage;
+            statsTotal.BonusPerDiseaseScourgeStrikeDamage = statsGearEnchantsBuffs.BonusPerDiseaseScourgeStrikeDamage;
+            statsTotal.BonusPlagueStrikeCrit = statsGearEnchantsBuffs.BonusPlagueStrikeCrit;
+            statsTotal.BonusRPFromDeathStrike = statsGearEnchantsBuffs.BonusRPFromDeathStrike;
+            statsTotal.BonusRPFromObliterate = statsGearEnchantsBuffs.BonusRPFromObliterate;
+            statsTotal.BonusRPFromScourgeStrike = statsGearEnchantsBuffs.BonusRPFromScourgeStrike;
+            statsTotal.BonusRuneStrikeMultiplier = statsGearEnchantsBuffs.BonusRuneStrikeMultiplier;
+            statsTotal.BonusScourgeStrikeCrit = statsGearEnchantsBuffs.BonusScourgeStrikeCrit;
+
             statsTotal.BonusShadowDamageMultiplier = statsGearEnchantsBuffs.BonusShadowDamageMultiplier;
             statsTotal.BonusFrostDamageMultiplier = statsGearEnchantsBuffs.BonusFrostDamageMultiplier;
 
@@ -1632,6 +1635,20 @@ namespace Rawr.DPSDK
                 BonusObliterateDamage = stats.BonusObliterateDamage,
                 BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
                 
+                BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
+                BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
+                BonusFrostStrikeCrit = stats.BonusFrostStrikeCrit,
+                BonusObliterateCrit = stats.BonusObliterateCrit,
+                BonusPerDiseaseBloodStrikeDamage = stats.BonusPerDiseaseBloodStrikeDamage,
+                BonusPerDiseaseHeartStrikeDamage = stats.BonusPerDiseaseHeartStrikeDamage,
+                BonusPerDiseaseObliterateDamage = stats.BonusPerDiseaseObliterateDamage,
+                BonusPerDiseaseScourgeStrikeDamage = stats.BonusPerDiseaseScourgeStrikeDamage,
+                BonusPlagueStrikeCrit = stats.BonusPlagueStrikeCrit,
+                BonusRPFromDeathStrike = stats.BonusRPFromDeathStrike,
+                BonusRPFromObliterate = stats.BonusRPFromObliterate,
+                BonusRPFromScourgeStrike = stats.BonusRPFromScourgeStrike,
+                BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
+                BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1705,6 +1722,10 @@ namespace Rawr.DPSDK
                 + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
                 + stats.BonusBloodStrikeDamage + stats.BonusDeathCoilDamage + stats.BonusDeathStrikeDamage + stats.BonusFrostStrikeDamage
                 + stats.BonusHeartStrikeDamage + stats.BonusIcyTouchDamage + stats.BonusObliterateDamage + stats.BonusScourgeStrikeDamage 
+                + stats.BonusDeathCoilCrit + stats.BonusDeathStrikeCrit + stats.BonusFrostStrikeCrit + stats.BonusObliterateCrit
+                + stats.BonusPerDiseaseBloodStrikeDamage + stats.BonusPerDiseaseHeartStrikeDamage + stats.BonusPerDiseaseObliterateDamage
+                + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
+                + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
                 + stats.ShadowDamage + stats.ArcaneDamage) != 0;
         }
 
