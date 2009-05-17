@@ -36,6 +36,7 @@ namespace Rawr.DPSDK
         public Boolean fourT7 = false;
         public Boolean GlyphofIT = false;
         public Boolean GlyphofFS = false;
+        public Boolean managedRP = false;
         public float GCDTime;
         public float RP;
 
@@ -66,9 +67,9 @@ namespace Rawr.DPSDK
         }
 
 
-        public float getRP(DeathKnightTalents talents, Boolean fourT7)
+        public float getRP(DeathKnightTalents talents, Character character)
         {
-            this.fourT7 = fourT7;
+            fourT7 = character.ActiveBuffsContains("Scourgeborne Battlegear 4 Piece Bonus");
             this.GlyphofIT = talents.GlyphofIcyTouch;
             this.GlyphofFS = talents.GlyphofFrostStrike;
 
@@ -80,12 +81,47 @@ namespace Rawr.DPSDK
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                 (10 * Horn) +
                 ((curRotationDuration / 5f)*talents.Butchery);
-            
-            RP -= ((40 * DeathCoil) +
-                ((GlyphofFS ? 32 : 40) * FrostStrike) + (40*UnholyBlight));
+
+            if (managedRP)
+            {
+                RP = manageRPDumping(talents, RP);
+            }
+            else
+            {
+                RP -= ((40 * DeathCoil) +
+                    ((GlyphofFS ? 32 : 40) * FrostStrike) + (40 * UnholyBlight));
+            }
             return RP;
         }
 
+        public float manageRPDumping(DeathKnightTalents talents, float RP)
+        {
+            
+            if (talents.FrostStrike > 0f)
+            {
+                FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
+                DeathCoil = 0f;
+                UnholyBlight = 0f;
+                RP = 0f;
+            }
+            else if (talents.UnholyBlight > 0f)
+            {
+                UnholyBlight = curRotationDuration / (talents.GlyphofUnholyBlight ? 30f : 20f);
+                RP -= UnholyBlight * 40f;
+                DeathCoil = RP / 40f;
+                FrostStrike = 0f;
+                RP = 0f;
+            }
+            else
+            {
+                DeathCoil = RP / 40f;
+                FrostStrike = 0f;
+                UnholyBlight = 0f;
+                RP = 0f;
+            }
+
+            return RP;
+        }
 
         public float getGCDTime()
         {

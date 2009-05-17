@@ -203,7 +203,7 @@ namespace Rawr.DPSDK
         private void btnRotation_Click(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            RotationViewer RV = new RotationViewer(calcOpts.rotation, calcOpts.talents);
+            RotationViewer RV = new RotationViewer(calcOpts, Character);
             RV.ShowDialog();            
             Character.OnCalculationsInvalidated();
         }

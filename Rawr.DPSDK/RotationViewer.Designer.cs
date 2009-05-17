@@ -76,7 +76,7 @@
             this.totalGCDs = new System.Windows.Forms.Label();
             this.txtHoW = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
-            this.cbFourT7 = new System.Windows.Forms.CheckBox();
+            this.cbManagedRP = new System.Windows.Forms.CheckBox();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -534,23 +534,24 @@
             this.label22.Text = "Horn of Winter:";
             this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // cbFourT7
+            // cbManagedRP
             // 
-            this.cbFourT7.AutoSize = true;
-            this.cbFourT7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbFourT7.Location = new System.Drawing.Point(180, 68);
-            this.cbFourT7.Name = "cbFourT7";
-            this.cbFourT7.Size = new System.Drawing.Size(63, 17);
-            this.cbFourT7.TabIndex = 79;
-            this.cbFourT7.Text = "4 pc T7";
-            this.cbFourT7.UseVisualStyleBackColor = true;
+            this.cbManagedRP.AutoSize = true;
+            this.cbManagedRP.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbManagedRP.Location = new System.Drawing.Point(180, 68);
+            this.cbManagedRP.Name = "cbManagedRP";
+            this.cbManagedRP.Size = new System.Drawing.Size(155, 17);
+            this.cbManagedRP.TabIndex = 79;
+            this.cbManagedRP.Text = "Manage runic power for me";
+            this.cbManagedRP.UseVisualStyleBackColor = true;
+            this.cbManagedRP.CheckedChanged += new System.EventHandler(this.cbManagedRP_CheckedChanged);
             // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(352, 424);
-            this.Controls.Add(this.cbFourT7);
+            this.Controls.Add(this.cbManagedRP);
             this.Controls.Add(this.txtHoW);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.totalGCDs);
@@ -657,6 +658,6 @@
         private System.Windows.Forms.Label totalGCDs;
         private System.Windows.Forms.TextBox txtHoW;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.CheckBox cbFourT7;
+        private System.Windows.Forms.CheckBox cbManagedRP;
     }
 }

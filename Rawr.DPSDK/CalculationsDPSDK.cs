@@ -237,6 +237,8 @@ namespace Rawr.DPSDK
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calcs.Talents = calcOpts.talents;
 
+
+
             //DPS Subgroups
             float dpsWhite = 0f;
             float dpsBCB = 0f;
@@ -313,6 +315,11 @@ namespace Rawr.DPSDK
             float commandMult = 0f;
 
             calcOpts.presence = calcOpts.rotation.presence;
+
+            if (calcOpts.rotation.managedRP)
+            {
+                calcOpts.rotation.getRP(talents, character);
+            }
             
             #region Impurity Application
             {
@@ -574,6 +581,8 @@ namespace Rawr.DPSDK
 
             }
             #endregion
+
+
             /*  StatsSpecialEffects se = new StatsSpecialEffects(character, calcs.BasicStats);
             Stats statsFromSe = se.getSpecialEffects(calcOpts, calcs);
             stats += statsFromSe;
@@ -788,9 +797,10 @@ namespace Rawr.DPSDK
                     float FSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * .6f +
                         150f + stats.BonusFrostStrikeDamage;
                     dpsFrostStrike = FSDmg / FSCD;
-                    float FSCritDmgMult = (.15f * (float)talents.GuileOfGorefiend);
-                    float FSCrit = 1f + physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit;
-                    dpsFrostStrike += dpsFrostStrike * FSCrit * FSCritDmgMult;
+                    float FSCritDmgMult =1f + (.15f * (float)talents.GuileOfGorefiend);
+                    float FSCrit = 1f + ((physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit) * FSCritDmgMult);
+                    dpsFrostStrike *= FSCrit;
+                    dpsFrostStrike *= 1f + .03f * talents.BloodOfTheNorth;
                 }
             }
             #endregion
@@ -844,8 +854,8 @@ namespace Rawr.DPSDK
                     float HBCD = realDuration / calcOpts.rotation.HowlingBlast;
                     float HBDmg = 540 + HowlingBlastAPMult * stats.AttackPower;
                     dpsHowlingBlast = HBDmg / HBCD;
-                    float HBCrit = spellCrits + addedCritFromKM;
-                    dpsHowlingBlast = (dpsHowlingBlast * HBCritDmgMult) * HBCrit;
+                    float HBCrit = 1f + ((spellCrits + addedCritFromKM) * HBCritDmgMult);
+                    dpsHowlingBlast *= HBCrit;
                 }
             }
             #endregion
@@ -866,7 +876,7 @@ namespace Rawr.DPSDK
                         (.03f * (float)talents.Subversion) +
                         (0.05f * (float)talents.Rime) +
                         stats.BonusObliterateCrit) * OblitCritDmgMult);
-                    dpsObliterate = dpsObliterate * OblitCrit;
+                    dpsObliterate *= OblitCrit;
                     dpsObliterate *= (talents.GlyphofObliterate ? 1.2f : 1f);
                 }
             }

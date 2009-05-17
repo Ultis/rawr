@@ -12,12 +12,16 @@ namespace Rawr.DPSDK
     {
         public Rotation rotation;
         public DeathKnightTalents talents;
+        CalculationOptionsDPSDK calcOpts;
+        Character character;
 
-        public RotationViewer(Rotation r, DeathKnightTalents t)
+        public RotationViewer(CalculationOptionsDPSDK calcOpts, Character character)
         {
             InitializeComponent();
-            rotation = r;
-            talents = t;
+            this.calcOpts = calcOpts;
+            rotation = calcOpts.rotation;
+            talents = calcOpts.talents;
+            this.character = character;
 
          //   cbPresence.Items.Clear();
          //   cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Blood.ToString());
@@ -50,8 +54,8 @@ namespace Rawr.DPSDK
                 totalGCDs.ForeColor = Color.Red;
             }
             else totalGCDs.ForeColor = Color.Black;
-            netRP.Text = rotation.getRP(talents, cbFourT7.Checked) + " runic power";
-            if (rotation.getRP(talents, cbFourT7.Checked) < 0)
+            netRP.Text = rotation.getRP(talents, character) + " runic power";
+            if (rotation.getRP(talents, character) < 0)
             {
                 netRP.ForeColor = Color.Red;
             }
@@ -74,6 +78,8 @@ namespace Rawr.DPSDK
             txtSS.Text = rotation.ScourgeStrike.ToString();
             txtUB.Text = rotation.UnholyBlight.ToString();
             txtUptime.Text = rotation.diseaseUptime.ToString();
+            txtHoW.Text = rotation.Horn.ToString();
+            cbManagedRP.Checked = rotation.managedRP;
             txtGargoyleDuration.Text = rotation.GargoyleDuration.ToString();
             if (rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
             {
@@ -83,7 +89,6 @@ namespace Rawr.DPSDK
             {
                 rbBloodPresence.Checked = true;
             }
-            cbFourT7.Checked = rotation.fourT7;
             updateLabels();
         }
 
@@ -488,6 +493,18 @@ namespace Rawr.DPSDK
                 t.Text = "0";
             }
             updateLabels();
+        }
+
+        private void cbManagedRP_CheckedChanged(object sender, EventArgs e)
+        {
+                txtFS.ReadOnly = cbManagedRP.Checked;
+                txtUB.ReadOnly = cbManagedRP.Checked;
+                txtDC.ReadOnly = cbManagedRP.Checked;
+                rotation.managedRP = cbManagedRP.Checked;
+                updateLabels();
+                txtFS.Text = rotation.FrostStrike.ToString();
+                txtDC.Text = rotation.DeathCoil.ToString();
+                txtUB.Text = rotation.UnholyBlight.ToString();
         }
     }
 }
