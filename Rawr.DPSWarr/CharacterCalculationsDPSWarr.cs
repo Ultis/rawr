@@ -12,21 +12,18 @@ namespace Rawr.DPSWarr
         //public AbilityModelList Abilities { get; set; }
 
         private float _overallPoints = 0f;
-        public override float OverallPoints
-        {
+        public override float OverallPoints {
             get { return _overallPoints; }
             set { _overallPoints = value; }
         }
 
         private float[] _subPoints = new float[] { 0f };
-        public override float[] SubPoints
-        {
+        public override float[] SubPoints {
             get { return _subPoints; }
             set { _subPoints = value; }
         }
         
-        public float TotalDPS
-        {
+        public float TotalDPS {
             get { return _subPoints[0];}
             set { _subPoints[0] = value; }
         }

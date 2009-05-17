@@ -503,20 +503,20 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            //float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
-            //float staBonus = (float)Math.Floor((statsGearEnchantsBuffs.Stamina + (float)calcOpts.ToughnessLvl) * (1 + statsRace.BonusStaminaMultiplier));
-            //statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            //statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
+            float staBonus = (float)Math.Floor((statsGearEnchantsBuffs.Stamina + (float)calcOpts.ToughnessLvl) * (1 + statsRace.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
 
             //statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             //statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) * (1 + 0.02f * character.WarriorTalents.StrengthOfArms) * (1 + character.WarriorTalents.ImprovedBerserkerStance * ((calcOpts.FuryStance) ? 0.04f: 0.00f))) - 1;
-            //statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
 
             statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
-            //statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
-            //statsTotal.Health   = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
+            statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
+            statsTotal.Health   = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
 
-            //statsTotal.Armor += statsTotal.Agility * 2;
+            statsTotal.Armor += statsTotal.Agility * 2;
 
             statsTotal.AttackPower = (statsTotal.Strength * 2 + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
             statsTotal.AttackPower += (statsTotal.Armor / 180) * talents.ArmoredToTheTeeth;

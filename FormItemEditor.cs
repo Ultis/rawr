@@ -125,7 +125,7 @@ namespace Rawr
                     }
                     else
                     {
-                        comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.DisplayName(socketBonuses.Current.Key));
+                        comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.DisplayName(socketBonuses.Current.Key).Trim());
                         numericUpDownBonus1.Value = (decimal)socketBonuses.Current.Value;
 
                         for (int i = 0; i < numericUpDownBonus1.DataBindings.Count; i++)
@@ -187,7 +187,11 @@ namespace Rawr
 
             comboBoxBonus1.Tag = numericUpDownBonus1;
             comboBoxBonus1.Items.Add("None");
-            comboBoxBonus1.Items.AddRange(Stats.StatNames);
+            //comboBoxBonus1.Items.AddRange(Stats.StatNames);
+
+            foreach(String s in Stats.StatNames){
+                comboBoxBonus1.Items.Add(s.Trim());
+            }
 
 
  /*
@@ -214,7 +218,11 @@ namespace Rawr
 
 			comboBoxBonus1.Tag = numericUpDownBonus1;
 			comboBoxBonus1.Items.Add("None");
-			comboBoxBonus1.Items.AddRange(Stats.StatNames);
+			//comboBoxBonus1.Items.AddRange(Stats.StatNames);
+
+            foreach (String s in Stats.StatNames) {
+                comboBoxBonus1.Items.Add(s.Trim());
+            }
 
 
 			/*

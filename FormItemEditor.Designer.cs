@@ -28,32 +28,32 @@ namespace Rawr
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup13 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup14 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Two Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("Main Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Off Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Ranged", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Projectile", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup21 = new System.Windows.Forms.ListViewGroup("Projectile Bag", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup22 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("fdhgerg");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("hfhsh");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("sdfgsd");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("werwer");
+            System.Windows.Forms.ListViewGroup listViewGroup23 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup24 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup25 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup26 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup27 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup28 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup29 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup30 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup31 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup32 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup33 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup34 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup35 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup36 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup37 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup38 = new System.Windows.Forms.ListViewGroup("Two Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup39 = new System.Windows.Forms.ListViewGroup("Main Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup40 = new System.Windows.Forms.ListViewGroup("Off Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup41 = new System.Windows.Forms.ListViewGroup("Ranged", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup42 = new System.Windows.Forms.ListViewGroup("Projectile", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup43 = new System.Windows.Forms.ListViewGroup("Projectile Bag", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup44 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("fdhgerg");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("hfhsh");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("sdfgsd");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("werwer");
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownId = new System.Windows.Forms.NumericUpDown();
             this.textBoxName = new System.Windows.Forms.TextBox();
@@ -267,6 +267,7 @@ namespace Rawr
             // comboBoxBonus1
             // 
             this.comboBoxBonus1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBonus1.DropDownWidth = 400;
             this.comboBoxBonus1.FormattingEnabled = true;
             this.comboBoxBonus1.Location = new System.Drawing.Point(6, 19);
             this.comboBoxBonus1.Name = "comboBoxBonus1";
@@ -395,80 +396,80 @@ namespace Rawr
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.listViewItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName});
-            listViewGroup1.Header = "Head";
-            listViewGroup1.Name = "listViewGroupHead";
-            listViewGroup2.Header = "Neck";
-            listViewGroup2.Name = "listViewGroupNeck";
-            listViewGroup3.Header = "Shoulders";
-            listViewGroup3.Name = "listViewGroupShoulders";
-            listViewGroup4.Header = "Back";
-            listViewGroup4.Name = "listViewGroupBack";
-            listViewGroup5.Header = "Chest";
-            listViewGroup5.Name = "listViewGroupChest";
-            listViewGroup6.Header = "Shirt";
-            listViewGroup6.Name = "listViewGroupShirt";
-            listViewGroup7.Header = "Tabard";
-            listViewGroup7.Name = "listViewGroupTabard";
-            listViewGroup8.Header = "Wrist";
-            listViewGroup8.Name = "listViewGroupWrist";
-            listViewGroup9.Header = "Hands";
-            listViewGroup9.Name = "listViewGroupHands";
-            listViewGroup10.Header = "Waist";
-            listViewGroup10.Name = "listViewGroupWaist";
-            listViewGroup11.Header = "Legs";
-            listViewGroup11.Name = "listViewGroupLegs";
-            listViewGroup12.Header = "Feet";
-            listViewGroup12.Name = "listViewGroupFeet";
-            listViewGroup13.Header = "Finger";
-            listViewGroup13.Name = "listViewGroupFinger";
-            listViewGroup14.Header = "Trinket";
-            listViewGroup14.Name = "listViewGroupTrinket";
-            listViewGroup15.Header = "One Hand";
-            listViewGroup15.Name = "listViewGroupOneHand";
-            listViewGroup16.Header = "Two Hand";
-            listViewGroup16.Name = "listViewGroupTwoHand";
-            listViewGroup17.Header = "Main Hand";
-            listViewGroup17.Name = "listViewGroupMainHand";
-            listViewGroup18.Header = "Off Hand";
-            listViewGroup18.Name = "listViewGroupOffHand";
-            listViewGroup19.Header = "Ranged";
-            listViewGroup19.Name = "listViewGroupRanged";
-            listViewGroup20.Header = "Projectile";
-            listViewGroup20.Name = "listViewGroupProjectile";
-            listViewGroup21.Header = "Projectile Bag";
-            listViewGroup21.Name = "listViewGroupProjectileBag";
-            listViewGroup22.Header = "Gems";
-            listViewGroup22.Name = "listViewGroupGems";
+            listViewGroup23.Header = "Head";
+            listViewGroup23.Name = "listViewGroupHead";
+            listViewGroup24.Header = "Neck";
+            listViewGroup24.Name = "listViewGroupNeck";
+            listViewGroup25.Header = "Shoulders";
+            listViewGroup25.Name = "listViewGroupShoulders";
+            listViewGroup26.Header = "Back";
+            listViewGroup26.Name = "listViewGroupBack";
+            listViewGroup27.Header = "Chest";
+            listViewGroup27.Name = "listViewGroupChest";
+            listViewGroup28.Header = "Shirt";
+            listViewGroup28.Name = "listViewGroupShirt";
+            listViewGroup29.Header = "Tabard";
+            listViewGroup29.Name = "listViewGroupTabard";
+            listViewGroup30.Header = "Wrist";
+            listViewGroup30.Name = "listViewGroupWrist";
+            listViewGroup31.Header = "Hands";
+            listViewGroup31.Name = "listViewGroupHands";
+            listViewGroup32.Header = "Waist";
+            listViewGroup32.Name = "listViewGroupWaist";
+            listViewGroup33.Header = "Legs";
+            listViewGroup33.Name = "listViewGroupLegs";
+            listViewGroup34.Header = "Feet";
+            listViewGroup34.Name = "listViewGroupFeet";
+            listViewGroup35.Header = "Finger";
+            listViewGroup35.Name = "listViewGroupFinger";
+            listViewGroup36.Header = "Trinket";
+            listViewGroup36.Name = "listViewGroupTrinket";
+            listViewGroup37.Header = "One Hand";
+            listViewGroup37.Name = "listViewGroupOneHand";
+            listViewGroup38.Header = "Two Hand";
+            listViewGroup38.Name = "listViewGroupTwoHand";
+            listViewGroup39.Header = "Main Hand";
+            listViewGroup39.Name = "listViewGroupMainHand";
+            listViewGroup40.Header = "Off Hand";
+            listViewGroup40.Name = "listViewGroupOffHand";
+            listViewGroup41.Header = "Ranged";
+            listViewGroup41.Name = "listViewGroupRanged";
+            listViewGroup42.Header = "Projectile";
+            listViewGroup42.Name = "listViewGroupProjectile";
+            listViewGroup43.Header = "Projectile Bag";
+            listViewGroup43.Name = "listViewGroupProjectileBag";
+            listViewGroup44.Header = "Gems";
+            listViewGroup44.Name = "listViewGroupGems";
             this.listViewItems.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3,
-            listViewGroup4,
-            listViewGroup5,
-            listViewGroup6,
-            listViewGroup7,
-            listViewGroup8,
-            listViewGroup9,
-            listViewGroup10,
-            listViewGroup11,
-            listViewGroup12,
-            listViewGroup13,
-            listViewGroup14,
-            listViewGroup15,
-            listViewGroup16,
-            listViewGroup17,
-            listViewGroup18,
-            listViewGroup19,
-            listViewGroup20,
-            listViewGroup21,
-            listViewGroup22});
+            listViewGroup23,
+            listViewGroup24,
+            listViewGroup25,
+            listViewGroup26,
+            listViewGroup27,
+            listViewGroup28,
+            listViewGroup29,
+            listViewGroup30,
+            listViewGroup31,
+            listViewGroup32,
+            listViewGroup33,
+            listViewGroup34,
+            listViewGroup35,
+            listViewGroup36,
+            listViewGroup37,
+            listViewGroup38,
+            listViewGroup39,
+            listViewGroup40,
+            listViewGroup41,
+            listViewGroup42,
+            listViewGroup43,
+            listViewGroup44});
             this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewItems.HideSelection = false;
             this.listViewItems.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8});
             this.listViewItems.Location = new System.Drawing.Point(12, 38);
             this.listViewItems.MultiSelect = false;
             this.listViewItems.Name = "listViewItems";
