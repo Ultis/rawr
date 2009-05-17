@@ -347,6 +347,10 @@ namespace Rawr
         BonusRuneStrikeMultiplier,
         BonusScourgeStrikeCrit,
         #endregion
+        #region Runeforges
+        BonusFrostWeaponDamage,
+        CinderglacierProc,
+        #endregion
         ArcaneDamage,
         FireDamage,
         ShadowDamage,
@@ -1357,6 +1361,25 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% White Damage as Frost Damage")]
+        public float BonusFrostWeaponDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostWeaponDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFrostWeaponDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        [DisplayName("Cinderglacier Proc")]
+        public float CinderglacierProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CinderglacierProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CinderglacierProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

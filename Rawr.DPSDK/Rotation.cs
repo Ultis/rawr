@@ -76,13 +76,13 @@ namespace Rawr.DPSDK
                 ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
                 ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
                 (10 * (PlagueStrike + BloodStrike + HeartStrike)) +
-                ((10 + (GlyphofIT ? 10 : 0)) * (IcyTouch)) +
-                (15 * HowlingBlast) +
+                ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
+                ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                 (10 * Horn) +
                 ((curRotationDuration / 5f)*talents.Butchery);
             
             RP -= ((40 * DeathCoil) +
-                ((GlyphofFS ? 32 : 40) * FrostStrike));
+                ((GlyphofFS ? 32 : 40) * FrostStrike) + (40*UnholyBlight));
             return RP;
         }
 

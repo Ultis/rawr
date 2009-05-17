@@ -516,6 +516,7 @@ namespace Rawr.DPSDK
                 float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight))); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                 float addHastePercent = 1f;
 
+
                 /*   if (calcOpts.Bloodlust)
                    {
                        float numLust = fightDuration % 600f;  // bloodlust changed in 3.0, can only have one every 10 minutes.
@@ -547,9 +548,9 @@ namespace Rawr.DPSDK
             }
             #endregion
 
-            #region Cinderglacier (hard-coded because SpecialEffects doesn't support this type of enchant yet)
+            #region Cinderglacier
             {
-                if (character.GetEnchantBySlot(Character.CharacterSlot.MainHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.MainHand).Id == 3369)
+            /*    if (character.GetEnchantBySlot(Character.CharacterSlot.MainHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.MainHand).Id == 3369)
                 {
                     float shadowFrostAbilitiesPerSecond = (calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
                         calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) / realDuration;
@@ -564,7 +565,12 @@ namespace Rawr.DPSDK
                     SpecialEffect temp = new SpecialEffect(Trigger.Use, new Stats(), 0, -1f);
                     float avgPPS = temp.GetAverageUptime(MH.hastedSpeed, 1f - calcs.AvoidedAttacks, MH.baseSpeed, calcOpts.FightLength * 60f) / 60;
                     CinderglacierMultiplier *= 1f + (avgPPS * 2) / shadowFrostAbilitiesPerSecond;
-                }
+                }*/
+                float shadowFrostAbilitiesPerSecond = ((calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
+                        calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) / 
+                        realDuration);
+
+                CinderglacierMultiplier *= 1f + (0.2f/(shadowFrostAbilitiesPerSecond / stats.CinderglacierProc));
 
             }
             #endregion
@@ -803,22 +809,25 @@ namespace Rawr.DPSDK
             }
             #endregion
 
-            #region Trinket direct-damage procs etc
+            #region Trinket direct-damage procs, razorice damage, etc
             {
                 dpsOtherArcane = stats.ArcaneDamage;
                 dpsOtherShadow = stats.ShadowDamage;
-                if (character.GetEnchantBySlot(Character.CharacterSlot.MainHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.MainHand).Id == 3370)    //main hand razorice
+
+                if (MH != null)
                 {
                     float dpsMHglancing = (0.24f * MH.DPS) * 0.75f;
                     float dpsMHBeforeArmor = ((MH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + physCrits)) + dpsMHglancing;
-                    dpsOtherFrost += (dpsMHBeforeArmor - dpsMHglancing) * .02f;   // presumably doesn't proc off of glancings, like necrosis
+                    dpsOtherFrost += (dpsMHBeforeArmor - dpsMHglancing) * stats.BonusFrostWeaponDamage;   // presumably doesn't proc off of glancings, like necrosis
                 }
-                if (character.GetEnchantBySlot(Character.CharacterSlot.OffHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.OffHand).Id == 3370)     //off hand 
+
+                if (OH != null)
                 {
                     float dpsOHglancing = (0.24f * OH.DPS) * 0.75f;
                     float dpsOHBeforeArmor = ((OH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + physCrits)) + dpsOHglancing;
-                    dpsOtherFrost += (dpsOHBeforeArmor - dpsOHglancing) * .02f;
+                    dpsOtherFrost += (dpsOHBeforeArmor - dpsOHglancing) * stats.BonusFrostWeaponDamage;
                 }
+
                 float OtherCrit = spellCrits;
                 float OtherCritDmgMult = 1.5f;
                 dpsOtherArcane += dpsOtherArcane * OtherCrit * OtherCritDmgMult;
@@ -1669,6 +1678,9 @@ namespace Rawr.DPSDK
                 BonusRPFromScourgeStrike = stats.BonusRPFromScourgeStrike,
                 BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
                 BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
+
+                BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
+                CinderglacierProc = stats.CinderglacierProc
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1747,7 +1759,7 @@ namespace Rawr.DPSDK
                 + stats.BonusPerDiseaseBloodStrikeDamage + stats.BonusPerDiseaseHeartStrikeDamage + stats.BonusPerDiseaseObliterateDamage
                 + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
                 + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
-                + stats.ShadowDamage + stats.ArcaneDamage) != 0;
+                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage) != 0;
         }
 
 
