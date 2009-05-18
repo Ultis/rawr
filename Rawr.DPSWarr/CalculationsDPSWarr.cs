@@ -15,12 +15,13 @@ namespace Rawr.DPSWarr
 				////Relevant Gem IDs for DPSWarrs
 				//Red
 				int[] bold = { 39900, 39996, 40111, 42142 };
-
+                int[] fractured = { 39909, 40002, 40117, 42153 };
 				//Purple
 				int[] sovereign = { 39934, 40022, 40129 };
 
 				//Orange
 				int[] inscribed = { 39947, 40037, 40142 };
+                int[] puissant = { 39933, 40033, 40140 };
 
 				//Meta
 				int chaotic = 41285;
@@ -30,12 +31,17 @@ namespace Rawr.DPSWarr
 						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon", //Strength
 						RedId = bold[0], YellowId = inscribed[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = chaotic },
+                    
 						
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, //Max Strength
 						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, //Strength
 						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
-						
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, // ArPen
+                        RedId = fractured[1], YellowId = inscribed[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, // Max ArPen
+                        RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
+	
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", //Max Strength
 						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", //Strength
@@ -44,7 +50,11 @@ namespace Rawr.DPSWarr
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", //Max Strength
 						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", //Strength
-						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
+						RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", Enabled = true, // ArPen
+                        RedId = fractured[1], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", Enabled = true, // Max ArPen
+                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
 				};
             }
         }
@@ -268,7 +278,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.WhiteDPS   = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
             calculatedStats.WhiteDmg   = combatFactors.AvgMhWeaponDmg;
             //calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
-            calculatedStats.DW = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
             calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
             calculatedStats.RND = new Skills.Rend(character, stats, combatFactors, whiteAttacks);//calculatedStats.RendDPS = skillAttacks.Rend();
             calculatedStats.MS = new Skills.Mortalstrike(character, stats, combatFactors, whiteAttacks);
@@ -292,6 +301,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
             calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
             calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
+            Skills.DeepWounds deepWounds = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
+            // RND and HS are not included because Rend won't crit, and HS replaces a white attack and thus is already covered
+            float allAbilityActivates = calculatedStats.SL.GetActivates() + calculatedStats.MS.GetActivates() +
+                calculatedStats.OP.GetActivates() + calculatedStats.SW.GetActivates() + calculatedStats.SS.GetActivates() +
+                calculatedStats.SW.GetActivates() + calculatedStats.BLS.GetActivates() * 5f +
+                calculatedStats.BS.GetActivates() + calculatedStats.SD.GetActivates() +
+                calculatedStats.BT.GetActivates() +
+                calculatedStats.WW.GetActivates() * (character.OffHand!=null && character.OffHand.Item.Type != Item.ItemType.Shield ? 2f : 1f);
+
+
+
+            deepWounds.SetAllAbilityActivates(allAbilityActivates);
+            calculatedStats.DW = deepWounds;
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;

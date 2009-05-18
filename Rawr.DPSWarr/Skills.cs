@@ -1638,8 +1638,11 @@ average damage over 6 sec.";
                 StanceOkFury = true;
                 StanceOkArms = true;
                 StanceOkDef = true;
+                activates = 0;
             }
             // Variables
+            private float activates;
+            public void SetAllAbilityActivates(float activates) { this.activates = activates; }
             // Get/Set
             // Functions
             public override float GetActivates() {
@@ -1647,7 +1650,8 @@ average damage over 6 sec.";
                 if (!GetValided()) { return 0f; }
 
                 // Actual Calcs
-                return StatS.PhysicalCrit;
+                return (activates + GetRotation() / combatFactors.MainHandSpeed + GetRotation() / combatFactors.OffHandSpeed)
+                    * StatS.PhysicalCrit;
 
                 // ORIGINAL LINE
                 //NONE
@@ -1708,36 +1712,36 @@ average damage over 6 sec.";
                 //return Damage;
 
                 // LANDSOUL'S VERSION
-                Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
-                Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
-                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
-                Ability TR = new Trauma(Char, StatS, combatFactors, Whiteattacks);
-                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
-                Ability BLS = new Bladestorm(Char, StatS, combatFactors, Whiteattacks);
-                Ability SS = new Swordspec(Char, StatS, combatFactors, Whiteattacks);
+                //Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
+                //Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                //Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                //Ability TR = new Trauma(Char, StatS, combatFactors, Whiteattacks);
+                //Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
+                //Ability BLS = new Bladestorm(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SS = new Swordspec(Char, StatS, combatFactors, Whiteattacks);
 
                 //float mhCrits = (1f / combatFactors.MainHandSpeed) * combatFactors.MhCrit * (1f - heroicStrikePercent);
                 //float ohCrits = (1f / combatFactors.OffHandSpeed) * combatFactors.OhCrit;
 
                 //float avgwpdmg = (/*AB54 %DIM*/1.122f * ((StatS.AttackPower / 14f + combatFactors.AvgMhWeaponDmg) * combatFactors.MainHandSpeed) */*AB56 %wepmod*/1.06f);
 
-                float critspersec = 
-                /*MeleeMH*/		    /* 0.078588f*/	(1f/combatFactors.TotalHaste)*(combatFactors.MhCrit)*/*AH48 Heroic Strike Difference*/1.0452f+(0.01f*/*AH24 sword exp bonus*/0f*Talents.IntensifyRage*/*R66 landed hits/sec no SS 0.9367f*/GetLandedAtksPerSecNoSS())*54f/60f*(combatFactors.MhCrit) + 
-                /*Mortal Strike*/	/* 0.042531f*/	(combatFactors.MhYellowCrit+0.1f*/*C40 4 pc T8 set bonus*/0f)/(MS.GetActivates()) +
-                /*Execute*/		    /* 0.019085f*/	SD.GetActivates()*combatFactors.MhYellowCrit +
-                /*Overpower*/		/* 0.123237f*/	(OP.GetActivates()==0f?0f:(combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower>1f?1f:combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower)/6f) +
-                // /*Heroics*/		/*-0.003395f*/	+
-                /*Slam*/		    /* 0.043861f*/SL.GetActivates()*combatFactors.MhYellowCrit
+                //float critspersec = 
+                ///*MeleeMH*/		    /* 0.078588f*/	(1f/combatFactors.TotalHaste)*(combatFactors.MhCrit)*/*AH48 Heroic Strike Difference*/1.0452f+(0.01f*/*AH24 sword exp bonus*/0f*Talents.IntensifyRage*/*R66 landed hits/sec no SS 0.9367f*/GetLandedAtksPerSecNoSS())*54f/60f*(combatFactors.MhCrit) + 
+                ///*Mortal Strike*/	/* 0.042531f*/	(combatFactors.MhYellowCrit+0.1f*/*C40 4 pc T8 set bonus*/0f)/(MS.GetActivates()) +
+                ///*Execute*/		    /* 0.019085f*/	SD.GetActivates()*combatFactors.MhYellowCrit +
+                ///*Overpower*/		/* 0.123237f*/	(OP.GetActivates()==0f?0f:(combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower>1f?1f:combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower)/6f) +
+                //// /*Heroics*/		/*-0.003395f*/	+
+                ///*Slam*/		    /* 0.043861f*/SL.GetActivates()*combatFactors.MhYellowCrit
 
-                ;
+                //;
 
                 float damage =
                     combatFactors.AvgMhWeaponDmg *
                     // next line replaced by line after it
                     //((mhCrits + ohCrits) * 100f) *
-                    critspersec *
+                    //critspersec *
                     (0.16f * Talents.DeepWounds);
                 damage *= (1f + StatS.BonusBleedDamageMultiplier);
 
@@ -1746,7 +1750,8 @@ average damage over 6 sec.";
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
-                Damage *= combatFactors.DamageReduction; // Global Damage Penalties
+                // TODO: bleeds aren't affected by armor, so combatFactors needs a bleedDamageReduction
+                //Damage *= combatFactors.DamageReduction; // Global Damage Penalties
 
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
                 return Damage;
@@ -1755,10 +1760,12 @@ average damage over 6 sec.";
             public float GetNumTicks() { return GetTTLTickingTime() / CastTime; }
             //public override float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
             public override float GetDPS() {
-                float dmgonuse = GetDamageOnUse();
-                float numticks = GetNumTicks();
-                float rot = GetRotation();
-                float result = (dmgonuse / numticks)/* / rot*/;
+                //float dmgonuse = GetDamageOnUse();
+                //float numticks = GetNumTicks();
+                //float rot = GetRotation();
+                //float result = (dmgonuse / numticks)/* / rot*/;
+                float result = GetDamageOnUse() * GetActivates() / GetRotation();
+                
                 return result;
             }
         }

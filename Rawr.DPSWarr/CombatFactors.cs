@@ -128,8 +128,8 @@ namespace Rawr.DPSWarr {
         public float OhDodgeChance { get { return CalcDodgeChance(OhExpertise) / 100f; } }
         public float CalcDodgeChance(float mhExpertise)
         {
-            var mhDodgeChance = 6.5f - .25f * mhExpertise;
-            mhDodgeChance -= _talents.WeaponMastery;
+            var mhDodgeChance = 0.065f - 0.0025f * mhExpertise;
+            mhDodgeChance -= _talents.WeaponMastery/100f;
             if (mhDodgeChance < 0f) { mhDodgeChance = 0f; }
             return mhDodgeChance;
         }
