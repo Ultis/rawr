@@ -1055,14 +1055,18 @@ namespace Rawr
 
                     stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f));
                 }
+                // ok... at this point with the way the code is written, this is really just for Sigil of the Unfaltering Knight, which grants a 
+                // 30 sec buff of 53 Def. Since it's a triggered event, and all, it's better to go off the trigger rather than a straight 
+                // 53 def all the time.  So adjusting this to be a special effect and assuming 30 secs.
                 regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(will )?(also )?increase (your )?(?<stat>\w+\s*\w*) by (?<amount>\d*).");
                 match = regex.Match(line);
                 if (match.Success)
                 {
                     string statName = match.Groups["stat"].Value;
                     float amount = int.Parse(match.Groups["amount"].Value);
+                    string ability = match.Groups["ability"].Value;
 
-                    EvalRegex(stats, statName, amount);
+                    stats.AddSpecialEffect(EvalRegex(statName, amount, 30, ability, 0f));
                 }
 
                 regex = new Regex(@"Your (?<ability>\w+\s*\w*) and (?<ability2>\w+\s*\w*) (abilities )?have a chance to grant (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");

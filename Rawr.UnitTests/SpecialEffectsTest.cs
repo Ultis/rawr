@@ -13,9 +13,6 @@ namespace Rawr.UnitTests
     {
         public static string[] m_TestLineArray = new string[13];
         public static Stats[] m_ExpectedArray = new Stats[13];
-        //public static uint m_i;
-        //public static string m_line;
-        //public static Stats m_Expected;
 
         private TestContext testContextInstance;
 
@@ -56,7 +53,9 @@ namespace Rawr.UnitTests
             // Sigil of the Unfaltering Knight:
             m_TestLineArray[i] = "Your Icy Touch will also increase your defense rating by 53.";
             tempStat = new Stats();
-            tempStat.DefenseRating = 53f;
+            elementStat = new Stats();
+            elementStat.DefenseRating = 53;
+            tempStat.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, elementStat, 30f, 0));
             m_ExpectedArray[i] = tempStat;
             i++;
 
