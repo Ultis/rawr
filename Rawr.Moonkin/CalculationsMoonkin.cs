@@ -463,9 +463,13 @@ namespace Rawr.Moonkin
                     else
                         statsTotal.Intellect += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
                 }
-                if (s.Stats.Spirit > 0)
+                if (s.Stats.Spirit > 0 && s.MaxStack > 1)
                 {
                     statsTotal.Spirit += s.Stats.Spirit * s.MaxStack;
+                }
+                else if (s.Stats.Spirit > 0)
+                {
+                    statsTotal.Spirit += s.Stats.Spirit * s.GetAverageUptime(0f, 1f);
                 }
             }
 
