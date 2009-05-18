@@ -97,11 +97,12 @@ Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
 
 Don't forget your weapons used matched with races can affect these numbers.",
                         
+                        "DPS Breakdown (Fury):Description",
                         "DPS Breakdown (Fury):Bloodsurge*The First number is per second or per tick. The second number is the normal damage (factoring mitigation and hit/miss and crits)",
                         "DPS Breakdown (Fury):Bloodthirst",
                         "DPS Breakdown (Fury):Whirlwind",
                         "DPS Breakdown (Arms):Mortal Strike",
-                        "DPS Breakdown (Arms):Slam",
+                        "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that Your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
                         "DPS Breakdown (Arms):Rend",
                         "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
                         "DPS Breakdown (Arms):Overpower",
@@ -111,7 +112,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (General):Heroic Strike",
                         "DPS Breakdown (General):Deep Wounds",
                         "DPS Breakdown (General):White DPS",
-                        "DPS Breakdown (General):Total DPS",
+                        @"DPS Breakdown (General):Total DPS*1st number is total DPS
+2nd number is total DMG over Rotation
+3rd number is total DMG over Duration",
                       
                         "Rage Details:Generated White DPS Rage",
                         "Rage Details:Generated Other Rage",
@@ -220,9 +223,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats                           stats           = GetCharacterStats(character, additionalItem);
 
             CombatFactors combatFactors = new CombatFactors(character, stats);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(character.WarriorTalents, stats, combatFactors, character);
+            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character.WarriorTalents, stats, combatFactors, character);
             Skills skillAttacks = new Skills(character,character.WarriorTalents, stats, combatFactors, whiteAttacks);
             Stats statsRace = GetRaceStats(character);
+
+            calculatedStats.Duration = calcOpts.Duration;
 
             calculatedStats.BasicStats = stats;
             calculatedStats.SkillAttacks = skillAttacks;
@@ -238,10 +243,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.OhExpertise = combatFactors.OhExpertise;
             calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility,character.Class);
             calculatedStats.CritRating = stats.CritRating;
-			calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit
-				- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
-            calculatedStats.MhCrit = combatFactors.MhCrit;// +stancecritbonus / 100.0f;
-            calculatedStats.OhCrit = combatFactors.OhCrit;// +stancecritbonus / 100.0f;
+            calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
+				//- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+            calculatedStats.MhCrit = combatFactors.MhCrit;
+            calculatedStats.OhCrit = combatFactors.OhCrit;
             // Offensive
             float teethbonus = stats.Armor;
             teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
@@ -261,6 +266,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
             calculatedStats.WhiteDPSOH = whiteAttacks.CalcOhWhiteDPS();
             calculatedStats.WhiteDPS   = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
+            calculatedStats.WhiteDmg   = combatFactors.AvgMhWeaponDmg;
             //calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
             calculatedStats.DW = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
             calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
@@ -533,6 +539,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.ArmorPenetration += ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
 
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
+            // handle boss level difference
+            statsTotal.PhysicalCrit -= (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
             //statsTotal.BonusCritMultiplier += statsGearEnchantsBuffs.BonusCritMultiplier;
 
@@ -542,7 +550,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
-            statsTotal.BonusSlamDamage = statsGearEnchantsBuffs.BonusSlamDamage;
+            statsTotal.BonusSlamDamage += statsGearEnchantsBuffs.BonusSlamDamage;
+            statsTotal.BonusSlamDamage += statsBuffs.DreadnaughtBonusRageProc;
             statsTotal.DreadnaughtBonusRageProc = statsGearEnchantsBuffs.DreadnaughtBonusRageProc;
 
 
@@ -550,11 +559,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
             // such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(talents, statsTotal, combatFactors, character);
+            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
 
             Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
 
-            float fightDuration = 600f;  //TODO: Assuming 10min fight for now
+            float fightDuration = calcOpts.Duration;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
             float meleeHitsPerSecond = 1f / 1.5f;
@@ -565,8 +574,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float meleeHitInterval = 1f / meleeHitsPerSecond;
             
             
-            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit 
-				- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit;
 
             float baseWeaponSped = character.MainHand != null ? character.MainHand.Speed : 2f;
 

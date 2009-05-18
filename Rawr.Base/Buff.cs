@@ -2226,7 +2226,7 @@ namespace Rawr
                 Name = "Dreadnaught Battlegear 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DreadnaughtBonusRageProc = 5f },
+                Stats = { DreadnaughtBonusRageProc = 0.05f },
                 SetName = "Dreadnaught Battlegear",
                 SetThreshold = 4
             });

@@ -34,16 +34,16 @@
             this.TLP_Main = new System.Windows.Forms.TableLayoutPanel();
             this.RB_StanceArms = new System.Windows.Forms.RadioButton();
             this.RB_StanceFury = new System.Windows.Forms.RadioButton();
-            this.LB_TargArmorDesc = new System.Windows.Forms.Label();
             this.GB_Bosses = new System.Windows.Forms.GroupBox();
+            this.LB_TargArmorDesc = new System.Windows.Forms.Label();
             this.GB_AoE = new System.Windows.Forms.GroupBox();
+            this.TLP_AoE = new System.Windows.Forms.TableLayoutPanel();
             this.RB_TargSingle = new System.Windows.Forms.RadioButton();
             this.RB_TargMultiple = new System.Windows.Forms.RadioButton();
-            this.TLP_AoE = new System.Windows.Forms.TableLayoutPanel();
             this.GB_Moving = new System.Windows.Forms.GroupBox();
             this.TLP_Moving = new System.Windows.Forms.TableLayoutPanel();
-            this.RB_TargsStand = new System.Windows.Forms.RadioButton();
             this.RB_TargsMove = new System.Windows.Forms.RadioButton();
+            this.RB_TargsStand = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             this.TLP_Main.SuspendLayout();
             this.GB_Bosses.SuspendLayout();
@@ -136,7 +136,6 @@
             // CB_Duration
             // 
             this.CB_Duration.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_Duration.Enabled = false;
             this.CB_Duration.Location = new System.Drawing.Point(133, 107);
             this.CB_Duration.Maximum = new decimal(new int[] {
             1200,
@@ -150,7 +149,7 @@
             0});
             this.CB_Duration.Name = "CB_Duration";
             this.CB_Duration.Size = new System.Drawing.Size(125, 20);
-            this.CB_Duration.TabIndex = 7;
+            this.CB_Duration.TabIndex = 9;
             this.CB_Duration.ThousandsSeparator = true;
             this.CB_Duration.Value = new decimal(new int[] {
             300,
@@ -163,11 +162,10 @@
             // 
             this.LB_Duration.AutoSize = true;
             this.LB_Duration.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_Duration.Enabled = false;
             this.LB_Duration.Location = new System.Drawing.Point(3, 104);
             this.LB_Duration.Name = "LB_Duration";
             this.LB_Duration.Size = new System.Drawing.Size(124, 26);
-            this.LB_Duration.TabIndex = 6;
+            this.LB_Duration.TabIndex = 8;
             this.LB_Duration.Text = "Duration (sec):";
             this.LB_Duration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -202,7 +200,7 @@
             this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TLP_Main.Size = new System.Drawing.Size(261, 527);
-            this.TLP_Main.TabIndex = 12;
+            this.TLP_Main.TabIndex = 0;
             // 
             // RB_StanceArms
             // 
@@ -210,7 +208,7 @@
             this.RB_StanceArms.Location = new System.Drawing.Point(133, 84);
             this.RB_StanceArms.Name = "RB_StanceArms";
             this.RB_StanceArms.Size = new System.Drawing.Size(85, 17);
-            this.RB_StanceArms.TabIndex = 5;
+            this.RB_StanceArms.TabIndex = 7;
             this.RB_StanceArms.Text = "Arms Stance";
             this.RB_StanceArms.UseVisualStyleBackColor = true;
             this.RB_StanceArms.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
@@ -222,19 +220,11 @@
             this.RB_StanceFury.Location = new System.Drawing.Point(3, 84);
             this.RB_StanceFury.Name = "RB_StanceFury";
             this.RB_StanceFury.Size = new System.Drawing.Size(82, 17);
-            this.RB_StanceFury.TabIndex = 4;
+            this.RB_StanceFury.TabIndex = 6;
             this.RB_StanceFury.TabStop = true;
             this.RB_StanceFury.Text = "Fury Stance";
             this.RB_StanceFury.UseVisualStyleBackColor = true;
             this.RB_StanceFury.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
-            // 
-            // LB_TargArmorDesc
-            // 
-            this.LB_TargArmorDesc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TargArmorDesc.Location = new System.Drawing.Point(3, 16);
-            this.LB_TargArmorDesc.Name = "LB_TargArmorDesc";
-            this.LB_TargArmorDesc.Size = new System.Drawing.Size(249, 270);
-            this.LB_TargArmorDesc.TabIndex = 0;
             // 
             // GB_Bosses
             // 
@@ -244,9 +234,17 @@
             this.GB_Bosses.Location = new System.Drawing.Point(3, 235);
             this.GB_Bosses.Name = "GB_Bosses";
             this.GB_Bosses.Size = new System.Drawing.Size(255, 289);
-            this.GB_Bosses.TabIndex = 9;
+            this.GB_Bosses.TabIndex = 12;
             this.GB_Bosses.TabStop = false;
             this.GB_Bosses.Text = "Bosses";
+            // 
+            // LB_TargArmorDesc
+            // 
+            this.LB_TargArmorDesc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TargArmorDesc.Location = new System.Drawing.Point(3, 16);
+            this.LB_TargArmorDesc.Name = "LB_TargArmorDesc";
+            this.LB_TargArmorDesc.Size = new System.Drawing.Size(249, 270);
+            this.LB_TargArmorDesc.TabIndex = 0;
             // 
             // GB_AoE
             // 
@@ -258,33 +256,9 @@
             this.GB_AoE.MaximumSize = new System.Drawing.Size(0, 45);
             this.GB_AoE.Name = "GB_AoE";
             this.GB_AoE.Size = new System.Drawing.Size(255, 45);
-            this.GB_AoE.TabIndex = 14;
+            this.GB_AoE.TabIndex = 10;
             this.GB_AoE.TabStop = false;
             this.GB_AoE.Text = "AoE";
-            // 
-            // RB_TargSingle
-            // 
-            this.RB_TargSingle.AutoSize = true;
-            this.RB_TargSingle.Checked = true;
-            this.RB_TargSingle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RB_TargSingle.Location = new System.Drawing.Point(3, 3);
-            this.RB_TargSingle.Name = "RB_TargSingle";
-            this.RB_TargSingle.Size = new System.Drawing.Size(118, 20);
-            this.RB_TargSingle.TabIndex = 11;
-            this.RB_TargSingle.TabStop = true;
-            this.RB_TargSingle.Text = "Single Targeting";
-            this.RB_TargSingle.UseVisualStyleBackColor = true;
-            // 
-            // RB_TargMultiple
-            // 
-            this.RB_TargMultiple.AutoSize = true;
-            this.RB_TargMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RB_TargMultiple.Location = new System.Drawing.Point(127, 3);
-            this.RB_TargMultiple.Name = "RB_TargMultiple";
-            this.RB_TargMultiple.Size = new System.Drawing.Size(119, 20);
-            this.RB_TargMultiple.TabIndex = 12;
-            this.RB_TargMultiple.Text = "Multiple Targeting";
-            this.RB_TargMultiple.UseVisualStyleBackColor = true;
             // 
             // TLP_AoE
             // 
@@ -299,10 +273,34 @@
             this.TLP_AoE.Location = new System.Drawing.Point(3, 16);
             this.TLP_AoE.Name = "TLP_AoE";
             this.TLP_AoE.RowCount = 1;
-            this.TLP_AoE.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TLP_AoE.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TLP_AoE.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.TLP_AoE.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_AoE.Size = new System.Drawing.Size(249, 26);
-            this.TLP_AoE.TabIndex = 13;
+            this.TLP_AoE.TabIndex = 0;
+            // 
+            // RB_TargSingle
+            // 
+            this.RB_TargSingle.AutoSize = true;
+            this.RB_TargSingle.Checked = true;
+            this.RB_TargSingle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RB_TargSingle.Location = new System.Drawing.Point(3, 3);
+            this.RB_TargSingle.Name = "RB_TargSingle";
+            this.RB_TargSingle.Size = new System.Drawing.Size(118, 20);
+            this.RB_TargSingle.TabIndex = 0;
+            this.RB_TargSingle.TabStop = true;
+            this.RB_TargSingle.Text = "Single Targeting";
+            this.RB_TargSingle.UseVisualStyleBackColor = true;
+            // 
+            // RB_TargMultiple
+            // 
+            this.RB_TargMultiple.AutoSize = true;
+            this.RB_TargMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RB_TargMultiple.Location = new System.Drawing.Point(127, 3);
+            this.RB_TargMultiple.Name = "RB_TargMultiple";
+            this.RB_TargMultiple.Size = new System.Drawing.Size(119, 20);
+            this.RB_TargMultiple.TabIndex = 1;
+            this.RB_TargMultiple.Text = "Multiple Targeting";
+            this.RB_TargMultiple.UseVisualStyleBackColor = true;
             // 
             // GB_Moving
             // 
@@ -313,7 +311,7 @@
             this.GB_Moving.MaximumSize = new System.Drawing.Size(0, 45);
             this.GB_Moving.Name = "GB_Moving";
             this.GB_Moving.Size = new System.Drawing.Size(255, 45);
-            this.GB_Moving.TabIndex = 15;
+            this.GB_Moving.TabIndex = 11;
             this.GB_Moving.TabStop = false;
             this.GB_Moving.Text = "Movement";
             // 
@@ -332,6 +330,17 @@
             this.TLP_Moving.Size = new System.Drawing.Size(249, 26);
             this.TLP_Moving.TabIndex = 0;
             // 
+            // RB_TargsMove
+            // 
+            this.RB_TargsMove.AutoSize = true;
+            this.RB_TargsMove.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RB_TargsMove.Location = new System.Drawing.Point(127, 3);
+            this.RB_TargsMove.Name = "RB_TargsMove";
+            this.RB_TargsMove.Size = new System.Drawing.Size(119, 20);
+            this.RB_TargsMove.TabIndex = 1;
+            this.RB_TargsMove.Text = "Moving Targets";
+            this.RB_TargsMove.UseVisualStyleBackColor = true;
+            // 
             // RB_TargsStand
             // 
             this.RB_TargsStand.AutoSize = true;
@@ -340,21 +349,10 @@
             this.RB_TargsStand.Location = new System.Drawing.Point(3, 3);
             this.RB_TargsStand.Name = "RB_TargsStand";
             this.RB_TargsStand.Size = new System.Drawing.Size(118, 20);
-            this.RB_TargsStand.TabIndex = 17;
+            this.RB_TargsStand.TabIndex = 0;
             this.RB_TargsStand.TabStop = true;
             this.RB_TargsStand.Text = "Standing Targets";
             this.RB_TargsStand.UseVisualStyleBackColor = true;
-            // 
-            // RB_TargsMove
-            // 
-            this.RB_TargsMove.AutoSize = true;
-            this.RB_TargsMove.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RB_TargsMove.Location = new System.Drawing.Point(127, 3);
-            this.RB_TargsMove.Name = "RB_TargsMove";
-            this.RB_TargsMove.Size = new System.Drawing.Size(119, 20);
-            this.RB_TargsMove.TabIndex = 18;
-            this.RB_TargsMove.Text = "Moving Targets";
-            this.RB_TargsMove.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelDPSWarr
             // 
