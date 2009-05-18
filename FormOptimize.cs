@@ -266,12 +266,14 @@ namespace Rawr
 
                 if (_character != null)
                 {
-                    OptimizerResults results = new OptimizerResults(_character, bestCharacter, checkBoxOptimizeTalents.Checked);
-                    string msg = e.OptimizedCharacterValue >= 0 ?
-                        string.Format("The Optimizer found a gearset with a score of {0}. (Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
-                            e.OptimizedCharacterValue, e.CurrentCharacterValue) :
-                        "The Optimizer was not able to meet all the requirements. Would you like to equip the gear that is closest to meeting them?";
-                    if (MessageBox.Show(this, msg + "\r\n\r\n" + results.ToString(), "Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    FormOptimizeResult result = new FormOptimizeResult(_character, bestCharacter);
+                    result.ShowDialog(this);
+//                    OptimizerResults results = new OptimizerResults(_character, bestCharacter, checkBoxOptimizeTalents.Checked);
+//                    string msg = e.OptimizedCharacterValue >= 0 ?
+//                        string.Format("The Optimizer found a gearset with a score of {0}. (Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
+//                            e.OptimizedCharacterValue, e.CurrentCharacterValue) :
+//                        "The Optimizer was not able to meet all the requirements. Would you like to equip the gear that is closest to meeting them?";
+                    if (result.LoadOptimizerResult() == DialogResult.Yes)
                     {
                         //Loading new items while IsLoading==true causes properties to be reset to their previously cached values, 
                         //so load all the items beforehand, then put them into the character all at once.
@@ -291,6 +293,7 @@ namespace Rawr
                         Close();
                         return;
                     }
+                    result.Dispose();
                 }
                 labelMax.Text = string.Empty;
                 buttonOptimize.Text = "Optimize";

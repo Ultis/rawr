@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -178,6 +178,12 @@
     <Compile Include="FormItemInstance.Designer.cs">
       <DependentUpon>FormItemInstance.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormOptimizeResult.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormOptimizeResult.Designer.cs">
+      <DependentUpon>FormOptimizeResult.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormRelevantItemRefinement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -314,6 +320,12 @@
     <Compile Include="ItemToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PaperDoll.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PaperDoll.Designer.cs">
+      <DependentUpon>PaperDoll.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Optimizer.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -389,6 +401,9 @@
       <DependentUpon>FormOptimize.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormOptimizeResult.resx">
+      <DependentUpon>FormOptimizeResult.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormRelevantItemRefinement.resx">
       <DependentUpon>FormRelevantItemRefinement.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -444,6 +459,9 @@
     <EmbeddedResource Include="ItemSelectorItem.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ItemSelectorItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaperDoll.resx">
+      <DependentUpon>PaperDoll.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
