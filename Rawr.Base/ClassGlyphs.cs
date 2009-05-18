@@ -532,4 +532,41 @@ namespace Rawr
   		[GlyphData(14, "Glyph of Unstable Affliction", true, @"Decreases the casting time of your Unstable Affliction by 0.2 sec.")]
   		public bool GlyphUA { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
   	}
+
+    public partial class RogueTalents
+    {
+        private bool[] _glyphData = new bool[15];
+        public override bool[] GlyphData { get { return _glyphData; } }
+
+        [GlyphData(0, "Glyph of Backstab", true, @"Your Backstab increases the duration of your Rupture effect on the target by 2 sec, up to a maximum of 6 additional sec.")]
+        public bool GlyphOfBackstab { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        [GlyphData(1, "Glyph of Eviscerate", true, @"Increases the critical strike chance of Eviscerate by 10%.")]
+        public bool GlyphOfEviscerate { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(2, "Glyph of Mutilate", true, @"Reduces the cost of Mutilate by 5 energy.")]
+        public bool GlyphOfMutilate { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(3, "Glyph of Hunger for Blood", true, @"Increases the bonus damage from Hunger for Blood by 3%.")]
+        public bool GlyphOfHungerforBlood { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(4, "Glyph of Killing Spree", true, @"Reduces the cooldown on Killing Spree by 45 seconds.")]
+        public bool GlyphOfKillingSpree { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData(5, "Glyph of Vigor", true, @"Vigor grants an additional 10 maximum energy.")]
+        public bool GlyphOfVigor { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(6, "Glyph of Fan of Knives", true, @"Increases the damage done by Fan of Knives by 20%.")]
+        public bool GlyphOfFanOfKnives { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        [GlyphData(7, "Glyph of Expose Armor", true, @"Increases the duration of Expose Armor by 10 sec.")]
+        public bool GlyphOfExposeArmor { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(8, "Glyph of Sinister Strike", true, @"Your Sinister Strike critical strikes have a 50% chance to add an additional combo point.")]
+        public bool GlyphOfSinisterStrike { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        [GlyphData(9, "Glyph of Slice and Dice", true, @"Increases the duration of Slice and Dice by 3 sec.")]
+        public bool GlyphOfSliceandDice { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        [GlyphData(10, "Glyph of Feint", true, @"Reduces the energy cost of Feint by 10.")]
+        public bool GlyphOfFeint { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(11, "Glyph of Ghostly Strike", true, @"Increases the damage dealt by Ghostly Strike by 40% and the duration of its effect by 4 sec., but increases its cooldown by 10 sec.")]
+        public bool GlyphOfGhostlyStrike { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(12, "Glyph of Rupture", true, @"Increases the duration of Rupture by 4 sec.")]
+        public bool GlyphOfRupture { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(13, "Glyph of Blade Flurry", true, @"Reduces the energy cost of Blade Flurry by 100%.")]
+        public bool GlyphOfBladeFlurry { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Adrenaline Rush", true, @"Increases the duration of Adrenaline Rush by 5 sec.")]
+        public bool GlyphOfAdrenalineRush { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+    }
 }

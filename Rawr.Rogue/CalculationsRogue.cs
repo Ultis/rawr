@@ -97,7 +97,7 @@ namespace Rawr.Rogue
             //------------------------------------------------------------------------------------
             // CALCULATE OUTPUTS
             //------------------------------------------------------------------------------------
-            var calculatedStats = new CharacterCalculationsRogue(stats);
+            var displayedValues = new CharacterCalculationsRogue(stats);
             var whiteAttacks = new WhiteAttacks(combatFactors);
             var cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
             var cpgDps = calcOpts.CpGenerator.CalcCpgDPS(calcOpts, combatFactors, stats, cycleTime);
@@ -106,62 +106,62 @@ namespace Rawr.Rogue
             foreach (var component in calcOpts.DpsCycle.Components)
             {
                 var finisherDps = component.CalcFinisherDPS(calcOpts, combatFactors, stats, whiteAttacks, cycleTime);
-                calculatedStats.AddToolTip(DisplayValue.FinisherDps, component + ": " + finisherDps);
+                displayedValues.AddToolTip(DisplayValue.FinisherDps, component + ": " + finisherDps);
                 totalFinisherDps += finisherDps;
             }
 
             var swordSpecDps = new SwordSpec().CalcDPS(calcOpts, combatFactors, whiteAttacks, cycleTime);
-            var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, calculatedStats, cycleTime);
+            var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, displayedValues, cycleTime);
 
             //------------------------------------------------------------------------------------
             // ADD CALCULATED OUTPUTS TO DISPLAY
             //------------------------------------------------------------------------------------
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
 
-            calculatedStats.AddDisplayValue(DisplayValue.Cpg, calcOpts.CpGenerator.Name);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime.Duration);
+            displayedValues.AddDisplayValue(DisplayValue.Cpg, calcOpts.CpGenerator.Name);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime.Duration);
 
-            calculatedStats.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
+            displayedValues.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
-            calculatedStats.AddPercentageToolTip(DisplayValue.HitRating, "Total % Hit: ", combatFactors.HitPercent);
-            calculatedStats.AddPercentageToolTip(DisplayValue.HitRating, "Poison % Hit: ", combatFactors.PoisonHitPercent);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
+            displayedValues.AddPercentageToolTip(DisplayValue.HitRating, "Total % Hit: ", combatFactors.HitPercent);
+            displayedValues.AddPercentageToolTip(DisplayValue.HitRating, "Poison % Hit: ", combatFactors.PoisonHitPercent);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CritRating, stats.CritRating);
-            calculatedStats.AddToolTip(DisplayValue.CritRating, "Crit % from Rating: " + combatFactors.CritFromCritRating);
-            calculatedStats.AddPercentageToolTip(DisplayValue.CritRating, "MH Crit %: ", combatFactors.ProbMhCrit);
-            calculatedStats.AddPercentageToolTip(DisplayValue.CritRating, "OH Crit%: ", combatFactors.ProbOhCrit);
-            calculatedStats.AddToolTip(DisplayValue.CritRating, "Crit Multiplier: " + combatFactors.BaseCritMultiplier);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.CritRating, stats.CritRating);
+            displayedValues.AddToolTip(DisplayValue.CritRating, "Crit % from Rating: " + combatFactors.CritFromCritRating);
+            displayedValues.AddPercentageToolTip(DisplayValue.CritRating, "MH Crit %: ", combatFactors.ProbMhCrit);
+            displayedValues.AddPercentageToolTip(DisplayValue.CritRating, "OH Crit%: ", combatFactors.ProbOhCrit);
+            displayedValues.AddToolTip(DisplayValue.CritRating, "Crit Multiplier: " + combatFactors.BaseCritMultiplier);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
-            calculatedStats.AddToolTip(DisplayValue.ArmorPenetration, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
+            displayedValues.AddToolTip(DisplayValue.ArmorPenetration, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
-            calculatedStats.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
-            calculatedStats.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
+            displayedValues.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
+            displayedValues.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
             
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
-            calculatedStats.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.BaseHaste <= 0 ? 0 : combatFactors.BaseHaste - 1) );
+            displayedValues.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
+            displayedValues.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.BaseHaste <= 0 ? 0 : combatFactors.BaseHaste - 1) );
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors) * 100);
-            calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
-            calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
-            calculatedStats.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors) * 100);
+            displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
+            displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
+            displayedValues.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDps, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
-            calculatedStats.AddToolTip(DisplayValue.WhiteDps, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
-            calculatedStats.AddToolTip(DisplayValue.WhiteDps, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
+            displayedValues.AddRoundedDisplayValue(DisplayValue.WhiteDps, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
+            displayedValues.AddToolTip(DisplayValue.WhiteDps, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
+            displayedValues.AddToolTip(DisplayValue.WhiteDps, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgDps, cpgDps);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDps, totalFinisherDps);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDps, swordSpecDps);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDps, poisonDps);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.CpgDps, cpgDps);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.FinisherDps, totalFinisherDps);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.SwordSpecDps, swordSpecDps);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.PoisonDps, poisonDps);
 
-            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
-            calculatedStats.OverallPoints = calculatedStats.TotalDPS;
+            displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
+            displayedValues.OverallPoints = displayedValues.TotalDPS;
 
-            return calculatedStats;
+            return displayedValues;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -356,10 +356,6 @@ namespace Rawr.Rogue
                            WeaponDamage = stats.WeaponDamage,
                            BonusCritMultiplier = stats.BonusCritMultiplier,
                            WindfuryAPBonus = stats.WindfuryAPBonus,
-//                           MongooseProc = stats.MongooseProc,
-//                           MongooseProcAverage = stats.MongooseProcAverage,
-//                           MongooseProcConstant = stats.MongooseProcConstant,
-//                           ExecutionerProc = stats.ExecutionerProc,
                            BonusSnDDuration = stats.BonusSnDDuration,
                            CPOnFinisher = stats.CPOnFinisher,
                            BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
@@ -373,7 +369,20 @@ namespace Rawr.Rogue
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
-            //return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
+        }
+
+        public override List<string> GetRelevantGlyphs()
+        {
+            var glyphs = new List<string>();
+            foreach(var pi in typeof(RogueTalents).GetProperties())
+            {
+                var glyphAttributes = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                if (glyphAttributes.Length > 0)
+                {
+                    glyphs.Add(glyphAttributes[0].Name);
+                }
+            }
+            return glyphs;
         }
     }
 }
