@@ -77,8 +77,10 @@ namespace Rawr.ShadowPriest
                         RedId = runed[0], YellowId = potent[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic[0] },
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Uncommon", // Mana
                         RedId = luminous[0], YellowId = brilliant[0], BlueId = seers[0], PrismaticId = brilliant[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Uncommon", // PvP
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Uncommon", // PvP - Stamina
                         RedId = glowing[0], YellowId = steady[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = powerful[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Uncommon", // PvP - Resilience
+                        RedId = durable[0], YellowId = mystic[0], BlueId = steady[0], PrismaticId = mystic[0], MetaId = powerful[0] },
 
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Rare", // Forced Hit
                         RedId = rigid[1], YellowId = rigid[1], BlueId = rigid[1], PrismaticId = rigid[1], MetaId = chaotic[0] },
@@ -94,8 +96,10 @@ namespace Rawr.ShadowPriest
                         RedId = runed[1], YellowId = potent[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic[0] },
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Rare", // Mana
                         RedId = luminous[1], YellowId = brilliant[1], BlueId = seers[1], PrismaticId = brilliant[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Rare", // PvP
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Rare", // PvP - Stamina
                         RedId = glowing[1], YellowId = steady[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = powerful[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Rare", // PvP - Resilience
+                        RedId = durable[1], YellowId = mystic[1], BlueId = steady[1], PrismaticId = mystic[1], MetaId = powerful[0] },
 
 
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Epic", // Forced Hit
@@ -112,8 +116,10 @@ namespace Rawr.ShadowPriest
                         RedId = runed[2], YellowId = potent[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic[0] },
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Epic", // Mana
                         RedId = luminous[2], YellowId = brilliant[2], BlueId = seers[2], PrismaticId = brilliant[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Epic", // PvP
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Epic", // PvP - Stamina
                         RedId = glowing[2], YellowId = steady[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = powerful[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Epic", // PvP - Resilience
+                        RedId = durable[2], YellowId = mystic[2], BlueId = steady[2], PrismaticId = mystic[2], MetaId = powerful[0] },
                     
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // Forced Hit
                         RedId = rigid[3], YellowId = rigid[1], BlueId = rigid[3], PrismaticId = rigid[1], MetaId = chaotic[0] },
@@ -123,8 +129,10 @@ namespace Rawr.ShadowPriest
                         RedId = quick[3], YellowId = quick[1], BlueId = quick[3], PrismaticId = quick[1], MetaId = chaotic[0] },
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // Crit
                         RedId = smooth[3], YellowId = smooth[1], BlueId = smooth[3], PrismaticId = smooth[1], MetaId = chaotic[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // PvP                        
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // PvP - Stamina                   
                         RedId = solid[3], YellowId = solid[3], BlueId = solid[1], PrismaticId = solid[1], MetaId = powerful[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Rare", // PvP - Resilience
+                        RedId = mystic[3], YellowId = mystic[1], BlueId = mystic[3], PrismaticId = mystic[1], MetaId = powerful[0] },
 
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // Forced Hit
                         RedId = rigid[3], YellowId = rigid[2], BlueId = rigid[3], PrismaticId = rigid[2], MetaId = chaotic[0] },
@@ -134,8 +142,10 @@ namespace Rawr.ShadowPriest
                         RedId = quick[3], YellowId = quick[2], BlueId = quick[3], PrismaticId = quick[2], MetaId = chaotic[0] },
                     new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // Crit
                         RedId = smooth[3], YellowId = smooth[2], BlueId = smooth[3], PrismaticId = smooth[2], MetaId = chaotic[0] },
-                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // PvP
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // PvP - Stamina
                         RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = powerful[0] },
+                    new GemmingTemplate() { Model = "ShadowPriest", Group = "Jeweler Epic", // PvP - Resilience
+                        RedId = mystic[3], YellowId = mystic[2], BlueId = mystic[3], PrismaticId = mystic[2], MetaId = powerful[0] },
                 };
             }
         }
@@ -495,7 +505,7 @@ namespace Rawr.ShadowPriest
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             Stats stats = GetCharacterStats(character, additionalItem);
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(character);
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
             CalculationOptionsShadowPriest calculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
             
@@ -513,7 +523,7 @@ namespace Rawr.ShadowPriest
             return calculatedStats;
         }
 
-        public static Stats GetBaseRaceStats(Character character)
+        /* Deprecated public static Stats GetBaseRaceStats(Character character)
         {
             Stats stats = new Stats();
             if (character.Level >= 70 && character.Level <= 80)
@@ -637,11 +647,11 @@ namespace Rawr.ShadowPriest
                     break;
             }
             return stats;
-        }
+        } */
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -687,14 +697,14 @@ namespace Rawr.ShadowPriest
 
         public static float GetInnerFireArmorBonus(Character character)
         {
-            float ArmorBonus = 2440;
+            float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1);
 
             return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Stamina = stats.Stamina,
                 Health = stats.Health,
@@ -731,7 +741,13 @@ namespace Rawr.ShadowPriest
                 WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
                 DevouringPlagueBonusDamage = stats.DevouringPlagueBonusDamage,
                 MindBlastHasteProc = stats.MindBlastHasteProc,
-                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                ManaRestore = stats.ManaRestore,
+                SpellsManaReduction = stats.SpellsManaReduction,
+                HighestStat = stats.HighestStat,
+                ShadowDamage = stats.ShadowDamage,
+
+                /*ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
@@ -744,7 +760,7 @@ namespace Rawr.ShadowPriest
                 TimbalsProc = stats.TimbalsProc,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                */
 
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
@@ -760,33 +776,59 @@ namespace Rawr.ShadowPriest
                 ShadowResistance = stats.ShadowResistance,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
             };
+
+            foreach (SpecialEffect se in stats.SpecialEffects())
+                if (RelevantTrinket(se))
+                    s.AddSpecialEffect(se);
+
+            return s;
         }
 
-        public override bool HasRelevantStats(Stats stats)
+        protected bool RelevantTrinket(SpecialEffect se)
+        {
+            if (se.Trigger == Trigger.DamageSpellCrit
+                || se.Trigger == Trigger.DamageSpellHit
+                || se.Trigger == Trigger.DamageSpellCast
+                || se.Trigger == Trigger.DoTTick
+                || se.Trigger == Trigger.SpellHit
+                || se.Trigger == Trigger.SpellCast
+                || se.Trigger == Trigger.SpellCrit
+                || se.Trigger == Trigger.SpellMiss
+                || se.Trigger == Trigger.Use)
+            {
+                return _HasRelevantStats(se.Stats);
+            }
+            return false;
+        }
+
+        protected bool _HasRelevantStats(Stats stats)
         {
             bool Yes = (
                 stats.Intellect + stats.Mana + stats.Spirit + stats.Mp5 + stats.SpellPower
                 + stats.SpellShadowDamageRating + stats.SpellCritRating + stats.CritRating
                 + stats.SpellCrit + stats.SpellHitRating + stats.HitRating + stats.SpellHit
                 + stats.SpellHasteRating + stats.SpellHaste + stats.HasteRating
-                
+
                 + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
                 + stats.BonusIntellectMultiplier + stats.BonusManaPotion
                 + stats.ThreatReductionMultiplier + stats.BonusDamageMultiplier
                 + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
                 + stats.BonusDiseaseDamageMultiplier + stats.PriestInnerFire
-                
+
                 + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
                 + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
                 + stats.WeakenedSoulDurationDecrease + stats.ManaRestoreOnCast_5_15
                 + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
-                + stats.ManaRestoreFromBaseManaPerHit + stats.SpellPowerFor15SecOnUse90Sec
+                + stats.ManaRestoreFromBaseManaPerHit + stats.BonusSpellCritMultiplier
+                + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
+                + stats.ShadowDamage
+
+                /*+ stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
                 + stats.HasteRatingFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse5Min
                 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnHit_10_45
                 + stats.SpellHasteFor10SecOnCast_10_45 + stats.TimbalsProc
-                + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc
-                + stats.BonusSpellCritMultiplier
+                + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc*/                
             ) > 0;
 
             bool Maybe = (
@@ -809,6 +851,15 @@ namespace Rawr.ShadowPriest
             ) > 0;
 
             return Yes || (Maybe && !No);
+        }
+
+        public override bool HasRelevantStats(Stats stats)
+        {
+            bool isRelevant = _HasRelevantStats(stats);
+
+            foreach (SpecialEffect se in stats.SpecialEffects())
+                isRelevant |= RelevantTrinket(se);
+            return isRelevant;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

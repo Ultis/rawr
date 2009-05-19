@@ -771,19 +771,21 @@ namespace Rawr
                 // Soul Preserver
                 stats.ManacostReduceWithin15OnHealingCast += 800;
             }
-            else if (line.StartsWith("Your damaging and healing spells have a chance to increase your spell power by 512 for 10 sec."))
+            else if ((match = Regex.Match(line, @"Your damaging and healing spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec.")).Success)
             {
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Forge Ember
-                stats.SpellPowerFor10SecOnHit_10_45 += 512;
+                stats.SpellPowerFor10SecOnHit_10_45 += spellPower;
                 // This is a nasty trick for compatibility = when designing a healer, please use this version:
-                stats.SpellPowerFor10SecOnHeal_10_45 += 512;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 512 }, 10, 45, 0.1f));
+                stats.SpellPowerFor10SecOnHeal_10_45 += spellPower;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
             }
-            else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 590 for 10 sec."))
+            else if ((match = Regex.Match(line, @"Your harmful spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec.")).Success)
             {
-                // Sundial of the Exiled (NOT FOR HEALERS)
-                stats.SpellPowerFor10SecOnHit_10_45 += 590;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
+                // Sundial of the Exiled (NOT FOR HEALERS) / Flare of the Heavens
+                stats.SpellPowerFor10SecOnHit_10_45 += spellPower;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
             }
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
             {

@@ -118,7 +118,7 @@ namespace Rawr.ShadowPriest
 
         public SpellStatistics SpellStatistics { get; protected set; }
 
-        public int BaseMana;
+        public float BaseMana;
 
         #region Properties
 
@@ -219,11 +219,7 @@ namespace Rawr.ShadowPriest
             Cooldown = cooldown;
             SpellStatistics = new SpellStatistics();
             MagicSchool = magicSchool;
-
-            if (character.Level >= 70 && character.Level <= 80)
-                BaseMana = 2620 + (character.Level - 70) * (3863 - 2620) / 10;
-            else
-                BaseMana = 2620;
+            BaseMana = BaseStats.GetBaseStats(character).Mana;
         }
 
         public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col) :
@@ -298,9 +294,9 @@ namespace Rawr.ShadowPriest
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
             
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
-                * (1f - character.PriestTalents.MentalAgility * 0.02f));
+                * (1f - character.PriestTalents.MentalAgility * 0.1f / 3f));
 
             if (stats.SWPDurationIncrease > 0)
             {
@@ -348,7 +344,7 @@ namespace Rawr.ShadowPriest
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f));
 
             CastTime = (float)Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
@@ -411,8 +407,8 @@ namespace Rawr.ShadowPriest
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.PriestTalents.ShadowPower * 0.2f) + 1f;
 
             CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.02f;
-            
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
                 * (1f - character.PriestTalents.FocusedMind * 0.05f)
                 * (1f - stats.MindBlastCostReduction));
@@ -457,9 +453,9 @@ namespace Rawr.ShadowPriest
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.PriestTalents.ShadowPower * 0.2f) + 1f;
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
-                * (1f - character.PriestTalents.MentalAgility * 0.02f));
+                * (1f - character.PriestTalents.MentalAgility * 0.1f / 3f));
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
         }
@@ -503,8 +499,8 @@ namespace Rawr.ShadowPriest
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                * (1f - character.PriestTalents.MentalAgility * 0.02f)
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
+                * (1f - character.PriestTalents.MentalAgility * 0.1f / 3f)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
                 * (1f - character.PriestTalents.FocusedMind * 0.05f));
 
@@ -566,8 +562,9 @@ namespace Rawr.ShadowPriest
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                * (1 - character.PriestTalents.MentalAgility * 0.02f));
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
+                * (1 - character.PriestTalents.MentalAgility * 0.1f / 3
+                     - character.PriestTalents.SoulWarding * 0.15f));
         }
 
         public override string ToString()
@@ -603,9 +600,9 @@ namespace Rawr.ShadowPriest
 
             HealthConvertionCoef *= (1 + character.PriestTalents.ImprovedVampiricEmbrace / 3f);
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
-                * (1f - character.PriestTalents.MentalAgility * 0.02f));
+                * (1f - character.PriestTalents.MentalAgility * 0.1f / 3f));
         }
 
         public override string ToString()
@@ -677,9 +674,9 @@ namespace Rawr.ShadowPriest
                 * (1 + character.PriestTalents.Shadowform * 0.15f)
                 * (1 + stats.DevouringPlagueBonusDamage);
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
-                * (1f - character.PriestTalents.MentalAgility * 0.02f));
+                * (1f - character.PriestTalents.MentalAgility * 0.1f / 3));
 
             if (character.PriestTalents.Shadowform > 0)
             {
@@ -845,7 +842,7 @@ namespace Rawr.ShadowPriest
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 );
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.HolyReach * 0.1f));
@@ -936,7 +933,7 @@ namespace Rawr.ShadowPriest
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 );
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.HolyReach * 0.1f));
@@ -996,7 +993,7 @@ namespace Rawr.ShadowPriest
 
             Cooldown *= (1f - character.PriestTalents.Aspiration * 0.1f);
 
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
+            ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ImprovedHealing * 0.05f));
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.HolyReach * 0.1f));

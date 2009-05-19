@@ -84,6 +84,33 @@ namespace Rawr.ShadowPriest
 
             // USE trinkets & effects.
             Stats Twinkets = new Stats();
+            foreach (SpecialEffect se in playerStats.SpecialEffects())
+            {
+                if (se.Stats.ManaRestore == 0 && se.Stats.Mp5 == 0)
+                {
+                    if (se.Trigger == Trigger.Use)
+                        Twinkets += se.GetAverageStats();
+                    else if (se.Trigger == Trigger.DamageSpellCast
+                        || se.Trigger == Trigger.SpellCast)
+                    {
+                        if (se.Stats.HasteRating > 0)
+                        {
+                            Twinkets += se.GetAverageStats(2f, 1f);
+                        }
+                        else if (se.Stats.HighestStat > 0)
+                        {
+                            float greatnessProc = se.GetAverageStats(2f, 1f).HighestStat;
+                            if (playerStats.Spirit > playerStats.Intellect)
+                                Twinkets.Spirit += greatnessProc;
+                            else
+                                Twinkets.Intellect += greatnessProc;
+                        }
+                    }
+                }
+            }
+
+            #region old
+            /*
             if (playerStats.SpellPowerFor15SecOnUse90Sec > 0.0f)
                 Twinkets.SpellPower += playerStats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
             if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
@@ -99,12 +126,22 @@ namespace Rawr.ShadowPriest
                 Twinkets.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
             // This is a very very wrong way of adding haste from Trinkets, due to the multiplicative nature of Haste.
             Twinkets.SpellHaste += StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating);
+             */
+            #endregion
+            if (Twinkets.HasteRating > 0)
+            {
+                playerStats.SpellHaste -= StatConversion.GetSpellHasteFromRating(playerStats.HasteRating);
+                playerStats.SpellHaste += StatConversion.GetSpellHasteFromRating(playerStats.HasteRating + Twinkets.HasteRating);
+            }
 
+            Twinkets.Spirit = (float)Math.Round(Twinkets.Spirit * (1 + playerStats.BonusSpiritMultiplier));
+            Twinkets.Intellect = (float)Math.Round(Twinkets.Intellect * (1 + playerStats.BonusIntellectMultiplier));
+            Twinkets.SpellPower += (float)Math.Round(Twinkets.Spirit * playerStats.SpellDamageFromSpiritPercentage);
+            playerStats += Twinkets;
 
-            PlayerStats = playerStats + Twinkets;
             CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
 
-            HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
+            HitChance = playerStats.SpellHit * 100f + CalculationOptions.TargetHit;
             if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
                 HitChance += character.PriestTalents.Misery * 1f;
             if (character.Race == Character.CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
@@ -114,6 +151,8 @@ namespace Rawr.ShadowPriest
             Trinkets = new List<Trinket>();
             Sequence = new Dictionary<float, Spell>();
             ManaSources = new List<ManaSource>();
+
+            PlayerStats = playerStats;      
         }
 
         public virtual void Calculate(CharacterCalculationsShadowPriest calculatedStats)
@@ -128,6 +167,11 @@ namespace Rawr.ShadowPriest
             {
                 if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
                     return spell;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
+                if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
+                    return spell;
+                if (spell.SpellStatistics.CooldownReset > 0 
+                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 1.5/2))
+                    return null;
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
             }
@@ -311,6 +355,23 @@ namespace Rawr.ShadowPriest
             simStats.SpellPower += simStats.Spirit * (character.PriestTalents.GlyphofShadow ? 0.1f : 0f);
 
             // Deal with Twinkets
+            foreach (SpecialEffect se in simStats.SpecialEffects())
+            {
+                if (se.Stats.SpellPower > 0)
+                {
+                    if (se.Trigger == Trigger.SpellCast
+                        || se.Trigger == Trigger.DamageSpellCast)
+                        simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                    else if (se.Trigger == Trigger.SpellHit
+                        || se.Trigger == Trigger.DamageSpellHit)
+                        simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, ShadowHitChance / 100f, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                    else if (se.Trigger == Trigger.SpellCrit
+                        || se.Trigger == Trigger.DamageSpellCrit)
+                        simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                }
+            }
+            #region old
+                /*
             // HASTE IS NOT REEVALUATED SO DONT EVEN TRY.
             if (simStats.SpellPowerFor10SecOnHit_10_45 > 0)
             {   // These have 10% Proc Chance (Sundial of the Exiled)
@@ -327,7 +388,8 @@ namespace Rawr.ShadowPriest
                 float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / CastsPerSecond / ProcActual;
                 simStats.SpellPower += simStats.SpellPowerFor10SecOnCast_15_45 * 10f / EffCooldown;
             }
-
+                 */
+            #endregion
             #endregion
 
             #region Pass 3: Redo Stats for all spells
@@ -342,7 +404,7 @@ namespace Rawr.ShadowPriest
             foreach (Spell spell in CastList)
             {
                 float Damage = spell.AvgDamage;
-                float Cost = spell.ManaCost - simStats.ManaRestoreOnCast_5_15 * 0.05f;
+                float Cost = spell.ManaCost;
                 switch (spell.Name)
                 {
                     case "Vampiric Touch":
@@ -410,6 +472,35 @@ namespace Rawr.ShadowPriest
             DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) : 0);
 
             // Finalize Trinkets
+           foreach (SpecialEffect se in simStats.SpecialEffects())
+            {
+                if (se.Trigger == Trigger.DoTTick)
+                {
+                    int dots = 0;
+                    foreach (Spell spell in SpellPriority)
+                        if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                    if (se.Stats.ShadowDamage > 0)
+                        DPS += se.GetAverageStats(dots / 3, 1f, 0f, CalculationOptions.FightLength * 60f).ShadowDamage
+                            * (1f + simStats.BonusShadowDamageMultiplier)
+                            * (1f + simStats.BonusDamageMultiplier)
+                            * (character.PriestTalents.ShadowWeaving > 0 ? 1.1f : 1.0f)
+                            * (1f + character.PriestTalents.Darkness * 0.02f)
+                            * (1f + character.PriestTalents.Shadowform * 0.15f);
+                }
+                else if (se.Trigger == Trigger.DamageSpellHit
+                    || se.Trigger == Trigger.SpellHit)
+                {
+                    if (se.Stats.ShadowDamage > 0)
+                        DPS += se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60f).ShadowDamage
+                            * (1f + simStats.BonusShadowDamageMultiplier)
+                            * (1f + simStats.BonusDamageMultiplier)
+                            * (character.PriestTalents.ShadowWeaving > 0 ? 1.1f : 1.0f)
+                            * (1f + character.PriestTalents.Darkness * 0.02f)
+                            * (1f + character.PriestTalents.Shadowform * 0.15f);
+                }
+            }
+            #region old
+                /*
             if (simStats.TimbalsProc > 0.0f)
             {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
                 //int dots = (MF != null)?3:0; // Apparently Flay no longer procs this
@@ -447,6 +538,8 @@ namespace Rawr.ShadowPriest
                 Spell Pendulum = new PendulumProc(simStats, character);
                 DPS += Pendulum.AvgDamage / EffCooldown * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
+                 */
+            #endregion
 
             Rotation += "\r\n\r\nMana Buffs:";
 
@@ -486,6 +579,34 @@ namespace Rawr.ShadowPriest
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
                 regen += tmpregen;
+            }
+            foreach (SpecialEffect se in simStats.SpecialEffects())
+            {
+                if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
+                {
+                    if (se.Trigger == Trigger.Use)
+                        tmpregen = se.GetAverageStats().ManaRestore
+                            + se.GetAverageStats().Mp5 / 5;
+                    else if (se.Trigger == Trigger.SpellCast
+                        || se.Trigger == Trigger.DamageSpellCast)
+                        tmpregen = se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60).ManaRestore
+                            + se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60f).Mp5 / 5;
+                    else if (se.Trigger == Trigger.SpellHit
+                        || se.Trigger == Trigger.DamageSpellHit)
+                        tmpregen = se.GetAverageStats(1f / CastsPerSecond, ShadowHitChance / 100f, 0f, CalculationOptions.FightLength * 60).ManaRestore
+                            + se.GetAverageStats(1f / CastsPerSecond, ShadowHitChance / 100f, 0f, CalculationOptions.FightLength * 60).Mp5 / 5;
+                    else if (se.Trigger == Trigger.SpellCrit
+                        || se.Trigger == Trigger.DamageSpellCrit)
+                        tmpregen = se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).ManaRestore
+                            + se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).Mp5 / 5;
+                    else
+                        tmpregen = 0;
+                    if (tmpregen > 0)
+                    {
+                        ManaSources.Add(new ManaSource(se.ToString(), tmpregen));
+                        regen += tmpregen;
+                    }
+                }
             }
 
             if (MPS > regen && character.Race == Character.CharacterRace.BloodElf)

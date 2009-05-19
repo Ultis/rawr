@@ -100,7 +100,7 @@ namespace Rawr.HolyPriest
                     if (se.Stats.ManaRestore == 0 && se.Stats.Mp5 == 0)
                     {   // We handle mana restoration stats later.
                         if (se.Trigger == Trigger.Use)
-                            UseProcs += se.GetAverageStats(2f, 1f);
+                            UseProcs += se.GetAverageStats();
                         else if (se.Trigger == Trigger.SpellCast
                             || se.Trigger == Trigger.HealingSpellCast
                             || se.Trigger == Trigger.HealingSpellHit)
