@@ -105,8 +105,8 @@ namespace Rawr.Moonkin
 
     // Define delegate types for proc effect class
     // Enable and disable the effect of the proc.  These two delegates should perform exact opposite operations.
-    delegate void Activate(CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
-    delegate void Deactivate(CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    delegate void Activate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    delegate void Deactivate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
     // Calculate the uptime of the effect.  This will be used to weight the proc when calculating the rotational DPS.
     delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs);
     // Optional calculations for complicated proc effects like Eclipse or trinkets that proc additional damage.
@@ -182,9 +182,17 @@ namespace Rawr.Moonkin
                         / timeBetweenProcs;
                 };
             }
-            else
+            else if (Effect.Trigger == Trigger.DamageDone ||
+                Effect.Trigger == Trigger.DamageSpellCast ||
+                Effect.Trigger == Trigger.DamageSpellCrit ||
+                Effect.Trigger == Trigger.DamageSpellHit ||
+                Effect.Trigger == Trigger.SpellCast ||
+                Effect.Trigger == Trigger.SpellCrit ||
+                Effect.Trigger == Trigger.SpellHit ||
+                Effect.Trigger == Trigger.SpellMiss ||
+                Effect.Trigger == Trigger.Use)
             {
-                Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
                     if (Effect.Stats.SpellPower > 0)
                         sp += Effect.Stats.SpellPower * Effect.MaxStack;
@@ -192,8 +200,37 @@ namespace Rawr.Moonkin
                         sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
                     if (Effect.Stats.HasteRating > 0)
                         sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+                    if (Effect.Stats.Spirit > 0)
+                    {
+                        Stats s = c.BasicStats.Clone();
+                        s.Spirit += Effect.Stats.Spirit * Effect.MaxStack;
+                        CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
+                        storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
+                        sp += storedStats.SpellPower;
+                    }
+                    if (Effect.Stats.HighestStat > 0)
+                    {
+                        if (c.BasicStats.Spirit > c.BasicStats.Intellect)
+                        {
+                            Stats s = c.BasicStats.Clone();
+                            s.Spirit += Effect.Stats.HighestStat;
+                            CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
+                            storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
+                            sp += storedStats.SpellPower;
+                        }
+                        else
+                        {
+                            Stats s = c.BasicStats.Clone();
+                            s.Intellect += Effect.Stats.HighestStat;
+                            CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
+                            storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
+                            storedStats.SpellCrit = cNew.SpellCrit - c.SpellCrit;
+                            sp += storedStats.SpellPower;
+                            sc += storedStats.SpellCrit;
+                        }
+                    }
                 };
-                Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                Deactivate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
                     if (Effect.Stats.SpellPower > 0)
                         sp -= Effect.Stats.SpellPower * Effect.MaxStack;
@@ -201,6 +238,22 @@ namespace Rawr.Moonkin
                         sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
                     if (Effect.Stats.HasteRating > 0)
                         sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
+                    if (Effect.Stats.Spirit > 0)
+                    {
+                        sp -= storedStats.SpellPower;
+                    }
+                    if (Effect.Stats.HighestStat > 0)
+                    {
+                        if (c.BasicStats.Spirit > c.BasicStats.Intellect)
+                        {
+                            sp -= storedStats.SpellPower;
+                        }
+                        else
+                        {
+                            sp -= storedStats.SpellPower;
+                            sc -= storedStats.SpellCrit;
+                        }
+                    }
                 };
                 UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
                 {
@@ -229,6 +282,7 @@ namespace Rawr.Moonkin
                 };
             }
         }
+        private Stats storedStats = new Stats();
         public SpecialEffect Effect { get; set; }
         public Activate Activate { get; set; }
         public Deactivate Deactivate { get; set; }
@@ -988,13 +1042,13 @@ namespace Rawr.Moonkin
                         int[] vals = gen.GetNext();
                         foreach (int idx in vals)
                         {
-                            activatedEffects[idx].Activate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
                         float tempDamage = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
-                            activatedEffects[idx].Deactivate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            activatedEffects[idx].Deactivate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
                         List<int> pairs = new List<int>(vals);
                         cachedUptimes[pairs] = tempUpTime;

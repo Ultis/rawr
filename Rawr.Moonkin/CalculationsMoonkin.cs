@@ -7,6 +7,13 @@ namespace Rawr.Moonkin
 	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", Character.CharacterClass.Druid)]
 	class CalculationsMoonkin : CalculationsBase
     {
+        public override bool SupportsMultithreading
+        {
+            get
+            {
+                return false;
+            }
+        }
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -329,35 +336,38 @@ namespace Rawr.Moonkin
 			return calcOpts;
 		}
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        public static CharacterCalculationsMoonkin GetInnerCharacterCalculations(Character character, Stats stats, Item additionalItem)
         {
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
-			calcs.SpellCrit = StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
-			calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
-			calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
-
-            // All spells: Damage +(0.04 * Lunar Guidance * Int)
-            stats.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;
+            calcs.SpellCrit = 0.0185f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
+            calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
+            calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
 
             // Fix for rounding error in converting partial points of int/spirit to spell power
             float spellPowerFromStats = (float)Math.Floor(stats.SpellDamageFromIntellectPercentage * stats.Intellect) +
                 (float)Math.Floor(stats.SpellDamageFromSpiritPercentage * stats.Spirit);
             calcs.SpellPower = stats.SpellPower + spellPowerFromStats;
 
-			calcs.Latency = calcOpts.Latency;
-			calcs.FightLength = calcOpts.FightLength;
-			calcs.TargetLevel = calcOpts.TargetLevel;
+            calcs.Latency = calcOpts.Latency;
+            calcs.FightLength = calcOpts.FightLength;
+            calcs.TargetLevel = calcOpts.TargetLevel;
             calcs.Scryer = calcOpts.AldorScryer == "Scryer";
 
             // 3.1 spirit regen
-			float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
+            float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
             calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
             calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
 
+            return calcs;
+        }
+
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        {
+            Stats stats = GetCharacterStats(character, additionalItem);
+            CharacterCalculationsMoonkin calcs = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             // Run the solver to do final calculations
             new MoonkinSolver().Solve(character, ref calcs);
 
@@ -390,7 +400,6 @@ namespace Rawr.Moonkin
             
             // Get the gear/enchants/buffs stats loaded in
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
@@ -454,7 +463,7 @@ namespace Rawr.Moonkin
             statsTotal.Spirit = (float)Math.Floor(statsRace.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit += (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
-            foreach (SpecialEffect s in statsTotal.SpecialEffects())
+            /*foreach (SpecialEffect s in statsTotal.SpecialEffects())
             {
                 if (s.Stats.HighestStat > 0)
                 {
@@ -471,7 +480,7 @@ namespace Rawr.Moonkin
                 {
                     statsTotal.Spirit += s.Stats.Spirit * s.GetAverageUptime(0f, 1f);
                 }
-            }
+            }*/
 
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
@@ -486,7 +495,6 @@ namespace Rawr.Moonkin
 			}
 
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
-			//statsTotal.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
             statsTotal.SpellCombatManaRegeneration += (float)Math.Round(character.DruidTalents.Intensity / 6.0f, 2);
             // Regen mechanic: mp5 +(0.04/0.07/0.10) * Int)
             statsTotal.Mp5 += (int)(statsTotal.Intellect * Math.Ceiling(character.DruidTalents.Dreamstate * 10 / 3.0f) / 100.0f);
@@ -497,11 +505,6 @@ namespace Rawr.Moonkin
 
             // Crit rating
             // Application order: Stats, Talents, Gear
-            // Add druid base crit
-            //statsTotal.SpellCrit += 0.0185f;
-            // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
-            //statsTotal.SpellCrit += statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent);
-            statsTotal.SpellCrit += 0.0185f + StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             // All spells: Crit% + (0.01 * Natural Perfection)
             statsTotal.SpellCrit += 0.01f * character.DruidTalents.NaturalPerfection;
             // All spells: Haste% + (0.01 * Celestial Focus)
@@ -517,6 +520,8 @@ namespace Rawr.Moonkin
                     statsTotal.SpellDamageFromSpiritPercentage += (0.1f * character.DruidTalents.ImprovedMoonkinForm);
                 }
             }
+            // All spells: Damage +(0.04 * Lunar Guidance * Int)
+            statsTotal.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
             if (character.ActiveBuffsContains("Faerie Fire"))
             {
@@ -745,86 +750,6 @@ namespace Rawr.Moonkin
                     wr.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.Wrath.DamagePerHit / calcsBase.BurstDPSRotation.Solver.Wrath.CastTime;
                     wr.OverallPoints = wr.DamagePoints + wr.RawDamagePoints;
                     return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr };
-/*                case "Relative Stat Values":
-                    CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
-                    CharacterCalculationsMoonkin calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 1 } }) as CharacterCalculationsMoonkin;
-                    CharacterCalculationsMoonkin calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }) as CharacterCalculationsMoonkin;
-                    CharacterCalculationsMoonkin calcsHit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }) as CharacterCalculationsMoonkin;
-                    CharacterCalculationsMoonkin calcsCrit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }) as CharacterCalculationsMoonkin;
-
-                    // Intellect calculations
-                    CharacterCalculationsMoonkin calcAtAdd = calcsBase;
-                    float intToAdd = 0.0f;
-                    while (calcsBase.OverallPoints == calcAtAdd.OverallPoints && intToAdd < 2)
-                    {
-                        intToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } }) as CharacterCalculationsMoonkin;
-                    }
-                    CharacterCalculationsMoonkin calcAtSubtract = calcsBase;
-                    float intToSubtract = 0.0f;
-                    while (calcsBase.OverallPoints == calcAtSubtract.OverallPoints && intToSubtract > -2)
-                    {
-                        intToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } }) as CharacterCalculationsMoonkin;
-                    }
-                    intToSubtract += 0.01f;
-
-                    ComparisonCalculationMoonkin comparisonInt = new ComparisonCalculationMoonkin()
-                    {
-                        Name = "Intellect",
-                        OverallPoints = (calcAtAdd.OverallPoints - calcsBase.OverallPoints) / (intToAdd - intToSubtract),
-                        DamagePoints = (calcAtAdd.SubPoints[0] - calcsBase.SubPoints[0]) / (intToAdd - intToSubtract),
-                        RawDamagePoints = (calcAtAdd.SubPoints[1] - calcsBase.SubPoints[1]) / (intToAdd - intToSubtract)
-                    };
-
-                    // Spirit calculations
-                    calcAtAdd = calcsBase;
-                    float spiToAdd = 0.0f;
-                    while (calcsBase.OverallPoints == calcAtAdd.OverallPoints && spiToAdd < 10)
-                    {
-                        spiToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } }) as CharacterCalculationsMoonkin;
-                    }
-                    calcAtSubtract = calcsBase;
-                    float spiToSubtract = 0.0f;
-                    while (calcsBase.OverallPoints == calcAtSubtract.OverallPoints && spiToSubtract > -10)
-                    {
-                        spiToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } }) as CharacterCalculationsMoonkin;
-                    }
-                    spiToSubtract += 0.01f;
-
-                    ComparisonCalculationMoonkin comparisonSpi = new ComparisonCalculationMoonkin()
-                    {
-                        Name = "Spirit",
-                        OverallPoints = (calcAtAdd.OverallPoints - calcsBase.OverallPoints) / (spiToAdd - spiToSubtract),
-                        DamagePoints = (calcAtAdd.SubPoints[0] - calcsBase.SubPoints[0]) / (spiToAdd - spiToSubtract),
-                        RawDamagePoints = (calcAtAdd.SubPoints[1] - calcsBase.SubPoints[1]) / (spiToAdd - spiToSubtract)
-                    };
-
-                    return new ComparisonCalculationBase[] {
-                        comparisonInt,
-                        comparisonSpi,
-                        new ComparisonCalculationMoonkin() { Name = "Spell Power",
-                            OverallPoints = calcsSpellPower.OverallPoints - calcsBase.OverallPoints,
-                            DamagePoints = calcsSpellPower.SubPoints[0] - calcsBase.SubPoints[0],
-                            RawDamagePoints = calcsSpellPower.SubPoints[1] - calcsBase.SubPoints[1]
-                        },
-                        new ComparisonCalculationMoonkin() { Name = "Haste",
-                            OverallPoints = calcsHaste.OverallPoints - calcsBase.OverallPoints,
-                            DamagePoints = calcsHaste.SubPoints[0] - calcsBase.SubPoints[0],
-                            RawDamagePoints = calcsHaste.SubPoints[1] - calcsBase.SubPoints[1]
-                        },
-                        new ComparisonCalculationMoonkin() { Name = "Hit",
-                            OverallPoints = calcsHit.OverallPoints - calcsBase.OverallPoints,
-                            DamagePoints = calcsHit.SubPoints[0] - calcsBase.SubPoints[0],
-                            RawDamagePoints = calcsHit.SubPoints[1] - calcsBase.SubPoints[1]
-                        },
-                        new ComparisonCalculationMoonkin() { Name = "Crit",
-                            OverallPoints = calcsCrit.OverallPoints - calcsBase.OverallPoints,
-                            DamagePoints = calcsCrit.SubPoints[0] - calcsBase.SubPoints[0],
-                            RawDamagePoints = calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]
-                        }};*/
             }
             return new ComparisonCalculationBase[0];
         }
