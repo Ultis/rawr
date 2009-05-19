@@ -5,7 +5,7 @@ namespace Rawr.DPSWarr {
         public CombatFactors(Character character, Stats stats) {
 			_stats = stats;
 			_mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
-			_offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
+			_offHand = character.OffHand == null ? null : character.OffHand.Item ;
             _talents = character.WarriorTalents;
             _calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             _characterRace = character.Race;
@@ -67,6 +67,7 @@ namespace Rawr.DPSWarr {
         public float AvgMhWeaponDmg { get { return CalcAverageWeaponDamage(MainHand,_stats,true); } }
         public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OffHand,_stats,false); } }
         private float CalcAverageWeaponDamage(Item weapon, Stats stats,bool mainoroff) {
+            if(weapon==null){return 0f;}
             return DamageBonus * ((stats.AttackPower / 14 + weapon.DPS) * weapon.Speed)
                 * (!mainoroff ? 0.5f + _talents.DualWieldSpecialization * 0.025f : 1f);
         }
@@ -103,6 +104,7 @@ namespace Rawr.DPSWarr {
         }
         private float CalcYellowCrit(Item weapon)
         {
+            if(weapon == null) {return 0f;}
             var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
             crit *= (1 - YellowMissChance - MhDodgeChance);
             //if (_calcOpts != null) {
@@ -151,7 +153,7 @@ namespace Rawr.DPSWarr {
             }
         }
         public float MainHandSpeed { get { return MainHand.Speed / TotalHaste; } }
-        public float OffHandSpeed { get { return OffHand.Speed / TotalHaste; } }
+        public float OffHandSpeed { get { return (OffHand == null ? 1f : OffHand.Speed / TotalHaste); } }
         public static float GetRacialExpertiseFromWeapon(Character.CharacterRace r, Item weapon) {
             if (r == Character.CharacterRace.Human) {
                 if (weapon != null && (weapon.Type == Item.ItemType.OneHandSword || weapon.Type == Item.ItemType.OneHandMace
@@ -179,11 +181,12 @@ namespace Rawr.DPSWarr {
         }
         private float CalcFlurryUptime(Stats stats) {
             float uptime = 1;
-            float weaponDiff = OffHand.Speed/MainHand.Speed;
+            float OHSpeed = (OffHand == null ? 1f : OffHand.Speed);
+            float weaponDiff = OHSpeed / MainHand.Speed;
             float mhpercent = weaponDiff/(1+weaponDiff);
             float ohpercent = 1-mhpercent;
             float consumeRate = (1 + _talents.Flurry * 0.05f) * (1f + StatConversion.GetHasteFromRating(_stats.HasteRating,Character.CharacterClass.Warrior)) * (1f + _stats.PhysicalHaste)
-                                * (1 / MainHand.Speed + 1 / OffHand.Speed);
+                                * (1 / MainHand.Speed + 1 / OHSpeed);
 
             float BTperSec = 0.1875f;
             float WWperSec = 0.1250f;

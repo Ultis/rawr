@@ -64,7 +64,7 @@ namespace Rawr.DPSWarr
         public Skills.Ability DW { get; set; }
         public Skills.Ability HS { get; set; }
         public Skills.Ability SL { get; set; }
-        public Skills.Ability RND { get; set; }
+        public Skills.DoT RD { get; set; }
         public Skills.Ability MS { get; set; }
         public Skills.Ability OP { get; set; }
         public Skills.Ability SS { get; set; }
@@ -152,11 +152,11 @@ namespace Rawr.DPSWarr
             dictValues.Add("Bloodsurge",        string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",BS.GetDPS(), BS.GetDamageOnUse(), BS.GetRageUsePerSecond() ,BS.GetActivates()));
             dictValues.Add("Bloodthirst",       string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",BT.GetDPS(), BT.GetDamageOnUse(), BT.GetRageUsePerSecond() ,BT.GetActivates()));
             dictValues.Add("Whirlwind",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",WW.GetDPS(), WW.GetDamageOnUse(), WW.GetRageUsePerSecond() ,WW.GetActivates()));
-            dictValues.Add("Mortal Strike",     string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",MS.GetDPS(), MS.GetDamageOnUse(), MS.GetRageUsePerSecond() ,MS.GetActivates()));
-            dictValues.Add("Slam",              string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",SL.GetDPS(), SL.GetDamageOnUse(), SL.GetRageUsePerSecond() ,SL.GetActivates()));
-            dictValues.Add("Rend",              string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",RND.GetDPS(),RND.GetDamageOnUse(),RND.GetRageUsePerSecond(),RND.GetActivates()));
-            dictValues.Add("Sudden Death",      string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",SD.GetDPS(), SD.GetDamageOnUse(), SD.GetRageUsePerSecond() ,SD.GetActivates()));
-            dictValues.Add("Overpower",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",OP.GetDPS(), OP.GetDamageOnUse(), OP.GetRageUsePerSecond() ,OP.GetActivates()));
+            dictValues.Add("Mortal Strike",     string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._MS_DPS/*MS.GetDPS()*/,MS.GetDamageOnUse(), MS.GetRageUsePerSecond() ,SkillAttacks._MS_GCDs /*MS.GetActivates()*/,SkillAttacks._MS_DPS/TotalDPS));
+            dictValues.Add("Slam",              string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._SL_DPS/*SL.GetDPS()*/,SL.GetDamageOnUse(), SL.GetRageUsePerSecond() ,SkillAttacks._SL_GCDs /*SL.GetActivates()*/,SkillAttacks._SL_DPS/TotalDPS));
+            dictValues.Add("Rend",              string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._RD_DPS/*RD.GetDPS()*/,RD.GetTickSize(), RD.GetRageUsePerSecond() ,SkillAttacks._RD_GCDs /*RD.GetActivates()*/,SkillAttacks._RD_DPS/TotalDPS));
+            dictValues.Add("Sudden Death",      string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._SD_DPS/*SD.GetDPS()*/,SD.GetDamageOnUse(), SD.GetRageUsePerSecond() ,SkillAttacks._SD_GCDs /*SD.GetActivates()*/,SkillAttacks._SD_DPS/TotalDPS));
+            dictValues.Add("Overpower",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._OP_DPS/*OP.GetDPS()*/,OP.GetDamageOnUse(), OP.GetRageUsePerSecond() ,SkillAttacks._OP_GCDs /*OP.GetActivates()*/,SkillAttacks._OP_DPS/TotalDPS));
             dictValues.Add("Bladestorm",        string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",BLS.GetDPS(),BLS.GetDamageOnUse(),BLS.GetRageUsePerSecond(),BLS.GetActivates()));
             dictValues.Add("Sword Spec",        string.Format("{0:0000} : {1:0000}"             ,SS.GetDPS(), SS.GetDamageOnUse()                           ));
             dictValues.Add("Sweeping Strikes",  string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",SW.GetDPS(), SW.GetDamageOnUse(), SW.GetRageUsePerSecond() ,SW.GetActivates()));

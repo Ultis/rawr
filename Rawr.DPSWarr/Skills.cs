@@ -33,8 +33,8 @@
             private readonly Character _character;
             public float CalcMhWhiteDPS() {
                 float wepSpeed = _combatFactors.MainHandSpeed;
-                if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1) {
-                    wepSpeed += (1.5f - (0.5f * _talents.ImprovedSlam)) / 5;
+                if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f) {
+                    wepSpeed += (1.5f - (0.5f * _talents.ImprovedSlam)) / 5f;
                 }
                 float mhWhiteDPS = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;
                 mhWhiteDPS += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1+_combatFactors.BonusWhiteCritDmg);
@@ -49,7 +49,7 @@
                 ohWhiteDPS += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
                 ohWhiteDPS += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
                 ohWhiteDPS /= _combatFactors.OffHandSpeed;
-                if (_combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
+                if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
                     return ohWhiteDPS;
                 } else {
                     return 0f;
@@ -262,7 +262,8 @@
                     /*||( CalcOpts.DefStance  && !StanceOkDef )*/ ) { return false; }
                 return true;
             }
-            public virtual float GetActivates() { return 0f; } // Number of times used in rotation
+            public virtual float GetActivates() { return GetActivates(true); } // Number of times used in rotation
+            public virtual float GetActivates(bool Override) { return 0f; } // Number of times used in rotation
             public virtual float GetHealing() { return 0f; }
             public virtual float GetDamage() { return GetDamage(false); }
             public virtual float GetDamage(bool Override) { return 0f; }
@@ -279,12 +280,27 @@
             }
             public virtual float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
             public virtual float GetDPS() { return GetAvgDamageOnUse() / GetRotation(); }
+            public virtual float GetAvgDamageOnUse(float acts) { return GetDamageOnUse() * acts; }
+            public virtual float GetDPS(float acts) { return GetAvgDamageOnUse(acts) / GetRotation(); }
             public virtual float GetLandedAtksPerSecNoSS() {
-                /*Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
                 Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
                 Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                Ability HS = new HeroicStrike(Char, StatS, combatFactors, Whiteattacks);
 
-                float AH31 = combatFactors.WhiteMissChance;
+                float    Dable = MS.GetActivates() + SD.GetActivates() + SL.GetActivates();
+                float nonDable = OP.GetActivates();
+
+                float white = (combatFactors.ProbMhWhiteHit+combatFactors.MhCrit+combatFactors.GlanceChance)
+                    * (combatFactors.MainHand.Speed/combatFactors.TotalHaste);
+
+                float ProbYellowHit = (1f - combatFactors.WhiteMissChance - combatFactors.MhDodgeChance);
+                float ProbYellowHitOP = (1f - combatFactors.WhiteMissChance);
+
+                float result = white + (Dable * ProbYellowHit) + (nonDable * ProbYellowHit);
+
+                /*float AH31 = combatFactors.WhiteMissChance;
                 float AH39 = combatFactors.MhDodgeChance;
                 float H56  = combatFactors.TotalHaste;
                 float AH48 = 1.0452f;//Heroic Strike Difference
@@ -300,22 +316,22 @@
                 //float heroics     = /*-0.01418f;*/ (1f-AH31-AH39)*(1f/H56)*AG47;
 
                 /*float result = white + op + suddeath + ms + slam + heroics;*/
-                			
-                //return result;
-                return 0.9367f;
+                
+                return result;
+                //return 0.9367f;
             }
             public virtual float GetLandedAtksPerSec() {
-                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
-                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                //Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
 
-                float AH31 = combatFactors.WhiteMissChance;
-                float AH39 = combatFactors.MhDodgeChance;
-                float H56 = combatFactors.TotalHaste;
-                float AH48 = 1.0452f;//Heroic Strike Difference
-                float AB46 = OP.GetActivates();
-                float M61 = 0.9455f;//SuddenDeath Overwrite Chance
-                float AG47 = -0.0452f;//Heroic Strike Freq
+                //float AH31 = combatFactors.WhiteMissChance;
+                //float AH39 = combatFactors.MhDodgeChance;
+                //float H56 = combatFactors.TotalHaste;
+                //float AH48 = 1.0452f;//Heroic Strike Difference
+                //float AB46 = OP.GetActivates();
+                //float M61 = 0.9455f;//SuddenDeath Overwrite Chance
+                //float AG47 = -0.0452f;//Heroic Strike Freq
 
                 float sspec = 0.00000f; //0.01f * GetLandedAtksPerSecNoSS() * 0f * Talents.SwordSpecialization * (1f - AH31 - AH39) * 54 / 60;
 
@@ -414,7 +430,7 @@
             public virtual float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
             public virtual float OtherRage() {
                 float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
-                if (combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
+                if (combatFactors.OffHand != null && combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
                     rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
                 rage *= combatFactors.TotalHaste;
                 rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
@@ -423,6 +439,26 @@
                 return rage;
             }
             #endregion
+        }
+        public class DoT : Ability {
+            // Constructors
+            public DoT(){}
+            // Variables
+            // Get/Set
+            // Functions
+            public virtual float GetTickSize() { return 0f; }
+            public virtual float GetTTLTickingTime() { return Cd; }
+            public virtual float GetTickLength() { return CastTime; }
+            public virtual float GetNumTicks() { return GetTTLTickingTime() / GetTickLength(); }
+            public virtual float GetDmgOverTickingTime() { return GetTickSize() * GetNumTicks(); }
+            public virtual float GetDPS() {
+                float dmgonuse = GetTickSize();
+                float numticks = GetNumTicks();
+                float rot = GetRotation();
+                float result = GetDmgOverTickingTime() / rot;
+                return result;
+                //return GetRotation() / GetDmgOverTickingTime();
+            }
         }
         // Fury Abilities
         public class BloodThirst : Ability {
@@ -727,14 +763,17 @@ the cooldown by (0.333/.666/1) sec.]";
                 if (!GetValided() || Talents.MortalStrike == 0) { return 0f; }
 
                 // Actual Calcs
-                //return (float)System.Math.Floor(GetRotation() / (Cd - (Talents.ImprovedMortalStrike * 0.33334f)));
+                return /*(float)System.Math.Floor(*/GetRotation() / (Cd - (Talents.ImprovedMortalStrike / 3.0f))/*)*/;
 
                 // ORIGINAL LINE
                 //return (1.0f / (5f - .334f * _talents.ImprovedMortalStrike));
 
                 // LANDSOUL's VERSION
-                float GCDPerc = (1.5f + (/*N4 Lag*/ 0f + /*AP62 Latency*/ 0f) / 1000f) / ((6f - Talents.ImprovedMortalStrike / 3f) + (/*N4 Lag*/ 0f + /*AP62 Latency*/ 0f) / 1000f) * (/*M65 Ability Scalar 0.9f this is hard set, not sure how he's getting the data for it*/0.9f + (1f - /*M65*/0.9f) * (1f - /*M64*/0.8f));
-                return (float)System.Math.Floor((1.5f + (/*N4 Lag*/ 0 + /*AP62 Latency*/ 0f) / 1000f) / GCDPerc);
+                //float GCDPerc = (1.5f / 1000f) / (6f - Talents.ImprovedMortalStrike / 3f) *
+                //    /*M65 Ability Scalar 0.9f this is hard set, not sure how he's getting the data for it*/
+                //    (/*M65*/0.9f + (1f - /*M65*/0.9f) * (1f - /*M64*/0.8f));
+                //float result = (float)System.Math.Floor((1.5f / 1000f) / GCDPerc);
+                //return result;
             }
             public override float GetDamage() {
                 // Invalidators
@@ -761,7 +800,7 @@ the cooldown by (0.333/.666/1) sec.]";
                 //return msDamage * _combatFactors.DamageReduction;
             }
         }
-        public class Rend : Ability {
+        public class Rend : DoT {
             // Constructors
             public Rend(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;
@@ -793,15 +832,21 @@ Trauma [Your melee critical strikes increase the effectiveness of Bleed effects 
                 // Invalidators
                 if (!GetValided()) { return 0f; }
                 // Actual Calcs
-                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
-                float MS_A = MS.GetActivates();
-                float GCDsused = (float)System.Math.Max(0f, GetRotation() / 1.5f - MS_A);
+                //Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                //float MS_A = MS.GetActivates();
+                //float NumGCDs = GetRotation() / 1.5f ;
+                //float GCDsused = (float)System.Math.Min(NumGCDs, MS_A);
+                //float availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+                //if (availGCDs <= 0f) { return 0f; }
                 float RendGCDs = GetRotation() / GetTTLTickingTime();
-                return (float)System.Math.Floor(RendGCDs);
+                //if (RendGCDs > availGCDs) {
+                    //RendGCDs = availGCDs;
+                //} 
+                return /*(float)System.Math.Floor(*/RendGCDs/*)*/;
                 // ORIGINAL LINE
                 //return 6.0f / (15f + (_talents.GlyphOfRending ? 6f : 0f));
             }
-            public override float GetDamage() {
+            public override float GetTickSize() {
                 // Invalidators
                 if (!GetValided()) { return 0f; }
 
@@ -837,37 +882,16 @@ Trauma [Your melee critical strikes increase the effectiveness of Bleed effects 
                 //return Damage / 18; // divide by 18 because of the uptime maybe? I don't get this part
 
                 // LANDSOUL's VERSION
-                float TickSize =
-                    (380f +
-                        (/*AB54 %DIM*/1.122f * ((StatS.AttackPower / 14f + combatFactors.AvgMhWeaponDmg) * combatFactors.MainHandSpeed) */*AB56 %wepmod*/1.06f)
-                    ) /
-                    (5f) *
-                    (1f + StatS.BonusBleedDamageMultiplier) *
-                    (1f + 0.1f * Talents.ImprovedRend);
+                float DmgBase = 380f;
+                float DmgBonusO75 = 0.25f*1.35f*((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage+combatFactors.MainHand.MinDamage)/2f) * (743f / 300000f);
+                float DmgBonusU75 = 0.75f*1.00f*((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage + combatFactors.MainHand.MinDamage) / 2f) * (743f / 300000f);
+                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier);
+                DmgMod *= 1f + 0.1f * Talents.ImprovedRend;
 
-                return TickSize /* *
-                    /*Num Ticks*//*(5f + (Talents.GlyphOfRending ? 2f : 0f)) /
-                    /*Ticking TTL Time*//*(Cd + (Talents.GlyphOfRending ? 6f : 0f))*/;
+                float TickSize = (DmgBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
+                return TickSize;
             }
-            public override float GetDamageOnUse() {
-                float Damage = GetDamage(); // Base Damage
-                //Damage *= combatFactors.DamageBonus; // Global Damage Bonuses // No other bonuses to damage (see getdamage)
-                //Damage *= combatFactors.DamageReduction; // Global Damage Penalties // Set value, Ignores Armor
-                //Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance); // Attack Table, does not crit
-
-                if (Damage < 0f) { Damage = 0f; } // Ensure that we are not doing negative Damage
-                return Damage;
-            }
-            public float GetTTLTickingTime() { return (Cd + (Talents.GlyphOfRending ? 6f : 0f)); }
-            public float GetNumTicks() { return GetTTLTickingTime() / CastTime; }
-            //public override float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
-            public override float GetDPS() {
-                float dmgonuse = GetDamageOnUse();
-                float numticks = GetNumTicks();
-                float rot = GetRotation();
-                float result = dmgonuse * numticks / rot;
-                return result;
-            }
+            public override float GetTTLTickingTime() { return (Cd + (Talents.GlyphOfRending ? 6f : 0f)); }
         }
         public class Suddendeath : Ability {
             // Constructors
@@ -899,6 +923,9 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
             // Get/Set
             // Functions
             public override float GetActivates() {
+                return GetActivates(true);
+            }
+            public override float GetActivates(bool Override) {
                 // Invalidators
                 if (!GetValided() || Talents.SuddenDeath == 0) { return 0f; }
 
@@ -922,22 +949,29 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
                 //return 2 * hits;
 
                 // LANDSOUL'S VERSION
-                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
-                Ability RND = new Rend(Char, StatS, combatFactors, Whiteattacks);
-                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                float MS_A = MS.GetActivates();
-                float RND_A = RND.GetActivates();
-                float OP_A = OP.GetActivates();
-                float GCDsused = (float)System.Math.Max(0f, GetRotation() / 1.5f - MS_A - OP_A - RND_A);
 
-                float GCDPerc = 0.03f * Talents.SuddenDeath *
-                                GetLandedAtksPerSec() * // R68 Landed Attacks per sec  0.9367f
-                                0.9455f * // M61 Exe overwrite chance
-                                (1.5f + (/*N4 lag*/0f +/*AP62 latency*/0f) / 1000f);
-                float procs = (float)System.Math.Max(0f, GetRotation() / 1.5f - GCDsused - (float)System.Math.Floor((1.5f + (/*N4 lag*/0f +/*AP62 latency*/0f) / 1000f) / GCDPerc));
+                //Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                //Ability RND = new Rend(Char, StatS, combatFactors, Whiteattacks);
+                //Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+                //float MS_A = MS.GetActivates();
+                //float RND_A = RND.GetActivates();
+                //float OP_A = OP.GetActivates();
+                //float NumGCDs = GetRotation() / 1.5f;
+                //float GCDsused = (float)System.Math.Min(NumGCDs, MS_A + RND_A + OP_A);
+                //float availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsus.09ed);
+                //if (availGCDs <= 0f) { return 0f; }
+                
+                // ACTUAL CALCS
+                float talent = 3f * Talents.SuddenDeath / 100f;
+                float hitspersec = (Override ? 1f : GetLandedAtksPerSec()); // R68 Landed Attacks per sec  0.9367f
+                                //0.9455f * // M61 Exe overwrite chance
+                float latency = (1.5f);
+                //float mod = 100f;
+                float SD_GCDS = talent * hitspersec * latency /* * mod*/;
+                // END ACTUAL CALCS
 
-                return procs;
-
+                //if (SD_GCDS > availGCDs) { SD_GCDS = availGCDs; }
+                return /*(float)System.Math.Floor(*/SD_GCDS/*)*/;
             }
             public override float GetDamage() {
                 // Invalidators
@@ -1011,24 +1045,41 @@ while they are casting, their magical damage and healing will be reduced by (25/
                 //return procs;
 
                 // LANDSOUL's VERSION
+
+                //Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                //Ability RND = new Rend(Char, StatS, combatFactors, Whiteattacks);
+                //float MS_A = MS.GetActivates();
+                //float RND_A = RND.GetActivates();
+                //float NumGCDs = GetRotation() / 1.5f;
+                //float GCDsused = (float)System.Math.Min(NumGCDs, MS_A+RND_A);
+                //float availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+                //if (availGCDs <= 0f) { return 0f; }
+
+
+                // ACTUAL CALCS
                 Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                float GCDPerc = (Talents.TasteForBlood == 0 ? 0f : (1.5f - 0.5f * Talents.UnrelentingAssault / 1000f) / ((Talents.TasteForBlood > 1f) ? 6f : 9f));
 
-                float GCDPerc = (Talents.TasteForBlood == 0 ? 0f : (1.5f - 0.5f * Talents.UnrelentingAssault + (/*N4 lag*/0f + /*AP62 latency*/0f) / 1000f) / ((Talents.TasteForBlood > 1f) ? 6f : 9f));
-
-                if (combatFactors.MhDodgeChance <= 0f && Talents.TasteForBlood == 0f) {
-                    return 0f;//999999f;
-                }else{
-                    if (Talents.TasteForBlood == 0f) {
-                        return 1f/
+                float OP_GCDs = GetRotation() / 
+                    ((combatFactors.MhDodgeChance <= 0f && Talents.TasteForBlood == 0f) ?
+                        0f
+                    :
+                        ((Talents.TasteForBlood == 0f) ? 1f /
                             (
-                                combatFactors.MhDodgeChance*(1f/combatFactors.MainHandSpeed)+
+                                combatFactors.MhDodgeChance * (1f / combatFactors.MainHandSpeed) +
                                 0.01f * (/*R66 Landed attacks per second no SwdSpk 0.8868f*/GetLandedAtksPerSecNoSS()) * combatFactors.MhExpertise * Talents.SwordSpecialization * 54f / 60f +
-                                0.03f * GCDPerc * (/*M61 Exe overwrite chance*/0.9430f) * (/*R68 Landed attacks per second 0.8868f*/GetLandedAtksPerSec()) +
-                                1f / (5f/1000f)//+
-                                //1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates()
-                             );
-                    }else{if (Talents.TasteForBlood > 1f) {return 6f;}else{return 9f;}}
-                }
+                                0.03f * GCDPerc * (/*R68 Landed attacks per second 0.8868f*/GetLandedAtksPerSec()) +
+                                1f / (5f / 1000f)//+
+                            //1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates()
+                             )
+                        :
+                            ((Talents.TasteForBlood > 1f) ? 6f : 9f ) ))
+                ;
+                // END ACTUAL CALCS
+
+
+                //if (OP_GCDs > availGCDs) { OP_GCDs = availGCDs; }
+                return /*(float)System.Math.Floor(*/OP_GCDs/*)*/;
             }
             public override float GetDamage() {
                 // Invalidators
@@ -1532,7 +1583,7 @@ Causes 173.25 additional damage against Dazed targets";
                 RageCost = 15/*-(_talents.ImprovedHeroicStrike*1f)*/;
                 CastTime = 0; // In Seconds // Replaces a white hit
                 StanceOkFury = true;
-                StanceOkArms = true;
+                StanceOkArms = false;
                 StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
             }
@@ -1544,8 +1595,7 @@ Causes 173.25 additional damage against Dazed targets";
                 if (!GetValided()) { return 0f; }
 
                 // HS per second
-                float hsHits = (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance);
-                hsHits *= (/*rageModifier +*/ freeRage() / heroicStrikeRageCost());
+                float hsHits = (/*rageModifier +*/ freeRage() / heroicStrikeRageCost());
 
                 if (hsHits < 0) { hsHits = 0; }
                 heroicStrikesPerSecond = hsHits;
@@ -1556,7 +1606,7 @@ Causes 173.25 additional damage against Dazed targets";
                 //return (_talents.ImprovedSlam == 2 ? (1.5f /*- (0.5f * _talents.ImprovedSlam)*/ / 5) : 0);
             }
             public override float heroicStrikeRageCost() {
-
+                if (!GetValided()) { return 0f; }
                 float rageCost = this.RageCost;
                 rageCost -= Talents.ImprovedHeroicStrike; // Imp HS
                 if (Talents.GlyphOfHeroicStrike) rageCost -= 10.0f * combatFactors.MhCrit; // Glyph bonus rage on crit
@@ -1768,6 +1818,83 @@ average damage over 6 sec.";
                 
                 return result;
             }
+        }
+        // bah
+        public float _MS_GCDs = 0f;public float _MS_PerHit = 0f;public float _MS_RPS = 0f;public float _MS_DPS = 0f;
+        public float _RD_GCDs = 0f;public float _RD_PerHit = 0f;public float _RD_RPS = 0f;public float _RD_DPS = 0f;
+        public float _OP_GCDs = 0f;public float _OP_PerHit = 0f;public float _OP_RPS = 0f;public float _OP_DPS = 0f;
+        public float _SD_GCDs = 0f;public float _SD_PerHit = 0f;public float _SD_RPS = 0f;public float _SD_DPS = 0f;
+        public float _SL_GCDs = 0f;public float _SL_PerHit = 0f;public float _SL_RPS = 0f;public float _SL_DPS = 0f;
+        public float MakeRotationandDoDPS_Arms() {
+            // Starting Numbers
+            float DPS_TTL = 0f;
+            float rotation = ROTATION_LENGTH_ARMS;
+            float NumGCDs = rotation / 1.5f;
+            float GCDsused = 0f;
+            float availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+
+            // White DPS
+            DPS_TTL += _whiteStats.CalcMhWhiteDPS();
+            
+            // Priority 1 : Mortal Strike on every CD
+            Ability MS = new Mortalstrike(_character, _stats, _combatFactors, _whiteStats);
+            float MS_GCDs = (float)System.Math.Floor(MS.GetActivates());
+            if (MS_GCDs > availGCDs) { MS_GCDs = availGCDs; }
+            _MS_GCDs = MS_GCDs;
+            GCDsused += (float)System.Math.Min(NumGCDs, MS_GCDs);
+            availGCDs = (float)System.Math.Max(0f,NumGCDs - GCDsused);
+            _MS_DPS = MS.GetDPS(MS_GCDs);
+            DPS_TTL += _MS_DPS;
+            if (availGCDs <= 0f) { return DPS_TTL; }
+
+            // Priority 2 : Rend on every tick off
+            DoT RND = new Rend(_character, _stats, _combatFactors, _whiteStats);
+            float RND_GCDs = (float)System.Math.Floor(RND.GetActivates()); //RND.GetActivates();
+            if (RND_GCDs > availGCDs) { RND_GCDs = availGCDs; }
+            _RD_GCDs = RND_GCDs;
+            GCDsused += (float)System.Math.Min(NumGCDs, RND_GCDs);
+            availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+            _RD_DPS = RND.GetDPS();
+            DPS_TTL += _RD_DPS;
+            if (availGCDs <= 0f) { return DPS_TTL; }
+
+            // Priority 3 : Taste for Blood Proc (Do Overpower) if available
+            Ability OP = new OverPower(_character, _stats, _combatFactors, _whiteStats);
+            float OP_GCDs = (float)System.Math.Floor(OP.GetActivates());
+            if (OP_GCDs > availGCDs) { OP_GCDs = availGCDs; }
+            _OP_GCDs = OP_GCDs;
+            GCDsused += (float)System.Math.Min(NumGCDs, OP_GCDs);
+            availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+            _OP_DPS = OP.GetDPS(OP_GCDs);
+            DPS_TTL += _OP_DPS;
+            if (availGCDs <= 0f) { return DPS_TTL; }
+
+            // Priority 4 : Sudden Death Proc (Do Execute) if available
+            Ability SD = new Suddendeath(_character, _stats, _combatFactors, _whiteStats);
+            float SD_GCDs = (float)System.Math.Floor(SD.GetActivates(false));
+            if (SD_GCDs > availGCDs) { SD_GCDs = availGCDs; }
+            _SD_GCDs = SD_GCDs;
+            GCDsused += (float)System.Math.Min(NumGCDs, SD_GCDs);
+            availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+            _SD_DPS = SD.GetDPS(SD_GCDs);
+            DPS_TTL += _SD_DPS;
+            if (availGCDs <= 0f) { return DPS_TTL; }
+
+            // Priority 5 : Slam for remainder of GCDs
+            Ability SL = new Slam(_character, _stats, _combatFactors, _whiteStats);
+            float SL_GCDs = availGCDs;
+            if (SL_GCDs > availGCDs) { SL_GCDs = availGCDs; }
+            _SL_GCDs = SL_GCDs;
+            GCDsused += (float)System.Math.Min(NumGCDs, SL_GCDs);
+            availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+            _SL_DPS = SL.GetDPS(SL_GCDs);
+            DPS_TTL += _SL_DPS;
+            if (availGCDs <= 0f) { return DPS_TTL; }
+
+            // Priority 6 : Heroic Strike, never
+
+            // Return result
+            return DPS_TTL;
         }
     }
 }
