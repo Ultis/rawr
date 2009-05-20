@@ -54,7 +54,7 @@
             this.butCancel.Location = new System.Drawing.Point(166, 336);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(75, 23);
-            this.butCancel.TabIndex = 1;
+            this.butCancel.TabIndex = 9;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             // 
@@ -64,7 +64,7 @@
             this.propertyGridStats.Location = new System.Drawing.Point(12, 12);
             this.propertyGridStats.Name = "propertyGridStats";
             this.propertyGridStats.Size = new System.Drawing.Size(229, 187);
-            this.propertyGridStats.TabIndex = 17;
+            this.propertyGridStats.TabIndex = 1;
             this.propertyGridStats.ToolbarVisible = false;
             // 
             // nudChance
@@ -73,14 +73,14 @@
             this.nudChance.Location = new System.Drawing.Point(85, 284);
             this.nudChance.Name = "nudChance";
             this.nudChance.Size = new System.Drawing.Size(61, 20);
-            this.nudChance.TabIndex = 18;
+            this.nudChance.TabIndex = 5;
             // 
             // nudDuration
             // 
             this.nudDuration.Location = new System.Drawing.Point(85, 232);
             this.nudDuration.Name = "nudDuration";
             this.nudDuration.Size = new System.Drawing.Size(61, 20);
-            this.nudDuration.TabIndex = 19;
+            this.nudDuration.TabIndex = 3;
             // 
             // nudCooldown
             // 
@@ -92,14 +92,14 @@
             0});
             this.nudCooldown.Name = "nudCooldown";
             this.nudCooldown.Size = new System.Drawing.Size(61, 20);
-            this.nudCooldown.TabIndex = 20;
+            this.nudCooldown.TabIndex = 4;
             // 
             // nudStacks
             // 
             this.nudStacks.Location = new System.Drawing.Point(85, 310);
             this.nudStacks.Name = "nudStacks";
             this.nudStacks.Size = new System.Drawing.Size(61, 20);
-            this.nudStacks.TabIndex = 21;
+            this.nudStacks.TabIndex = 7;
             // 
             // label1
             // 
@@ -144,8 +144,7 @@
             this.cmbTrigger.Location = new System.Drawing.Point(85, 205);
             this.cmbTrigger.Name = "cmbTrigger";
             this.cmbTrigger.Size = new System.Drawing.Size(106, 21);
-            this.cmbTrigger.TabIndex = 26;
-            this.cmbTrigger.SelectedIndexChanged += new System.EventHandler(this.cmbTrigger_SelectedIndexChanged);
+            this.cmbTrigger.TabIndex = 2;
             // 
             // label5
             // 
@@ -161,7 +160,7 @@
             this.butOkay.Location = new System.Drawing.Point(85, 336);
             this.butOkay.Name = "butOkay";
             this.butOkay.Size = new System.Drawing.Size(75, 23);
-            this.butOkay.TabIndex = 28;
+            this.butOkay.TabIndex = 8;
             this.butOkay.Text = "Okay";
             this.butOkay.UseVisualStyleBackColor = true;
             this.butOkay.Click += new System.EventHandler(this.butOkay_Click);
@@ -176,8 +175,7 @@
             this.cmbPPM.Location = new System.Drawing.Point(152, 283);
             this.cmbPPM.Name = "cmbPPM";
             this.cmbPPM.Size = new System.Drawing.Size(49, 21);
-            this.cmbPPM.TabIndex = 29;
-            this.cmbPPM.SelectedIndexChanged += new System.EventHandler(this.cmbPPM_SelectedIndexChanged);
+            this.cmbPPM.TabIndex = 6;
             // 
             // FormEditSpecialEffect
             // 
