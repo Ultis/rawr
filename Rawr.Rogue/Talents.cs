@@ -90,7 +90,7 @@ namespace Rawr.Rogue
 		public class HungerForBlood
 		{
 			public static readonly Talents EnergyPerSecond = new Talents(() => _talents.HungerForBlood, -0.25f);
-			public static readonly Talents Damage = new Talents(() => _talents.HungerForBlood, 0.15f);
+			public static readonly Talents Damage = new Talents(() => _talents.HungerForBlood, 0.15f + (Glyphs.GlyphOfHungerforBlood ? .03f : 0f));
 		}
 
 
@@ -161,6 +161,28 @@ namespace Rawr.Rogue
 			public static readonly Talents BackstabAndAmbushEnergyCost = new Talents(() => _talents.SlaughterFromTheShadows, 3f, 6f, 9f, 12f, 15f);
 			public static readonly Talents HemoEnergyCost = new Talents(() => _talents.SlaughterFromTheShadows, 1f, 2f, 3f, 4f, 5f);
 		}
+
+        //---------------------------------------------------------------------
+        //Glyphs
+        //---------------------------------------------------------------------
+        public class Glyphs
+        {
+            public static bool GlyphOfBackstab { get { return _talents.GlyphOfBackstab; } }
+            public static bool GlyphOfEviscerate { get { return _talents.GlyphOfEviscerate; } }
+            public static bool GlyphOfMutilate { get { return _talents.GlyphOfMutilate; } }
+            public static bool GlyphOfHungerforBlood { get { return _talents.GlyphOfHungerforBlood; } }
+            public static bool GlyphOfKillingSpree { get { return _talents.GlyphOfKillingSpree; } }
+            public static bool GlyphOfVigor { get { return _talents.GlyphOfVigor; } }
+            public static bool GlyphOfFanOfKnives { get { return _talents.GlyphOfFanOfKnives; } }
+            public static bool GlyphOfExposeArmor { get { return _talents.GlyphOfExposeArmor; } }
+            public static bool GlyphOfSinisterStrike { get { return _talents.GlyphOfSinisterStrike; } }
+            public static bool GlyphOfSliceandDice { get { return _talents.GlyphOfSliceandDice; } }
+            public static bool GlyphOfFeint { get { return _talents.GlyphOfFeint; } }
+            public static bool GlyphOfGhostlyStrike { get { return _talents.GlyphOfGhostlyStrike; } }
+            public static bool GlyphOfRupture { get { return _talents.GlyphOfRupture; } }
+            public static bool GlyphOfBladeFlurry { get { return _talents.GlyphOfBladeFlurry; } }
+            public static bool GlyphOfAdrenalineRush { get { return _talents.GlyphOfAdrenalineRush; } }
+        }
 
 		//---------------------------------------------------------------------
 		//Class Initializers and Methods

@@ -27,7 +27,7 @@ namespace Rawr.Rogue.FinishingMoves
             finisherDmg *= Talents.ImprovedEviscerate.Multiplier;
             finisherDmg *= Talents.FindWeakness.Multiplier;
             finisherDmg *= Talents.Aggression.Multiplier;
-            finisherDmg = finisherDmg * (1f - combatFactors.ProbMhCrit) + (finisherDmg * 2f) * combatFactors.ProbMhCrit;
+            finisherDmg = finisherDmg * (1f - combatFactors.ProbMhCrit) + (finisherDmg * 2f) * (combatFactors.ProbMhCrit + GlyphOfEviscerateBonus);
             finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
 
             if (!Talents.SurpriseAttacks.HasPoints)
@@ -35,6 +35,11 @@ namespace Rawr.Rogue.FinishingMoves
 
             finisherDmg *= combatFactors.DamageReduction;
             return finisherDmg / cycleTime.Duration;
+        }
+
+        private static float GlyphOfEviscerateBonus
+        {
+            get { return Talents.Glyphs.GlyphOfEviscerate ? .1f : 0f; }
         }
     }
 }

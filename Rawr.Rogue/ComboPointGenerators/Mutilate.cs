@@ -13,9 +13,11 @@ namespace Rawr.Rogue.ComboPointGenerators
 			//Assume Mutiliate can only crit once, so Focused Attacks can only return 2 energy, and
 			//not 2 energy for a MH crit, and another 2 energy (total 4) for a MH and OH crit
             return 60f * combatFactors.Tier7FourPieceEnergyCostReduction
-                - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus); 
+                - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus)
+                - GlyphOfMutilateBonus; 
 		}
 
+        private static float GlyphOfMutilateBonus { get { return Talents.Glyphs.GlyphOfMutilate ? 5f : 0f; } }
         public override float Crit(CombatFactors combatFactors)
         {
             return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus;

@@ -11,14 +11,6 @@ namespace Rawr.Rogue
     [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", Character.CharacterClass.Rogue)]
     public class CalculationsRogue : CalculationsBase
     {
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
-                return new List<GemmingTemplate>();
-            }
-        }
-
         public CalculationsRogue(){}
         private readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelRogue();
         private readonly string[] _customChartNames = new[] {"Combat Table"};
@@ -339,50 +331,198 @@ namespace Rawr.Rogue
         {
             return new Stats
                        {
-                           Stamina = stats.Stamina,
                            Agility = stats.Agility,
                            Strength = stats.Strength,
                            AttackPower = stats.AttackPower,
-                           BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                           BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                           BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                           BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                           Health = stats.Health,
                            CritRating = stats.CritRating,
                            HitRating = stats.HitRating,
+                           Stamina = stats.Stamina,
                            HasteRating = stats.HasteRating,
                            ExpertiseRating = stats.ExpertiseRating,
                            ArmorPenetration = stats.ArmorPenetration,
+                           ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                           BloodlustProc = stats.BloodlustProc,
                            WeaponDamage = stats.WeaponDamage,
+                           BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                           BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                            BonusCritMultiplier = stats.BonusCritMultiplier,
+                           BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                           BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                           BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                           Health = stats.Health,
+                           ExposeWeakness = stats.ExposeWeakness,
+                           Bloodlust = stats.Bloodlust,
+                           DrumsOfBattle = stats.DrumsOfBattle,
+                           DrumsOfWar = stats.DrumsOfWar,
+                           ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                           PhysicalHaste = stats.PhysicalHaste,
+                           PhysicalHit = stats.PhysicalHit,
+                           PhysicalCrit = stats.PhysicalCrit,
+                           HighestStat = stats.HighestStat,
                            WindfuryAPBonus = stats.WindfuryAPBonus,
+
+                           AllResist = stats.AllResist,
+                           ArcaneResistance = stats.ArcaneResistance,
+                           NatureResistance = stats.NatureResistance,
+                           FireResistance = stats.FireResistance,
+                           FrostResistance = stats.FrostResistance,
+                           ShadowResistance = stats.ShadowResistance,
+                           ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                           NatureResistanceBuff = stats.NatureResistanceBuff,
+                           FireResistanceBuff = stats.FireResistanceBuff,
+                           FrostResistanceBuff = stats.FrostResistanceBuff,
+                           ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                           
                            BonusSnDDuration = stats.BonusSnDDuration,
                            CPOnFinisher = stats.CPOnFinisher,
                            BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
                            BonusFreeFinisher = stats.BonusFreeFinisher,
                            BonusCPGDamage = stats.BonusCPGDamage,
                            BonusSnDHaste = stats.BonusSnDHaste,
-                           BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier
+                           BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+                           RogueT7TwoPieceBonus = stats.RogueT7TwoPieceBonus,
+                           RogueT7FourPieceBonus = stats.RogueT7FourPieceBonus,
+                           RogueT8TwoPieceBonus = stats.RogueT8TwoPieceBonus,
+                           RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus
                        };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
+            return
+                (
+                    stats.Agility +
+                    stats.Strength +
+                    stats.AttackPower +
+                    stats.CritRating +
+                    stats.HitRating +
+                    stats.Stamina +
+                    stats.HasteRating +
+                    stats.ExpertiseRating +
+                    stats.ArmorPenetration +
+                    stats.ArmorPenetrationRating +
+                    stats.BloodlustProc +
+                    stats.WeaponDamage +
+                    stats.BonusAgilityMultiplier +
+                    stats.BonusAttackPowerMultiplier +
+                    stats.BonusCritMultiplier +
+                    stats.BonusDamageMultiplier +
+                    stats.BonusStaminaMultiplier +
+                    stats.BonusStrengthMultiplier +
+                    stats.Health +
+                    stats.ExposeWeakness +
+                    stats.Bloodlust +
+                    stats.DrumsOfBattle +
+                    stats.DrumsOfWar +
+                    stats.ThreatReductionMultiplier +
+                    stats.PhysicalHaste +
+                    stats.PhysicalHit +
+                    stats.PhysicalCrit +
+                    stats.HighestStat +
+                    stats.WindfuryAPBonus +
+
+                    stats.AllResist +
+                    stats.ArcaneResistance +
+                    stats.NatureResistance +
+                    stats.FireResistance +
+                    stats.FrostResistance +
+                    stats.ShadowResistance +
+                    stats.ArcaneResistanceBuff +
+                    stats.NatureResistanceBuff +
+                    stats.FireResistanceBuff +
+                    stats.FrostResistanceBuff +
+                    stats.ShadowResistanceBuff +
+
+                    stats.BonusSnDDuration +
+                    stats.CPOnFinisher +
+                    stats.BonusEvisEnvenomDamage +
+                    stats.BonusFreeFinisher +
+                    stats.BonusCPGDamage +
+                    stats.BonusSnDHaste +
+                    stats.BonusBleedDamageMultiplier +
+                    stats.RogueT7TwoPieceBonus +
+                    stats.RogueT7FourPieceBonus +
+                    stats.RogueT8TwoPieceBonus +
+                    stats.RogueT8FourPieceBonus
+                ) != 0;
         }
 
         public override List<string> GetRelevantGlyphs()
         {
-            var glyphs = new List<string>();
-            foreach(var pi in typeof(RogueTalents).GetProperties())
-            {
-                var glyphAttributes = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
-                if (glyphAttributes.Length > 0)
-                {
-                    glyphs.Add(glyphAttributes[0].Name);
-                }
-            }
+            var glyphs = new List<string>
+                             {
+                                 //"Glyph of Backstab",
+                                 "Glyph of Eviscerate",
+                                 "Glyph of Mutilate",
+                                 "Glyph of Hunger for Blood",
+                                 //"Glyph of Killing Spree",
+                                 //"Glyph of Vigor",
+                                 //"Glyph of Fan of Knives",
+                                 //"Glyph of Expose Armor",
+                                 "Glyph of Sinister Strike",
+                                 //"Glyph of Slice and Dice",
+                                 //"Glyph of Feint",
+                                 //"Glyph of Ghostly Strike",
+                                 //"Glyph of Rupture",
+                                 //"Glyph of Blade Flurry",
+                                 //"Glyph of Adrenaline Rush"
+                             };
             return glyphs;
+        }
+
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                ////Relevant Gem IDs for Ferals
+                //Red
+                int[] bold = { 39900, 39996, 40111, 42142 };
+                int[] delicate = { 39905, 39997, 40112, 42143 };
+
+                //Purple
+                int[] shifting = { 39935, 40023, 40130 };
+                int[] sovereign = { 39934, 40022, 40129 };
+
+                //Blue
+                int[] solid = { 39919, 40008, 40119, 36767 };
+
+                //Green
+                int[] enduring = { 39976, 40089, 40167 };
+
+                //Yellow
+                int[] thick = { 39916, 40015, 40126, 42157 };
+
+                //Orange
+                int[] etched = { 39948, 40038, 40143 };
+                int[] fierce = { 39951, 40041, 40146 };
+                int[] glinting = { 39953, 40044, 40148 };
+                int[] stalwart = { 39964, 40056, 40160 };
+                int[] deadly = { 39952, 40043, 40147 };
+
+                //Meta
+                // int austere = 41380;
+                int relentless = 41398;
+
+                return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Agility
+						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Crit
+						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Max Agility
+						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Crit 
+						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", //Max Agility
+						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", //Agi/Crit 
+						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Agility
+						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agility Heavy
+						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
+				};
+            }
         }
     }
 }
