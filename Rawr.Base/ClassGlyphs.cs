@@ -569,4 +569,78 @@ namespace Rawr
         [GlyphData(14, "Glyph of Adrenaline Rush", true, @"Increases the duration of Adrenaline Rush by 5 sec.")]
         public bool GlyphOfAdrenalineRush { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
     }
+
+    public partial class HunterTalents
+    {
+        private bool[] _glyphData = new bool[33]; // Set this to the final value of how many glyphs there end up being.
+        public override bool[] GlyphData { get { return _glyphData; } }
+
+        [GlyphData(0, "Glyph of Aimed Shot", true, @"Reduces the cooldown of your Aimed Shot ability by 2 sec.")]
+        public bool GlyphOfAimedShot { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        [GlyphData(1, "Glyph of Arcane Shot", true, @"Your Arcane Shot refunds 20% of its mana cost if the target has one of your Stings active on it.")]
+        public bool GlyphOfArcaneShot { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        [GlyphData(2, "Glyph of Aspect of the Viper", true, @"Increases the amount of mana gained from attacks while Aspect of the Viper is active by 10%.")]
+        public bool GlyphOfAspectOfTheViper { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(3, "Glyph of Bestial Wrath", true, @"Decreases the cooldown of Bestial Wrath by 20 sec.")]
+        public bool GlyphOfBestialWrath { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(4, "Glyph of Chimera Shot", true, @"Reduces the cooldown of Chimera Shot by 1 sec.")]
+        public bool GlyphOfChimeraShot { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData(5, "Glyph of Deterrence", true, @"Decreases the cooldown of Deterrence by 10 sec.")]
+        public bool GlyphOfDeterrence { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(6, "Glyph of Disengage", true, @"Decreases the cooldown of Disengage by 5 sec.")]
+        public bool GlyphOfDisengage { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        [GlyphData(7, "Glyph of Explosive Shot", true, @"Increases the critical strike chance of Explosive Shot by 4%.")]
+        public bool GlyphOfExplosiveShot { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(8, "Glyph of Explosive Trap", true, @"The periodic damage from your Explosive Trap can now be critical strikes.")]
+        public bool GlyphOfExplosiveTrap { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        [GlyphData(9, "Glyph of Feign Death", false, @"Reduces the cooldown of your Feign Death spell by 5 sec.")]
+        public bool GlyphOfFeignDeath { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        [GlyphData(10, "Glyph of Freezing Trap", true, @"When your Freezing Trap breaks, the victim's movement speed is reduced by 30% for 4 sec.")]
+        public bool GlyphOfFreezingTrap { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(11, "Glyph of Frost Trap", true, @"Increases the radius of the effect from your Frost Trap by 2 yards.")]
+        public bool GlyphOfFrostTrap { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(12, "Glyph of Hunter's Mark", true, @"Increases the attack power bonus of your Hunter's Mark by 20%.")]
+        public bool GlyphOfHuntersMark { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(13, "Glyph of Immolation Trap", true, @"Decreases the duration of the effect from your Immolation Trap by 6 sec., but damage while active is increased by 100%.")]
+        public bool GlyphOfImmolationTrap { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Kill Shot", true, @"Reduces the cooldown of Kill Shot by 6 sec.")]
+        public bool GlyphOfKillShot { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Mend Pet", false, @"Your Mend Pet spell increases your pet's happiness slightly.")]
+        public bool GlyphOfMendPet { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(16, "Glyph of Mending", true, @"Increases the healing done by your Mend Pet ability by 40%.")]
+        public bool GlyphOfMending { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Multi-Shot", true, @"Decreases the cooldown of Multi-Shot by 1 sec.")]
+        public bool GlyphOfMultiShot { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Possessed Strength", false, @"Increases the damage your pet inflicts while using Eyes of the Beast by 50%.")]
+        public bool GlyphOfPossessedStrength { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, "Glyph of Rapid Fire", true, @"Increases the haste from Rapid Fire by an additional 8%.")]
+        public bool GlyphOfRapidFire { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, "Glyph of Raptor Strike", true, @"Reduces damage taken by 20% for 3 sec after using Raptor Strike.")]
+        public bool GlyphOfRaptorStrike { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(21, "Glyph of Revive Pet", false, @"Reduces the pushback suffered from damaging attacks while casting Revive Pet by 100%.")]
+        public bool GlyphOfRevivePet { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, "Glyph of Scare Beast", false, @"Reduces the pushback suffered from damaging attacks while casting Scare Beast by 75%.")]
+        public bool GlyphOfScareBeast { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        [GlyphData(23, "Glyph of Scatter Shot", true, @"Increases the range of Scatter Shot by 3 yards.")]
+        public bool GlyphOfScatterShot { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Serpent Sting", true, @"Increases the duration of your Serpent Sting by 6 sec.")]
+        public bool GlyphOfSerpentSting { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, "Glyph of Snake Trap", true, @"Snakes generated by your Snake Trap take 90% reduced damge from area of effect spells.")]
+        public bool GlyphOfSnakeTrap { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(26, "Glyph of Steady Shot", true, @"Increases the damage dealt by Steady Shot by 10% when your target is afflicted with Serpent Sting.")]
+        public bool GlyphOfSteadyShot { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        [GlyphData(27, "Glyph of the Beast", true, @"Increases the attack power bonus of Aspect of the Beast for you and your pet by an additional 2%.")]
+        public bool GlyphOfTheBeast { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(28, "Glyph of the Hawk", true, @"Increases the haste bonus of the Improved Aspect of the Hawk effect by an additional 6%.")]
+        public bool GlyphOfTheHawk { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
+        [GlyphData(29, "Glyph of the Pack", false, @"Increases the range of your Aspect of the Pack ability by 15 yards.")]
+        public bool GlyphOfThePack { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
+        [GlyphData(30, "Glyph of Trueshot Aura", true, @"While your Trueshot Aura is active, you have 10% increased critical strike chance on your Aimed Shot.")]
+        public bool GlyphOfTrueshotAura { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
+        [GlyphData(31, "Glyph of Volley", true, @"Decreases the mana cost of Volley by 20%.")]
+        public bool GlyphOfVolley { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
+        [GlyphData(32, "Glyph of Wyvern Sting", true, @"Decreases the cooldown of your Wyvern Sting by 6 sec.")]
+        public bool GlyphOfWyvernSting { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+    }
+
 }

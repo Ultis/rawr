@@ -12,9 +12,9 @@ namespace Rawr.Hunter
 		private Aspect _Aspect = Aspect.Hawk;
 		private ShotRotation _shotRotation = ShotRotation.OneToOne;
         private PetFamily _petFamily = PetFamily.Cat;
-        private PetAttacks _petPriority1 = PetAttacks.Bite;
-        private PetAttacks _petPriority2 = PetAttacks.Claw;
-        private PetAttacks _petPriority3 = PetAttacks.None;
+        private PetSkills _petPriority1 = PetSkills.Bite;
+        private PetSkills _petPriority2 = PetSkills.Claw;
+        private PetSkills _petPriority3 = PetSkills.None;
 
         private Shots _shotPriority1 = Shots.SteadyShot;
         private Shots _shotPriority2 = Shots.None;
@@ -23,13 +23,13 @@ namespace Rawr.Hunter
 
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
-		private PetAttacks[] _PetAttacks;
+        private PetSkills[] _PetAttacks;
 
         private bool _useCustomShotRotation = false;
 
 		public CalculationOptionsHunter()
 		{
-            _PetAttacks = new PetAttacks[3];
+            _PetAttacks = new PetSkills[3];
 			_PetAttacks[0] = _petPriority1;
 			_PetAttacks[1] = _petPriority2;
             _PetAttacks[2] = _petPriority3;
@@ -83,20 +83,20 @@ namespace Rawr.Hunter
 			get { return _petFamily; }
 			set { _petFamily = value; }
 		}
-	
-        public PetAttacks PetPriority1
+
+        public PetSkills PetPriority1
 		{
 			get { return _petPriority1; }
 			set { _petPriority1 = value; }
 		}
 
-        public PetAttacks PetPriority2
+        public PetSkills PetPriority2
 		{
 			get { return _petPriority2; }
 			set { _petPriority2 = value; }
 		}
 
-        public PetAttacks PetPriority3
+        public PetSkills PetPriority3
 		{
 			get { return _petPriority3; }
 			set { _petPriority3 = value; }
@@ -126,7 +126,7 @@ namespace Rawr.Hunter
 			set { _latency = value;}
 		}
 
-		public PetAttacks[] PetAttackSequence
+        public PetSkills[] PetAttackSequence
 		{
 			get { return _PetAttacks; }
 			set { _PetAttacks = value; }

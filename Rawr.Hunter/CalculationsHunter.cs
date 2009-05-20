@@ -16,12 +16,14 @@ namespace Rawr.Hunter
 	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", Character.CharacterClass.Hunter)]
 	public class CalculationsHunter : CalculationsBase
     {
+        public const string cszHAEPGraphTitle = "Relative Change in DPS by Stat";
+
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
 				////Relevant Gem IDs for Hunters
-				//Red
+                //Red                                   // Dragon's EYE
 				int[] delicate = { 39905, 39997, 40112, 42143 };
 
 				//Purple
@@ -30,8 +32,8 @@ namespace Rawr.Hunter
 				//Green
 				int[] vivid = { 39975, 40088, 40166 };
 
-				//Yellow
-				int[] rigid = { 39915, 40014, 40125, 42156 };
+				//Yellow                                // Dragon's EYE
+				int[] rigid = { 39915, 40014, 40125,    42156 };
 
 				//Orange
 				int[] glinting = { 39953, 40044, 40148 };
@@ -165,7 +167,7 @@ namespace Rawr.Hunter
 				"Complex Calculated Stats:Overall DPS"
 			};
 
-            customChartNames = new string[] { "Relative Stat Values" };
+            customChartNames = new string[] { cszHAEPGraphTitle };
 
 			relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 					{
@@ -244,7 +246,7 @@ namespace Rawr.Hunter
         {
             switch (chartName)
             {
-                case "Relative Stat Values":
+                case cszHAEPGraphTitle:
                     CharacterCalculationsHunter baseCalc = GetCharacterCalculations(character) as CharacterCalculationsHunter;
                     CharacterCalculationsHunter calcCritValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }) as CharacterCalculationsHunter;
                     CharacterCalculationsHunter calcAPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 2 } }) as CharacterCalculationsHunter;
@@ -280,12 +282,10 @@ namespace Rawr.Hunter
                                     HunterDpsPoints = (calcIntValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcIntValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcIntValue.OverallPoints - baseCalc.OverallPoints),},
-
                                 new ComparisonCalculationHunter() { Name = "+1 ArP Rating", 
                                     HunterDpsPoints = (calcArPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcArPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcArPValue.OverallPoints - baseCalc.OverallPoints),},
-
                     };
 
             }

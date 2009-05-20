@@ -1091,7 +1091,8 @@ namespace Rawr
         {
             HunterTalents clone = (HunterTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
-            //clone._glyphData = (bool[])_glyphData.Clone();
+            // Uncommenting this out so that it handles the glyph data that's now being populated.
+            clone._glyphData = (bool[])_glyphData.Clone();
             return clone;
         }
 
@@ -1577,6 +1578,55 @@ namespace Rawr
         public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
     }
 
+    public partial class HunterPetTalents : TalentsBase, ICloneable
+    {
+        private int[] _data = new int[2];
+        public override int[] Data { get { return _data; } }
+        public HunterPetTalents() { }
+        public HunterPetTalents(string talents)
+        {
+            LoadString(talents);
+        }
+        object ICloneable.Clone()
+        {
+            HunterPetTalents clone = (HunterPetTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            // Pets don't have glyphs
+            //clone._glyphData = (bool[])_glyphData.Clone();
+            return clone;
+        }
+
+        public HunterPetTalents Clone()
+        {
+            return (HunterPetTalents)((ICloneable)this).Clone();
+        }
+
+        public static string[] TreeNames = new string[] {
+@"Cunning",
+@"Ferocity",
+@"Tenacity",};
+
+
+        [TalentData(0, "Improved Aspect of the Hawk", 5, 0, 2, 1, -1, new string[] {
+@"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 3% for 12 sec.",
+@"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 6% for 12 sec.",
+@"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 9% for 12 sec.",
+@"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 12% for 12 sec.",
+@"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 15% for 12 sec.",}, "spell_nature_ravenform")]
+        public int ImprovedAspectOfTheHawk { get { return _data[0]; } set { _data[0] = value; } }
+
+        [TalentData(1, "Endurance Training", 5, 0, 3, 1, -1, new string[] {
+@"Increases the Health of your pet by 2% and your total health by 1%.",
+@"Increases the Health of your pet by 4% and your total health by 2%.",
+@"Increases the Health of your pet by 6% and your total health by 3%.",
+@"Increases the Health of your pet by 8% and your total health by 4%.",
+@"Increases the Health of your pet by 10% and your total health by 5%.",}, "spell_nature_reincarnation")]
+        public int EnduranceTraining { get { return _data[1]; } set { _data[1] = value; } }
+
+  
+    }
+
+    
     public partial class RogueTalents : TalentsBase, ICloneable
     {
         private int[] _data = new int[83];

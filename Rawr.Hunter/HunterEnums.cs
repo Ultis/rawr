@@ -29,31 +29,55 @@ namespace Rawr.Hunter
         ArcaneShot,
     }
 
+    public enum PetClass
+    {
+        Cunning,
+        Ferocity,
+        Tenacity,
+
+        NUM_PetClass, // Always last entry.
+    }
+
+    public enum PetTalents
+    {
+    }
+
     public enum PetFamily
     {
         Bat,
         Bear,
+        BirdofPrey,
         Boar,
         CarrionBird,
         Cat,
+        Chimaera,
+        CoreHound,
         Crab,
         Crocolisk,
+        Devilsaur,
         Dragonhawk,
         Gorilla,
         Hyena,
+        Moth,
         NetherRay,
-        Owl,
         Raptor,
         Ravager,
+        Rhino,
         Scorpid,
         Serpent,
+        Silithid,
         Spider,
+        SpiritBeast,
         SporeBat,
         Tallstrider,
         Turtle,
         WarpStalker,
+        Wasp,
         WindSerpent,
-        Wolf
+        Wolf,
+        Worm,
+
+        NUM_PetFamily // Always last entry.
     }
 
     public enum Faction
@@ -63,24 +87,67 @@ namespace Rawr.Hunter
 		Scryer
 	}
 
-	public enum PetAttacks
-	{
+    public enum PetSkills
+    {
+        None,                   // 0
+
+        ///////////////////////////
+        // Cunning:
+        SonicBlast,             // Bat
+        Snatch,                 // Birds of prey
+        FroststormBreath,       // Chimaeras
+        FireBreath,             // Dragonhawks
+        NetherShock,            // Nether Ray
+        Ravage,                 // Ravager
+        PoisonSpit,             // Serpents
+        VenomWebSpray,          // Silithids
+        Web,                    // Spiders
+        SporeCloud,             // Sporebats
+        LightningBreath,        // WindSerpents.
+
+        ///////////////////////////
+        // Ferocity:
+        DemoralizingScreech,    // Carrion Birds
+        Prowl,                  // Cats
+        Rake,                   // Cats
+        LavaBreath,             // CoreHounds
+        MonstrousBite,          // Devilsaurs
+        TendonRip,              // Hyenas
+        SerenityDust,           // Moths
+        SavageRend,             // Raptors
+        SpiritStrike,           // SpiritBeasts
+        DustCloud,              // TallStriders
+        Sting,                  // Wasps
+        FuriousHowl,            // Wolves
+
+        ///////////////////////////
+        // Tenacity:
+        Swipe,                  // Bear
+        Gore,                   // Boar
+        Pin,                    // Crab
+        BatAttitude,            // Crocolisks
+        Pummel,                 // Gorilla
+        Stampede,               // Rhino
+        ScorpidPoison,          // Scorpid
+        ShellShield,            // Turtle
+        Warp,                   // Warp Stalker
+        AcidSpit,               // Worms
+
+        ///////////////////////////
+        // Focus Dump:
         Bite,
         Claw,
+        Smack,
+
+        ///////////////////////////
+        // Threat:
         Cower,
-        FireBreath,
-        FuriousHowl,
-        Gore,
         Growl,
-        LightningBreath,
-        None,
-        PoisonSpit,
-        ScorpidPoison,
-        Screech,
-        Thunderstomp,
-        Warp
+
+        NUM_PetSkills      // always last.
     }
 
+    // TODO: move these to the global values that include class specific values.
     public class HunterRatings
     {
         public double BASE_HIT_PERCENT = .95; // Check
