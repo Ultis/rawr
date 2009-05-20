@@ -69,7 +69,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UnitTests", "Rawr.Unit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFCA06A8-B40B-4A80-B76F-BA2722AB555A}"
 	ProjectSection(SolutionItems) = preProject
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 		Rawr1.vsmdi = Rawr1.vsmdi
 	EndProjectSection
 EndProject

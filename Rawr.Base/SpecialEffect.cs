@@ -116,9 +116,17 @@ namespace Rawr
                     float y = ivl * intervalN;
                     int j = (int)y;
                     y -= j;
-                    float v0 = grid[i, j] + x * (grid[i + 1, j] - grid[i, j]);
-                    float v1 = grid[i, j + 1] + x * (grid[i + 1, j + 1] - grid[i, j + 1]);
-                    return v0 + y * (v1 - v0);
+                    if (i >= procChanceN)
+                    {
+                        // treat 100% proc chance or higher as 100%, might want to consider throwing exception instead
+                        return grid[procChanceN, j] + y * (grid[procChanceN, j + 1] - grid[procChanceN, j]);
+                    }
+                    else
+                    {
+                        float v0 = grid[i, j] + x * (grid[i + 1, j] - grid[i, j]);
+                        float v1 = grid[i, j + 1] + x * (grid[i + 1, j + 1] - grid[i, j + 1]);
+                        return v0 + y * (v1 - v0);
+                    }
                 }
             }
 
