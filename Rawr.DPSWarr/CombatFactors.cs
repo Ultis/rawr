@@ -37,7 +37,8 @@ namespace Rawr.DPSWarr {
                 }else{
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }
-                if (_talents.TitansGrip == 1 && (MainHand.Slot == Item.ItemSlot.TwoHand || OffHand.Slot == Item.ItemSlot.TwoHand))
+                if (_talents.TitansGrip == 1 && MainHand != null && OffHand != null &&
+                    (MainHand.Slot == Item.ItemSlot.TwoHand || OffHand.Slot == Item.ItemSlot.TwoHand))
                     armorReduction *= 0.9f;
 
                 return armorReduction;
