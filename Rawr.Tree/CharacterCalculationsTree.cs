@@ -47,6 +47,47 @@ namespace Rawr.Tree
             haste_until_soft_cap = soft - BasicStats.HasteRating;
         }
 
+        string LifebloomMethod_ToString(int lbStack, bool LifebloomFastStacking)
+        {
+            string result;
+            if (LifebloomFastStacking)
+            {
+                switch (lbStack)
+                {
+                    case 0: result = "Unused";
+                        break;
+                    case 1: result = "Single blooms";
+                        break;
+                    case 2: result = "Fast Double blooms";
+                        break;
+                    case 3: result = "Fast Triple blooms";
+                        break;
+                    case 4:
+                    default: result = "Stack";
+                        break;
+                }
+            }
+            else
+            {
+                switch (lbStack)
+                {
+                    case 0: result = "Unused";
+                        break;
+                    case 1: result = "Single blooms";
+                        break;
+                    case 2: result = "Slow Double blooms";
+                        break;
+                    case 3: result = "Slow Triple blooms";
+                        break;
+                    case 4:
+                    default: result = "Stack";
+                        break;
+                }
+            }
+
+            return result;
+        }
+
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -99,8 +140,11 @@ namespace Rawr.Tree
                 dictValues.Add("Unused cast time percentage", Math.Round(Simulation.UnusedCastTimeFrac*100.0f, 0).ToString()+"%");
             }
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
+
+            
+            dictValues.Add("Lifebloom method", LifebloomMethod_ToString(Simulation.LifebloomStackSize, Simulation.LifebloomFastStacking));
             dictValues.Add("HPS for primary heal", Math.Round(Simulation.HPSFromPrimary,2).ToString());
-            dictValues.Add("HPS for tank HoTs", Math.Round(Simulation.HPSFromHots,2).ToString());
+            dictValues.Add("HPS for tank HoTs", Math.Round(Simulation.HPSFromHots, 2).ToString() + "*" + Math.Round(Simulation.HPSFromTrueHots, 2).ToString() + " from true HoTs\n" + Math.Round(Simulation.HPSFromHots - Simulation.HPSFromTrueHots, 2).ToString()+" in the form of bursts from Regrowth and LB Blooms");
             dictValues.Add("MPS for primary heal", Math.Round(Simulation.MPSFromPrimary,2).ToString());
             dictValues.Add("MPS for tank HoTs", Math.Round(Simulation.MPSFromHots,2).ToString());
             dictValues.Add("MPS for Wild Growth", Math.Round(Simulation.MPSFromWildGrowth, 2).ToString());
@@ -130,13 +174,21 @@ namespace Rawr.Tree
             dictValues.Add("LB HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
             dictValues.Add("LB HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
-            spell = new Lifebloom(this, BasicStats, 2);
-            dictValues.Add("LBx2 HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
-            dictValues.Add("LBx2 HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
+            spell = new Lifebloom(this, BasicStats, 2, true);
+            dictValues.Add("LBx2 (fast stack) HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
+            dictValues.Add("LBx2 (fast stack) HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
-            spell = new Lifebloom(this, BasicStats, 3);
-            dictValues.Add("LBx3 HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
-            dictValues.Add("LBx3 HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
+            spell = new Lifebloom(this, BasicStats, 3, true);
+            dictValues.Add("LBx3 (fast stack) HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
+            dictValues.Add("LBx3 (fast stack) HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
+
+            spell = new Lifebloom(this, BasicStats, 2, false);
+            dictValues.Add("LBx2 (slow stack) HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
+            dictValues.Add("LBx2 (slow stack) HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
+
+            spell = new Lifebloom(this, BasicStats, 3, false);
+            dictValues.Add("LBx3 (slow stack) HPS", Math.Round(spell.TotalAverageHealing / spell.Duration, 2).ToString());
+            dictValues.Add("LBx3 (slow stack) HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.ManaCost, 2) + " Manacost");
 
             spell = new LifebloomStack(this, BasicStats);
             dictValues.Add("LBS Tick", Math.Round(spell.PeriodicTick, 2).ToString());

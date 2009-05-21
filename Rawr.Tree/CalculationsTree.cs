@@ -11,6 +11,7 @@ namespace Rawr.Tree
         public float MaxHPS;
         public float HPSFromPrimary;
         public float HPSFromHots;
+        public float HPSFromTrueHots;
         public float HPSFromWildGrowth;
         public float HPSFromSwiftmend;
         public float MPSFromPrimary;
@@ -36,6 +37,8 @@ namespace Rawr.Tree
         public float TotalHealsPerMinute;
         public float UnusedMana;
         public float UnusedCastTimeFrac;
+        public int LifebloomStackSize;
+        public bool LifebloomFastStacking;
     }
 
     public enum HealTargetTypes { TankHealing = 0, RaidHealing = 1 };
@@ -174,6 +177,7 @@ namespace Rawr.Tree
                         "Simulation:Unused Mana Remaining",
                         "Simulation:Unused cast time percentage",
                         "Simulation:Total healing done",
+                        "Simulation:Lifebloom method",
                         "Simulation:HPS for tank HoTs",
                         "Simulation:MPS for tank HoTs",
                         "Simulation:HPS for Wild Growth",
@@ -192,10 +196,14 @@ namespace Rawr.Tree
                         "Lifebloom:LB HPS",
                         "Lifebloom:LB HPM",
 
-                        "Lifebloom Stacked Blooms:LBx2 HPS",
-                        "Lifebloom Stacked Blooms:LBx2 HPM",
-                        "Lifebloom Stacked Blooms:LBx3 HPS",
-                        "Lifebloom Stacked Blooms:LBx3 HPM",
+                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPM",
 
                         "Lifebloom Continuous Stack:LBS Tick",
                         "Lifebloom Continuous Stack:LBS HPS",
@@ -381,10 +389,11 @@ namespace Rawr.Tree
             };
         }
         
-        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, int lbOnTank, int nTanks, int swiftmendPMin, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
+        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, int lbOnTank, int nTanks, int swiftmendPMin, Spell primaryHeal, HealTargetTypes primaryHealTarget)
         {
+            float primaryFrac;
             float lifebloomDuration = 0.0f;
-            //Value passed in primaryFrac, not used anymore, this value is calculated to let mana last for the fight duration
+
             #region Spells
             int hots = 0;
             if (rejuvOnTank) hots++;
@@ -395,7 +404,7 @@ namespace Rawr.Tree
             Spell lifebloom = null;
             if ((lbOnTank >= 1)&&(lbOnTank <= 3))
             {
-                lifebloom = new Lifebloom(calculatedStats, stats, lbOnTank);
+                lifebloom = new Lifebloom(calculatedStats, stats, lbOnTank, true);
                 lifebloomDuration = lifebloom.Duration + 1.0f; // Add 1 sec, to make sure bloom has taken place, before applying again
             }
             else if (lbOnTank == 4)
@@ -425,6 +434,7 @@ namespace Rawr.Tree
 
             #region HotsOnTanks
             float hotsHPS = 0;
+            float trueHotsHPS = 0;
             float hotsCastTime = 0;
             float hotsMPS = 0;
             float hotsCastsPerMinute = 0;
@@ -433,6 +443,7 @@ namespace Rawr.Tree
             if (rejuvOnTank)
             {
                 hotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
+                trueHotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
                 hotsMPS += rejuvenate.ManaCost / rejuvenate.Duration;
                 hotsCastTime += rejuvenate.CastTime / rejuvenate.Duration;
                 hotsCastsPerMinute += 60f / rejuvenate.Duration;
@@ -441,6 +452,7 @@ namespace Rawr.Tree
             if (rgOnTank)
             {
                 hotsHPS += regrowth.HPSHoT + regrowth.HPS / regrowth.Duration;
+                trueHotsHPS += regrowth.HPSHoT;
                 hotsMPS += regrowth.ManaCost / regrowth.Duration;
                 hotsCastTime += regrowth.CastTime / regrowth.Duration;
                 hotsCastsPerMinute += 60f / regrowth.Duration;
@@ -452,6 +464,7 @@ namespace Rawr.Tree
             {
                            // HoT part                 Bloom Part
                 hotsHPS += lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloomDuration;
+                trueHotsHPS += lifebloom.HPSHoT;
                 hotsMPS += lifebloom.ManaCost / lifebloomDuration;
                 hotsCastTime += lifebloom.CastTime / lifebloomDuration;
                 hotsCastsPerMinute += 60f / lifebloomDuration;
@@ -459,6 +472,7 @@ namespace Rawr.Tree
                 hotsCritsPerMinute += 60f / lifebloomDuration * lifebloom.CritPercent / 100f;  // Bloom crits
             }
             hotsHPS *= nTanks;
+            trueHotsHPS *= nTanks;
             hotsMPS *= nTanks;
             hotsCastTime *= nTanks;
             hotsCastsPerMinute *= nTanks;
@@ -673,6 +687,7 @@ namespace Rawr.Tree
                 MPS = mps,
                 HPSFromPrimary = hpsHealing,
                 HPSFromHots = hotsHPS,
+                HPSFromTrueHots = trueHotsHPS,
                 HPSFromWildGrowth = wgHPS,
                 HPSFromSwiftmend = swiftHPS,
                 MPSFromPrimary = mpsHealing,
@@ -698,6 +713,8 @@ namespace Rawr.Tree
                 ReplenishRegen = replenishment,
                 UnusedMana = unusedMana,
                 UnusedCastTimeFrac = unusedCastTimeFrac,
+                LifebloomStackSize = lbOnTank,
+                LifebloomFastStacking = (lbOnTank<4),   // Hard-code fast stack
             };
         }
 
@@ -781,7 +798,7 @@ namespace Rawr.Tree
                     }
                     break;
                 case 6:
-                    // RG Raid (1 Tank RJ/LB)
+                    // RG Raid (1 Tank RJ/LBStack)
                     {
                         noTanks = 1;
                         rejuvOnTank = true;
@@ -792,7 +809,18 @@ namespace Rawr.Tree
                     }
                     break;
                 case 7:
-                    // RG Raid (2 Tanks RJ/LB)
+                    // RG Raid (1 Tank RJ/1xLB)
+                    {
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 1;
+                        primaryHeal = new Regrowth(calculatedStats, stats, false);
+                        healTarget = HealTargetTypes.RaidHealing;
+                    }
+                    break;
+                case 8:
+                    // RG Raid (2 Tanks RJ/LBStack)
                     {
                         noTanks = 2;
                         rejuvOnTank = true;
@@ -802,42 +830,87 @@ namespace Rawr.Tree
                         healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
-                case 8:
-                    // RJ Raid (1 Tank RJ/LB)
-                    {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Rejuvenation(calculatedStats, stats);
-                        healTarget = HealTargetTypes.RaidHealing;
-                    }
-                    break;
                 case 9:
-                    // RJ Raid (2 Tanks RJ/LB)
+                    // RG Raid (2 Tanks RJ/LBStack)
                     {
                         noTanks = 2;
                         rejuvOnTank = true;
                         rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                        lifeBloomStackSize = 1;
+                        primaryHeal = new Regrowth(calculatedStats, stats, false);
                         healTarget = HealTargetTypes.RaidHealing;
-
                     }
                     break;
                 case 10:
-                    // N Raid (1 Tank RJ/LB)
+                    // RJ Raid (1 Tank RJ/LBStack)
                     {
                         noTanks = 1;
                         rejuvOnTank = true;
                         rgOnTank = false;
                         lifeBloomStackSize = 4;
-                        primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
                         healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 11:
-                    // N Raid (2 Tanks RJ/LB)
+                    // RJ Raid (1 Tank RJ/1xLB)
+                    {
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 1;
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                        healTarget = HealTargetTypes.RaidHealing;
+                    }
+                    break;
+                case 12:
+                    // RJ Raid (2 Tanks RJ/LBStack)
+                    {
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                        healTarget = HealTargetTypes.RaidHealing;
+
+                    }
+                    break;
+                case 13:
+                    // RJ Raid (2 Tanks RJ/1xLB)
+                    {
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                        healTarget = HealTargetTypes.RaidHealing;
+
+                    }
+                    break;
+                case 14:
+                    // N Raid (1 Tank RJ/LBStack)
+                    {
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        healTarget = HealTargetTypes.RaidHealing;
+                    }
+                    break;
+                case 15:
+                    // N Raid (1 Tank RJ/1xLB)
+                    {
+                        noTanks = 1;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 1;
+                        primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        healTarget = HealTargetTypes.RaidHealing;
+                    }
+                    break;
+                case 16:
+                    // N Raid (2 Tanks RJ/LBStack)
                     {
                         noTanks = 2;
                         rejuvOnTank = true;
@@ -848,7 +921,19 @@ namespace Rawr.Tree
 
                     }
                     break;
-                case 12:
+                case 17:
+                    // N Raid (2 Tanks RJ/1xLB)
+                    {
+                        noTanks = 2;
+                        rejuvOnTank = true;
+                        rgOnTank = false;
+                        lifeBloomStackSize = 4;
+                        primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        healTarget = HealTargetTypes.RaidHealing;
+
+                    }
+                    break;
+                case 18:
                     // N spam
                     {
                         noTanks = 0;
@@ -860,7 +945,7 @@ namespace Rawr.Tree
 
                     }
                     break;
-                case 13:
+                case 19:
                     // HT spam
                     {
                         noTanks = 0;
@@ -872,7 +957,7 @@ namespace Rawr.Tree
 
                     }
                     break;
-                case 14:
+                case 20:
                     // RG spam
                     {
                         noTanks = 0;
@@ -883,7 +968,7 @@ namespace Rawr.Tree
                         healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
-                case 15:
+                case 21:
                     // 2 Tanks (RJ/RG/1xLB*/RG*)
                     {
                         noTanks = 2;
@@ -894,7 +979,7 @@ namespace Rawr.Tree
                         healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
-                case 16:
+                case 22:
                     // 2 Tanks (RJ/RG/2xLB*/RG*)
                     {
                         noTanks = 2;
@@ -905,7 +990,7 @@ namespace Rawr.Tree
                         healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
-                case 17:
+                case 23:
                     // 2 Tanks (RJ/RG/3xLB*/RG*)
                     {
                         noTanks = 2;
@@ -934,8 +1019,7 @@ namespace Rawr.Tree
             result = SimulateHealing(
                             calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
                             rejuvOnTank, rgOnTank, lifeBloomStackSize, noTanks, SwiftmendPerMin,
-                            primaryHeal,
-                            .01f * calcOpts.MainSpellFraction, healTarget);
+                            primaryHeal, healTarget);
             return result;
         }
 
@@ -1133,13 +1217,19 @@ namespace Rawr.Tree
                         "Tank Healing Touch (plus RJ/RG/LB)",
                         "Tank Healing Touch (2 Tanks RJ/RG/LB)",
                         "Tank Regrowth (plus RJ/RG/LB)",
-                        "STank Regrowth (2 Tanks RJ/RG/LB)",
-                        "Raid healing with Regrowth (1 Tank RJ/LB)",
-                        "Raid healing with Regrowth (2 Tanks RJ/LB)",
-                        "Raid healing with Rejuvenation (1 Tank RJ/LB)",
-                        "Raid healing with Rejuvenation (2 Tanks RJ/LB)",
-                        "Raid healing with Nourish (1 Tank RJ/LB)",
-                        "Raid healing with Nourish (2 Tanks RJ/LB)",
+                        "Tank Regrowth (2 Tanks RJ/RG/LB)",
+                        "Raid healing with Regrowth (1 Tank RJ/LBStack)",
+                        "Raid healing with Regrowth (1 Tank RJ/1xLB)",
+                        "Raid healing with Regrowth (2 Tanks RJ/LBStack)",
+                        "Raid healing with Regrowth (2 Tanks RJ/1xLB)",
+                        "Raid healing with Rejuvenation (1 Tank RJ/LBStack)",
+                        "Raid healing with Rejuvenation (1 Tank RJ/1xLB)",
+                        "Raid healing with Rejuvenation (2 Tanks RJ/LBStack)",
+                        "Raid healing with Rejuvenation (2 Tanks RJ/1xLB)",
+                        "Raid healing with Nourish (1 Tank RJ/LBStack)",
+                        "Raid healing with Nourish (1 Tank RJ/1xLB)",
+                        "Raid healing with Nourish (2 Tanks RJ/LBStack)",
+                        "Raid healing with Nourish (2 Tanks RJ/1xLB)",
                         "Nourish spam",
                         "Healing Touch spam",
                         "Regrowth spam",

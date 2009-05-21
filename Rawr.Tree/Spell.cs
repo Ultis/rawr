@@ -548,19 +548,36 @@ namespace Rawr.Tree
             applyHaste();
         }
 
-        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats, int numStacks) : this(calcs, calculatedStats) 
+        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats, int numStacks, bool fastStack) : this(calcs, calculatedStats) 
         {
+            float newPeriodicTicks = periodicTicks;
+
             if (numStacks == 1)
             {
                 // Do nothing, already setup
             }
             else if (numStacks == 2)
             {
-                float newPeriodicTicks = periodicTicks * 2 - 1;  // Double number of ticks, but lose 1
                 manaCost *= 2;
                 manaRefund *= 2;
-                  // N-1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
-                stackScaling = ( (periodicTicks-1)+2*periodicTicks ) / newPeriodicTicks;
+
+                if (!fastStack)
+                {
+                    #region Slow LB stacking
+                    newPeriodicTicks = periodicTicks * 2 - 1;  // Double number of ticks, but lose 1
+                    // N-1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
+                    stackScaling = ((periodicTicks - 1) + 2 * periodicTicks) / newPeriodicTicks;
+                    #endregion
+                }
+                else
+                {
+
+                    #region Fast LB stacking
+                    newPeriodicTicks = periodicTicks + 1;  // Stack every tick 
+                    // 1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
+                    stackScaling = ((1) + 2 * periodicTicks) / newPeriodicTicks;
+                    #endregion
+                }
 
                 stackSize = 2.0f; // Bloom heal doubled
 
@@ -570,11 +587,25 @@ namespace Rawr.Tree
             }
             else if (numStacks == 3)
             {
-                float newPeriodicTicks = periodicTicks * 3 - 2;  // Triple number of ticks, but lose 1 each time
                 manaCost *= 3;
                 manaRefund *= 3;
-                // N-1 ticks of 1 stack + N -1 ticks of 2 stacks, averaged over total ticks
-                stackScaling = ( (periodicTicks - 1) + 2 * (periodicTicks - 1) + 3 * periodicTicks )/ newPeriodicTicks;
+
+                if (!fastStack)
+                {
+                    #region Slow LB stacking
+                    newPeriodicTicks = periodicTicks * 3 - 2;  // Triple number of ticks, but lose 1 each time
+                    // N-1 ticks of 1 stack + N -1 ticks of 2 stacks, averaged over total ticks
+                    stackScaling = ((periodicTicks - 1) + 2 * (periodicTicks - 1) + 3 * periodicTicks) / newPeriodicTicks;
+                    #endregion
+                }
+                else
+                {
+                    #region Fast LB stacking
+                    newPeriodicTicks = periodicTicks + 2;  // Stack every tick 
+                    // 1 ticks of 1 stack + 1 ticks of 2 stacks, averaged over total ticks
+                    stackScaling = ((1) + 2 * (1) + 3 * periodicTicks) / newPeriodicTicks;
+                    #endregion
+                }
 
                 stackSize *= 3.0f; // Bloom heal trippled
 
