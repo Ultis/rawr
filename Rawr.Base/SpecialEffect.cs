@@ -215,7 +215,7 @@ namespace Rawr
             }
         }
 
-        private Dictionary<float, Interpolator> interpolator;
+        private Dictionary<float, Interpolator> interpolator = new Dictionary<float, Interpolator>();
 
         public enum CalculationMode
         {
@@ -601,14 +601,16 @@ namespace Rawr
                     }
                     else if (triggerInterval > 0 && Mode == CalculationMode.Interpolation)
                     {
-                        if (interpolator == null) interpolator = new Dictionary<float, Interpolator>();
-                        Interpolator i;
-                        if (!interpolator.TryGetValue(fightDuration, out i))
+                        lock (interpolator)
                         {
-                            i = new UptimeInterpolator(this, fightDuration);
-                            interpolator[fightDuration] = i;
+                            Interpolator i;
+                            if (!interpolator.TryGetValue(fightDuration, out i))
+                            {
+                                i = new UptimeInterpolator(this, fightDuration);
+                                interpolator[fightDuration] = i;
+                            }
+                            return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                         }
-                        return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                     }
                     else
                     {
@@ -889,14 +891,16 @@ namespace Rawr
             }
             else if (Mode == CalculationMode.Interpolation)
             {
-                if (interpolator == null) interpolator = new Dictionary<float, Interpolator>();
-                Interpolator i;
-                if (!interpolator.TryGetValue(fightDuration, out i))
+                lock (interpolator)
                 {
-                    i = new ProcsPerSecondInterpolator(this, fightDuration);
-                    interpolator[fightDuration] = i;
+                    Interpolator i;
+                    if (!interpolator.TryGetValue(fightDuration, out i))
+                    {
+                        i = new ProcsPerSecondInterpolator(this, fightDuration);
+                        interpolator[fightDuration] = i;
+                    }
+                    return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                 }
-                return i[triggerChance * GetChance(attackSpeed), triggerInterval];
             }
             else
             {
