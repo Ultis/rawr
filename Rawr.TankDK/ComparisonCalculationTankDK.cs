@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Rawr.TankDK
 {
+    // Reminder: this is for an individual item.  Do not apply weighting to this class.  
     class ComparisonCalculationTankDK : ComparisonCalculationBase
     {
         private string _name = string.Empty;
@@ -34,6 +35,7 @@ namespace Rawr.TankDK
 
         public override float OverallPoints
         {
+            // Reminder: this is for an individual item.  Do not apply weighting to this class.  
             get { return Survival + Mitigation + Threat; }
             set { }
         }
@@ -67,10 +69,20 @@ namespace Rawr.TankDK
             set { _equipped = value; }
         }
 
+        /// <summary>
+        /// Name of the Stat to set to 1.00 for relative stats calcs
+        /// </summary>
+        public override String BaseStat { get { return " Stamina"; } }
+
+        /// <summary>
+        /// User Option whether to use the Base Stat feature for relative stats calcs
+        /// </summary>
+        public override bool getBaseStatOption(Character character) { return true; }
+
         public override string ToString()
         {
-            return "";
-            //return string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints));
+            // So that the ToString() function can be used as a base-line comparison if all else fails.
+            return string.Format("{0}: ({1}O = {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(Mitigation), Math.Round(Survival), Math.Round(Threat));
         }
     }
 }

@@ -291,12 +291,12 @@ namespace Rawr.TankDK
         /// will be available to the optimizer
         /// </summary>
         public override string[] OptimizableCalculationLabels { get { return new string[] {
-            "Crit Reduction",
-            "Avoidance",
-            "Damage Reduction",
-            "Target Miss",
-            "Target Parry",
-            "Target Dodge",
+            "Chance to be Crit",
+            "Avoidance %",
+            "Damage Reduction %",
+            "Target Miss %",
+            "Target Parry %",
+            "Target Dodge %",
             "Armor",
 
             }; } 
@@ -319,15 +319,27 @@ namespace Rawr.TankDK
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
+            // TODO: (Shazear) 
+            // There are a number of constants declared below and used immediately.  
+            // Need to break out those constants so as things change in game from patch to patch, we 
+            // don't need to hunt down each value individually.
 
+            // Import the option values from the options tab on the UI.
+            CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
+            // Validate opts 
+            if (null == opts) return null;
+
+            // Setup basic data from the character.
+            // Baseline numbers of race & Class.
+            Stats raceStats = GetRaceStats(character);
+            // Level differences.
             int targetLevel = opts.TargetLevel;
             int characterLevel = character.Level;
-            Stats stats = GetCharacterStats(character, additionalItem);
-            Stats raceStats = GetRaceStats(character);
-
             float levelDifference = (targetLevel - characterLevel) * 0.2f;
+            // The full character data.
+            Stats stats = GetCharacterStats(character, additionalItem);
 
+            // Talent: Unbreakable Armor specific number.
             float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
 
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
@@ -348,7 +360,7 @@ namespace Rawr.TankDK
             float parryPreDR = (defSkill * 0.04f) + (stats.ParryRating + parryRatingFromStr) / 49.18498611f;
 
             float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
-            float missPostDR = 1f / (1f / 16.0f + 0.9560f / missPreDR); //TODO: Search for correct value
+            float missPostDR = 1f / (1f / 16.0f + 0.9560f / missPreDR); 
             float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
 
             float dodgeTotal = dodgeNonDR + dodgePostDR;
@@ -360,9 +372,14 @@ namespace Rawr.TankDK
 
             float currentAvoidance = 100.0f;
 
-            calcs.Miss = missTotal; currentAvoidance -= missTotal;
-            calcs.Dodge = Math.Min(currentAvoidance, dodgeTotal); currentAvoidance -= Math.Min(currentAvoidance, dodgeTotal);
-            calcs.Parry = Math.Min(currentAvoidance, parryTotal); currentAvoidance -= Math.Min(currentAvoidance, parryTotal);
+            calcs.Miss = missTotal; 
+            currentAvoidance -= missTotal;
+
+            calcs.Dodge = Math.Min(currentAvoidance, dodgeTotal); 
+            currentAvoidance -= Math.Min(currentAvoidance, dodgeTotal);
+
+            calcs.Parry = Math.Min(currentAvoidance, parryTotal); 
+            currentAvoidance -= Math.Min(currentAvoidance, parryTotal);
 
             float critReduction = (stats.Defense + defSkill) * 0.04f + stats.Resilience / 81.97497559f;
 
@@ -376,7 +393,13 @@ namespace Rawr.TankDK
             float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f)/* * (1.0f - character.DeathKnightTalents.FrostAura * 0.01f)*/ *
                                 (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime);
 
+            // TODO: (Shazear)
+            // Break out the Surival, Mitigation and Threat math into their own functions.
+            // The goal is to make things more clear so when tweaks are required they can be easily read
+            // and isolated from other aspects of the paperdoll.
+
 //***** Survival Rating *****
+
             float armor = stats.Armor;
             // Armor Damage Reduction is capped at 75%
             float armor_dr = Math.Min(0.75f, armor / (armor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
@@ -420,7 +443,7 @@ namespace Rawr.TankDK
             
 
 
-            // ***** THREAT *****
+// ***** THREAT *****
 
             if (character.MainHand != null)
             {
@@ -535,9 +558,11 @@ namespace Rawr.TankDK
             CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
             DeathKnightTalents talents = character.DeathKnightTalents;
 
+            // Basic racial & class baseline.
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
+            // Why was this pulled?
+            //Stats statsEnchants = GetEnchantsStats(character);  
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
@@ -593,8 +618,10 @@ namespace Rawr.TankDK
             statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
+
+            //Do we really need Int and spirit?  Pulling it.
+            //statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
+            //statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             statsTotal.Armor = (float)Math.Floor(statsGearEnchantsBuffs.Armor * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier) * 1.80f + 2f * statsTotal.Agility);
             statsTotal.Armor *= 1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier;
@@ -604,7 +631,8 @@ namespace Rawr.TankDK
             statsTotal.Health = (float)Math.Floor((statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * 1.10f);
             statsTotal.Health *= (1f + statsGearEnchantsBuffs.BonusHealthMultiplier);
 
-            statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
+            //Do we really need Mana calc?  Pulling it.
+            //statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
 
             statsTotal.Armor += statsTotal.BonusArmor;
@@ -636,13 +664,8 @@ namespace Rawr.TankDK
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
-            //statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
-
-            //statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
-            //statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
-            //statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
 
@@ -663,8 +686,11 @@ namespace Rawr.TankDK
         }
 
 
-        private Stats GetRaceStats(Character character)
+        private Stats GetRaceStats_old(Character character)
         {
+            // Base stats static class implemented... 
+            // Moving this function to pull those values
+            // Keeping this old function for a couple set of unittests and then will purge.
             Stats statsRace;
             switch (character.Race)
             {
@@ -719,6 +745,13 @@ namespace Rawr.TankDK
         }
 
 
+        private Stats GetRaceStats(Character character)
+        {
+            Stats Base = new Stats();
+            Base = BaseStats.GetBaseStats(character);
+            return Base;
+        }
+
         /// <summary>
         /// Filters a Stats object to just the stats relevant to the model.
         /// </summary>
@@ -726,14 +759,14 @@ namespace Rawr.TankDK
         /// <returns>A filtered Stats object containing only the stats relevant to the model.</returns>
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Health = stats.Health,
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
-                Intellect = stats.Intellect,
-                Spirit = stats.Spirit,
+                //Intellect = stats.Intellect, INT & Spirit are relevent?  Really?
+                //Spirit = stats.Spirit,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
 
@@ -747,15 +780,16 @@ namespace Rawr.TankDK
 
                 Resilience = stats.Resilience,
 
-                //AttackPower = stats.AttackPower,
+                // Why was AP, crit, haste, Weapon damage etc removed?  Since it playes into Threat production?
+                AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
-                //CritRating = stats.CritRating,
+                CritRating = stats.CritRating,
                 //ArmorPenetration = stats.ArmorPenetration,
                 ExpertiseRating = stats.ExpertiseRating,
-                //HasteRating = stats.HasteRating,
-                //WeaponDamage = stats.WeaponDamage,
-                //PhysicalCrit = stats.PhysicalCrit,
-                //PhysicalHaste = stats.PhysicalHaste,
+                HasteRating = stats.HasteRating,
+                WeaponDamage = stats.WeaponDamage,
+                PhysicalCrit = stats.PhysicalCrit,
+                PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
 
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
@@ -770,8 +804,56 @@ namespace Rawr.TankDK
                 LotPCritRating = stats.LotPCritRating,
                 CritMeleeRating = stats.CritMeleeRating,
                 WindfuryAPBonus = stats.WindfuryAPBonus,
-                Bloodlust = stats.Bloodlust
+                Bloodlust = stats.Bloodlust,
+
+                // Bringing in some of the relavent stats from DPSDK.
+
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
+
+                BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
+                BonusDeathCoilDamage = stats.BonusDeathCoilDamage,
+                BonusDeathStrikeDamage = stats.BonusDeathStrikeDamage,
+                BonusFrostStrikeDamage = stats.BonusFrostStrikeDamage,
+                BonusHeartStrikeDamage = stats.BonusHeartStrikeDamage,
+                BonusIcyTouchDamage = stats.BonusIcyTouchDamage,
+                BonusObliterateDamage = stats.BonusObliterateDamage,
+                BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
+
             };
+
+            // Also bringing in the trigger events from DPSDK - 
+            // Since I'm going to move the +Def bonus for the Sigil of the Unfaltering Knight
+            // To a special effect.  Also there are alot of OnUse and OnEquip special effects
+            // That probably aren't being taken into effect.
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (HasRelevantStats(effect.Stats))
+                {
+                    if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageSpellCast ||
+                        effect.Trigger == Trigger.DamageSpellCrit ||
+                        effect.Trigger == Trigger.DamageSpellHit ||
+                        effect.Trigger == Trigger.SpellCast ||
+                        effect.Trigger == Trigger.SpellCrit ||
+                        effect.Trigger == Trigger.SpellHit ||
+                        effect.Trigger == Trigger.DoTTick ||
+                        effect.Trigger == Trigger.MeleeCrit ||
+                        effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.PhysicalCrit ||
+                        effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
+                        effect.Trigger == Trigger.IcyTouchHit ||
+                        effect.Trigger == Trigger.PlagueStrikeHit ||
+                        effect.Trigger == Trigger.RuneStrikeHit ||
+                        effect.Trigger == Trigger.Use)
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            return s;
         }
 
 
@@ -779,17 +861,82 @@ namespace Rawr.TankDK
         /// Tests whether there are positive relevant stats in the Stats object.
         /// </summary>
         /// <param name="stats">The complete Stats object containing all stats.</param>
-        /// <returns>True if any of the positive stats in the Stats are relevant.</returns>
+        /// <returns>True if any of the non-Zero stats in the Stats are relevant.  
+        /// I realize that there aren't many stats that have negative values, but for completeness.</returns>
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
-                stats.CritRating + stats.HitRating + stats.BonusArmor +
-                stats.DodgeRating + stats.DefenseRating + stats.ParryRating + stats.Resilience +
-                stats.Dodge + stats.Parry + stats.Defense + stats.BonusArmorMultiplier +
-                stats.BonusHealthMultiplier + stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
-                stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust) != 0;
+            bool bResults = false;
+            bResults |= (stats.Health != 0);
+            bResults |= (stats.Strength != 0);
+            bResults |= (stats.Agility != 0);
+            bResults |= (stats.Stamina != 0);
+            bResults |= (stats.AttackPower != 0);
+            bResults |= (stats.HitRating != 0);
+            bResults |= (stats.CritRating != 0);
+            bResults |= (stats.ArmorPenetration != 0);
+            bResults |= (stats.ExpertiseRating != 0);
+            bResults |= (stats.HasteRating != 0);
+            bResults |= (stats.WeaponDamage != 0);
+            bResults |= (stats.BonusArmor != 0);
+            bResults |= (stats.DodgeRating != 0);
+            bResults |= (stats.DefenseRating != 0);
+            bResults |= (stats.ParryRating != 0);
+            bResults |= (stats.Resilience != 0);
+            bResults |= (stats.Dodge != 0);
+            bResults |= (stats.Parry != 0);
+            bResults |= (stats.Defense != 0);
+            bResults |= (stats.BonusArmorMultiplier != 0);
+            bResults |= (stats.BonusHealthMultiplier != 0);
+            bResults |= (stats.BonusStrengthMultiplier != 0);
+            bResults |= (stats.BonusStaminaMultiplier != 0);
+            bResults |= (stats.BonusAgilityMultiplier != 0);
+            bResults |= (stats.BonusCritMultiplier != 0);
+            bResults |= (stats.BonusAttackPowerMultiplier != 0);
+            bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
+            bResults |= (stats.BonusSpellPowerMultiplier != 0);
+            bResults |= (stats.CritMeleeRating != 0);
+            bResults |= (stats.LotPCritRating != 0);
+            bResults |= (stats.WindfuryAPBonus != 0);
+            bResults |= (stats.Bloodlust != 0);
+
+            // Bringing in the damage stuff from DPSDK for better threat data
+            bResults |= (stats.BonusShadowDamageMultiplier != 0);
+            bResults |= (stats.BonusFrostDamageMultiplier != 0);
+            bResults |= (stats.BonusDiseaseDamageMultiplier != 0);
+
+            bResults |= (stats.BonusBloodStrikeDamage != 0);
+            bResults |= (stats.BonusDeathCoilDamage != 0);
+            bResults |= (stats.BonusDeathStrikeDamage != 0);
+            bResults |= (stats.BonusFrostStrikeDamage != 0);
+            bResults |= (stats.BonusHeartStrikeDamage != 0);
+            bResults |= (stats.BonusIcyTouchDamage != 0);
+            bResults |= (stats.BonusObliterateDamage != 0);
+            bResults |= (stats.BonusScourgeStrikeDamage != 0);
+
+            if (bResults)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    bResults |= (effect.Trigger == Trigger.DamageDone ||
+                                effect.Trigger == Trigger.DamageSpellCast ||
+                                effect.Trigger == Trigger.DamageSpellCrit ||
+                                effect.Trigger == Trigger.DamageSpellHit ||
+                                effect.Trigger == Trigger.SpellCast ||
+                                effect.Trigger == Trigger.SpellCrit ||
+                                effect.Trigger == Trigger.SpellHit ||
+                                effect.Trigger == Trigger.DoTTick ||
+                                effect.Trigger == Trigger.MeleeCrit ||
+                                effect.Trigger == Trigger.MeleeHit ||
+                                effect.Trigger == Trigger.PhysicalCrit ||
+                                effect.Trigger == Trigger.PhysicalHit ||
+                                effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
+                                effect.Trigger == Trigger.IcyTouchHit ||
+                                effect.Trigger == Trigger.PlagueStrikeHit ||
+                                effect.Trigger == Trigger.RuneStrikeHit ||
+                                effect.Trigger == Trigger.Use);
+                }
+            }
+            return bResults;
         }
 
 

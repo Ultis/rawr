@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Rawr.TankDK
 {
+    // Reminder: This is the character totals based on all gear and talents.  Apply the weights here.
     class CharacterCalculationsTankDK : CharacterCalculationsBase
     {
 
@@ -28,7 +29,7 @@ namespace Rawr.TankDK
 
         public float AvoidancePreDR { get; set; }
         public float AvoidancePostDR { get; set; }
-        public float TotalMitigation { get; set; }
+        public float TotalMitigation { get; set; }  // What's the difference between this and Mitigation above?
         public float DamageTaken { get; set; }
         public float CritReduction { get; set; }
         public float CappedCritReduction { get; set; }
@@ -41,7 +42,7 @@ namespace Rawr.TankDK
 
         public float Armor { get; set; }
 
-        public float Crit { get; set; }
+        public float Crit { get; set; } // What's the difference between this and CritReduction above?
         public float Defense { get; set; }
         public float DefenseRating { get; set; }
         public float DefenseRatingNeeded { get; set; }
@@ -63,13 +64,13 @@ namespace Rawr.TankDK
         {
             switch (calculation)
             {
-                case "Crit Reduction": return Crit;
-                case "Avoidance": return Miss + Parry + Dodge;
-                case "Target Miss": return TargetMiss * 100.0f;
-                case "Target Parry": return TargetParry * 100.0f;
-                case "Target Dodge": return TargetDodge * 100.0f;
-                case "Armor Damage Reduction": return ArmorDamageReduction * 100.0f;
-                case "Armor": return Armor;
+                case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
+                case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicat math location?
+                case "Target Miss %": return TargetMiss * 100.0f; 
+                case "Target Parry %": return TargetParry * 100.0f; // Expertise related.
+                case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
+                case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
+                case "Armor": return Armor; // Raw Armor
                 default:
                     return 0.0f;
             }
@@ -88,7 +89,7 @@ namespace Rawr.TankDK
             dict["Parry"] = Parry.ToString("F2");
             dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("F2") + "%";
 
-            dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2");
+            dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2"); // Another duplicate math location.
 
             dict["Health"] = BasicStats.Health.ToString("F0");
             dict["Armor"] = BasicStats.Armor.ToString("F0");
@@ -102,8 +103,10 @@ namespace Rawr.TankDK
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
 
             dict["Overall Points"] = String.Format("{0:0,0}", (Mitigation + Survival));
-            dict["Mitigation Points"] = String.Format("{0:0,0}", Mitigation);
-            dict["Survival Points"] = String.Format("{0:0,0}", Survival);
+            // Modify above to:
+            //dict["Overall Points"] = OverallPoints.ToString("F1"); 
+            dict["Mitigation Points"] = String.Format("{0:0,0}", Mitigation); // Unmodified Mitigation.
+            dict["Survival Points"] = String.Format("{0:0,0}", Survival); // Unmodified Survival
 
             dict["Crit"] = Crit.ToString("F2");
             dict["Defense"] = Defense.ToString("F0");
@@ -114,11 +117,11 @@ namespace Rawr.TankDK
             dict["Target Dodge"] = (TargetDodge * 100.0f).ToString("F1") + "%";
             dict["Target Parry"] = (TargetParry * 100.0f).ToString("F1") + "%";
 
-            dict["Threat"] = Threat.ToString("F1");
-            dict["Overall"] = OverallPoints.ToString("F1");
-            dict["Modified Survival"] = (Survival * SurvivalWeight).ToString("F1");
+            dict["Threat"] = Threat.ToString("F1"); // Unmodified Threat.
+            dict["Overall"] = OverallPoints.ToString("F1");  
+            dict["Modified Survival"] = (Survival * SurvivalWeight).ToString("F1"); // another place of duplicate math.
             dict["Modified Mitigation"] = (Mitigation).ToString("F1");
-            dict["Modified Threat"] = (Threat * ThreatWeight).ToString("F1");
+            dict["Modified Threat"] = (Threat * ThreatWeight).ToString("F1"); // another place of duplicate math.
 
             return dict;
         }
