@@ -51,9 +51,9 @@ namespace Rawr.DPSWarr
 						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", //Strength
 						RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", Enabled = true, // ArPen
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", // ArPen
                         RedId = fractured[1], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", Enabled = true, // Max ArPen
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", // Max ArPen
                         RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
 				};
             }
@@ -277,10 +277,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating,Character.CharacterClass.Warrior);
             // DPS
 
-            calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
-            calculatedStats.WhiteDPSOH = (character.OffHand==null ? 0f : whiteAttacks.CalcOhWhiteDPS());
-            calculatedStats.WhiteDPS   = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-            calculatedStats.WhiteDmg   = combatFactors.AvgMhWeaponDmg;
+            
             //calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
             calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
             calculatedStats.RD = new Skills.Rend(character, stats, combatFactors, whiteAttacks);//calculatedStats.RendDPS = skillAttacks.Rend();
@@ -300,6 +297,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 heroicstrike.bloodsurgeRPS = bloodsurge.GetRageUsePerSecond();
                 newHSActivates = heroicstrike.GetActivates();
             }
+            
+            whiteAttacks.setHSFrequency(heroicstrike.GetActivates() * combatFactors.MainHandSpeed / heroicstrike.GetRotation());
+            calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
+            calculatedStats.WhiteDPSOH = (character.OffHand == null ? 0f : whiteAttacks.CalcOhWhiteDPS());
+            calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
+            calculatedStats.WhiteDmg = combatFactors.AvgMhWeaponDmg;
+
             calculatedStats.BS = bloodsurge;
             calculatedStats.HS = heroicstrike;
             calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
@@ -307,16 +311,17 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
             Skills.DeepWounds deepWounds = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
             // RND and HS are not included because Rend won't crit, and HS replaces a white attack and thus is already covered
-            float allAbilityActivates = calculatedStats.SL.GetActivates() + calculatedStats.MS.GetActivates() +
-                calculatedStats.OP.GetActivates() + calculatedStats.SW.GetActivates() + calculatedStats.SS.GetActivates() +
-                calculatedStats.SW.GetActivates() + calculatedStats.BLS.GetActivates() * 5f +
-                calculatedStats.BS.GetActivates() + calculatedStats.SD.GetActivates() +
-                calculatedStats.BT.GetActivates() +
-                calculatedStats.WW.GetActivates() * (character.OffHand!=null && character.OffHand.Item.Type != Item.ItemType.Shield ? 2f : 1f);
+            float MHAbilityActivates = calculatedStats.SL.GetActivates() + calculatedStats.MS.GetActivates() +
+                calculatedStats.OP.GetActivates() + /*calculatedStats.SW.GetActivates() + calculatedStats.SS.GetActivates()*/ +
+                calculatedStats.BLS.GetActivates() * 6f + calculatedStats.BS.GetActivates() + calculatedStats.SD.GetActivates() +
+                calculatedStats.BT.GetActivates() + calculatedStats.WW.GetActivates();
+            float OHAbilityActivates = 0f;
+            if (character.OffHand != null)
+                OHAbilityActivates = calculatedStats.WW.GetActivates() + calculatedStats.BLS.GetActivates() * 6f;
 
 
 
-            deepWounds.SetAllAbilityActivates(allAbilityActivates);
+            deepWounds.SetAllAbilityActivates(MHAbilityActivates, OHAbilityActivates);
             calculatedStats.DW = deepWounds;
             // Neutral
             // Defensive
@@ -537,19 +542,24 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
-            float strBase = (float)Math.Floor(statsRace.Strength * (1f + statsRace.BonusStrengthMultiplier));
-            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1f + statsRace.BonusStrengthMultiplier));
-            float staBase = (float)Math.Floor(statsRace.Stamina * (1f + statsRace.BonusStaminaMultiplier));
-            float staBonus = (float)Math.Floor((statsGearEnchantsBuffs.Stamina + (float)calcOpts.ToughnessLvl) * (1f + statsRace.BonusStaminaMultiplier));
-            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1f + statsTotal.BonusStaminaMultiplier));
+            float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
+            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
+            float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
+            float staBonus = (float)Math.Floor((statsGearEnchantsBuffs.Stamina + (float)calcOpts.ToughnessLvl) * (1 + statsRace.BonusStaminaMultiplier));
+            //float strModifier = (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier);
+            //float racialStr = /*(float)Math.Floor*/(statsRace.Strength * strModifier);
+            //float gearStr = /*(float)Math.Floor*/(statsGearEnchantsBuffs.Strength * strModifier);
+            //statsTotal.Strength = racialStr + gearStr;
+
+            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
 
             //statsTotal.BonusAttackPowerMultiplier = ((1f + statsRace.BonusAttackPowerMultiplier) * (1f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1f;
             //statsTotal.BonusStrengthMultiplier = ((1f + statsRace.BonusStrengthMultiplier) * (1f + statsGearEnchantsBuffs.BonusStrengthMultiplier) * (1f + 0.02f * character.WarriorTalents.StrengthOfArms) * (1 + character.WarriorTalents.ImprovedBerserkerStance * ((calcOpts.FuryStance) ? 0.04f: 0.00f))) - 1;
             statsTotal.BonusStaminaMultiplier = ((1f + statsRace.BonusStaminaMultiplier) * (1f + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1f;
 
-            statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1f + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1f + statsTotal.BonusStaminaMultiplier ));
+            statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
             statsTotal.Health   = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
 
             statsTotal.Armor += statsTotal.Agility * 2f;
@@ -573,7 +583,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.PhysicalCrit -= (0.006f * (calcOpts.TargetLevel - 80f) + (calcOpts.TargetLevel == 83f ? 0.03f : 0f));
 
             //statsTotal.BonusCritMultiplier += statsGearEnchantsBuffs.BonusCritMultiplier;
-
+            
             //statsTotal.BonusDamageMultiplier += statsGearEnchantsBuffs.BonusDamageMultiplier;
             //statsTotal.BonusPhysicalDamageMultiplier += statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
 
@@ -591,7 +601,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
 
-            Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
+            //Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
 
             float fightDuration = calcOpts.Duration;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);

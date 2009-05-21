@@ -31,11 +31,16 @@ namespace Rawr.DPSWarr {
         }
         public float DamageReduction {
             get {
+                float armorReduction;
                 if(_calcOpts==null){
-				    return Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(80,12900,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
+				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(80,12900,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }else{
-                    return Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
+                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }
+                if (_talents.TitansGrip == 1 && (MainHand.Slot == Item.ItemSlot.TwoHand || OffHand.Slot == Item.ItemSlot.TwoHand))
+                    armorReduction *= 0.9f;
+
+                return armorReduction;
                 //return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
             }
         }
@@ -126,8 +131,8 @@ namespace Rawr.DPSWarr {
         public float OhCrit { get { return CalcCrit(OffHand); } }
         public float OhYellowCrit { get { return CalcYellowCrit(OffHand); } }
         public float GlanceChance { get { return 0.25f; } }
-        public float MhDodgeChance { get { return CalcDodgeChance(MhExpertise) / 100f; } }
-        public float OhDodgeChance { get { return CalcDodgeChance(OhExpertise) / 100f; } }
+        public float MhDodgeChance { get { return CalcDodgeChance(MhExpertise); } }
+        public float OhDodgeChance { get { return CalcDodgeChance(OhExpertise); } }
         public float CalcDodgeChance(float mhExpertise)
         {
             var mhDodgeChance = 0.065f - 0.0025f * mhExpertise;
@@ -141,10 +146,8 @@ namespace Rawr.DPSWarr {
         public float OhExpertise    { get { return CalcExpertise(OffHand); } }
         public float TotalHaste {
             get {   
-                //TODO:  Add WindFury Totem (a straight haste bonus as of patch 3.0)
                 float flurryUptime = CalcFlurryUptime(_stats);
                 float flurryHaste = _talents.Flurry * 0.05f * flurryUptime;
-
                 var totalHaste = 1f;
                 totalHaste *= (1f + flurryHaste) * (1f + StatConversion.GetHasteFromRating(_stats.HasteRating,Character.CharacterClass.Warrior));
                 totalHaste *= 1f + _stats.PhysicalHaste;

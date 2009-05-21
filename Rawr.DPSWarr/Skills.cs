@@ -26,11 +26,14 @@
                 _stats = stats;
                 _combatFactors = combatFactors;
                 _character = character;
+                hsFrequency = 0.0f;
             }
             private readonly WarriorTalents _talents;
             private readonly Stats _stats;
             private readonly CombatFactors _combatFactors;
             private readonly Character _character;
+            private float hsFrequency;
+            public void setHSFrequency(float freq) { hsFrequency = freq; }
             public float CalcMhWhiteDPS() {
                 float wepSpeed = _combatFactors.MainHandSpeed;
                 if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f) {
@@ -42,6 +45,7 @@
                 mhWhiteDPS /= wepSpeed;
                 //mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (_combatFactors.GlanceChance/* - (0.24f * 0.35f)*/); // ebs: WTF?!?
                 mhWhiteDPS *= _combatFactors.DamageReduction;
+                mhWhiteDPS *= (1f - hsFrequency);
                 return mhWhiteDPS;
             }
             public float CalcOhWhiteDPS() {
@@ -49,6 +53,7 @@
                 ohWhiteDPS += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
                 ohWhiteDPS += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
                 ohWhiteDPS /= _combatFactors.OffHandSpeed;
+                ohWhiteDPS *= _combatFactors.DamageReduction;
                 if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
                     return ohWhiteDPS;
                 } else {
@@ -56,7 +61,7 @@
                 }
             }
 
-            public float GetSwingRage(Item i, bool mainoroff) {
+            public float GetSwingRage(Item i, bool isMH) {
                 // d = damage amt
                 // c = rage conversion value
                 // s = weapon speed
@@ -69,18 +74,18 @@
                 s = i.Speed;
 
                 // regular hit
-                d = _combatFactors.AvgWeaponDmg(i,mainoroff) * _combatFactors.DamageReduction;
-                f = (mainoroff ? 3.5f : 1.75f);
+                d = _combatFactors.AvgWeaponDmg(i,isMH) * _combatFactors.DamageReduction;
+                f = (isMH ? 3.5f : 1.75f);
                 rage += RageFormula(d, c, s, f) * _combatFactors.ProbWhiteHit(i);
 
                 // crit
-                d *= _combatFactors.BonusWhiteCritDmg;
-                f = (mainoroff ? 7.0f : 3.5f);
+                d *= (1f + _combatFactors.BonusWhiteCritDmg);
+                f = (isMH ? 7.0f : 3.5f);
                 rage += RageFormula(d, c, s, f) * _combatFactors.CalcCrit(i);
 
                 // glance
-                d = d / _combatFactors.MhCrit * 0.7f;
-                f = (mainoroff ? 3.5f : 1.75f);
+                d = d / (1f + _combatFactors.BonusWhiteCritDmg) * 0.75f;
+                f = (isMH ? 3.5f : 1.75f);
                 rage += RageFormula(d, c, s, f) * _combatFactors.GlanceChance;
 
                 // UW rage per swing
@@ -102,7 +107,7 @@
                 
                 return rage;
             }
-            public float RageFormula(float d, float c, float s, float f) { return 15.0f * d / 4.0f / c + f * s / 2.0f; }
+            public float RageFormula(float d, float c, float s, float f) { return 3.75f * d / c + f * s / 2.0f; }
         }
         // Abilities
         public class Ability {
@@ -349,6 +354,11 @@
                 //    rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
                 //rage *= combatFactors.TotalHaste;
                 rage /*+*/= AngerManagementRagePerSec() + ImprovedBerserkerRagePerSec() + BloodRageGainRagePerSec();
+                
+                // 4pcT7
+                if (StatS.DreadnaughtBonusRageProc != 0f)
+                    rage += 5.0f * 0.1f * ((Talents.DeepWounds > 0f ? 1f : 0f) + (CalcOpts.FuryStance == false ? 1f / 3f : 0f));
+
                 rage *= 1 + Talents.EndlessRage * 0.25f;
 
                 return rage;
@@ -492,9 +502,8 @@ Unending Fury [Increases the damage done by your Slam, Whirlwind and Bloodthirst
             public override float GetActivates() {
                 // Invalidators
                 if (!GetValided()||Talents.Bloodthirst==0f) { return 0f; }
-
+                return 3.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
                 // Actual Calcs
-                return GetRotation() / Cd;
                 //return GetRotation() / Cd;
                 // ORIGINAL LINE
                 //return (3.0f / 16) * Talents.Bloodthirst;
@@ -673,7 +682,11 @@ your next Slam instant for 5 sec.";
                 //Ability HS = new HeroicStrike(Char, StatS, combatFactors, Whiteattacks);
                 
                 float chance = Talents.Bloodsurge * 0.0666666667f;
-                float procs = BT.GetActivates() + WW.GetActivates() + hsActivates;// HS.GetActivates();
+                float chanceMhHitLands = (1f - combatFactors.YellowMissChance + combatFactors.MhDodgeChance);
+                float chanceOhHitLands = (1f - combatFactors.YellowMissChance + combatFactors.OhDodgeChance);
+
+                float procs = BT.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceOhHitLands
+                    + hsActivates*chanceMhHitLands;// HS.GetActivates();
                 procs *= chance;
                 //procs /= GetRotation();
                 // procs = (procs / GetRotation()) - (chance * chance + 0.01f); // WTF is with squaring chance?
@@ -1555,7 +1568,8 @@ extra point of rage into 38 additional damage. Only usable on enemies that have 
                 // float PercDIM = 1.1f;//  this is handled in DamageBonus
                 // float PercWepMod = 1f + 0.02f * Talents.TwoHandedWeaponSpecialization; //  this is handled in DamageBonus
 
-                float bonus = (1f + StatS.BonusSlamDamage);// 2 Pc T7 Set bonus, etc
+                float bonus = (1f + StatS.BonusSlamDamage + 0.02f*Talents.UnendingFury);// 2 Pc T7 Set bonus
+
 
                 // LANDSOUL's VERSION
                 float dmg = bonus * (combatFactors.AvgMhWeaponDmg + 250);
@@ -1599,7 +1613,7 @@ Causes 173.25 additional damage against Dazed targets";
 
                 if (hsHits < 0) { hsHits = 0; }
                 heroicStrikesPerSecond = hsHits;
-
+                
                 return hsHits * GetRotation();
 
                 // ORIGINAL LINE
@@ -1634,7 +1648,7 @@ Causes 173.25 additional damage against Dazed targets";
                 /*if (heroicStrikePercent > 1) { heroicStrikePercent = 1; }
                 float damageIncrease = heroicStrikePercent * (495 + combatFactors.AvgMhWeaponDmg * (0.25f * 0.35f));
                 */
-                float damageIncrease = 495f;
+                float damageIncrease = combatFactors.AvgMhWeaponDmg + 495f;
                 // Talents Affecting
 
                 // Spread this damage over rotation length (turns it into DPS)
@@ -1688,11 +1702,14 @@ average damage over 6 sec.";
                 StanceOkFury = true;
                 StanceOkArms = true;
                 StanceOkDef = true;
-                activates = 0;
+                mhActivates = ohActivates = 0;
             }
             // Variables
-            private float activates;
-            public void SetAllAbilityActivates(float activates) { this.activates = activates; }
+            private float mhActivates, ohActivates;
+            public void SetAllAbilityActivates(float mh, float oh) { 
+                mhActivates = mh * combatFactors.MhYellowCrit + GetRotation() / combatFactors.MainHandSpeed * combatFactors.MhCrit; 
+                ohActivates = oh * combatFactors.OhYellowCrit + GetRotation() / combatFactors.OffHandSpeed * combatFactors.OhCrit; 
+            }
             // Get/Set
             // Functions
             public override float GetActivates() {
@@ -1700,8 +1717,7 @@ average damage over 6 sec.";
                 if (!GetValided()) { return 0f; }
 
                 // Actual Calcs
-                return (activates + GetRotation() / combatFactors.MainHandSpeed + GetRotation() / combatFactors.OffHandSpeed)
-                    * StatS.PhysicalCrit;
+                return mhActivates + ohActivates;
 
                 // ORIGINAL LINE
                 //NONE
@@ -1787,20 +1803,16 @@ average damage over 6 sec.";
 
                 //;
 
-                float damage =
-                    combatFactors.AvgMhWeaponDmg *
-                    // next line replaced by line after it
-                    //((mhCrits + ohCrits) * 100f) *
-                    //critspersec *
-                    (0.16f * Talents.DeepWounds);
+                float damage = combatFactors.AvgMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates+ohActivates) +
+                    combatFactors.AvgOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates+ohActivates);
                 damage *= (1f + StatS.BonusBleedDamageMultiplier);
+                if (Talents.TitansGrip == 1) damage *= 0.9f; // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
 
                 return damage;
             }
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
-                Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
-                // TODO: bleeds aren't affected by armor, so combatFactors needs a bleedDamageReduction
+                //Damage *= combatFactors.DamageBonus; // DW is only affected by % effects in the sense that MHWeaponDmg is, which is already covered
                 //Damage *= combatFactors.DamageReduction; // Global Damage Penalties
 
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
