@@ -564,7 +564,7 @@ namespace Rawr.Tree
             extraMana += extraManaFromPot;
             #endregion
 
-            #region Innervates
+ /*           #region Old_Innervates
             // Wildebees : 20090308 : Reworked Innervate region to:
             //                          move the glyth scaling before the maximum check,
             //                          fixed the maximum mana check, 
@@ -576,9 +576,22 @@ namespace Rawr.Tree
                 manaFromInnervate *= (calcOpts.Innervates + 0.2f);      // Only works for 1 innervate in the fight
             else
                 manaFromInnervate *= calcOpts.Innervates;
+            #endregion */
+
+            #region Innervates
+            float manaFromInnervate = 4.5f * calcOpts.Innervates;       // Use self innervate?
+
+            if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate)
+            {
+                manaFromInnervate += 0.9f;
+            }
+
+            manaFromInnervate *= Rawr.Tree.TreeConstants.BaseMana;
+
+            //TODO: Should we add this limit back in?
             // lets assume the mana return is maximally 95% of your mana
             // thus take the smaller value of 95% of mana pool and total mana regenerated
-            manaFromInnervate = Math.Min(manaFromInnervate, .95f * stats.Mana);
+//            manaFromInnervate = Math.Min(manaFromInnervate, .95f * stats.Mana);
 
             extraMana += manaFromInnervate;
             #endregion
