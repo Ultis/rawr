@@ -52,6 +52,7 @@ namespace Rawr
         public const float RATING_PER_HEALTH = 10.00f; //10 Health per 1 STA;
         public const float RATING_PER_MANA = 15.00f; //15 Mana per 1 INT;
         public const float RATING_PER_DODGEPARRYREDUC = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
+        public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 166.66667f;
@@ -60,16 +61,16 @@ namespace Rawr
         // Sigh, depends on class.
         public static float[] AGI_PER_PHYSICALCRIT = { 0.0f, // CharacterClass starts at 1
             62.50f, // Warrior 1
-            52.08f, // Paladin 2
-            83.33f, // Hunter 3
-            83.33f, // Rogue 4
-            52.08f, // Priest 5
+            52.083f, // Paladin 2
+            83.333f, // Hunter 3
+            83.333f, // Rogue 4
+            52.083f, // Priest 5
             62.50f, // Death Knight 6
-            83.33f, // Shaman 7
-            51.02f, // Mage 8
-            50.51f, // Warlock 9
+            83.333f, // Shaman 7
+            51.0204f, // Mage 8
+            50.505f, // Warlock 9
             0.0f,   // Empty 10
-            83.33f, // Druid 11
+            83.333f, // Druid 11
         };
 
         public static float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
@@ -84,6 +85,100 @@ namespace Rawr
             52.08333333f, // Warlock 9
             0.0f,         // Empty 10
             41.66666667f, // Druid 11
+        };
+
+        public static float[] DR_COEFFIENT = { 0.0f, // Starts at 0
+            0.9560f, // Warrior 1
+            0.9560f, // Paladin 2
+            0.9880f, // Hunter 3
+            0.9880f, // Rogue 4
+            0.9530f, // Priest 5
+            0.9560f, // Death Knight 6
+            0.9880f, // Shaman 7
+            0.9530f, // Mage 8
+            0.9530f, // Warlock 9
+            0.0f,         // Empty 10
+            0.9720f, // Druid 11
+        };
+
+        // This is the cap value for DODGE PERCENTAGE.
+        public static float[] CAP_DODGE = { 0.0f, // Starts at 0
+            88.129021f, // Warrior 1
+            88.129021f, // Paladin 2
+            145.560408f, // Hunter 3
+            145.560408f, // Rogue 4
+            150.375940f, // Priest 5
+            88.129021f, // Death Knight 6
+            145.560408f, // Shaman 7
+            150.375940f, // Mage 8
+            150.375940f, // Warlock 9
+            0.0f,         // Empty 10
+            116.890707f, // Druid 11
+        };
+
+        /// <summary>
+        /// This is the 1/CAP_DODGE to cut down the ammount of math going on.
+        /// </summary>
+        public static float[] CAP_DODGE_INV = { 0.0f, // Starts at 0
+            0.011347f, // Warrior 1
+            0.011347f, // Paladin 2
+            0.006870f, // Hunter 3
+            0.006870f, // Rogue 4
+            0.006650f, // Priest 5
+            0.011347f, // Death Knight 6
+            0.006870f, // Shaman 7
+            0.006650f, // Mage 8
+            0.006650f, // Warlock 9
+            0.0f,         // Empty 10
+            0.008555f, // Druid 11
+        };
+
+        // This is the cap value for PARRY PERCENTAGE.
+        public static float[] CAP_PARRY = { 0.0f, // Starts at 0
+            47.003525f, // Warrior 1
+            47.003525f, // Paladin 2
+            145.560408f, // Hunter 3
+            145.560408f, // Rogue 4
+            0f, // Priest 5
+            47.003525f, // Death Knight 6
+            145.560408f, // Shaman 7
+            0f, // Mage 8
+            0f, // Warlock 9
+            0.0f,         // Empty 10
+            0f, // Druid 11
+        };
+
+        /// <summary>
+        /// This is the 1/CAP_PARRY to cut down the ammount of math going on.
+        /// And prevent divide by 0 errors.
+        /// </summary>
+        public static float[] CAP_PARRY_INV = { 0.0f, // Starts at 0
+            0.021275f, // Warrior 1
+            0.021275f, // Paladin 2
+            0.006870f, // Hunter 3
+            0.006870f, // Rogue 4
+            0f, // Priest 5
+            0.021275f, // Death Knight 6
+            0.006870f, // Shaman 7
+            0f, // Mage 8
+            0f, // Warlock 9
+            0.0f,         // Empty 10
+            0f, // Druid 11
+        };
+
+        //This is the cap value for MISS PERCENTAGE
+        public static float[] CAP_MISSED = { 0.0f, // Starts at 0
+            16f, // Warrior 1
+            16f, // Paladin 2
+            0f, // Hunter 3
+            0f, // Rogue 4
+            0f, // Priest 5
+            16f, // Death Knight 6
+            0f, // Shaman 7
+            0f, // Mage 8
+            0f, // Warlock 9
+            0.0f,         // Empty 10
+            0f, // Druid 11
         };
 
         #endregion
@@ -160,7 +255,7 @@ namespace Rawr
         /// <returns>A Value (5.4 = 5 extra Defense)</returns>
         public static float GetDefenseFromRating(float Rating)
         {
-            return Rating / RATING_PER_DEFENSE;
+            return (float)Math.Floor(Math.Round(Rating / RATING_PER_DEFENSE));
         }
 
         public static float GetDodgeFromRating(float Rating, Character.CharacterClass Class) { return GetDodgeFromRating(Rating); }
@@ -503,6 +598,104 @@ namespace Rawr
                 if (ResistTable[x] > 0f)
                     return 0.1f * x;
             return 0f;
+        }
+
+        // Initial function taken from the ProtWarrior Module.
+        // Then using table found on EJ:
+        // http://elitistjerks.com/f31/t29453-combat_ratings_level_80_a/
+        // creating updated Avoidance Chance w/ DR build in formula.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character">Character in question.</param>
+        /// <param name="stats">Stats object... total stats of the character.</param>
+        /// <param name="avoidanceType">What type of hit is the target doing on the character?</param>
+        /// <param name="TargetLevel">Level of the target being fought</param>
+        /// <returns>A % value where .50 == 50%</returns>
+        public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int TargetLevel) { return GetDRAvoidanceChance(character, stats, avoidanceType, (uint)TargetLevel); }
+        public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, uint TargetLevel)
+        {
+            float levelModifier = (TargetLevel - character.Level) * 0.2f;
+            float defSkill = (GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
+            float defSkillMod = (defSkill * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
+            float baseAvoid = 0.0f;
+            float modifiedAvoid = defSkillMod;
+            float finalAvoid = 0f; // I know it breaks my lack of redundancy rule, but it helps w/ readability.
+            int iClass = (int)character.Class;
+
+            switch (avoidanceType)
+            {
+                case HitResult.Dodge:
+                    baseAvoid = ((stats.Dodge + GetDodgeFromAgility(stats.BaseAgility, character.Class)) * 100f) - levelModifier;
+                    modifiedAvoid += (GetDodgeFromAgility((stats.Agility - stats.BaseAgility), character.Class) +
+                                    GetDodgeFromRating(stats.DodgeRating) * 100f);
+                    modifiedAvoid = DRMath(CAP_DODGE_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
+                    break;
+                case HitResult.Parry:
+                    baseAvoid = stats.Parry * 100f - levelModifier;
+                    // Need to ensure that for DKs we include Parry from str effected by DR.
+                    float parryRatingFromStr = 0f;
+                    if (character.Class == Character.CharacterClass.DeathKnight)
+                    {
+                        // Talent: Unbreakable Armor specific number.
+                        float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
+                        parryRatingFromStr = stats.Strength * (1.0f + uaUptime) * 0.25f;
+                    }
+                    modifiedAvoid += (GetParryFromRating(stats.ParryRating + parryRatingFromStr) * 100f);
+                    modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
+                    break;
+                case HitResult.Miss:
+                    // Base Miss rate according is 5%
+                    // However, this can be talented up (e.g. Frigid Dreadplate, NE racial, etc.) 
+                    baseAvoid = stats.Miss * 100f - levelModifier;
+                    modifiedAvoid = DRMath( (1f/CAP_MISSED[iClass]), DR_COEFFIENT[iClass], modifiedAvoid );
+                    // Factoring in the Miss Cap. 
+                    modifiedAvoid = Math.Min(CAP_MISSED[iClass], modifiedAvoid);
+                    break;
+                case HitResult.Block:
+                    // The 5% base block should be moved into stats.Block as a base value like the others
+                    baseAvoid = 5.0f + stats.Block - levelModifier;
+                    modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
+                    break;
+                case HitResult.Crit:
+                    modifiedAvoid += (GetResilienceFromRating(stats.Resilience) * 100f);
+                    break;
+            }
+
+            // Many of the base values are whole numbers, so need to get it back to decimal. 
+            // May want to look at making this more consistant in the future.
+            finalAvoid = (baseAvoid + modifiedAvoid) / 100.0f;
+            return finalAvoid;
+        }
+        /// <summary>
+        /// StatPostDR =  1/(CAP_STAT_INV + COEF/StatPreDR)
+        /// </summary>
+        /// <param name="inv_cap">One of the CAP_STAT_INV values, appropriate for the class.</param>
+        /// <param name="coefficient">One of the DR_COEF values, appropriate for the class.</param>
+        /// <param name="valuePreDR">The value of the stat before DR are factored in.</param>
+        /// <returns></returns>
+        private static float DRMath(float inv_cap, float coefficient, float valuePreDR)
+        {
+            float DRValue = 0f;
+            DRValue = 1f / (inv_cap + coefficient / valuePreDR);
+            return DRValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="stats">Be sure to pass in the total character's stats.  Not just his gear.</param>
+        /// <param name="TargetLevel">Level of the mob to be tanked.  Usually 82 or 83.</param>
+        /// <returns></returns>
+        public static float GetDefenseRatingNeeded(Character character, Stats stats, int TargetLevel) { return GetDefenseRatingNeeded(character, stats, (uint)TargetLevel); }
+        public static float GetDefenseRatingNeeded(Character character, Stats stats, uint TargetLevel)
+        {
+            // Should be 689(DefRating) - stats.DefenseRating. vs. level 83 mob.
+            // And/or 459.2(Resilience) - stats.ResilienceRating
+            float fAvoidance = GetDRAvoidanceChance(character, stats, HitResult.Crit, (uint)TargetLevel);
+            float critChance = (5.0f + ((TargetLevel - character.Level) * 0.2f)) - (fAvoidance * 100);
+            return (critChance / DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * RATING_PER_DEFENSE;
         }
 
         /* Not yet completed.

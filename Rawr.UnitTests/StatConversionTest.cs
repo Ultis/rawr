@@ -1,6 +1,6 @@
 ﻿using Rawr;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace Rawr.zzTestzz
+namespace Rawr.UnitTests
 {
     
     
@@ -14,7 +14,6 @@ namespace Rawr.zzTestzz
 
 
         private TestContext testContextInstance;
-
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
@@ -60,6 +59,61 @@ namespace Rawr.zzTestzz
         //}
         //
         #endregion
+
+        /// <summary>
+        ///A test for GetDRAvoidanceChance
+        ///</summary>
+        [TestMethod()]
+        public void GetDRAvoidanceChanceTest_Warrior_NoGear()
+        {
+            ItemInstance[] IIArray = new ItemInstance[1];
+            Character toon = new Character("TestWarrior", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Assert.IsNotNull(toon);
+            //toon.Level = 80;  //Asumption here.
+            toon.Class = Character.CharacterClass.Warrior;
+
+            Stats stats = new Stats();
+            uint TargetLevel = 83;
+            float[] expected = new float[(int)HitResult.NUM_HitResult];
+            expected[(int)HitResult.Miss] = -0.006f;
+            expected[(int)HitResult.Dodge] = -0.006f;
+            expected[(int)HitResult.Parry] = -0.006f;
+            expected[(int)HitResult.Block] = 0.044f;
+            expected[(int)HitResult.Crit] = -0f;
+
+            // Iterate through the hit result types.
+            for (HitResult i = 0; i < HitResult.NUM_HitResult; i++)
+            {
+                float actual = StatConversion.GetDRAvoidanceChance(toon, stats, i, TargetLevel);
+                Assert.AreEqual(expected[(int)i], actual, i.ToString());
+            }
+        }
+
+        /// <summary>
+        ///A test for GetDefenseFromRating
+        ///</summary>
+        [TestMethod()]
+        public void GetDefenseFromRatingTest_zero()
+        {
+            float Rating = 0F; 
+            float expected = 0F; 
+            float actual;
+            actual = StatConversion.GetDefenseFromRating(Rating);
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        ///A test for GetDefenseFromRating
+        ///</summary>
+        [TestMethod()]
+        public void GetDefenseFromRatingTest_CritCap()
+        {
+            float Rating = 689F;
+            float expected = 140F;
+            float actual;
+            actual = StatConversion.GetDefenseFromRating(Rating);
+            Assert.AreEqual(expected, actual);
+        }
 
         /* Commenting out the tests that aren't implemented yet.
          * 
@@ -557,35 +611,6 @@ namespace Rawr.zzTestzz
         }
 
         /// <summary>
-        ///A test for GetDefenseFromRating
-        ///</summary>
-        [TestMethod()]
-        public void GetDefenseFromRatingTest1()
-        {
-            float Rating = 0F; // TODO: Initialize to an appropriate value
-            float expected = 0F; // TODO: Initialize to an appropriate value
-            float actual;
-            actual = StatConversion.GetDefenseFromRating(Rating);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-
-        /// <summary>
-        ///A test for GetDefenseFromRating
-        ///</summary>
-        [TestMethod()]
-        public void GetDefenseFromRatingTest()
-        {
-            float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
-            float expected = 0F; // TODO: Initialize to an appropriate value
-            float actual;
-            actual = StatConversion.GetDefenseFromRating(Rating, Class);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-
-        /// <summary>
         ///A test for GetCritFromRating
         ///</summary>
         [TestMethod()]
@@ -752,5 +777,7 @@ namespace Rawr.zzTestzz
         }
          * 
          */
+
     }
 }
+

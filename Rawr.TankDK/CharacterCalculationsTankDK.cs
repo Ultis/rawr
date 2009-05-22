@@ -31,15 +31,10 @@ namespace Rawr.TankDK
         public float AvoidancePostDR { get; set; }
         public float TotalMitigation { get; set; }  // What's the difference between this and Mitigation above?
         public float DamageTaken { get; set; }
-        public float CritReduction { get; set; }
-        public float CappedCritReduction { get; set; }
+//        public float CritReduction { get; set; }
+//        public float CappedCritReduction { get; set; }
 
         public float ArmorDamageReduction { get; set; }
-
-        public float DRDefense { get; set; }
-        public float DRParry { get; set; }
-        public float DRDodge { get; set; }
-
         public float Armor { get; set; }
 
         public float Crit { get; set; } // What's the difference between this and CritReduction above?
@@ -80,16 +75,12 @@ namespace Rawr.TankDK
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
-            dict["DR Defense"] = DRDefense.ToString("F2") + "%";
-            dict["DR Parry"] = DRParry.ToString("F2") + "%";
-            dict["DR Dodge"] = DRDodge.ToString("F2") + "%";
-
-            dict["Miss"] = Miss.ToString("F2");
-            dict["Dodge"] = Dodge.ToString("F2");
-            dict["Parry"] = Parry.ToString("F2");
+            dict["Miss"] = Miss.ToString("F2") + "%";
+            dict["Dodge"] = Dodge.ToString("F2") + "%";
+            dict["Parry"] = Parry.ToString("F2") + "%";
             dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("F2") + "%";
 
-            dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2"); // Another duplicate math location.
+            dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2") + "%"; // Another duplicate math location.
 
             dict["Health"] = BasicStats.Health.ToString("F0");
             dict["Armor"] = BasicStats.Armor.ToString("F0");
@@ -101,6 +92,8 @@ namespace Rawr.TankDK
             dict["Crit Rating"] = BasicStats.CritRating.ToString("F0");
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
+            dict["Armor Penetration"] = BasicStats.ArmorPenetration.ToString("F0");
+            dict["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString("F0");
 
             dict["Overall Points"] = String.Format("{0:0,0}", (Mitigation + Survival));
             // Modify above to:

@@ -460,6 +460,23 @@ namespace Rawr {
         NUM_NonStackingStat // This should always be the last entry.
     }
 
+    // Pulling this from ProtWar/ProtPally so that it can be used in other common areas.
+    public enum HitResult
+    {
+        AnyMiss,
+        AnyHit,
+        Miss,
+        Dodge,
+        Parry,
+        Block,
+        Glance,
+        Resist,
+        Crit,
+        Hit,
+
+        NUM_HitResult, // Always the last entry in the enum.
+    }
+
     [System.AttributeUsage(System.AttributeTargets.Property)]
     public class CommonStat : System.Attribute {
         public static float GetCommonStatMinimumRange(PropertyInfo property) {
