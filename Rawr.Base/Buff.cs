@@ -2914,9 +2914,9 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
                 {
-                    BonusRPFromDeathStrike = 10f,
-                    BonusRPFromObliterate = 10f,
-                    BonusRPFromScourgeStrike = 10f
+                    BonusRPFromDeathStrike = 5f,
+                    BonusRPFromObliterate = 5f,
+                    BonusRPFromScourgeStrike = 5f
                 },
                 SetName = "Scourgeborne Battlegear",
                 SetThreshold = 4
@@ -2930,8 +2930,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
                 {
-                    BonusDeathCoilCrit = 0.05f,
-                    BonusFrostStrikeCrit = 0.05f
+                    BonusDeathCoilCrit = 0.08f,
+                    BonusFrostStrikeCrit = 0.08f
                 },
                 SetName = "Darkruned Battlegear",
                 SetThreshold = 2
