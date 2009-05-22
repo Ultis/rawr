@@ -1087,7 +1087,7 @@ namespace Rawr
             }
 		}
 
-        public int GetJewelerCount()
+        private void UpdateJewelerCount()
         {
             int jewelerCount = 0;
             for (int index = 1; index <= 3; index++)
@@ -1098,8 +1098,11 @@ namespace Rawr
                     jewelerCount++;
                 }
             }
-            return jewelerCount;
+            JewelerCount = jewelerCount;
         }
+
+        [XmlIgnore]
+        public int JewelerCount { get; private set; }
 
         [DefaultValueAttribute(false)]
         public bool ForceDisplay { get; set; }
@@ -1109,6 +1112,7 @@ namespace Rawr
         {
             _gemmedId = string.Empty;
             InvalidateCachedData();
+            UpdateJewelerCount();
             if (IdsChanged != null) IdsChanged(this, null);
         }
 
@@ -1299,6 +1303,7 @@ namespace Rawr
 			_gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
 			_gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
 			_enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+            UpdateJewelerCount();
 		}
 		public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId)
 		{
@@ -1307,7 +1312,8 @@ namespace Rawr
 			_gem2Id = gem2Id;
 			_gem3Id = gem3Id;
 			_enchantId = enchantId;
-		}
+            UpdateJewelerCount();
+        }
         public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant)
         {
             Item = item;

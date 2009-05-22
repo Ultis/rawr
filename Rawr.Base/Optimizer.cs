@@ -1145,7 +1145,7 @@ namespace Rawr.Optimizer
                 int minJeweler = slotItems[slot].Count > 0 ? 3 : 0;
                 foreach (ItemInstance itemInstance in slotItems[slot])
                 {
-                    int jewelerCount = itemInstance == null ? 0 : itemInstance.GetJewelerCount();
+                    int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
                     if (jewelerCount < minJeweler)
                     {
                         minJeweler = jewelerCount;
@@ -1719,7 +1719,7 @@ namespace Rawr.Optimizer
                     ItemInstance item = (ItemInstance)items[s];
                     if (item != null)
                     {
-                        min += item.GetJewelerCount();
+                        min += item.JewelerCount;
                     }
                 }
                 for (int s = slot + 1; s < characterSlots; s++)
@@ -1734,7 +1734,7 @@ namespace Rawr.Optimizer
                     KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot][rand.Next(slotItemsRandom[slot].Count)];
                     KeyedList<ItemInstance> list2 = list1[rand.Next(list1.Count)];
                     result = list2[rand.Next(list2.Count)];
-                } while (count++ < 10 && result != null && result.GetJewelerCount() > max);
+                } while (count++ < 10 && result != null && result.JewelerCount > max);
                 return result;
             }
         }
@@ -1753,22 +1753,22 @@ namespace Rawr.Optimizer
                         ItemInstance item = (ItemInstance)items[s];
                         if (item != null)
                         {
-                            min += item.GetJewelerCount();
+                            min += item.JewelerCount;
                         }
                     }
                     for (int s = slot + 1; s < characterSlots; s++)
                     {
                         ItemInstance item1 = (ItemInstance)father.Items[s];
-                        int c1 = item1 == null ? 0 : item1.GetJewelerCount();
+                        int c1 = item1 == null ? 0 : item1.JewelerCount;
                         ItemInstance item2 = (ItemInstance)mother.Items[s];
-                        int c2 = item2 == null ? 0 : item2.GetJewelerCount();
+                        int c2 = item2 == null ? 0 : item2.JewelerCount;
                         min += Math.Min(c1, c2);
                     }
                     int max = 3 - min;
                     ItemInstance f = (ItemInstance)father.Items[slot];
-                    int fc = f == null ? 0 : f.GetJewelerCount();
+                    int fc = f == null ? 0 : f.JewelerCount;
                     ItemInstance m = (ItemInstance)mother.Items[slot];
-                    int mc = m == null ? 0 : m.GetJewelerCount();
+                    int mc = m == null ? 0 : m.JewelerCount;
                     if (fc > max)
                     {
                         return m;
