@@ -73,9 +73,9 @@ namespace Rawr.DPSDK
             this.GlyphofIT = talents.GlyphofIcyTouch;
             this.GlyphofFS = talents.GlyphofFrostStrike;
 
-            RP = ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (Obliterate)) +
-                ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
-                ((15 + (fourT7 ? 10 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
+            RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave) * (Obliterate)) +
+                ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
+                ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
                 (10 * (PlagueStrike + BloodStrike + HeartStrike)) +
                 ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
