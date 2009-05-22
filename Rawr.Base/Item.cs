@@ -1087,6 +1087,20 @@ namespace Rawr
             }
 		}
 
+        public int GetJewelerCount()
+        {
+            int jewelerCount = 0;
+            for (int index = 1; index <= 3; index++)
+            {
+                Item gem = GetGem(index);
+                if (gem != null && gem.IsJewelersGem)
+                {
+                    jewelerCount++;
+                }
+            }
+            return jewelerCount;
+        }
+
         [DefaultValueAttribute(false)]
         public bool ForceDisplay { get; set; }
 

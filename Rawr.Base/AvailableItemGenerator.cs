@@ -547,9 +547,14 @@ namespace Rawr.Optimizer
             List<Enchant> filteredList = new List<Enchant>();
             foreach (Enchant enchant in unfilteredList)
             {
-                if (enchant == null)
+                if (enchant.Id == 0)
                 {
-                    filteredList.Add(enchant);
+                    // only add no enchant if it is the only enchant
+                    // it won't be filtered because it has a null slot
+                    if (unfilteredList.Count == 1)
+                    {
+                        filteredList.Add(enchant);
+                    }
                     continue;
                 }
 

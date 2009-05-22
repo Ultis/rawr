@@ -307,6 +307,7 @@ namespace Rawr.Optimizer
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
 
             slotItemsRandom = new List<KeyedList<KeyedList<ItemInstance>>>[characterSlots];
+            minJeweler = new int[characterSlots];
         }
 
         public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs)
@@ -1117,6 +1118,7 @@ namespace Rawr.Optimizer
             public string Key { get; set; }
         }
         List<KeyedList<KeyedList<ItemInstance>>>[] slotItemsRandom;
+        int[] minJeweler;
         List<object> lockedItems;
         Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
         AvailableItemGenerator itemGenerator;
@@ -1140,8 +1142,14 @@ namespace Rawr.Optimizer
             for (int slot = 0; slot < characterSlots; slot++)
             {
                 slotItemsRandom[slot] = new List<KeyedList<KeyedList<ItemInstance>>>();
+                int minJeweler = slotItems[slot].Count > 0 ? 3 : 0;
                 foreach (ItemInstance itemInstance in slotItems[slot])
                 {
+                    int jewelerCount = itemInstance == null ? 0 : itemInstance.GetJewelerCount();
+                    if (jewelerCount < minJeweler)
+                    {
+                        minJeweler = jewelerCount;
+                    }
                     string gemmedId = ((object)itemInstance == null) ? "0.0.0.0.0" : itemInstance.GemmedId;
                     string key1 = ((object)itemInstance == null) ? "0" : itemInstance.Id.ToString();
                     string key2 = ((object)itemInstance == null) ? "0" : itemInstance.EnchantId.ToString();
@@ -1161,6 +1169,7 @@ namespace Rawr.Optimizer
                     }
                     list2.Add(itemInstance);
                 }
+                this.minJeweler[slot] = minJeweler;
             }
 
             pairSlotMap = new int[characterSlots];
@@ -1702,10 +1711,77 @@ namespace Rawr.Optimizer
             }
             else
             {
-                KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot][rand.Next(slotItemsRandom[slot].Count)];
-                KeyedList<ItemInstance> list2 = list1[rand.Next(list1.Count)];
-                return list2[rand.Next(list2.Count)];
+                // select random item such that jeweler count won't exceed maximum
+                // first count how many jewelers at minimum we will have assuming what we have so far and the minimum available from the rest of slots
+                int min = 0;
+                for (int s = 0; s < slot; s++)
+                {
+                    ItemInstance item = (ItemInstance)items[s];
+                    if (item != null)
+                    {
+                        min += item.GetJewelerCount();
+                    }
+                }
+                for (int s = slot + 1; s < characterSlots; s++)
+                {
+                    min += minJeweler[s];
+                }
+                int max = 3 - min; // we can use at most this many if we want to be possible to be feasible
+                ItemInstance result = null;
+                int count = 0;
+                do
+                {
+                    KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot][rand.Next(slotItemsRandom[slot].Count)];
+                    KeyedList<ItemInstance> list2 = list1[rand.Next(list1.Count)];
+                    result = list2[rand.Next(list2.Count)];
+                } while (count++ < 10 && result != null && result.GetJewelerCount() > max);
+                return result;
             }
+        }
+
+        protected override OptimizerCharacter BuildChildIndividual(OptimizerCharacter father, OptimizerCharacter mother)
+        {
+            // jewelcrafter preserving crossover
+            // an alternative option would be to add optimizer constraints that restarted character construction if jewelcrafter
+            // gems exceeded limit, it is not clear without testing which option is better
+            return GeneratorBuildIndividual(
+                delegate(int slot, object[] items)
+                {
+                    int min = 0;
+                    for (int s = 0; s < slot; s++)
+                    {
+                        ItemInstance item = (ItemInstance)items[s];
+                        if (item != null)
+                        {
+                            min += item.GetJewelerCount();
+                        }
+                    }
+                    for (int s = slot + 1; s < characterSlots; s++)
+                    {
+                        ItemInstance item1 = (ItemInstance)father.Items[s];
+                        int c1 = item1 == null ? 0 : item1.GetJewelerCount();
+                        ItemInstance item2 = (ItemInstance)mother.Items[s];
+                        int c2 = item2 == null ? 0 : item2.GetJewelerCount();
+                        min += Math.Min(c1, c2);
+                    }
+                    int max = 3 - min;
+                    ItemInstance f = (ItemInstance)father.Items[slot];
+                    int fc = f == null ? 0 : f.GetJewelerCount();
+                    ItemInstance m = (ItemInstance)mother.Items[slot];
+                    int mc = m == null ? 0 : m.GetJewelerCount();
+                    if (fc > max)
+                    {
+                        return m;
+                    }
+                    else if (mc > max)
+                    {
+                        return f;
+                    }
+                    else
+                    {
+                        return rand.NextDouble() < 0.5d ? f : m;
+                    }
+                });
         }
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
