@@ -604,7 +604,8 @@ namespace Rawr.DPSDK
                 if (talents.ScourgeStrike > 0 && calcOpts.rotation.ScourgeStrike > 0f)
                 {
                     float SSCD = combatTable.realDuration / calcOpts.rotation.ScourgeStrike;
-                    float SSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (.45f + 0.11f * .45f * calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage)) + 357.188f +
+                    float SSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 
+                        (.45f + .45f * calcOpts.rotation.avgDiseaseMult * stats.BonusPerDiseaseScourgeStrikeDamage) + 357.188f +
                         stats.BonusScourgeStrikeDamage;
                     dpsScourgeStrike = SSDmg / SSCD;
                     float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.CritBonusDamage;
@@ -702,7 +703,8 @@ namespace Rawr.DPSDK
                 {
                     // this is missing +crit chance from rime
                     float OblitCD = combatTable.realDuration / calcOpts.rotation.Obliterate;
-                    float OblitDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.8f + 0.125f * 0.8f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage))) +
+                    float OblitDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 
+                        (0.8f + 0.8f * (float)calcOpts.rotation.avgDiseaseMult * stats.BonusPerDiseaseObliterateDamage)) +
                         stats.BonusObliterateDamage;
                     dpsObliterate = OblitDmg / OblitCD;
                     //float OblitCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
@@ -743,7 +745,8 @@ namespace Rawr.DPSDK
                 if (calcOpts.rotation.BloodStrike > 0f)
                 {
                     float BSCD = combatTable.realDuration / calcOpts.rotation.BloodStrike;
-                    float BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.4f + 0.125f * 0.4f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage))) +
+                    float BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 
+                        (0.4f + 0.4f * (float)calcOpts.rotation.avgDiseaseMult * stats.BonusPerDiseaseBloodStrikeDamage)) +
                         305.6f + stats.BonusBloodStrikeDamage;
                     dpsBloodStrike = BSDmg / BSCD;
                     float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
@@ -761,7 +764,8 @@ namespace Rawr.DPSDK
                 if (talents.HeartStrike > 0 && calcOpts.rotation.HeartStrike > 0f)
                 {
                     float HSCD = combatTable.realDuration / calcOpts.rotation.HeartStrike;
-                    float HSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * (0.5f + 0.1f * 0.5f * (float)calcOpts.rotation.avgDiseaseMult) * (1f + stats.BonusPerDiseaseHeartStrikeDamage)) +
+                    float HSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 
+                        (0.5f + 0.5f * (float)calcOpts.rotation.avgDiseaseMult) * stats.BonusPerDiseaseHeartStrikeDamage) +
                         368f + stats.BonusHeartStrikeDamage;
                     dpsHeartStrike = HSDmg / HSCD;
                     //float HSCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
