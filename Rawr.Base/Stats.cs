@@ -3376,7 +3376,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("Bonus Bleed Damage Multiplier")]
+        [DisplayName("% Bonus Bleed Damage Multiplier")]
         [Category("Buffs / Debuffs")]
         public float BonusBleedDamageMultiplier
         {

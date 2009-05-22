@@ -43,7 +43,7 @@
                 mhWhiteDPS += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1+_combatFactors.BonusWhiteCritDmg);
                 mhWhiteDPS += _combatFactors.AvgMhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
                 mhWhiteDPS /= wepSpeed;
-                //mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (_combatFactors.GlanceChance/* - (0.24f * 0.35f)*/); // ebs: WTF?!?
+                //mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (_combatFactors.GlanceChance/* - (0.24f * 0.35f)*/)); // ebs: WTF?!?
                 mhWhiteDPS *= _combatFactors.DamageReduction;
                 mhWhiteDPS *= (1f - hsFrequency);
                 return mhWhiteDPS;
@@ -60,37 +60,33 @@
                     return 0f;
                 }
             }
-
             public float GetSwingRage(Item i, bool isMH) {
                 // d = damage amt
-                // c = rage conversion value
                 // s = weapon speed
                 // f = hit factor
 
-                float c, d, s, f, rage;
+                float d, s, f, rage;
 
                 rage = 0.0f;
-                c = 0.0091107836f * _character.Level * _character.Level + 3.225598133f * _character.Level + 4.2652911f;
                 s = i.Speed;
 
                 // regular hit
                 d = _combatFactors.AvgWeaponDmg(i,isMH) * _combatFactors.DamageReduction;
                 f = (isMH ? 3.5f : 1.75f);
-                rage += RageFormula(d, c, s, f) * _combatFactors.ProbWhiteHit(i);
+                rage += RageFormula(d, s, f) * _combatFactors.ProbWhiteHit(i);
 
                 // crit
                 d *= (1f + _combatFactors.BonusWhiteCritDmg);
                 f = (isMH ? 7.0f : 3.5f);
-                rage += RageFormula(d, c, s, f) * _combatFactors.CalcCrit(i);
+                rage += RageFormula(d, s, f) * _combatFactors.CalcCrit(i);
 
                 // glance
                 d = d / (1f + _combatFactors.BonusWhiteCritDmg) * 0.75f;
                 f = (isMH ? 3.5f : 1.75f);
-                rage += RageFormula(d, c, s, f) * _combatFactors.GlanceChance;
+                rage += RageFormula(d, s, f) * _combatFactors.GlanceChance;
 
                 // UW rage per swing
                 rage += (_combatFactors.MainHand.Speed * (3f * _talents.UnbridledWrath) / 60.0f) * (1.0f - _combatFactors.WhiteMissChance);
-                rage *= (1.0f + 0.25f * _talents.EndlessRage);
                 return rage;
             }
             // Rage generated per second
@@ -107,7 +103,18 @@
                 
                 return rage;
             }
-            public float RageFormula(float d, float c, float s, float f) { return 3.75f * d / c + f * s / 2.0f; }
+            public float RageFormula(float d, float s, float f) {
+                /* R = Rage Generated
+                 * d = damage amount
+                 * c = rage conversion value
+                 * s = weapon speed
+                 * f = hit factor */
+                const float c = 0.0091107836f * 80f * 80f + 3.225598133f * 80f + 4.2652911f; // = ~320.6
+                float R = 0f;
+                R = 3.75f * d / c + f * s / 2.0f;
+                R *= (1.0f + 0.25f * _talents.EndlessRage);
+                return R;
+            }
         }
         // Abilities
         public class Ability {
@@ -285,8 +292,15 @@
             }
             public virtual float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
             public virtual float GetDPS() { return GetAvgDamageOnUse() / GetRotation(); }
-            public virtual float GetAvgDamageOnUse(float acts) { return GetDamageOnUse() * acts; }
-            public virtual float GetDPS(float acts) { return GetAvgDamageOnUse(acts) / GetRotation(); }
+            public virtual float GetAvgDamageOnUse(float acts) {
+                float dou = GetDamageOnUse();
+                return GetDamageOnUse() * acts;
+            }
+            public virtual float GetDPS(float acts) {
+                float adou = GetAvgDamageOnUse(acts);
+                float rot = GetRotation();
+                return adou / rot;
+            }
             public virtual float GetLandedAtksPerSecNoSS() {
                 Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
                 Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
@@ -378,8 +392,7 @@
                 float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage + BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
                 return rage;
             }
-            public virtual float neededRage()
-            {
+            public virtual float neededRage() {
                 Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
                 float BTRage = BT.GetRageUsePerSecond();
                 //float BTRage = BloodThirstHits() * 30; // ORIGINAL LINE
@@ -520,7 +533,7 @@ Unending Fury [Increases the damage done by your Slam, Whirlwind and Bloodthirst
                 float Damage = (StatS.AttackPower * 50.0f / 100f);
                 
                 // Talents Affecting
-                Damage *= (1 + Talents.UnendingFury * 0.02f);
+                Damage *= (1.00f + Talents.UnendingFury * 0.02f);
 
                 // Ensure that we are not doing negative Damage
                 if (Damage < 0) { Damage = 0; }
@@ -935,9 +948,7 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
             // Variables
             // Get/Set
             // Functions
-            public override float GetActivates() {
-                return GetActivates(true);
-            }
+            public override float GetActivates() { return GetActivates(true); }
             public override float GetActivates(bool Override) {
                 // Invalidators
                 if (!GetValided() || Talents.SuddenDeath == 0) { return 0f; }
@@ -1472,13 +1483,18 @@ extra point of rage into 38 additional damage. Only usable on enemies that have 
                 // Invalidators
                 if (!Override && !GetValided()) { return 0f; }
 
-                float freerage = freeRage(); if (freerage <= 0f) { return 0.0f; } // No Free Rage = 0 damage
+                float freerage = freeRage();
+                if (Override && freerage <= (RageCost - (Talents.ImprovedExecute * 0.25f))) {
+                    freerage = RageCost - (Talents.ImprovedExecute * 0.25f);
+                }else if (freerage <= 0f) {
+                    return 0.0f; // No Free Rage = 0 damage
+                }
                 float executeRage = freerage * GetRotation();
                 executeRage -= (Cd - 2.5f * Talents.ImprovedExecute);
                 if (Override && executeRage > 30f) { executeRage = 30f; }
                 executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
 
-                float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38;
+                float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
                 // Spread this damage over rotaion length (turns it into DPS)
                 //Damage /= GetRotation();

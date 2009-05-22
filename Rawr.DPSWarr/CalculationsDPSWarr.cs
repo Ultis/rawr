@@ -787,25 +787,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return false;
         }
         public Stats GetBuffsStats(Character character) {
-            var statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            //Mongoose
-            if (character.MainHand != null && (character.MainHandEnchant != null && (character.MainHandEnchant.Id == 2673)))
-            {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
-            }
-            if (character.OffHand != null && (character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673))
-            {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Item.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Item.Speed)) / 6f));
-            }
-
-            //Executioner
-			//if (character.MainHand != null && (character.MainHandEnchant != null && (character.MainHandEnchant.Id == 3225)))
-			//{
-			//    statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
-			//}
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             return statsBuffs;
         }
