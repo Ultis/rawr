@@ -147,6 +147,15 @@ namespace Rawr
             }
         }
 
+        public void SetOptimizerScores(float scoreBefore, float scoreAfter)
+        {
+            paperDollBefore.SetResultText(string.Format("Score Before Optimization :\r\n{0}", scoreBefore));
+            if (scoreAfter >= 0)
+                paperDollAfter.SetResultText(string.Format("Score After Optimization :\r\n{0}", scoreAfter));
+            else
+                paperDollAfter.SetResultText("The Optimizer was not able to meet all the requirements. Would you like to equip the gear that is closest to meeting them?");
+        }
+
         public DialogResult LoadOptimizerResult()
         {
             return result;

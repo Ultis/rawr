@@ -18,13 +18,13 @@ namespace Rawr
         {
             InitializeComponent();
             _character = new Character();
-            itemButtonHead.SelectedItem = itemButtonWrist.SelectedItem = 
-            itemButtonBack.SelectedItem = itemButtonChest.SelectedItem = itemButtonFeet.SelectedItem =  
-            itemButtonFinger1.SelectedItem = itemButtonFinger2.SelectedItem =  itemButtonHands.SelectedItem = 
-            itemButtonHead.SelectedItem =  itemButtonRanged.SelectedItem = itemButtonLegs.SelectedItem = 
-            itemButtonShoulders.SelectedItem = itemButtonMainHand.SelectedItem = itemButtonOffHand.SelectedItem =  
-            itemButtonProjectile.SelectedItemInstance = itemButtonProjectileBag.SelectedItemInstance = 
-            itemButtonNeck.SelectedItemInstance = itemButtonShirt.SelectedItemInstance = itemButtonWaist.SelectedItemInstance = 
+            itemButtonHead.SelectedItem = itemButtonWrist.SelectedItem =
+            itemButtonBack.SelectedItem = itemButtonChest.SelectedItem = itemButtonFeet.SelectedItem =
+            itemButtonFinger1.SelectedItem = itemButtonFinger2.SelectedItem = itemButtonHands.SelectedItem =
+            itemButtonHead.SelectedItem = itemButtonRanged.SelectedItem = itemButtonLegs.SelectedItem =
+            itemButtonShoulders.SelectedItem = itemButtonMainHand.SelectedItem = itemButtonOffHand.SelectedItem =
+            itemButtonProjectile.SelectedItemInstance = itemButtonProjectileBag.SelectedItemInstance =
+            itemButtonNeck.SelectedItemInstance = itemButtonShirt.SelectedItemInstance = itemButtonWaist.SelectedItemInstance =
             itemButtonTabard.SelectedItemInstance = itemButtonTrinket1.SelectedItemInstance = itemButtonTrinket2.SelectedItemInstance = new ItemInstance();
         }
 
@@ -100,7 +100,7 @@ namespace Rawr
             get { return Character.Projectile ?? new ItemInstance(); }
             set { itemButtonProjectile.SelectedItemInstance = value; itemButtonProjectile.UpdateSelectedItem(); }
         }
- 
+
         public ItemInstance ProjectileBag
         {
             get { return Character.ProjectileBag ?? new ItemInstance(); }
@@ -154,71 +154,71 @@ namespace Rawr
             get { return Character.Trinket2 ?? new ItemInstance(); }
             set { itemButtonTrinket2.SelectedItemInstance = value; itemButtonTrinket2.UpdateSelectedItem(); }
         }
-        #endregion 
+        #endregion
 
         public Character Character
-		{
-			get
-			{
-				if (_character == null)
-				{
-					Character character = new Character();
-					Character = character;
-				}
-				return _character;
-			}
-			set
-			{
-				if (_character != null)
-				{
-					_character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
+        {
+            get
+            {
+                if (_character == null)
+                {
+                    Character character = new Character();
+                    Character = character;
                 }
-				_character = value;
-				if (_character != null)
-				{
-					this.Cursor = Cursors.WaitCursor;
+                return _character;
+            }
+            set
+            {
+                if (_character != null)
+                {
+                    _character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
+                }
+                _character = value;
+                if (_character != null)
+                {
+                    this.Cursor = Cursors.WaitCursor;
                     _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
 
-					Character.CurrentModel = null;
-					
-					Calculations.CalculationOptionsPanel.Character = _character;
-                    ItemToolTip.Instance.Character = 
-						ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character = 
-						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
-						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
-						itemButtonHead.Character = itemButtonRanged.Character = itemButtonLegs.Character =
-						itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
-						itemButtonTabard.Character = itemButtonTrinket1.Character = itemButtonTrinket2.Character =
-						itemButtonWaist.Character = itemButtonMainHand.Character = itemButtonOffHand.Character =
-						itemButtonProjectile.Character = itemButtonProjectileBag.Character = itemButtonWrist.Character = _character;
+                    Character.CurrentModel = null;
 
-					_character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
-					_loadingCharacter = true;
+                    Calculations.CalculationOptionsPanel.Character = _character;
+                    ItemToolTip.Instance.Character =
+                        ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character =
+                        itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
+                        itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
+                        itemButtonHead.Character = itemButtonRanged.Character = itemButtonLegs.Character =
+                        itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
+                        itemButtonTabard.Character = itemButtonTrinket1.Character = itemButtonTrinket2.Character =
+                        itemButtonWaist.Character = itemButtonMainHand.Character = itemButtonOffHand.Character =
+                        itemButtonProjectile.Character = itemButtonProjectileBag.Character = itemButtonWrist.Character = _character;
 
-					textBoxName.Text = Character.Name;
-					textBoxRealm.Text = Character.Realm;
-					comboBoxRegion.Text = Character.Region.ToString();
-					comboBoxRace.Text = Character.Race.ToString();
-					checkBoxEnforceGemRequirements.Checked = Character.EnforceGemRequirements;
-					{
-						comboBoxClass.Text = Character.Class.ToString();
-					}
-					_loadingCharacter = false;
+                    _character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
+                    _loadingCharacter = true;
+
+                    textBoxName.Text = Character.Name;
+                    textBoxRealm.Text = Character.Realm;
+                    comboBoxRegion.Text = Character.Region.ToString();
+                    comboBoxRace.Text = Character.Race.ToString();
+                    checkBoxEnforceGemRequirements.Checked = Character.EnforceGemRequirements;
+                    {
+                        comboBoxClass.Text = Character.Class.ToString();
+                    }
+                    _loadingCharacter = false;
                     _character.IsLoading = false;
                     _character_ItemsChanged(_character, EventArgs.Empty); // this way it won't cause extra invalidations for other listeners of the event
                     this.Cursor = Cursors.Default;
-				}
+                }
             }
-		}
+        }
 
-		void _character_ItemsChanged(object sender, EventArgs e)
-		{
+        void _character_ItemsChanged(object sender, EventArgs e)
+        {
             if (this.InvokeRequired)
             {
                 Invoke((EventHandler)_character_ItemsChanged, sender, e);
                 return;
             }
-			this.Cursor = Cursors.WaitCursor;
+            this.Cursor = Cursors.WaitCursor;
             if (!_loadingCharacter)
             {
                 itemButtonBack.UpdateSelectedItem(); itemButtonChest.UpdateSelectedItem(); itemButtonFeet.UpdateSelectedItem();
@@ -228,12 +228,17 @@ namespace Rawr
                 itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
                 itemButtonWaist.UpdateSelectedItem(); itemButtonMainHand.UpdateSelectedItem(); itemButtonOffHand.UpdateSelectedItem();
                 itemButtonProjectile.UpdateSelectedItem(); itemButtonProjectileBag.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
-            }            
+            }
             if (_character.IsMetaGemActive)
                 itemButtonHead.BackColor = _defaultColor;
             else
                 itemButtonHead.BackColor = Color.Red;
             this.Cursor = Cursors.Default;
+        }
+
+        public void SetResultText(String message)
+        {
+            labResults.Text = message;
         }
     }
 }

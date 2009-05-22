@@ -59,12 +59,14 @@
             this.itemButtonShoulders = new Rawr.ItemButtonWithEnchant();
             this.itemButtonTabard = new Rawr.ItemButton();
             this.itemButtonTrinket1 = new Rawr.ItemButton();
-            this.calculationDisplay1 = new Rawr.CalculationDisplay();
             this.itemButtonTrinket2 = new Rawr.ItemButton();
             this.itemButtonWaist = new Rawr.ItemButton();
             this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
             this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.labResults = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox3
@@ -504,17 +506,6 @@
             this.itemButtonTrinket1.Text = "Trinket1";
             this.itemButtonTrinket1.UseVisualStyleBackColor = true;
             // 
-            // calculationDisplay1
-            // 
-            this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.calculationDisplay1.AutoScroll = true;
-            this.calculationDisplay1.Location = new System.Drawing.Point(85, 150);
-            this.calculationDisplay1.Name = "calculationDisplay1";
-            this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.calculationDisplay1.Size = new System.Drawing.Size(302, 437);
-            this.calculationDisplay1.TabIndex = 27;
-            // 
             // itemButtonTrinket2
             // 
             this.itemButtonTrinket2.Character = null;
@@ -578,10 +569,31 @@
             this.itemButtonWrist.TabIndex = 12;
             this.itemButtonWrist.UseVisualStyleBackColor = true;
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.labResults);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(91, 245);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(291, 87);
+            this.flowLayoutPanel1.TabIndex = 30;
+            // 
+            // labResults
+            // 
+            this.labResults.AutoEllipsis = true;
+            this.labResults.AutoSize = true;
+            this.labResults.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labResults.Location = new System.Drawing.Point(3, 0);
+            this.labResults.Name = "labResults";
+            this.labResults.Size = new System.Drawing.Size(284, 24);
+            this.labResults.TabIndex = 30;
+            this.labResults.Text = "Score before optimizer : 1234";
+            this.labResults.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // PaperDoll
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.itemButtonBack);
             this.Controls.Add(this.itemButtonChest);
@@ -600,7 +612,6 @@
             this.Controls.Add(this.itemButtonShoulders);
             this.Controls.Add(this.itemButtonTabard);
             this.Controls.Add(this.itemButtonTrinket1);
-            this.Controls.Add(this.calculationDisplay1);
             this.Controls.Add(this.itemButtonTrinket2);
             this.Controls.Add(this.itemButtonWaist);
             this.Controls.Add(this.itemButtonMainHand);
@@ -609,6 +620,8 @@
             this.Size = new System.Drawing.Size(476, 678);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -632,7 +645,6 @@
         private ItemButtonWithEnchant itemButtonShoulders;
         private ItemButton itemButtonTabard;
         private ItemButton itemButtonTrinket1;
-        private CalculationDisplay calculationDisplay1;
         private ItemButton itemButtonTrinket2;
         private ItemButton itemButtonWaist;
         private ItemButtonWithEnchant itemButtonMainHand;
@@ -651,5 +663,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label labResults;
     }
 }

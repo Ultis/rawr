@@ -267,6 +267,7 @@ namespace Rawr
                 if (_character != null)
                 {
                     FormOptimizeResult result = new FormOptimizeResult(_character, bestCharacter);
+                    result.SetOptimizerScores(e.CurrentCharacterValue, e.OptimizedCharacterValue);
                     result.ShowDialog(this);
 //                    OptimizerResults results = new OptimizerResults(_character, bestCharacter, checkBoxOptimizeTalents.Checked);
 //                    string msg = e.OptimizedCharacterValue >= 0 ?
