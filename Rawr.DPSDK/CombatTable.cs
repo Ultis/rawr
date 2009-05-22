@@ -1,0 +1,242 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rawr.DPSDK
+{
+    class CombatTable
+    {
+        public Character character;
+        public CharacterCalculationsDPSDK calcs;
+        public DeathKnightTalents talents;
+        public Stats stats;
+        public CalculationOptionsDPSDK calcOpts;
+        public Boolean DW;
+
+        public Weapon MH, OH;
+
+        public float combinedSwingTime;
+
+        public float physCrits, hitBonus, 
+            missedSpecial, dodgedSpecial, 
+            spellCrits, spellResist, 
+            totalMHMiss, totalOHMiss,
+            realDuration, totalMeleeAbilities,
+        totalSpellAbilities;
+
+        public CombatTable(Character c, Stats stats, CalculationOptionsDPSDK calcOpts)
+        {
+            new CombatTable(c, new CharacterCalculationsDPSDK(), stats, calcOpts);
+        }
+
+        public CombatTable(Character c, CharacterCalculationsDPSDK calcs, Stats stats, CalculationOptionsDPSDK calcOpts)
+        {
+            character = c;
+            this.calcs = calcs;
+            talents = character.DeathKnightTalents;
+            this.calcOpts = calcOpts;
+            this.stats = stats;
+            totalMeleeAbilities = 0f;
+            totalSpellAbilities = 0f;
+
+            totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
+                calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike +
+                calcOpts.rotation.FrostStrike;
+
+            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
+
+            hitBonus = .01f * (float)talents.NervesOfColdSteel;
+            Weapons();
+            CritsAndResists();
+        }
+
+        public void CritsAndResists()
+        {
+            #region Crits, Resists
+            {
+                // Attack Rolltable (DW):
+                // 27.0% miss     (9.0% with 2H)
+                //  6.5% dodge
+                // 24.0% glancing (75% hit-dmg)
+                // xx.x% crit
+                // remaining = hit
+
+                // Crit: Base .65%
+                physCrits = .0065f;
+                physCrits += StatConversion.GetPhysicalCritFromRating(stats.CritRating);
+                physCrits += StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.DeathKnight);
+                physCrits += .01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer + talents.Annihilation);
+                physCrits += stats.PhysicalCrit;
+                calcs.CritChance = physCrits;
+
+                float chanceAvoided = 0.335f;
+
+                float chanceDodged = 0.065f;
+
+                calcs.DodgedMHAttacks = MH.chanceDodged;
+                calcs.DodgedOHAttacks = OH.chanceDodged;
+
+                if (character.MainHand != null)
+                {
+                    chanceDodged = MH.chanceDodged;
+                }
+
+                if (character.OffHand != null)
+                {
+                    if (character.MainHand != null)
+                    {
+                        chanceDodged += OH.chanceDodged;
+                        chanceDodged /= 2;
+                    }
+                    else
+                    {
+                        chanceDodged = OH.chanceDodged;
+                    }
+                }
+
+                calcs.DodgedAttacks = chanceDodged;
+
+                float chanceMiss = 0f;
+                if (character.OffHand == null) chanceMiss = .08f;
+                else chanceMiss = .27f;
+                chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
+                chanceMiss -= hitBonus;
+                chanceMiss -= stats.PhysicalHit;
+                if (chanceMiss < 0f) chanceMiss = 0f;
+                calcs.MissedAttacks = chanceMiss;
+
+                chanceAvoided = chanceDodged + chanceMiss;
+                calcs.AvoidedAttacks = chanceDodged + chanceMiss;
+
+                chanceMiss = .08f;
+                chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
+                chanceMiss -= hitBonus;
+                chanceMiss -= stats.PhysicalHit;
+                if (chanceMiss < 0f) chanceMiss = 0f;
+                chanceDodged = MH.chanceDodged;
+                missedSpecial = chanceMiss;
+                dodgedSpecial = chanceDodged;
+                // calcs.MissedAttacks = chanceMiss           
+
+                spellCrits = 0f;
+                spellCrits += StatConversion.GetSpellCritFromRating(stats.CritRating);
+                spellCrits += stats.SpellCrit;
+                spellCrits += .01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer);
+                calcs.SpellCritChance = spellCrits;
+
+                // Resists: Base 17%
+                spellResist = .17f;
+                spellResist -= StatConversion.GetSpellHitFromRating(stats.HitRating);
+                spellResist -= hitBonus + (.01f * talents.Virulence);
+                spellResist -= stats.SpellHit;
+                if (spellResist < 0f) spellResist = 0f;
+
+                // Total physical misses
+                totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
+                totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
+                realDuration = calcOpts.rotation.curRotationDuration;
+                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)));
+                realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
+                    ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
+                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)))))); //still need to implement spellhaste here
+            }
+            #endregion
+        }
+
+        public void Weapons(){
+
+            float MHExpertise = stats.Expertise;
+            float OHExpertise = stats.Expertise;
+
+            if (character.Race == Character.CharacterRace.Dwarf)
+            {
+                if (character.MainHand != null &&
+                    (character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
+                     character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
+                {
+                    MHExpertise += 5f;
+                }
+
+                if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandMace)
+                {
+                    OHExpertise += 5f;
+                }
+            }
+            else if (character.Race == Character.CharacterRace.Orc)
+            {
+                if (character.MainHand != null &&
+                    (character.MainHand.Item.Type == Item.ItemType.OneHandAxe ||
+                     character.MainHand.Item.Type == Item.ItemType.TwoHandAxe))
+                {
+                    MHExpertise += 5f;
+                }
+
+                if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandAxe)
+                {
+                    OHExpertise += 5f;
+                }
+            }
+            if (character.Race == Character.CharacterRace.Human)
+            {
+                if (character.MainHand != null &&
+                    (character.MainHand.Item.Type == Item.ItemType.OneHandSword ||
+                     character.MainHand.Item.Type == Item.ItemType.TwoHandSword ||
+                     character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
+                     character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
+                {
+                    MHExpertise += 3f;
+                }
+
+                if (character.OffHand != null &&
+                    (character.OffHand.Item.Type == Item.ItemType.OneHandSword ||
+                    character.OffHand.Item.Type == Item.ItemType.OneHandMace))
+                {
+                    OHExpertise += 3f;
+                }
+            }
+
+
+            MH = new Weapon(null, null, null, 0f);
+            OH = new Weapon(null, null, null, 0f);
+
+            if (character.MainHand != null)
+            {
+                MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
+                calcs.MHAttackSpeed = MH.hastedSpeed;
+                calcs.MHWeaponDamage = MH.damage;
+                calcs.MHExpertise = MH.effectiveExpertise;
+            }
+
+            if (character.OffHand != null)
+            {
+                OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
+
+                float OHMult = .05f * (float)talents.NervesOfColdSteel;
+                OH.damage *= .5f + OHMult;
+                DW = true;
+
+                //need this for weapon swing procs
+                //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
+                //combinedSwingTime = 1f / combinedSwingTime;
+                combinedSwingTime = (MH.hastedSpeed + OH.hastedSpeed) / 4;
+                calcs.OHAttackSpeed = OH.hastedSpeed;
+                calcs.OHWeaponDamage = OH.damage;
+                calcs.OHExpertise = OH.effectiveExpertise;
+            }
+            else
+            {
+                MH.damage *= 1f + (.02f * talents.TwoHandedWeaponSpecialization);
+                combinedSwingTime = MH.hastedSpeed;
+                calcs.OHAttackSpeed = 0f;
+                calcs.OHWeaponDamage = 0f;
+                calcs.OHExpertise = 0f;
+            }
+
+            if (character.MainHand == null && character.OffHand == null)
+            {
+                combinedSwingTime = 2f;
+                MH = new Weapon(null, stats, calcOpts, 0f);
+            }
+        }
+    }
+}

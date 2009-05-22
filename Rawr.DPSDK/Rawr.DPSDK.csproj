@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="CalculationsDPSDK.cs" />
     <Compile Include="CharacterCalculationsDPSDK.cs" />
+    <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationDPSDK.cs" />
     <Compile Include="Graph.cs">
       <SubType>Form</SubType>
