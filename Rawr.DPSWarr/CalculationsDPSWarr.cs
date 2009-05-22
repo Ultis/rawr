@@ -298,7 +298,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 newHSActivates = heroicstrike.GetActivates();
             }
             
-            whiteAttacks.setHSFrequency(heroicstrike.GetActivates() * combatFactors.MainHandSpeed / heroicstrike.GetRotation());
+            whiteAttacks.HS_Freq = heroicstrike.GetActivates() * combatFactors.MainHandSpeed / heroicstrike.GetRotation();
             calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
             calculatedStats.WhiteDPSOH = (character.OffHand == null ? 0f : whiteAttacks.CalcOhWhiteDPS());
             calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;

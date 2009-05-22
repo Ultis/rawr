@@ -69,42 +69,39 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Average Weapon Damage
-        public float AvgWeaponDmg(Item i,bool mainoroff) { return CalcAverageWeaponDamage(i, _stats,mainoroff); }
+        public float AvgWeaponDmg(Item i, bool isMH) { return CalcAverageWeaponDamage(i, _stats, isMH); }
         public float AvgMhWeaponDmg { get { return CalcAverageWeaponDamage(MainHand,_stats,true); } }
         public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OffHand,_stats,false); } }
-        private float CalcAverageWeaponDamage(Item weapon, Stats stats,bool mainoroff) {
+        private float CalcAverageWeaponDamage(Item weapon, Stats stats,bool isMH) {
             if(weapon==null){return 0f;}
             return DamageBonus * ((stats.AttackPower / 14 + weapon.DPS) * weapon.Speed)
-                * (!mainoroff ? 0.5f + _talents.DualWieldSpecialization * 0.025f : 1f);
+                * (!isMH ? 0.5f + _talents.DualWieldSpecialization * 0.025f : 1f);
         }
         #endregion
         #region Weapon Crit Damage
-        public float BonusWhiteCritDmg
-        {
-            get
-            {
-                float baseCritDmg = (2 * (1f + _stats.BonusCritMultiplier) - 1);
-                baseCritDmg *= (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 1;
-                return (2 * (1f + _stats.BonusCritMultiplier) - 1) * (1 + _talents.PoleaxeSpecialization * 0.01f);
+        public float BonusWhiteCritDmg {
+            get {
+                float baseCritDmg = (2f * (1f + _stats.BonusCritMultiplier) - 1f);
+                baseCritDmg *= (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 1f;
+                return (2f * (1f + _stats.BonusCritMultiplier) - 1f) * (1f + _talents.PoleaxeSpecialization * 0.01f);
             }
         }
-        public float BonusYellowCritDmg { get { return BonusWhiteCritDmg * (1 + _talents.Impale * 0.1f); } }
+        public float BonusYellowCritDmg { get { return BonusWhiteCritDmg * (1f + _talents.Impale * 0.1f); } }
         #endregion
         #region Attack Table
         public float YellowMissChance { get { var missChance = 0.08f - HitPercent; return missChance < 0f ? 0f : missChance; } }
         public float WhiteMissChance {
             get {
-                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1 ? 8f : 27f );
+                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f ? 8f : 27f );
                 missChance -= HitPercent;
-                return missChance < 0f ? 0f : missChance/100; 
+                return missChance < 0f ? 0f : missChance/100f; 
             }
         }
-        public float CalcCrit(Item weapon)
-        {
-            if (weapon == null || weapon.MaxDamage == 0) { return 0f; }
+        public float CalcCrit(Item weapon) {
+            if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
             var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
 
-            crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
+            crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
 
             return crit;
         }

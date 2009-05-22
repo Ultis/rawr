@@ -21,19 +21,23 @@
 
         // White Damage + White Rage Generated
         public class WhiteAttacks {
+            // Constructors
             public WhiteAttacks(WarriorTalents talents, Stats stats, CombatFactors combatFactors, Character character) {
                 _talents = talents;
                 _stats = stats;
                 _combatFactors = combatFactors;
                 _character = character;
-                hsFrequency = 0.0f;
+                HS_Freq = 0.0f;
             }
+            // Variables
             private readonly WarriorTalents _talents;
             private readonly Stats _stats;
             private readonly CombatFactors _combatFactors;
             private readonly Character _character;
-            private float hsFrequency;
-            public void setHSFrequency(float freq) { hsFrequency = freq; }
+            private float HS_FREQ;
+            // Get/Set
+            public float HS_Freq { get { return HS_FREQ; } set { HS_FREQ = value; } }
+            // Functions
             public float CalcMhWhiteDPS() {
                 float wepSpeed = _combatFactors.MainHandSpeed;
                 if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f) {
@@ -45,7 +49,7 @@
                 mhWhiteDPS /= wepSpeed;
                 //mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (_combatFactors.GlanceChance/* - (0.24f * 0.35f)*/)); // ebs: WTF?!?
                 mhWhiteDPS *= _combatFactors.DamageReduction;
-                mhWhiteDPS *= (1f - hsFrequency);
+                mhWhiteDPS *= (1f - HS_Freq);
                 return mhWhiteDPS;
             }
             public float CalcOhWhiteDPS() {
@@ -60,6 +64,7 @@
                     return 0f;
                 }
             }
+            // Rage Calcs
             public float GetSwingRage(Item i, bool isMH) {
                 // d = damage amt
                 // s = weapon speed
