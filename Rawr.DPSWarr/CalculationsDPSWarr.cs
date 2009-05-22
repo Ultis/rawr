@@ -286,11 +286,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.SS = new Skills.Swordspec(character, stats, combatFactors, whiteAttacks); //calculatedStats.SwordSpecDPS = skillAttacks.SwordSpec();
             calculatedStats.SW = new Skills.SweepingStrikes(character, stats, combatFactors, whiteAttacks);
             calculatedStats.BLS = new Skills.Bladestorm(character, stats, combatFactors, whiteAttacks); //calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
+            calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
+            calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
 
             Skills.HeroicStrike heroicstrike = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);
             Skills.BloodSurge bloodsurge = new Skills.BloodSurge(character, stats, combatFactors, whiteAttacks);
             float oldHSActivates = 0.0f, newHSActivates = heroicstrike.GetActivates();
-            while (Math.Abs(newHSActivates - oldHSActivates) > 0.01f)
+            while (calcOpts.FuryStance && Math.Abs(newHSActivates - oldHSActivates) > 0.01f)
             {
                 oldHSActivates = heroicstrike.GetActivates();
                 bloodsurge.hsActivates = oldHSActivates;
@@ -302,13 +305,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
             calculatedStats.WhiteDPSOH = (character.OffHand == null ? 0f : whiteAttacks.CalcOhWhiteDPS());
             calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-            calculatedStats.WhiteDmg = combatFactors.AvgMhWeaponDmg;
-
+            calculatedStats.WhiteDmg = whiteAttacks.MhAvgSwingDmg();
+            whiteAttacks.HS_Freq = 0;
             calculatedStats.BS = bloodsurge;
             calculatedStats.HS = heroicstrike;
-            calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
-            calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
-            calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
+            
             Skills.DeepWounds deepWounds = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
             // RND and HS are not included because Rend won't crit, and HS replaces a white attack and thus is already covered
             float MHAbilityActivates = calculatedStats.SL.GetActivates() + calculatedStats.MS.GetActivates() +

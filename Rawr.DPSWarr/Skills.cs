@@ -43,26 +43,45 @@
                 if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f) {
                     wepSpeed += (1.5f - (0.5f * _talents.ImprovedSlam)) / 5f;
                 }
-                float mhWhiteDPS = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;
-                mhWhiteDPS += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1+_combatFactors.BonusWhiteCritDmg);
-                mhWhiteDPS += _combatFactors.AvgMhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
+                float mhWhiteDPS = MhAvgSwingDmg();
                 mhWhiteDPS /= wepSpeed;
                 //mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (_combatFactors.GlanceChance/* - (0.24f * 0.35f)*/)); // ebs: WTF?!?
-                mhWhiteDPS *= _combatFactors.DamageReduction;
+                //mhWhiteDPS *= _combatFactors.DamageReduction;
                 mhWhiteDPS *= (1f - HS_Freq);
                 return mhWhiteDPS;
             }
             public float CalcOhWhiteDPS() {
-                float ohWhiteDPS = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;
-                ohWhiteDPS += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
-                ohWhiteDPS += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
+                float ohWhiteDPS = OhAvgSwingDmg();
                 ohWhiteDPS /= _combatFactors.OffHandSpeed;
-                ohWhiteDPS *= _combatFactors.DamageReduction;
+                //ohWhiteDPS *= _combatFactors.DamageReduction;
                 if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
                     return ohWhiteDPS;
                 } else {
                     return 0f;
                 }
+            }
+            public float MhAvgSwingDmg()
+            {
+                float mhWhiteSwing = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;
+                mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1+_combatFactors.BonusWhiteCritDmg);
+                mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
+                
+                mhWhiteSwing *= _combatFactors.DamageBonus;
+                mhWhiteSwing *= _combatFactors.DamageReduction;
+                
+                return mhWhiteSwing;
+                
+            }
+            public float OhAvgSwingDmg()
+            {
+                float ohWhiteSwing = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;
+                ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
+                ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
+                
+                ohWhiteSwing *= _combatFactors.DamageBonus;
+                ohWhiteSwing *= _combatFactors.DamageReduction;
+
+                return ohWhiteSwing;
             }
             // Rage Calcs
             public float GetSwingRage(Item i, bool isMH) {
@@ -289,7 +308,7 @@
                 float Damage = GetDamage(); // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
-                Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                Damage *= (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
                     + combatFactors.MhYellowCrit * combatFactors.BonusYellowCritDmg); // Attack Table
 
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
@@ -690,6 +709,55 @@ your next Slam instant for 5 sec.";
             public float hsActivates { get; set; }
             // Get/Set
             // Functions
+            private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
+            {
+                float hsPercent = (hsActivates) / (GetRotation() / combatFactors.MainHandSpeed);
+                float numProcs = 0.0f;
+                int whiteTimer = 0;
+                int WWtimer = 0;
+                int BTtimer = 0;
+                const int GCD = 15;
+                float chanceWeDontProc = 1f; // temp value that keeps track of what the odds are we got a proc by SLAM time
+                int numWW = 0;
+                int numBT = 0;
+                for (int timeStamp = 0; timeStamp < GetRotation()*10; timeStamp++)
+                {
+                    
+                    if (whiteTimer <= 0)
+                    {
+                        chanceWeDontProc *= (1f - hsPercent * procChance * chanceMHhit);
+                        whiteTimer = (int)System.Math.Ceiling(combatFactors.MainHandSpeed*10);
+                    }
+
+                    if (timeStamp % GCD == 0)
+                    {
+                        if (WWtimer <= 0)
+                        {
+                            chanceWeDontProc *= (1f - procChance*chanceMHhit) * (1f - procChance*chanceOHhit);
+                            WWtimer = 80;
+                            numWW++;
+                        }
+                        else if (BTtimer <= 0)
+                        {
+                            chanceWeDontProc *= (1f - procChance * chanceMHhit);
+                            BTtimer = 50;
+                            numBT++;
+                        }
+                        else
+                        {
+                            // We slam
+                            numProcs += (1f - chanceWeDontProc);
+                            chanceWeDontProc = 1f;
+                        }
+
+                    }
+                    whiteTimer--;
+                    WWtimer--;
+                    BTtimer--;
+                }
+
+                return numProcs;
+            }
             public override float GetActivates() {
                 // Invalidators
                 if (!GetValided() || Talents.Bloodsurge == 0) { return 0f; }
@@ -699,9 +767,11 @@ your next Slam instant for 5 sec.";
                 Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
                 //Ability HS = new HeroicStrike(Char, StatS, combatFactors, Whiteattacks);
                 
-                float chance = Talents.Bloodsurge * 0.0666666667f;
-                float chanceMhHitLands = (1f - combatFactors.YellowMissChance + combatFactors.MhDodgeChance);
-                float chanceOhHitLands = (1f - combatFactors.YellowMissChance + combatFactors.OhDodgeChance);
+                float chance = Talents.Bloodsurge * 0.20f / 3f;
+                float chanceMhHitLands = (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance);
+                float chanceOhHitLands = (1f - combatFactors.YellowMissChance - combatFactors.OhDodgeChance);
+                
+                float procs2 = CalcSlamProcs(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
 
                 float procs = BT.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceOhHitLands
                     + hsActivates*chanceMhHitLands;// HS.GetActivates();
@@ -710,7 +780,7 @@ your next Slam instant for 5 sec.";
                 // procs = (procs / GetRotation()) - (chance * chance + 0.01f); // WTF is with squaring chance?
                 if (procs < 0) { procs = 0; }
                 if (procs > 5) { procs = 5; } // Only have 5 free GCDs in the rotation
-                return procs;
+                return procs2;
 
                 // ORIGINAL LINES
                 //float chance = _talents.Bloodsurge * 0.0666666666f;
@@ -1824,17 +1894,21 @@ average damage over 6 sec.";
 
                 //;
 
+                // doing it this way because Deep Wounds triggering off of a MH crit and Deep Wounds triggering off of an OH crit do diff damage.
+                // GetDamage is doing the average damage of a deep wounds trigger
                 float damage = combatFactors.AvgMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates+ohActivates) +
                     combatFactors.AvgOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates+ohActivates);
-                damage *= (1f + StatS.BonusBleedDamageMultiplier);
-                if (Talents.TitansGrip == 1) damage *= 0.9f; // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
-
+                
+                
                 return damage;
             }
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
                 //Damage *= combatFactors.DamageBonus; // DW is only affected by % effects in the sense that MHWeaponDmg is, which is already covered
                 //Damage *= combatFactors.DamageReduction; // Global Damage Penalties
+                Damage *= (1f + StatS.BonusBleedDamageMultiplier);
+                Damage *= combatFactors.DamageBonus; // Avg_hWeaponDmg no longer has DamageBonus in, we were double-dipping
+                if (Talents.TitansGrip == 1) Damage *= 0.9f; // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
 
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
                 return Damage;

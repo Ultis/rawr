@@ -74,7 +74,9 @@ namespace Rawr.DPSWarr {
         public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OffHand,_stats,false); } }
         private float CalcAverageWeaponDamage(Item weapon, Stats stats,bool isMH) {
             if(weapon==null){return 0f;}
-            return DamageBonus * ((stats.AttackPower / 14 + weapon.DPS) * weapon.Speed)
+            // removed the DamageBonus from here, as it was causing double dipping down the line.  Damage Bonus should be done
+            // only at the absolute end of calculations to prevent this
+            return ((stats.AttackPower / 14 + weapon.DPS) * weapon.Speed)
                 * (!isMH ? 0.5f + _talents.DualWieldSpecialization * 0.025f : 1f);
         }
         #endregion
@@ -92,9 +94,9 @@ namespace Rawr.DPSWarr {
         public float YellowMissChance { get { var missChance = 0.08f - HitPercent; return missChance < 0f ? 0f : missChance; } }
         public float WhiteMissChance {
             get {
-                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f ? 8f : 27f );
-                missChance -= HitPercent;
-                return missChance < 0f ? 0f : missChance/100f; 
+                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f ? 0.08f : 0.27f );
+                missChance -= HitPercent; // hit percent is 0.05f for 5%, not 5f for 5%
+                return missChance < 0f ? 0f : missChance; 
             }
         }
         public float CalcCrit(Item weapon) {
