@@ -340,7 +340,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
                     + calculatedStats.SS.GetDPS() + calculatedStats.BLS.GetDPS();
             }else{
-                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms();
+                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + deepWounds.GetDPS();
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
@@ -519,23 +519,42 @@ Don't forget your weapons used matched with races can affect these numbers.",
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents talents = character.WarriorTalents;
 
+            //SetDefaults(character);
+
             Stats statsRace = GetRaceStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsTalents = new Stats()
-            {
+            Stats statsTalents = new Stats() {
                 //Parry = talents.Deflection * 1.0f,
                 PhysicalCrit = talents.Cruelty * 0.01f + (calcOpts.FuryStance ? 0.03f : 0f),
                 //Dodge = talents.Anticipation * 1.0f,
                 //Block = talents.ShieldSpecialization * 1.0f,
                 //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
-                BonusDamageMultiplier = talents.OneHandedWeaponSpecialization * 0.02f,
-                BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
+                BonusDamageMultiplier = /*(character.MainHand != null &&
+                                         (character.MainHand.Type == Item.ItemType.OneHandAxe ||
+                                         character.MainHand.Type == Item.ItemType.OneHandMace ||
+                                         character.MainHand.Type == Item.ItemType.OneHandSword ||
+                                         character.MainHand.Type == Item.ItemType.Dagger ||
+                                         character.MainHand.Type == Item.ItemType.FistWeapon)
+                                         ? talents.OneHandedWeaponSpecialization * 0.02f: 0f)
+                                         +*/ (character.MainHand != null &&
+                                         (character.MainHand.Type == Item.ItemType.Polearm ||
+                                         character.MainHand.Type == Item.ItemType.Staff ||
+                                         character.MainHand.Type == Item.ItemType.TwoHandAxe ||
+                                         character.MainHand.Type == Item.ItemType.TwoHandMace ||
+                                         character.MainHand.Type == Item.ItemType.TwoHandSword)
+                                         ? talents.TwoHandedWeaponSpecialization * 0.02f : 0f)
+                                         - (talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
+                                        (character.OffHand.Type == Item.ItemType.TwoHandAxe  ||
+                                         character.OffHand.Type == Item.ItemType.TwoHandMace ||
+                                         character.OffHand.Type == Item.ItemType.TwoHandSword)
+                                         ? 0.10f : 0f),
+                BonusStaminaMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f,
+                BonusStrengthMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f,
+                Expertise = /*talents.Vitality * 2.0f +*/ talents.StrengthOfArms * 2.0f,
                 //BonusShieldSlamDamage = talents.GagOrder * 0.05f,
-                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
-                BaseArmorMultiplier = talents.Toughness * 0.02f,
+                //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
+                //BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.03f,
                 ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
                 PhysicalHit = talents.Precision * 1.0f,
@@ -552,12 +571,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //float gearStr = /*(float)Math.Floor*/(statsGearEnchantsBuffs.Strength * strModifier);
             //statsTotal.Strength = racialStr + gearStr;
 
+            statsTotal.BonusStaminaMultiplier = ((1f + statsRace.BonusStaminaMultiplier) * (1f + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1f;
             statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
 
             //statsTotal.BonusAttackPowerMultiplier = ((1f + statsRace.BonusAttackPowerMultiplier) * (1f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1f;
             //statsTotal.BonusStrengthMultiplier = ((1f + statsRace.BonusStrengthMultiplier) * (1f + statsGearEnchantsBuffs.BonusStrengthMultiplier) * (1f + 0.02f * character.WarriorTalents.StrengthOfArms) * (1 + character.WarriorTalents.ImprovedBerserkerStance * ((calcOpts.FuryStance) ? 0.04f: 0.00f))) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1f + statsRace.BonusStaminaMultiplier) * (1f + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1f;
 
             statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
@@ -787,10 +806,87 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             return false;
         }
+        
         public Stats GetBuffsStats(Character character) {
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             return statsBuffs;
+        }
+        public override void SetDefaults(Character character) {
+            WarriorTalents  talents = character.WarriorTalents;
+            bool doit = false;
+            bool removeother = false;
+            // === BATTLE SHOUT ===   // Jothay: deactivated until better control can be put on it
+            /*bool hasBoM = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blessing of Might"));
+            bool hasBoMImp = hasBoM && character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Blessing of Might"));
+            if (hasBoMImp) {
+                // Do Nothing, don't add Battle Shout as Imp BoM is a better buff (by ~2 AP)
+                doit = false;
+                removeother = false;
+            }if(hasBoM){
+                // BoM but not Improved
+                if(talents.CommandingPresence > 0){
+                    // Comm Presence is the only reason to override
+                    doit = true;
+                    removeother = true;
+                }else{
+                    // dont override as reg BoM is still better
+                    doit = false;
+                    removeother = false;
+                }
+            }else{
+                // No BoM (imp or otherwise) is in the way so just do it
+                doit = true;
+                removeother = true;
+            }
+            if (removeother) {
+                if (hasBoMImp) { character.ActiveBuffs.Remove(Buff.GetBuffByName("Improved Blessing of Might")); }
+                if (hasBoM) { character.ActiveBuffs.Remove(Buff.GetBuffByName("Blessing of Might")); }
+            }
+            if (doit) {// but dont add it if we already have it
+                if(!character.ActiveBuffs.Contains(Buff.GetBuffByName("Battle Shout"))){
+                    character.ActiveBuffs.Add(Buff.GetBuffByName("Battle Shout"));
+                }
+                if (talents.CommandingPresence == 5 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Commanding Presence (Attack Power)"))) {
+                    character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Attack Power)"));
+                }
+            }*/
+            // == TRAUMA ==
+            // The benefits from both Trauma and Mangle are identical
+            // So we should always apply Trauma if we have the talent
+            // but dont add it if we already have it
+            doit = talents.Trauma > 0 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Trauma"));
+            removeother = doit;
+            if (removeother) {
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Mangle"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Mangle"));
+                }
+            }
+            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma")); }
+            // == RAMPAGE ==
+            // The benefits from both Rampage and Leader of the Pack are identical
+            // So we should always apply Rampage if we have the talent
+            // but dont add it if we already have it
+            doit = talents.Rampage > 0 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Rampage"));
+            removeother = doit;
+            if (removeother) {
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Leader of the Pack"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Leader of the Pack"));
+                }
+            }
+            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Rampage")); }
+            // == BLOOD FRENZY ==
+            // The benefits from both Blood Frenzy and Savage Combat are identical
+            // So we should always apply Blood Frenzy if we have the talent
+            // but dont add it if we already have it
+            doit = talents.BloodFrenzy > 0 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy"));
+            removeother = doit;
+            if (removeother) {
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Savage Combat"));
+                }
+            }
+            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Blood Frenzy")); }
         }
 
         public void GetTalents(Character character) {

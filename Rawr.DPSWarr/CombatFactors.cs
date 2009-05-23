@@ -25,8 +25,8 @@ namespace Rawr.DPSWarr {
         #region Major Damage Factors
         public float DamageBonus {
             get {
-                return (1+_talents.TwoHandedWeaponSpecialization * 0.02f)*(1+_stats.BonusPhysicalDamageMultiplier)*
-                        (1+_stats.BonusDamageMultiplier)*(1f+ (_talents.DeathWish*0.2f)*(30f/(180f*(1 - 0.11f*_talents.IntensifyRage))))*(1f+0.02f*_talents.WreckingCrew);
+                return (1+_stats.BonusPhysicalDamageMultiplier)*(1+_stats.BonusDamageMultiplier)*
+                    (1f+ (_talents.DeathWish*0.2f)*(30f/(180f*(1 - 0.11f*_talents.IntensifyRage))))*(1f+0.02f*_talents.WreckingCrew);
             }
         }
         public float DamageReduction {
@@ -37,27 +37,10 @@ namespace Rawr.DPSWarr {
                 }else{
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }
-                if (_talents.TitansGrip == 1 && MainHand != null && OffHand != null &&
-                    (MainHand.Slot == Item.ItemSlot.TwoHand || OffHand.Slot == Item.ItemSlot.TwoHand))
-                    armorReduction *= 0.9f;
 
                 return armorReduction;
-                //return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
             }
         }
-        /*public float EffectiveBossArmor {
-			get {
-				float armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
-				float reducedArmor = (float)_calcOpts.TargetArmor * (armorReductionPercent);
-
-				return reducedArmor;
-				//float totalArmor = _calcOpts.TargetArmor;
-				//totalArmor *= (MainHand.Type == Item.ItemType.TwoHandMace) ? 1 - (0.03f * _talents.MaceSpecialization) : 1.0f;
-				//totalArmor -= _stats.ArmorPenetration;
-				//totalArmor *= 1 - (_stats.ArmorPenetrationRating * WarriorConversions.ArPToArmorPenetration / 100f);
-				//return totalArmor;
-			}
-		} */
         #endregion
         #region Normalized Weapon Damage
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MainHand, _stats); } }

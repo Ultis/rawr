@@ -19,6 +19,8 @@ namespace Rawr.DPSWarr {
             CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
             CB_Duration.Minimum = 0;
             CB_Duration.Maximum = 60*20; // 20 minutes
+
+            RB_StanceFury.Checked = true;
         }
         protected override void LoadCalculationOptions() {
             if (Character != null && Character.CalculationOptions == null) { Character.CalculationOptions = new CalculationOptionsDPSWarr(); return; }
