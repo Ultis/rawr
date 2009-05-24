@@ -102,7 +102,7 @@ namespace Rawr
 					CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(character, itemStats,
 						false, true, false);
 					y = calcs.OverallPoints;
-					rotations[i] = calcs.GetCharacterDisplayCalculationValues()["Optimal Rotation"];
+					//rotations[i] = calcs.GetCharacterDisplayCalculationValues()["Optimal Rotation"];
 					overallData[i] = y;
 					minY = Math.Min(minY, y);
 					maxY = Math.Max(maxY, y);

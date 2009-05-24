@@ -412,7 +412,8 @@ namespace Rawr.Cat
 			DruidTalents talents = character.DruidTalents;
 			Stats statsTalents = new Stats()
 			{
-				PhysicalCrit = 0.02f * talents.SharpenedClaws + (character.ActiveBuffsContains("Leader of the Pack") ?
+				PhysicalCrit = 0.02f * talents.SharpenedClaws + ((character.ActiveBuffsContains("Leader of the Pack") ||
+				character.ActiveBuffsContains("Rampage"))?
 					0 : 0.05f * talents.LeaderOfThePack) + 0.02f * talents.MasterShapeshifter,
 				Dodge = 0.02f * talents.FeralSwiftness,
 				BonusStaminaMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
