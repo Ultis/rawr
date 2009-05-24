@@ -1144,7 +1144,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
@@ -1158,7 +1158,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
@@ -1186,7 +1186,35 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Blacksmithing</Name>
+      <Pattern>BoP crafted Blacksmithing</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Alchemy</Name>
+      <Pattern>BoP crafted Alchemy</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
