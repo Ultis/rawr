@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Item>
+    <ItemLevel>17</ItemLevel>
+    <IconPath>INV_Shirt_02</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Fine Cloth Shirt</Name>
+    <Id>859</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
     <ItemLevel>10</ItemLevel>
     <IconPath>INV_Shirt_Blue_01</IconPath>
     <Stats />
@@ -9,6 +20,28 @@
     <SocketBonus />
     <Name>Blue Linen Shirt</Name>
     <Id>2577</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>15</ItemLevel>
+    <IconPath>INV_Shirt_14</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Captain Sanders' Shirt</Name>
+    <Id>3342</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>34</ItemLevel>
+    <IconPath>INV_Shirt_08</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Formal White Shirt</Name>
+    <Id>4334</Id>
     <Slot>Shirt</Slot>
   </Item>
   <Item>
@@ -21,6 +54,29 @@
     <Name>Rich Purple Silk Shirt</Name>
     <Id>4335</Id>
     <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>INV_Shirt_GuildTabard_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Guild Tabard</Name>
+    <Id>5976</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>60</ItemLevel>
+    <IconPath>INV_Shirt_GuildTabard_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Tabard of the Protector</Name>
+    <Id>28788</Id>
+    <Slot>Tabard</Slot>
   </Item>
   <Item>
     <ItemLevel>128</ItemLevel>
@@ -3179,7 +3235,7 @@
           <Stats>
             <ShadowDamage>1460</ShadowDamage>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
@@ -4824,7 +4880,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>SpellHit</Trigger>
+          <Trigger>SpellCast</Trigger>
           <Stats>
             <SpellPower>512</SpellPower>
           </Stats>
@@ -15915,9 +15971,13 @@
   <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <BonusObliterateDamage>336</BonusObliterateDamage>
+      <BonusScourgeStrikeDamage>189</BonusScourgeStrikeDamage>
+      <BonusDeathStrikeDamage>315</BonusDeathStrikeDamage>
+    </Stats>
     <Quality>Epic</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Sigil of Awareness</Name>
@@ -16479,7 +16539,7 @@
           <Stats>
             <Healed>3572</Healed>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.2</Chance>
           <MaxStack>1</MaxStack>
@@ -18205,7 +18265,7 @@
           <Stats>
             <ArcaneDamage>1880</ArcaneDamage>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
@@ -18259,7 +18319,7 @@
           <Stats>
             <ShadowDamage>1050</ShadowDamage>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
@@ -18444,7 +18504,7 @@
           <Stats>
             <ManaRestore>900</ManaRestore>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.25</Chance>
           <MaxStack>1</MaxStack>
@@ -18506,6 +18566,8 @@
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Weapon_Rifle_24</IconPath>
     <Stats>
+      <Armor>-21.5</Armor>
+      <BonusArmor>21.5</BonusArmor>
       <Agility>36</Agility>
       <Stamina>30</Stamina>
       <AttackPower>72</AttackPower>
@@ -18513,8 +18575,8 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>Gun</Type>
-    <MinDamage>314</MinDamage>
-    <MaxDamage>584</MaxDamage>
+    <MinDamage>376</MinDamage>
+    <MaxDamage>646</MaxDamage>
     <Speed>2.9</Speed>
     <SocketBonus />
     <Name>Envoy of Mortality</Name>
@@ -19195,6 +19257,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Misc_Head_Dragon_Green</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <Spirit>18</Spirit>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>10</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <ExtraSpiritWhileCasting>180</ExtraSpiritWhileCasting>
     </Stats>
     <Quality>Epic</Quality>
@@ -20960,7 +21035,7 @@
           <Stats>
             <Healed>2710</Healed>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>60</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
@@ -22578,7 +22653,21 @@
   <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_LibramofTruth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>JudgementHit</Trigger>
+          <Stats>
+            <JudgementBlockValue>352</JudgementBlockValue>
+          </Stats>
+          <Duration>5</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -22591,6 +22680,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>Spell_Nature_UnrelentingStorm</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ShamanLightningBolt</Trigger>
+          <Stats>
+            <HasteRating>196</HasteRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <LightningBoltHasteProc_15_45>196</LightningBoltHasteProc_15_45>
     </Stats>
     <Quality>Epic</Quality>
@@ -22673,9 +22775,23 @@
   <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>BloodStrikeOrHeartStrikeHit</Trigger>
+          <Stats>
+            <CritRating>173</CritRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <RequiredClasses>Death Knight</RequiredClasses>
     <Unique>true</Unique>
     <SocketBonus />
@@ -23378,6 +23494,75 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_CHEST_PLATE_23</IconPath>
+    <Stats>
+      <Armor>2369</Armor>
+      <Stamina>180</Stamina>
+      <Strength>105</Strength>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dreadplate Chestpiece</Name>
+    <Id>40787</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Plate_25</IconPath>
+    <Stats>
+      <Armor>2369</Armor>
+      <Stamina>180</Stamina>
+      <Strength>105</Strength>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Scaled Chestpiece</Name>
+    <Id>40788</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>inv_chest_plate_25</IconPath>
+    <Stats>
+      <Armor>2369</Armor>
+      <Stamina>180</Stamina>
+      <Strength>105</Strength>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Plate Chestpiece</Name>
+    <Id>40789</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_62</IconPath>
     <Stats>
@@ -23602,6 +23787,29 @@
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Gauntlets_72</IconPath>
+    <Stats>
+      <Armor>1480</Armor>
+      <Stamina>133</Stamina>
+      <Strength>82</Strength>
+      <CritRating>39</CritRating>
+      <Resilience>47</Resilience>
+      <CrusaderStrikeMultiplier>0.05</CrusaderStrikeMultiplier>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Scaled Gauntlets</Name>
+    <Id>40808</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_GAUNTLETS_62</IconPath>
     <Stats>
       <Armor>1480</Armor>
@@ -23763,9 +23971,11 @@
   <Item>
     <ItemLevel>150</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <BonusIcyTouchDamage>111</BonusIcyTouchDamage>
+    </Stats>
     <Quality>Rare</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Sigil of the Frozen Conscience</Name>
@@ -23839,6 +24049,75 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Scaled Helm</Name>
     <Id>40825</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_HELMET_98</IconPath>
+    <Stats>
+      <Armor>1925</Armor>
+      <Stamina>180</Stamina>
+      <Strength>105</Strength>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Plate Helm</Name>
+    <Id>40826</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_135</IconPath>
+    <Stats>
+      <Armor>1925</Armor>
+      <Stamina>180</Stamina>
+      <Strength>105</Strength>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dreadplate Helm</Name>
+    <Id>40827</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_133</IconPath>
+    <Stats>
+      <Armor>1925</Armor>
+      <Stamina>180</Stamina>
+      <Strength>105</Strength>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Scaled Helm</Name>
+    <Id>40828</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -24316,6 +24595,72 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_SHOULDER_89</IconPath>
+    <Stats>
+      <Armor>1777</Armor>
+      <Stamina>133</Stamina>
+      <Strength>82</Strength>
+      <CritRating>52</CritRating>
+      <Resilience>59</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Plate Shoulders</Name>
+    <Id>40866</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_99</IconPath>
+    <Stats>
+      <Armor>1777</Armor>
+      <Stamina>133</Stamina>
+      <Strength>82</Strength>
+      <CritRating>52</CritRating>
+      <Resilience>59</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dreadplate Shoulders</Name>
+    <Id>40868</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_94</IconPath>
+    <Stats>
+      <Armor>1777</Armor>
+      <Stamina>133</Stamina>
+      <Strength>82</Strength>
+      <CritRating>52</CritRating>
+      <Resilience>59</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Scaled Shoulders</Name>
+    <Id>40869</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Belt_14</IconPath>
     <Stats>
@@ -24568,6 +24913,30 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Plate_25</IconPath>
+    <Stats>
+      <Armor>2369</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ornamented Chestguard</Name>
+    <Id>40907</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_62</IconPath>
     <Stats>
@@ -24729,6 +25098,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Ornamented Headcover</Name>
     <Id>40932</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_133</IconPath>
+    <Stats>
+      <Armor>1925</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Mp5>3</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ornamented Headcover</Name>
+    <Id>40933</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -24894,6 +25287,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Ornamented Spaulders</Name>
     <Id>40962</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_94</IconPath>
+    <Stats>
+      <Armor>1777</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ornamented Spaulders</Name>
+    <Id>40963</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -25230,6 +25646,54 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Chain_16</IconPath>
+    <Stats>
+      <Armor>1325</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <Resilience>80</Resilience>
+      <Mp5>26</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ringmail Armor</Name>
+    <Id>40992</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Chain_16</IconPath>
+    <Stats>
+      <Armor>1325</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mail Armor</Name>
+    <Id>40993</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_65</IconPath>
     <Stats>
@@ -25486,6 +25950,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_140</IconPath>
+    <Stats>
+      <Armor>1077</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <Resilience>64</Resilience>
+      <Mp5>26</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Mp5>3</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ringmail Helm</Name>
+    <Id>41013</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Helmet_140</IconPath>
     <Stats>
@@ -25555,6 +26043,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Mail Helm</Name>
     <Id>41018</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_140</IconPath>
+    <Stats>
+      <Armor>1077</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Mp5>3</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mail Helm</Name>
+    <Id>41019</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -25819,6 +26331,29 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_82</IconPath>
+    <Stats>
+      <Armor>994</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <Resilience>60</Resilience>
+      <Mp5>20</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Ringmail Spaulders</Name>
+    <Id>41038</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shoulder_104</IconPath>
     <Stats>
@@ -25885,6 +26420,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Mail Spaulders</Name>
     <Id>41043</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_82</IconPath>
+    <Stats>
+      <Armor>994</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mail Spaulders</Name>
+    <Id>41044</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -26341,6 +26899,31 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Chain_16</IconPath>
+    <Stats>
+      <Armor>1325</Armor>
+      <Agility>80</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>130</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Linked Armor</Name>
+    <Id>41081</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_CHEST_MAIL_02</IconPath>
     <Stats>
@@ -26413,6 +26996,31 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Chain Armor</Name>
     <Id>41086</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_CHEST_MAIL_02</IconPath>
+    <Stats>
+      <Armor>1325</Armor>
+      <Agility>80</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>130</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Chain Armor</Name>
+    <Id>41087</Id>
     <Slot>Chest</Slot>
   </Item>
   <Item>
@@ -26710,6 +27318,31 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_140</IconPath>
+    <Stats>
+      <Armor>1077</Armor>
+      <Agility>80</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>130</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Linked Helm</Name>
+    <Id>41151</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Helmet128</IconPath>
     <Stats>
@@ -26782,6 +27415,31 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Chain Helm</Name>
     <Id>41156</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_125</IconPath>
+    <Stats>
+      <Armor>1077</Armor>
+      <Agility>80</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>130</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Chain Helm</Name>
+    <Id>41157</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -27106,6 +27764,30 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_82</IconPath>
+    <Stats>
+      <Armor>994</Armor>
+      <Agility>60</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>102</AttackPower>
+      <Intellect>45</Intellect>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Linked Spaulders</Name>
+    <Id>41211</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shoulder_101</IconPath>
     <Stats>
@@ -27175,6 +27857,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Chain Spaulders</Name>
     <Id>41216</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_SHOULDER_100</IconPath>
+    <Stats>
+      <Armor>994</Armor>
+      <Agility>60</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>102</AttackPower>
+      <Intellect>45</Intellect>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Chain Spaulders</Name>
+    <Id>41217</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -27573,6 +28279,29 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_98</IconPath>
+    <Stats>
+      <Armor>447</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <Spirit>51</Spirit>
+      <SpellPower>96</SpellPower>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Kodohide Spaulders</Name>
+    <Id>41275</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shoulder_98</IconPath>
     <Stats>
@@ -27642,6 +28371,29 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_98</IconPath>
+    <Stats>
+      <Armor>447</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Wyrmhide Spaulders</Name>
+    <Id>41281</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_GAUNTLETS_58</IconPath>
     <Stats>
@@ -27668,9 +28420,9 @@
     <ItemLevel>80</ItemLevel>
     <IconPath>INV_Jewelcrafting_IceDiamond_02</IconPath>
     <Stats>
-      <CritRating>21</CritRating>
       <BonusCritMultiplier>0.03</BonusCritMultiplier>
       <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <CritRating>21</CritRating>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -28047,6 +28799,30 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_70</IconPath>
+    <Stats>
+      <Armor>596</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <Spirit>64</Spirit>
+      <SpellPower>123</SpellPower>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Kodohide Robes</Name>
+    <Id>41310</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Chest_Leather_12</IconPath>
     <Stats>
@@ -28119,6 +28895,30 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_70</IconPath>
+    <Stats>
+      <Armor>596</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Wyrmhide Robes</Name>
+    <Id>41316</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Helmet_141</IconPath>
     <Stats>
@@ -28164,6 +28964,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Kodohide Helm</Name>
     <Id>41320</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_126</IconPath>
+    <Stats>
+      <Armor>485</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <Spirit>64</Spirit>
+      <SpellPower>123</SpellPower>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Spirit>8</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Kodohide Helm</Name>
+    <Id>41321</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -28236,6 +29060,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Wyrmhide Helm</Name>
     <Id>41326</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_126</IconPath>
+    <Stats>
+      <Armor>485</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Spirit>8</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Wyrmhide Helm</Name>
+    <Id>41327</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -28937,7 +29785,7 @@
           <Stats>
             <ManaRestore>600</ManaRestore>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>15</Cooldown>
           <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
@@ -30506,6 +31354,30 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_CHEST_LEATHER_16</IconPath>
+    <Stats>
+      <Armor>596</Armor>
+      <Agility>105</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>120</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Leather Tunic</Name>
+    <Id>41650</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Pants_Leather_25</IconPath>
     <Stats>
@@ -30647,6 +31519,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Dragonhide Robes</Name>
     <Id>41660</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_70</IconPath>
+    <Stats>
+      <Armor>596</Armor>
+      <Agility>105</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>120</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dragonhide Robes</Name>
+    <Id>41661</Id>
     <Slot>Chest</Slot>
   </Item>
   <Item>
@@ -30794,6 +31690,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_HELMET_102</IconPath>
+    <Stats>
+      <Armor>485</Armor>
+      <Agility>105</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>120</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Leather Helm</Name>
+    <Id>41672</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Helmet_141</IconPath>
     <Stats>
@@ -30866,6 +31786,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_126</IconPath>
+    <Stats>
+      <Armor>485</Armor>
+      <Agility>105</Agility>
+      <Stamina>138</Stamina>
+      <AttackPower>120</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <CritRating>8</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dragonhide Helm</Name>
+    <Id>41678</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shoulder_95</IconPath>
     <Stats>
@@ -30909,6 +31853,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Leather Spaulders</Name>
     <Id>41682</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_88</IconPath>
+    <Stats>
+      <Armor>447</Armor>
+      <Agility>82</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>90</AttackPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Leather Spaulders</Name>
+    <Id>41683</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -30978,6 +31945,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Dragonhide Spaulders</Name>
     <Id>41714</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_98</IconPath>
+    <Stats>
+      <Armor>447</Armor>
+      <Agility>82</Agility>
+      <Stamina>102</Stamina>
+      <AttackPower>90</AttackPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dragonhide Spaulders</Name>
+    <Id>41715</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -31497,6 +32487,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_136</IconPath>
+    <Stats>
+      <Armor>258</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <Spirit>64</Spirit>
+      <SpellPower>123</SpellPower>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Spirit>8</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mooncloth Hood</Name>
+    <Id>41854</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Chest_Cloth_63</IconPath>
     <Stats>
@@ -31542,6 +32556,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Mooncloth Robe</Name>
     <Id>41858</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_63</IconPath>
+    <Stats>
+      <Armor>317</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <Spirit>64</Spirit>
+      <SpellPower>123</SpellPower>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>6</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mooncloth Robe</Name>
+    <Id>41859</Id>
     <Slot>Chest</Slot>
   </Item>
   <Item>
@@ -31660,6 +32698,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Mooncloth Mantle</Name>
     <Id>41868</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_SHOULDER_89</IconPath>
+    <Stats>
+      <Armor>236</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <Spirit>51</Spirit>
+      <SpellPower>96</SpellPower>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mooncloth Mantle</Name>
+    <Id>41869</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -32223,6 +33284,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_136</IconPath>
+    <Stats>
+      <Armor>258</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Resilience>8</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Satin Hood</Name>
+    <Id>41915</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Chest_Cloth_63</IconPath>
     <Stats>
@@ -32292,6 +33377,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Satin Robe</Name>
     <Id>41920</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_63</IconPath>
+    <Stats>
+      <Armor>317</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Furious Gladiator's Satin Robe</Name>
+    <Id>41921</Id>
     <Slot>Chest</Slot>
   </Item>
   <Item>
@@ -32460,6 +33569,29 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_SHOULDER_89</IconPath>
+    <Stats>
+      <Armor>238</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Furious Gladiator's Satin Mantle</Name>
+    <Id>41934</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Gauntlets_64</IconPath>
     <Stats>
@@ -32624,6 +33756,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_86</IconPath>
+    <Stats>
+      <Armor>258</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Resilience>8</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Silk Cowl</Name>
+    <Id>41946</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Chest_Cloth_63</IconPath>
     <Stats>
@@ -32693,6 +33849,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Silk Raiment</Name>
     <Id>41951</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_61</IconPath>
+    <Stats>
+      <Armor>317</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Furious Gladiator's Silk Raiment</Name>
+    <Id>41953</Id>
     <Slot>Chest</Slot>
   </Item>
   <Item>
@@ -32858,6 +34038,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Silk Amice</Name>
     <Id>41964</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_49</IconPath>
+    <Stats>
+      <Armor>238</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Furious Gladiator's Silk Amice</Name>
+    <Id>41965</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -33080,6 +34283,30 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Helmet_137</IconPath>
+    <Stats>
+      <Armor>258</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>64</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Resilience>8</Resilience>
+    </SocketBonus>
+    <Name>Furious Gladiator's Felweave Cowl</Name>
+    <Id>41993</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Chest_Cloth_63</IconPath>
     <Stats>
@@ -33125,6 +34352,30 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Felweave Raiment</Name>
     <Id>41997</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Chest_Cloth_63</IconPath>
+    <Stats>
+      <Armor>317</Armor>
+      <Stamina>138</Stamina>
+      <Intellect>60</Intellect>
+      <SpellPower>123</SpellPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Furious Gladiator's Felweave Raiment</Name>
+    <Id>41998</Id>
     <Slot>Chest</Slot>
   </Item>
   <Item>
@@ -33314,6 +34565,29 @@
     </SocketBonus>
     <Name>Deadly Gladiator's Felweave Amice</Name>
     <Id>42010</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shoulder_101</IconPath>
+    <Stats>
+      <Armor>238</Armor>
+      <Stamina>102</Stamina>
+      <Intellect>45</Intellect>
+      <SpellPower>96</SpellPower>
+      <CritRating>51</CritRating>
+      <Resilience>60</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Furious Gladiator's Felweave Amice</Name>
+    <Id>42011</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -34481,6 +35755,36 @@
     <Slot>Trinket</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_TrinketPVP_01</IconPath>
+    <Stats>
+      <Resilience>108</Resilience>
+      <PVPTrinket>1</PVPTrinket>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Medallion of the Alliance</Name>
+    <Id>42124</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_TrinketPVP_02</IconPath>
+    <Stats>
+      <Resilience>108</Resilience>
+      <PVPTrinket>1</PVPTrinket>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Medallion of the Horde</Name>
+    <Id>42126</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>Ability_Warrior_EndlessRage</IconPath>
     <Stats>
@@ -34827,6 +36131,28 @@
     <Slot>OneHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Axe_97</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Cleaver</Name>
+    <Id>42209</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Axe_97</IconPath>
     <Stats>
@@ -35113,6 +36439,28 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Axe_97</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Hacker</Name>
+    <Id>42228</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Axe_97</IconPath>
     <Stats>
@@ -35148,6 +36496,25 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Chopper</Name>
     <Id>42232</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Axe_97</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Chopper</Name>
+    <Id>42233</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -35191,6 +36558,27 @@
     <Slot>OneHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>inv_axe_97</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Furious Gladiator's Waraxe</Name>
+    <Id>42238</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Shortblade_90</IconPath>
     <Stats>
@@ -35226,6 +36614,28 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Shanker</Name>
     <Id>42242</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_90</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>257</MinDamage>
+    <MaxDamage>387</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Shanker</Name>
+    <Id>42243</Id>
     <Slot>OneHand</Slot>
   </Item>
   <Item>
@@ -35267,6 +36677,28 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_90</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>175</MinDamage>
+    <MaxDamage>326</MaxDamage>
+    <Speed>1.4</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Shiv</Name>
+    <Id>42249</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Shortblade_90</IconPath>
     <Stats>
@@ -35302,6 +36734,28 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Mutilator</Name>
     <Id>42255</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_90</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>225</MinDamage>
+    <MaxDamage>419</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mutilator</Name>
+    <Id>42256</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -35343,6 +36797,28 @@
     <Slot>MainHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Hand_19</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Right Ripper</Name>
+    <Id>42261</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Hand_19</IconPath>
     <Stats>
@@ -35378,6 +36854,25 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Left Render</Name>
     <Id>42265</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Hand_19</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Left Render</Name>
+    <Id>42266</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -35419,6 +36914,28 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Hand_19</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Left Ripper</Name>
+    <Id>42271</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Mace_72</IconPath>
     <Stats>
@@ -35454,6 +36971,28 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Pummeler</Name>
     <Id>42275</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_17</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>325</MinDamage>
+    <MaxDamage>605</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Pummeler</Name>
+    <Id>42276</Id>
     <Slot>OneHand</Slot>
   </Item>
   <Item>
@@ -35495,6 +37034,28 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_17</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Bonecracker</Name>
+    <Id>42281</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Sword_86</IconPath>
     <Stats>
@@ -35533,6 +37094,28 @@
     <Slot>OneHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Sword_58</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>372</MinDamage>
+    <MaxDamage>558</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Slicer</Name>
+    <Id>42286</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Sword_86</IconPath>
     <Stats>
@@ -35568,6 +37151,25 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Quickblade</Name>
     <Id>42290</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Sword_58</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>34</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Quickblade</Name>
+    <Id>42291</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -35685,6 +37287,29 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Axe_98</IconPath>
+    <Stats>
+      <Stamina>180</Stamina>
+      <AttackPower>210</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandAxe</Type>
+    <MinDamage>670</MinDamage>
+    <MaxDamage>1005</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Decapitator</Name>
+    <Id>42318</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Hammer_31</IconPath>
     <Stats>
@@ -35720,6 +37345,29 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Bonegrinder</Name>
     <Id>42322</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_74</IconPath>
+    <Stats>
+      <Stamina>180</Stamina>
+      <AttackPower>210</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandMace</Type>
+    <MinDamage>670</MinDamage>
+    <MaxDamage>1005</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Bonegrinder</Name>
+    <Id>42323</Id>
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
@@ -35761,6 +37409,29 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Halberd_29</IconPath>
+    <Stats>
+      <Stamina>180</Stamina>
+      <AttackPower>210</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Polearm</Type>
+    <MinDamage>670</MinDamage>
+    <MaxDamage>1005</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Pike</Name>
+    <Id>42328</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Sword_131</IconPath>
     <Stats>
@@ -35796,6 +37467,29 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Greatsword</Name>
     <Id>42332</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Sword_131</IconPath>
+    <Stats>
+      <Stamina>180</Stamina>
+      <AttackPower>210</AttackPower>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandSword</Type>
+    <MinDamage>670</MinDamage>
+    <MaxDamage>1005</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Greatsword</Name>
+    <Id>42333</Id>
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
@@ -35897,6 +37591,29 @@
     <Slot>MainHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_91</IconPath>
+    <Stats>
+      <Stamina>66</Stamina>
+      <Intellect>44</Intellect>
+      <SpellPower>550</SpellPower>
+      <CritRating>36</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>79</MinDamage>
+    <MaxDamage>251</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Spellblade</Name>
+    <Id>42347</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Hammer_29</IconPath>
     <Stats>
@@ -35934,6 +37651,29 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Gavel</Name>
     <Id>42352</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_17</IconPath>
+    <Stats>
+      <Stamina>66</Stamina>
+      <Intellect>44</Intellect>
+      <SpellPower>550</SpellPower>
+      <Resilience>36</Resilience>
+      <Mp5>14</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>79</MinDamage>
+    <MaxDamage>251</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Gavel</Name>
+    <Id>42353</Id>
     <Slot>MainHand</Slot>
   </Item>
   <Item>
@@ -35997,6 +37737,30 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Staff_74</IconPath>
+    <Stats>
+      <Stamina>175</Stamina>
+      <Intellect>77</Intellect>
+      <SpellPower>550</SpellPower>
+      <CritRating>86</CritRating>
+      <Resilience>86</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>220</MinDamage>
+    <MaxDamage>406</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Battle Staff</Name>
+    <Id>42364</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Staff_87</IconPath>
     <Stats>
@@ -36054,6 +37818,30 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Energy Staff</Name>
     <Id>42384</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>175</Stamina>
+      <Intellect>77</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>550</SpellPower>
+      <Resilience>86</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>220</MinDamage>
+    <MaxDamage>406</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Energy Staff</Name>
+    <Id>42385</Id>
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
@@ -36117,6 +37905,30 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Staff_88</IconPath>
+    <Stats>
+      <Agility>105</Agility>
+      <Stamina>180</Stamina>
+      <CritRating>64</CritRating>
+      <Resilience>80</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>372</MinDamage>
+    <MaxDamage>558</MaxDamage>
+    <Speed>2</Speed>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Staff</Name>
+    <Id>42391</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Jewelcrafting_PurpleSerpent</IconPath>
     <Stats>
@@ -36157,7 +37969,7 @@
           <Stats>
             <ManaRestore>2340</ManaRestore>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>300</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
@@ -36352,6 +38164,25 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Axe_03</IconPath>
+    <Stats>
+      <Stamina>55</Stamina>
+      <AttackPower>76</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>25</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Thrown</Type>
+    <MinDamage>353</MinDamage>
+    <MaxDamage>531</MaxDamage>
+    <Speed>1.9</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's War Edge</Name>
+    <Id>42451</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Rifle_31</IconPath>
     <Stats>
@@ -36387,6 +38218,27 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Rifle</Name>
     <Id>42485</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Rifle_31</IconPath>
+    <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
+      <Stamina>55</Stamina>
+      <AttackPower>76</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>25</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Gun</Type>
+    <MinDamage>464</MinDamage>
+    <MaxDamage>658</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Rifle</Name>
+    <Id>42486</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -36428,6 +38280,27 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Bow_31</IconPath>
+    <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
+      <Stamina>55</Stamina>
+      <AttackPower>76</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>25</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Bow</Type>
+    <MinDamage>464</MinDamage>
+    <MaxDamage>658</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Longbow</Name>
+    <Id>42491</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Weapon_Crossbow_32</IconPath>
     <Stats>
@@ -36463,6 +38336,27 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Heavy Crossbow</Name>
     <Id>42495</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Crossbow_32</IconPath>
+    <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
+      <Stamina>55</Stamina>
+      <AttackPower>76</AttackPower>
+      <CritRating>26</CritRating>
+      <Resilience>25</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Crossbow</Type>
+    <MinDamage>464</MinDamage>
+    <MaxDamage>658</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Heavy Crossbow</Name>
+    <Id>42496</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -36505,6 +38399,27 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Touch of Defeat</Name>
     <Id>42502</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Wand_27</IconPath>
+    <Stats>
+      <Stamina>43</Stamina>
+      <Intellect>19</Intellect>
+      <SpellPower>44</SpellPower>
+      <CritRating>25</CritRating>
+      <Resilience>24</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Wand</Type>
+    <MinDamage>437</MinDamage>
+    <MaxDamage>812</MaxDamage>
+    <DamageType>Fire</DamageType>
+    <Speed>1.9</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Touch of Defeat</Name>
+    <Id>42503</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -36588,6 +38503,27 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Wand_27</IconPath>
+    <Stats>
+      <Stamina>43</Stamina>
+      <Intellect>19</Intellect>
+      <Spirit>25</Spirit>
+      <SpellPower>44</SpellPower>
+      <Resilience>24</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Wand</Type>
+    <MinDamage>437</MinDamage>
+    <MaxDamage>812</MaxDamage>
+    <DamageType>Fire</DamageType>
+    <Speed>1.9</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Baton of Light</Name>
+    <Id>42514</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Wand_27</IconPath>
     <Stats>
@@ -36651,6 +38587,27 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Wand_27</IconPath>
+    <Stats>
+      <Stamina>43</Stamina>
+      <Intellect>19</Intellect>
+      <SpellPower>44</SpellPower>
+      <SpellPenetration>31</SpellPenetration>
+      <Resilience>24</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Wand</Type>
+    <MinDamage>437</MinDamage>
+    <MaxDamage>812</MaxDamage>
+    <DamageType>Fire</DamageType>
+    <Speed>1.9</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Piercing Touch</Name>
+    <Id>42520</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Misc_Book_06</IconPath>
     <Stats>
@@ -36699,6 +38656,23 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Endgame</Name>
     <Id>42525</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Misc_Book_06</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <Intellect>33</Intellect>
+      <SpellPower>78</SpellPower>
+      <CritRating>44</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Endgame</Name>
+    <Id>42526</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -36753,6 +38727,23 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Misc_Book_06</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <Intellect>33</Intellect>
+      <Spirit>44</Spirit>
+      <SpellPower>78</SpellPower>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Reprieve</Name>
+    <Id>42532</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Misc_Book_06</IconPath>
     <Stats>
@@ -36801,6 +38792,23 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Grimoire</Name>
     <Id>42537</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Misc_Book_06</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <Intellect>33</Intellect>
+      <SpellPower>78</SpellPower>
+      <SpellPenetration>55</SpellPenetration>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Grimoire</Name>
+    <Id>42538</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -37018,6 +39026,22 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shield_63</IconPath>
+    <Stats>
+      <Armor>7960</Armor>
+      <Stamina>126</Stamina>
+      <BlockValue>223</BlockValue>
+      <Resilience>84</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Shield</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Shield Wall</Name>
+    <Id>42560</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shield_61</IconPath>
     <Stats>
@@ -37053,6 +39077,25 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Barrier</Name>
     <Id>42564</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shield_61</IconPath>
+    <Stats>
+      <Armor>7960</Armor>
+      <Stamina>78</Stamina>
+      <Intellect>33</Intellect>
+      <SpellPower>78</SpellPower>
+      <CritRating>44</CritRating>
+      <BlockValue>223</BlockValue>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Shield</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Barrier</Name>
+    <Id>42565</Id>
     <Slot>OffHand</Slot>
   </Item>
   <Item>
@@ -37113,9 +39156,42 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shield_61</IconPath>
+    <Stats>
+      <Armor>7960</Armor>
+      <Stamina>78</Stamina>
+      <Intellect>33</Intellect>
+      <SpellPower>78</SpellPower>
+      <BlockValue>223</BlockValue>
+      <Resilience>44</Resilience>
+      <Mp5>18</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Shield</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Redoubt</Name>
+    <Id>42571</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_IdolofHealth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <AttackPower>94</AttackPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Rare</Quality>
     <Type>Idol</Type>
     <SocketBonus />
@@ -37126,7 +39202,21 @@
   <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_IdolofHealth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <SpellPower>52</SpellPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Rare</Quality>
     <Type>Idol</Type>
     <SocketBonus />
@@ -37168,9 +39258,34 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>Spell_Nature_NatureTouchGrow</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>Idol</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Idol of Tenacity</Name>
+    <Id>42579</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_IdolofHealth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <SpellPower>62</SpellPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <SocketBonus />
@@ -37181,7 +39296,21 @@
   <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Relics_IdolofHealth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <SpellPower>70</SpellPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <SocketBonus />
@@ -37190,9 +39319,48 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Relics_IdolofHealth</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <SpellPower>84</SpellPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Idol</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Idol of Steadfastness</Name>
+    <Id>42584</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_IdolofHealth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <AttackPower>106</AttackPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <SocketBonus />
@@ -37203,12 +39371,51 @@
   <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Relics_IdolofHealth</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <AttackPower>120</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <SocketBonus />
     <Name>Deadly Gladiator's Idol of Resolve</Name>
     <Id>42588</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Relics_IdolofHealth</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <AttackPower>144</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Idol</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Idol of Resolve</Name>
+    <Id>42589</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -37271,6 +39478,17 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>Spell_Frost_SummonWaterElemental</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>Totem</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Totem of the Third Wind</Name>
+    <Id>42598</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>Spell_Nature_SlowingTotem</IconPath>
     <Stats>
@@ -37292,6 +39510,17 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Totem of Survival</Name>
     <Id>42602</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>Spell_Nature_SlowingTotem</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>Totem</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Totem of Survival</Name>
+    <Id>42603</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -37319,9 +39548,34 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>Spell_Nature_SlowingTotem</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>Totem</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Totem of Indomitability</Name>
+    <Id>42608</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_LibramofHope</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <AttackPower>94</AttackPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Rare</Quality>
     <Type>Libram</Type>
     <SocketBonus />
@@ -37369,11 +39623,39 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Misc_Book_07</IconPath>
+    <Stats>
+      <SpellPower>320</SpellPower>
+      <FlashOfLightSpellPower>320</FlashOfLightSpellPower>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Libram</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Libram of Justice</Name>
+    <Id>42615</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PlagueStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>94</AttackPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Rare</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Savage Gladiator's Sigil of Strife</Name>
@@ -37383,9 +39665,23 @@
   <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PlagueStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>106</AttackPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Hateful Gladiator's Sigil of Strife</Name>
@@ -37395,13 +39691,53 @@
   <Item>
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PlagueStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>120</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Deadly Gladiator's Sigil of Strife</Name>
     <Id>42620</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Shield_56</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PlagueStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>144</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Sigil</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Sigil of Strife</Name>
+    <Id>42621</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -37746,7 +40082,21 @@
   <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Misc_Book_07</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <AttackPower>106</AttackPower>
+          </Stats>
+          <Duration>6</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <SocketBonus />
@@ -37758,7 +40108,19 @@
     <ItemLevel>213</ItemLevel>
     <IconPath>INV_Relics_LibramofHope</IconPath>
     <Stats>
-      <APCrusaderStrike_10>120</APCrusaderStrike_10>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>CrusaderStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>120</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
@@ -37768,20 +40130,35 @@
     <Slot>Ranged</Slot>
   </Item>
   <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Relics_LibramofHope</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>CrusaderStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>144</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Libram</Type>
+    <SocketBonus />
+    <Name>Furious Gladiator's Libram of Fortitude</Name>
+    <Id>42853</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Inscription_TarotGreatness</IconPath>
     <Stats>
       <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <HighestStat>300</HighestStat>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.33</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
         <SpecialEffect>
           <Trigger>HealingSpellHit</Trigger>
           <Stats>
@@ -37793,7 +40170,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
         <SpecialEffect>
-          <Trigger>DamageSpellHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
           </Stats>
@@ -37803,7 +40180,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>3</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
       <Strength>90</Strength>
       <GreatnessProc>300</GreatnessProc>
     </Stats>
@@ -37819,6 +40196,19 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Inscription_TarotIllusion</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <ManaRestore>1200</ManaRestore>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>300</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>100</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
@@ -37851,7 +40241,7 @@
           <Stats>
             <ShadowDamage>2000</ShadowDamage>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.35</Chance>
           <MaxStack>1</MaxStack>
@@ -40485,13 +42875,13 @@
     <Slot>Finger</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
+    <ItemLevel>200</ItemLevel>
     <IconPath>INV_Fishingpole_03</IconPath>
     <Stats />
     <Quality>Epic</Quality>
     <Type>None</Type>
-    <MinDamage>21</MinDamage>
-    <MaxDamage>33</MaxDamage>
+    <MinDamage>447</MinDamage>
+    <MaxDamage>672</MaxDamage>
     <Speed>3</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -41759,16 +44149,6 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <HighestStat>300</HighestStat>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.33</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
           <Trigger>HealingSpellHit</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
@@ -41779,7 +44159,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
         <SpecialEffect>
-          <Trigger>DamageSpellHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
           </Stats>
@@ -41789,7 +44169,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>3</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
       <Agility>90</Agility>
       <GreatnessProc>300</GreatnessProc>
     </Stats>
@@ -41807,16 +44187,6 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <HighestStat>300</HighestStat>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.33</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
           <Trigger>HealingSpellHit</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
@@ -41827,7 +44197,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
         <SpecialEffect>
-          <Trigger>DamageSpellHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
           </Stats>
@@ -41837,7 +44207,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>3</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
       <Spirit>90</Spirit>
       <GreatnessProc>300</GreatnessProc>
     </Stats>
@@ -41855,16 +44225,6 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <HighestStat>300</HighestStat>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.33</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
           <Trigger>HealingSpellHit</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
@@ -41875,7 +44235,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
         <SpecialEffect>
-          <Trigger>DamageSpellHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <HighestStat>300</HighestStat>
           </Stats>
@@ -41885,7 +44245,7 @@
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>3</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
       <Intellect>90</Intellect>
       <GreatnessProc>300</GreatnessProc>
     </Stats>
@@ -42663,6 +45023,54 @@
     <SocketBonus />
     <Name>Deadly Gladiator's Focus Staff</Name>
     <Id>44420</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>175</Stamina>
+      <Intellect>77</Intellect>
+      <SpellPower>550</SpellPower>
+      <Resilience>86</Resilience>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>220</MinDamage>
+    <MaxDamage>406</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's War Staff</Name>
+    <Id>44421</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>175</Stamina>
+      <Intellect>77</Intellect>
+      <SpellPower>550</SpellPower>
+      <HitRating>86</HitRating>
+      <Resilience>86</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>220</MinDamage>
+    <MaxDamage>406</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Focus Staff</Name>
+    <Id>44422</Id>
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
@@ -44117,9 +46525,9 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>FistWeapon</Type>
-    <MinDamage>391</MinDamage>
-    <MaxDamage>587</MaxDamage>
-    <Speed>2.6</Speed>
+    <MinDamage>406</MinDamage>
+    <MaxDamage>610</MaxDamage>
+    <Speed>2.7</Speed>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <HitRating>4</HitRating>
@@ -44218,6 +46626,8 @@
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_weapon_rifle_31</IconPath>
     <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
       <Stamina>57</Stamina>
       <Strength>27</Strength>
       <HitRating>21</HitRating>
@@ -44226,8 +46636,8 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>Gun</Type>
-    <MinDamage>328</MinDamage>
-    <MaxDamage>610</MaxDamage>
+    <MinDamage>401</MinDamage>
+    <MaxDamage>683</MaxDamage>
     <Speed>2.9</Speed>
     <SocketBonus />
     <Name>Veranus' Bane</Name>
@@ -44320,9 +46730,9 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>OneHandSword</Type>
-    <MinDamage>200</MinDamage>
-    <MaxDamage>372</MaxDamage>
-    <Speed>1.6</Speed>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
     <SocketBonus />
     <Name>Remorse</Name>
     <Id>45142</Id>
@@ -44354,9 +46764,23 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>RuneStrikeHit</Trigger>
+          <Stats>
+            <DodgeRating>136</DodgeRating>
+          </Stats>
+          <Duration>5</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Sigil of Deflection</Name>
@@ -44366,7 +46790,9 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Relics_LibramofHope</IconPath>
-    <Stats />
+    <Stats>
+      <ShieldOfRighteousnessBlockValue>272</ShieldOfRighteousnessBlockValue>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <SocketBonus />
@@ -44819,7 +47245,9 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>Spell_Nature_GiftoftheWaterSpirit</IconPath>
-    <Stats />
+    <Stats>
+      <TotemSSDamage>155</TotemSSDamage>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Totem</Type>
     <SocketBonus />
@@ -45675,10 +48103,10 @@
     <IconPath>INV_Belt_49C</IconPath>
     <Stats>
       <Armor>1361</Armor>
-      <Stamina>142</Stamina>
-      <Strength>80</Strength>
+      <Stamina>108</Stamina>
+      <Strength>93</Strength>
       <CritRating>64</CritRating>
-      <HitRating>46</HitRating>
+      <HitRating>47</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Plate</Type>
@@ -45731,6 +48159,51 @@
     <Name>Sapphire Amulet of Renewal</Name>
     <Id>45243</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Boots_Chain_07</IconPath>
+    <Stats>
+      <Armor>931</Armor>
+      <Agility>69</Agility>
+      <Stamina>55</Stamina>
+      <AttackPower>114</AttackPower>
+      <Intellect>49</Intellect>
+      <CritRating>42</CritRating>
+      <HitRating>42</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Greaves of Swift Vengeance</Name>
+    <Id>45244</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Shoulder_51</IconPath>
+    <Stats>
+      <Armor>457</Armor>
+      <Agility>87</Agility>
+      <Stamina>96</Stamina>
+      <AttackPower>122</AttackPower>
+      <HitRating>55</HitRating>
+      <ExpertiseRating>47</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Shoulderpads of the Intruder</Name>
+    <Id>45245</Id>
+    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -45883,9 +48356,12 @@
   <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Shield_56</IconPath>
-    <Stats />
+    <Stats>
+      <BonusDeathCoilDamage>380</BonusDeathCoilDamage>
+      <BonusFrostStrikeDamage>380</BonusFrostStrikeDamage>
+    </Stats>
     <Quality>Epic</Quality>
-    <Type>None</Type>
+    <Type>Sigil</Type>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Sigil of the Vengeful Heart</Name>
@@ -46010,6 +48486,8 @@
     <ItemLevel>232</ItemLevel>
     <IconPath>INV_Weapon_Rifle_33</IconPath>
     <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
       <Agility>38</Agility>
       <Stamina>33</Stamina>
       <AttackPower>54</AttackPower>
@@ -46018,8 +48496,8 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>Gun</Type>
-    <MinDamage>328</MinDamage>
-    <MaxDamage>610</MaxDamage>
+    <MinDamage>401</MinDamage>
+    <MaxDamage>683</MaxDamage>
     <Speed>2.9</Speed>
     <SocketBonus />
     <Name>Giant's Bane</Name>
@@ -46114,7 +48592,7 @@
     <Stats>
       <Agility>52</Agility>
       <Stamina>51</Stamina>
-      <AttackPower>38</AttackPower>
+      <AttackPower>76</AttackPower>
       <CritRating>37</CritRating>
       <HasteRating>29</HasteRating>
     </Stats>
@@ -46537,19 +49015,19 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Wand_29</IconPath>
     <Stats>
-      <Stamina>22</Stamina>
-      <Intellect>17</Intellect>
-      <Spirit>20</Spirit>
-      <SpellPower>42</SpellPower>
-      <HitRating>27</HitRating>
+      <Stamina>26</Stamina>
+      <Intellect>19</Intellect>
+      <Spirit>22</Spirit>
+      <SpellPower>45</SpellPower>
+      <HitRating>29</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Wand</Type>
-    <MinDamage>397</MinDamage>
-    <MaxDamage>737</MaxDamage>
+    <MinDamage>414</MinDamage>
+    <MaxDamage>769</MaxDamage>
     <DamageType>Nature</DamageType>
     <Speed>1.8</Speed>
     <SocketColor1>Yellow</SocketColor1>
@@ -46582,19 +49060,19 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_ThrowingKnife_08</IconPath>
     <Stats>
-      <Agility>21</Agility>
-      <Stamina>25</Stamina>
-      <AttackPower>55</AttackPower>
-      <ArmorPenetrationRating>26</ArmorPenetrationRating>
-      <HitRating>19</HitRating>
+      <Agility>23</Agility>
+      <Stamina>28</Stamina>
+      <AttackPower>62</AttackPower>
+      <ArmorPenetrationRating>28</ArmorPenetrationRating>
+      <HitRating>22</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Thrown</Type>
-    <MinDamage>374</MinDamage>
-    <MaxDamage>562</MaxDamage>
+    <MinDamage>390</MinDamage>
+    <MaxDamage>586</MaxDamage>
     <Speed>2.1</Speed>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -46976,9 +49454,9 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>OneHandMace</Type>
-    <MinDamage>200</MinDamage>
-    <MaxDamage>372</MaxDamage>
-    <Speed>1.6</Speed>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
     <SocketBonus />
     <Name>Stonerender</Name>
     <Id>45315</Id>
@@ -47172,6 +49650,8 @@
     <ItemLevel>232</ItemLevel>
     <IconPath>INV_Weapon_Bow_51</IconPath>
     <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
       <Agility>38</Agility>
       <Stamina>36</Stamina>
       <AttackPower>54</AttackPower>
@@ -47180,8 +49660,8 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>Bow</Type>
-    <MinDamage>316</MinDamage>
-    <MaxDamage>589</MaxDamage>
+    <MinDamage>387</MinDamage>
+    <MaxDamage>660</MaxDamage>
     <Speed>2.8</Speed>
     <SocketBonus />
     <Name>Siren's Cry</Name>
@@ -48282,8 +50762,8 @@
       <Armor>402</Armor>
       <Stamina>69</Stamina>
       <Intellect>57</Intellect>
-      <Spirit>65</Spirit>
-      <SpellPower>70</SpellPower>
+      <Spirit>52</Spirit>
+      <SpellPower>93</SpellPower>
       <HasteRating>53</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -49751,6 +52231,29 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Gauntlets_48</IconPath>
+    <Stats>
+      <Armor>846</Armor>
+      <Agility>79</Agility>
+      <Stamina>75</Stamina>
+      <AttackPower>106</AttackPower>
+      <Intellect>49</Intellect>
+      <CritRating>55</CritRating>
+      <HitRating>50</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Gloves of the Steady Hand</Name>
+    <Id>45444</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
     <IconPath>INV_Chest_Plate18</IconPath>
     <Stats>
       <Armor>2420</Armor>
@@ -49773,6 +52276,27 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Bracer_24B</IconPath>
+    <Stats>
+      <Armor>142</Armor>
+      <Stamina>63</Stamina>
+      <Intellect>52</Intellect>
+      <Spirit>48</Spirit>
+      <SpellPower>75</SpellPower>
+      <HasteRating>39</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Grasps of Reason</Name>
+    <Id>45446</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Jewelry_Ring_45</IconPath>
     <Stats>
@@ -49793,19 +52317,19 @@
     <Slot>Neck</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Weapon_Shortblade_77</IconPath>
     <Stats>
-      <Agility>47</Agility>
-      <Stamina>48</Stamina>
-      <AttackPower>54</AttackPower>
-      <ArmorPenetrationRating>20</ArmorPenetrationRating>
-      <HitRating>31</HitRating>
+      <Agility>51</Agility>
+      <Stamina>53</Stamina>
+      <AttackPower>62</AttackPower>
+      <ArmorPenetrationRating>24</ArmorPenetrationRating>
+      <HitRating>34</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Dagger</Type>
-    <MinDamage>246</MinDamage>
-    <MaxDamage>370</MaxDamage>
+    <MinDamage>257</MinDamage>
+    <MaxDamage>387</MaxDamage>
     <Speed>1.8</Speed>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -49816,19 +52340,19 @@
     <Slot>OneHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Weapon_Hand_22</IconPath>
     <Stats>
-      <Agility>39</Agility>
-      <Stamina>41</Stamina>
-      <AttackPower>72</AttackPower>
-      <CritRating>27</CritRating>
-      <HitRating>31</HitRating>
+      <Agility>42</Agility>
+      <Stamina>45</Stamina>
+      <AttackPower>80</AttackPower>
+      <CritRating>30</CritRating>
+      <HitRating>34</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>FistWeapon</Type>
-    <MinDamage>370</MinDamage>
-    <MaxDamage>556</MaxDamage>
+    <MinDamage>386</MinDamage>
+    <MaxDamage>580</MaxDamage>
     <Speed>2.7</Speed>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -50234,13 +52758,56 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Shield_65</IconPath>
+    <Stats>
+      <Armor>8130</Armor>
+      <Stamina>70</Stamina>
+      <Intellect>48</Intellect>
+      <SpellPower>75</SpellPower>
+      <CritRating>40</CritRating>
+      <BlockValue>227</BlockValue>
+      <HasteRating>47</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Shield</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Wisdom's Hold</Name>
+    <Id>45470</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_69</IconPath>
+    <Stats>
+      <Stamina>96</Stamina>
+      <Strength>51</Strength>
+      <DodgeRating>39</DodgeRating>
+      <DefenseRating>48</DefenseRating>
+      <ExpertiseRating>41</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Fate's Clutch</Name>
+    <Id>45471</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
     <IconPath>INV_Helmet_134</IconPath>
     <Stats>
       <Armor>1966</Armor>
-      <Stamina>192</Stamina>
-      <Strength>112</Strength>
+      <Stamina>145</Stamina>
+      <Strength>122</Strength>
       <CritRating>86</CritRating>
-      <HitRating>69</HitRating>
+      <HitRating>61</HitRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Plate</Type>
@@ -50252,6 +52819,51 @@
     <Name>Warhelm of the Champion</Name>
     <Id>45472</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_CHEST_LEATHER_16</IconPath>
+    <Stats>
+      <Armor>609</Armor>
+      <Agility>112</Agility>
+      <Stamina>127</Stamina>
+      <AttackPower>140</AttackPower>
+      <CritRating>70</CritRating>
+      <HasteRating>85</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketColor3>Red</SocketColor3>
+    <SocketBonus>
+      <Agility>8</Agility>
+    </SocketBonus>
+    <Name>Embrace of the Gladiator</Name>
+    <Id>45473</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Shoulder_01</IconPath>
+    <Stats>
+      <Armor>1015</Armor>
+      <Stamina>82</Stamina>
+      <Intellect>69</Intellect>
+      <SpellPower>92</SpellPower>
+      <HasteRating>48</HasteRating>
+      <Mp5>25</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Pauldrons of the Combatant</Name>
+    <Id>45474</Id>
+    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -50352,6 +52964,27 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
+    <IconPath>inv_weapon_shortblade_93</IconPath>
+    <Stats>
+      <Agility>55</Agility>
+      <Stamina>48</Stamina>
+      <AttackPower>64</AttackPower>
+      <CritRating>28</CritRating>
+      <HasteRating>37</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>184</MinDamage>
+    <MaxDamage>343</MaxDamage>
+    <Speed>1.4</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Bladetwister</Name>
+    <Id>45484</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
     <IconPath>INV_Jewelry_Necklace_47</IconPath>
     <Stats>
       <Stamina>96</Stamina>
@@ -50369,6 +53002,27 @@
     <Name>Bronze Pendant of the Vanir</Name>
     <Id>45485</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Misc_Cape_Naxxramas_02</IconPath>
+    <Stats>
+      <Armor>162</Armor>
+      <Stamina>61</Stamina>
+      <Intellect>51</Intellect>
+      <SpellPower>75</SpellPower>
+      <CritRating>40</CritRating>
+      <Mp5>19</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Drape of the Sullen Goddess</Name>
+    <Id>45486</Id>
+    <Slot>Back</Slot>
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
@@ -50443,7 +53097,7 @@
         <SpecialEffect>
           <Trigger>SpellCast</Trigger>
           <Stats>
-            <SpellPower>850</SpellPower>
+            <SpellPower>751</SpellPower>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>45</Cooldown>
@@ -50524,6 +53178,45 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
+    <IconPath>inv_weapon_hand_23</IconPath>
+    <Stats>
+      <Agility>35</Agility>
+      <Stamina>54</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>27</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>197</MinDamage>
+    <MaxDamage>367</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus />
+    <Name>Delirium's Touch</Name>
+    <Id>45494</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_jewelry_ring_66</IconPath>
+    <Stats>
+      <Stamina>52</Stamina>
+      <Intellect>48</Intellect>
+      <Spirit>39</Spirit>
+      <SpellPower>75</SpellPower>
+      <HasteRating>55</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Conductive Seal</Name>
+    <Id>45495</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
     <IconPath>INV_Misc_Cape_19</IconPath>
     <Stats>
       <Armor>162</Armor>
@@ -50542,6 +53235,26 @@
     <Name>Titanskin Cloak</Name>
     <Id>45496</Id>
     <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_helmet_99</IconPath>
+    <Stats>
+      <Armor>263</Armor>
+      <Stamina>111</Stamina>
+      <Intellect>92</Intellect>
+      <Spirit>70</Spirit>
+      <SpellPower>131</SpellPower>
+      <CritRating>69</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus />
+    <Name>Crown of Luminescence</Name>
+    <Id>45497</Id>
+    <Slot>Head</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -50847,23 +53560,41 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
+    <IconPath>inv_jewelry_necklace_45</IconPath>
+    <Stats>
+      <Agility>64</Agility>
+      <Stamina>70</Stamina>
+      <AttackPower>86</AttackPower>
+      <CritRating>48</CritRating>
+      <HasteRating>41</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Pendulum of Infinity</Name>
+    <Id>45517</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
     <IconPath>Spell_Holy_SummonLightwell</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DoTTick</Trigger>
+          <Trigger>DamageSpellHit</Trigger>
           <Stats>
-            <ShadowDamage>1050</ShadowDamage>
+            <SpellPower>850</SpellPower>
           </Stats>
-          <Duration>1</Duration>
+          <Duration>10</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <CritRating>95</CritRating>
-      <ExtractOfNecromanticPowerProc>1</ExtractOfNecromanticPowerProc>
+      <CritRating>120</CritRating>
+      <SpellPowerFor10SecOnHit_10_45>850</SpellPowerFor10SecOnHit_10_45>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -50872,6 +53603,30 @@
     <Name>Flare of the Heavens</Name>
     <Id>45518</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Chest_Leather_12</IconPath>
+    <Stats>
+      <Armor>609</Armor>
+      <Stamina>74</Stamina>
+      <Intellect>92</Intellect>
+      <Spirit>78</Spirit>
+      <SpellPower>122</SpellPower>
+      <HasteRating>69</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketColor3>Blue</SocketColor3>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Vestments of the Blind Denizen</Name>
+    <Id>45519</Id>
+    <Slot>Chest</Slot>
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
@@ -51103,6 +53858,86 @@
     <Name>Cowl of Dark Whispers</Name>
     <Id>45532</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_weapon_halberd_30</IconPath>
+    <Stats>
+      <Agility>112</Agility>
+      <Stamina>129</Stamina>
+      <AttackPower>164</AttackPower>
+      <HitRating>64</HitRating>
+      <HasteRating>85</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Polearm</Type>
+    <MinDamage>665</MinDamage>
+    <MaxDamage>999</MaxDamage>
+    <Speed>3.4</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus />
+    <Name>Dark Edge of Depravity</Name>
+    <Id>45533</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_jewelry_ring_76</IconPath>
+    <Stats>
+      <Stamina>81</Stamina>
+      <Strength>74</Strength>
+      <CritRating>48</CritRating>
+      <HitRating>40</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Seal of the Betrayed King</Name>
+    <Id>45534</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_pants_leather_28</IconPath>
+    <Stats>
+      <Armor>533</Armor>
+      <Agility>112</Agility>
+      <Stamina>127</Stamina>
+      <AttackPower>152</AttackPower>
+      <CritRating>78</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketColor3>Blue</SocketColor3>
+    <SocketBonus />
+    <Name>Legguards of Cunning Deception</Name>
+    <Id>45536</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_boots_cloth_17</IconPath>
+    <Stats>
+      <Armor>223</Armor>
+      <Stamina>82</Stamina>
+      <Intellect>69</Intellect>
+      <SpellPower>92</SpellPower>
+      <CritRating>61</CritRating>
+      <HasteRating>47</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus />
+    <Name>Treads of the False Oracle</Name>
+    <Id>45537</Id>
+    <Slot>Feet</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -51686,6 +54521,28 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Crossbow_33</IconPath>
+    <Stats>
+      <Armor>-30.2</Armor>
+      <BonusArmor>30.2</BonusArmor>
+      <Agility>40</Agility>
+      <Stamina>40</Stamina>
+      <AttackPower>58</AttackPower>
+      <CritRating>28</CritRating>
+      <HitRating>23</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Crossbow</Type>
+    <MinDamage>465</MinDamage>
+    <MaxDamage>656</MaxDamage>
+    <Speed>2.8</Speed>
+    <SocketBonus />
+    <Name>Skyforge Crossbow</Name>
+    <Id>45570</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
     <IconPath>INV_Pants_Plate_20</IconPath>
     <Stats>
       <Armor>2117</Armor>
@@ -51726,6 +54583,77 @@
     <Name>Daschal's Bite</Name>
     <Id>45605</Id>
     <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_84</IconPath>
+    <Stats>
+      <Agility>47</Agility>
+      <Stamina>54</Stamina>
+      <AttackPower>80</AttackPower>
+      <CritRating>29</CritRating>
+      <HasteRating>24</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>271</MinDamage>
+    <MaxDamage>407</MaxDamage>
+    <Speed>1.8</Speed>
+    <Unique>true</Unique>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Fang of Oblivion</Name>
+    <Id>45607</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Mace_92</IconPath>
+    <Stats>
+      <Stamina>54</Stamina>
+      <Intellect>55</Intellect>
+      <SpellPower>587</SpellPower>
+      <CritRating>29</CritRating>
+      <Mp5>19</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>93</MinDamage>
+    <MaxDamage>297</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Constellus</Name>
+    <Id>45612</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Staff_93</IconPath>
+    <Stats>
+      <Agility>112</Agility>
+      <Stamina>105</Stamina>
+      <AttackPower>140</AttackPower>
+      <ArmorPenetrationRating>85</ArmorPenetrationRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>469</MinDamage>
+    <MaxDamage>705</MaxDamage>
+    <Speed>2.4</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>8</Agility>
+    </SocketBonus>
+    <Name>Dreambinder</Name>
+    <Id>45613</Id>
+    <Slot>TwoHand</Slot>
   </Item>
   <Item>
     <ItemLevel>24</ItemLevel>
@@ -51769,6 +54697,24 @@
     <Name>High-powered Flashlight</Name>
     <Id>45631</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>inv_bracer_23a</IconPath>
+    <Stats>
+      <Armor>1059</Armor>
+      <Stamina>81</Stamina>
+      <Strength>74</Strength>
+      <CritRating>48</CritRating>
+      <HasteRating>40</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus />
+    <Name>Armbands of Bedlam</Name>
+    <Id>45663</Id>
+    <Slot>Wrist</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -51875,7 +54821,7 @@
       <Armor>7802</Armor>
       <Stamina>89</Stamina>
       <Intellect>41</Intellect>
-      <SpellPower>37</SpellPower>
+      <SpellPower>73</SpellPower>
       <CritRating>46</CritRating>
       <BlockValue>218</BlockValue>
       <HasteRating>36</HasteRating>
@@ -52137,7 +55083,8 @@
       <Stamina>69</Stamina>
       <Strength>35</Strength>
       <HitRating>24</HitRating>
-      <DodgeRating>46</DodgeRating>
+      <DodgeRating>31</DodgeRating>
+      <ParryRating>30</ParryRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>OneHandSword</Type>
@@ -52227,10 +55174,11 @@
     <Stats>
       <Armor>7802</Armor>
       <Stamina>66</Stamina>
-      <Strength>59</Strength>
+      <Strength>40</Strength>
       <ParryRating>32</ParryRating>
       <BlockValue>218</BlockValue>
       <DefenseRating>44</DefenseRating>
+      <ExpertiseRating>32</ExpertiseRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Shield</Type>
@@ -53100,13 +56048,13 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
+    <ItemLevel>20</ItemLevel>
     <IconPath>INV_Fishingpole_01</IconPath>
     <Stats />
     <Quality>Rare</Quality>
     <Type>None</Type>
-    <MinDamage>12</MinDamage>
-    <MaxDamage>18</MaxDamage>
+    <MinDamage>42</MinDamage>
+    <MaxDamage>63</MaxDamage>
     <Speed>3</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -53191,19 +56139,6 @@
     <ItemLevel>219</ItemLevel>
     <IconPath>INV_Misc_Rune_10</IconPath>
     <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>DamageSpellCast</Trigger>
-          <Stats>
-            <HasteRating>522</HasteRating>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
       <HitRating>108</HitRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -53213,6 +56148,117 @@
     <Name>Elemental Focus Stone</Name>
     <Id>45866</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_CHEST_MAIL_04</IconPath>
+    <Stats>
+      <Armor>1314</Armor>
+      <Stamina>99</Stamina>
+      <Intellect>81</Intellect>
+      <SpellPower>114</SpellPower>
+      <CritRating>70</CritRating>
+      <HasteRating>57</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Breastplate of the Stoneshaper</Name>
+    <Id>45867</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Sword_136</IconPath>
+    <Stats>
+      <Stamina>141</Stamina>
+      <Strength>113</Strength>
+      <ArmorPenetrationRating>64</ArmorPenetrationRating>
+      <CritRating>81</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandSword</Type>
+    <MinDamage>670</MinDamage>
+    <MaxDamage>1005</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Aesir's Edge</Name>
+    <Id>45868</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Bracer_15</IconPath>
+    <Stats>
+      <Armor>259</Armor>
+      <Agility>63</Agility>
+      <Stamina>54</Stamina>
+      <AttackPower>72</AttackPower>
+      <ArmorPenetrationRating>30</ArmorPenetrationRating>
+      <HitRating>46</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Fluxing Energy Coils</Name>
+    <Id>45869</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Weapon_Rifle_33</IconPath>
+    <Stats>
+      <Armor>-25.4</Armor>
+      <BonusArmor>25.4</BonusArmor>
+      <Agility>29</Agility>
+      <Stamina>30</Stamina>
+      <AttackPower>66</AttackPower>
+      <HitRating>27</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Gun</Type>
+    <MinDamage>415</MinDamage>
+    <MaxDamage>707</MaxDamage>
+    <Speed>3</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Magnetized Projectile Emitter</Name>
+    <Id>45870</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>Achievement_Dungeon_UlduarRaid_Misc_02</IconPath>
+    <Stats>
+      <BonusArmor>448</BonusArmor>
+      <Stamina>72</Stamina>
+      <Strength>40</Strength>
+      <ParryRating>35</ParryRating>
+      <ExpertiseRating>22</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <ParryRating>4</ParryRating>
+    </SocketBonus>
+    <Name>Seal of Ulduar</Name>
+    <Id>45871</Id>
+    <Slot>Finger</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -53271,19 +56317,19 @@
     <Slot>Finger</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Mace_90</IconPath>
     <Stats>
-      <Stamina>74</Stamina>
-      <Strength>34</Strength>
-      <HitRating>20</HitRating>
-      <ParryRating>30</ParryRating>
-      <DefenseRating>24</DefenseRating>
+      <Stamina>78</Stamina>
+      <Strength>36</Strength>
+      <HitRating>23</HitRating>
+      <ParryRating>33</ParryRating>
+      <DefenseRating>27</DefenseRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>OneHandMace</Type>
-    <MinDamage>192</MinDamage>
-    <MaxDamage>357</MaxDamage>
+    <MinDamage>200</MinDamage>
+    <MaxDamage>372</MaxDamage>
     <Speed>1.6</Speed>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -53294,15 +56340,16 @@
     <Slot>OneHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Shield_66</IconPath>
     <Stats>
-      <Armor>7890</Armor>
-      <Stamina>86</Stamina>
-      <Strength>53</Strength>
-      <BlockRating>31</BlockRating>
-      <BlockValue>221</BlockValue>
-      <DefenseRating>33</DefenseRating>
+      <Armor>7960</Armor>
+      <Stamina>92</Stamina>
+      <Strength>39</Strength>
+      <ParryRating>37</ParryRating>
+      <BlockRating>33</BlockRating>
+      <BlockValue>223</BlockValue>
+      <DefenseRating>35</DefenseRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Shield</Type>
@@ -53386,19 +56433,19 @@
     <Slot>Red</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Staff_94</IconPath>
     <Stats>
-      <Stamina>102</Stamina>
-      <Intellect>105</Intellect>
-      <Spirit>76</Spirit>
-      <SpellPower>520</SpellPower>
-      <HasteRating>61</HasteRating>
+      <Stamina>111</Stamina>
+      <Intellect>112</Intellect>
+      <Spirit>84</Spirit>
+      <SpellPower>550</SpellPower>
+      <HasteRating>93</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Staff</Type>
-    <MinDamage>221</MinDamage>
-    <MaxDamage>409</MaxDamage>
+    <MinDamage>231</MinDamage>
+    <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Red</SocketColor2>
@@ -53475,7 +56522,7 @@
       <Armor>475</Armor>
       <Agility>101</Agility>
       <Stamina>77</Stamina>
-      <AttackPower>162</AttackPower>
+      <AttackPower>146</AttackPower>
       <CritRating>60</CritRating>
       <ExpertiseRating>53</ExpertiseRating>
     </Stats>
@@ -53596,19 +56643,19 @@
     <Slot>Trinket</Slot>
   </Item>
   <Item>
-    <ItemLevel>226</ItemLevel>
+    <ItemLevel>232</ItemLevel>
     <IconPath>INV_Weapon_Shortblade_79</IconPath>
     <Stats>
-      <Agility>41</Agility>
-      <Stamina>36</Stamina>
-      <AttackPower>68</AttackPower>
-      <CritRating>28</CritRating>
-      <HasteRating>31</HasteRating>
+      <Agility>44</Agility>
+      <Stamina>40</Stamina>
+      <AttackPower>74</AttackPower>
+      <CritRating>32</CritRating>
+      <HasteRating>34</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Dagger</Type>
-    <MinDamage>192</MinDamage>
-    <MaxDamage>288</MaxDamage>
+    <MinDamage>200</MinDamage>
+    <MaxDamage>301</MaxDamage>
     <Speed>1.4</Speed>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -53729,6 +56776,69 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Rifle_31</IconPath>
+    <Stats>
+      <Armor>-30.2</Armor>
+      <BonusArmor>30.2</BonusArmor>
+      <Stamina>60</Stamina>
+      <AttackPower>82</AttackPower>
+      <CritRating>27</CritRating>
+      <Resilience>26</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Gun</Type>
+    <MinDamage>498</MinDamage>
+    <MaxDamage>702</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Shotgun</Name>
+    <Id>45937</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Bow_31</IconPath>
+    <Stats>
+      <Armor>-30.2</Armor>
+      <BonusArmor>30.2</BonusArmor>
+      <Stamina>60</Stamina>
+      <AttackPower>82</AttackPower>
+      <CritRating>27</CritRating>
+      <Resilience>26</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Bow</Type>
+    <MinDamage>498</MinDamage>
+    <MaxDamage>702</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Recurve</Name>
+    <Id>45938</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Crossbow_32</IconPath>
+    <Stats>
+      <Armor>-30.2</Armor>
+      <BonusArmor>30.2</BonusArmor>
+      <Stamina>60</Stamina>
+      <AttackPower>82</AttackPower>
+      <CritRating>27</CritRating>
+      <Resilience>26</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Crossbow</Type>
+    <MinDamage>498</MinDamage>
+    <MaxDamage>702</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Repeater</Name>
+    <Id>45939</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>INV_CHEST_LEATHER_15</IconPath>
     <Stats>
@@ -53767,6 +56877,626 @@
     <Name>Chestguard of the Lasher</Name>
     <Id>45941</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_GAUNTLETS_61</IconPath>
+    <Stats>
+      <Armor>821</Armor>
+      <Stamina>74</Stamina>
+      <Intellect>62</Intellect>
+      <SpellPower>100</SpellPower>
+      <CritRating>50</CritRating>
+      <HasteRating>43</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Gloves of Whispering Winds</Name>
+    <Id>45943</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>spell_nature_wispsplodegreen</IconPath>
+    <Stats>
+      <Agility>57</Agility>
+      <Stamina>54</Stamina>
+      <AttackPower>92</AttackPower>
+      <ArmorPenetrationRating>38</ArmorPenetrationRating>
+      <HitRating>32</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <HitRating>4</HitRating>
+    </SocketBonus>
+    <Name>Seed of Budding Carnage</Name>
+    <Id>45945</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_65</IconPath>
+    <Stats>
+      <Stamina>47</Stamina>
+      <Intellect>49</Intellect>
+      <SpellPower>74</SpellPower>
+      <HasteRating>30</HasteRating>
+      <Mp5>18</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Mp5>2</Mp5>
+    </SocketBonus>
+    <Name>Fire Orchid Signet</Name>
+    <Id>45946</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Sword_133</IconPath>
+    <Stats>
+      <Agility>49</Agility>
+      <Stamina>31</Stamina>
+      <AttackPower>68</AttackPower>
+      <HitRating>28</HitRating>
+      <ExpertiseRating>24</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>312</MinDamage>
+    <MaxDamage>580</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Serilas, Blood Blade of Invar One-Arm</Name>
+    <Id>45947</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Axe_98</IconPath>
+    <Stats>
+      <Stamina>192</Stamina>
+      <AttackPower>224</AttackPower>
+      <CritRating>70</CritRating>
+      <Resilience>85</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandAxe</Type>
+    <MinDamage>704</MinDamage>
+    <MaxDamage>1057</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Sunderer</Name>
+    <Id>45948</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Mace_74</IconPath>
+    <Stats>
+      <Stamina>192</Stamina>
+      <AttackPower>224</AttackPower>
+      <CritRating>70</CritRating>
+      <Resilience>85</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandMace</Type>
+    <MinDamage>704</MinDamage>
+    <MaxDamage>1057</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Crusher</Name>
+    <Id>45949</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Sword_131</IconPath>
+    <Stats>
+      <Stamina>192</Stamina>
+      <AttackPower>224</AttackPower>
+      <CritRating>70</CritRating>
+      <Resilience>85</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandSword</Type>
+    <MinDamage>704</MinDamage>
+    <MaxDamage>1057</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Claymore</Name>
+    <Id>45950</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Halberd_20</IconPath>
+    <Stats>
+      <Stamina>192</Stamina>
+      <AttackPower>224</AttackPower>
+      <CritRating>70</CritRating>
+      <Resilience>85</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Polearm</Type>
+    <MinDamage>704</MinDamage>
+    <MaxDamage>1057</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Halberd</Name>
+    <Id>45951</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Staff_88</IconPath>
+    <Stats>
+      <Agility>112</Agility>
+      <Stamina>192</Stamina>
+      <CritRating>70</CritRating>
+      <Resilience>85</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>391</MinDamage>
+    <MaxDamage>587</MaxDamage>
+    <Speed>2</Speed>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Greatstaff</Name>
+    <Id>45952</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>186</Stamina>
+      <Intellect>82</Intellect>
+      <SpellPower>587</SpellPower>
+      <Resilience>92</Resilience>
+      <HasteRating>92</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>232</MinDamage>
+    <MaxDamage>428</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Combat Staff</Name>
+    <Id>45953</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>186</Stamina>
+      <Intellect>82</Intellect>
+      <SpellPower>587</SpellPower>
+      <HitRating>92</HitRating>
+      <Resilience>92</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>232</MinDamage>
+    <MaxDamage>428</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Acute Staff</Name>
+    <Id>45954</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>186</Stamina>
+      <Intellect>82</Intellect>
+      <SpellPower>587</SpellPower>
+      <CritRating>92</CritRating>
+      <Resilience>92</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>232</MinDamage>
+    <MaxDamage>428</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Skirmish Staff</Name>
+    <Id>45955</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Staff_87</IconPath>
+    <Stats>
+      <Stamina>186</Stamina>
+      <Intellect>82</Intellect>
+      <Spirit>92</Spirit>
+      <SpellPower>587</SpellPower>
+      <Resilience>92</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>232</MinDamage>
+    <MaxDamage>428</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Light Staff</Name>
+    <Id>45956</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Axe_97</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>342</MinDamage>
+    <MaxDamage>636</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Handaxe</Name>
+    <Id>45957</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_90</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>271</MinDamage>
+    <MaxDamage>407</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Spike</Name>
+    <Id>45958</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Mace_17</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>342</MinDamage>
+    <MaxDamage>636</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Truncheon</Name>
+    <Id>45959</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Sword_58</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>391</MinDamage>
+    <MaxDamage>587</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Longblade</Name>
+    <Id>45960</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Axe_97</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>197</MinDamage>
+    <MaxDamage>367</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dicer</Name>
+    <Id>45961</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_90</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>184</MinDamage>
+    <MaxDamage>343</MaxDamage>
+    <Speed>1.4</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Dirk</Name>
+    <Id>45962</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Hand_19</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>197</MinDamage>
+    <MaxDamage>367</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Left Razor</Name>
+    <Id>45963</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Mace_17</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>197</MinDamage>
+    <MaxDamage>367</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Punisher</Name>
+    <Id>45964</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Sword_58</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>197</MinDamage>
+    <MaxDamage>367</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Swiftblade</Name>
+    <Id>45965</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Axe_97</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>342</MinDamage>
+    <MaxDamage>636</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Splitter</Name>
+    <Id>45966</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_90</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>237</MinDamage>
+    <MaxDamage>441</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Eviscerator</Name>
+    <Id>45967</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Hand_15</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>342</MinDamage>
+    <MaxDamage>636</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketBonus />
+    <Name>Furious Gladiator's Left Claw</Name>
+    <Id>45968</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Hand_19</IconPath>
+    <Stats>
+      <Stamina>82</Stamina>
+      <AttackPower>94</AttackPower>
+      <CritRating>29</CritRating>
+      <Resilience>36</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>342</MinDamage>
+    <MaxDamage>636</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Grasp</Name>
+    <Id>45969</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Weapon_Shortblade_91</IconPath>
+    <Stats>
+      <Stamina>70</Stamina>
+      <Intellect>46</Intellect>
+      <SpellPower>587</SpellPower>
+      <CritRating>39</CritRating>
+      <Resilience>38</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>82</MinDamage>
+    <MaxDamage>264</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Mageblade</Name>
+    <Id>45970</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Mace_17</IconPath>
+    <Stats>
+      <Stamina>70</Stamina>
+      <Intellect>46</Intellect>
+      <SpellPower>587</SpellPower>
+      <Resilience>38</Resilience>
+      <Mp5>16</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>82</MinDamage>
+    <MaxDamage>264</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Furious Gladiator's Salvation</Name>
+    <Id>45971</Id>
+    <Slot>MainHand</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -53860,6 +57590,27 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Pants_Plate_21</IconPath>
+    <Stats>
+      <Armor>2054</Armor>
+      <Stamina>129</Stamina>
+      <Strength>113</Strength>
+      <CritRating>60</CritRating>
+      <HitRating>76</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <HitRating>6</HitRating>
+    </SocketBonus>
+    <Name>Fused Alloy Legplates</Name>
+    <Id>45982</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
     <ItemLevel>80</ItemLevel>
     <IconPath>INV_Jewelcrafting_Gem_38</IconPath>
     <Stats>
@@ -53874,15 +57625,78 @@
     <Slot>Yellow</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Boots_Plate_11</IconPath>
+    <Stats>
+      <Armor>1614</Armor>
+      <Stamina>102</Stamina>
+      <Strength>55</Strength>
+      <ParryRating>57</ParryRating>
+      <DefenseRating>50</DefenseRating>
+      <ExpertiseRating>43</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus />
+    <Name>Greaves of the Iron Army</Name>
+    <Id>45988</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Boots_Chain_03</IconPath>
+    <Stats>
+      <Armor>903</Armor>
+      <Agility>57</Agility>
+      <Stamina>66</Stamina>
+      <AttackPower>138</AttackPower>
+      <Intellect>40</Intellect>
+      <CritRating>38</CritRating>
+      <HitRating>48</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Mail</Type>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus />
+    <Name>Tempered Mercury Greaves</Name>
+    <Id>45989</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>inv_sword_132</IconPath>
+    <Stats>
+      <Stamina>51</Stamina>
+      <Intellect>36</Intellect>
+      <SpellPower>550</SpellPower>
+      <CritRating>37</CritRating>
+      <HitRating>52</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>85</MinDamage>
+    <MaxDamage>271</MaxDamage>
+    <Speed>1.8</Speed>
+    <Unique>true</Unique>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus />
+    <Name>Fusion Blade</Name>
+    <Id>45990</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>200</ItemLevel>
     <IconPath>achievement_profession_fishing_journeymanfisher</IconPath>
     <Stats>
       <ShadowResistance>40</ShadowResistance>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
-    <MinDamage>12</MinDamage>
-    <MaxDamage>18</MaxDamage>
+    <MinDamage>406</MinDamage>
+    <MaxDamage>610</MaxDamage>
     <Speed>3</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -53891,19 +57705,41 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
+    <ItemLevel>200</ItemLevel>
     <IconPath>inv_fishingpole_05</IconPath>
     <Stats />
     <Quality>Rare</Quality>
     <Type>None</Type>
-    <MinDamage>12</MinDamage>
-    <MaxDamage>18</MaxDamage>
+    <MinDamage>406</MinDamage>
+    <MaxDamage>610</MaxDamage>
     <Speed>3</Speed>
     <Unique>true</Unique>
     <SocketBonus />
     <Name>Jeweled Fishing Pole</Name>
     <Id>45992</Id>
     <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>inv_gizmo_newgoggles</IconPath>
+    <Stats>
+      <Armor>480</Armor>
+      <Agility>97</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>164</AttackPower>
+      <CritRating>60</CritRating>
+      <HasteRating>66</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <HitRating>8</HitRating>
+    </SocketBonus>
+    <Name>Mimiron's Flight Goggles</Name>
+    <Id>45993</Id>
+    <Slot>Head</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -54135,6 +57971,39 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>INV_Mace_99</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellHit</Trigger>
+          <Stats>
+            <ShieldFromHealed>0.15</ShieldFromHealed>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Stamina>52</Stamina>
+      <Intellect>54</Intellect>
+      <SpellPower>587</SpellPower>
+      <CritRating>47</CritRating>
+      <HasteRating>46</HasteRating>
+    </Stats>
+    <Quality>Legendary</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>93</MinDamage>
+    <MaxDamage>298</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketBonus />
+    <Name>Val'anyr, Hammer of Ancient Kings</Name>
+    <Id>46017</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>INV_Weapon_Crossbow_33</IconPath>
     <Stats>
@@ -54335,6 +58204,98 @@
     <Name>Drape of the Faceless General</Name>
     <Id>46032</Id>
     <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Staff_94</IconPath>
+    <Stats>
+      <Agility>88</Agility>
+      <Stamina>131</Stamina>
+      <AttackPower>204</AttackPower>
+      <CritRating>73</CritRating>
+      <HitRating>56</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>521</MinDamage>
+    <MaxDamage>782</MaxDamage>
+    <Speed>2.8</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <HitRating>6</HitRating>
+    </SocketBonus>
+    <Name>Tortured Earth</Name>
+    <Id>46033</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Pants_Cloth_31</IconPath>
+    <Stats>
+      <Armor>275</Armor>
+      <Stamina>84</Stamina>
+      <Intellect>82</Intellect>
+      <Spirit>66</Spirit>
+      <SpellPower>132</SpellPower>
+      <CritRating>60</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Leggings of Profound Darkness</Name>
+    <Id>46034</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>INV_Mace_92</IconPath>
+    <Stats>
+      <Stamina>52</Stamina>
+      <Intellect>51</Intellect>
+      <SpellPower>550</SpellPower>
+      <CritRating>41</CritRating>
+      <HasteRating>22</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>94</MinDamage>
+    <MaxDamage>288</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Aesuga, Hand of the Ardent Champion</Name>
+    <Id>46035</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <IconPath>inv_sword_133</IconPath>
+    <Stats>
+      <Agility>52</Agility>
+      <Stamina>51</Stamina>
+      <AttackPower>72</AttackPower>
+      <CritRating>20</CritRating>
+      <HitRating>36</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>187</MinDamage>
+    <MaxDamage>349</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Void Sabre</Name>
+    <Id>46036</Id>
+    <Slot>OneHand</Slot>
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
@@ -54565,6 +58526,52 @@
     <Name>Titan-forged Raiment of Salvation</Name>
     <Id>46066</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Mace_93</IconPath>
+    <Stats>
+      <Stamina>129</Stamina>
+      <Strength>113</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandMace</Type>
+    <MinDamage>624</MinDamage>
+    <MaxDamage>937</MaxDamage>
+    <Speed>3.5</Speed>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Hammer of Crushing Whispers</Name>
+    <Id>46067</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Shoulder_25</IconPath>
+    <Stats>
+      <Armor>236</Armor>
+      <Stamina>48</Stamina>
+      <Intellect>49</Intellect>
+      <Spirit>42</Spirit>
+      <SpellPower>100</SpellPower>
+      <HasteRating>62</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Spirit>6</Spirit>
+    </SocketBonus>
+    <Name>Amice of Inconceivable Horror</Name>
+    <Id>46068</Id>
+    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
@@ -54948,6 +58955,50 @@
     <Name>Soul-Devouring Cinch</Name>
     <Id>46095</Id>
     <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Ring_29</IconPath>
+    <Stats>
+      <Stamina>54</Stamina>
+      <Intellect>46</Intellect>
+      <Spirit>36</Spirit>
+      <SpellPower>74</SpellPower>
+      <CritRating>32</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Spirit>4</Spirit>
+    </SocketBonus>
+    <Name>Signet of Soft Lament</Name>
+    <Id>46096</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Mace_91</IconPath>
+    <Stats>
+      <Agility>37</Agility>
+      <Stamina>36</Stamina>
+      <AttackPower>98</AttackPower>
+      <ExpertiseRating>32</ExpertiseRating>
+      <HasteRating>24</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>312</MinDamage>
+    <MaxDamage>580</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Caress of Insanity</Name>
+    <Id>46097</Id>
+    <Slot>OneHand</Slot>
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
@@ -57235,6 +61286,112 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_gauntlets_25</IconPath>
+    <Stats>
+      <Armor>365</Armor>
+      <Agility>79</Agility>
+      <Stamina>86</Stamina>
+      <AttackPower>120</AttackPower>
+      <HasteRating>30</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus />
+    <Name>Nightsong Handgrips</Name>
+    <Id>46260</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_helmet_15</IconPath>
+    <Stats>
+      <Armor>475</Armor>
+      <Agility>74</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>142</AttackPower>
+      <CritRating>70</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus />
+    <Name>Nightsong Headguard</Name>
+    <Id>46262</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_pants_mail_15</IconPath>
+    <Stats>
+      <Armor>511</Armor>
+      <Agility>106</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>106</AttackPower>
+      <CritRating>65</CritRating>
+      <HasteRating>46</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus />
+    <Name>Nightsong Legguards</Name>
+    <Id>46265</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_chest_chain_15</IconPath>
+    <Stats>
+      <Armor>585</Armor>
+      <Agility>90</Agility>
+      <Stamina>110</Stamina>
+      <AttackPower>152</AttackPower>
+      <CritRating>62</CritRating>
+      <HitRating>45</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus />
+    <Name>Nightsong Raiments</Name>
+    <Id>46267</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>219</ItemLevel>
+    <IconPath>inv_shoulder_14</IconPath>
+    <Stats>
+      <Armor>438</Armor>
+      <Agility>71</Agility>
+      <Stamina>67</Stamina>
+      <AttackPower>104</AttackPower>
+      <CritRating>56</CritRating>
+      <ExpertiseRating>44</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Nightsong Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus />
+    <Name>Nightsong Shoulderpads</Name>
+    <Id>46269</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>226</ItemLevel>
     <IconPath>INV_Misc_AhnQirajTrinket_05</IconPath>
     <Stats>
@@ -57491,5 +61648,59 @@
     <Name>Bloodcrush Cudgel</Name>
     <Id>46351</Id>
     <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>INV_Jewelry_Necklace_36</IconPath>
+    <Stats>
+      <Stamina>94</Stamina>
+      <AttackPower>126</AttackPower>
+      <ArmorPenetrationRating>42</ArmorPenetrationRating>
+      <Resilience>42</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Furious Gladiator's Pendant of Sundering</Name>
+    <Id>46373</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>239</ItemLevel>
+    <IconPath>temp</IconPath>
+    <Stats>
+      <Agility>64</Agility>
+      <Stamina>61</Stamina>
+      <AttackPower>96</AttackPower>
+      <ArmorPenetrationRating>33</ArmorPenetrationRating>
+      <CritRating>43</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Unique>true</Unique>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Brann's Signet Ring</Name>
+    <Id>47001</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>226</ItemLevel>
+    <IconPath>temp</IconPath>
+    <Stats>
+      <Agility>55</Agility>
+      <Stamina>57</Stamina>
+      <AttackPower>96</AttackPower>
+      <ArmorPenetrationRating>33</ArmorPenetrationRating>
+      <CritRating>36</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus />
+    <Name>Brann's Sealing Ring</Name>
+    <Id>47002</Id>
+    <Slot>Finger</Slot>
   </Item>
 </ArrayOfItem>
