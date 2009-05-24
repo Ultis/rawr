@@ -107,16 +107,15 @@
     <Compile Include="CalculationOptionsPanelHunter.Designer.cs">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsHunter.cs">
-    </Compile>
+    <Compile Include="CalculationsHunter.cs" />
     <Compile Include="CharacterCalculationsHunter.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
     <Compile Include="PetCalculations.cs" />
+    <Compile Include="PetSkill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CalculationOptionsPanelHunter.resx">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -136,7 +135,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ShotRotations.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -165,9 +163,6 @@
       <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ReadMe.Hunter.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,35 +8,31 @@ using System.IO;
 namespace Rawr.Hunter
 {
 	/// <summary>
-	/// I started this model project as a way to expand  upon my understanding of hunter mechanics and theorycraft and to give myself a way to 
-	/// view gear upgrades inside Rawr since I like using this for my druid.  Most of the modelling in the first version was not done by me but was found in 
-	/// wowwiki and from Cheeky's DPS spreadsheet. The pieces that I calculated 
-	/// out on my own (and then verified against known sources) are easily overshadowed by those two sources.
+	/// This module is based entirely on Shandara's DPS spreadsheet
+    /// This version based on Shandara's DPS Spreadsheet v88a
 	/// </summary>
 	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", Character.CharacterClass.Hunter)]
 	public class CalculationsHunter : CalculationsBase
     {
-        public const string cszHAEPGraphTitle = "Relative Change in DPS by Stat";
-
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
 				////Relevant Gem IDs for Hunters
-                //Red                                   // Dragon's EYE
-				int[] delicate = { 39905, 39997, 40112, 42143 };
+				//Red
+				int[] delicate = { 41434, 39997, 40112, 42143 };
 
 				//Purple
-				int[] shifting = { 39935, 40023, 40130 };
+				int[] shifting = { 41460, 40023, 40130 };
 
 				//Green
-				int[] vivid = { 39975, 40088, 40166 };
+                int[] vivid = { 41481, 40088, 40166 };
 
-				//Yellow                                // Dragon's EYE
-				int[] rigid = { 39915, 40014, 40125,    42156 };
+				//Yellow
+                int[] rigid = { 41447, 40014, 40125, 42156 };
 
 				//Orange
-				int[] glinting = { 39953, 40044, 40148 };
+                int[] glinting = { 41491, 40044, 40148 };
 
 				//Meta
 				int relentless = 41398;
@@ -81,48 +77,6 @@ namespace Rawr.Hunter
 	
 		#endregion	
 
-
-        /**
-         * Implemented Talents:
-         * 
-         ***** Beast Mastery:
-         * Improved Aspect of the Hawk
-         * Focus Fire+
-         * Aspect Mastery+
-         * Serpent's Swiftness
-         * Unleased Fury
-         * Ferocity
-         * Bestial Disciplin
-         * Animal Handler
-         * Kindred Spirits
-         * Ferocious Inspiration
-         * Frenzy
-         * 
-         ***** Marksmanship:
-         * Focused Aim+
-         * Lethal Shots
-         * Mortal Shots
-         * Careful Aim
-         * Improved Arcane Shot
-         * Improved Stings+
-         * Combat Experience
-         * Master Marksman+
-         * Wild Quiver
-         * Improved Steady Shot+
-         * Chimera Shot
-         * Piercing Shots
-         * Go for the Throat
-         * 
-         ***** Survival:
-         * Survival Instincts
-         * Survivalist
-         * Hunter vs. Wild+
-         * Killer Instinct
-         * Lightning Reflexes
-         * Explosive Shot
-         * Expose Weakness
-         */
-
         private CalculationOptionsPanelBase calculationOptionsPanel = null;
         private string[] characterDisplayCalculationLabels = null;
         private string[] customChartNames = null;
@@ -148,11 +102,12 @@ namespace Rawr.Hunter
 				"Basic Calculated Stats:Ranged AP",
 				"Basic Calculated Stats:Attack Speed",
                 "Basic Calculated Stats:Steady Speed",
+                "Basic Calculated Stats:Specials Per Second",
 				"Pet Stats:Pet Attack Power",
 				"Pet Stats:Pet Hit Percentage",
 				"Pet Stats:Pet Crit Percentage",
 				"Pet Stats:Pet Base DPS",
-				"Pet Stats:Pet Special DPS",
+				"Pet Stats:Pet Special DPS*Based on all damaging or DPS boosting skills on auto-cast",
 				"Pet Stats:Pet KC DPS",
                 "Intermediate Stats:Autoshot DPS",
                 "Intermediate Stats:Steady Spam",
@@ -167,7 +122,7 @@ namespace Rawr.Hunter
 				"Complex Calculated Stats:Overall DPS"
 			};
 
-            customChartNames = new string[] { cszHAEPGraphTitle };
+            customChartNames = new string[] { "Relative Stat Values" };
 
 			relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 					{
@@ -246,7 +201,7 @@ namespace Rawr.Hunter
         {
             switch (chartName)
             {
-                case cszHAEPGraphTitle:
+                case "Relative Stat Values":
                     CharacterCalculationsHunter baseCalc = GetCharacterCalculations(character) as CharacterCalculationsHunter;
                     CharacterCalculationsHunter calcCritValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }) as CharacterCalculationsHunter;
                     CharacterCalculationsHunter calcAPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 2 } }) as CharacterCalculationsHunter;
@@ -282,10 +237,12 @@ namespace Rawr.Hunter
                                     HunterDpsPoints = (calcIntValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcIntValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcIntValue.OverallPoints - baseCalc.OverallPoints),},
+
                                 new ComparisonCalculationHunter() { Name = "+1 ArP Rating", 
                                     HunterDpsPoints = (calcArPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcArPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcArPValue.OverallPoints - baseCalc.OverallPoints),},
+
                     };
 
             }
@@ -382,13 +339,11 @@ namespace Rawr.Hunter
             get { return relevantItemTypes; }
         }
 
-        
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get { return subPointNameColors; }
         }
-
-   
+ 
         public override Character.CharacterClass TargetClass
         {
             get { return Character.CharacterClass.Hunter; }
@@ -430,7 +385,7 @@ namespace Rawr.Hunter
 
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
 			calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
-			calculatedStats.PetStats = GetPetStats(options, calculatedStats.BasicStats, character);
+			calculatedStats.PetStats = GetPetStats(options, calculatedStats, character);
 			if (character.Ranged == null || (character.Ranged.Item.Type != Item.ItemType.Bow && character.Ranged.Item.Type != Item.ItemType.Gun
 											&& character.Ranged.Item.Type != Item.ItemType.Crossbow))
 			{
@@ -438,16 +393,14 @@ namespace Rawr.Hunter
 				return calculatedStats;
 			}
 
-            HunterRatings ratings = new HunterRatings();
-
-            double hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.3 * character.HunterTalents.AspectMastery);
+            double hawkRAPBonus = HunterRatings.HAWK_BONUS_AP * (1.0 + 0.3 * character.HunterTalents.AspectMastery);
 
             #region Base Attack Speed
             //Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
-            double totalStaticHaste = (1.0 + (calculatedStats.BasicStats.HasteRating / ratings.HASTE_RATING_PER_PERCENT / 100.0));
+            double totalStaticHaste = (1.0 + (calculatedStats.BasicStats.HasteRating / HunterRatings.HASTE_RATING_PER_PERCENT / 100.0));
 
             {
-                totalStaticHaste *= (1.0 + .04 * character.HunterTalents.SerpentsSwiftness) * ratings.QUIVER_SPEED_INCREASE;
+                totalStaticHaste *= (1.0 + .04 * character.HunterTalents.SerpentsSwiftness) * HunterRatings.QUIVER_SPEED_INCREASE;
                 totalStaticHaste *= (1.0 + calculatedStats.BasicStats.PhysicalHaste);
             }
 
@@ -521,7 +474,7 @@ namespace Rawr.Hunter
 
             #region Pet
 
-            PetCalculations pet = new PetCalculations(character, calculatedStats, options, GetBuffsStats(character.ActiveBuffs));
+            PetCalculations pet = new PetCalculations(character, calculatedStats, options, statsBuffs, PetFamily.Bat, statsBaseGear);
 
             #endregion
 
@@ -530,6 +483,9 @@ namespace Rawr.Hunter
 
             talentModifiers *= 1.0f + 0.01f * character.HunterTalents.RangedWeaponSpecialization;
             talentModifiers *= 1.0f + 0.01f * character.HunterTalents.FocusedFire;
+            talentModifiers *= 1.0f + 0.1 * character.HunterTalents.TrueshotAura;
+            talentModifiers *= 1.0f + 0.1f * character.HunterTalents.ImprovedHuntersMark;
+            talentModifiers *= 1.0f + 0.01f * character.HunterTalents.ImprovedTracking;
 
             double talentDmgModifiers = 1.0 + pet.ferociousInspirationUptime * character.HunterTalents.FerociousInspiration * 0.01;
             talentDmgModifiers *= calculatedStats.BasicStats.BonusDamageMultiplier;
@@ -545,18 +501,10 @@ namespace Rawr.Hunter
                 double autoshotDmg = weaponDamageAverage * critHitModifier;
 
                 double wildQuiverChance = 0.0;
-                if (character.HunterTalents.WildQuiver == 1)
-                {
-                    wildQuiverChance = 0.04;
-                }
-                else if (character.HunterTalents.WildQuiver == 2)
-                {
-                    wildQuiverChance = 0.07;
-                }
-                else if (character.HunterTalents.WildQuiver == 3)
-                {
-                    wildQuiverChance = 0.10;
-                }
+                
+                if (character.HunterTalents.WildQuiver > 0)
+                    wildQuiverChance = (character.HunterTalents.WildQuiver * 0.03) + 0.01;
+
                 autoshotDmg = autoshotDmg + (autoshotDmg / 2.0) * wildQuiverChance;  // TODO: Check if this works with crits
 
                 autoshotDmg *= talentModifiers;
@@ -574,50 +522,6 @@ namespace Rawr.Hunter
 
             #endregion
 
-            #region Rotations
-
-            ShotRotationCalculator rotation = new ShotRotationCalculator(character, calculatedStats, options, totalStaticHaste, effectiveRAPAgainstMob, abilitiesCritDmgModifier, autoshotCritDmgModifier, weaponDamageAverage, ammoDamage, talentModifiers);
-
-            double bestDPS = 0.0;
-
-            calculatedStats.SteadySpamDPS = rotation.SteadyRotation().DPS * talentDmgModifiers;
-            bestDPS = Math.Max(calculatedStats.SteadySpamDPS, bestDPS);
-
-            calculatedStats.Arcane3xSteadyDPS = rotation.ASSteadyRotation(3).DPS * talentDmgModifiers;
-            bestDPS = Math.Max(calculatedStats.Arcane3xSteadyDPS, bestDPS);
-
-            calculatedStats.Arcane2xSteadyDPS = rotation.ASSteadyRotation(2).DPS * talentDmgModifiers;
-            bestDPS = Math.Max(calculatedStats.Arcane2xSteadyDPS, bestDPS);
-
-            calculatedStats.SerpASSteadyDPS = rotation.ASSteadySerpentRotation().DPS * talentDmgModifiers;
-            bestDPS = Math.Max(calculatedStats.SerpASSteadyDPS, bestDPS);
-
-            calculatedStats.ExpSteadySerpDPS = rotation.ExpSteadySerpRotation().DPS * talentDmgModifiers;
-            if (character.HunterTalents.ExplosiveShot > 0)
-            {
-                bestDPS = Math.Max(calculatedStats.ExpSteadySerpDPS, bestDPS);
-            }
-
-            calculatedStats.ChimASSteadyDPS = rotation.ChimASSteadyRotation().DPS * talentDmgModifiers;
-            if (character.HunterTalents.ChimeraShot > 0)
-            {
-                bestDPS = Math.Max(calculatedStats.ChimASSteadyDPS, bestDPS);
-            }
-
-            calculatedStats.CustomDPS = rotation.createCustomRotation().DPS * talentDmgModifiers;
-
-            #endregion
-
-            if (options.UseCustomShotRotation)
-            {
-                calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.CustomDPS);
-            }
-            else
-            {
-                calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + bestDPS);
-            }
- 
-            
             calculatedStats.PetDpsPoints = pet.getDPS();
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
@@ -627,13 +531,13 @@ namespace Rawr.Hunter
 
             
 		}
-
+        Stats statsBaseGear = new Stats();
+        Stats statsBuffs = new Stats();
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			Stats statsRace = GetRaceStats(character.Race);
-			Stats statsBaseGear = GetItemStats(character, additionalItem);
-			//Stats statsEnchants = GetEnchantsStats(character);
-			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsRace = BaseStats.GetBaseStats(80, Character.CharacterClass.Hunter, character.Race);
+			statsBaseGear = GetItemStats(character, additionalItem);
+			statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			Stats statsTalents = GetBaseTalentStats(character.HunterTalents);
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 			statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
@@ -644,10 +548,7 @@ namespace Rawr.Hunter
 				options = new CalculationOptionsHunter();
 				character.CalculationOptions = options;
 			}
-			int targetDefence = 5*options.TargetLevel;
-
-
-            HunterRatings ratings = new HunterRatings();
+            int targetDefence = 5 * options.TargetLevel;
 
 			Stats statsTotal = new Stats();
 			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
@@ -665,6 +566,10 @@ namespace Rawr.Hunter
 			
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
 			statsTotal.Armor = (float)Math.Round((statsGearEnchantsBuffs.Armor + statsRace.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
+
+            if (character.HunterTalents.ThickHide > 0)
+                statsTotal.Armor *= 1 + ((character.HunterTalents.ThickHide * 0.03f) + 0.01f);
+
             statsTotal.Miss = 0.0f;
 			statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
@@ -689,26 +594,18 @@ namespace Rawr.Hunter
             statsTotal.BonusDamageMultiplier = 1.0f + statsGearEnchantsBuffs.BonusDamageMultiplier;
             statsTotal.BonusAttackPowerMultiplier = 1.0f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
 
-    		//Begin non Base Stats.
-
 			statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * (statsTotal.Intellect-10) + statsGearEnchantsBuffs.Mana);
 
             // TODO: Implement new racials
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - 10.0f) * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-			//add up health talents, based on health, not base stat, so cannot roll it into Talent Stats
 
-            // endurance training
-			{
-				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
-			}
+			statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
 
-            float hitBonus = (float)(statsTotal.HitRating / (ratings.HIT_RATING_PER_PERCENT * 100.0f) + statsTalents.PhysicalHit + statsRace.PhysicalHit);
+            float hitBonus = (float)(statsTotal.HitRating / (HunterRatings.HIT_RATING_PER_PERCENT * 100.0f) + statsTalents.PhysicalHit + statsRace.PhysicalHit);
 
             float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
             if ((options.TargetLevel - 80f) < 3)
-            {
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (options.TargetLevel - 80f) - hitBonus);
-            }
 
             statsTotal.PhysicalHit = 1.0f - chanceMiss;
 
@@ -716,11 +613,11 @@ namespace Rawr.Hunter
 				((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Item.Type == Item.ItemType.Gun) ||
 				(character.Race == Character.CharacterRace.Troll && character.Ranged.Item.Type == Item.ItemType.Bow)))
 			{
-                statsTotal.CritRating += (float)Math.Floor(ratings.CRIT_RATING_PER_PERCENT);
+                statsTotal.CritRating += (float)Math.Floor(HunterRatings.CRIT_RATING_PER_PERCENT);
 			}
 
-            statsTotal.PhysicalCrit = (float)(ratings.BASE_CRIT_PERCENT + (statsTotal.Agility / ratings.AGILITY_PER_CRIT / 100.0f)
-                                + (statsTotal.CritRating / ratings.CRIT_RATING_PER_PERCENT / 100.0f)
+            statsTotal.PhysicalCrit = (float)(HunterRatings.BASE_CRIT_PERCENT + (statsTotal.Agility / HunterRatings.AGILITY_PER_CRIT / 100.0f)
+                                + (statsTotal.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT / 100.0f)
                                 + ((350 - targetDefence) * 0.04 / 100.0f)
 								+ statsTalents.PhysicalCrit
                                 + statsTotal.PhysicalCrit);
@@ -782,6 +679,7 @@ namespace Rawr.Hunter
 				talents.PhysicalCrit += (talentTree.KillerInstinct * 0.01f);
 
 				//Master Tactitian
+                
 				// TODO: Implement properly
 
 				//surefooted
@@ -796,160 +694,11 @@ namespace Rawr.Hunter
 			return talents;
 		}
 
-		private Stats GetRaceStats(Character.CharacterRace characterRace)
+		private Stats GetPetStats(CalculationOptionsHunter options, CharacterCalculationsHunter hunterStats, Character character)
 		{
-			Stats statsRace;
-			switch (characterRace)
-			{
-				case Character.CharacterRace.BloodElf:
-					statsRace = new Stats()
-					{
-						Health = 3488F,
-						Mana = 3253f,
-						Strength = 61f,
-						Agility = 153f,
-						Stamina = 106f,
-						Intellect = 81f,
-						Spirit = 82F,
-					};
-					break;
-				case Character.CharacterRace.Draenei:
-					statsRace = new Stats()
-					{
-						Health = 3488f,
-						Mana = 3253f,
-						Strength = 65f,
-						Agility = 148f,
-						Stamina = 106f,
-						Intellect = 78f,
-						Spirit = 82f,
-                        PhysicalHit = 0.01f,
-					};
-					break;
-				case Character.CharacterRace.Dwarf:
-					statsRace = new Stats()
-					{
-						Health = 3488f,
-						Mana = 3253f,
-						Strength = 66f,
-						Agility = 147f,
-						Stamina = 111f,
-						Intellect = 76f,
-						Spirit = 82f
-					};
-					break;
-				case Character.CharacterRace.NightElf:
-					statsRace = new Stats()
-					{
-						Health = 3488f,
-						Mana = 3253f,
-						Strength = 61f,
-						Agility = 156f,
-						Stamina = 107f,
-						Intellect = 77f,
-						Spirit = 83f
-					};
-					break;
-				case Character.CharacterRace.Orc:
-					statsRace = new Stats()
-					{
-						Health = 3488f,
-						Mana = 3253f,
-						Strength = 67f,
-						Agility = 148f,
-						Stamina = 110f,
-						Intellect = 74f,
-						Spirit = 86f,
-						BonusPetDamageMultiplier = .05f
-					};
-					break;
-				case Character.CharacterRace.Tauren:
-					statsRace = new Stats()
-					{
-						Health = 3488f,
-						Mana = 3253f,
-						Strength = 69f,
-						Agility = 148f,
-						Stamina = 110f,
-						Intellect = 72f,
-						Spirit = 85f
-					};
-					break;
-				case Character.CharacterRace.Troll:
-					statsRace = new Stats()
-					{
-						Health = 3488f,
-						Mana = 3253f,
-						Strength = 65f,
-						Agility = 153f,
-						Stamina = 109f,
-						Intellect = 73f,
-						Spirit = 84f
-					};
-					break;
-
-
-				default:
-					statsRace = new Stats();
-					break;
-			}
-			return statsRace;
+            //Moved to one place so changes are easier, all now in PetCalculations
+            return new PetCalculations(character, hunterStats, options, statsBuffs, options.PetFamily, statsBaseGear).petStats;
 		}
-
-		private Stats GetPetStats(CalculationOptionsHunter options, Stats hunterStats, Character character)
-		{
-			Stats petStats = new Stats()
-			{
-                //TODO: Level80 value?
-				Agility = 128,
-				Strength = 162,
-				Stamina = 307,
-				Intellect = 33,
-				Spirit = 99
-			};
-
-			//TODO: strength pet buffs here (e.g. kings, pet food)
-
-			petStats.AttackPower = (petStats.Strength - 10f) * 2f;
-			petStats.AttackPower += (hunterStats.RangedAttackPower * .22f);
-
-			//TODO: AP Buffs go here, (e.g. Might, TSA)
-
-			//TODO: TargetDebuffs to here (e.g. Imp. Hunters Mark, sunders, etc.)
-			
-			//Pet Hit
-			double petHitChance = .95;
-			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
-			{//Animal Handler
-				petHitChance += (.02 * character.HunterTalents.AnimalHandler);
-			}
-			
-			if (character.Race == Character.CharacterRace.Draenei)
-			{
-				petHitChance += .01;
-			}
-			if (options.TargetLevel == 73)
-			{
-				petHitChance -= (5 * .004 + .02);
-			}
-			else
-			{
-				petHitChance -= ((options.TargetLevel * 5 - 350) * .001);
-			}
-			petStats.PhysicalHit = (float)petHitChance;
-
-			//Pet Crit
-			petStats.PhysicalCrit += petStats.Agility / 2560f;
-			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
-			{
-				petStats.PhysicalCrit += (.02f * character.HunterTalents.Ferocity);
-			}
-			petStats.PhysicalCrit -= ((options.TargetLevel * 5f - 350f) * .0004f);
-			petStats.PhysicalCrit += hunterStats.BonusPetCritChance;
-			return petStats;
-		}
-
-
 
         #endregion
 

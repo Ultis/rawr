@@ -60,15 +60,5 @@ namespace Rawr.Hunter
             get { return _equipped; }
             set { _equipped = value; }
         }
-
-        /// <summary>
-        /// Name of the Stat to set to 1.00 for relative stats calcs
-        /// </summary>
-        public override String BaseStat { get { return " Agility"; } }
-
-        /// <summary>
-        /// User Option whether to use the Base Stat feature for relative stats calcs
-        /// </summary>
-        public override bool getBaseStatOption(Character character) { return true; }
     }
 }
