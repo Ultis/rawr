@@ -223,6 +223,7 @@ namespace Rawr {
         NourishBonusPerHoT,
         NourishSpellpower,
         RejuvenationInstantTick,
+        SwiftmendBonus,
         #endregion
         #region Added by Rawr.Enhance
         TotemLLAttackPower,
@@ -2250,6 +2251,15 @@ namespace Rawr {
         }
 
         // Tier 8 Set bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Healing by Swiftmend")]
+        [Category("Tree")]
+        public float SwiftmendBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SwiftmendBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SwiftmendBonus] = value; }
+        }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Instant Tick by Rejuvenation")]
         [Category("Tree")]

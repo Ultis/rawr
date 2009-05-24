@@ -2165,6 +2165,16 @@ namespace Rawr
             // Tree Tier 8 set bonuses
             defaultBuffs.Add(new Buff()
             {
+                Name = "Nightsong Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SwiftmendBonus = 0.1f },
+                SetName = "Nightsong Regalia",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Nightsong Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
@@ -2172,7 +2182,6 @@ namespace Rawr
                 SetName = "Nightsong Regalia",
                 SetThreshold = 4
             });
-
             defaultBuffs.Add(new Buff()
             {
                 Name = "Destroyer Armor 2 Piece Bonus",

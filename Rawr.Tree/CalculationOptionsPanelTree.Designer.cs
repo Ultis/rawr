@@ -276,32 +276,37 @@
             this.cbRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRotation.FormattingEnabled = true;
             this.cbRotation.Items.AddRange(new object[] {
-            "Tank Nourish (plus RJ/RG/LB)",
+            "Tank Nourish (plus RJ/RG/Roll LB)",
+            "Tank Nourish (plus RJ/RG/Slow 3xLB)",
+            "Tank Nourish (plus RJ/RG/Fast 3xLB)",
             "Tank Nourish (2 Tanks RJ/RG/LB)",
+            "Tank Nourish (2 Tanks RJ/RG/Slow 3xLB)",
+            "Tank Nourish (2 Tanks RJ/RG/Fast 3xLB)",
             "Tank Healing Touch (plus RJ/RG/LB)",
             "Tank Healing Touch (2 Tanks RJ/RG/LB)",
-            "Tank Regrowth (plus RJ/RG/LB)",
-            "Tank Regrowth (2 Tanks RJ/RG/LB)",
-            "Raid healing with Regrowth (1 Tank RJ/LBStack)",
-            "Raid healing with Regrowth (1 Tank RJ/1xLB)",
-            "Raid healing with Regrowth (2 Tanks RJ/LBStack)",
-            "Raid healing with Regrowth (2 Tanks RJ/1xLB)",
-            "Raid healing with Rejuvenation (1 Tank RJ/LBStack)",
-            "Raid healing with Rejuvenation (1 Tank RJ/1xLB)",
-            "Raid healing with Rejuvenation (2 Tanks RJ/LBStack)",
-            "Raid healing with Rejuvenation (2 Tanks RJ/1xLB)",
-            "Raid healing with Nourish (1 Tank RJ/LBStack)",
-            "Raid healing with Nourish (1 Tank RJ/1xLB)",
-            "Raid healing with Nourish (2 Tanks RJ/LBStack)",
-            "Raid healing with Nourish (2 Tanks RJ/1xLB)",
+            "Tank Regrowth (plus RJ/RG/Roll LB)",
+            "Tank Regrowth (plus RJ/RG/Slow 3xLB)",
+            "Tank Regrowth (plus RJ/RG/Fast 3xLB)",
+            "Tank Regrowth (2 Tanks RJ/RG/Roll LB)",
+            "Tank Regrowth (2 Tanks RJ/RG/Slow 3xLB)",
+            "Tank Regrowth (2 Tanks RJ/RG/Fast 3xLB)",
+            "Raid heal with Regrowth (1 Tank RJ/Roll LB)",
+            "Raid heal with Regrowth (1 Tank RJ/Slow 3xLB)",
+            "Raid heal with Regrowth (2 Tanks RJ/Roll LB)",
+            "Raid heal with Regrowth (2 Tanks RJ/Slow 3xLB)",
+            "Raid heal with Rejuv (1 Tank RJ/Roll LB)",
+            "Raid heal with Rejuv (1 Tank RJ/Slow 3xLB)",
+            "Raid heal with Rejuv (2 Tanks RJ/Roll LB)",
+            "Raid heal with Rejuv (2 Tanks RJ/Slow 3xLB)",
+            "Raid heal with Nourish (1 Tank RJ/Roll LB)",
+            "Raid heal with Nourish (1 Tank RJ/Slow 3xLB)",
+            "Raid heal with Nourish (2 Tanks RJ/Roll LB)",
+            "Raid heal with Nourish (2 Tanks RJ/Slow 3xLB)",
             "Nourish spam",
             "Healing Touch spam",
-            "Regrowth spam",
-            "Tank Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
-            "Tank Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
-            "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
-//            "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms/SM)"
-            });
+            "Regrowth spam on tank",
+            "Regrowth spam on raid",
+            "Rejuvenation spam on raid"});
             this.cbRotation.Location = new System.Drawing.Point(9, 34);
             this.cbRotation.MaxDropDownItems = 10;
             this.cbRotation.Name = "cbRotation";
@@ -599,6 +604,8 @@
             // chbGlyphSwiftmend
             // 
             this.chbGlyphSwiftmend.AutoSize = true;
+            this.chbGlyphSwiftmend.Checked = true;
+            this.chbGlyphSwiftmend.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbGlyphSwiftmend.Enabled = false;
             this.chbGlyphSwiftmend.Location = new System.Drawing.Point(256, 95);
             this.chbGlyphSwiftmend.Name = "chbGlyphSwiftmend";

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Rawr.Tree
 {
+
     public class Rotation
     {
         public float HPS;
@@ -37,15 +38,62 @@ namespace Rawr.Tree
         public float TotalHealsPerMinute;
         public float UnusedMana;
         public float UnusedCastTimeFrac;
-        public int LifebloomStackSize;
-        public bool LifebloomFastStacking;
+        public RotationSettings rotSettings;
+//        public int LifebloomStackSize;
+//        public bool LifebloomFastStacking;
     }
 
     public enum HealTargetTypes { TankHealing = 0, RaidHealing = 1 };
 
+    public enum SpellList { HealingTouch = 0, Nourish = 1, Regrowth = 2, Rejuvenation = 3 };
+
+    public class RotationSettings
+    {
+        public bool rejuvOnTank, rgOnTank;
+        public int lifeBloomStackSize, noTanks;
+        public bool lifeBloomFastStack;
+        public SpellList primaryHeal;
+        public HealTargetTypes healTarget;
+        public int SwiftmendPerMin, WildGrowthPerMinute;
+    }
+
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
     class CalculationsTree : CalculationsBase
     {
+        public static string[] predefRotations = {
+                        "Tank Nourish (plus RJ/RG/Roll LB)",
+                        "Tank Nourish (plus RJ/RG/Slow 3xLB)",
+                        "Tank Nourish (plus RJ/RG/Fast 3xLB)",
+                        "Tank Nourish (2 Tanks RJ/RG/LB)",
+                        "Tank Nourish (2 Tanks RJ/RG/Slow 3xLB)",
+                        "Tank Nourish (2 Tanks RJ/RG/Fast 3xLB)",
+                        "Tank Healing Touch (plus RJ/RG/LB)",
+                        "Tank Healing Touch (2 Tanks RJ/RG/LB)",
+                        "Tank Regrowth (plus RJ/RG/Roll LB)",
+                        "Tank Regrowth (plus RJ/RG/Slow 3xLB)",
+                        "Tank Regrowth (plus RJ/RG/Fast 3xLB)",
+                        "Tank Regrowth (2 Tanks RJ/RG/Roll LB)",
+                        "Tank Regrowth (2 Tanks RJ/RG/Slow 3xLB)",
+                        "Tank Regrowth (2 Tanks RJ/RG/Fast 3xLB)",
+                        "Raid heal with Regrowth (1 Tank RJ/Roll LB)",
+                        "Raid heal with Regrowth (1 Tank RJ/Slow 3xLB)",
+                        "Raid heal with Regrowth (2 Tanks RJ/Roll LB)",
+                        "Raid heal with Regrowth (2 Tanks RJ/Slow 3xLB)",
+                        "Raid heal with Rejuv (1 Tank RJ/Roll LB)",
+                        "Raid heal with Rejuv (1 Tank RJ/Slow 3xLB)",
+                        "Raid heal with Rejuv (2 Tanks RJ/Roll LB)",
+                        "Raid heal with Rejuv (2 Tanks RJ/Slow 3xLB)",
+                        "Raid heal with Nourish (1 Tank RJ/Roll LB)",
+                        "Raid heal with Nourish (1 Tank RJ/Slow 3xLB)",
+                        "Raid heal with Nourish (2 Tanks RJ/Roll LB)",
+                        "Raid heal with Nourish (2 Tanks RJ/Slow 3xLB)",
+                        "Nourish spam",
+                        "Healing Touch spam",
+                        "Regrowth spam on tank",
+                        "Regrowth spam on raid",
+                        "Rejuvenation spam on raid",
+                    };
+
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -177,7 +225,9 @@ namespace Rawr.Tree
                         "Simulation:Unused Mana Remaining",
                         "Simulation:Unused cast time percentage",
                         "Simulation:Total healing done",
+                        "Simulation:Number of tanks",
                         "Simulation:Lifebloom method",
+                        "Simulation:Extra Tank HoTs",
                         "Simulation:HPS for tank HoTs",
                         "Simulation:MPS for tank HoTs",
                         "Simulation:HPS for Wild Growth",
@@ -185,6 +235,7 @@ namespace Rawr.Tree
                         "Simulation:HPS for Swiftmend",
                         "Simulation:MPS for Swiftmend",
                         "Simulation:HoT refresh fraction",
+                        "Simulation:Spell for primary heal",
                         "Simulation:HPS for primary heal",
                         "Simulation:MPS for primary heal",
                         "Simulation:Mana regen per second",
@@ -389,25 +440,25 @@ namespace Rawr.Tree
             };
         }
         
-        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, int lbOnTank, int nTanks, int swiftmendPMin, Spell primaryHeal, HealTargetTypes primaryHealTarget)
+        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings)
         {
             float primaryFrac;
             float lifebloomDuration = 0.0f;
 
             #region Spells
             int hots = 0;
-            if (rejuvOnTank) hots++;
-            if (rgOnTank) hots++;
-            if (lbOnTank > 0) hots++;
+            if (rotSettings.rejuvOnTank) hots++;
+            if (rotSettings.rgOnTank) hots++;
+            if (rotSettings.lifeBloomStackSize > 0) hots++;
             //Spell regrowth = new Regrowth(calculatedStats, stats, false);
             Spell regrowth = new Regrowth(calculatedStats, stats, true);
             Spell lifebloom = null;
-            if ((lbOnTank >= 1)&&(lbOnTank <= 3))
+            if ((rotSettings.lifeBloomStackSize >= 1) && (rotSettings.lifeBloomStackSize <= 3))
             {
-                lifebloom = new Lifebloom(calculatedStats, stats, lbOnTank, true);
+                lifebloom = new Lifebloom(calculatedStats, stats, rotSettings.lifeBloomStackSize, rotSettings.lifeBloomFastStack);
                 lifebloomDuration = lifebloom.Duration + 1.0f; // Add 1 sec, to make sure bloom has taken place, before applying again
             }
-            else if (lbOnTank == 4)
+            else if (rotSettings.lifeBloomStackSize == 4)
             {
                 lifebloom = new LifebloomStack(calculatedStats, stats);
                 lifebloomDuration = lifebloom.Duration;
@@ -418,6 +469,47 @@ namespace Rawr.Tree
             //Spell nourishWithHoT = new Nourish(calculatedStats, stats, hots > 0 ? hots : 1);
             //Spell healingTouch = new HealingTouch(calculatedStats, stats);
             WildGrowth wildGrowth = new WildGrowth(calculatedStats, stats);
+
+
+            Spell primaryHeal;
+            switch (rotSettings.primaryHeal)
+            {
+                case SpellList.HealingTouch:
+                default:
+                    {
+                        primaryHeal = new HealingTouch(calculatedStats, stats);
+                    }
+                    break;
+
+                case SpellList.Nourish:
+                    {
+                        if (rotSettings.healTarget == HealTargetTypes.RaidHealing)
+                        {
+                            primaryHeal = new Nourish(calculatedStats, stats, 0);
+                        }
+                        else
+                        {
+                            int noTankHots = 0;
+                            noTankHots += (rotSettings.rgOnTank) ? 1 : 0;
+                            noTankHots += (rotSettings.rejuvOnTank) ? 1 : 0;
+                            noTankHots += (rotSettings.lifeBloomStackSize>0) ? 1 : 0;
+                            primaryHeal = new Nourish(calculatedStats, stats, noTankHots);
+                        }
+                    }
+                    break;
+
+                case SpellList.Regrowth:
+                    {
+                        primaryHeal = new Regrowth(calculatedStats, stats, rotSettings.healTarget == HealTargetTypes.TankHealing);
+                    }
+                    break;
+
+                case SpellList.Rejuvenation:
+                    {
+                        primaryHeal = new Rejuvenation(calculatedStats, stats);
+                    }
+                    break;
+            }
             #endregion
 
             float castsPerMinute = 0;
@@ -425,11 +517,11 @@ namespace Rawr.Tree
             float healsPerMinute = 0;
 
             #region WildGrowthPerMinute
-            float wgCastTime = wildGrowth.CastTime / 60f * wgPerMin;
-            float wgMPS = wildGrowth.ManaCost / 60f * wgPerMin;
-            float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * wgPerMin;  // Assume no overhealing
-            castsPerMinute += wgPerMin;
-            healsPerMinute += wgPerMin * 10; // assumption it will go 10 times ;)
+            float wgCastTime = wildGrowth.CastTime / 60f * rotSettings.WildGrowthPerMinute;
+            float wgMPS = wildGrowth.ManaCost / 60f * rotSettings.WildGrowthPerMinute;
+            float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * rotSettings.WildGrowthPerMinute;  // Assume no overhealing
+            castsPerMinute += rotSettings.WildGrowthPerMinute;
+            healsPerMinute += rotSettings.WildGrowthPerMinute * 10; // assumption it will go 10 times ;)
             #endregion
 
             #region HotsOnTanks
@@ -440,7 +532,7 @@ namespace Rawr.Tree
             float hotsCastsPerMinute = 0;
             float hotsCritsPerMinute = 0;
             float hotsHealsPerMinute = 0;
-            if (rejuvOnTank)
+            if (rotSettings.rejuvOnTank)
             {
                 hotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
                 trueHotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
@@ -449,7 +541,7 @@ namespace Rawr.Tree
                 hotsCastsPerMinute += 60f / rejuvenate.Duration;
                 hotsHealsPerMinute += 20; // hot component
             }
-            if (rgOnTank)
+            if (rotSettings.rgOnTank)
             {
                 hotsHPS += regrowth.HPSHoT + regrowth.HPS / regrowth.Duration;
                 trueHotsHPS += regrowth.HPSHoT;
@@ -460,7 +552,7 @@ namespace Rawr.Tree
                 hotsHealsPerMinute += 60f / regrowth.Duration; // direct component
                 hotsHealsPerMinute += 20; // hot component
             }
-            if ((lbOnTank > 0)&&(lifebloom != null))
+            if ((rotSettings.lifeBloomStackSize > 0) && (lifebloom != null))
             {
                            // HoT part                 Bloom Part
                 hotsHPS += lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloomDuration;
@@ -471,13 +563,13 @@ namespace Rawr.Tree
                 hotsHealsPerMinute += 60; // hot component
                 hotsCritsPerMinute += 60f / lifebloomDuration * lifebloom.CritPercent / 100f;  // Bloom crits
             }
-            hotsHPS *= nTanks;
-            trueHotsHPS *= nTanks;
-            hotsMPS *= nTanks;
-            hotsCastTime *= nTanks;
-            hotsCastsPerMinute *= nTanks;
-            hotsCritsPerMinute *= nTanks;
-            hotsHealsPerMinute *= nTanks;
+            hotsHPS *= rotSettings.noTanks;
+            trueHotsHPS *= rotSettings.noTanks;
+            hotsMPS *= rotSettings.noTanks;
+            hotsCastTime *= rotSettings.noTanks;
+            hotsCastsPerMinute *= rotSettings.noTanks;
+            hotsCritsPerMinute *= rotSettings.noTanks;
+            hotsHealsPerMinute *= rotSettings.noTanks;
             castsPerMinute += hotsCastsPerMinute;
             critsPerMinute += hotsCritsPerMinute;
             healsPerMinute += hotsHealsPerMinute;
@@ -488,26 +580,26 @@ namespace Rawr.Tree
             float swiftHPS = 0.0f;
             float swiftMPS = 0.0f;
             float swiftCastTime = 0.0f;
-            if ( (hots > 0) && (swiftmendPMin > 0) )
+            if ((hots > 0) && (rotSettings.SwiftmendPerMin > 0))
             {
 
-                if (rejuvOnTank)
-                    if (rgOnTank)
+                if (rotSettings.rejuvOnTank)
+                    if (rotSettings.rgOnTank)
                         swift = new Swiftmend(calculatedStats, stats, rejuvenate, regrowth);
                     else
                         swift = new Swiftmend(calculatedStats, stats, rejuvenate, null);
                 else
-                    if (rgOnTank)
+                    if (rotSettings.rgOnTank)
                         swift = new Swiftmend(calculatedStats, stats, null, regrowth);
                     else
                         swift = new Swiftmend(calculatedStats, stats, null, null);
 
-                swiftCastTime = swift.CastTime * swiftmendPMin /60.0f;
-                swiftHPS = swift.TotalAverageHealing * swiftmendPMin / 60.0f;
-                swiftMPS = swift.ManaCost * swiftmendPMin / 60.0f;
-                castsPerMinute += swiftmendPMin;
-                healsPerMinute += swiftmendPMin;
-                critsPerMinute += swift.CritPercent / 100.0f * swiftmendPMin;
+                swiftCastTime = swift.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
+                swiftHPS = swift.TotalAverageHealing * rotSettings.SwiftmendPerMin / 60.0f;
+                swiftMPS = swift.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
+                castsPerMinute += rotSettings.SwiftmendPerMin;
+                healsPerMinute += rotSettings.SwiftmendPerMin;
+                critsPerMinute += swift.CritPercent / 100.0f * rotSettings.SwiftmendPerMin;
 
                 /* /
                 // Handle consumed HoTs
@@ -522,13 +614,13 @@ namespace Rawr.Tree
                 /* */
                 #region Replace HoTs if refreshed
                 // Extra MPS if HoTs refreshed                // Use only one of these 2 sections
-                hotsMPS += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.ManaCost * swiftmendPMin / 60.0f;
-                hotsMPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.ManaCost * swiftmendPMin / 60.0f;
+                hotsMPS += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
+                hotsMPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
                 // Replacing Regrowths gives extra direct heals
-                hotsHPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.AverageHealingwithCrit * swiftmendPMin / 60.0f; 
+                hotsHPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.AverageHealingwithCrit * rotSettings.SwiftmendPerMin / 60.0f; 
                 // Replacing HoTs take extra time
-                hotsCastTime += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.CastTime * swiftmendPMin / 60.0f;
-                hotsCastTime += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.CastTime * swiftmendPMin / 60.0f;
+                hotsCastTime += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
+                hotsCastTime += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
                 #endregion
                  /* */
 
@@ -651,7 +743,7 @@ namespace Rawr.Tree
             float hpsHealing = 0;
             float hpsHeal100 = 0;
             // Wildebees: 20090221 : Changed check to be based on raidHealing, instead of just handling lifebloom and rejuv differently
-            if (primaryHealTarget == HealTargetTypes.RaidHealing)
+            if (rotSettings.healTarget == HealTargetTypes.RaidHealing)
             {
                 hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
                 //   by total healing by primaryHeal/cast time
@@ -694,9 +786,14 @@ namespace Rawr.Tree
             }
             #endregion
 
+            #region Convert to be ready for points
+            float MaxHPS = hotsHPS + hpsHeal100 + wgHPS + swiftHPS;
+
+            #endregion
+
             return new Rotation() {
                 HPS = hps,
-                MaxHPS = hotsHPS + hpsHeal100 + wgHPS + swiftHPS,
+                MaxHPS = MaxHPS,
                 MPS = mps,
                 HPSFromPrimary = hpsHealing,
                 HPSFromHots = hotsHPS,
@@ -726,19 +823,16 @@ namespace Rawr.Tree
                 ReplenishRegen = replenishment,
                 UnusedMana = unusedMana,
                 UnusedCastTimeFrac = unusedCastTimeFrac,
-                LifebloomStackSize = lbOnTank,
-                LifebloomFastStacking = (lbOnTank<4),   // Hard-code fast stack
+                rotSettings = rotSettings,
             };
         }
 
-        protected Rotation predefinedRotation(int rotation, Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
+        protected RotationSettings predefinedRotation(int rotation, Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
         {
-            Rotation result = null;
-            bool rejuvOnTank, rgOnTank;
-            int lifeBloomStackSize, noTanks;
-            Spell primaryHeal;
-            HealTargetTypes healTarget;
-            int SwiftmendPerMin = 0;
+//            Rotation result = null;
+            RotationSettings settings = new RotationSettings();
+
+            settings.lifeBloomFastStack = false;
 
             switch (rotation)
             {
@@ -746,294 +840,379 @@ namespace Rawr.Tree
                 default:
                     // 1 Tank (RJ/RG/LB/N*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Nourish(calculatedStats, stats, 3);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
 
                     }
                     break;
                 case 1:
-                    // 2 Tanks (RJ/RG/LB/N*)
+                    // 1 Tank (RJ/RG/slow 3xLB/N*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Nourish(calculatedStats, stats, 3);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+
                     }
                     break;
                 case 2:
-                    // 1 Tank (RJ/RG/LB/HT*)
+                    // 1 Tank (RJ/RG/fast 3xLB/N*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new HealingTouch(calculatedStats, stats);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.lifeBloomFastStack = true;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+
                     }
                     break;
                 case 3:
-                    // 2 Tanks (RJ/RG/LB/HT*)
+                    // 2 Tanks (RJ/RG/LB/N*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new HealingTouch(calculatedStats, stats);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 4:
-                    // 1 Tank (RJ/RG/LB/RG*)
+                    // 2 Tank (RJ/RG/slow 3xLB/N*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+
                     }
                     break;
                 case 5:
-                    // 2 Tanks (RJ/RG/LB/RG*)
+                    // 2 Tank (RJ/RG/fast 3xLB/N*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.lifeBloomFastStack = true;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+
                     }
                     break;
+
                 case 6:
-                    // RG Raid (1 Tank RJ/LBStack)
+                    // 1 Tank (RJ/RG/LB/HT*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Regrowth(calculatedStats, stats, false);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.HealingTouch;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 7:
-                    // RG Raid (1 Tank RJ/1xLB)
+                    // 2 Tanks (RJ/RG/LB/HT*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 1;
-                        primaryHeal = new Regrowth(calculatedStats, stats, false);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.HealingTouch;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 8:
-                    // RG Raid (2 Tanks RJ/LBStack)
+                    // 1 Tank (RJ/RG/LB/RG*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Regrowth(calculatedStats, stats, false);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 9:
-                    // RG Raid (2 Tanks RJ/LBStack)
+                    // 1 Tanks (RJ/RG/slow 3xLB*/RG*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 1;
-                        primaryHeal = new Regrowth(calculatedStats, stats, false);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 10:
-                    // RJ Raid (1 Tank RJ/LBStack)
+                    // 1 Tanks (RJ/RG/fast 3xLB*/RG*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Rejuvenation(calculatedStats, stats);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.lifeBloomFastStack = true;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
+
                 case 11:
-                    // RJ Raid (1 Tank RJ/1xLB)
+                    // 2 Tanks (RJ/RG/LB/RG*)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 1;
-                        primaryHeal = new Rejuvenation(calculatedStats, stats);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 12:
-                    // RJ Raid (2 Tanks RJ/LBStack)
+                    // 2 Tanks (RJ/RG/slow 3xLB*/RG*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Rejuvenation(calculatedStats, stats);
-                        healTarget = HealTargetTypes.RaidHealing;
-
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
                 case 13:
-                    // RJ Raid (2 Tanks RJ/1xLB)
+                    // 2 Tanks (RJ/RG/fast 3xLB*/RG*)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Rejuvenation(calculatedStats, stats);
-                        healTarget = HealTargetTypes.RaidHealing;
-
+                        settings.lifeBloomFastStack = true;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
                     }
                     break;
+
                 case 14:
-                    // N Raid (1 Tank RJ/LBStack)
+                    // RG Raid (1 Tank RJ/LBStack)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Nourish(calculatedStats, stats, 0);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 15:
-                    // N Raid (1 Tank RJ/1xLB)
+                    // RG Raid (1 Tank RJ/1xLB)
                     {
-                        noTanks = 1;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 1;
-                        primaryHeal = new Nourish(calculatedStats, stats, 0);
-                        healTarget = HealTargetTypes.RaidHealing;
+                        settings.lifeBloomFastStack = false;
+
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 16:
-                    // N Raid (2 Tanks RJ/LBStack)
+                    // RG Raid (2 Tanks RJ/LBStack)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Nourish(calculatedStats, stats, 0);
-                        healTarget = HealTargetTypes.RaidHealing;
-
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 17:
-                    // N Raid (2 Tanks RJ/1xLB)
+                    // RG Raid (2 Tanks RJ/Slow3xLB)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 4;
-                        primaryHeal = new Nourish(calculatedStats, stats, 0);
-                        healTarget = HealTargetTypes.RaidHealing;
-
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 18:
-                    // N spam
+                    // RJ Raid (1 Tank RJ/LBStack)
                     {
-                        noTanks = 0;
-                        rejuvOnTank = false;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 0;
-                        primaryHeal = new Nourish(calculatedStats, stats);
-                        healTarget = HealTargetTypes.TankHealing;
-
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Rejuvenation;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 19:
-                    // HT spam
+                    // RJ Raid (1 Tank RJ/3xLB)
                     {
-                        noTanks = 0;
-                        rejuvOnTank = false;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 0;
-                        primaryHeal = new HealingTouch(calculatedStats, stats);
-                        healTarget = HealTargetTypes.TankHealing;
-
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Rejuvenation;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 20:
-                    // RG spam
+                    // RJ Raid (2 Tanks RJ/LBStack)
                     {
-                        noTanks = 0;
-                        rejuvOnTank = false;
-                        rgOnTank = false;
-                        lifeBloomStackSize = 0;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Rejuvenation;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
+
                     }
                     break;
                 case 21:
-                    // 2 Tanks (RJ/RG/1xLB*/RG*)
+                    // RJ Raid (2 Tanks RJ/3xLB)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 1;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Rejuvenation;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
+
                     }
                     break;
                 case 22:
-                    // 2 Tanks (RJ/RG/2xLB*/RG*)
+                    // N Raid (1 Tank RJ/LBStack)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 2;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
                 case 23:
-                    // 2 Tanks (RJ/RG/3xLB*/RG*)
+                    // N Raid (1 Tank RJ/3xLB)
                     {
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 3;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
                     }
                     break;
-  /*              case 18:
-                    // 2 Tanks (RJ/RG/3xLB* /RG* /SM)
+                case 24:
+                    // N Raid (2 Tanks RJ/LBStack)
                     {
-                        SwiftmendPerMin = 4;
-                        noTanks = 2;
-                        rejuvOnTank = true;
-                        rgOnTank = true;
-                        lifeBloomStackSize = 3;
-                        primaryHeal = new Regrowth(calculatedStats, stats, true);
-                        healTarget = HealTargetTypes.TankHealing;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 4;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
+
                     }
                     break;
- */
+                case 25:
+                    // N Raid (2 Tanks RJ/3xLB)
+                    {
+                        settings.lifeBloomFastStack = false;
+                        settings.noTanks = 2;
+                        settings.rejuvOnTank = true;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 3;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
+
+                    }
+                    break;
+                case 26:
+                    // N spam
+                    {
+                        settings.noTanks = 0;
+                        settings.rejuvOnTank = false;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 0;
+                        settings.primaryHeal = SpellList.Nourish;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+
+                    }
+                    break;
+                case 27:
+                    // HT spam
+                    {
+                        settings.noTanks = 0;
+                        settings.rejuvOnTank = false;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 0;
+                        settings.primaryHeal = SpellList.HealingTouch;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+
+                    }
+                    break;
+                case 28:
+                    // RG spam on tank
+                    {
+                        settings.noTanks = 1;
+                        settings.rejuvOnTank = false;
+                        settings.rgOnTank = true;
+                        settings.lifeBloomStackSize = 0;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.TankHealing;
+                    }
+                    break;
+                case 29:
+                    // RG spam on raid
+                    {
+                        settings.noTanks = 0;
+                        settings.rejuvOnTank = false;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 0;
+                        settings.primaryHeal = SpellList.Regrowth;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
+                    }
+                    break;
+                case 30:
+                    // Rej spam
+                    {
+                        settings.noTanks = 0;
+                        settings.rejuvOnTank = false;
+                        settings.rgOnTank = false;
+                        settings.lifeBloomStackSize = 0;
+                        settings.primaryHeal = SpellList.Rejuvenation;
+                        settings.healTarget = HealTargetTypes.RaidHealing;
+                    }
+                    break;
+
             }
-            SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
-            result = SimulateHealing(
-                            calculatedStats, stats, calcOpts, calcOpts.WildGrowthPerMinute,
-                            rejuvOnTank, rgOnTank, lifeBloomStackSize, noTanks, SwiftmendPerMin,
-                            primaryHeal, healTarget);
-            return result;
+
+            settings.SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
+            settings.WildGrowthPerMinute = calcOpts.WildGrowthPerMinute;
+            return settings;
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
@@ -1048,7 +1227,13 @@ namespace Rawr.Tree
             Stats combinedStats = calculatedStats.BasicStats;
             Stats stats = calculatedStats.BasicStats;
             float ExtraHPS = 0f;
-            Rotation rot = predefinedRotation(calcOpts.Rotation, stats, calcOpts, calculatedStats);
+            RotationSettings settings = predefinedRotation(calcOpts.Rotation, stats, calcOpts, calculatedStats);
+            if (calcOpts.Rotation == 99)
+            {
+                settings = calcOpts.customRotationSettings;
+            }
+
+            Rotation rot = SimulateHealing(calculatedStats, stats, calcOpts, settings);
             int nPasses = 3, k;
             for (k = 0; k < nPasses; k++)
             {
@@ -1060,8 +1245,7 @@ namespace Rawr.Tree
                 
                 // Create a new stats instance that uses the proc effects
                 combinedStats = GetCharacterStats(character, additionalItem, procs);
-                rot = predefinedRotation(calcOpts.Rotation, combinedStats, calcOpts, calculatedStats);
-//                rot = predefinedRotation(calcOpts.Rotation, stats + procs, calcOpts, calculatedStats);
+                rot = SimulateHealing(calculatedStats, combinedStats, calcOpts, settings);  
             }
             calculatedStats.Simulation = rot;
             calculatedStats.BasicStats = combinedStats;     // Replace BasicStats to get Spirit while casting included
@@ -1224,38 +1408,169 @@ namespace Rawr.Tree
                 case "Spell rotations":
                     List<ComparisonCalculationBase> comparisonsDPS = new List<ComparisonCalculationBase>();
 
-                    string[] rotations = new string[] {
-                        "Tank Nourish (plus RJ/RG/LB)",
-                        "Tank Nourish (2 Tanks RJ/RG/LB)",
-                        "Tank Healing Touch (plus RJ/RG/LB)",
-                        "Tank Healing Touch (2 Tanks RJ/RG/LB)",
-                        "Tank Regrowth (plus RJ/RG/LB)",
-                        "Tank Regrowth (2 Tanks RJ/RG/LB)",
-                        "Raid healing with Regrowth (1 Tank RJ/LBStack)",
-                        "Raid healing with Regrowth (1 Tank RJ/1xLB)",
-                        "Raid healing with Regrowth (2 Tanks RJ/LBStack)",
-                        "Raid healing with Regrowth (2 Tanks RJ/1xLB)",
-                        "Raid healing with Rejuvenation (1 Tank RJ/LBStack)",
-                        "Raid healing with Rejuvenation (1 Tank RJ/1xLB)",
-                        "Raid healing with Rejuvenation (2 Tanks RJ/LBStack)",
-                        "Raid healing with Rejuvenation (2 Tanks RJ/1xLB)",
-                        "Raid healing with Nourish (1 Tank RJ/LBStack)",
-                        "Raid healing with Nourish (1 Tank RJ/1xLB)",
-                        "Raid healing with Nourish (2 Tanks RJ/LBStack)",
-                        "Raid healing with Nourish (2 Tanks RJ/1xLB)",
-                        "Nourish spam",
-                        "Healing Touch spam",
-                        "Regrowth spam",
-                        "Tank Regrowth (2 Tanks RJ/RG/1xLB Blooms)",
-                        "Tank Regrowth (2 Tanks RJ/RG/2xLB Blooms)",
-                        "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms)",
-//                        "Tank Regrowth (2 Tanks RJ/RG/3xLB Blooms/SM)",
-                    };
 
-                    for (int i = 0; i < rotations.Length; i++)
+                    for (int i = 0; i < predefRotations.Length; i++)
                     {
-                        comparisonsDPS.Add(getRotationData(character, i, rotations[i]));
+                        comparisonsDPS.Add(getRotationData(character, i, predefRotations[i]));
                     }   
+
+
+                    // Tank Healing Rotations
+                    RotationSettings rotSettings = new RotationSettings();
+                    string rotName;
+                    rotSettings.healTarget = HealTargetTypes.TankHealing;
+                    rotSettings.SwiftmendPerMin = ((CalculationOptionsTree)(character.CalculationOptions)).SwiftmendPerMinute;
+                    rotSettings.WildGrowthPerMinute = ((CalculationOptionsTree)(character.CalculationOptions)).WildGrowthPerMinute;
+
+                    for (SpellList spList = SpellList.HealingTouch; spList < SpellList.Rejuvenation; spList++)
+                    {
+                        rotSettings.primaryHeal = spList;
+                        for (int noTanks = 1; noTanks < 3; noTanks++)
+                        {
+                            rotSettings.noTanks = noTanks;
+                            for (int lbMode = 0; lbMode < 7; lbMode++)
+                            {
+                                rotName = "Tx" + noTanks.ToString() + " " + spList.ToString() + " (RG+RJ";
+                                switch (lbMode)
+                                {
+                                    case (0):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 0;
+//                                            rotName += "No LB";
+                                            break;
+                                        }
+                                    case (1):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 1;
+                                            rotName += "+1xLB";
+                                            break;
+                                        }
+                                    case (2):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 2;
+                                            rotSettings.lifeBloomFastStack = false;
+                                            rotName += "+Slow 2xLB";
+                                            break;
+                                        }
+                                    case (3):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 3;
+                                            rotSettings.lifeBloomFastStack = false;
+                                            rotName += "+Slow 3xLB";
+                                            break;
+                                        }
+                                    case (4):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 4;
+                                            rotSettings.lifeBloomFastStack = false;
+                                            rotName += "+Rolling LB";
+                                            break;
+                                        }
+                                    case (5):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 2;
+                                            rotSettings.lifeBloomFastStack = true;
+                                            rotName += "+Fast 2xLB";
+                                            break;
+                                        }
+                                    case (6):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 3;
+                                            rotSettings.lifeBloomFastStack = true;
+                                            rotName += "+Fast 3xLB";
+                                            break;
+                                        }
+
+                                }
+
+                                rotSettings.rgOnTank = true;
+                                rotSettings.rejuvOnTank = true;
+                                rotName += ")";
+                                ((CalculationOptionsTree)(character.CalculationOptions)).customRotationSettings = rotSettings;
+                                comparisonsDPS.Add(getRotationData(character, 99, rotName));
+
+                            }
+                        }
+                    }
+
+                    // Raid Healing Rotations
+                    rotSettings.healTarget = HealTargetTypes.RaidHealing;
+                    for (SpellList spList = SpellList.HealingTouch; spList <= SpellList.Rejuvenation; spList++)
+                    {
+                        rotSettings.primaryHeal = spList;
+
+                        rotSettings.noTanks = 0;
+                        ((CalculationOptionsTree)(character.CalculationOptions)).customRotationSettings = rotSettings;
+                        rotName = "Raid only " + spList.ToString();
+                        comparisonsDPS.Add(getRotationData(character, 99, rotName));
+
+                        for (int noTanks = 1; noTanks < 3; noTanks++)
+                        {
+                            rotSettings.noTanks = noTanks;
+                            for (int lbMode = 0; lbMode < 7; lbMode++)
+                            {
+                                rotName = "Raid+Tx" + noTanks.ToString() + " " + spList.ToString() + " (RG+RJ";
+                                switch (lbMode)
+                                {
+                                    case (0):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 0;
+                                            //rotName += "No LB";
+                                            break;
+                                        }
+                                    case (1):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 1;
+                                            rotName += "+1xLB";
+                                            break;
+                                        }
+                                    case (2):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 2;
+                                            rotSettings.lifeBloomFastStack = false;
+                                            rotName += "+Slow 2xLB";
+                                            break;
+                                        }
+                                    case (3):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 3;
+                                            rotSettings.lifeBloomFastStack = false;
+                                            rotName += "+Slow 3xLB";
+                                            break;
+                                        }
+                                    case (4):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 4;
+                                            rotSettings.lifeBloomFastStack = false;
+                                            rotName += "+Rolling LB";
+                                            break;
+                                        }
+                                    case (5):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 2;
+                                            rotSettings.lifeBloomFastStack = true;
+                                            rotName += "+Fast 2xLB";
+                                            break;
+                                        }
+                                    case (6):
+                                        {
+                                            rotSettings.lifeBloomStackSize = 3;
+                                            rotSettings.lifeBloomFastStack = true;
+                                            rotName += "+Fast 3xLB";
+                                            break;
+                                        }
+
+                                }
+
+                                rotSettings.rgOnTank = true;
+                                rotSettings.rejuvOnTank = true;
+                                rotName += ")";
+                                ((CalculationOptionsTree)(character.CalculationOptions)).customRotationSettings = rotSettings;
+                                comparisonsDPS.Add(getRotationData(character, 99, rotName));
+
+                            }
+                        }
+                    }
 
                     return comparisonsDPS.ToArray();
                 default:
@@ -1303,6 +1618,7 @@ namespace Rawr.Tree
                 NourishSpellpower = stats.NourishSpellpower,
                 SpellsManaReduction = stats.SpellsManaReduction,
                 ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
+                SwiftmendBonus = stats.SwiftmendBonus,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1335,7 +1651,7 @@ namespace Rawr.Tree
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore 
-                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived) > 0;
+                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -1366,7 +1682,7 @@ namespace Rawr.Tree
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
                 stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
-                stats.ManacostReduceWithin15OnHealingCast
+                stats.ManacostReduceWithin15OnHealingCast + stats.SwiftmendBonus
                 > 0)
                 return true;
 

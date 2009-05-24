@@ -141,8 +141,10 @@ namespace Rawr.Tree
             }
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
 
-            
-            dictValues.Add("Lifebloom method", LifebloomMethod_ToString(Simulation.LifebloomStackSize, Simulation.LifebloomFastStacking));
+
+            dictValues.Add("Number of tanks", Simulation.rotSettings.noTanks.ToString());
+            dictValues.Add("Lifebloom method", LifebloomMethod_ToString(Simulation.rotSettings.lifeBloomStackSize, Simulation.rotSettings.lifeBloomFastStack));
+            dictValues.Add("Extra Tank HoTs", (Simulation.rotSettings.rgOnTank ? "Regrowth" : "") + (Simulation.rotSettings.rejuvOnTank ? " Rejuv" : ""));
             dictValues.Add("HPS for primary heal", Math.Round(Simulation.HPSFromPrimary,2).ToString());
             dictValues.Add("HPS for tank HoTs", Math.Round(Simulation.HPSFromHots, 2).ToString() + "*" + Math.Round(Simulation.HPSFromTrueHots, 2).ToString() + " from true HoTs\n" + Math.Round(Simulation.HPSFromHots - Simulation.HPSFromTrueHots, 2).ToString()+" in the form of bursts from Regrowth and LB Blooms");
             dictValues.Add("MPS for primary heal", Math.Round(Simulation.MPSFromPrimary,2).ToString());
@@ -151,6 +153,7 @@ namespace Rawr.Tree
             dictValues.Add("HPS for Wild Growth", Math.Round(Simulation.HPSFromWildGrowth, 2).ToString());
             dictValues.Add("MPS for Swiftmend", Math.Round(Simulation.MPSFromSwiftmend, 2).ToString()+"* Doesn't include possible extra MPS to refresh HoTs, if Glyph of Swiftmend not used");
             dictValues.Add("HPS for Swiftmend", Math.Round(Simulation.HPSFromSwiftmend, 2).ToString());
+            dictValues.Add("Spell for primary heal", Simulation.rotSettings.primaryHeal.ToString());
             dictValues.Add("Mana regen per second", Math.Round(Simulation.ManaPer5InRotation / 5, 2).ToString());
             dictValues.Add("HoT refresh fraction", Math.Round(Simulation.HotsFraction, 2).ToString());
             dictValues.Add("Casts per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());

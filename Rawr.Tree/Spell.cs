@@ -39,7 +39,8 @@ namespace Rawr.Tree
         }
 
         public float coefDH = 0f; //coef for DirectHeal
-        public float speed = 1;
+        public float speed = 1.0f;
+        public float NGspeed = 1.0f;
         public float NGmod = 0;
 
         protected float healingBonus = 0f;
@@ -150,15 +151,19 @@ namespace Rawr.Tree
                 {
                     pNoBuff *= 1 - NGmod * critChance;
                 }
-                speed *= ( (1 - pNoBuff) * 0.2f) + 1f;
+                NGspeed = ( (1 - pNoBuff) * 0.2f) + 1f;
                 applyHaste();
             }
         }
         
         protected virtual void applyHaste()
         {
-            gcd = gcdBeforeHaste / speed;
-            castTime = (float)Math.Round(castTimeBeforeHaste / speed, 4);
+            gcd = gcdBeforeHaste / (speed * NGspeed);
+            if (gcd < 1.0f)
+                gcd = 1.0f;
+            castTime = (float)Math.Round(castTimeBeforeHaste / (speed * NGspeed), 4);
+            if (castTime < 1.0f)
+                castTime = 1.0f;
         }
 
         protected float OmenProc(float chance, float maxReduction)
@@ -994,6 +999,13 @@ namespace Rawr.Tree
                 }
 
             }
+
+            #region Nightsong (Tier 8) 2 item set bonus
+            minHeal *= (1.0f + calculatedStats.SwiftmendBonus);
+            maxHeal *= (1.0f + calculatedStats.SwiftmendBonus);
+            #endregion
+
+            applyHaste();
         }
 
     }
