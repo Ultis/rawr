@@ -83,7 +83,7 @@
             this.Controls.Add(this.paperDollAfter);
             this.Controls.Add(this.paperDollBefore);
             this.Name = "FormOptimizeResult";
-            this.Text = "FormOptimizeResult";
+            this.Text = "Optimizer Results";
             this.ResumeLayout(false);
 
         }

@@ -92,7 +92,9 @@ namespace Rawr
 
 		private void buttonEnchant_Click(object sender, EventArgs e)
 		{
-            (FormItemSelection ?? (this.FindForm() as IFormItemSelectionProvider)).FormItemSelection.Show(this, CharacterSlot);
+			IFormItemSelectionProvider form = (FormItemSelection ?? (this.FindForm() as IFormItemSelectionProvider));
+			if (form != null)
+				form.FormItemSelection.Show(this, CharacterSlot);
 		}
 
 		void buttonEnchant_MouseLeave(object sender, EventArgs e)
