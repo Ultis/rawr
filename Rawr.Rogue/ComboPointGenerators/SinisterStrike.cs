@@ -49,7 +49,7 @@ namespace Rawr.Rogue.ComboPointGenerators
         {
             get
             {
-                return 1 + (Talents.Glyphs.GlyphOfSinisterStrike ? .5f : 0f);
+                return 1 + (Talents.Glyphs.SinisterStrike ? .5f : 0f);
             }
         }
     }

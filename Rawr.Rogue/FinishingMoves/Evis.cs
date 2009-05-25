@@ -5,9 +5,11 @@ namespace Rawr.Rogue.FinishingMoves
     [Serializable]
     public class Evis : FinisherBase
     {
+        public const string NAME = "Evis";
+
         public override char Id { get { return 'E'; } }
 
-        public override string Name { get { return "Evis"; } }
+        public override string Name { get { return NAME; } }
 
         public override float EnergyCost(CombatFactors combatFactors, int rank)
         {
@@ -17,7 +19,7 @@ namespace Rawr.Rogue.FinishingMoves
             return baseCost + missCost + dodgeCost;
         }
 
-        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
+        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
             var evisMod = stats.AttackPower*rank*.03f;
             var evisMin = 245f + (rank - 1f)*185f + evisMod;
@@ -39,7 +41,7 @@ namespace Rawr.Rogue.FinishingMoves
 
         private static float GlyphOfEviscerateBonus
         {
-            get { return Talents.Glyphs.GlyphOfEviscerate ? .1f : 0f; }
+            get { return Talents.Glyphs.Eviscerate ? .1f : 0f; }
         }
     }
 }

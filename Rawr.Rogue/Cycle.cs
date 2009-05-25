@@ -7,27 +7,42 @@ namespace Rawr.Rogue
     [Serializable]
     public class Cycle
     {
-        private readonly List<CycleComponent> components = new List<CycleComponent>();
+        private readonly List<CycleComponent> _components = new List<CycleComponent>();
 
         public int TotalComboPoints
         {
             get
             {
                 var ret = 0;
-                for (var i = 0; i < components.Count; i++)
-                    ret += (components[i]).Rank;
+                for (var i = 0; i < _components.Count; i++)
+                    ret += (_components[i]).Rank;
                 return ret;
             }
         }
 
         public override string ToString()
         {
-            return string.Join("", components.ConvertAll(c => c.ToString()).ToArray());
+            return string.Join("", _components.ConvertAll(c => c.ToString()).ToArray());
         }
 
         public List<CycleComponent> Components
         {
-            get { return components; }
+            get { return _components; }
+        }
+
+        public bool Includes(string componentName)
+        {
+            return FindAll(componentName).Count > 0;
+        }
+
+        public CycleComponent Find(string name)
+        {
+            return FindAll(name).Count > 0 ? FindAll(name)[0] : null;
+        }
+
+        public List<CycleComponent> FindAll(string name)
+        {
+            return _components.FindAll(c => c.Finisher.Name == name);
         }
     }
 
@@ -61,9 +76,9 @@ namespace Rawr.Rogue
             set { _finisher = value; }
         }
 
-        public float CalcFinisherDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CycleTime cycleTime)
+        public float CalcFinisherDps( CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CycleTime cycleTime, CharacterCalculationsRogue displayValues )
         {
-            return _finisher.CalcFinisherDPS(calcOpts, stats, combatFactors, _rank, cycleTime, whiteAttacks);
+            return _finisher.CalcFinisherDPS(calcOpts, stats, combatFactors, _rank, cycleTime, whiteAttacks, displayValues);
         }
 
         public override string ToString()

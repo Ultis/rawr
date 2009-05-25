@@ -5,9 +5,11 @@ namespace Rawr.Rogue.FinishingMoves
     [Serializable]
     public class Rupture : FinisherBase
     {
+        public const string NAME = "Rupture";
+
         public override char Id { get { return 'R'; } }
 
-        public override string Name { get { return "Rupture"; } }
+        public override string Name { get { return NAME; } }
 
         public override float EnergyCost(CombatFactors combatFactors, int rank)
         {
@@ -17,7 +19,7 @@ namespace Rawr.Rogue.FinishingMoves
             return baseCost + missCost + dodgeCost;
         }
 
-        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
+        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
             float finisherDmg;
             switch (rank)

@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using Rawr.Rogue.ComboPointGenerators;
 using Rawr.Rogue.Poisons;
+using Rawr.Rogue.SpecialAbilities;
 
 namespace Rawr.Rogue
 {
@@ -34,6 +35,7 @@ namespace Rawr.Rogue
 		public PoisonBase TempMainHandEnchant = new NoPoison();
 		public PoisonBase TempOffHandEnchant = new NoPoison();
         public ComboPointGenerator CpGenerator = new SinisterStrike();
+        public Feint Feint = new Feint();
 
         public float ComboPointsNeededForCycle()
         {

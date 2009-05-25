@@ -179,6 +179,7 @@ namespace Rawr.Rogue
             {
                 var energyRegen = 10f*Talents.Multiply(Talents.Vitality, Talents.AdrenalineRush);
                 energyRegen += Talents.HungerForBlood.EnergyPerSecond.Bonus;
+                energyRegen -= _calcOpts.Feint.EnergyCost();
                 return energyRegen;
             }
         }

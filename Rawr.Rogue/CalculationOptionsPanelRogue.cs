@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Rawr.Rogue.ComboPointGenerators;
 using Rawr.Rogue.FinishingMoves;
 using Rawr.Rogue.Poisons;
+using Rawr.Rogue.SpecialAbilities;
 
 namespace Rawr.Rogue
 {
@@ -32,13 +33,13 @@ namespace Rawr.Rogue
             comboBoxFinisher1.ValueMember = "Id";
             comboBoxFinisher1.DataSource = new Finishers();
             comboBoxComboPoints1.SelectedIndex = 4;
-            comboBoxFinisher1.SelectedIndex = comboBoxFinisher1.FindString(new SnD().Name);
+            comboBoxFinisher1.SelectedIndex = comboBoxFinisher1.FindString(SnD.NAME);
 
             comboBoxFinisher2.DisplayMember = "Name";
             comboBoxFinisher2.ValueMember = "Id";
             comboBoxFinisher2.DataSource = new Finishers();
             comboBoxComboPoints2.SelectedIndex = 5;
-            comboBoxFinisher2.SelectedIndex = comboBoxFinisher2.FindString(new Rupture().Name);
+            comboBoxFinisher2.SelectedIndex = comboBoxFinisher2.FindString(Rupture.NAME);
 
             comboBoxFinisher3.DisplayMember = "Name";
             comboBoxFinisher3.ValueMember = "Id";
@@ -145,6 +146,19 @@ namespace Rawr.Rogue
             CpPerSecLabel.Visible = visible;
             HatStepper.Visible = visible;
             HemoPerCycle.Visible = visible;
+        }
+
+        private void Feint_CheckedChanged(object sender, EventArgs e)
+        {
+            FeintDelayStepper.Visible = FeintDelayLabel.Visible = Feint.Checked;
+            _calcOpts.Feint = Feint.Checked ? new Feint((float)FeintDelayStepper.Value) : new Feint(0);
+            UpdateCalculations();
+        }
+
+        private void FeintDelayStepper_ValueChanged(object sender, EventArgs e)
+        {
+            _calcOpts.Feint = Feint.Checked ? new Feint((float)FeintDelayStepper.Value) : new Feint(0);
+            UpdateCalculations();
         }
     }
 }

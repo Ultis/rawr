@@ -1,10 +1,8 @@
-using Rawr.Rogue.ComboPointGenerators;
-
-namespace Rawr.Rogue
+namespace Rawr.Rogue.SpecialAbilities
 {
     public class SwordSpec
     {
-        public float CalcDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CycleTime cycleTime)
+        public float CalcDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, CycleTime cycleTime)
         {
             var ssHits = 0f;
             if (combatFactors.MainHand.Type == Item.ItemType.OneHandSword)

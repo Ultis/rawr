@@ -55,12 +55,18 @@
             this.HemoPerCycle = new System.Windows.Forms.NumericUpDown();
             this.CpPerSecLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.FeintDelayLabel = new System.Windows.Forms.Label();
+            this.FeintDelayStepper = new System.Windows.Forms.NumericUpDown();
+            this.Feint = new System.Windows.Forms.CheckBox();
             this.groupBoxCycles.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HatStepper)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HemoPerCycle)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FeintDelayStepper)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBoxTargetLevel
@@ -407,10 +413,63 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "CPG";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.FeintDelayLabel);
+            this.groupBox5.Controls.Add(this.FeintDelayStepper);
+            this.groupBox5.Controls.Add(this.Feint);
+            this.groupBox5.Location = new System.Drawing.Point(15, 417);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(258, 90);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Abilities";
+            // 
+            // FeintDelayLabel
+            // 
+            this.FeintDelayLabel.AutoSize = true;
+            this.FeintDelayLabel.Location = new System.Drawing.Point(83, 20);
+            this.FeintDelayLabel.Name = "FeintDelayLabel";
+            this.FeintDelayLabel.Size = new System.Drawing.Size(94, 13);
+            this.FeintDelayLabel.TabIndex = 2;
+            this.FeintDelayLabel.Text = "Delay (in seconds)";
+            this.FeintDelayLabel.Visible = false;
+            // 
+            // FeintDelayStepper
+            // 
+            this.FeintDelayStepper.Location = new System.Drawing.Point(183, 17);
+            this.FeintDelayStepper.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.FeintDelayStepper.Name = "FeintDelayStepper";
+            this.FeintDelayStepper.Size = new System.Drawing.Size(69, 20);
+            this.FeintDelayStepper.TabIndex = 1;
+            this.FeintDelayStepper.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.FeintDelayStepper.Visible = false;
+            this.FeintDelayStepper.ValueChanged += new System.EventHandler(this.FeintDelayStepper_ValueChanged);
+            // 
+            // Feint
+            // 
+            this.Feint.AutoSize = true;
+            this.Feint.Location = new System.Drawing.Point(11, 20);
+            this.Feint.Name = "Feint";
+            this.Feint.Size = new System.Drawing.Size(49, 17);
+            this.Feint.TabIndex = 0;
+            this.Feint.Text = "Feint";
+            this.Feint.UseVisualStyleBackColor = true;
+            this.Feint.CheckedChanged += new System.EventHandler(this.Feint_CheckedChanged);
+            // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.comboBoxArmorBosses);
             this.Controls.Add(this.groupBox1);
@@ -421,7 +480,7 @@
             this.Controls.Add(this.labelTargetArmorDescription);
             this.Controls.Add(this.groupBox3);
             this.Name = "CalculationOptionsPanelRogue";
-            this.Size = new System.Drawing.Size(294, 432);
+            this.Size = new System.Drawing.Size(294, 542);
             this.groupBoxCycles.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -430,6 +489,9 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HemoPerCycle)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FeintDelayStepper)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -469,5 +531,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label HemoPerCycleLabel;
         private System.Windows.Forms.NumericUpDown HemoPerCycle;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label FeintDelayLabel;
+        private System.Windows.Forms.NumericUpDown FeintDelayStepper;
+        private System.Windows.Forms.CheckBox Feint;
     }
 }

@@ -35,6 +35,7 @@ namespace Rawr.Rogue
         public static readonly DisplayValue OhWeaponDamage = new DisplayValue("Base Stats", "OH Weapon Damage");
         public static readonly DisplayValue HitRating = new DisplayValue("Base Stats", "Hit Rating");
         public static readonly DisplayValue BaseExpertise = new DisplayValue("Base Stats", "Base Expertise");
+        public static readonly DisplayValue SndUptime = new DisplayValue("Base Stats", "SnD UpTime %");
 
         public static readonly DisplayValue EnergyRegen = new DisplayValue("DPS Breakdown", "Energy Regen");
         public static readonly DisplayValue CycleTime = new DisplayValue("DPS Breakdown", "Cycle Time (in seconds)");

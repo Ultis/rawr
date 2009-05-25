@@ -89,6 +89,7 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BasicStats\BaseRogueStats.cs" />
+    <Compile Include="BasicStats\RogueGemmingTemplates.cs" />
     <Compile Include="BasicStats\RelevantItems.cs" />
     <Compile Include="CalculationOptionsPanelRogue.cs">
       <SubType>UserControl</SubType>
@@ -124,7 +125,8 @@
     <Compile Include="Poisons\PoisonList.cs" />
     <Compile Include="Poisons\WoundPoison.cs" />
     <Compile Include="RogueConversions.cs" />
-    <Compile Include="SwordSpec.cs" />
+    <Compile Include="SpecialAbilities\Feint.cs" />
+    <Compile Include="SpecialAbilities\SwordSpec.cs" />
     <Compile Include="Talents.cs" />
     <Compile Include="WhiteAttacks.cs" />
   </ItemGroup>

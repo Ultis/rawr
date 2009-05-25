@@ -1,0 +1,22 @@
+﻿using System;
+
+namespace Rawr.Rogue.SpecialAbilities
+{
+    [Serializable]
+    public class Feint
+    {
+        public Feint() : this(0f){}
+        public Feint( float delay )
+        {
+            _delay = delay;
+        }
+
+        private readonly float _delay;
+
+        public float EnergyCost()
+        {
+            var baseCost = 20 - (Talents.Glyphs.Feint ? 10 : 0);
+            return _delay == 0f ? 0f : baseCost / _delay;
+        }
+    }
+}

@@ -4,7 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 using Rawr.Rogue.BasicStats;
+using Rawr.Rogue.FinishingMoves;
 using Rawr.Rogue.Poisons;
+using Rawr.Rogue.SpecialAbilities;
 
 namespace Rawr.Rogue
 {
@@ -81,10 +83,10 @@ namespace Rawr.Rogue
             var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var combatFactors = new CombatFactors(character, stats);
-            return GetCalculations(calcOpts, combatFactors, stats);
+            return GetCalculations(calcOpts, combatFactors, stats, needsDisplayCalculations);
         }
 
-        public static CharacterCalculationsBase GetCalculations(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats)
+        public static CharacterCalculationsBase GetCalculations(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, bool needsDisplayCalculations)
         {
             //------------------------------------------------------------------------------------
             // CALCULATE OUTPUTS
@@ -95,15 +97,25 @@ namespace Rawr.Rogue
             var cpgDps = calcOpts.CpGenerator.CalcCpgDPS(calcOpts, combatFactors, stats, cycleTime);
 
             var totalFinisherDps = 0f;
+            
             foreach (var component in calcOpts.DpsCycle.Components)
             {
-                var finisherDps = component.CalcFinisherDPS(calcOpts, combatFactors, stats, whiteAttacks, cycleTime);
+                var finisherDps = component.CalcFinisherDps(calcOpts, combatFactors, stats, whiteAttacks, cycleTime, displayedValues);
                 displayedValues.AddToolTip(DisplayValue.FinisherDps, component + ": " + finisherDps);
                 totalFinisherDps += finisherDps;
             }
 
-            var swordSpecDps = new SwordSpec().CalcDPS(calcOpts, combatFactors, whiteAttacks, cycleTime);
+            var swordSpecDps = new SwordSpec().CalcDps(calcOpts, combatFactors, whiteAttacks, cycleTime);
             var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, displayedValues, cycleTime);
+            var sndUpTime = SnD.UpTime(calcOpts, cycleTime);
+
+            displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
+            displayedValues.OverallPoints = displayedValues.TotalDPS;
+
+            if (!needsDisplayCalculations)
+            {
+                return displayedValues;
+            }
 
             //------------------------------------------------------------------------------------
             // ADD CALCULATED OUTPUTS TO DISPLAY
@@ -135,6 +147,8 @@ namespace Rawr.Rogue
             
             displayedValues.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
             displayedValues.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.BaseHaste <= 0 ? 0 : combatFactors.BaseHaste - 1) );
+            
+            displayedValues.AddRoundedDisplayValue(DisplayValue.SndUptime, sndUpTime*100f);
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors) * 100);
             displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
@@ -149,9 +163,6 @@ namespace Rawr.Rogue
             displayedValues.AddRoundedDisplayValue(DisplayValue.FinisherDps, totalFinisherDps);
             displayedValues.AddRoundedDisplayValue(DisplayValue.SwordSpecDps, swordSpecDps);
             displayedValues.AddRoundedDisplayValue(DisplayValue.PoisonDps, poisonDps);
-
-            displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
-            displayedValues.OverallPoints = displayedValues.TotalDPS;
 
             return displayedValues;
         }
@@ -460,8 +471,8 @@ namespace Rawr.Rogue
                                  //"Glyph of Fan of Knives",
                                  //"Glyph of Expose Armor",
                                  "Glyph of Sinister Strike",
-                                 //"Glyph of Slice and Dice",
-                                 //"Glyph of Feint",
+                                 "Glyph of Slice and Dice",
+                                 "Glyph of Feint",
                                  //"Glyph of Ghostly Strike",
                                  //"Glyph of Rupture",
                                  //"Glyph of Blade Flurry",
@@ -472,57 +483,7 @@ namespace Rawr.Rogue
 
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
-            get
-            {
-                ////Relevant Gem IDs for Ferals
-                //Red
-                int[] bold = { 39900, 39996, 40111, 42142 };
-                int[] delicate = { 39905, 39997, 40112, 42143 };
-
-                //Purple
-                int[] shifting = { 39935, 40023, 40130 };
-                int[] sovereign = { 39934, 40022, 40129 };
-
-                //Blue
-                int[] solid = { 39919, 40008, 40119, 36767 };
-
-                //Green
-                int[] enduring = { 39976, 40089, 40167 };
-
-                //Yellow
-                int[] thick = { 39916, 40015, 40126, 42157 };
-
-                //Orange
-                int[] etched = { 39948, 40038, 40143 };
-                int[] fierce = { 39951, 40041, 40146 };
-                int[] glinting = { 39953, 40044, 40148 };
-                int[] stalwart = { 39964, 40056, 40160 };
-                int[] deadly = { 39952, 40043, 40147 };
-
-                //Meta
-                // int austere = 41380;
-                int relentless = 41398;
-
-                return new List<GemmingTemplate>()
-				{
-					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Agility
-						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Crit
-						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Max Agility
-						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Crit 
-						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Epic", //Max Agility
-						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Epic", //Agi/Crit 
-						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Agility
-						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agility Heavy
-						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
-				};
-            }
+            get { return RogueGemmingTemplates.List; }
         }
     }
 }

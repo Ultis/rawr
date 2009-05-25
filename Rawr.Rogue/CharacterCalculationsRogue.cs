@@ -79,6 +79,11 @@ namespace Rawr.Rogue
             AddToolTip(key, prefix + Round(value*100));    
         }
 
+        public void AddRoundedToolTip(DisplayValue key, string text, float value)
+        {
+            AddToolTip(key, string.Format(text, Round(value)));    
+        }
+
         public void AddToolTip(DisplayValue key, params string[] toolTips)
         {
             if (!_dictValues.ContainsKey(key))
@@ -96,13 +101,13 @@ namespace Rawr.Rogue
         
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
-            var _returnValue = new Dictionary<string, string>();
+            var returnValue = new Dictionary<string, string>();
             foreach(var kvp in _dictValues)
             {
                 var toolTip = kvp.Value.ToolTips.Count == 0 ? "" : "*" + string.Join("\r\n", kvp.Value.ToolTips.ToArray());
-                _returnValue.Add(kvp.Key.Name, kvp.Value.Stat + toolTip);
+                returnValue.Add(kvp.Key.Name, kvp.Value.Stat + toolTip);
             }
-            return _returnValue;
+            return returnValue;
         }
 
         public override float GetOptimizableCalculationValue(string calculation)

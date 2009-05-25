@@ -36,12 +36,10 @@ namespace Rawr.Rogue
 			_talent = talent;
 			_bonuses.Add(0f);
 			_bonuses.AddRange(multipliers);
-			_items.Add(this);
 		}
 
 		private readonly TalentDelegate _talent;
 		private readonly List<float> _bonuses = new List<float>();
-		private static readonly List<Talents> _items = new List<Talents>();
 		private static RogueTalents _talents = new RogueTalents();
 
 		//---------------------------------------------------------------------
@@ -90,7 +88,7 @@ namespace Rawr.Rogue
 		public class HungerForBlood
 		{
 			public static readonly Talents EnergyPerSecond = new Talents(() => _talents.HungerForBlood, -0.25f);
-			public static readonly Talents Damage = new Talents(() => _talents.HungerForBlood, 0.15f + (Glyphs.GlyphOfHungerforBlood ? .03f : 0f));
+			public static readonly Talents Damage = new Talents(() => _talents.HungerForBlood, 0.15f + (Glyphs.HungerforBlood ? .03f : 0f));
 		}
 
 
@@ -99,7 +97,7 @@ namespace Rawr.Rogue
 		//---------------------------------------------------------------------
 		public static readonly Talents ImprovedSinisterStrike = new Talents(() => _talents.ImprovedSinisterStrike, 3f, 5f);
 		public static readonly Talents DualWieldSpecialization = new Talents(() => _talents.DualWieldSpecialization, 0.5f, 0.1f, 0.15f, 0.2f, 0.25f);
-		public static readonly Talents ImprovedSliceAndDice = new Talents(() => _talents.ImprovedSliceAndDice, 0.25f, 0.51f);
+		public static readonly Talents ImprovedSliceAndDice = new Talents(() => _talents.ImprovedSliceAndDice, 0.25f, 0.50f);
 		public static readonly Talents Precision = new Talents(() => _talents.Precision, 1f, 2f, 3f, 4f, 5f);
 		//NEED  Endurance - is there a need for this one?
 		//NEED: Riposte (might be another CPG class)
@@ -167,21 +165,21 @@ namespace Rawr.Rogue
         //---------------------------------------------------------------------
         public class Glyphs
         {
-            public static bool GlyphOfBackstab { get { return _talents.GlyphOfBackstab; } }
-            public static bool GlyphOfEviscerate { get { return _talents.GlyphOfEviscerate; } }
-            public static bool GlyphOfMutilate { get { return _talents.GlyphOfMutilate; } }
-            public static bool GlyphOfHungerforBlood { get { return _talents.GlyphOfHungerforBlood; } }
-            public static bool GlyphOfKillingSpree { get { return _talents.GlyphOfKillingSpree; } }
-            public static bool GlyphOfVigor { get { return _talents.GlyphOfVigor; } }
-            public static bool GlyphOfFanOfKnives { get { return _talents.GlyphOfFanOfKnives; } }
-            public static bool GlyphOfExposeArmor { get { return _talents.GlyphOfExposeArmor; } }
-            public static bool GlyphOfSinisterStrike { get { return _talents.GlyphOfSinisterStrike; } }
-            public static bool GlyphOfSliceandDice { get { return _talents.GlyphOfSliceandDice; } }
-            public static bool GlyphOfFeint { get { return _talents.GlyphOfFeint; } }
-            public static bool GlyphOfGhostlyStrike { get { return _talents.GlyphOfGhostlyStrike; } }
-            public static bool GlyphOfRupture { get { return _talents.GlyphOfRupture; } }
-            public static bool GlyphOfBladeFlurry { get { return _talents.GlyphOfBladeFlurry; } }
-            public static bool GlyphOfAdrenalineRush { get { return _talents.GlyphOfAdrenalineRush; } }
+            public static bool Backstab { get { return _talents.GlyphOfBackstab; } }
+            public static bool Eviscerate { get { return _talents.GlyphOfEviscerate; } }
+            public static bool Mutilate { get { return _talents.GlyphOfMutilate; } }
+            public static bool HungerforBlood { get { return _talents.GlyphOfHungerforBlood; } }
+            public static bool KillingSpree { get { return _talents.GlyphOfKillingSpree; } }
+            public static bool Vigor { get { return _talents.GlyphOfVigor; } }
+            public static bool FanOfKnives { get { return _talents.GlyphOfFanOfKnives; } }
+            public static bool ExposeArmor { get { return _talents.GlyphOfExposeArmor; } }
+            public static bool SinisterStrike { get { return _talents.GlyphOfSinisterStrike; } }
+            public static bool SliceandDice { get { return _talents.GlyphOfSliceandDice; } }
+            public static bool Feint { get { return _talents.GlyphOfFeint; } }
+            public static bool GhostlyStrike { get { return _talents.GlyphOfGhostlyStrike; } }
+            public static bool Rupture { get { return _talents.GlyphOfRupture; } }
+            public static bool BladeFlurry { get { return _talents.GlyphOfBladeFlurry; } }
+            public static bool AdrenalineRush { get { return _talents.GlyphOfAdrenalineRush; } }
         }
 
 		//---------------------------------------------------------------------

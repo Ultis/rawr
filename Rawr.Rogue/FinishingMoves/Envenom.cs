@@ -1,5 +1,4 @@
 ﻿using System;
-using Rawr.Rogue.ComboPointGenerators;
 using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue.FinishingMoves
@@ -7,6 +6,7 @@ namespace Rawr.Rogue.FinishingMoves
     [Serializable]
     public class Envenom : FinisherBase
     {
+        public const string NAME = "Envenom";
         public override char Id
         {
             get { return 'N'; }
@@ -14,7 +14,7 @@ namespace Rawr.Rogue.FinishingMoves
 
         public override string Name
         {
-            get { return "Envenom"; }
+            get { return NAME; }
         }
 
         public override float EnergyCost( CombatFactors combatFactors, int rank )
@@ -25,7 +25,7 @@ namespace Rawr.Rogue.FinishingMoves
             return baseCost + missCost + dodgeCost;
         }
 
-        public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks)
+        public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
             var dpAverageStackSize = CalcAverageStackSize(calcOpts, whiteAttacks, rank);
             var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;

@@ -17,7 +17,7 @@ namespace Rawr.Rogue.ComboPointGenerators
                 - GlyphOfMutilateBonus; 
 		}
 
-        private static float GlyphOfMutilateBonus { get { return Talents.Glyphs.GlyphOfMutilate ? 5f : 0f; } }
+        private static float GlyphOfMutilateBonus { get { return Talents.Glyphs.Mutilate ? 5f : 0f; } }
         public override float Crit(CombatFactors combatFactors)
         {
             return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus;
