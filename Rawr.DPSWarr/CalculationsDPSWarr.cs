@@ -121,7 +121,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Overpower",
                         "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
                         "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that Your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
-                        "DPS Breakdown (Arms):Bladestorm",
+                        "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
                         "DPS Breakdown (Arms):Sword Spec",
                         "DPS Breakdown (Arms):Sweeping Strikes",
 
@@ -621,43 +621,40 @@ Don't forget your weapons used matched with races can affect these numbers.",
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
 
-            //Skills.Ability fake = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
-
             float fightDuration = calcOpts.Duration;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
             float meleeHitsPerSecond = 1f / 1.5f;
-            if (character.MainHand != null && character.MainHand.Speed > 0f)
-                meleeHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus);
-            if (character.OffHand != null && character.OffHand.Speed > 0f)
-                meleeHitsPerSecond += (1f / character.OffHand.Speed) * (1f + hasteBonus);
+            if (character.MainHand != null && character.MainHand.Speed > 0f) { meleeHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus); }
+            if (character.OffHand  != null && character.OffHand.Speed  > 0f) { meleeHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus); }
             float meleeHitInterval = 1f / meleeHitsPerSecond;
-            
-            
             float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit;
-
-            float baseWeaponSped = character.MainHand != null ? character.MainHand.Speed : 2f;
+            float baseWeaponSpeed = character.MainHand != null ? character.MainHand.Speed : 2f;
 
             Stats statsProcs = new Stats();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 switch (effect.Trigger) {
-                    case Trigger.Use:
-                        statsProcs += effect.GetAverageStats(0f, 1f, baseWeaponSped, calcOpts.Duration);
-                        break;
-                    case Trigger.MeleeHit: case Trigger.PhysicalHit:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, baseWeaponSped, calcOpts.Duration);
-                        break;
-                    case Trigger.MeleeCrit: case Trigger.PhysicalCrit:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, baseWeaponSped, calcOpts.Duration);
-                        break;
-                    case Trigger.DoTTick:
-                        statsProcs += effect.GetAverageStats(1.5f, 1f, baseWeaponSped, calcOpts.Duration);
-                        break;
-                    case Trigger.DamageDone:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, baseWeaponSped, calcOpts.Duration);
-                        break;
+                    case Trigger.Use:                                   statsProcs += effect.GetAverageStats(0f,                    1f,         baseWeaponSpeed, fightDuration); break;
+                    case Trigger.MeleeHit:  case Trigger.PhysicalHit:   statsProcs += effect.GetAverageStats(meleeHitInterval,      1f,         baseWeaponSpeed, fightDuration); break;
+                    case Trigger.MeleeCrit: case Trigger.PhysicalCrit:  statsProcs += effect.GetAverageStats(meleeHitInterval,      chanceCrit, baseWeaponSpeed, fightDuration); break;
+                    case Trigger.DoTTick:                               statsProcs += effect.GetAverageStats(1.5f,                  1f,         baseWeaponSpeed, fightDuration); break;
+                    case Trigger.DamageDone:                            statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f,         baseWeaponSpeed, fightDuration); break;
                 }
             }
+            // Warrior Abilities as SpecialEffects
+            float IntenseCDMod = 1f - (100f/9f)*talents.IntensifyRage;
+            /*SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
+                new Stats() { ArmorPenetration = 0.20f, },
+                10f, 5f * 60f);
+            if (!calcOpts.FuryStance) { statsProcs += ShatteringThrow.GetAverageStats(  0f, 1f, baseWeaponSpeed, fightDuration); }
+            SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
+                new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
+                30f, 3f * 60f * IntenseCDMod);
+            if ( calcOpts.FuryStance) { statsProcs += DeathWish.GetAverageStats(        0f, 1f, baseWeaponSpeed, fightDuration); }
+            SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
+                new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
+                12f, 5f * 60f * IntenseCDMod);
+            if ( calcOpts.FuryStance) { statsProcs += Recklessness.GetAverageStats(     0f, 1f, baseWeaponSpeed, fightDuration); }*/
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));

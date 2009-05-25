@@ -857,22 +857,19 @@ namespace Rawr
             // P(x):=sum(I[p](r+1,x-r*C),r,0,floor(x/C))
             // where I[p] is incomplete beta function
 
-            if (fightDuration == 0.0f)
-            {
+            if (fightDuration == 0.0f) {
                 // this is special case, meaning that we have infinite fight duration, so we have
                 // a proc on average every Cooldown + triggerInterval / p
                 float pp = triggerChance * GetChance(attackSpeed);
                 if (pp == 0.0) return 0.0f;
                 return 1.0f / (Cooldown + triggerInterval / pp);
             }
-            if (triggerInterval == 0.0f)
-            {
+            if (triggerInterval == 0.0f) {
                 // this is a special case, meaning that it basically auto triggers on cooldown
                 return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
             }
 
-            if (Mode == CalculationMode.Advanced)
-            {
+            if (Mode == CalculationMode.Advanced) {
                 double c = Cooldown / triggerInterval;
                 if (c < 1.0) c = 1.0;
                 double n = fightDuration / triggerInterval;
@@ -881,18 +878,14 @@ namespace Rawr
 
                 double averageProcs = 0.0;
                 int r = 1;
-                while (x > 0)
-                {
+                while (x > 0) {
                     averageProcs += SpecialFunction.Ibeta(r, x, p);
                     r++;
                     x -= c;
                 }
                 return (float)(averageProcs / fightDuration);
-            }
-            else if (Mode == CalculationMode.Interpolation)
-            {
-                lock (interpolator)
-                {
+            } else if (Mode == CalculationMode.Interpolation) {
+                lock (interpolator) {
                     Interpolator i;
                     if (!interpolator.TryGetValue(fightDuration, out i))
                     {
@@ -901,9 +894,7 @@ namespace Rawr
                     }
                     return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                 }
-            }
-            else
-            {
+            } else {
                 float p = triggerChance * GetChance(attackSpeed);
                 // simple approximation
                 float t = fightDuration - triggerInterval / p;

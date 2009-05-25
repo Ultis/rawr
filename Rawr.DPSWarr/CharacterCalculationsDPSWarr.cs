@@ -28,6 +28,8 @@ namespace Rawr.DPSWarr
             set { _subPoints[0] = value; }
         }
 
+        public float TotalDPS2 { get; set; }
+
         public int TargetLevel { get; set; }
 
         public float Duration { get; set; }
@@ -99,14 +101,13 @@ namespace Rawr.DPSWarr
             WarriorTalents talents = new WarriorTalents();
             Character character = new Character();
             CombatFactors combatFactors = new CombatFactors(character, BasicStats);
-
+            string format = "";
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, BasicStats, combatFactors, character);
             if (SkillAttacks == null){SkillAttacks = new Skills(character,talents, BasicStats, combatFactors, whiteAttacks);}
 
-            dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}"
-                ,BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
-            dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}"
-                ,BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            // Base Stats
+            dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}",BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}" ,BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
@@ -147,23 +148,29 @@ namespace Rawr.DPSWarr
                                 OhExpertise, StatConversion.GetDodgeParryReducFromExpertise(OhExpertise),
                                 (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1,
                                 StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1)));
-            // DPS ind
-            dictValues.Add("Description",       string.Format("DPS  : PerHit : RPS : #Acts"));
-            dictValues.Add("Bloodsurge",        string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",BS.GetDPS(), BS.GetDamageOnUse(), BS.GetRageUsePerSecond() ,BS.GetActivates()));
-            dictValues.Add("Bloodthirst",       string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",BT.GetDPS(), BT.GetDamageOnUse(), BT.GetRageUsePerSecond() ,BT.GetActivates()));
-            dictValues.Add("Whirlwind",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",WW.GetDPS(), WW.GetDamageOnUse(), WW.GetRageUsePerSecond() ,WW.GetActivates()));
-            dictValues.Add("Mortal Strike",     string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._MS_DPS/*MS.GetDPS()*/,MS.GetDamageOnUse(), MS.GetRageUsePerSecond() ,SkillAttacks._MS_GCDs /*MS.GetActivates()*/,SkillAttacks._MS_DPS/TotalDPS));
-            dictValues.Add("Slam",              string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._SL_DPS/*SL.GetDPS()*/,SL.GetDamageOnUse(), SL.GetRageUsePerSecond() ,SkillAttacks._SL_GCDs /*SL.GetActivates()*/,SkillAttacks._SL_DPS/TotalDPS));
-            dictValues.Add("Rend",              string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._RD_DPS/*RD.GetDPS()*/,RD.GetTickSize(), RD.GetRageUsePerSecond() ,SkillAttacks._RD_GCDs /*RD.GetActivates()*/,SkillAttacks._RD_DPS/TotalDPS));
-            dictValues.Add("Sudden Death",      string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._SD_DPS/*SD.GetDPS()*/,SD.GetDamageOnUse(), SD.GetRageUsePerSecond() ,SkillAttacks._SD_GCDs /*SD.GetActivates()*/,SkillAttacks._SD_DPS/TotalDPS));
-            dictValues.Add("Overpower",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS",SkillAttacks._OP_DPS/*OP.GetDPS()*/,OP.GetDamageOnUse(), OP.GetRageUsePerSecond() ,SkillAttacks._OP_GCDs /*OP.GetActivates()*/,SkillAttacks._OP_DPS/TotalDPS));
-            dictValues.Add("Bladestorm",        string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",BLS.GetDPS(),BLS.GetDamageOnUse(),BLS.GetRageUsePerSecond(),BLS.GetActivates()));
-            dictValues.Add("Sword Spec",        string.Format("{0:0000} : {1:0000}"             ,SS.GetDPS(), SS.GetDamageOnUse()                           ));
-            dictValues.Add("Sweeping Strikes",  string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",SW.GetDPS(), SW.GetDamageOnUse(), SW.GetRageUsePerSecond() ,SW.GetActivates()));
-            // DPS
-            dictValues.Add("Heroic Strike",     string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}",HS.GetDPS(), HS.GetDamageOnUse(), HS.heroicStrikeRageCost(),HS.GetActivates()));
-            dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}"             ,DW.GetDPS(), DW.GetDamageOnUse()                           ));
-            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}"+Environment.NewLine+"Off Hand- {5:0.00}",WhiteDPS,WhiteDmg,WhiteRage,0f, WhiteDPSMH, WhiteDPSOH));
+            // DPS Fury
+            format = "{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS";
+            dictValues.Add("Description",       string.Format("DPS  : PerHit : RPS : #ActsD"));
+            dictValues.Add("Bloodsurge",        string.Format(format,BS.GetDPS(), BS.GetDamageOnUse(), BS.GetRageUsePerSecond() ,BS.GetActivates(),BS.GetDPS()/TotalDPS));
+            dictValues.Add("Bloodthirst",       string.Format(format,BT.GetDPS(), BT.GetDamageOnUse(), BT.GetRageUsePerSecond() ,BT.GetActivates(),BT.GetDPS()/TotalDPS));
+            dictValues.Add("Whirlwind",         string.Format(format,WW.GetDPS(), WW.GetDamageOnUse(), WW.GetRageUsePerSecond() ,WW.GetActivates(),WW.GetDPS()/TotalDPS));
+            dictValues.Add("Heroic Strike",     string.Format(format,HS.GetDPS(), HS.GetDamageOnUse(), HS.heroicStrikeRageCost(),HS.GetActivates(),HS.GetDPS()/TotalDPS));
+            // DPS Arms
+            format = "{0:0000} : {1:0000} : {2:00.00} : {3:000.00}*{4:00.0%} of DPS";
+            dictValues.Add("Mortal Strike",     string.Format(format,SkillAttacks._MS_DPS ,MS.GetDamageOnUse() ,SkillAttacks._MS_GCDs ,SkillAttacks._MS_GCDsD ,SkillAttacks._MS_DPS /TotalDPS));
+            dictValues.Add("Rend",              string.Format(format,SkillAttacks._RD_DPS ,RD.GetTickSize()    ,SkillAttacks._RD_GCDs ,SkillAttacks._RD_GCDsD ,SkillAttacks._RD_DPS /TotalDPS));
+            dictValues.Add("Overpower",         string.Format(format,SkillAttacks._OP_DPS ,OP.GetDamageOnUse() ,SkillAttacks._OP_GCDs ,SkillAttacks._OP_GCDsD ,SkillAttacks._OP_DPS /TotalDPS));
+            dictValues.Add("Sudden Death",      string.Format(format,SkillAttacks._SD_DPS ,SD.GetDamageOnUse() ,SkillAttacks._SD_GCDs ,SkillAttacks._SD_GCDsD ,SkillAttacks._SD_DPS /TotalDPS));
+            dictValues.Add("Slam",              string.Format(format,SkillAttacks._SL_DPS ,SL.GetDamageOnUse() ,SkillAttacks._SL_GCDs ,SkillAttacks._SL_GCDsD ,SkillAttacks._SL_DPS /TotalDPS));
+            dictValues.Add("Bladestorm",        string.Format(format,SkillAttacks._BLS_DPS,BLS.GetDamageOnUse(),SkillAttacks._BLS_GCDs,SkillAttacks._BLS_GCDsD,SkillAttacks._BLS_DPS/TotalDPS));
+            dictValues.Add("Sword Spec",        string.Format(format,SS.GetDPS()          ,SS.GetDamageOnUse() ,SS.GetActivates()     ,SS.GetActivates()      ,SS.GetDPS()          /TotalDPS));
+            dictValues.Add("Sweeping Strikes",  string.Format(format,SW.GetDPS()          ,SW.GetDamageOnUse() ,SW.GetActivates()     ,SW.GetActivates()      ,SW.GetDPS()          /TotalDPS));
+            // DPS General
+            dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",DW.GetDPS(), DW.GetDamageOnUse(),DW.GetDPS()/TotalDPS));
+            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}" + 
+                                Environment.NewLine + "Off Hand- {5:0.00}" + 
+                                Environment.NewLine + "{6:00.0%} of DPS",
+                                WhiteDPS,WhiteDmg,WhiteRage,0f,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
             dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}", TotalDPS,TotalDPS*BT.GetRotation(),TotalDPS*Duration));
             // Rage
             dictValues.Add("Generated White DPS Rage",  string.Format("{0:00.000}",WhiteRage));

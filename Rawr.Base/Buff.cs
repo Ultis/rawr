@@ -5,14 +5,10 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Rawr
-{
-    public class BuffList : List<Buff>
-    {
-    }
+namespace Rawr {
+    public class BuffList : List<Buff> { }
 
-    public class Buff
-    {
+    public class Buff {
         //early morning
         //summer soul and solace
         //the world is watching
@@ -26,62 +22,45 @@ namespace Rawr
         public List<Buff> Improvements = new List<Buff>();
         public bool IsCustom = false;
         private List<string> _conflictingBuffs = null;
-        public List<string> ConflictingBuffs
-        {
+        public List<string> ConflictingBuffs {
             get { return _conflictingBuffs ?? (_conflictingBuffs = new List<string>(new string[] { Group })); }
             set { _conflictingBuffs = value; }
         }
 
         private static readonly string _savedFilePath;
-        static Buff()
-        {
+        static Buff() {
             _savedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "BuffCache.xml");
             LoadBuffs();
             SaveBuffs();
         }
         //washing virgin halo
-        public Buff()
-        {
+        public Buff() { }
 
-        }
-
-        private static void SaveBuffs()
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(_savedFilePath, false, Encoding.UTF8))
-                {
+        private static void SaveBuffs() {
+            try {
+                using (StreamWriter writer = new StreamWriter(_savedFilePath, false, Encoding.UTF8)) {
                     XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
                     serializer.Serialize(writer, _allBuffs);
                     writer.Close();
                 }
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 // Log.Write(ex.Message);
                 // Log.Write(ex.StackTrace);
             }
         }
 
-        private static void LoadBuffs()
-        {
-            try
-            {
+        private static void LoadBuffs() {
+            try {
                 List<Buff> loadedBuffs = new List<Buff>();
-                try
-                {
-                    if (File.Exists(_savedFilePath))
-                    {
-                        using (StreamReader reader = new StreamReader(_savedFilePath, Encoding.UTF8))
-                        {
+                try {
+                    if (File.Exists(_savedFilePath)) {
+                        using (StreamReader reader = new StreamReader(_savedFilePath, Encoding.UTF8)) {
                             XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
                             loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
                             reader.Close();
                         }
                     }
-                }
-                catch (System.Exception)
-                {
+                } catch (System.Exception) {
                     //Log.Write(ex.Message);
 #if !DEBUG
                     MessageBox.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.", "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -102,20 +81,15 @@ namespace Rawr
                 allBuffs.Values.CopyTo(allBuffArray, 0);
                 _allBuffs = new List<Buff>(allBuffs.Values);
                 CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
-            }
-            catch { }
+            } catch { }
         }
 
-        private static void CacheSetBonuses()
-        {
-            foreach (Buff buff in AllBuffs)
-            {
+        private static void CacheSetBonuses() {
+            foreach (Buff buff in AllBuffs) {
                 string setName = buff.SetName;
-                if (!string.IsNullOrEmpty(setName))
-                {
+                if (!string.IsNullOrEmpty(setName)) {
                     List<Buff> setBonuses;
-                    if (!setBonusesByName.TryGetValue(setName, out setBonuses))
-                    {
+                    if (!setBonusesByName.TryGetValue(setName, out setBonuses)) {
                         setBonuses = new List<Buff>();
                         setBonusesByName[setName] = setBonuses;
                     }
@@ -125,8 +99,7 @@ namespace Rawr
         }
 
         //you're in agreement
-        public override string ToString()
-        {
+        public override string ToString() {
             string summary = Name + ": ";
             summary += Stats.ToString();
             summary = summary.TrimEnd(',', ' ', ':');
@@ -134,8 +107,7 @@ namespace Rawr
         }
 
         //you can understand
-        public static Buff GetBuffByName(string name)
-        {
+        public static Buff GetBuffByName(string name) {
             /*foreach (Buff buff in AllBuffs)
                 if (buff.Name == name)
                     return buff;
@@ -148,31 +120,22 @@ namespace Rawr
         //enter static
         private static string _cachedModel = "";
         private static List<Buff> _relevantBuffs = new List<Buff>();
-        public static List<Buff> RelevantBuffs
-        {
-            get
-            {
-                if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantBuffs == null)
-                {
-                    if (Calculations.Instance != null)
-                    {
+        public static List<Buff> RelevantBuffs {
+            get {
+                if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantBuffs == null) {
+                    if (Calculations.Instance != null) {
                         _cachedModel = Calculations.Instance.ToString();
                         _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff));
-                    }
-                    else
-                        _relevantBuffs = new List<Buff>();
+                    } else { _relevantBuffs = new List<Buff>(); }
                 }
                 return _relevantBuffs;
             }
         }
 
         private static List<Buff> _allSetBonuses = null;
-        public static List<Buff> AllSetBonuses
-        {
-            get
-            {
-                if (_allSetBonuses == null)
-                {
+        public static List<Buff> AllSetBonuses {
+            get {
+                if (_allSetBonuses == null) {
                     _allSetBonuses = AllBuffs.FindAll(buff => !string.IsNullOrEmpty(buff.SetName));
                 }
                 return _allSetBonuses;
@@ -180,53 +143,38 @@ namespace Rawr
         }
 
         private static Dictionary<string, List<Buff>> setBonusesByName = new Dictionary<string, List<Buff>>();
-        public static List<Buff> GetSetBonuses(string setName)
-        {
+        public static List<Buff> GetSetBonuses(string setName) {
             List<Buff> setBonuses;
-            if (!setBonusesByName.TryGetValue(setName, out setBonuses))
-            {
+            if (!setBonusesByName.TryGetValue(setName, out setBonuses)) {
                 return new List<Buff>(); // if it's not cached we know we don't have any
             }
             return setBonuses;
         }
 
         private static List<Buff> _relevantSetBonuses = null;
-        public static List<Buff> RelevantSetBonuses
-        {
-            get
-            {
-                if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantSetBonuses == null)
-                {
-                    if (Calculations.Instance != null)
-                    {
+        public static List<Buff> RelevantSetBonuses {
+            get {
+                if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantSetBonuses == null) {
+                    if (Calculations.Instance != null) {
                         _cachedModel = Calculations.Instance.ToString();
                         _relevantSetBonuses = AllBuffs.FindAll(buff =>
                             Calculations.HasRelevantStats(buff.GetTotalStats()) && !string.IsNullOrEmpty(buff.SetName));
-                    }
-                    else
-                        _relevantSetBonuses = new List<Buff>();
+                    } else { _relevantSetBonuses = new List<Buff>(); }
                 }
                 return _relevantSetBonuses;
             }
         }
 
         private static Dictionary<string, Buff> _allBuffsByName = null;
-        private static Dictionary<string, Buff> AllBuffsByName
-        {
-            get
-            {
-                if (_allBuffsByName == null)
-                {
+        private static Dictionary<string, Buff> AllBuffsByName {
+            get {
+                if (_allBuffsByName == null) {
                     _allBuffsByName = new Dictionary<string, Buff>();
-                    foreach (Buff buff in AllBuffs)
-                    {
-                        if (!_allBuffsByName.ContainsKey(buff.Name))
-                        {
+                    foreach (Buff buff in AllBuffs) {
+                        if (!_allBuffsByName.ContainsKey(buff.Name)) {
                             _allBuffsByName.Add(buff.Name, buff);
-                            foreach (Buff improvement in buff.Improvements)
-                            {
-                                if (!_allBuffsByName.ContainsKey(improvement.Name))
-                                {
+                            foreach (Buff improvement in buff.Improvements) {
+                                if (!_allBuffsByName.ContainsKey(improvement.Name)) {
                                     _allBuffsByName.Add(improvement.Name, improvement);
                                 }
                             }
@@ -237,8 +185,7 @@ namespace Rawr
             }
         }
 
-        public Stats GetTotalStats()
-        {
+        public Stats GetTotalStats() {
             Stats ret = new Stats();
             ret += this.Stats;
             foreach (Buff buff in Improvements)
@@ -248,13 +195,9 @@ namespace Rawr
 
         //a grey mistake
         private static List<Buff> _allBuffs = null;
-        public static List<Buff> AllBuffs
-        {
-            get { return _allBuffs; }
-        }
+        public static List<Buff> AllBuffs { get { return _allBuffs; } }
 
-        private static List<Buff> GetDefaultBuffs()
-        {
+        private static List<Buff> GetDefaultBuffs() {
             List<Buff> defaultBuffs = new List<Buff>();
             Buff buff;
 
@@ -2008,8 +1951,7 @@ namespace Rawr
                 SetThreshold = 4
             });
 
-
-            // Windhawk (epic leather caster) set
+            #region Windhawk (epic leather caster) set
             defaultBuffs.Add(new Buff()
             {
                 Name = "Windhawk Armor",
@@ -2019,7 +1961,8 @@ namespace Rawr
                 SetName = "Windhawk Armor",
                 SetThreshold = 3
             });
-            // Moonkin tier 4/5/6 sets
+            #endregion
+            #region Moonkin tier 4/5/6 sets
             defaultBuffs.Add(new Buff()
             {
                 Name = "Malorne Regalia 2 Piece Bonus",
@@ -2038,7 +1981,8 @@ namespace Rawr
                 SetName = "Malorne Regalia",
                 SetThreshold = 4
             });
-            // Nordrassil 2-piece skipped because it has nothing to do with dps
+            #endregion
+            #region Nordrassil 2-piece skipped because it has nothing to do with dps
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nordrassil Regalia 4 Piece Bonus",
@@ -2066,7 +2010,8 @@ namespace Rawr
                 SetName = "Thunderheart Regalia",
                 SetThreshold = 4
             });
-            // Feral Tier 7 set bonuses
+            #endregion
+            #region Feral Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Dreamwalker Battlegear 2 Piece Bonus",
@@ -2085,8 +2030,9 @@ namespace Rawr
                 SetName = "Dreamwalker Battlegear",
                 SetThreshold = 4
 			});
-			// Feral Tier 8 set bonuses 
-			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
+            #endregion
+            #region Feral Tier 8 set bonuses
+            defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
 			{
 			    Name = "Nightsong Battlegear 2 Piece Bonus",
 			    Group = "Set Bonuses",
@@ -2104,7 +2050,8 @@ namespace Rawr
 				SetName = "Nightsong Battlegear",
 			    SetThreshold = 4
 			});
-            // Moonkin Tier 7 set bonuses
+            #endregion
+            #region Moonkin Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Dreamwalker Garb 2 Piece Bonus",
@@ -2123,7 +2070,8 @@ namespace Rawr
                 SetName = "Dreamwalker Garb",
                 SetThreshold = 4
             });
-            // Moonkin Tier 8 set bonuses
+            #endregion
+            #region Moonkin Tier 8 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nightsong Garb 2 Piece Bonus",
@@ -2142,8 +2090,9 @@ namespace Rawr
                 SetName = "Nightsong Garb",
                 SetThreshold = 4
             });
+            #endregion
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.15f, 1));
-            // Tree Tier 7 set bonuses
+            #region Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Dreamwalker Regalia 2 Piece Bonus",
@@ -2162,7 +2111,8 @@ namespace Rawr
                 SetName = "Dreamwalker Regalia",
                 SetThreshold = 4
             });
-            // Tree Tier 8 set bonuses
+            #endregion
+            #region Tree Tier 8 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nightsong Regalia 2 Piece Bonus",
@@ -2182,6 +2132,7 @@ namespace Rawr
                 SetName = "Nightsong Regalia",
                 SetThreshold = 4
             });
+            #endregion
             defaultBuffs.Add(new Buff()
             {
                 Name = "Destroyer Armor 2 Piece Bonus",
@@ -2199,7 +2150,7 @@ namespace Rawr
                 Name = "Destroyer Armor 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HasteRating = 67 },
+                Stats = { HasteRating = 67f },
                 SetName = "Destroyer Armor",
                 SetThreshold = 4
             });
@@ -2285,7 +2236,7 @@ namespace Rawr
                 SetThreshold = 3
             });
 
-            // Resto Shammy set bonuses:  Removed BC sets as we push to Ulduar
+            #region Resto Shammy set bonuses: Removed BC sets as we push to Ulduar
             /*defaultBuffs.Add(new Buff()
             {
                 Name = "Cyclone Raiment 2 Piece Bonus",
@@ -2325,7 +2276,9 @@ namespace Rawr
                 Stats = { CHHealIncrease = .05f },
                 SetThreshold = 4
             });*/
-            // Tier 7
+            #endregion
+
+            #region Shaman Tier 7
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthshatter Regalia 2 Piece Bonus",
@@ -2363,8 +2316,9 @@ namespace Rawr
                 Stats = { CHCTDecrease = .2f },
                 SetThreshold = 4
             });
+            #endregion
 
-            // Elemental Shaman set bonuses:
+            #region Elemental Shaman set bonuses
             //Tier 6																																																																																		
             defaultBuffs.Add(new Buff()
             {
@@ -2449,8 +2403,9 @@ namespace Rawr
                 Stats = { BonusMWFreq = 0.2f },
                 SetThreshold = 4
             });
+            #endregion
 
-            //Hunter Set Bonuses
+            #region Hunter Set Bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Rift Stalker Armor 4 Piece Bonus",
@@ -2469,8 +2424,9 @@ namespace Rawr
                 Stats = { BonusSteadyShotDamageMultiplier = .1f },
                 SetThreshold = 4
             });
+            #endregion
 
-            // Holy Priest bonuses
+            #region Holy Priest bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Primal Mooncloth 3 Piece Bonus",
@@ -2660,10 +2616,10 @@ namespace Rawr
                 SetName = "Sanctification Garb",
                 SetThreshold = 4
             });
-
+            #endregion
 
             #region Rogue set bonuses
-            
+
             defaultBuffs.Add(new Buff()
             {
                 Name = "Netherblade 2 Piece Bonus",
@@ -2768,7 +2724,7 @@ namespace Rawr
 
             #endregion
 
-            //Paladin Set Bonuses
+            #region Paladin Set Bonuses
             //Holy T7
             defaultBuffs.Add(new Buff()
             {
@@ -2900,8 +2856,9 @@ namespace Rawr
                 SetName = "Aegis Regalia",
                 SetThreshold = 4
             });
+            #endregion
 
-            // DK DPS T7
+            #region DK DPS T7
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scourgeborne Battlegear 2 Piece Bonus",
@@ -3003,8 +2960,9 @@ namespace Rawr
                 SetName = "Darkruned Plate",
                 SetThreshold = 4
             });
-       
-			#endregion
+            #endregion
+
+            #endregion
 
             #region Profession Buffs
             defaultBuffs.Add(new Buff()

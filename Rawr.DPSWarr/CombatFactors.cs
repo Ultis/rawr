@@ -84,24 +84,18 @@ namespace Rawr.DPSWarr {
         }
         public float CalcCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
-            var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
+            float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
 
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
 
             return crit;
         }
-        private float CalcYellowCrit(Item weapon)
-        {
-            if(weapon == null) {return 0f;}
-            var crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
+        private float CalcYellowCrit(Item weapon) {
+            if(weapon == null || weapon.MaxDamage == 0f) {return 0f;}
+            float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
             crit *= (1 - YellowMissChance - MhDodgeChance);
-            //if (_calcOpts != null) {
-            //if (_calcOpts.TargetLevel == 83) { crit -= 0.048f; }
-            //    if (_calcOpts.FuryStance) { crit += 0.03f; }
-            //}
-            //crit += 0.01f * _talents.Cruelty;
 
-            crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
+            crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
 
             return crit;
         }
@@ -109,19 +103,25 @@ namespace Rawr.DPSWarr {
         public float ProbWhiteHit(Item i) { return 1f - WhiteMissChance - CalcCrit(i) - CalcDodgeChance(CalcExpertise(i)) - GlanceChance; }
         public float ProbMhWhiteHit { get { return 1f - WhiteMissChance - MhCrit - MhDodgeChance - GlanceChance; } }
         public float ProbOhWhiteHit { get { return 1f - WhiteMissChance - OhCrit - OhDodgeChance - GlanceChance; } }
-        public float MhCrit { get { return CalcCrit(MainHand); } }
-        public float MhYellowCrit { get { return CalcYellowCrit(MainHand); } }
-        public float OhCrit { get { return CalcCrit(OffHand); } }
-        public float OhYellowCrit { get { return CalcYellowCrit(OffHand); } }
-        public float GlanceChance { get { return 0.25f; } }
-        public float MhDodgeChance { get { return CalcDodgeChance(MhExpertise); } }
-        public float OhDodgeChance { get { return CalcDodgeChance(OhExpertise); } }
-        public float CalcDodgeChance(float mhExpertise)
-        {
-            var mhDodgeChance = 0.065f - 0.0025f * mhExpertise;
-            mhDodgeChance -= _talents.WeaponMastery/100f;
+        public float MhCrit         { get { return CalcCrit(MainHand); } }
+        public float MhYellowCrit   { get { return CalcYellowCrit(MainHand); } }
+        public float OhCrit         { get { return CalcCrit(OffHand); } }
+        public float OhYellowCrit   { get { return CalcYellowCrit(OffHand); } }
+        public float GlanceChance   { get { return 0.25f; } }
+        public float MhDodgeChance  { get { return CalcDodgeChance(MhExpertise); } }
+        public float OhDodgeChance  { get { return CalcDodgeChance(OhExpertise); } }
+        public float CalcDodgeChance(float mhExpertise) {
+            float mhDodgeChance = 0.065f - 0.0025f * mhExpertise;
+            mhDodgeChance -= _talents.WeaponMastery / 100f;
             if (mhDodgeChance < 0f) { mhDodgeChance = 0f; }
             return mhDodgeChance;
+        }
+        public float MhParryChance  { get { return CalcParryChance(MhExpertise); } }
+        public float OhParryChance  { get { return CalcParryChance(OhExpertise); } }
+        public float CalcParryChance(float mhExpertise) {
+            float mhParryChance = 0.12f - 0.0025f * mhExpertise;
+            if (mhParryChance < 0f) { mhParryChance = 0f; }
+            return mhParryChance;
         }
         #endregion
         #region Other
