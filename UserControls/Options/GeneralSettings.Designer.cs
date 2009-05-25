@@ -42,6 +42,7 @@
             this.chbGemNames = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
+            this.checkBoxDisplayItemIds = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,10 +127,17 @@
             resources.ApplyResources(this.comboBoxProcEffectCalculationMode, "comboBoxProcEffectCalculationMode");
             this.comboBoxProcEffectCalculationMode.Name = "comboBoxProcEffectCalculationMode";
             // 
+            // checkBoxDisplayItemIds
+            // 
+            resources.ApplyResources(this.checkBoxDisplayItemIds, "checkBoxDisplayItemIds");
+            this.checkBoxDisplayItemIds.Name = "checkBoxDisplayItemIds";
+            this.checkBoxDisplayItemIds.UseVisualStyleBackColor = true;
+            // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxDisplayItemIds);
             this.Controls.Add(this.comboBoxProcEffectCalculationMode);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.chbGemNames);
@@ -162,6 +170,7 @@
         private System.Windows.Forms.CheckBox chbGemNames;
         private System.Windows.Forms.ComboBox comboBoxProcEffectCalculationMode;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox checkBoxDisplayItemIds;
 
 
 	}

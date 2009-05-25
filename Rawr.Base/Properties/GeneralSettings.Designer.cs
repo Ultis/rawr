@@ -94,5 +94,17 @@ namespace Rawr.Properties {
                 this["ProcEffectMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayItemIds {
+            get {
+                return ((bool)(this["DisplayItemIds"]));
+            }
+            set {
+                this["DisplayItemIds"] = value;
+            }
+        }
     }
 }

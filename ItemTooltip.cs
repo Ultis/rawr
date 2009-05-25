@@ -363,40 +363,44 @@ namespace Rawr
                                 {
                                     case Item.ItemQuality.Common:
                                     case Item.ItemQuality.Temp:
-                                        nameBrush = new SolidBrush(Color.FromKnownColor(KnownColor.InfoText));
+                                        nameBrush = SystemBrushes.InfoText;
                                         break;
                                     case Item.ItemQuality.Epic:
-                                        nameBrush = new SolidBrush(Color.Purple);
+                                        nameBrush = Brushes.Purple;
                                         break;
                                     case Item.ItemQuality.Legendary:
-                                        nameBrush = new SolidBrush(Color.Orange);
+                                        nameBrush = Brushes.Orange;
                                         break;
                                     case Item.ItemQuality.Heirloom:
                                     case Item.ItemQuality.Artifact:
-                                        nameBrush = new SolidBrush(Color.Gold);
+                                        nameBrush = Brushes.Gold;
                                         break;
                                     case Item.ItemQuality.Poor:
-                                        nameBrush = new SolidBrush(Color.Gray);
+                                        nameBrush = Brushes.Gray;
                                         break;
                                     case Item.ItemQuality.Rare:
-                                        nameBrush = new SolidBrush(Color.Blue);
+                                        nameBrush = Brushes.Blue;
                                         break;
                                     case Item.ItemQuality.Uncommon:
-                                        nameBrush = new SolidBrush(Color.Green);
+                                        nameBrush = Brushes.Green;
                                         break;
                                 }
                                 g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
-                                nameBrush.Dispose();
-                                nameBrush = null;
                             }
 
                             // item level drawing
                             if (CurrentItem.ItemLevel > 0)
                             {
                                 SizeF name_size = g.MeasureString(CurrentItem.Name, _fontName);
-                                Brush ilvlBrush = new SolidBrush(Color.Gray);
-                                g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel), _fontName, ilvlBrush, name_size.Width + 2, 4);
-                                ilvlBrush.Dispose();
+                                Brush ilvlBrush = Brushes.Gray;
+                                if (Properties.GeneralSettings.Default.DisplayItemIds)
+                                {
+                                    g.DrawString(string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id), _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                }
+                                else
+                                {
+                                    g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel), _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                }
                             }
 
                             xPos = xGrid.initial;
