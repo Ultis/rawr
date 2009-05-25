@@ -126,6 +126,37 @@ namespace Rawr
             trackBarThoroughness.Value = Properties.Optimizer.Default.Thoroughness;
         }
 
+        private Item SingleItemUpgrade
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(textBoxSingleItemUpgrade.Text))
+                {
+                    return null;
+                }
+                else
+                {
+                    int id;
+                    if (int.TryParse(textBoxSingleItemUpgrade.Text, out id))
+                    {
+                        return ItemCache.FindItemById(id);
+                    }
+                    else
+                    {
+                        // try to match by name
+                        foreach (Item item in ItemCache.AllItems)
+                        {
+                            if (item.Name == textBoxSingleItemUpgrade.Text)
+                            {
+                                return item;
+                            }
+                        }
+                    }
+                    return null;
+                }
+            }
+        }
+
         private void UpdateStatusLabel()
         {
             if (batchListReady)
@@ -1186,7 +1217,7 @@ namespace Rawr
             if (CurrentBatchCharacter.Character != null)
             {
                 optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null);
-                optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
+                optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, SingleItemUpgrade);
             }
         }
 
@@ -1271,7 +1302,7 @@ namespace Rawr
                 currentOperation = AsyncOperation.BuildBatchUpgradeList;
                 buttonCancel.Enabled = true;
 
-                batchOptimizer.ComputeUpgradesAsync(thoroughness, null);
+                batchOptimizer.ComputeUpgradesAsync(thoroughness, SingleItemUpgrade);
             }
         }
 
@@ -1345,22 +1376,33 @@ namespace Rawr
             Character[] characterList = new Character[BatchCharacterList.Count];
             CalculationsBase[] modelList = new CalculationsBase[BatchCharacterList.Count];
             Dictionary<int, Item> itemById = new Dictionary<int, Item>();
+            Item single = SingleItemUpgrade;
+            if (single != null)
+            {
+                itemList = new Item[] { single };
+            }
             for (int i = 0; i < BatchCharacterList.Count; i++)
             {
                 characterList[i] = BatchCharacterList[i].Character;
                 modelList[i] = BatchCharacterList[i].Model;
-                Item[] items = ItemCache.GetRelevantItems(modelList[i]);
-                foreach (Item item in items)
+                if (single == null)
                 {
-                    if (item != null && modelList[i].RelevantItemTypes.Contains(item.Type) && !item.IsGem)
+                    Item[] items = ItemCache.GetRelevantItems(modelList[i]);
+                    foreach (Item item in items)
                     {
-                        itemById[item.Id] = item;
+                        if (item != null && modelList[i].RelevantItemTypes.Contains(item.Type) && !item.IsGem)
+                        {
+                            itemById[item.Id] = item;
+                        }
                     }
                 }
             }
             itemGenerator = new AvailableItemGenerator(character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
-            itemList = new List<Item>(itemById.Values).ToArray();
+            if (single == null)
+            {
+                itemList = new List<Item>(itemById.Values).ToArray();
+            }
             itemIndex = 0;
             upgradeList = new Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>>();
             workingCharacter = character;

@@ -1800,6 +1800,8 @@ namespace Rawr.Optimizer
                     Item bestNonLimitedGem = null;
                     float bestEnchantValue = float.NegativeInfinity;
                     Enchant bestEnchant = null;
+                    float bestOneHandEnchantValue = float.NegativeInfinity;
+                    Enchant bestOneHandEnchant = null;
                     if (slot == (int)Character.CharacterSlot.Head)
                     {
                         foreach (Item gem in itemGenerator.MetaGemItems)
@@ -1860,6 +1862,11 @@ namespace Rawr.Optimizer
                                 bestEnchantValue = value;
                                 bestEnchant = enchant;
                             }
+                            if (enchant.Slot == Item.ItemSlot.OneHand && value > bestOneHandEnchantValue)
+                            {
+                                bestOneHandEnchantValue = value;
+                                bestOneHandEnchant = enchant;
+                            }
                         }
                     }
 
@@ -1873,6 +1880,24 @@ namespace Rawr.Optimizer
                     {
                         if (item.AvailabilityInformation == null || item.AvailabilityInformation.GenerativeEnchants.Count > 0)
                         {
+                            Enchant enchant = bestEnchant;
+                            if (enchant != null)
+                            {
+                                if (enchant.Slot == Item.ItemSlot.OffHand)
+                                {
+                                    if (item.Type != Item.ItemType.Shield)
+                                    {
+                                        enchant = bestOneHandEnchant;
+                                    }
+                                }
+                                else if (enchant.Slot == Item.ItemSlot.TwoHand)
+                                {
+                                    if (item.Slot != Item.ItemSlot.TwoHand)
+                                    {
+                                        enchant = bestOneHandEnchant;
+                                    }
+                                }
+                            }
                             int gemCount = itemGenerator.GetItemGemCount(item);
                             // first generate best nonlimited without matching sockets
                             Item[] gems = new Item[4];
@@ -1893,7 +1918,7 @@ namespace Rawr.Optimizer
                                     }
                                 }
                             }
-                            ItemInstance itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], bestEnchant);
+                            ItemInstance itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
                             list.Add(itemInstance);
                             // add jewelers one by one into worst slot
                             for (int i = 0; i < gemCount; i++)
@@ -1925,7 +1950,7 @@ namespace Rawr.Optimizer
                                 if (score > 0)
                                 {
                                     gems[bestg] = bestJewelerGem;
-                                    itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], bestEnchant);
+                                    itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
                                     list.Add(itemInstance);
                                 }
                                 else
@@ -1963,7 +1988,7 @@ namespace Rawr.Optimizer
                                             break;
                                     }
                                 }
-                                itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], bestEnchant);
+                                itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
                                 list.Add(itemInstance);
                                 // add jewelers one by one into worst slot
                                 for (int i = 0; i < gemCount; i++)
@@ -1986,7 +2011,7 @@ namespace Rawr.Optimizer
                                     {
                                         gems[bestg] = bestJewelerGem;
                                         values[bestg] = bestJewelerValue;
-                                        itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], bestEnchant);
+                                        itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
                                         list.Add(itemInstance);
                                     }
                                     else

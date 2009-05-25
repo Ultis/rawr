@@ -62,6 +62,8 @@
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonDown = new System.Windows.Forms.Button();
+            this.buttonUp = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.trackBarMaxRounds = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
@@ -69,8 +71,8 @@
             this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
             this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
-            this.buttonDown = new System.Windows.Forms.Button();
-            this.buttonUp = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxSingleItemUpgrade = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
@@ -352,6 +354,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.textBoxSingleItemUpgrade);
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.buttonDown);
             this.panel1.Controls.Add(this.buttonUp);
             this.panel1.Controls.Add(this.buttonCancel);
@@ -366,6 +370,28 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(168, 336);
             this.panel1.TabIndex = 3;
+            // 
+            // buttonDown
+            // 
+            this.buttonDown.Enabled = false;
+            this.buttonDown.Location = new System.Drawing.Point(33, 310);
+            this.buttonDown.Name = "buttonDown";
+            this.buttonDown.Size = new System.Drawing.Size(23, 23);
+            this.buttonDown.TabIndex = 33;
+            this.buttonDown.Text = "↓";
+            this.buttonDown.UseVisualStyleBackColor = true;
+            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
+            // 
+            // buttonUp
+            // 
+            this.buttonUp.Enabled = false;
+            this.buttonUp.Location = new System.Drawing.Point(6, 310);
+            this.buttonUp.Name = "buttonUp";
+            this.buttonUp.Size = new System.Drawing.Size(23, 23);
+            this.buttonUp.TabIndex = 32;
+            this.buttonUp.Text = "↑";
+            this.buttonUp.UseVisualStyleBackColor = true;
+            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
             // 
             // buttonCancel
             // 
@@ -439,27 +465,21 @@
             this.trackBarThoroughness.TickFrequency = 10;
             this.trackBarThoroughness.Value = 150;
             // 
-            // buttonDown
+            // label3
             // 
-            this.buttonDown.Enabled = false;
-            this.buttonDown.Location = new System.Drawing.Point(33, 310);
-            this.buttonDown.Name = "buttonDown";
-            this.buttonDown.Size = new System.Drawing.Size(23, 23);
-            this.buttonDown.TabIndex = 33;
-            this.buttonDown.Text = "↓";
-            this.buttonDown.UseVisualStyleBackColor = true;
-            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 170);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.TabIndex = 34;
+            this.label3.Text = "Single Item Upgrades";
             // 
-            // buttonUp
+            // textBoxSingleItemUpgrade
             // 
-            this.buttonUp.Enabled = false;
-            this.buttonUp.Location = new System.Drawing.Point(6, 310);
-            this.buttonUp.Name = "buttonUp";
-            this.buttonUp.Size = new System.Drawing.Size(23, 23);
-            this.buttonUp.TabIndex = 32;
-            this.buttonUp.Text = "↑";
-            this.buttonUp.UseVisualStyleBackColor = true;
-            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
+            this.textBoxSingleItemUpgrade.Location = new System.Drawing.Point(6, 186);
+            this.textBoxSingleItemUpgrade.Name = "textBoxSingleItemUpgrade";
+            this.textBoxSingleItemUpgrade.Size = new System.Drawing.Size(150, 20);
+            this.textBoxSingleItemUpgrade.TabIndex = 35;
             // 
             // FormBatchTools
             // 
@@ -534,5 +554,7 @@
         private System.Windows.Forms.ToolStripMenuItem buildProgressiveUpgradeListToolStripMenuItem;
         private System.Windows.Forms.Button buttonDown;
         private System.Windows.Forms.Button buttonUp;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBoxSingleItemUpgrade;
     }
 }
