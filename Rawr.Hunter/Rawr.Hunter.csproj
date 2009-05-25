@@ -112,7 +112,9 @@
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
     <Compile Include="PetCalculations.cs" />
-    <Compile Include="PetSkill.cs" />
+    <Compile Include="PetSkill.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CalculationOptionsPanelHunter.resx">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>
