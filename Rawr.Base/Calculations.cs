@@ -304,10 +304,10 @@ namespace Rawr
 				return Instance.IsEnchantRelevant(enchant);
 			return false;
 		}
-		public static bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+		public static bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
 		{
 			if (Instance != null)
-				return Instance.ItemFitsInSlot(item, character, slot);
+				return Instance.ItemFitsInSlot(item, character, slot, ignoreUnique);
 			return false;
 		}
 		public static bool EnchantFitsInSlot(Enchant item, Character character, Item.ItemSlot slot)
@@ -1081,9 +1081,9 @@ namespace Rawr
 			}
 		}
 
-		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
 		{
-            if (item != null && item.Unique)
+            if (item != null && item.Unique && !ignoreUnique)
             {
                 if (slot == Character.CharacterSlot.Finger1)
                 {

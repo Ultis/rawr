@@ -776,7 +776,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return relevant;
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot) {
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique) {
             if (item == null || character == null) {
                 return false;
             } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == Item.ItemType.Polearm) {
@@ -788,7 +788,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             } else if (item.Type == Item.ItemType.Polearm && slot == Character.CharacterSlot.MainHand) {
                 return true;
             } else {
-                return base.ItemFitsInSlot(item, character, slot);
+                return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
             }
         }
         public override bool IncludeOffHandInCalculations(Character character) {

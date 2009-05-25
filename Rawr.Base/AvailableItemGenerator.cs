@@ -465,7 +465,7 @@ namespace Rawr.Optimizer
                         bool fits = false;
                         foreach (Character character in characters)
                         {
-                            if (item.FitsInSlot((Character.CharacterSlot)i, character))
+                            if (item.FitsInSlot((Character.CharacterSlot)i, character, true))
                             {
                                 fits = true;
                                 break;

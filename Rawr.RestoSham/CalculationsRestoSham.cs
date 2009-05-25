@@ -178,10 +178,10 @@ namespace Rawr.RestoSham
             }
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
         {
             if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
-            return base.ItemFitsInSlot(item, character, slot);
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
         //
