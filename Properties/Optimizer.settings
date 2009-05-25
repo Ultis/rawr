@@ -23,5 +23,8 @@
     <Setting Name="TemplateGemsEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="GreedyOptimizationMethod" Type="Rawr.GreedyOptimizationMethod" Scope="User">
+      <Value Profile="(Default)">AllCombinations</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

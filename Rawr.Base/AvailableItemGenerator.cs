@@ -9,6 +9,18 @@ namespace Rawr.Optimizer
         public int GemCount;
         public Dictionary<string, bool> ItemAvailable = new Dictionary<string, bool>();
         public List<ItemInstance> ItemList = new List<ItemInstance>();
+        public List<DirectUpgradeEntry> MatchingDirectUpgradeList;
+        public List<DirectUpgradeEntry> NonMatchingDirectUpgradeList;
+        public List<DirectUpgradeEntry> SingleDirectUpgradeList;
+        public Dictionary<string, DirectUpgradeEntry> MatchingMap;
+        public Dictionary<string, DirectUpgradeEntry> NonMatchingMap;
+        public List<Enchant> GenerativeEnchants;
+    }
+
+    public class DirectUpgradeEntry
+    {
+        public ItemInstance ItemInstance { get; set; }
+        public List<DirectUpgradeEntry> DirectUpgradeList { get; set; }
     }
 
     /// <summary>
@@ -21,6 +33,7 @@ namespace Rawr.Optimizer
         private bool overrideRegem;
         private bool overrideReenchant;
         private bool slotFiltering;
+        private bool generateDirectUpgrades;
         private Character[] characters;
         private CalculationsBase[] models;
 
@@ -29,6 +42,24 @@ namespace Rawr.Optimizer
         private Item[] metaGemItems;
         private Item[] gemItems;
         private Enchant[][] slotAvailableEnchants = new Enchant[slotCount][];
+        private List<List<DirectUpgradeEntry>>[] slotDirectUpgrades = new List<List<DirectUpgradeEntry>>[slotCount];
+        private List<Item>[] slotRawItems = new List<Item>[slotCount];
+
+        public List<List<DirectUpgradeEntry>>[] SlotDirectUpgrades
+        {
+            get
+            {
+                return slotDirectUpgrades;
+            }
+        }
+
+        public Enchant[][] SlotEnchants
+        {
+            get
+            {
+                return slotAvailableEnchants;
+            }
+        }
 
         public Dictionary<string, bool> ItemAvailable
         {
@@ -43,6 +74,14 @@ namespace Rawr.Optimizer
             get
             {
                 return slotItems;
+            }
+        }
+
+        public List<Item>[] SlotRawItems
+        {
+            get
+            {
+                return slotRawItems;
             }
         }
 
@@ -62,16 +101,121 @@ namespace Rawr.Optimizer
             }
         }
 
-        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, overrideRegem, overrideReenchant, slotFiltering, new Character[] { character }, new CalculationsBase[] { model }) { }
+        public void AddItemRestrictions(ItemInstance[] items)
+        {
+            for (int slot = 0; slot < items.Length; slot++)
+            {
+                AddItemRestriction(items[slot]);
+            }
+        }
 
-        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character[] characters, CalculationsBase[] models)
+
+        public void AddItemRestrictions(Character character)
+        {
+            for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+            {
+                AddItemRestriction(character._item[slot]);
+            }
+        }
+
+        public void AddItemRestriction(ItemInstance item)
+        {
+            if (item == null || item.Item == null || item.Item.AvailabilityInformation == null) return;
+            bool directUpgradeData = item.Item.AvailabilityInformation.MatchingDirectUpgradeList != null;
+            // make all other gemmings/enchantings of this item unavailable
+            item.Item.AvailabilityInformation.ItemAvailable.Clear();
+            item.Item.AvailabilityInformation.ItemAvailable[item.GemmedId] = true;
+            item.Item.AvailabilityInformation.ItemList.Clear();
+            item.Item.AvailabilityInformation.ItemList.Add(item);
+            DirectUpgradeEntry singleEntry = null;
+            if (directUpgradeData)
+            {
+                item.Item.AvailabilityInformation.MatchingDirectUpgradeList.Clear();
+                item.Item.AvailabilityInformation.NonMatchingDirectUpgradeList.Clear();
+                item.Item.AvailabilityInformation.SingleDirectUpgradeList.Clear();
+                singleEntry = new DirectUpgradeEntry() { ItemInstance = item };
+                item.Item.AvailabilityInformation.SingleDirectUpgradeList.Add(singleEntry);
+                item.Item.AvailabilityInformation.GenerativeEnchants.Clear();
+            }
+            List<string> allKeys = new List<string>(itemAvailable.Keys);
+            string keyRoot = item.Id.ToString() + ".";
+            foreach (string key in allKeys)
+            {
+                if (key.StartsWith(keyRoot) && key != item.GemmedId)
+                {
+                    itemAvailable.Remove(key);
+                }
+            }
+            for (int slot = 0; slot < slotItems.Length; slot++)
+            {
+                slotItems[slot].RemoveAll(i => i != null && i.Id == item.Id && i.GemmedId != item.GemmedId);
+                if (directUpgradeData)
+                {
+                    slotDirectUpgrades[slot][0].RemoveAll(i => i.ItemInstance.Id == item.Id);
+                    if (slotDirectUpgrades[slot].Contains(item.Item.AvailabilityInformation.MatchingDirectUpgradeList))
+                    {
+                        slotDirectUpgrades[slot][0].Add(singleEntry);
+                    }
+                }
+            }
+        }
+
+        public void RegularizeCharacter(Character character)
+        {
+            // if item is not available pick the one that is available
+            for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+            {
+                ItemInstance item = character._item[slot];
+                if (item != null && item.Item != null && item.Item.AvailabilityInformation != null)
+                {
+                    if (!itemAvailable.ContainsKey(item.GemmedId))
+                    {
+                        character._item[slot] = item.Item.AvailabilityInformation.ItemList[0];
+                    }
+                }
+            }                           
+        }
+
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, new Character[] { character }, new CalculationsBase[] { model }) { }
+
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character[] characters, CalculationsBase[] models)
         {
             this.availableItems = availableItems;
+            if (templateGemsEnabled)
+            {
+                this.availableItems = new List<string>(availableItems);
+                List<string> templateGems = new List<string>();
+                // this could actually be empty, but in practice they will populate it at least once before
+                // however as a sanity check if it is null fetch the template from the model
+                for (int index = 0; index < models.Length; index++)
+                {
+                    if (GemmingTemplate.AllTemplates.Count == 0 || GemmingTemplate.AllTemplates[models[0].Name] == null)
+                    {
+                        GemmingTemplate.AllTemplates[models[0].Name] = new List<GemmingTemplate>(models[0].DefaultGemmingTemplates);
+                    }
+                    foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[models[0].Name])
+                    {
+                        if (template.Enabled)
+                        {
+                            if (!templateGems.Contains(template.RedId.ToString())) templateGems.Add(template.RedId.ToString());
+                            if (!templateGems.Contains(template.YellowId.ToString())) templateGems.Add(template.YellowId.ToString());
+                            if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
+                            if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
+                            if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
+                        }
+                    }
+                }
+                foreach (string gem in templateGems)
+                {
+                    if (!this.availableItems.Contains(gem)) this.availableItems.Add(gem);
+                }
+            }
             this.overrideRegem = overrideRegem;
             this.overrideReenchant = overrideReenchant;
             this.slotFiltering = slotFiltering;
             this.characters = characters;
             this.models = models;
+            this.generateDirectUpgrades = generateDirectUpgrades;
 
             bool oldVolatility = Item.OptimizerManagedVolatiliy;
             try
@@ -156,6 +300,15 @@ namespace Rawr.Optimizer
         {
             item.AvailabilityInformation = new ItemAvailabilityInformation();
             item.AvailabilityInformation.GemCount = GetItemGemCount(item);
+            if (generateDirectUpgrades)
+            {
+                item.AvailabilityInformation.MatchingDirectUpgradeList = new List<DirectUpgradeEntry>();
+                item.AvailabilityInformation.MatchingMap = new Dictionary<string, DirectUpgradeEntry>();
+                item.AvailabilityInformation.NonMatchingDirectUpgradeList = new List<DirectUpgradeEntry>();
+                item.AvailabilityInformation.NonMatchingMap = new Dictionary<string, DirectUpgradeEntry>();
+                item.AvailabilityInformation.SingleDirectUpgradeList = new List<DirectUpgradeEntry>();
+                item.AvailabilityInformation.GenerativeEnchants = new List<Enchant>();
+            }
         }
 
         private void PopulateAvailableIds()
@@ -209,6 +362,7 @@ namespace Rawr.Optimizer
             for (int i = 0; i < slotCount; i++)
             {
                 slotItems[i] = new List<ItemInstance>();
+                slotRawItems[i] = new List<Item>();
             }
 
             slotAvailableEnchants[(int)Character.CharacterSlot.Back] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Back, characters, availableItems, models));
@@ -249,6 +403,14 @@ namespace Rawr.Optimizer
                     gemmedId = id + ".*.*.*";
                     map[gemmedId + "." + restriction] = true;
                     if (overrideReenchant) map[gemmedId + ".*"] = true;
+                }
+            }
+            if (generateDirectUpgrades)
+            {
+                for (int i = 0; i < slotCount; i++)
+                {
+                    slotDirectUpgrades[i] = new List<List<DirectUpgradeEntry>>();
+                    slotDirectUpgrades[i].Add(new List<DirectUpgradeEntry>()); // add a list for all singles
                 }
             }
             foreach (KeyValuePair<string, Dictionary<string, bool>> keyMap in gemmedIdMap)
@@ -312,6 +474,13 @@ namespace Rawr.Optimizer
                         if (fits)
                         {
                             slotItems[i].AddRange(possibleGemmedItems);
+                            slotRawItems[i].Add(item);
+                            if (generateDirectUpgrades)
+                            {
+                                slotDirectUpgrades[i][0].AddRange(item.AvailabilityInformation.SingleDirectUpgradeList);
+                                slotDirectUpgrades[i].Add(item.AvailabilityInformation.MatchingDirectUpgradeList);
+                                slotDirectUpgrades[i].Add(item.AvailabilityInformation.NonMatchingDirectUpgradeList);
+                            }
                         }
                     }
                 }
@@ -466,6 +635,26 @@ namespace Rawr.Optimizer
                 possibleEnchants = new Enchant[] { Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, null) };
             }
 
+            bool generative = (ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*")) && (ids.Length <= 2 || (ids.Length > 2 && ids[2] == "*")) && (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*"));
+            if (generative && availability != null)
+            {
+                if (availability.GemCount == 0)
+                {
+                    generative = false;
+                }
+            }
+
+            if (generative && availability != null && generateDirectUpgrades)
+            {
+                foreach (Enchant enchant in possibleEnchants)
+                {
+                    if (!availability.GenerativeEnchants.Contains(enchant))
+                    {
+                        availability.GenerativeEnchants.Add(enchant);
+                    }
+                }
+            }
+
             foreach (Item gem1 in possibleGem1s)
                 foreach (Item gem2 in possibleGem2s)
                     foreach (Item gem3 in possibleGem3s)
@@ -484,7 +673,7 @@ namespace Rawr.Optimizer
                             bool add = true;
                             if (!Item.GemMatchesSlot(gem1, item.SocketColor1) || !Item.GemMatchesSlot(gem2, item.SocketColor2) || !Item.GemMatchesSlot(gem3, item.SocketColor3))
                             {
-                                if ((ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*")) && (ids.Length <= 2 || (ids.Length > 2 && ids[2] == "*")) && (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*")))
+                                if (generative)
                                 {
                                     List<int> gemOrder = new List<int>();
                                     if (gem1 != null && gem1.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem1.Id);
@@ -498,11 +687,137 @@ namespace Rawr.Optimizer
                                             break;
                                         }
                                     }
+                                    if (availability != null && generateDirectUpgrades)
+                                    {
+                                        var map = availability.NonMatchingMap;
+                                        string gemId1 = string.Format("{0}.0.0.0", gem1 != null ? gem1.Id : 0);
+                                        string gemId2 = string.Format("{0}.{1}.0.0", gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0);
+                                        string gemId3 = string.Format("{0}.{1}.{2}.0", gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0);
+                                        string gemId4 = string.Format("{0}.{1}.{2}.{3}", gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0, enchant != null ? enchant.Id : 0);
+                                        DirectUpgradeEntry entry1, entry2, entry3, entry4;
+                                        List<DirectUpgradeEntry> list = availability.NonMatchingDirectUpgradeList;
+                                        if (gem1 != null)
+                                        {
+                                            if (!map.TryGetValue(gemId1, out entry1))
+                                            {
+                                                entry1 = new DirectUpgradeEntry();
+                                                entry1.ItemInstance = new ItemInstance(item, gem1, null, null, null);
+                                                entry1.DirectUpgradeList = new List<DirectUpgradeEntry>();
+                                                map[gemId1] = entry1;
+                                                list.Add(entry1);
+                                            }
+                                            list = entry1.DirectUpgradeList;
+                                        }
+                                        if (gem2 != null)
+                                        {
+                                            if (!map.TryGetValue(gemId2, out entry2))
+                                            {
+                                                entry2 = new DirectUpgradeEntry();
+                                                entry2.ItemInstance = new ItemInstance(item, gem1, gem2, null, null);
+                                                entry2.DirectUpgradeList = new List<DirectUpgradeEntry>();
+                                                map[gemId2] = entry2;
+                                                list.Add(entry2);
+                                            }
+                                            list = entry2.DirectUpgradeList;
+                                        }
+                                        if (gem3 != null)
+                                        {
+                                            if (!map.TryGetValue(gemId3, out entry3))
+                                            {
+                                                entry3 = new DirectUpgradeEntry();
+                                                entry3.ItemInstance = new ItemInstance(item, gem1, gem2, gem3, null);
+                                                entry3.DirectUpgradeList = new List<DirectUpgradeEntry>();
+                                                map[gemId3] = entry3;
+                                                list.Add(entry3);
+                                            }
+                                            list = entry3.DirectUpgradeList;
+                                        }
+                                        if (!map.TryGetValue(gemId4, out entry4))
+                                        {
+                                            entry4 = new DirectUpgradeEntry();
+                                            entry4.ItemInstance = new ItemInstance(item, gem1, gem2, gem3, enchant);
+                                            map[gemId4] = entry4;
+                                            list.Add(entry4);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (generative && availability != null && generateDirectUpgrades)
+                                {
+                                    var map = availability.MatchingMap;
+                                    string gemId1 = string.Format("{0}.0.0.0", gem1 != null ? gem1.Id : 0);
+                                    string gemId2 = string.Format("{0}.{1}.0.0", gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0);
+                                    string gemId3 = string.Format("{0}.{1}.{2}.0", gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0);
+                                    string gemId4 = string.Format("{0}.{1}.{2}.{3}", gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0, enchant != null ? enchant.Id : 0);
+                                    DirectUpgradeEntry entry1, entry2, entry3, entry4;
+                                    List<DirectUpgradeEntry> list = availability.MatchingDirectUpgradeList;
+                                    if (gem1 != null)
+                                    {
+                                        if (!map.TryGetValue(gemId1, out entry1))
+                                        {
+                                            entry1 = new DirectUpgradeEntry();
+                                            entry1.ItemInstance = new ItemInstance(item, gem1, null, null, null);
+                                            entry1.DirectUpgradeList = new List<DirectUpgradeEntry>();
+                                            map[gemId1] = entry1;
+                                            list.Add(entry1);
+                                        }
+                                        list = entry1.DirectUpgradeList;
+                                    }
+                                    if (gem2 != null)
+                                    {
+                                        if (!map.TryGetValue(gemId2, out entry2))
+                                        {
+                                            entry2 = new DirectUpgradeEntry();
+                                            entry2.ItemInstance = new ItemInstance(item, gem1, gem2, null, null);
+                                            entry2.DirectUpgradeList = new List<DirectUpgradeEntry>();
+                                            map[gemId2] = entry2;
+                                            list.Add(entry2);
+                                        }
+                                        list = entry2.DirectUpgradeList;
+                                    }
+                                    if (gem3 != null)
+                                    {
+                                        if (!map.TryGetValue(gemId3, out entry3))
+                                        {
+                                            entry3 = new DirectUpgradeEntry();
+                                            entry3.ItemInstance = new ItemInstance(item, gem1, gem2, gem3, null);
+                                            entry3.DirectUpgradeList = new List<DirectUpgradeEntry>();
+                                            map[gemId3] = entry3;
+                                            list.Add(entry3);
+                                        }
+                                        list = entry3.DirectUpgradeList;
+                                    }
+                                    if (!map.TryGetValue(gemId4, out entry4))
+                                    {
+                                        entry4 = new DirectUpgradeEntry();
+                                        entry4.ItemInstance = new ItemInstance(item, gem1, gem2, gem3, enchant);
+                                        map[gemId4] = entry4;
+                                        list.Add(entry4);
+                                    }
                                 }
                             }
                             if (add)
                             {
-                                possibleGemmedItems.Add(new ItemInstance(item, gem1, gem2, gem3, enchant));
+                                ItemInstance instance = new ItemInstance(item, gem1, gem2, gem3, enchant);
+                                possibleGemmedItems.Add(instance);
+                                if (availability != null && !generative && generateDirectUpgrades)
+                                {
+                                    bool addSingle = true;
+                                    foreach (DirectUpgradeEntry entry in availability.SingleDirectUpgradeList)
+                                    {
+                                        if (entry.ItemInstance == instance)
+                                        {
+                                            addSingle = false;
+                                            break;
+                                        }
+                                    }
+                                    if (addSingle)
+                                    {
+                                        availability.SingleDirectUpgradeList.Add(new DirectUpgradeEntry() { ItemInstance = instance });
+                                    }
+                                }
                             }
                         }
 

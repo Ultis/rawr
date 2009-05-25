@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -505,7 +505,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Recent.settings</DependentUpon>
     </Compile>
-    <Compile Include="SavedTalentSpec.cs" />
     <Compile Include="ScrollHook.cs" />
     <Compile Include="TalentItem.cs" />
     <Compile Include="TalentPicker.cs">

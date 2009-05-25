@@ -83,7 +83,7 @@ namespace Rawr
         /// </summary>
         public Stats Stats = new Stats();
 
-        private static List<Enchant> _allEnchants = null;
+        private static EnchantList _allEnchants = null;
         private static readonly string _SaveFilePath;
 
 
@@ -137,7 +137,7 @@ namespace Rawr
 
         public override int GetHashCode()
         {
-            return (Name + Id.ToString() + Slot.ToString() + Stats.ToString()).GetHashCode();
+            return (Id.ToString() + Slot.ToString()).GetHashCode();
         }
 
         public bool FitsInSlot(Item.ItemSlot slot)
@@ -266,7 +266,7 @@ namespace Rawr
             {
                 using (StreamWriter writer = new StreamWriter(_SaveFilePath, false, Encoding.UTF8))
                 {
-                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnchantList));
                     serializer.Serialize(writer, _allEnchants);
                     writer.Close();
                 }
@@ -285,7 +285,7 @@ namespace Rawr
                     xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
                     System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnchantList));
                     System.IO.StringReader reader = new System.IO.StringReader(xml);
-                    _allEnchants = (List<Enchant>)serializer.Deserialize(reader);
+                    _allEnchants = (EnchantList)serializer.Deserialize(reader);
                     reader.Close();
                 }
             }
@@ -294,8 +294,7 @@ namespace Rawr
             {
                 if (_allEnchants == null)
                 {
-                    _allEnchants = new List<Enchant>();
-
+                    _allEnchants = new EnchantList();
                 }
             }
 

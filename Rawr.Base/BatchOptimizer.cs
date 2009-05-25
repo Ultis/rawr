@@ -168,33 +168,7 @@ namespace Rawr.Optimizer
 
         private void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled)
         {
-            if (templateGemsEnabled)
-            {
-                availableItems = new List<string>(availableItems);
-                List<string> templateGems = new List<string>();
-                // this could actually be empty, but in practice they will populate it at least once before
-                // however as a sanity check if it is null fetch the template from the model
-                if (GemmingTemplate.AllTemplates.Count == 0 || !GemmingTemplate.AllTemplates.ContainsKey(modelList[0].Name))
-                {
-                    GemmingTemplate.AllTemplates[modelList[0].Name] = new List<GemmingTemplate>(Calculations.Instance.DefaultGemmingTemplates);
-                }
-                foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[modelList[0].Name])
-                {
-                    if (template.Enabled)
-                    {
-                        if (!templateGems.Contains(template.RedId.ToString())) templateGems.Add(template.RedId.ToString());
-                        if (!templateGems.Contains(template.YellowId.ToString())) templateGems.Add(template.YellowId.ToString());
-                        if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
-                        if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
-                        if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
-                    }
-                }
-                foreach (string gem in templateGems)
-                {
-                    if (!availableItems.Contains(gem)) availableItems.Add(gem);
-                }
-            }
-            PopulateAvailableIds(availableItems, overrideRegem, overrideReenchant);
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant);
         }
 
         private enum OptimizationOperation
@@ -407,7 +381,7 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
-            asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, error, cancellationPending));
+            asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, null, error, cancellationPending));
         }
         #endregion
 
@@ -694,9 +668,9 @@ namespace Rawr.Optimizer
             }
         }
 
-        private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
+        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, false, batchList.ToArray(), modelList.ToArray());
+            itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, false, batchList.ToArray(), modelList.ToArray());
             List<ItemInstance>[] slotList = itemGenerator.SlotItems;
             slotItemList = new List<object>[characterSlots];
 

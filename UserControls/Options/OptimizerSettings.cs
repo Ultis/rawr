@@ -25,6 +25,18 @@ namespace Rawr.UserControls.Options
                     comboBoxOptimizationMethod.SelectedIndex = 1;
                     break;
             }
+            switch (Properties.Optimizer.Default.GreedyOptimizationMethod)
+            {
+                case GreedyOptimizationMethod.AllCombinations:
+                    comboBoxGreedyOptimizationMethod.SelectedIndex = 0;
+                    break;
+                case GreedyOptimizationMethod.SingleChanges:
+                    comboBoxGreedyOptimizationMethod.SelectedIndex = 1;
+                    break;
+                case GreedyOptimizationMethod.GreedyBest:
+                    comboBoxGreedyOptimizationMethod.SelectedIndex = 2;
+                    break;
+            }
             checkBoxTemplateGemsEnabled.Checked = Properties.Optimizer.Default.TemplateGemsEnabled;
         }
 
@@ -41,6 +53,18 @@ namespace Rawr.UserControls.Options
                     break;
                 case 1:
                     Properties.Optimizer.Default.OptimizationMethod = OptimizationMethod.SimulatedAnnealing;
+                    break;
+            }
+            switch (comboBoxGreedyOptimizationMethod.SelectedIndex)
+            {
+                case 0:
+                    Properties.Optimizer.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.AllCombinations;
+                    break;
+                case 1:
+                    Properties.Optimizer.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.SingleChanges;
+                    break;
+                case 2:
+                    Properties.Optimizer.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.GreedyBest;
                     break;
             }
             Properties.Optimizer.Default.TemplateGemsEnabled = checkBoxTemplateGemsEnabled.Checked;

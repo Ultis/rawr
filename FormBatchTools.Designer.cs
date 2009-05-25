@@ -45,6 +45,8 @@
             this.buildUpgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bathcOptimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildBatchUpgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.progressiveOptimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buildProgressiveUpgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCharactersAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,6 +69,8 @@
             this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
             this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
+            this.buttonDown = new System.Windows.Forms.Button();
+            this.buttonUp = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
@@ -104,47 +108,47 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.importToolStripMenuItem.Text = "&Import";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(120, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -157,6 +161,8 @@
             this.buildUpgradeListToolStripMenuItem,
             this.bathcOptimizeToolStripMenuItem,
             this.buildBatchUpgradeListToolStripMenuItem,
+            this.progressiveOptimizeToolStripMenuItem,
+            this.buildProgressiveUpgradeListToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveCharactersToolStripMenuItem,
             this.saveCharactersAsCopyToolStripMenuItem});
@@ -167,61 +173,75 @@
             // setAvailableItemsToolStripMenuItem
             // 
             this.setAvailableItemsToolStripMenuItem.Name = "setAvailableItemsToolStripMenuItem";
-            this.setAvailableItemsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.setAvailableItemsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.setAvailableItemsToolStripMenuItem.Text = "Set Available Items";
             this.setAvailableItemsToolStripMenuItem.Click += new System.EventHandler(this.setAvailableGearToolStripMenuItem_Click);
             // 
             // replaceUnavailableToolStripMenuItem
             // 
             this.replaceUnavailableToolStripMenuItem.Name = "replaceUnavailableToolStripMenuItem";
-            this.replaceUnavailableToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.replaceUnavailableToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.replaceUnavailableToolStripMenuItem.Text = "Replace Unavailable";
             this.replaceUnavailableToolStripMenuItem.Click += new System.EventHandler(this.replaceUnavailableToolStripMenuItem_Click);
             // 
             // optimizeToolStripMenuItem
             // 
             this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
-            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.optimizeToolStripMenuItem.Text = "Optimize";
             this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
             // 
             // buildUpgradeListToolStripMenuItem
             // 
             this.buildUpgradeListToolStripMenuItem.Name = "buildUpgradeListToolStripMenuItem";
-            this.buildUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.buildUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.buildUpgradeListToolStripMenuItem.Text = "Build Upgrade List";
             this.buildUpgradeListToolStripMenuItem.Click += new System.EventHandler(this.buildUpgradeListToolStripMenuItem_Click);
             // 
             // bathcOptimizeToolStripMenuItem
             // 
             this.bathcOptimizeToolStripMenuItem.Name = "bathcOptimizeToolStripMenuItem";
-            this.bathcOptimizeToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.bathcOptimizeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.bathcOptimizeToolStripMenuItem.Text = "Batch Optimize";
             this.bathcOptimizeToolStripMenuItem.Click += new System.EventHandler(this.bathcOptimizeToolStripMenuItem_Click);
             // 
             // buildBatchUpgradeListToolStripMenuItem
             // 
             this.buildBatchUpgradeListToolStripMenuItem.Name = "buildBatchUpgradeListToolStripMenuItem";
-            this.buildBatchUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.buildBatchUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.buildBatchUpgradeListToolStripMenuItem.Text = "Build Batch Upgrade List";
             this.buildBatchUpgradeListToolStripMenuItem.Click += new System.EventHandler(this.buildBatchUpgradeListToolStripMenuItem_Click);
+            // 
+            // progressiveOptimizeToolStripMenuItem
+            // 
+            this.progressiveOptimizeToolStripMenuItem.Name = "progressiveOptimizeToolStripMenuItem";
+            this.progressiveOptimizeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.progressiveOptimizeToolStripMenuItem.Text = "Progressive Optimize";
+            this.progressiveOptimizeToolStripMenuItem.Click += new System.EventHandler(this.progressiveOptimizeToolStripMenuItem_Click);
+            // 
+            // buildProgressiveUpgradeListToolStripMenuItem
+            // 
+            this.buildProgressiveUpgradeListToolStripMenuItem.Name = "buildProgressiveUpgradeListToolStripMenuItem";
+            this.buildProgressiveUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.buildProgressiveUpgradeListToolStripMenuItem.Text = "Build Progressive Upgrade List";
+            this.buildProgressiveUpgradeListToolStripMenuItem.Click += new System.EventHandler(this.buildProgressiveUpgradeListToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(201, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(230, 6);
             // 
             // saveCharactersToolStripMenuItem
             // 
             this.saveCharactersToolStripMenuItem.Name = "saveCharactersToolStripMenuItem";
-            this.saveCharactersToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.saveCharactersToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.saveCharactersToolStripMenuItem.Text = "Save Characters";
             this.saveCharactersToolStripMenuItem.Click += new System.EventHandler(this.saveCharactersToolStripMenuItem_Click);
             // 
             // saveCharactersAsCopyToolStripMenuItem
             // 
             this.saveCharactersAsCopyToolStripMenuItem.Name = "saveCharactersAsCopyToolStripMenuItem";
-            this.saveCharactersAsCopyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.saveCharactersAsCopyToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.saveCharactersAsCopyToolStripMenuItem.Text = "Save Characters As Copy";
             this.saveCharactersAsCopyToolStripMenuItem.Click += new System.EventHandler(this.saveCharactersAsCopyToolStripMenuItem_Click);
             // 
@@ -245,6 +265,7 @@
             this.dataGridView.Size = new System.Drawing.Size(462, 336);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
+            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
             // characterColumn
             // 
@@ -331,6 +352,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.buttonDown);
+            this.panel1.Controls.Add(this.buttonUp);
             this.panel1.Controls.Add(this.buttonCancel);
             this.panel1.Controls.Add(this.trackBarMaxRounds);
             this.panel1.Controls.Add(this.label1);
@@ -416,6 +439,28 @@
             this.trackBarThoroughness.TickFrequency = 10;
             this.trackBarThoroughness.Value = 150;
             // 
+            // buttonDown
+            // 
+            this.buttonDown.Enabled = false;
+            this.buttonDown.Location = new System.Drawing.Point(33, 310);
+            this.buttonDown.Name = "buttonDown";
+            this.buttonDown.Size = new System.Drawing.Size(23, 23);
+            this.buttonDown.TabIndex = 33;
+            this.buttonDown.Text = "↓";
+            this.buttonDown.UseVisualStyleBackColor = true;
+            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
+            // 
+            // buttonUp
+            // 
+            this.buttonUp.Enabled = false;
+            this.buttonUp.Location = new System.Drawing.Point(6, 310);
+            this.buttonUp.Name = "buttonUp";
+            this.buttonUp.Size = new System.Drawing.Size(23, 23);
+            this.buttonUp.TabIndex = 32;
+            this.buttonUp.Text = "↑";
+            this.buttonUp.UseVisualStyleBackColor = true;
+            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
+            // 
             // FormBatchTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -485,5 +530,9 @@
         private System.Windows.Forms.ToolStripMenuItem replaceUnavailableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bathcOptimizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem buildBatchUpgradeListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem progressiveOptimizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem buildProgressiveUpgradeListToolStripMenuItem;
+        private System.Windows.Forms.Button buttonDown;
+        private System.Windows.Forms.Button buttonUp;
     }
 }

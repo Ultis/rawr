@@ -168,11 +168,11 @@ namespace Rawr
             // model change will force it to reload and set up all needed events and everything
 			Calculations_ModelChanged(null, null);
 
-			//_loadingCharacter = true;
-            SetDraeneiHitBuff();
+			_loadingCharacter = true;
+            //SetDraeneiHitBuff(); // this has no reason to be called here, if anywhere it should be called when loading from armory
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
-			//_loadingCharacter = false;
+			_loadingCharacter = false;
 
             itemFilterTreeView = new ItemFilterTreeView();
             itemFilterTreeView.EditMode = false;
@@ -1423,6 +1423,8 @@ namespace Rawr
 
         private void SetDraeneiHitBuff()
         {
+            // TODO this is prone for exceptions and the way it is called is completely inappropriate
+            // should rework this completely
             if (Character.Race == Character.CharacterRace.Draenei)
                 Character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
             else if (Character.Faction == Character.CharacterFaction.Horde)

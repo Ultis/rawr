@@ -27,7 +27,7 @@ namespace Rawr
 			this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
 		}
 
-        private List<SavedTalentSpec> _savedTalents;
+        private SavedTalentSpecList _savedTalents;
         private void LoadTalentSpecs()
         {
             try
@@ -36,8 +36,8 @@ namespace Rawr
                 {
                     using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8))
                     {
-                        XmlSerializer serializer = new XmlSerializer(typeof(List<SavedTalentSpec>));
-                        _savedTalents = (List<SavedTalentSpec>)serializer.Deserialize(reader);
+                        XmlSerializer serializer = new XmlSerializer(typeof(SavedTalentSpecList));
+                        _savedTalents = (SavedTalentSpecList)serializer.Deserialize(reader);
                         reader.Close();
                     }
                 }
@@ -48,7 +48,7 @@ namespace Rawr
             }
             if (_savedTalents == null)
             {
-                _savedTalents = new List<SavedTalentSpec>(10);
+                _savedTalents = new SavedTalentSpecList(10);
             }
         }
         private void SaveTalentSpecs()
@@ -57,7 +57,7 @@ namespace Rawr
             {
                 using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<SavedTalentSpec>));
+                    XmlSerializer serializer = new XmlSerializer(typeof(SavedTalentSpecList));
                     serializer.Serialize(writer, _savedTalents);
                     writer.Close();
                 }

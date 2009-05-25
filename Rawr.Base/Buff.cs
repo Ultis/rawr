@@ -5,8 +5,13 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Rawr {
-    public class BuffList : List<Buff> { }
+namespace Rawr
+{
+    public class BuffList : List<Buff>
+    {
+        public BuffList() : base() { }
+        public BuffList(IEnumerable<Buff> collection) : base(collection) { }
+    }
 
     public class Buff {
         //early morning
@@ -36,10 +41,15 @@ namespace Rawr {
         //washing virgin halo
         public Buff() { }
 
-        private static void SaveBuffs() {
-            try {
-                using (StreamWriter writer = new StreamWriter(_savedFilePath, false, Encoding.UTF8)) {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+        }
+
+        private static void SaveBuffs()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_savedFilePath, false, Encoding.UTF8))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
                     serializer.Serialize(writer, _allBuffs);
                     writer.Close();
                 }
@@ -79,7 +89,7 @@ namespace Rawr {
                         allBuffs.Add(defaultBuff.Name, defaultBuff);
                 Buff[] allBuffArray = new Buff[allBuffs.Count];
                 allBuffs.Values.CopyTo(allBuffArray, 0);
-                _allBuffs = new List<Buff>(allBuffs.Values);
+                _allBuffs = new BuffList(allBuffs.Values);
                 CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
             } catch { }
         }
@@ -194,8 +204,11 @@ namespace Rawr {
         }
 
         //a grey mistake
-        private static List<Buff> _allBuffs = null;
-        public static List<Buff> AllBuffs { get { return _allBuffs; } }
+        private static BuffList _allBuffs = null;
+        public static List<Buff> AllBuffs
+        {
+            get { return _allBuffs; }
+        }
 
         private static List<Buff> GetDefaultBuffs() {
             List<Buff> defaultBuffs = new List<Buff>();

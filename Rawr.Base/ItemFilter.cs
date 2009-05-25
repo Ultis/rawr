@@ -127,9 +127,16 @@ namespace Rawr
     }
 
     [Serializable]
+    public class ItemTypeList : List<Item.ItemType>
+    {
+        public ItemTypeList() : base() { }
+        public ItemTypeList(IEnumerable<Item.ItemType> collection) : base(collection) { }
+    }
+
+    [Serializable]
     public class ItemFilterData
     {
-        public SerializableDictionary<string, List<Item.ItemType>> RelevantItemTypes = new SerializableDictionary<string, List<Item.ItemType>>();
+        public SerializableDictionary<string, ItemTypeList> RelevantItemTypes = new SerializableDictionary<string, ItemTypeList>();
         public ItemFilterRegexList RegexList = new ItemFilterRegexList();
         public bool OtherRegexEnabled = true;
     }
@@ -144,10 +151,10 @@ namespace Rawr
         /// </summary>
         public static List<Item.ItemType> GetRelevantItemTypesList(CalculationsBase model)
         {
-            List<Item.ItemType> list;
+            ItemTypeList list;
             if (!data.RelevantItemTypes.TryGetValue(model.Name, out list))
             {
-                list = new List<Item.ItemType>(model.RelevantItemTypes);
+                list = new ItemTypeList(model.RelevantItemTypes);
                 data.RelevantItemTypes[model.Name] = list;
             }
             return list;

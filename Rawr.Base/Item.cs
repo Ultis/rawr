@@ -1576,5 +1576,7 @@ namespace Rawr
 
 	public class ItemList : List<Item>
     {
+        public ItemList() : base() { }
+        public ItemList(IEnumerable<Item> collection) : base(collection) { }
     }
 }

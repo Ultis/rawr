@@ -796,6 +796,12 @@ namespace Rawr
         }
     }
 
+    [XmlRoot("dictionary")]
+    [Serializable]
+    public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation>
+    {
+    }
+
     public static class LocationFactory
     {
         static LocationFactory()
@@ -814,7 +820,7 @@ namespace Rawr
             _LocationFactory["sourceType.none"] = NoSource.Construct;
         }
 
-        static SerializableDictionary<string, ItemLocation> _allLocations = new SerializableDictionary<string, ItemLocation>();
+        static ItemLocationDictionary _allLocations = new ItemLocationDictionary();
 
         public static ItemLocation Lookup(int id)
         {
@@ -837,7 +843,7 @@ namespace Rawr
         {
             using (StreamWriter writer = new StreamWriter(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName), false, Encoding.UTF8))
             {
-                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemLocationDictionary));
                 serializer.Serialize(writer, _allLocations);
                 writer.Close();
             }
@@ -845,7 +851,7 @@ namespace Rawr
 
         public static void Load(string fileName)
         {
-            SerializableDictionary<string, ItemLocation> sourceInfo = null;
+            ItemLocationDictionary sourceInfo = null;
             _allLocations.Clear();
             if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName)))
             {
@@ -853,9 +859,9 @@ namespace Rawr
                 {
                     string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName));
                     
-                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemLocationDictionary));
                     System.IO.StringReader reader = new System.IO.StringReader(xml);
-                    sourceInfo = (SerializableDictionary<string, ItemLocation>) serializer.Deserialize(reader);
+                    sourceInfo = (ItemLocationDictionary)serializer.Deserialize(reader);
                     reader.Close();
                     _allLocations = sourceInfo;
                 }

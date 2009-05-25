@@ -191,8 +191,8 @@ namespace Rawr
 #if !AGGREGATE_ITEMS
             using (StreamWriter writer = new StreamWriter(ItemCache.SavedFilePath, false, Encoding.UTF8))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
-                serializer.Serialize(writer, new List<Item>(AllItems));
+                XmlSerializer serializer = new XmlSerializer(typeof(ItemList));
+                serializer.Serialize(writer, new ItemList(AllItems));
                 writer.Close();
             }
 

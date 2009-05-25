@@ -202,6 +202,7 @@ namespace Rawr
             buttonCancel.DialogResult = DialogResult.None;
 
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
             _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
 		}
 
@@ -502,7 +503,8 @@ namespace Rawr
 				comboBoxCalculationToOptimize.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
+            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
             _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness, _itemToEvaluate);
         }
 

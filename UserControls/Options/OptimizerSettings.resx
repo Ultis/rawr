@@ -117,18 +117,48 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="comboBoxGreedyOptimizationMethod.Items" xml:space="preserve">
+    <value>All Combinations</value>
+  </data>
+  <data name="comboBoxGreedyOptimizationMethod.Items1" xml:space="preserve">
+    <value>Single Gem/Enchant Changes</value>
+  </data>
+  <data name="comboBoxGreedyOptimizationMethod.Items2" xml:space="preserve">
+    <value>Greedy Best Gem/Enchant</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="comboBoxGreedyOptimizationMethod.Location" type="System.Drawing.Point, System.Drawing">
+    <value>18, 130</value>
+  </data>
+  <data name="comboBoxGreedyOptimizationMethod.Size" type="System.Drawing.Size, System.Drawing">
+    <value>159, 21</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="comboBoxGreedyOptimizationMethod.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;comboBoxGreedyOptimizationMethod.Name" xml:space="preserve">
+    <value>comboBoxGreedyOptimizationMethod</value>
+  </data>
+  <data name="&gt;&gt;comboBoxGreedyOptimizationMethod.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBoxGreedyOptimizationMethod.Parent" xml:space="preserve">
+    <value>groupBox1</value>
+  </data>
+  <data name="&gt;&gt;comboBoxGreedyOptimizationMethod.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checkBoxTemplateGemsEnabled.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="checkBoxTemplateGemsEnabled.Location" type="System.Drawing.Point, System.Drawing">
     <value>18, 54</value>
   </data>
   <data name="checkBoxTemplateGemsEnabled.Size" type="System.Drawing.Size, System.Drawing">
     <value>213, 30</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checkBoxTemplateGemsEnabled.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
@@ -145,7 +175,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;checkBoxTemplateGemsEnabled.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="comboBoxOptimizationMethod.Items" xml:space="preserve">
     <value>Genetic Algorithm</value>
@@ -172,7 +202,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;comboBoxOptimizationMethod.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -199,7 +229,7 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="WarningsEnabledCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -229,13 +259,13 @@
     <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;WarningsEnabledCheckBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>237, 139</value>
+    <value>237, 163</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>

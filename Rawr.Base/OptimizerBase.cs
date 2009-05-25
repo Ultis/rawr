@@ -517,6 +517,7 @@ namespace Rawr.Optimizer
             }
         }
 
+
 		protected virtual KeyValuePair<float, TIndividual> LookForDirectItemUpgrades(List<TItem> items, int slot, float best, TIndividual bestIndividual, out TValuation bestValuation)
 		{
 			TIndividual swappedIndividual;
@@ -531,8 +532,9 @@ namespace Rawr.Optimizer
                 directValuationsQueued = 0;
                 directValuationsComplete = 0;
             }
+            TItem baseItem = itemList[slot];
             foreach (TItem item in items)
-			{
+            {
                 itemList[slot] = item;
                 if (IsIndividualValid(itemList))
                 {
@@ -555,7 +557,7 @@ namespace Rawr.Optimizer
                         }
                     }
                 }
-			}
+            }
             if (ThreadPoolValuation)
             {
                 lock (directValuationLock)
