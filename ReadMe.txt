@@ -1,8 +1,28 @@
-Rawr v2.2.4.0
+Rawr v2.2.5.0
 ------------
-Welcome to Rawr 2.2.4.0.
+Welcome to Rawr 2.2.5.0.
    
 Recent Changes:
+v2.2.5.0
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all 
+the 3.1 modeling changes.
+ - Capped ArPen from Rating at 100%
+ - Improvements to the Wowhead parser, especially around Sigils
+ - Improvements to the Optimizer's handling of gems
+ - Enhanced filtering! You can now have subfilters to filters, and there are now default filters for Ulduar gear, broken down by raid size, difficulty, and boss.
+ - There's a new Optimizer Results dialog. It's still a bit buggy at the moment, but we intend to improve it substantially as we get time. Please give us feedback on this new feature!
+ - Rawr.Rogue: Further work on rogue support, but this model is still largely incomplete
+ - Rawr.Mage: Better frost cycle handling
+ - Rawr.DPSDK: Massive improvements to logic, across the board
+ - Rawr.DPSWarr: Fix for agility miscalculation, better proc handling, better arms/fury rotation handling
+ - Rawr.Enhance: Minor calculation improvements
+ - Rawr.Moonkin: Fix for some proc handling
+ - Rawr.HolyPriest: Calculation tweaks
+ - Rawr.ShadowPriest: Improved haste calculations, and proc calculations
+ - Rawr.Hunter: Starting to get up to date! Still largely incomplete, but progress is being made!
+ - Rawr.Tree: Improved rotations, set bonuses.
+
+
 v2.2.4.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
  - Fix for crashing bug when editing gemming templates and custom gemmings
