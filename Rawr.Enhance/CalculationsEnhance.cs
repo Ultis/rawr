@@ -500,8 +500,8 @@ namespace Rawr
             float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility));
 			float strBase = (float)Math.Floor((float)(statsBase.Strength));
             float strBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Strength));
-            float intBase = (float)Math.Floor((float)(statsBase.Intellect * (1 + .02f * AK)));
-            float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect * (1 + .02f * AK)));
+            float intBase = (float)Math.Floor((float)(statsBase.Intellect * (1f + .02f * AK)));
+            float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect * (1f + .02f * AK)));
             float staBase = (float)Math.Floor((float)(statsBase.Stamina));  
 			float staBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Stamina));
             float spiBase = (float)Math.Floor((float)(statsBase.Spirit));  

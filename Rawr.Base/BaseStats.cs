@@ -513,7 +513,7 @@ namespace Rawr
                         case Character.CharacterRace.Orc:
                             S.Strength = 123;
                             S.Agility = 71;
-                            S.Stamina = 141;
+                            S.Stamina = 138;
                             S.Intellect = 125;
                             S.Spirit = 146;
                             break;
@@ -521,7 +521,7 @@ namespace Rawr
                             S.Strength = 125;
                             S.Agility = 69;
                             S.Stamina = 138;
-                            S.Intellect = 138;
+                            S.Intellect = 123;
                             S.Spirit = 145;
                             break;
                         case Character.CharacterRace.Troll:
