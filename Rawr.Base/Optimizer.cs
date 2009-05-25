@@ -1522,6 +1522,13 @@ namespace Rawr.Optimizer
                 // pick best nonjeweler instances
                 Array.Copy(nonJewelerItems, itemList, characterSlots);
                 int remainingJewelers = 3;
+                for (int i = 0; i < characterSlots; i++)
+                {
+                    if (nonJewelerItems[i] != null)
+                    {
+                        remainingJewelers -= nonJewelerItems[i].JewelerCount;
+                    }
+                }
                 // pick 3 best jewelers, don't repeat slots
                 for (int i = 0; i < list.Count && remainingJewelers > 0; i++)
                 {
@@ -2067,6 +2074,7 @@ namespace Rawr.Optimizer
                     if (jewelerItems[minJeweler] != null)
                     {
                         minValue = jewelerValue[minJeweler];
+                        nonJewelerItems[slot] = jewelerItems[minJeweler];
                         break;
                     }
                 }
@@ -2132,39 +2140,46 @@ namespace Rawr.Optimizer
             return GeneratorBuildIndividual(
                 delegate(int slot, object[] items)
                 {
-                    int min = 0;
-                    for (int s = 0; s < slot; s++)
+                    if (slot < characterSlots)
                     {
-                        ItemInstance item = (ItemInstance)items[s];
-                        if (item != null)
+                        int min = 0;
+                        for (int s = 0; s < slot; s++)
                         {
-                            min += item.JewelerCount;
+                            ItemInstance item = (ItemInstance)items[s];
+                            if (item != null)
+                            {
+                                min += item.JewelerCount;
+                            }
                         }
-                    }
-                    for (int s = slot + 1; s < characterSlots; s++)
-                    {
-                        ItemInstance item1 = (ItemInstance)father.Items[s];
-                        int c1 = item1 == null ? 0 : item1.JewelerCount;
-                        ItemInstance item2 = (ItemInstance)mother.Items[s];
-                        int c2 = item2 == null ? 0 : item2.JewelerCount;
-                        min += Math.Min(c1, c2);
-                    }
-                    int max = 3 - min;
-                    ItemInstance f = (ItemInstance)father.Items[slot];
-                    int fc = f == null ? 0 : f.JewelerCount;
-                    ItemInstance m = (ItemInstance)mother.Items[slot];
-                    int mc = m == null ? 0 : m.JewelerCount;
-                    if (fc > max)
-                    {
-                        return m;
-                    }
-                    else if (mc > max)
-                    {
-                        return f;
+                        for (int s = slot + 1; s < characterSlots; s++)
+                        {
+                            ItemInstance item1 = (ItemInstance)father.Items[s];
+                            int c1 = item1 == null ? 0 : item1.JewelerCount;
+                            ItemInstance item2 = (ItemInstance)mother.Items[s];
+                            int c2 = item2 == null ? 0 : item2.JewelerCount;
+                            min += Math.Min(c1, c2);
+                        }
+                        int max = 3 - min;
+                        ItemInstance f = (ItemInstance)father.Items[slot];
+                        int fc = f == null ? 0 : f.JewelerCount;
+                        ItemInstance m = (ItemInstance)mother.Items[slot];
+                        int mc = m == null ? 0 : m.JewelerCount;
+                        if (fc > max)
+                        {
+                            return m;
+                        }
+                        else if (mc > max)
+                        {
+                            return f;
+                        }
+                        else
+                        {
+                            return rand.NextDouble() < 0.5d ? f : m;
+                        }
                     }
                     else
                     {
-                        return rand.NextDouble() < 0.5d ? f : m;
+                        return rand.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                     }
                 });
         }

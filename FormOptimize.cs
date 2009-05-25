@@ -182,6 +182,9 @@ namespace Rawr
 			}
             OptimizationRequirement[] _requirements = requirements.ToArray();
 
+            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
+
             _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs());
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
@@ -201,8 +204,6 @@ namespace Rawr
 
             buttonCancel.DialogResult = DialogResult.None;
 
-            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
-            _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
             _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
 		}
 
@@ -485,6 +486,9 @@ namespace Rawr
                 }
             }
 
+            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
+
             _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs());
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
@@ -503,8 +507,6 @@ namespace Rawr
 				comboBoxCalculationToOptimize.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
-            _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
             _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness, _itemToEvaluate);
         }
 
