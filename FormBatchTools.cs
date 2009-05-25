@@ -1352,7 +1352,10 @@ namespace Rawr
                 Item[] items = ItemCache.GetRelevantItems(modelList[i]);
                 foreach (Item item in items)
                 {
-                    itemById[item.Id] = item;
+                    if (item != null && modelList[i].RelevantItemTypes.Contains(item.Type) && !item.IsGem)
+                    {
+                        itemById[item.Id] = item;
+                    }
                 }
             }
             itemGenerator = new AvailableItemGenerator(character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);

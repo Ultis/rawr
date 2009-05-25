@@ -27,21 +27,21 @@ namespace Rawr
         public List<Buff> Improvements = new List<Buff>();
         public bool IsCustom = false;
         private List<string> _conflictingBuffs = null;
-        public List<string> ConflictingBuffs {
+        public List<string> ConflictingBuffs 
+        {
             get { return _conflictingBuffs ?? (_conflictingBuffs = new List<string>(new string[] { Group })); }
             set { _conflictingBuffs = value; }
         }
 
         private static readonly string _savedFilePath;
-        static Buff() {
+        static Buff() 
+        {
             _savedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "BuffCache.xml");
             LoadBuffs();
             SaveBuffs();
         }
         //washing virgin halo
         public Buff() { }
-
-        }
 
         private static void SaveBuffs()
         {
