@@ -260,7 +260,7 @@ namespace Rawr
                         do
                         {
                             batchIndex++;
-                        } while (batchIndex < BatchCharacterList.Count && CurrentBatchCharacter.Character == null);
+                        } while (batchIndex < BatchCharacterList.Count && (CurrentBatchCharacter.Character == null || CurrentBatchCharacter.Locked));
 
                         if (batchIndex < BatchCharacterList.Count)
                         {
@@ -294,17 +294,8 @@ namespace Rawr
                         // update the working character and start upgrade evaluation
                         workingCharacter = e.OptimizedCharacter;
                         int _thoroughness = trackBarThoroughness.Value;
-                        if (upgradeListPhase == 0)
-                        {
-                            // we haven't used the item yet
-                            // we shouldn't be getting here, optimize is only called after item is used
-                            optimizer.ComputeUpgradesAsync(workingCharacter, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, itemList[itemIndex]);
-                        }
-                        else
-                        {
-                            // evaluate what we get by using the optimized item
-                            optimizer.EvaluateUpgradeAsync(workingCharacter, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, optimizedItemInstance);
-                        }
+                        // evaluate what we get by using the optimized item
+                        optimizer.EvaluateUpgradeAsync(workingCharacter, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, optimizedItemInstance);
                     }
                     break;
             }
@@ -486,18 +477,8 @@ namespace Rawr
                             batchIndex = 0;
                             upgradeListPhase = 0;
                             int _thoroughness = trackBarThoroughness.Value;
-                            bool _overrideRegem = checkBoxOverrideRegem.Checked;
-                            bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
                             // we have to reinitialize item generator because of the restrictions we made
-                            Character[] characterList = new Character[BatchCharacterList.Count];
-                            CalculationsBase[] modelList = new CalculationsBase[BatchCharacterList.Count];
-                            Dictionary<int, Item> itemById = new Dictionary<int, Item>();
-                            for (int i = 0; i < BatchCharacterList.Count; i++)
-                            {
-                                characterList[i] = BatchCharacterList[i].Character;
-                                modelList[i] = BatchCharacterList[i].Model;
-                            }
-                            itemGenerator = new AvailableItemGenerator(CurrentBatchCharacter.Character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
+                            CreateBatchItemGenerator();
                             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
                             workingCharacter = CurrentBatchCharacter.Character;
                             optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, itemList[itemIndex]);
@@ -716,18 +697,8 @@ namespace Rawr
                             batchIndex = 0;
                             upgradeListPhase = 0;
                             int _thoroughness = trackBarThoroughness.Value;
-                            bool _overrideRegem = checkBoxOverrideRegem.Checked;
-                            bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
                             // we have to reinitialize item generator because of the restrictions we made
-                            Character[] characterList = new Character[BatchCharacterList.Count];
-                            CalculationsBase[] modelList = new CalculationsBase[BatchCharacterList.Count];
-                            Dictionary<int, Item> itemById = new Dictionary<int, Item>();
-                            for (int i = 0; i < BatchCharacterList.Count; i++)
-                            {
-                                characterList[i] = BatchCharacterList[i].Character;
-                                modelList[i] = BatchCharacterList[i].Model;
-                            }
-                            itemGenerator = new AvailableItemGenerator(CurrentBatchCharacter.Character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
+                            CreateBatchItemGenerator();
                             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
                             workingCharacter = CurrentBatchCharacter.Character;
                             optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, itemList[itemIndex]);
@@ -1330,7 +1301,7 @@ namespace Rawr
 
         private void progressiveOptimizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (currentOperation != AsyncOperation.None || CurrentBatchCharacter.Character == null) return;
+            if (currentOperation != AsyncOperation.None) return;
 
             currentOperation = AsyncOperation.ProgressiveOptimize;
             optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
@@ -1341,7 +1312,25 @@ namespace Rawr
             optimizerRound = 0;
 
             int _thoroughness = trackBarThoroughness.Value;
-            Character character = CurrentBatchCharacter.Character;
+            CreateBatchItemGenerator();
+            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
+            while (CurrentBatchCharacter != null && CurrentBatchCharacter.Locked)
+            {
+                batchIndex++;
+            }
+            if (CurrentBatchCharacter != null)
+            {
+                optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
+            }
+            else
+            {
+                buttonCancel.Enabled = false;
+                currentOperation = AsyncOperation.None;
+            }
+        }
+
+        private void CreateBatchItemGenerator()
+        {
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
             Character[] characterList = new Character[BatchCharacterList.Count];
@@ -1351,9 +1340,15 @@ namespace Rawr
                 characterList[i] = BatchCharacterList[i].Character;
                 modelList[i] = BatchCharacterList[i].Model;
             }
-            itemGenerator = new AvailableItemGenerator(character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
-            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
-            optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
+            itemGenerator = new AvailableItemGenerator(BatchCharacterList[0].Character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
+            // create item restrictions for locked characters
+            for (int i = 0; i < BatchCharacterList.Count; i++)
+            {
+                if (BatchCharacterList[i].Locked)
+                {
+                    itemGenerator.AddItemRestrictions(BatchCharacterList[i].Character);
+                }
+            }
         }
 
         private void buildProgressiveUpgradeListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1371,38 +1366,30 @@ namespace Rawr
 
             int _thoroughness = trackBarThoroughness.Value;
             Character character = CurrentBatchCharacter.Character;
-            bool _overrideRegem = checkBoxOverrideRegem.Checked;
-            bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            Character[] characterList = new Character[BatchCharacterList.Count];
-            CalculationsBase[] modelList = new CalculationsBase[BatchCharacterList.Count];
             Dictionary<int, Item> itemById = new Dictionary<int, Item>();
             Item single = SingleItemUpgrade;
             if (single != null)
             {
                 itemList = new Item[] { single };
             }
-            for (int i = 0; i < BatchCharacterList.Count; i++)
+            else
             {
-                characterList[i] = BatchCharacterList[i].Character;
-                modelList[i] = BatchCharacterList[i].Model;
-                if (single == null)
+                for (int i = 0; i < BatchCharacterList.Count; i++)
                 {
-                    Item[] items = ItemCache.GetRelevantItems(modelList[i]);
+                    CalculationsBase model = BatchCharacterList[i].Model;
+                    Item[] items = ItemCache.GetRelevantItems(model);
                     foreach (Item item in items)
                     {
-                        if (item != null && modelList[i].RelevantItemTypes.Contains(item.Type) && !item.IsGem)
+                        if (item != null && !item.IsGem)
                         {
                             itemById[item.Id] = item;
                         }
                     }
                 }
-            }
-            itemGenerator = new AvailableItemGenerator(character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, Properties.Optimizer.Default.TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
-            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
-            if (single == null)
-            {
                 itemList = new List<Item>(itemById.Values).ToArray();
             }
+            CreateBatchItemGenerator();
+            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
             itemIndex = 0;
             upgradeList = new Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>>();
             workingCharacter = character;
@@ -1591,6 +1578,8 @@ namespace Rawr
                 }
             }
         }
+
+        public bool Locked { get; set; }
 
         private float score;
         [XmlIgnore]

@@ -51,17 +51,13 @@
             this.saveCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCharactersAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.newScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
-            this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.batchCharacterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip1 = new Rawr.FormBatchTools.MyStatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.textBoxSingleItemUpgrade = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.buttonDown = new System.Windows.Forms.Button();
             this.buttonUp = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -71,8 +67,13 @@
             this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
             this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxSingleItemUpgrade = new System.Windows.Forms.TextBox();
+            this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.newScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
+            this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
@@ -89,7 +90,7 @@
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(630, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(674, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStripBatch";
             // 
@@ -253,6 +254,7 @@
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.characterColumn,
+            this.Locked,
             this.weightColumn,
             this.scoreColumn,
             this.newScoreColumn,
@@ -264,65 +266,10 @@
             this.dataGridView.Margin = new System.Windows.Forms.Padding(0);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(462, 336);
+            this.dataGridView.Size = new System.Drawing.Size(506, 336);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
-            // 
-            // characterColumn
-            // 
-            this.characterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.characterColumn.DataPropertyName = "Name";
-            this.characterColumn.HeaderText = "Character";
-            this.characterColumn.Name = "characterColumn";
-            this.characterColumn.ReadOnly = true;
-            this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // weightColumn
-            // 
-            this.weightColumn.DataPropertyName = "Weight";
-            this.weightColumn.HeaderText = "Weight";
-            this.weightColumn.Name = "weightColumn";
-            this.weightColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.weightColumn.Width = 50;
-            // 
-            // scoreColumn
-            // 
-            this.scoreColumn.DataPropertyName = "Score";
-            this.scoreColumn.HeaderText = "Score";
-            this.scoreColumn.Name = "scoreColumn";
-            this.scoreColumn.ReadOnly = true;
-            this.scoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.scoreColumn.Width = 66;
-            // 
-            // newScoreColumn
-            // 
-            this.newScoreColumn.DataPropertyName = "NewScore";
-            this.newScoreColumn.HeaderText = "New Score";
-            this.newScoreColumn.Name = "newScoreColumn";
-            this.newScoreColumn.ReadOnly = true;
-            this.newScoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.newScoreColumn.Width = 66;
-            // 
-            // loadBatchCharacterColumn
-            // 
-            this.loadBatchCharacterColumn.DataPropertyName = "RelativePath";
-            this.loadBatchCharacterColumn.HeaderText = "";
-            this.loadBatchCharacterColumn.Name = "loadBatchCharacterColumn";
-            this.loadBatchCharacterColumn.NewRowButtonVisible = true;
-            this.loadBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.loadBatchCharacterColumn.Text = "...";
-            this.loadBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.loadBatchCharacterColumn.Width = 20;
-            // 
-            // showBatchCharacterColumn
-            // 
-            this.showBatchCharacterColumn.HeaderText = "";
-            this.showBatchCharacterColumn.Name = "showBatchCharacterColumn";
-            this.showBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.showBatchCharacterColumn.Text = "Show";
-            this.showBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.showBatchCharacterColumn.Width = 50;
             // 
             // batchCharacterListBindingSource
             // 
@@ -336,7 +283,7 @@
             this.statusProgressBar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 360);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(630, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(674, 22);
             this.statusStrip1.TabIndex = 2;
             // 
             // statusLabel
@@ -366,10 +313,26 @@
             this.panel1.Controls.Add(this.checkBoxOverrideRegem);
             this.panel1.Controls.Add(this.trackBarThoroughness);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(462, 24);
+            this.panel1.Location = new System.Drawing.Point(506, 24);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(168, 336);
             this.panel1.TabIndex = 3;
+            // 
+            // textBoxSingleItemUpgrade
+            // 
+            this.textBoxSingleItemUpgrade.Location = new System.Drawing.Point(6, 186);
+            this.textBoxSingleItemUpgrade.Name = "textBoxSingleItemUpgrade";
+            this.textBoxSingleItemUpgrade.Size = new System.Drawing.Size(150, 20);
+            this.textBoxSingleItemUpgrade.TabIndex = 35;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 170);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.TabIndex = 34;
+            this.label3.Text = "Single Item Upgrades";
             // 
             // buttonDown
             // 
@@ -465,27 +428,74 @@
             this.trackBarThoroughness.TickFrequency = 10;
             this.trackBarThoroughness.Value = 150;
             // 
-            // label3
+            // characterColumn
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 170);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 13);
-            this.label3.TabIndex = 34;
-            this.label3.Text = "Single Item Upgrades";
+            this.characterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.characterColumn.DataPropertyName = "Name";
+            this.characterColumn.HeaderText = "Character";
+            this.characterColumn.Name = "characterColumn";
+            this.characterColumn.ReadOnly = true;
+            this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // textBoxSingleItemUpgrade
+            // Locked
             // 
-            this.textBoxSingleItemUpgrade.Location = new System.Drawing.Point(6, 186);
-            this.textBoxSingleItemUpgrade.Name = "textBoxSingleItemUpgrade";
-            this.textBoxSingleItemUpgrade.Size = new System.Drawing.Size(150, 20);
-            this.textBoxSingleItemUpgrade.TabIndex = 35;
+            this.Locked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Locked.DataPropertyName = "Locked";
+            this.Locked.HeaderText = "Locked";
+            this.Locked.Name = "Locked";
+            this.Locked.Width = 49;
+            // 
+            // weightColumn
+            // 
+            this.weightColumn.DataPropertyName = "Weight";
+            this.weightColumn.HeaderText = "Weight";
+            this.weightColumn.Name = "weightColumn";
+            this.weightColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.weightColumn.Width = 50;
+            // 
+            // scoreColumn
+            // 
+            this.scoreColumn.DataPropertyName = "Score";
+            this.scoreColumn.HeaderText = "Score";
+            this.scoreColumn.Name = "scoreColumn";
+            this.scoreColumn.ReadOnly = true;
+            this.scoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.scoreColumn.Width = 66;
+            // 
+            // newScoreColumn
+            // 
+            this.newScoreColumn.DataPropertyName = "NewScore";
+            this.newScoreColumn.HeaderText = "New Score";
+            this.newScoreColumn.Name = "newScoreColumn";
+            this.newScoreColumn.ReadOnly = true;
+            this.newScoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.newScoreColumn.Width = 66;
+            // 
+            // loadBatchCharacterColumn
+            // 
+            this.loadBatchCharacterColumn.DataPropertyName = "RelativePath";
+            this.loadBatchCharacterColumn.HeaderText = "";
+            this.loadBatchCharacterColumn.Name = "loadBatchCharacterColumn";
+            this.loadBatchCharacterColumn.NewRowButtonVisible = true;
+            this.loadBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.loadBatchCharacterColumn.Text = "...";
+            this.loadBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.loadBatchCharacterColumn.Width = 20;
+            // 
+            // showBatchCharacterColumn
+            // 
+            this.showBatchCharacterColumn.HeaderText = "";
+            this.showBatchCharacterColumn.Name = "showBatchCharacterColumn";
+            this.showBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.showBatchCharacterColumn.Text = "Show";
+            this.showBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.showBatchCharacterColumn.Width = 50;
             // 
             // FormBatchTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 382);
+            this.ClientSize = new System.Drawing.Size(674, 382);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -541,12 +551,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ToolStripMenuItem buildUpgradeListToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn characterColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn weightColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn scoreColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn newScoreColumn;
-        private FormBatchTools.MyDataGridViewButtonColumn loadBatchCharacterColumn;
-        private FormBatchTools.MyDataGridViewButtonColumn showBatchCharacterColumn;
         private System.Windows.Forms.ToolStripMenuItem replaceUnavailableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bathcOptimizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem buildBatchUpgradeListToolStripMenuItem;
@@ -556,5 +560,12 @@
         private System.Windows.Forms.Button buttonUp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxSingleItemUpgrade;
+        private System.Windows.Forms.DataGridViewTextBoxColumn characterColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Locked;
+        private System.Windows.Forms.DataGridViewTextBoxColumn weightColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn scoreColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn newScoreColumn;
+        private FormBatchTools.MyDataGridViewButtonColumn loadBatchCharacterColumn;
+        private FormBatchTools.MyDataGridViewButtonColumn showBatchCharacterColumn;
     }
 }
