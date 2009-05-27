@@ -739,6 +739,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
         public override bool HasRelevantStats(Stats stats) {
             bool relevant = (
+                stats.Stamina +
                 stats.Agility +
                 stats.Strength +
                 stats.BonusAgilityMultiplier +
