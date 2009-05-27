@@ -79,7 +79,7 @@ namespace Rawr
 
         public bool IsMatch(Item item)
         {
-            if ((!string.IsNullOrEmpty(item.LocationInfo.Description) && Regex.IsMatch(item.LocationInfo.Description)) || (!string.IsNullOrEmpty(item.LocationInfo.Note) && Regex.IsMatch(item.LocationInfo.Note)))
+            if (string.IsNullOrEmpty(_pattern) || (!string.IsNullOrEmpty(item.LocationInfo.Description) && Regex.IsMatch(item.LocationInfo.Description)) || (!string.IsNullOrEmpty(item.LocationInfo.Note) && Regex.IsMatch(item.LocationInfo.Note)))
             {
                 if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
                 {
