@@ -2104,7 +2104,7 @@ namespace Rawr
                 SetThreshold = 4
             });
             #endregion
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.15f, 1));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.08f, 1));
             #region Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {
