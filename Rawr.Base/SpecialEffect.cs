@@ -869,7 +869,7 @@ namespace Rawr
                 return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
             }
 
-            if (Mode == CalculationMode.Advanced) {
+            if (Mode == CalculationMode.Advanced && triggerInterval > 0) {
                 double c = Cooldown / triggerInterval;
                 if (c < 1.0) c = 1.0;
                 double n = fightDuration / triggerInterval;
@@ -884,7 +884,7 @@ namespace Rawr
                     x -= c;
                 }
                 return (float)(averageProcs / fightDuration);
-            } else if (Mode == CalculationMode.Interpolation) {
+            } else if (Mode == CalculationMode.Interpolation && triggerInterval > 0) {
                 lock (interpolator) {
                     Interpolator i;
                     if (!interpolator.TryGetValue(fightDuration, out i))
