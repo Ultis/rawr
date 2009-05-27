@@ -2191,10 +2191,19 @@ namespace Rawr.Optimizer
                         int mc = m == null ? 0 : m.JewelerCount;
                         if (fc > max)
                         {
+                            // we need a unique check otherwise we can end in a dead loop because the min computed above underestimates
+                            if ((object)m != null && m.Item.Unique && slot > 0 && items[slot - 1] != null && ((ItemInstance)items[slot - 1]).Id == m.Id)
+                            {
+                                return f;
+                            }
                             return m;
                         }
                         else if (mc > max)
                         {
+                            if ((object)f != null && f.Item.Unique && slot > 0 && items[slot - 1] != null && ((ItemInstance)items[slot - 1]).Id == f.Id)
+                            {
+                                return m;
+                            }
                             return f;
                         }
                         else
