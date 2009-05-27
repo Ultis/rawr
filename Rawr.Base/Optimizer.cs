@@ -1496,6 +1496,14 @@ namespace Rawr.Optimizer
             {
                 if (slot < characterSlots)
                 {
+                    ignoreIdForJeweler = 0;
+                    if (slot == (int)Character.CharacterSlot.Finger2 || slot == (int)Character.CharacterSlot.Trinket2 || slot == (int)Character.CharacterSlot.OffHand)
+                    {
+                        if ((object)nonJewelerItems[slot - 1] != null && nonJewelerItems[slot - 1].Item.Unique)
+                        {
+                            ignoreIdForJeweler = nonJewelerItems[slot - 1].Id;
+                        }
+                    }
                     results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation, list);
                 }
                 else
@@ -1573,7 +1581,7 @@ namespace Rawr.Optimizer
                     }
                 }
                 // is it better than what we have
-                if (value > this.bestValue)
+                if (IsIndividualValid(greedyIndividual) && value > this.bestValue) // make sure to do a validation here, we're doing a bunch of voodoo, don't want to mess things up
                 {
                     this.bestValue = value;
                     this.bestValuation = greedyValuation;
@@ -1593,6 +1601,7 @@ namespace Rawr.Optimizer
             public int JewelerCount;
         }
 
+        private int ignoreIdForJeweler;
         private int currentSlot;
         private float[] jewelerValue = new float[4];
         private ItemInstance[] jewelerItems = new ItemInstance[4];
@@ -1609,10 +1618,13 @@ namespace Rawr.Optimizer
             lock (directValuationLock)
             {
                 directValuationsComplete++;
-                if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                 {
-                    jewelerItems[jewelerCount] = itemInstance;
-                    jewelerValue[jewelerCount] = nonJewelerValue;
+                    if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                    {
+                        jewelerItems[jewelerCount] = itemInstance;
+                        jewelerValue[jewelerCount] = nonJewelerValue;
+                    }
                 }
                 if (value > bestDirectValue)
                 {
@@ -1660,11 +1672,14 @@ namespace Rawr.Optimizer
                             float nonJewelerValue;
                             value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
                             ItemInstance itemInstance = (ItemInstance)item;
-                            int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
-                            if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                            if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                             {
-                                jewelerItems[jewelerCount] = itemInstance;
-                                jewelerValue[jewelerCount] = nonJewelerValue;
+                                int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
+                                if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                                {
+                                    jewelerItems[jewelerCount] = itemInstance;
+                                    jewelerValue[jewelerCount] = nonJewelerValue;
+                                }
                             }
                             if (value > best)
                             {
@@ -1733,11 +1748,14 @@ namespace Rawr.Optimizer
                                     float nonJewelerValue;
                                     value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
                                     ItemInstance itemInstance = entry.ItemInstance;
-                                    int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
-                                    if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                                    if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                                     {
-                                        jewelerItems[jewelerCount] = itemInstance;
-                                        jewelerValue[jewelerCount] = nonJewelerValue;
+                                        int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
+                                        if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                                        {
+                                            jewelerItems[jewelerCount] = itemInstance;
+                                            jewelerValue[jewelerCount] = nonJewelerValue;
+                                        }
                                     }
                                     if (value > best)
                                     {
@@ -2055,11 +2073,14 @@ namespace Rawr.Optimizer
                                 float nonJewelerValue;
                                 value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
                                 ItemInstance itemInstance = (ItemInstance)item;
-                                int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
-                                if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                                if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                                 {
-                                    jewelerItems[jewelerCount] = itemInstance;
-                                    jewelerValue[jewelerCount] = nonJewelerValue;
+                                    int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
+                                    if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
+                                    {
+                                        jewelerItems[jewelerCount] = itemInstance;
+                                        jewelerValue[jewelerCount] = nonJewelerValue;
+                                    }
                                 }
                                 if (value > best)
                                 {

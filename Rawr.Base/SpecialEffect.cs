@@ -454,7 +454,7 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
-            if (triggerChance == 0f)
+            if (triggerChance == 0f || float.IsPositiveInfinity(triggerInterval))
             {
                 return 0f;
             }
@@ -856,6 +856,11 @@ namespace Rawr
 
             // P(x):=sum(I[p](r+1,x-r*C),r,0,floor(x/C))
             // where I[p] is incomplete beta function
+
+            if (triggerChance == 0f || float.IsPositiveInfinity(triggerInterval))
+            {
+                return 0f;
+            }
 
             if (fightDuration == 0.0f) {
                 // this is special case, meaning that we have infinite fight duration, so we have
