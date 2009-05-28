@@ -100,6 +100,8 @@
     <Compile Include="CalculationOptionsRogue.cs" />
     <Compile Include="CalculationsRogue.cs" />
     <Compile Include="CharacterCalculationsRogue.cs" />
+    <Compile Include="ClassAbilities\Glyphs.cs" />
+    <Compile Include="ClassAbilities\TalentsAndGlyphs.cs" />
     <Compile Include="CombatFactors.cs" />
     <Compile Include="ComboPointGenerators\Backstab.cs" />
     <Compile Include="ComboPointGenerators\ComboPointGenerator.cs" />
@@ -127,7 +129,7 @@
     <Compile Include="RogueConversions.cs" />
     <Compile Include="SpecialAbilities\Feint.cs" />
     <Compile Include="SpecialAbilities\SwordSpec.cs" />
-    <Compile Include="Talents.cs" />
+    <Compile Include="ClassAbilities\Talents.cs" />
     <Compile Include="WhiteAttacks.cs" />
   </ItemGroup>
   <ItemGroup>

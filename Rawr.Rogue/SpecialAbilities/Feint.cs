@@ -1,4 +1,5 @@
 ﻿using System;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.SpecialAbilities
 {
@@ -15,7 +16,7 @@ namespace Rawr.Rogue.SpecialAbilities
 
         public float EnergyCost()
         {
-            var baseCost = 20 - (Talents.Glyphs.Feint ? 10 : 0);
+            var baseCost = 20 - (Glyphs.GlyphOfFeint ? 10 : 0);
             return _delay == 0f ? 0f : baseCost / _delay;
         }
     }

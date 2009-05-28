@@ -1,4 +1,5 @@
 using System;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue
 {
@@ -177,8 +178,18 @@ namespace Rawr.Rogue
         {
             get
             {
-                var energyRegen = 10f*Talents.Multiply(Talents.Vitality, Talents.AdrenalineRush);
+                /*
+                =10
+                    -15/31
+                    +2.5*Vitality/3
+                    -(1-GlyphOfBF)*BladeFlurry*25/120
+                    +
+                */
+                var energyRegen = 10f;
+                energyRegen += Talents.Vitality.Bonus;
+                energyRegen += Talents.AdrenalineRush.Energy.Bonus;
                 energyRegen += Talents.HungerForBlood.EnergyPerSecond.Bonus;
+                energyRegen -= Talents.BladeFlurry.EnergyCost.Bonus;
                 energyRegen -= _calcOpts.Feint.EnergyCost();
                 return energyRegen;
             }
@@ -191,7 +202,7 @@ namespace Rawr.Rogue
                 var totalHaste = 1f;
                 totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));  //TODO:  change from assuming SnD has a 100% uptime
                 totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-                totalHaste *= (1f + Talents.BladeFlurry.Bonus);
+                totalHaste *= (1f + Talents.BladeFlurry.Haste.Bonus);
                 return totalHaste;
             }
         }

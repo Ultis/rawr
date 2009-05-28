@@ -1,4 +1,5 @@
 using System;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
@@ -49,7 +50,7 @@ namespace Rawr.Rogue.ComboPointGenerators
         {
             get
             {
-                return 1 + (Talents.Glyphs.SinisterStrike ? .5f : 0f);
+                return 1 + (Glyphs.GlyphOfSinisterStrike ? .5f : 0f);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Rawr.Rogue.ClassAbilities;
 using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue.FinishingMoves

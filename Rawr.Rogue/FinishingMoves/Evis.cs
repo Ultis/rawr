@@ -1,4 +1,5 @@
 using System;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.FinishingMoves
 {
@@ -41,7 +42,7 @@ namespace Rawr.Rogue.FinishingMoves
 
         private static float GlyphOfEviscerateBonus
         {
-            get { return Talents.Glyphs.Eviscerate ? .1f : 0f; }
+            get { return Glyphs.GlyphOfEviscerate ? .1f : 0f; }
         }
     }
 }

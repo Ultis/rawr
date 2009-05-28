@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.FinishingMoves
 {
@@ -78,7 +79,7 @@ namespace Rawr.Rogue.FinishingMoves
 
         private static float GlyphOfSndBonus
         {
-            get { return Talents.Glyphs.SliceandDice ? 3f : 0f; }
+            get { return Glyphs.GlyphOfSliceandDice ? 3f : 0f; }
         }
     }
 }

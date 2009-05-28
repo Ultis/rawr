@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Windows.Forms;
+using Rawr.Rogue.ClassAbilities;
 using Rawr.Rogue.ComboPointGenerators;
 using Rawr.Rogue.Poisons;
 using Rawr.Rogue.SpecialAbilities;

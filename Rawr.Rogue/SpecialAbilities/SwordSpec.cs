@@ -1,3 +1,5 @@
+using Rawr.Rogue.ClassAbilities;
+
 namespace Rawr.Rogue.SpecialAbilities
 {
     public class SwordSpec

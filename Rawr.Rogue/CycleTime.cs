@@ -1,4 +1,6 @@
-﻿namespace Rawr.Rogue
+﻿using Rawr.Rogue.ClassAbilities;
+
+namespace Rawr.Rogue
 {
     public class CycleTime
     {

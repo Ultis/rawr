@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 using Rawr.Rogue.BasicStats;
+using Rawr.Rogue.ClassAbilities;
 using Rawr.Rogue.FinishingMoves;
 using Rawr.Rogue.Poisons;
 using Rawr.Rogue.SpecialAbilities;
@@ -79,7 +80,7 @@ namespace Rawr.Rogue
         /// 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            Talents.Initialize(character.RogueTalents);
+            TalentsAndGlyphs.Initialize(character.RogueTalents);
             var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var combatFactors = new CombatFactors(character, stats);
@@ -460,25 +461,7 @@ namespace Rawr.Rogue
 
         public override List<string> GetRelevantGlyphs()
         {
-            var glyphs = new List<string>
-                             {
-                                 //"Glyph of Backstab",
-                                 "Glyph of Eviscerate",
-                                 "Glyph of Mutilate",
-                                 "Glyph of Hunger for Blood",
-                                 //"Glyph of Killing Spree",
-                                 //"Glyph of Vigor",
-                                 //"Glyph of Fan of Knives",
-                                 //"Glyph of Expose Armor",
-                                 "Glyph of Sinister Strike",
-                                 "Glyph of Slice and Dice",
-                                 "Glyph of Feint",
-                                 //"Glyph of Ghostly Strike",
-                                 //"Glyph of Rupture",
-                                 //"Glyph of Blade Flurry",
-                                 //"Glyph of Adrenaline Rush"
-                             };
-            return glyphs;
+            return ModeledGlyphs.List;
         }
 
         public override List<GemmingTemplate> DefaultGemmingTemplates

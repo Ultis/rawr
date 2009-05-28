@@ -190,6 +190,7 @@ namespace Rawr
 						break;
 					case Character.CharacterClass.Rogue:
 						character.RogueTalents = new RogueTalents(talentCode);
+				        character.CurrentModel = "Rogue";
 						break;
 					case Character.CharacterClass.Priest:
 						character.PriestTalents = new PriestTalents(talentCode);
