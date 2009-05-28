@@ -319,30 +319,24 @@ namespace Rawr.Healadin
 
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    if (effect.Trigger == Trigger.Use)
+                    float trigger = 0;
+                    if (calc == null)
                     {
-                        statsAverage += effect.GetAverageStats();
+                        trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
+                        if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) trigger *= stats.SpellCrit;
                     }
                     else
                     {
-                        float trigger = 0;
-                        if (calc == null)
-                        {
-                            trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
-                            if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) trigger *= stats.SpellCrit;
-                        }
-                        else
-                        {
-                            if (effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
-                                trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
-                            else if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
-                                trigger = 1f / Rotation.GetHealingCritsPerSec(calc);
-                            else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
-                                trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
-                            else continue;
-                        }
-                        statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
+                        if (effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
+                            trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
+                        else if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
+                            trigger = 1f / Rotation.GetHealingCritsPerSec(calc);
+                        else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
+                            trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
+                        else if (effect.Trigger == Trigger.Use) trigger = 0f;
+                        else continue;
                     }
+                    statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
                 }
                 statsAverage.ManaRestore *= fightLength;
                 statsAverage.Healed *= fightLength;

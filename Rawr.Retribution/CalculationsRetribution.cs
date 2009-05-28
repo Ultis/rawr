@@ -413,46 +413,45 @@ namespace Rawr.Retribution
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    if (effect.Trigger == Trigger.Use)
-                    {
-                        statsAverage += effect.GetAverageStats();
-                    }
-                    else
-                    {
-                        float trigger = 0f; float procChance = 1f;
-                        if (effect.Trigger == Trigger.MeleeCrit)
-                        {
-                            trigger = 1f / rot.GetMeleeCritsPerSec();
-                        }
-                        else if (effect.Trigger == Trigger.MeleeHit)
-                        {
-                            trigger = 1f / rot.GetMeleeAttacksPerSec();
-                        }
-                        else if (effect.Trigger == Trigger.PhysicalCrit)
-                        {
-                            trigger = 1f / rot.GetPhysicalCritsPerSec();
-                        }
-                        else if (effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
-                        {
-                            trigger = 1f / rot.GetPhysicalAttacksPerSec();
-                        }
-                        else if (effect.Trigger == Trigger.CrusaderStrikeHit)
-                        {
-                            trigger = rot.GetCrusaderStrikeCD();
-                            procChance = rot.CS.ChanceToLand();
-                        }
-                        else if (effect.Trigger == Trigger.JudgementHit)
-                        {
-                            trigger = rot.GetJudgementCD();
-                            procChance = rot.Judge.ChanceToLand();
-                        }
-                        else continue;
-                        if (effect.MaxStack > 1) statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance,
-                            combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset);
-                        else statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
 
-                        float chance = effect.GetAverageUptime(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
+                    float trigger = 0f; float procChance = 1f;
+                    if (effect.Trigger == Trigger.MeleeCrit)
+                    {
+                        trigger = 1f / rot.GetMeleeCritsPerSec();
                     }
+                    else if (effect.Trigger == Trigger.MeleeHit)
+                    {
+                        trigger = 1f / rot.GetMeleeAttacksPerSec();
+                    }
+                    else if (effect.Trigger == Trigger.PhysicalCrit)
+                    {
+                        trigger = 1f / rot.GetPhysicalCritsPerSec();
+                    }
+                    else if (effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
+                    {
+                        trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    }
+                    else if (effect.Trigger == Trigger.CrusaderStrikeHit)
+                    {
+                        trigger = rot.GetCrusaderStrikeCD();
+                        procChance = rot.CS.ChanceToLand();
+                    }
+                    else if (effect.Trigger == Trigger.JudgementHit)
+                    {
+                        trigger = rot.GetJudgementCD();
+                        procChance = rot.Judge.ChanceToLand();
+                    }
+                    else if (effect.Trigger == Trigger.Use)
+                    {
+                        trigger = 0f;
+                        procChance = 1f;
+                    }
+                    else continue;
+                    if (effect.MaxStack > 1) statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance,
+                        combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset);
+                    else statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
+
+                    float chance = effect.GetAverageUptime(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
                 }
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
