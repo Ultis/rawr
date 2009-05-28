@@ -2081,7 +2081,7 @@ namespace Rawr.Mage
                 }
                 else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
-                    if (HasMageStats(effect.Stats))
+                    if (HasEffectStats(effect.Stats))
                     {
                         s.AddSpecialEffect(effect);
                         continue;
@@ -2089,6 +2089,12 @@ namespace Rawr.Mage
                 }
             }
             return s;
+        }
+
+        private bool HasEffectStats(Stats stats)
+        {
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating;
+            return HasMageStats(stats) || (commonStats > 0);
         }
 
         private bool HasMageStats(Stats stats)
@@ -2100,6 +2106,7 @@ namespace Rawr.Mage
         public override bool HasRelevantStats(Stats stats)
         {
             bool mageStats = HasMageStats(stats);
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -2141,13 +2148,13 @@ namespace Rawr.Mage
                 }
                 else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
-                    if (HasMageStats(effect.Stats))
+                    if (HasEffectStats(effect.Stats))
                     {
                         return true;
                     }
                 }
             }
-            return (mageStats || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
+            return (mageStats || (commonStats > 0 && ignoreStats == 0.0f));
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
