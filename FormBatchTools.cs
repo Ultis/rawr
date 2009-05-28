@@ -423,7 +423,23 @@ namespace Rawr
                     {
                         // make item restrictions based on best character without using the item
                         itemGenerator.AddItemRestrictions(workingCharacter);
-                        Character.CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemList[itemIndex].Slot);
+                        // if we're evaluating an item that was already marked available then we must restrict to that version
+                        // if it was used in this character
+                        Item item = itemList[itemIndex];
+                        Character.CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Slot);
+                        if (upgradeListPhase == 0)
+                        {
+                            foreach (Character.CharacterSlot s in Character.CharacterSlots)
+                            {
+                                ItemInstance itemInstance = workingCharacter[s];
+                                if ((object)itemInstance != null && itemInstance.Id == item.Id)
+                                {
+                                    upgradeListPhase = 1;
+                                    optimizedItemInstance = itemInstance;
+                                    break;
+                                }
+                            }
+                        }
                         Dictionary<string, UpgradeEntry> map;
                         if (!upgradeList.TryGetValue(slot, out map))
                         {
