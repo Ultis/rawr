@@ -110,11 +110,19 @@ namespace Rawr
 
 		void _character_ItemsChanged(object sender, EventArgs e)
 		{
-			if (CharacterSlot == Character.CharacterSlot.OffHand)
-			{
-				_dimIcon = !Calculations.IncludeOffHandInCalculations(Character);
-			}
+            UpdateDim();
 		}
+        private void UpdateDim()
+        {
+            if (Character != null && CharacterSlot == Character.CharacterSlot.OffHand)
+            {
+                _dimIcon = !Calculations.IncludeOffHandInCalculations(Character);
+            }
+            else
+            {
+                _dimIcon = false;
+            }
+        }
 
 		public int SelectedItemId
 		{
@@ -145,7 +153,8 @@ namespace Rawr
                 }
 			}
 			this.Text = string.Empty;
-			this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem, this.Width < 64) : null;
+            UpdateDim();
+            this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem, this.Width < 64) : null;
 		}
 
 		public event EventHandler SelectedItemChanged;
