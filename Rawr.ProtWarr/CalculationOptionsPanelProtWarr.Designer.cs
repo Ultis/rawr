@@ -112,7 +112,7 @@ namespace Rawr.ProtWarr
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 45);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Target Armor:  (Default: 13100)";
+            this.label2.Text = "Target Armor:  (Default: 10643)";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // trackBarTargetArmor
@@ -212,7 +212,7 @@ namespace Rawr.ProtWarr
             this.labelBossAttack.Name = "labelBossAttack";
             this.labelBossAttack.Size = new System.Drawing.Size(83, 45);
             this.labelBossAttack.TabIndex = 0;
-            this.labelBossAttack.Text = "Base Attack: * (Default: 25000)";
+            this.labelBossAttack.Text = "Base Attack: * (Default: 60000)";
             this.labelBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelBossAttack.ToolTipText = "Base attacker damage before armor.";
             // 
@@ -230,7 +230,7 @@ namespace Rawr.ProtWarr
             this.trackBarBossAttackValue.SmallChange = 500;
             this.trackBarBossAttackValue.TabIndex = 2;
             this.trackBarBossAttackValue.TickFrequency = 5000;
-            this.trackBarBossAttackValue.Value = 25000;
+            this.trackBarBossAttackValue.Value = 60000;
             this.trackBarBossAttackValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelBossAttackValue
@@ -242,7 +242,7 @@ namespace Rawr.ProtWarr
             this.labelBossAttackValue.Name = "labelBossAttackValue";
             this.labelBossAttackValue.Size = new System.Drawing.Size(37, 13);
             this.labelBossAttackValue.TabIndex = 0;
-            this.labelBossAttackValue.Text = "25000";
+            this.labelBossAttackValue.Text = "60000";
             // 
             // labelThreatScaleText
             // 

@@ -19,11 +19,6 @@ namespace Rawr.ProtWarr
 			float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
 				stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
 			return damageReduction;
-			
-			//// Armor Penetration Rating multiplier needs to go into CalculationsProtWarr
-			//float targetArmor = (calcOpts.TargetArmor - stats.ArmorPenetration) 
-			//                    * (1.0f - BonusArmorPenetrationPercentage(character, stats));
-			//return Math.Max(0.0f, Math.Min(0.75f, targetArmor / (targetArmor + (467.5f * character.Level - 22167.5f))));
         }
 
         public static float TargetCritChance(Character character, Stats stats)

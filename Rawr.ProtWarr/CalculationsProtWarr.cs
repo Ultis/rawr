@@ -258,6 +258,38 @@ threat and limited threat scaled by the threat scale.",
 			}
 		}
 
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Devotion Aura (Armor)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Grace"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Insect Swarm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+        }
+
 		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warrior; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtWarr(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtWarr(); }
@@ -564,39 +596,62 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
-        public override Stats GetItemStats(Character character, Item additionalItem)
+        private Stats GetSpecialEffectStats(Character character, Stats stats)
         {
-            Stats statsItems = base.GetItemStats(character, additionalItem);
+            Stats statsSpecialEffects = new Stats();
 
-            // Assuming a GCD every 1.5s
-            float abilityPerSecond = 1.0f / 1.5f;
-            // Assumes 15% miss rate as we don't know the stats here--need to find a better solution
-            float hitRate = 0.85f;  
+            float weaponSpeed = 1.0f;
+            if (character.MainHand != null)
+                weaponSpeed = character.MainHand.Speed;
 
-            //Mongoose
-            /*if (character.MainHand != null && statsItems.MongooseProc > 0)
+            AttackModelMode amm = AttackModelMode.Basic;
+            if (character.WarriorTalents.UnrelentingAssault > 0)
+                amm = AttackModelMode.UnrelentingAssault;
+            else if (character.WarriorTalents.Shockwave > 0)
+                amm = AttackModelMode.FullProtection;
+            else if (character.WarriorTalents.Devastate > 0)
+                amm = AttackModelMode.Devastate;
+
+            AttackModel am = new AttackModel(character, stats, amm);
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                float procRate = 1.0f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
-
-                statsItems.Agility += 120.0f * procUptime;
-                statsItems.HasteRating += (2.0f / ProtWarr.HasteRatingToHaste) * procUptime;
+                switch (effect.Trigger)
+                {
+                    case Trigger.Use:
+                        statsSpecialEffects += effect.GetAverageStats(0.0f, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.MeleeHit:
+                    case Trigger.PhysicalHit:
+                        statsSpecialEffects += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.MeleeCrit:
+                    case Trigger.PhysicalCrit:
+                        statsSpecialEffects += effect.GetAverageStats(am.CritsPerSecond, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.DoTTick:
+                        if (character.WarriorTalents.DeepWounds > 0)
+                            statsSpecialEffects += effect.GetAverageStats(2.0f, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.DamageDone:
+                        statsSpecialEffects += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
+                        break;
+                }
             }
 
-            //Executioner
-            if (character.MainHand != null && statsItems.ExecutionerProc > 0)
-            {
-                float procRate = 1.2f; // PPM
-                float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
-                float procUptime = procDuration * procPerSecond;
+            statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
+            statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
+            statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
+            statsSpecialEffects.Armor += 2.0f * statsSpecialEffects.Agility;
+            statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BonusArmorMultiplier));
+            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f);
+            statsSpecialEffects.AttackPower += statsSpecialEffects.Strength;
+            statsSpecialEffects.AttackPower += (float)Math.Floor(character.WarriorTalents.ArmoredToTheTeeth * statsSpecialEffects.Armor / 180.0f);
+            statsSpecialEffects.AttackPower = (float)Math.Floor(statsSpecialEffects.AttackPower * (1f + stats.BonusAttackPowerMultiplier));
+            statsSpecialEffects.BlockValue += (float)Math.Floor(statsSpecialEffects.Strength * ProtWarr.StrengthToBlockValue);
+            statsSpecialEffects.BlockValue = (float)Math.Floor(statsSpecialEffects.BlockValue * (1 + stats.BonusBlockValueMultiplier));
 
-                statsItems.ArmorPenetrationRating += 120.0f * procUptime;
-            }*/
-
-            return statsItems;
+            return statsSpecialEffects;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -625,16 +680,13 @@ threat and limited threat scaled by the threat scale.",
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            Stats statsProcs = new Stats();
 
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
             statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
-            if (statsTotal.GreatnessProc > 0)
-            {
-                statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15f / 48f);
-            }
             statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += statsTotal.Stamina * 10f;
@@ -675,8 +727,11 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
             statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 
-            // Haste Trinkets
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
+            // Calculate Procs and Special Effects
+            statsTotal += GetSpecialEffectStats(character, statsTotal);
+
+            // Greatness/Highest Stat Effect
+            statsTotal.Strength += (float)Math.Floor(statsTotal.HighestStat * (1 + statsTotal.BonusStrengthMultiplier));
 
 			return statsTotal;
 		}
@@ -949,9 +1004,18 @@ threat and limited threat scaled by the threat scale.",
             return enchant.Slot == Item.ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
         }
 
+        public override bool IsItemRelevant(Item item)
+        {
+            // Bone Fishing Pole
+            if (item.Id == 45991)
+                return false;
+
+            return base.IsItemRelevant(item);
+        }
+
 		public override Stats GetRelevantStats(Stats stats)
 		{
-			return new Stats()
+            Stats relevantStats = new Stats()
 			{
 				Armor = stats.Armor,
 				BonusArmor = stats.BonusArmor,
@@ -997,6 +1061,7 @@ threat and limited threat scaled by the threat scale.",
                 PhysicalHaste = stats.PhysicalHaste,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
+                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1004,21 +1069,33 @@ threat and limited threat scaled by the threat scale.",
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
 
-                //MongooseProc = stats.MongooseProc,
-                //MongooseProcAverage = stats.MongooseProcAverage,
-                //MongooseProcConstant = stats.MongooseProcConstant,
-
-                //ExecutionerProc = stats.ExecutionerProc,
-
+                HighestStat = stats.HighestStat,
                 BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
                 DevastateCritIncrease = stats.DevastateCritIncrease
 			};
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if ((effect.Trigger == Trigger.Use || 
+                    effect.Trigger == Trigger.MeleeCrit || 
+                    effect.Trigger == Trigger.MeleeHit || 
+                    effect.Trigger == Trigger.PhysicalCrit || 
+                    effect.Trigger == Trigger.PhysicalHit || 
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone) && HasRelevantStats(effect.Stats))
+                {
+                    relevantStats.AddSpecialEffect(effect);
+                }
+            }
+
+            return relevantStats;
 		}
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
+            bool relevant = 
+                (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
                     stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
@@ -1030,15 +1107,31 @@ threat and limited threat scaled by the threat scale.",
 					stats.FrostResistanceBuff + stats.ShadowResistanceBuff + 
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
-                    stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
+                    stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
-                    stats.BonusBleedDamageMultiplier + 
-                    //stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
-                    //stats.ExecutionerProc +
-                    stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease
-                   ) != 0;
+                    stats.BonusBleedDamageMultiplier +
+                    stats.HighestStat + stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease
+                ) != 0;
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.MeleeCrit ||
+                    effect.Trigger == Trigger.MeleeHit ||
+                    effect.Trigger == Trigger.PhysicalCrit ||
+                    effect.Trigger == Trigger.PhysicalHit ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
+                {
+                    relevant |= HasRelevantStats(effect.Stats);
+                    if (relevant) break;
+                }
+            }
+
+            return relevant;
 		}
+
         /// <summary>
         /// Saves the talents for the character
         /// </summary>

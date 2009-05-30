@@ -23,6 +23,10 @@ namespace Rawr.ProtWarr
         {
             get { return AttackTable.Critical; }
         }
+        public float HitPercentage
+        {
+            get { return AttackTable.AnyHit; }
+        }
 
         private void CalculateDamage()
         {

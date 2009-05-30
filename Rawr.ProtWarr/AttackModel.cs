@@ -33,6 +33,8 @@ namespace Rawr.ProtWarr
         public string Description { get; private set; }
         public float ThreatPerSecond { get; private set; }
         public float DamagePerSecond { get; private set; }
+        public float AttacksPerSecond { get; private set; }
+        public float CritsPerSecond { get; private set; }
 
         private void Calculate()
         {
@@ -40,6 +42,7 @@ namespace Rawr.ProtWarr
             float modelThreat = 0.0f;
             float modelDamage = 0.0f;
             float modelCrits = 0.0f;
+            float modelHits = 0.0f;
 
             switch (AttackModelMode)
             {
@@ -60,6 +63,9 @@ namespace Rawr.ProtWarr
                         modelCrits  = 
                             Abilities[Ability.ShieldSlam].CritPercentage +
                             Abilities[Ability.Revenge].CritPercentage;
+                        modelHits =
+                            Abilities[Ability.ShieldSlam].HitPercentage +
+                            Abilities[Ability.Revenge].HitPercentage;
                         break;
                     }
                 case AttackModelMode.Devastate:
@@ -83,6 +89,10 @@ namespace Rawr.ProtWarr
                                 Abilities[Ability.ShieldSlam].CritPercentage +
                                 Abilities[Ability.Revenge].CritPercentage +
                                 Abilities[Ability.Devastate].CritPercentage * 2;
+                            modelHits =
+                               Abilities[Ability.ShieldSlam].HitPercentage +
+                               Abilities[Ability.Revenge].HitPercentage +
+                               Abilities[Ability.Devastate].HitPercentage * 2;
                         }
                         else
                             goto case AttackModelMode.Basic;
@@ -113,6 +123,10 @@ namespace Rawr.ProtWarr
                                 (1.0f * Abilities[Ability.ShieldSlam].CritPercentage) +
                                 (0.73f * Abilities[Ability.Revenge].CritPercentage) +
                                 (1.4596f * Abilities[Ability.Devastate].CritPercentage);
+                            modelHits =
+                                (1.0f * Abilities[Ability.ShieldSlam].HitPercentage) +
+                                (0.73f * Abilities[Ability.Revenge].HitPercentage) +
+                                (1.4596f * Abilities[Ability.Devastate].HitPercentage);
                         }
                         else
                             goto case AttackModelMode.Basic;
@@ -158,6 +172,15 @@ namespace Rawr.ProtWarr
                                     Abilities[Ability.Shockwave].CritPercentage + 
                                     Abilities[Ability.Devastate].CritPercentage
                                     ) / 3));
+                            modelHits =
+                                (1.0f * Abilities[Ability.ShieldSlam].HitPercentage) +
+                                (0.73f * Abilities[Ability.Revenge].HitPercentage) +
+                                (1.133f * Abilities[Ability.Devastate].HitPercentage) +
+                                (0.3266f * ((
+                                    Abilities[Ability.ConcussionBlow].HitPercentage +
+                                    Abilities[Ability.Shockwave].HitPercentage +
+                                    Abilities[Ability.Devastate].HitPercentage
+                                    ) / 3));
                         }
                         else
                             goto case AttackModelMode.Basic;
@@ -176,6 +199,7 @@ namespace Rawr.ProtWarr
                             modelThreat = Abilities[Ability.Revenge].Threat;
                             modelDamage = Abilities[Ability.Revenge].Damage;
                             modelCrits  = Abilities[Ability.Revenge].CritPercentage;
+                            modelHits   = Abilities[Ability.Revenge].HitPercentage;
                         }
                         else
                             goto case AttackModelMode.Basic;
@@ -191,6 +215,7 @@ namespace Rawr.ProtWarr
                 modelThreat += Abilities[Ability.HeroicStrike].Threat * weaponHits;
                 modelDamage += Abilities[Ability.HeroicStrike].Damage * weaponHits;
                 modelCrits  += Abilities[Ability.HeroicStrike].CritPercentage * weaponHits;
+                modelHits   += Abilities[Ability.HeroicStrike].HitPercentage * weaponHits;
             }
             else
             {
@@ -198,6 +223,7 @@ namespace Rawr.ProtWarr
                 modelThreat += Abilities[Ability.None].Threat * weaponHits;
                 modelDamage += Abilities[Ability.None].Damage * weaponHits;
                 modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits;
+                modelHits   += Abilities[Ability.None].HitPercentage * weaponHits;
             }
 
             // Damage Shield
@@ -216,6 +242,8 @@ namespace Rawr.ProtWarr
 
             ThreatPerSecond = modelThreat / modelLength;
             DamagePerSecond = modelDamage / modelLength;
+            AttacksPerSecond = modelHits / modelLength;
+            CritsPerSecond = modelCrits / modelLength;
         }
 
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode)
