@@ -1543,7 +1543,7 @@ namespace Rawr
         {
             get
             {
-                if (model == null)
+                if (model == null || model.Name != Character.CurrentModel)
                 {
                     model = Calculations.GetModel(Character.CurrentModel);
                 }
