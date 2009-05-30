@@ -441,8 +441,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1600, "Striking", Item.ItemSlot.Wrist, new Stats() { AttackPower = 38 }));
             defaultEnchants.Add(new Enchant(3845, "Greater Assault", Item.ItemSlot.Wrist, new Stats() { AttackPower = 50 }));
             defaultEnchants.Add(new Enchant(3231, "Expertise", Item.ItemSlot.Wrist, new Stats() { ExpertiseRating = 15 }));
-            defaultEnchants.Add(new Enchant(3829, "Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 35 }));
-            defaultEnchants.Add(new Enchant(1594, "Greater Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
+            defaultEnchants.Add(new Enchant(3829, "Greater Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 35 }));
+            defaultEnchants.Add(new Enchant(1594, "Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
             defaultEnchants.Add(new Enchant(1603, "Crusher", Item.ItemSlot.Hands, new Stats() { AttackPower = 44 }));
             defaultEnchants.Add(new Enchant(3231, "Expertise", Item.ItemSlot.Hands, new Stats() { ExpertiseRating = 15 }));
             defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 20 }));
