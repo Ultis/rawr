@@ -50,6 +50,7 @@
     <Compile Include="CalculationsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rawr.Rogue.Tests\CombatFactorsTests.cs" />
+    <Compile Include="Rawr.Rogue.Tests\TimingTests.cs" />
     <Compile Include="SpecialEffectsTest.cs" />
     <Compile Include="SpecialEffectTest.cs" />
     <Compile Include="StatConversionTest.cs" />
