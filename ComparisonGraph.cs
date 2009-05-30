@@ -740,7 +740,7 @@ namespace Rawr
                             }
                         }
 
-						ItemContextualMenu.Instance.Show(itemInstance, slot, ItemCalculations[itemIndex].CharacterItems, true);
+						ItemContextualMenu.Instance.Show(Character, itemInstance, slot, ItemCalculations[itemIndex].CharacterItems, true);
 
 					}
                 }
@@ -846,11 +846,11 @@ namespace Rawr
         {
             if (_tooltipItem != null && _tooltipLocation != Point.Empty)
 			{
-				ItemToolTip.Instance.Show(_tooltipItem, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
+				ItemToolTip.Instance.Show(Character, _tooltipItem, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
             }
             else if (_tooltipItemInstance != null && _tooltipLocation != Point.Empty)
             {
-                ItemToolTip.Instance.Show(_tooltipItemInstance, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
+                ItemToolTip.Instance.Show(Character, _tooltipItemInstance, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
             }
             else
             {

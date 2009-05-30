@@ -135,7 +135,7 @@ namespace Rawr
             optimize.Dispose();
         }
 
-        public void Show(ItemInstance item, Character.CharacterSlot equipSlot, bool allowDelete)
+        public void Show(Character character, ItemInstance item, Character.CharacterSlot equipSlot, bool allowDelete)
         {
             // TankConcrete 09.01.09 - Added a check to make sure the item being displayed
             // is really an item we can show a context menu for. Enchants, etc., won't work
@@ -143,14 +143,13 @@ namespace Rawr
             // Items with ID > 0 are regular items. Below 0 are enchants and the like.
             if (item.Id > 0)
             {
-                Show(item, equipSlot, null, allowDelete);
+                Show(character, item, equipSlot, null, allowDelete);
             }
-
-            return;
         }
 
-		public void Show(ItemInstance item, Character.CharacterSlot equipSlot, ItemInstance[] characterItems, bool allowDelete)
+		public void Show(Character character, ItemInstance item, Character.CharacterSlot equipSlot, ItemInstance[] characterItems, bool allowDelete)
 		{
+            Character = character;
 			_item = item;
             _characterItems = characterItems;
             _menuItemEquipAll.Visible = (_characterItems != null);

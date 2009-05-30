@@ -113,7 +113,7 @@ namespace Rawr
 				
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
-				ItemToolTip.Instance.Show(itemEnchant, this, new Point(tipX, itemButtonItem.Height));
+				ItemToolTip.Instance.Show(Character, itemEnchant, this, new Point(tipX, itemButtonItem.Height));
 			}
 		}
 	}

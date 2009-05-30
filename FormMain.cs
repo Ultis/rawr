@@ -2247,6 +2247,6 @@ namespace Rawr
 				itemComparison1.Refresh();
 			}
 			catch { }
-		}
+        }
     }
 }

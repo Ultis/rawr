@@ -32,15 +32,18 @@ namespace Rawr
 			get { return _character; }
 			set
 			{
-				if (_character != null)
-				{
-					_character.CalculationsInvalidated -= new EventHandler(CharacterItemCache_ItemsChanged);
-				}
-				_character = value;
-				if (_character != null)
-				{
-					_character.CalculationsInvalidated += new EventHandler(CharacterItemCache_ItemsChanged);
-				}
+                if (_character != value)
+                {
+                    if (_character != null)
+                    {
+                        _character.CalculationsInvalidated -= new EventHandler(CharacterItemCache_ItemsChanged);
+                    }
+                    _character = value;
+                    if (_character != null)
+                    {
+                        _character.CalculationsInvalidated += new EventHandler(CharacterItemCache_ItemsChanged);
+                    }
+                }
 			}
 		}
 
@@ -447,7 +450,7 @@ namespace Rawr
                                     if (slotColor != Item.ItemSlot.None)
                                     {
                                         Rectangle rectGemBorder = new Rectangle(3 + (103 * (i)), 25 + statHeight, 35, 35);
-                                        Brush brushGemBorder = new SolidBrush(Color.Silver);
+                                        Brush brushGemBorder = Brushes.Silver;
                                         switch (slotColor)
                                         {
                                             case Item.ItemSlot.Red:
@@ -474,7 +477,7 @@ namespace Rawr
                                             if (icon != null)
                                             {
                                                 g.DrawImageUnscaled(icon, rectGemBorder.X + 2, rectGemBorder.Y + 2);
-                                                icon.Dispose();
+                                                //icon.Dispose(); // these are cached images, I believe they should not be disposed
                                                 icon = null;
                                             }
 
@@ -515,6 +518,15 @@ namespace Rawr
                                                     g.DrawString(stats[1].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
                                                         rectGemBorder.X + 39, rectGemBorder.Y + 12);
                                                     g.DrawString(stats[2].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 24);
+                                                    break;
+                                                case 4:
+                                                case 5:
+                                                    g.DrawString(stats[0].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 0);
+                                                    g.DrawString(stats[1].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 12);
+                                                    g.DrawString(stats[2].Trim() + "...", _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
                                                         rectGemBorder.X + 39, rectGemBorder.Y + 24);
                                                     break;
                                             }
@@ -672,29 +684,31 @@ namespace Rawr
             }
         }
 
-        public void Show(Item item, IWin32Window window, Point point)
+        public void Show(Character character, Item item, IWin32Window window, Point point)
         {
-            Show(item, null, Character.CharacterSlot.None, window, point);
+            Show(character, item, null, Character.CharacterSlot.None, window, point);
         }
 
-		public void Show(Item item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
+        public void Show(Character character, Item item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
 		{
+            Character = character;
 			CurrentItem = item;
             CurrentCharacterItems = characterItems;
-			CurrentSlot = slot;
+			CurrentSlot = slot;            
             if (CachedToolTipImage != null && CurrentItem != null)
             {
                 base.Show(item.Name, window, point);
             }
 		}
 
-        public void Show(ItemInstance item, IWin32Window window, Point point)
+        public void Show(Character character, ItemInstance item, IWin32Window window, Point point)
         {
-            Show(item, null, Character.CharacterSlot.None, window, point);
+            Show(character, item, null, Character.CharacterSlot.None, window, point);
         }
 
-        public void Show(ItemInstance item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
+        public void Show(Character character, ItemInstance item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
         {
+            Character = character;
             CurrentItemInstance = item;
             CurrentCharacterItems = characterItems;
 			CurrentSlot = slot;

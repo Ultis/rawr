@@ -53,14 +53,14 @@ namespace Rawr
                 int tipX = this.Width;
                 if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
                     tipX = -309;
-                ItemToolTip.Instance.Show(SelectedItemInstance, this, new Point(tipX, 0));
+                ItemToolTip.Instance.Show(Character, SelectedItemInstance, this, new Point(tipX, 0));
             }
 			else if (SelectedItem != null)
 			{
 				int tipX = this.Width;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -309;
-				ItemToolTip.Instance.Show(SelectedItem, this, new Point(tipX, 0));
+				ItemToolTip.Instance.Show(Character, SelectedItem, this, new Point(tipX, 0));
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Rawr
 			}
 			else if (e.Button == MouseButtons.Right && SelectedItemInstance != null)
 			{
-                ItemContextualMenu.Instance.Show(SelectedItemInstance, CharacterSlot, false);
+                ItemContextualMenu.Instance.Show(Character, SelectedItemInstance, CharacterSlot, false);
 			}
 		}
 

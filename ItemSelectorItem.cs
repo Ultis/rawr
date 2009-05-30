@@ -73,11 +73,11 @@ namespace Rawr
 			else if (e.Button == MouseButtons.Right)
 			{
 				if (ItemCalculation.ItemInstance != null)
-					ItemContextualMenu.Instance.Show(ItemCalculation.ItemInstance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+					ItemContextualMenu.Instance.Show(Character, ItemCalculation.ItemInstance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
 				else
 				{
 					ItemInstance instance = GemmingTemplate.CurrentTemplates[0].GetItemInstance(ItemCalculation.Item, null, false);
-					ItemContextualMenu.Instance.Show(instance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+					ItemContextualMenu.Instance.Show(Character, instance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
 				}
 			}
 		}
@@ -114,11 +114,11 @@ namespace Rawr
 					tipX = -249;
                 if (_itemCalculation.ItemInstance != null)
                 {
-                    ItemToolTip.Instance.Show(_itemCalculation.ItemInstance.Id == 0 ? null : _itemCalculation.ItemInstance, null, CharacterSlot, this, new Point(tipX, 0));
+                    ItemToolTip.Instance.Show(Character, _itemCalculation.ItemInstance.Id == 0 ? null : _itemCalculation.ItemInstance, null, CharacterSlot, this, new Point(tipX, 0));
                 }
                 else
                 {
-					ItemToolTip.Instance.Show(_itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, null, CharacterSlot, this, new Point(tipX, 0));
+					ItemToolTip.Instance.Show(Character, _itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, null, CharacterSlot, this, new Point(tipX, 0));
                 }
 
 				//UpdateBackColors();
