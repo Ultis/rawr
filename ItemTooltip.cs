@@ -482,19 +482,22 @@ namespace Rawr
                                             }
 
                                             bool active = true;
-											if (Character.IsEquipped(CurrentItemInstance))
-											{
-												active = gem.MeetsRequirements(Character);
-											}
-											else
-											{
-												Character.CharacterSlot slotToEquip = CurrentSlot;
-												if (slotToEquip == Character.CharacterSlot.None)
-													slotToEquip = Character.GetCharacterSlotByItemSlot(CurrentItemInstance.Slot);
-												Character characterWithItemEquipped = Character.Clone();
-												characterWithItemEquipped[slotToEquip] = CurrentItemInstance;
-												active = gem.MeetsRequirements(characterWithItemEquipped);
-											}
+                                            if (Character != null)
+                                            {
+                                                if (Character.IsEquipped(CurrentItemInstance))
+                                                {
+                                                    active = gem.MeetsRequirements(Character);
+                                                }
+                                                else
+                                                {
+                                                    Character.CharacterSlot slotToEquip = CurrentSlot;
+                                                    if (slotToEquip == Character.CharacterSlot.None)
+                                                        slotToEquip = Character.GetCharacterSlotByItemSlot(CurrentItemInstance.Slot);
+                                                    Character characterWithItemEquipped = Character.Clone();
+                                                    characterWithItemEquipped[slotToEquip] = CurrentItemInstance;
+                                                    active = gem.MeetsRequirements(characterWithItemEquipped);
+                                                }
+                                            }
 
                                             string[] stats = gem.Stats.ToString().Split(',');
 
