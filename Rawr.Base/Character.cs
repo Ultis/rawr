@@ -561,20 +561,49 @@ namespace Rawr //O O . .
                     {
                         // we have an available item that might be filtered out
                         Item item = ItemCache.FindItemById(int.Parse(ids[0]));
-                        if (item != null && !itemChecked.ContainsKey(item.Id))
+                        if (item != null)
                         {
                             if (item.FitsInSlot(slot, this))
                             {
+                                bool check = itemChecked.ContainsKey(item.Id);
+                                Enchant enchant;
+                                if (ids.Length < 5 || ids[4] == "*")
+                                {
+                                    if (check)
+                                    {
+                                        // we've already processed this one
+                                        continue;
+                                    }
+                                    enchant = GetEnchantBySlot(slot);
+                                }
+                                else
+                                {
+                                    if (check && int.Parse(ids[4]) == GetEnchantBySlot(slot).Id)
+                                    {
+                                        continue;
+                                    }
+                                    enchant = Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, this);
+                                }
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
                                 foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
                                 {
                                     if (template.Enabled)
                                     {
-                                        ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+                                        ItemInstance instance = template.GetItemInstance(item, enchant, blacksmithingSocket);
                                         if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                     }
                                 }
-                                items.AddRange(itemInstances);
+                                if (check)
+                                {
+                                    foreach (ItemInstance instance in itemInstances)
+                                    {
+                                        if (!items.Contains(instance)) items.Add(instance);
+                                    }
+                                }
+                                else
+                                {
+                                    items.AddRange(itemInstances);
+                                }
                             }
                             itemChecked[item.Id] = true;
                         }
