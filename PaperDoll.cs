@@ -35,10 +35,22 @@ namespace Rawr
             set { itemButtonHead.SelectedItem = value; itemButtonHead.UpdateSelectedItem(); }
         }
 
+        public bool HeadHidden
+        {
+            get { return itemButtonHead.ItemHidden; }
+            set { itemButtonHead.ItemHidden = value; }
+        }
+
         public ItemInstance Neck
         {
             get { return Character.Neck ?? new ItemInstance(); }
             set { itemButtonNeck.SelectedItemInstance = value; itemButtonNeck.UpdateSelectedItem(); }
+        }
+
+        public bool NeckHidden
+        {
+            get { return itemButtonNeck.ItemHidden; }
+            set { itemButtonNeck.ItemHidden = value; }
         }
 
         public ItemInstance Shoulders
@@ -47,10 +59,22 @@ namespace Rawr
             set { itemButtonShoulders.SelectedItem = value; itemButtonShoulders.UpdateSelectedItem(); }
         }
 
+        public bool ShouldersHidden
+        {
+            get { return itemButtonShoulders.ItemHidden; }
+            set { itemButtonShoulders.ItemHidden = value; }
+        }
+
         public ItemInstance Back
         {
             get { return Character.Back ?? new ItemInstance(); }
             set { itemButtonBack.SelectedItem = value; itemButtonBack.UpdateSelectedItem(); }
+        }
+
+        public bool BackHidden
+        {
+            get { return itemButtonBack.ItemHidden; }
+            set { itemButtonBack.ItemHidden = value; }
         }
 
         public ItemInstance Chest
@@ -59,10 +83,22 @@ namespace Rawr
             set { itemButtonChest.SelectedItem = value; itemButtonChest.UpdateSelectedItem(); }
         }
 
+        public bool ChestHidden
+        {
+            get { return itemButtonChest.ItemHidden; }
+            set { itemButtonChest.ItemHidden = value; }
+        }
+
         public ItemInstance Shirt
         {
             get { return Character.Shirt ?? new ItemInstance(); }
             set { itemButtonShirt.SelectedItemInstance = value; itemButtonShirt.UpdateSelectedItem(); }
+        }
+
+        public bool ShirtHidden
+        {
+            get { return itemButtonShirt.ItemHidden; }
+            set { itemButtonShirt.ItemHidden = value; }
         }
 
         public ItemInstance Tabard
@@ -71,10 +107,22 @@ namespace Rawr
             set { itemButtonTabard.SelectedItemInstance = value; itemButtonTabard.UpdateSelectedItem(); }
         }
 
+        public bool TabardHidden
+        {
+            get { return itemButtonTabard.ItemHidden; }
+            set { itemButtonTabard.ItemHidden = value; }
+        }
+
         public ItemInstance Wrist
         {
             get { return Character.Wrist ?? new ItemInstance(); }
             set { itemButtonWrist.SelectedItem = value; itemButtonWrist.UpdateSelectedItem(); }
+        }
+
+        public bool WristHidden
+        {
+            get { return itemButtonWrist.ItemHidden; }
+            set { itemButtonWrist.ItemHidden = value; }
         }
 
         public ItemInstance MainHand
@@ -83,10 +131,22 @@ namespace Rawr
             set { itemButtonMainHand.SelectedItem = value; itemButtonMainHand.UpdateSelectedItem(); }
         }
 
+        public bool MainHandHidden
+        {
+            get { return itemButtonMainHand.ItemHidden; }
+            set { itemButtonMainHand.ItemHidden = value; }
+        }
+
         public ItemInstance OffHand
         {
             get { return Character.OffHand ?? new ItemInstance(); }
             set { itemButtonOffHand.SelectedItem = value; itemButtonOffHand.UpdateSelectedItem(); }
+        }
+
+        public bool OffHandHidden
+        {
+            get { return itemButtonOffHand.ItemHidden; }
+            set { itemButtonOffHand.ItemHidden = value; }
         }
 
         public ItemInstance Ranged
@@ -95,10 +155,22 @@ namespace Rawr
             set { itemButtonRanged.SelectedItem = value; itemButtonRanged.UpdateSelectedItem(); }
         }
 
+        public bool RangedHidden
+        {
+            get { return itemButtonRanged.ItemHidden; }
+            set { itemButtonRanged.ItemHidden = value; }
+        }
+
         public ItemInstance Projectile
         {
             get { return Character.Projectile ?? new ItemInstance(); }
             set { itemButtonProjectile.SelectedItemInstance = value; itemButtonProjectile.UpdateSelectedItem(); }
+        }
+
+        public bool ProjectileHidden
+        {
+            get { return itemButtonProjectile.ItemHidden; }
+            set { itemButtonProjectile.ItemHidden = value; }
         }
 
         public ItemInstance ProjectileBag
@@ -107,10 +179,22 @@ namespace Rawr
             set { itemButtonProjectileBag.SelectedItemInstance = value; itemButtonProjectileBag.UpdateSelectedItem(); }
         }
 
+        public bool ProjectileBagHidden
+        {
+            get { return itemButtonProjectileBag.ItemHidden; }
+            set { itemButtonProjectileBag.ItemHidden = value; }
+        }
+
         public ItemInstance Hands
         {
             get { return Character.Hands ?? new ItemInstance(); }
             set { itemButtonHands.SelectedItem = value; itemButtonHands.UpdateSelectedItem(); }
+        }
+
+        public bool HandsHidden
+        {
+            get { return itemButtonHands.ItemHidden; }
+            set { itemButtonHands.ItemHidden = value; }
         }
 
         public ItemInstance Waist
@@ -119,10 +203,22 @@ namespace Rawr
             set { itemButtonWaist.SelectedItemInstance = value; itemButtonWaist.UpdateSelectedItem(); }
         }
 
+        public bool WaistHidden
+        {
+            get { return itemButtonWaist.ItemHidden; }
+            set { itemButtonWaist.ItemHidden = value; }
+        }
+
         public ItemInstance Legs
         {
             get { return Character.Legs ?? new ItemInstance(); }
             set { itemButtonLegs.SelectedItem = value; itemButtonLegs.UpdateSelectedItem(); }
+        }
+
+        public bool LegsHidden
+        {
+            get { return itemButtonLegs.ItemHidden; }
+            set { itemButtonLegs.ItemHidden = value; }
         }
 
         public ItemInstance Feet
@@ -131,10 +227,22 @@ namespace Rawr
             set { itemButtonFeet.SelectedItem = value; itemButtonFeet.UpdateSelectedItem(); }
         }
 
+        public bool FeetHidden
+        {
+            get { return itemButtonFeet.ItemHidden; }
+            set { itemButtonFeet.ItemHidden = value; }
+        }
+
         public ItemInstance Finger1
         {
             get { return Character.Finger1 ?? new ItemInstance(); }
             set { itemButtonFinger1.SelectedItem = value; itemButtonFinger1.UpdateSelectedItem(); }
+        }
+
+        public bool Finger1Hidden
+        {
+            get { return itemButtonFinger1.ItemHidden; }
+            set { itemButtonFinger1.ItemHidden = value; }
         }
 
         public ItemInstance Finger2
@@ -143,16 +251,34 @@ namespace Rawr
             set { itemButtonFinger2.SelectedItem = value; itemButtonFinger2.UpdateSelectedItem(); }
         }
 
+        public bool Finger2Hidden
+        {
+            get { return itemButtonFinger2.ItemHidden; }
+            set { itemButtonFinger2.ItemHidden = value; }
+        }
+
         public ItemInstance Trinket1
         {
             get { return Character.Trinket1 ?? new ItemInstance(); }
             set { itemButtonTrinket1.SelectedItemInstance = value; itemButtonTrinket1.UpdateSelectedItem(); }
         }
 
+        public bool Trinket1Hidden
+        {
+            get { return itemButtonTrinket1.ItemHidden; }
+            set { itemButtonTrinket1.ItemHidden = value; }
+        }
+
         public ItemInstance Trinket2
         {
             get { return Character.Trinket2 ?? new ItemInstance(); }
             set { itemButtonTrinket2.SelectedItemInstance = value; itemButtonTrinket2.UpdateSelectedItem(); }
+        }
+
+        public bool Trinket2Hidden
+        {
+            get { return itemButtonTrinket2.ItemHidden; }
+            set { itemButtonTrinket2.ItemHidden = value; }
         }
         #endregion
 

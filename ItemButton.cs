@@ -138,6 +138,20 @@ namespace Rawr
 			}
 		}
 
+        private bool itemHidden;
+        public bool ItemHidden
+        {
+            get
+            {
+                return itemHidden;
+            }
+            set
+            {
+                itemHidden = value;
+                UpdateSelectedItem();
+            }
+        }
+
 		public void UpdateSelectedItem()
 		{
 			if (Character != null)
@@ -154,7 +168,14 @@ namespace Rawr
 			}
 			this.Text = string.Empty;
             UpdateDim();
-            this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem, this.Width < 64) : null;
+            if (ItemHidden)
+            {
+                this.ItemIcon = null;
+            }
+            else
+            {
+                this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem, this.Width < 64) : null;
+            }
 		}
 
 		public event EventHandler SelectedItemChanged;

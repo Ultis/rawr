@@ -78,15 +78,35 @@ namespace Rawr
             }
 		}
 
+        public bool ItemHidden
+        {
+            get
+            {
+                return itemButtonItem.ItemHidden;
+            }
+            set
+            {
+                itemButtonItem.ItemHidden = value;
+                UpdateSelectedItem();
+            }
+        }
+
 		public void UpdateSelectedItem()
 		{
-            if (Width < 50 || Height < 60)
+            if (ItemHidden)
             {
-                if (SelectedEnchant == null) buttonEnchant.Text = "";
-                else buttonEnchant.Text = SelectedEnchant.ReallyShortName;
+                buttonEnchant.Text = "";
             }
-            else if (SelectedEnchant == null) buttonEnchant.Text = ""; 
-            else buttonEnchant.Text = SelectedEnchant.ShortName;
+            else
+            {
+                if (Width < 50 || Height < 60)
+                {
+                    if (SelectedEnchant == null) buttonEnchant.Text = "";
+                    else buttonEnchant.Text = SelectedEnchant.ReallyShortName;
+                }
+                else if (SelectedEnchant == null) buttonEnchant.Text = "";
+                else buttonEnchant.Text = SelectedEnchant.ShortName;
+            }
             itemButtonItem.UpdateSelectedItem();
 		}
 

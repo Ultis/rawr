@@ -23,127 +23,134 @@ namespace Rawr
         private void RemoveUnchangedItems()
         {
             Enchant noEnchant = Enchant.FindEnchant(0, Item.ItemSlot.None, paperDollBefore.Character);
-            paperDollBefore.Shirt  = null;
-            paperDollBefore.Tabard = null;
-            paperDollAfter.Shirt = null;
-            paperDollAfter.Tabard = null;
+            paperDollBefore.ShirtHidden = true;
+            paperDollBefore.TabardHidden = true;
+            paperDollAfter.ShirtHidden = true;
+            paperDollAfter.TabardHidden = true;
 
             if (paperDollBefore.Head.Equals(paperDollAfter.Head))
             {
-                paperDollBefore.Head = null;
-                paperDollAfter.Head = null;
+                paperDollBefore.HeadHidden = true;
+                paperDollAfter.HeadHidden = true;
             }
             if (paperDollBefore.Neck.Equals(paperDollAfter.Neck))
             {
-                paperDollBefore.Neck = null;
-                paperDollAfter.Neck = null;
+                paperDollBefore.NeckHidden = true;
+                paperDollAfter.NeckHidden = true;
             }
             if (paperDollBefore.Shoulders.Equals(paperDollAfter.Shoulders))
             {
-                paperDollBefore.Shoulders = null;
-                paperDollAfter.Shoulders = null;
+                paperDollBefore.ShouldersHidden = true;
+                paperDollAfter.ShouldersHidden = true;
             }
             if (paperDollBefore.Back.Equals(paperDollAfter.Back))
             {
-                paperDollBefore.Back = null;
-                paperDollAfter.Back = null;
+                paperDollBefore.BackHidden = true;
+                paperDollAfter.BackHidden = true;
             }
             if (paperDollBefore.Chest.Equals(paperDollAfter.Chest))
             {
-                paperDollBefore.Chest = null;
-                paperDollAfter.Chest = null;
+                paperDollBefore.ChestHidden = true;
+                paperDollAfter.ChestHidden = true;
             }
             if (paperDollBefore.Wrist.Equals(paperDollAfter.Wrist))
             {
-                paperDollBefore.Wrist = null;
-                paperDollAfter.Wrist = null;
+                paperDollBefore.WristHidden = true;
+                paperDollAfter.WristHidden = true;
             }
             if (paperDollBefore.MainHand.Equals(paperDollAfter.MainHand))
             {
-                paperDollBefore.MainHand = null;
-                paperDollAfter.MainHand = null;
+                paperDollBefore.MainHandHidden = true;
+                paperDollAfter.MainHandHidden = true;
             }
             if (paperDollBefore.OffHand.Equals(paperDollAfter.OffHand))
             {
-                paperDollBefore.OffHand = null;
-                paperDollAfter.OffHand = null;
+                paperDollBefore.OffHandHidden = true;
+                paperDollAfter.OffHandHidden = true;
             }
             if (paperDollBefore.Ranged.Equals(paperDollAfter.Ranged))
             {
-                paperDollBefore.Ranged = null;
-                paperDollAfter.Ranged = null;
+                paperDollBefore.RangedHidden = true;
+                paperDollAfter.RangedHidden = true;
             }
             if (paperDollBefore.Projectile.Equals(paperDollAfter.Projectile))
             {
-                paperDollBefore.Projectile = null;
-                paperDollAfter.Projectile = null;
+                paperDollBefore.ProjectileHidden = true;
+                paperDollAfter.ProjectileHidden = true;
             }
             if (paperDollBefore.ProjectileBag.Equals(paperDollAfter.ProjectileBag))
             {
-                paperDollBefore.ProjectileBag = null;
-                paperDollAfter.ProjectileBag = null;
+                paperDollBefore.ProjectileBagHidden = true;
+                paperDollAfter.ProjectileBagHidden = true;
             }
             if (paperDollBefore.Hands.Equals(paperDollAfter.Hands))
             {
-                paperDollBefore.Hands = null;
-                paperDollAfter.Hands = null;
+                paperDollBefore.HandsHidden = true;
+                paperDollAfter.HandsHidden = true;
             }
             if (paperDollBefore.Waist.Equals(paperDollAfter.Waist))
             {
-                paperDollBefore.Waist = null;
-                paperDollAfter.Waist = null;
+                paperDollBefore.WaistHidden = true;
+                paperDollAfter.WaistHidden = true;
             }
             if (paperDollBefore.Legs.Equals(paperDollAfter.Legs))
             {
-                paperDollBefore.Legs = null;
-                paperDollAfter.Legs = null;
+                paperDollBefore.LegsHidden = true;
+                paperDollAfter.LegsHidden = true;
             }
             if (paperDollBefore.Feet.Equals(paperDollAfter.Feet))
             {
-                paperDollBefore.Feet = null;
-                paperDollAfter.Feet = null;
+                paperDollBefore.FeetHidden = true;
+                paperDollAfter.FeetHidden = true;
             }
             if (paperDollBefore.Finger1.Equals(paperDollAfter.Finger1))
             {
-                paperDollBefore.Finger1 = null;
-                paperDollAfter.Finger1 = null;
+                paperDollBefore.Finger1Hidden = true;
+                paperDollAfter.Finger1Hidden = true;
             }
             if (paperDollBefore.Finger2.Equals(paperDollAfter.Finger2))
             {
-                paperDollBefore.Finger2 = null;
-                paperDollAfter.Finger2 = null;
+                paperDollBefore.Finger2Hidden = true;
+                paperDollAfter.Finger2Hidden = true;
             }
             if (paperDollBefore.Trinket1.Equals(paperDollAfter.Trinket1))
             {
-                paperDollBefore.Trinket1 = null;
-                paperDollAfter.Trinket1 = null;
+                paperDollBefore.Trinket1Hidden = true;
+                paperDollAfter.Trinket1Hidden = true;
             }
             if (paperDollBefore.Trinket2.Equals(paperDollAfter.Trinket2))
             {
-                paperDollBefore.Trinket2 = null;
-                paperDollAfter.Trinket2 = null;
+                paperDollBefore.Trinket2Hidden = true;
+                paperDollAfter.Trinket2Hidden = true;
             }
 
             // now check swapped slot rings & trinkets
             if (paperDollBefore.Finger1.Equals(paperDollAfter.Finger2))
             {
-                paperDollBefore.Finger1 = null;
-                paperDollAfter.Finger2 = null;
+                paperDollBefore.Finger1Hidden = true;
+                paperDollAfter.Finger2Hidden = true;
             }
             if (paperDollBefore.Finger2.Equals(paperDollAfter.Finger1))
             {
-                paperDollBefore.Finger2 = null;
-                paperDollAfter.Finger1 = null;
+                paperDollBefore.Finger2Hidden = true;
+                paperDollAfter.Finger1Hidden = true;
             }
             if (paperDollBefore.Trinket1.Equals(paperDollAfter.Trinket2))
             {
-                paperDollBefore.Trinket1 = null;
-                paperDollAfter.Trinket2 = null;
+                paperDollBefore.Trinket1Hidden = true;
+                paperDollAfter.Trinket2Hidden = true;
             }
             if (paperDollBefore.Trinket2.Equals(paperDollAfter.Trinket1))
             {
-                paperDollBefore.Trinket2 = null;
-                paperDollAfter.Trinket1 = null;
+                paperDollBefore.Trinket2Hidden = true;
+                paperDollAfter.Trinket1Hidden = true;
+            }
+
+            // also hide offhands if they're not actually used
+            if (!Calculations.IncludeOffHandInCalculations(paperDollBefore.Character) && !Calculations.IncludeOffHandInCalculations(paperDollAfter.Character))
+            {
+                paperDollBefore.OffHandHidden = true;
+                paperDollAfter.OffHandHidden = true;
             }
         }
 
