@@ -451,8 +451,11 @@ namespace Rawr
                         if (!map.TryGetValue(key, out upgradeEntry))
                         {
                             upgradeEntry = new UpgradeEntry();
-                            upgradeEntry.Item = null;
                             map[key] = upgradeEntry;
+                        }
+                        if (upgradeListPhase == 1)
+                        {
+                            upgradeEntry.Item = optimizedItemInstance;
                         }
                         upgradeEntry.ValueList.Add(0.0f);
                     }
