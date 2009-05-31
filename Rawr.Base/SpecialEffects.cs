@@ -576,7 +576,7 @@ namespace Rawr
             // Wrath of Cenarius
             else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 132 for 10 sec."))
             {
-                stats.SpellDamageFor10SecOnHit_5 += 132;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 132 }, 10, 0, 0.05f));
             }
             else if (line == "Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.")
             {   //Bandit's Insignia
@@ -707,7 +707,8 @@ namespace Rawr
             { //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.
                 line = line.Substring("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for ".Length);
                 line = line.Replace(" sec.", "");
-                stats.BangleProc += (float)int.Parse(line);
+                //stats.BangleProc += (float)int.Parse(line);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellCombatManaRegeneration = 0.1f }, 15.0f, 45.0f));
             }
             else if (line.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec."))
             {
@@ -1274,7 +1275,8 @@ namespace Rawr
             }
             else if (line.StartsWith("Gain 250 mana each sec. for "))
             {
-                stats.ManaregenFor8SecOnUse5Min += 250;
+                //stats.ManaregenFor8SecOnUse5Min += 250;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Mp5 = 250 * 5 }, 8.0f, 300.0f));
             }
             else if (line.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains 320 spell power."))
             {
@@ -1307,10 +1309,6 @@ namespace Rawr
 				{
 					stats.ManacostReduceWithin15OnUse1Min += (float)int.Parse(m.Groups["mana"].Value);
 				}
-			}
-			else if (line.StartsWith("Gain 250 mana each sec. for "))
-			{
-				stats.ManaregenFor8SecOnUse5Min += 250;
 			}
 			else if (line.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains 320 spell power."))
 			{

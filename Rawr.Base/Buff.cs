@@ -1239,9 +1239,9 @@ namespace Rawr
             {
                 Name = "Elixir of Demonslaying",
                 Group = "Elixirs and Flasks",
-                Stats = { AttackPower = 265 },
+                Stats = { AttackPowerDemons = 265 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of Demonslaying (Mixology)", Stats = { AttackPower = 88 } } }
+                Improvements = { new Buff { Name = "Elixir of Demonslaying (Mixology)", Stats = { AttackPowerDemons = 88 } } }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1846,7 +1846,7 @@ namespace Rawr
                 Name = "Spellstrike 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SpellDamageFor10SecOnHit_5 = 92 },
+                Stats = { },
                 SetName = "Spellstrike Infusion",
                 SetThreshold = 2
             });

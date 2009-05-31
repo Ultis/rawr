@@ -16,6 +16,7 @@ namespace Rawr {
         ArmorPenetrationRating,
         AshtongueTrinketProc,
         AttackPower,
+        AttackPowerDemons,
         AverageAgility,
         AverageArmor,
         BaseAgility,
@@ -115,10 +116,8 @@ namespace Rawr {
         SpellPowerFor10SecOnHeal_10_45,
         SpellPowerFor10SecOnCast_10_45,
         SpellPowerFor10SecOnCast_15_45,
-        SpellDamageFor10SecOnHit_5,
         SpellPowerFor10SecOnResist,
         SpellPowerFor15SecOnCrit_20_45,
-        SpellPowerFor15SecOnCast_50_45,
         SpellPowerFor15SecOnUse90Sec,
         SpellPowerFor15SecOnUse2Min,
         SpellPowerFor20SecOnUse2Min,
@@ -170,12 +169,10 @@ namespace Rawr {
         RejuvenationSpellpower,
         LifebloomTickHealBonus,
         HealingTouchFinalHealBonus,
-        ManaregenFor8SecOnUse5Min,
         SpiritFor20SecOnUse2Min,
         ManaregenOver12SecOnUse3Min,
         ManaregenOver12SecOnUse5Min,
         ManacostReduceWithin15OnHealingCast,
-        BangleProc,
         FullManaRegenFor15SecOnSpellcast,
         SpellPower,
         BonusRageOnCrit,
@@ -655,6 +652,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AttackPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.AttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Misc")]
+        public float AttackPowerDemons
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AttackPowerDemons]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AttackPowerDemons] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2051,16 +2056,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.Mp5OnCastFor20SecOnUse2Min] = value; }
         }
 
-        // 5% chance, no cooldown
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec)")]
-        [Category("Old Equipment Procs")]
-        public float SpellDamageFor10SecOnHit_5
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnHit_5]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnHit_5] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mana Gem Effect")]
         [Category("Mage")]
@@ -2128,16 +2123,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCrit_20_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCrit_20_45] = value; }
-        }
-
-        // 50% chance, 45 sec internal cooldown
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (15 sec)")]
-        [Category("Old Equipment Procs")]
-        public float SpellPowerFor15SecOnCast_50_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCast_50_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCast_50_45] = value; }
         }
 
         // 20% chance, 45 sec internal cooldown
@@ -2854,16 +2839,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
         }
 
-        /* Regen trinkets */
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana each sec. for 8 sec. (5 min cd)")]
-        [Category("Old Equipment Procs")]
-        public float ManaregenFor8SecOnUse5Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenFor8SecOnUse5Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaregenFor8SecOnUse5Min] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spirit for 20 sec. (2 min cd)")]
         [Category("Old Equipment Procs")]
@@ -2907,15 +2882,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Bangle Proc")]
-        [Category("Old Equipment Procs")]
-        public float BangleProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BangleProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BangleProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
