@@ -527,8 +527,7 @@ namespace Rawr.Healadin
 
         private bool HasWantedStats(Stats stats)
         {
-            return (stats.SpellCrit + stats.SpellHaste
-                + stats.PhysicalHit + stats.GreatnessProc + stats.BonusHoTOnDirectHeals + stats.Mana
+            return (stats.SpellCrit + stats.SpellHaste  + stats.PhysicalHit + stats.Mana
                 + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit +
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
