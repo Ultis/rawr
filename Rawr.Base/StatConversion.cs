@@ -633,14 +633,7 @@ namespace Rawr
                     break;
                 case HitResult.Parry:
                     baseAvoid = stats.Parry * 100f - levelModifier;
-                    // Need to ensure that for DKs we include Parry from str effected by DR.
-                    float parryRatingFromStr = 0f;
-                    if (character.Class == Character.CharacterClass.DeathKnight)
-                    {
-                        // Talent: Unbreakable Armor specific number.
-                        float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
-                        parryRatingFromStr = stats.Strength * (1.0f + uaUptime) * 0.25f;
-                    }
+                    float parryRatingFromStr = stats.Strength * 0.25f;
                     modifiedAvoid += (GetParryFromRating(stats.ParryRating + parryRatingFromStr) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
                     break;
