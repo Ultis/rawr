@@ -715,13 +715,10 @@ namespace Rawr.ShadowPriest
                 Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
-                SpellCritRating = stats.SpellCritRating,
                 CritRating = stats.CritRating,
                 SpellCrit = stats.SpellCrit,
-                SpellHitRating = stats.SpellHitRating,
                 HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
-                SpellHasteRating = stats.SpellHasteRating,
                 SpellHaste = stats.SpellHaste,
                 HasteRating = stats.HasteRating,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
@@ -805,9 +802,9 @@ namespace Rawr.ShadowPriest
         {
             bool Yes = (
                 stats.Intellect + stats.Mana + stats.Spirit + stats.Mp5 + stats.SpellPower
-                + stats.SpellShadowDamageRating + stats.SpellCritRating + stats.CritRating
-                + stats.SpellCrit + stats.SpellHitRating + stats.HitRating + stats.SpellHit
-                + stats.SpellHasteRating + stats.SpellHaste + stats.HasteRating
+                + stats.SpellShadowDamageRating + stats.CritRating
+                + stats.SpellCrit + stats.HitRating + stats.SpellHit
+                + stats.SpellHaste + stats.HasteRating
 
                 + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
                 + stats.BonusIntellectMultiplier + stats.BonusManaPotion
@@ -817,7 +814,7 @@ namespace Rawr.ShadowPriest
 
                 + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
                 + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
-                + stats.WeakenedSoulDurationDecrease + stats.ManaRestoreOnCast_5_15
+                + stats.WeakenedSoulDurationDecrease
                 + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
                 + stats.ManaRestoreFromBaseManaPerHit + stats.BonusSpellCritMultiplier
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat

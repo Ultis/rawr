@@ -170,7 +170,7 @@ namespace Rawr.ShadowPriest
                 if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
                     return spell;
                 if (spell.SpellStatistics.CooldownReset > 0 
-                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 1.5/2))
+                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown))
                     return null;
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
