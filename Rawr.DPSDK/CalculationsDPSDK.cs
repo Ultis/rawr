@@ -1326,8 +1326,6 @@ namespace Rawr.DPSDK
             statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsBaseGear.ExpertiseRating);
 
-            if (statsTotal.GreatnessProc > 0)
-                statsGearEnchantsBuffs.Strength += statsTotal.GreatnessProc * 15f / 45f;
 
             StatsSpecialEffects.combatTable = new CombatTable(character, statsTotal, calcOpts);
 
@@ -1546,7 +1544,6 @@ namespace Rawr.DPSDK
                 //HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
-                SpellHasteRating = stats.SpellHasteRating,
                 SpellHaste = stats.SpellHaste,
 
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -1559,7 +1556,6 @@ namespace Rawr.DPSDK
 
                 LotPCritRating = stats.LotPCritRating,
                 CritMeleeRating = stats.CritMeleeRating,
-                WindfuryAPBonus = stats.WindfuryAPBonus,
                 Bloodlust = stats.Bloodlust,
 
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
@@ -1661,7 +1657,7 @@ namespace Rawr.DPSDK
                 stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.ShadowDamage +
-                stats.CritMeleeRating + stats.BonusShadowDamageMultiplier + stats.SpellHaste + stats.SpellHasteRating
+                stats.CritMeleeRating + stats.BonusShadowDamageMultiplier + stats.SpellHaste
                 + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
                 + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
                 + stats.BonusBloodStrikeDamage + stats.BonusDeathCoilDamage + stats.BonusDeathStrikeDamage + stats.BonusFrostStrikeDamage

@@ -85,15 +85,5 @@ namespace Rawr.DPSDK
         
             return statsAverage;
         }
-
-        public static void GreatnessProc()
-        {
-            //trinket procs
-            if (stats.GreatnessProc > 0)
-            {
-                float expectedStr = (float)Math.Floor(stats.Strength * (1 + stats.BonusStrengthMultiplier));
-                stats.Strength += stats.GreatnessProc * 15f / 45f;
-            }
-        }
     }
 }
