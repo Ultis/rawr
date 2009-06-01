@@ -204,9 +204,6 @@ namespace Rawr.Rogue
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
-            // Haste trinket (Meteorite Whetstone)
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
-
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
@@ -241,8 +238,6 @@ namespace Rawr.Rogue
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
-
-            statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
 
             // T4 bonuses
             statsTotal.BonusSnDDuration = statsGearEnchantsBuffs.BonusSnDDuration;
@@ -364,15 +359,12 @@ namespace Rawr.Rogue
                            Health = stats.Health,
                            ExposeWeakness = stats.ExposeWeakness,
                            Bloodlust = stats.Bloodlust,
-                           DrumsOfBattle = stats.DrumsOfBattle,
-                           DrumsOfWar = stats.DrumsOfWar,
                            ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                            PhysicalHaste = stats.PhysicalHaste,
                            PhysicalHit = stats.PhysicalHit,
                            PhysicalCrit = stats.PhysicalCrit,
                            HighestStat = stats.HighestStat,
-                           WindfuryAPBonus = stats.WindfuryAPBonus,
-
+                           
                            AllResist = stats.AllResist,
                            ArcaneResistance = stats.ArcaneResistance,
                            NatureResistance = stats.NatureResistance,
@@ -424,14 +416,11 @@ namespace Rawr.Rogue
                     stats.Health +
                     stats.ExposeWeakness +
                     stats.Bloodlust +
-                    stats.DrumsOfBattle +
-                    stats.DrumsOfWar +
                     stats.ThreatReductionMultiplier +
                     stats.PhysicalHaste +
                     stats.PhysicalHit +
                     stats.PhysicalCrit +
                     stats.HighestStat +
-                    stats.WindfuryAPBonus +
 
                     stats.AllResist +
                     stats.ArcaneResistance +
