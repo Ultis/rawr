@@ -817,8 +817,6 @@ namespace Rawr.Cat
 					TigersFuryCooldownReduction = stats.TigersFuryCooldownReduction,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
-					DrumsOfBattle = stats.DrumsOfBattle,
-					DrumsOfWar = stats.DrumsOfWar,
 					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 					PhysicalHaste = stats.PhysicalHaste,
 					PhysicalHit = stats.PhysicalHit,
