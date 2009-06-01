@@ -1,4 +1,6 @@
-﻿namespace Rawr.Rogue
+﻿using Rawr.Rogue.ClassAbilities;
+
+namespace Rawr.Rogue
 {
     public class WhiteAttacks
     {
@@ -29,20 +31,22 @@
             get { return OhSwingsPerSecond * _combatFactors.ProbOhCrit; }
         }
 
-        public float CalcMhWhiteDPS()
+        public float CalcMhWhiteDps()
         {
             var dps = _combatFactors.MhAvgDamage * 0.75f * _combatFactors.ProbGlancingHit;
             dps += _combatFactors.MhAvgDamage * _combatFactors.BaseCritMultiplier * _combatFactors.ProbMhCrit;
             dps += _combatFactors.MhAvgDamage * _combatFactors.ProbMhWhiteHit;
-            return dps*MhSwingsPerSecond*_combatFactors.DamageReduction;
+            var mhDps = dps * MhSwingsPerSecond * _combatFactors.DamageReduction;
+            return mhDps * (1f + Talents.Add(Talents.FindWeakness, Talents.HungerForBlood.Damage));
         }
 
-        public float CalcOhWhiteDPS()
+        public float CalcOhWhiteDps()
         {
             var dps = _combatFactors.OhAvgDamage * 0.75f * _combatFactors.ProbGlancingHit;
             dps += _combatFactors.OhAvgDamage * _combatFactors.BaseCritMultiplier * _combatFactors.ProbOhCrit;
             dps += _combatFactors.OhAvgDamage * _combatFactors.ProbOhWhiteHit;
-            return dps*OhSwingsPerSecond*_combatFactors.DamageReduction;
+            var ohDps = dps * OhSwingsPerSecond * _combatFactors.DamageReduction;
+            return ohDps * (1f + Talents.Add(Talents.FindWeakness, Talents.HungerForBlood.Damage));
         }
 
         private float MhSwingsPerSecond
@@ -52,7 +56,7 @@
 
         private float OhSwingsPerSecond
         {
-			get { return (1f / _combatFactors.MainHand.Speed) * _combatFactors.BaseHaste; }
+			get { return (1f / _combatFactors.OffHand.Speed) * _combatFactors.BaseHaste; }
         }
     }
 }

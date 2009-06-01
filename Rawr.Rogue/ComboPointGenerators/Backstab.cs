@@ -8,28 +8,25 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public override string Name { get { return "Backstab"; } }
 
-        public override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
             return 60f * combatFactors.Tier7FourPieceEnergyCostReduction
-                - Talents.SlaughterFromTheShadows.BackstabAndAmbushEnergyCost.Bonus 
-                - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus);  
+                - Talents.SlaughterFromTheShadows.BackstabAndAmbushEnergyCost.Bonus
+                - (Crit(combatFactors, calcOpts) * Talents.FocusedAttacks.Bonus);  
         }
 
-        public override float Crit(CombatFactors combatFactors)
+        public override float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
-            return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.Backstab.Bonus) * combatFactors.ProbYellowHit;
+            return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.Backstab.Bonus + CritBonusFromTurnTheTables(calcOpts)) * combatFactors.ProbYellowHit;
         }
 
-        public override float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
+        public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
-			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.Aggression, Talents.BladeTwisting, Talents.SurpriseAttacks, Talents.Opportunity));
-            baseDamage *= Talents.DirtyDeeds.Multiplier;
-    		baseDamage *= Talents.FindWeakness.Multiplier;
+			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.Aggression, Talents.BladeTwisting, Talents.SurpriseAttacks, Talents.Opportunity, Talents.DirtyDeeds, Talents.HungerForBlood.Damage));
             baseDamage *= combatFactors.DamageReduction;
-
-            var critDamage = baseDamage*CriticalDamageMultiplier(combatFactors)*Crit(combatFactors);
-            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
+            var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors, calcOpts);
+            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors, calcOpts), 0);
 
             return (critDamage + nonCritDamage) * calcOpts.ComboPointsNeededForCycle() / cycleTime.Duration;
         }

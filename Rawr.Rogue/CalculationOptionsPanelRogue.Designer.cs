@@ -56,6 +56,9 @@
             this.CpPerSecLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.UseTurnTheTables = new System.Windows.Forms.CheckBox();
+            this.TurnTheTablesNumericStepperLabel = new System.Windows.Forms.Label();
+            this.TurnTheTablesUptimePercent = new System.Windows.Forms.NumericUpDown();
             this.FeintDelayLabel = new System.Windows.Forms.Label();
             this.FeintDelayStepper = new System.Windows.Forms.NumericUpDown();
             this.Feint = new System.Windows.Forms.CheckBox();
@@ -66,6 +69,7 @@
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HemoPerCycle)).BeginInit();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TurnTheTablesUptimePercent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FeintDelayStepper)).BeginInit();
             this.SuspendLayout();
             // 
@@ -415,6 +419,9 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.UseTurnTheTables);
+            this.groupBox5.Controls.Add(this.TurnTheTablesNumericStepperLabel);
+            this.groupBox5.Controls.Add(this.TurnTheTablesUptimePercent);
             this.groupBox5.Controls.Add(this.FeintDelayLabel);
             this.groupBox5.Controls.Add(this.FeintDelayStepper);
             this.groupBox5.Controls.Add(this.Feint);
@@ -424,6 +431,41 @@
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Abilities";
+            // 
+            // UseTurnTheTables
+            // 
+            this.UseTurnTheTables.AutoSize = true;
+            this.UseTurnTheTables.Location = new System.Drawing.Point(11, 46);
+            this.UseTurnTheTables.Name = "UseTurnTheTables";
+            this.UseTurnTheTables.Size = new System.Drawing.Size(101, 17);
+            this.UseTurnTheTables.TabIndex = 5;
+            this.UseTurnTheTables.Text = "Turn the Tables";
+            this.UseTurnTheTables.UseVisualStyleBackColor = true;
+            this.UseTurnTheTables.CheckedChanged += new System.EventHandler(this.UseTurnTheTables_CheckedChanged);
+            // 
+            // TurnTheTablesNumericStepperLabel
+            // 
+            this.TurnTheTablesNumericStepperLabel.AutoSize = true;
+            this.TurnTheTablesNumericStepperLabel.Location = new System.Drawing.Point(126, 46);
+            this.TurnTheTablesNumericStepperLabel.Name = "TurnTheTablesNumericStepperLabel";
+            this.TurnTheTablesNumericStepperLabel.Size = new System.Drawing.Size(51, 13);
+            this.TurnTheTablesNumericStepperLabel.TabIndex = 4;
+            this.TurnTheTablesNumericStepperLabel.Text = "Uptime %";
+            this.TurnTheTablesNumericStepperLabel.Visible = false;
+            // 
+            // TurnTheTablesUptimePercent
+            // 
+            this.TurnTheTablesUptimePercent.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.TurnTheTablesUptimePercent.Location = new System.Drawing.Point(183, 44);
+            this.TurnTheTablesUptimePercent.Name = "TurnTheTablesUptimePercent";
+            this.TurnTheTablesUptimePercent.Size = new System.Drawing.Size(69, 20);
+            this.TurnTheTablesUptimePercent.TabIndex = 3;
+            this.TurnTheTablesUptimePercent.Visible = false;
+            this.TurnTheTablesUptimePercent.ValueChanged += new System.EventHandler(this.TurnTheTablesUptimePercent_ValueChanged);
             // 
             // FeintDelayLabel
             // 
@@ -491,6 +533,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.HemoPerCycle)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TurnTheTablesUptimePercent)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FeintDelayStepper)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -535,5 +578,8 @@
         private System.Windows.Forms.Label FeintDelayLabel;
         private System.Windows.Forms.NumericUpDown FeintDelayStepper;
         private System.Windows.Forms.CheckBox Feint;
+        private System.Windows.Forms.CheckBox UseTurnTheTables;
+        private System.Windows.Forms.Label TurnTheTablesNumericStepperLabel;
+        private System.Windows.Forms.NumericUpDown TurnTheTablesUptimePercent;
     }
 }

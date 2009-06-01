@@ -67,7 +67,7 @@ namespace Rawr.Rogue.ClassAbilities
             public static readonly Talents DeadlyPoisonApplication = new Talents(() => _talents.MasterPoisoner, .15f, .30f, .45f);
         }
 
-        public static readonly Talents TurnTheTables = new Talents(() => _talents.TurnTheTables, .2f, .4f, .6f);
+        public static readonly Talents TurnTheTables = new Talents(() => _talents.TurnTheTables, .02f, .04f, .06f);
         public static readonly Talents CutToTheChase = new Talents(() => _talents.CutToTheChase, .2f, .4f, .6f, .8f, 1f);
 
         public class HungerForBlood

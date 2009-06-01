@@ -95,7 +95,7 @@ namespace Rawr.Rogue
             var displayedValues = new CharacterCalculationsRogue(stats);
             var whiteAttacks = new WhiteAttacks(combatFactors);
             var cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
-            var cpgDps = calcOpts.CpGenerator.CalcCpgDPS(calcOpts, combatFactors, stats, cycleTime);
+            var cpgDps = calcOpts.CpGenerator.CalcCpgDps(calcOpts, combatFactors, stats, cycleTime);
 
             var totalFinisherDps = 0f;
             
@@ -110,7 +110,7 @@ namespace Rawr.Rogue
             var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, displayedValues, cycleTime);
             var sndUpTime = SnD.UpTime(calcOpts, cycleTime);
 
-            displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
+            displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDps() + whiteAttacks.CalcOhWhiteDps() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
             displayedValues.OverallPoints = displayedValues.TotalDPS;
 
             if (!needsDisplayCalculations)
@@ -151,14 +151,14 @@ namespace Rawr.Rogue
             
             displayedValues.AddRoundedDisplayValue(DisplayValue.SndUptime, sndUpTime*100f);
 
-            displayedValues.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors) * 100);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors, calcOpts) * 100);
             displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
             displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
             displayedValues.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
 
-            displayedValues.AddRoundedDisplayValue(DisplayValue.WhiteDps, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
-            displayedValues.AddToolTip(DisplayValue.WhiteDps, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
-            displayedValues.AddToolTip(DisplayValue.WhiteDps, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
+            displayedValues.AddRoundedDisplayValue(DisplayValue.WhiteDps, whiteAttacks.CalcMhWhiteDps() + whiteAttacks.CalcOhWhiteDps());
+            displayedValues.AddToolTip(DisplayValue.WhiteDps, "MH White DPS: " + whiteAttacks.CalcMhWhiteDps());
+            displayedValues.AddToolTip(DisplayValue.WhiteDps, "OH White DPS: " + whiteAttacks.CalcOhWhiteDps());
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.CpgDps, cpgDps);
             displayedValues.AddRoundedDisplayValue(DisplayValue.FinisherDps, totalFinisherDps);

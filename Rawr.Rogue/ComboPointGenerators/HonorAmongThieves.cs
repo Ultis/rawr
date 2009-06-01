@@ -20,19 +20,19 @@ namespace Rawr.Rogue.ComboPointGenerators
             get { return "HAT"; }
         }
 
-        public override float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
+        public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
         {
             return 0f;
         }
 
-        public override float Crit(CombatFactors combatFactors)
+        public override float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
             return 0;
         }
 
-        public override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
-            return new Hemo().EnergyCost(combatFactors)*_hemosPerCycle;
+            return new Hemo().EnergyCost(combatFactors, calcOpts) * _hemosPerCycle;
         }
 
         public override float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)

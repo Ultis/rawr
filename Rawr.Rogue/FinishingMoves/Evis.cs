@@ -27,9 +27,7 @@ namespace Rawr.Rogue.FinishingMoves
             var evisMax = 365f + (rank - 1f)*185f + evisMod;
 
             var finisherDmg = (evisMin + evisMax)/2f;
-            finisherDmg *= Talents.ImprovedEviscerate.Multiplier;
-            finisherDmg *= Talents.FindWeakness.Multiplier;
-            finisherDmg *= Talents.Aggression.Multiplier;
+            finisherDmg *= ( 1f + Talents.Add(Talents.ImprovedEviscerate, Talents.FindWeakness, Talents.Aggression, Talents.HungerForBlood.Damage));
             finisherDmg = finisherDmg * (1f - combatFactors.ProbMhCrit) + (finisherDmg * 2f) * (combatFactors.ProbMhCrit + GlyphOfEviscerateBonus);
             finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
 

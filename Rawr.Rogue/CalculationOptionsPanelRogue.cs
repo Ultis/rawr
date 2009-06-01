@@ -160,5 +160,18 @@ namespace Rawr.Rogue
             _calcOpts.Feint = Feint.Checked ? new Feint((float)FeintDelayStepper.Value) : new Feint(0);
             UpdateCalculations();
         }
+
+        private void UseTurnTheTables_CheckedChanged(object sender, EventArgs e)
+        {
+            TurnTheTablesUptimePercent.Visible = TurnTheTablesNumericStepperLabel.Visible = UseTurnTheTables.Checked;
+            _calcOpts.TurnTheTablesUptime = UseTurnTheTables.Checked ? (float)TurnTheTablesUptimePercent.Value/100f : 0f;
+            UpdateCalculations();
+        }
+
+        private void TurnTheTablesUptimePercent_ValueChanged(object sender, EventArgs e)
+        {
+            _calcOpts.TurnTheTablesUptime = (float) TurnTheTablesUptimePercent.Value/100f;
+            UpdateCalculations();
+        }
     }
 }

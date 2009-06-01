@@ -37,7 +37,7 @@ namespace Rawr.Rogue
 		public PoisonBase TempOffHandEnchant = new NoPoison();
         public ComboPointGenerator CpGenerator = new SinisterStrike();
         public Feint Feint = new Feint();
-
+        public float TurnTheTablesUptime;
         public float ComboPointsNeededForCycle()
         {
             return DpsCycle.TotalComboPoints - (DpsCycle.Components.Count * Talents.Ruthlessness.Bonus);

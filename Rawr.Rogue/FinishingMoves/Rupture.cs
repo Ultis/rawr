@@ -42,12 +42,7 @@ namespace Rawr.Rogue.FinishingMoves
                     break;
             }
 
-            //Note:  Shadowstep isn't modeled because the energy cost isn't modeled
-            //Note:  Bonus Physical Damage isn't modeled yet  (e.g. Savage Combat/Blood Frenzy) 
-
-            finisherDmg *= ( 1f + Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness) );
-            finisherDmg *= Talents.DirtyDeeds.Multiplier;
-            finisherDmg *= Talents.FindWeakness.Multiplier;
+            finisherDmg *= ( 1f + Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness, Talents.DirtyDeeds, Talents.HungerForBlood.Damage) );
             finisherDmg *= ( 1f + stats.BonusBleedDamageMultiplier );
             finisherDmg *= ( 1f - combatFactors.YellowMissChance );
             finisherDmg *= combatFactors.Tier7TwoPieceRuptureBonusDamage;

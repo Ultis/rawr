@@ -8,28 +8,26 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public override string Name { get { return "Hemo"; } }
 
-        public override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
             return 35f * combatFactors.Tier7FourPieceEnergyCostReduction
                 - Talents.SlaughterFromTheShadows.HemoEnergyCost.Bonus 
-                - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus); 
+                - (Crit(combatFactors, calcOpts) * Talents.FocusedAttacks.Bonus); 
         }
 
-        public override float Crit(CombatFactors combatFactors)
+        public override float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
-            return combatFactors.ProbMhCrit * combatFactors.ProbYellowHit;
+            return (combatFactors.ProbMhCrit + CritBonusFromTurnTheTables(calcOpts)) * combatFactors.ProbYellowHit;
 		}
 
-        public override float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
+        public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
-			baseDamage *= (1 + Talents.Add(Talents.FindWeakness, Talents.SurpriseAttacks));
-            baseDamage *= Talents.DirtyDeeds.Multiplier;
-			baseDamage *= Talents.FindWeakness.Multiplier;
+            baseDamage *= (1 + Talents.Add(Talents.DirtyDeeds, Talents.FindWeakness, Talents.SurpriseAttacks, Talents.HungerForBlood.Damage));
             baseDamage *= combatFactors.DamageReduction;
 
-            var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors);
-            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
+            var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors, calcOpts);
+            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors, calcOpts), 0);
 
             return (critDamage + nonCritDamage) * calcOpts.ComboPointsNeededForCycle() / cycleTime.Duration;
         }

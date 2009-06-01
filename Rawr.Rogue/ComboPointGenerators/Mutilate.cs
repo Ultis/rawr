@@ -9,19 +9,20 @@ namespace Rawr.Rogue.ComboPointGenerators
     {
         public override string Name { get { return "Mutilate"; } }
 
-        public override float EnergyCost(CombatFactors combatFactors)
+        public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
 		{ 
 			//Assume Mutiliate can only crit once, so Focused Attacks can only return 2 energy, and
 			//not 2 energy for a MH crit, and another 2 energy (total 4) for a MH and OH crit
             return 60f * combatFactors.Tier7FourPieceEnergyCostReduction
-                - (Crit(combatFactors) * Talents.FocusedAttacks.Bonus)
+                - (Crit(combatFactors, calcOpts) * Talents.FocusedAttacks.Bonus)
                 - GlyphOfMutilateBonus; 
 		}
 
         private static float GlyphOfMutilateBonus { get { return Glyphs.GlyphOfMutilate ? 5f : 0f; } }
-        public override float Crit(CombatFactors combatFactors)
+
+        public override float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
-            return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus;
+            return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus + CritBonusFromTurnTheTables(calcOpts);
 		}
 
         protected override float ComboPointsGeneratedPerAttack
@@ -29,17 +30,15 @@ namespace Rawr.Rogue.ComboPointGenerators
 			get { return 2f; }
 		}
 
-        public override float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
+        public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
-            baseDamage *= TalentBonusDamage();
+            baseDamage *= (1f + Talents.Add(Talents.FindWeakness, Talents.Opportunity, Talents.DirtyDeeds, Talents.HungerForBlood.Damage));
             baseDamage *= BonusIfTargetIsPoisoned(calcOpts);
-            baseDamage *= Talents.DirtyDeeds.Multiplier;
-			baseDamage *= Talents.FindWeakness.Multiplier;
             baseDamage *= combatFactors.DamageReduction;
 
-            var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors);
-            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
+            var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors, calcOpts);
+            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors, calcOpts), 0);
 
             return (critDamage + nonCritDamage) * (calcOpts.ComboPointsNeededForCycle() / ComboPointsGeneratedPerAttack) / cycleTime.Duration;
         }
@@ -49,11 +48,6 @@ namespace Rawr.Rogue.ComboPointGenerators
             var damage = combatFactors.MhNormalizedDamage + 181;
             damage += combatFactors.OhNormalizedDamage + (181 * 2 *combatFactors.OffHandDamagePenalty);
             return damage;
-        }
-
-        private static float TalentBonusDamage()
-        {
-            return 1f + Talents.Add(Talents.FindWeakness, Talents.Opportunity);
         }
 
         private static float BonusIfTargetIsPoisoned(CalculationOptionsRogue calcOpts)

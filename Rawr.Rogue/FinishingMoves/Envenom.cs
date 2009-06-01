@@ -30,8 +30,7 @@ namespace Rawr.Rogue.FinishingMoves
         {
             var dpAverageStackSize = CalcAverageStackSize(calcOpts, whiteAttacks, rank);
             var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;
-            damage *= Talents.VilePoisons.Multiplier;
-            damage *= Talents.FindWeakness.Multiplier;
+            damage *= ( 1f + Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.HungerForBlood.Damage) );
             return damage / cycleTime.Duration;
         }
 

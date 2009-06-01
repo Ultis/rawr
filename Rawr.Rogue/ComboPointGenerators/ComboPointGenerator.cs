@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
@@ -14,12 +15,12 @@ namespace Rawr.Rogue.ComboPointGenerators
     public abstract class ComboPointGenerator 
     {
         public abstract string Name { get; }
-        public abstract float CalcCpgDPS(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime);
-        public abstract float Crit(CombatFactors combatFactors);
+        public abstract float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime);
+        public abstract float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts );
 
         public virtual float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
         {
-            return MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()) * EnergyCost(combatFactors) / regen;
+            return MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()) * EnergyCost(combatFactors, calcOpts) / regen;
         }
 
         public virtual float MhHitsNeeded(float numCpg)
@@ -32,10 +33,15 @@ namespace Rawr.Rogue.ComboPointGenerators
             return 0f;
         }
 
-        public abstract float EnergyCost(CombatFactors combatFactors);
+        public abstract float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts);
         protected virtual float ComboPointsGeneratedPerAttack
         {
             get { return 1; }
+        }
+
+        protected float CritBonusFromTurnTheTables(CalculationOptionsRogue calcOpts)
+        {
+            return calcOpts.TurnTheTablesUptime * Talents.TurnTheTables.Bonus;
         }
     }
 
