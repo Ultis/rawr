@@ -138,6 +138,7 @@ namespace Rawr.Mage
         public float SpellDamageCoefficient { get { return template.SpellDamageCoefficient; } }
         public float DotDamageCoefficient { get { return template.DotDamageCoefficient; } }
         public float DotDuration { get { return template.DotDuration; } }
+        public float DotTickInterval { get { return template.DotTickInterval; } }
         public float AoeDamageCap { get { return template.AoeDamageCap; } }
         public float Range { get { return template.Range; } }
 
@@ -403,7 +404,7 @@ namespace Rawr.Mage
                 float dotFactor = commonMultiplier * DotDamageModifier;
                 if (spammedDot)
                 {
-                    dotFactor *= CastTime / DotDuration;
+                    dotFactor *= Math.Min((float)Math.Floor(CastTime / DotTickInterval) * DotTickInterval / DotDuration, 1.0f);
                 }
                 averageDamage += BasePeriodicDamage * dotFactor;
                 damagePerSpellPower += DotDamageCoefficient * dotFactor;

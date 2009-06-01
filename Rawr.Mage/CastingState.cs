@@ -720,7 +720,7 @@ namespace Rawr.Mage
                     s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false);
                     break;
                 case SpellId.Pyroblast:
-                    s = Calculations.PyroblastTemplate.GetSpell(this, false);
+                    s = Calculations.PyroblastTemplate.GetSpell(this, false, false);
                     break;
                 case SpellId.FireBlast:
                     s = Calculations.FireBlastTemplate.GetSpell(this);
@@ -831,7 +831,10 @@ namespace Rawr.Mage
                     s = Calculations.FrostboltTemplate.GetSpell(this, false, false, true, false);
                     break;
                 case SpellId.PyroblastPOM:
-                    s = Calculations.PyroblastTemplate.GetSpell(this, true);
+                    s = Calculations.PyroblastTemplate.GetSpell(this, true, false);
+                    break;
+                case SpellId.PyroblastPOMSpammed:
+                    s = Calculations.PyroblastTemplate.GetSpell(this, true, true);
                     break;
                 case SpellId.LivingBomb:
                     s = Calculations.LivingBombTemplate.GetSpell(this);

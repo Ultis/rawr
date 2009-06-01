@@ -27,6 +27,7 @@ namespace Rawr.Mage
         public float SpellDamageCoefficient;
         public float DotDamageCoefficient;
         public float DotDuration;
+        public float DotTickInterval;
         public float CastProcs;
         public float NukeProcs;
         public float HitRate;

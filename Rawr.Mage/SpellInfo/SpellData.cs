@@ -51,6 +51,7 @@ namespace Rawr.Mage
         Pyroblast,
         [Description("POM+Pyroblast")]
         PyroblastPOM,
+        PyroblastPOMSpammed,
         [Description("Fire Blast")]
         FireBlast,
         [Description("Scorch")]
@@ -320,6 +321,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             AoeDamageCap = 37500;
+            DotTickInterval = 2;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
     }
@@ -599,6 +601,7 @@ namespace Rawr.Mage
             }
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
             DotDuration = 8;
+            DotTickInterval = 2;
             BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
@@ -661,6 +664,7 @@ namespace Rawr.Mage
             BaseSpellModifier *= (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
             DotDuration = 9;
+            DotTickInterval = 3;
             float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
             NukeProcs = 1;
@@ -690,11 +694,11 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public Spell GetSpell(CastingState castingState, bool pom)
+        public Spell GetSpell(CastingState castingState, bool pom, bool spammedDot)
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            spell.CalculateDerivedStats(castingState, false, pom, false);
+            spell.CalculateDerivedStats(castingState, false, pom, spammedDot);
             return spell;
         }
 
@@ -703,6 +707,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             DotDuration = 12;
+            DotTickInterval = 3;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
     }

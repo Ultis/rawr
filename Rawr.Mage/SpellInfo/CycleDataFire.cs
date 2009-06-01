@@ -9,13 +9,13 @@ namespace Rawr.Mage
         public FBPyro(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            Spell FB;
             float K;
             Name = "FBPyro";
             AffectedByFlameCap = true;
 
-            FB = castingState.GetSpell(SpellId.Fireball);
+            Spell FB = castingState.GetSpell(SpellId.Fireball);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Fireball";
 
             // S0: no proc, 0 count
@@ -52,7 +52,8 @@ namespace Rawr.Mage
             if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
 
             AddSpell(needsDisplayCalculations, FB, 1);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -73,6 +74,7 @@ namespace Rawr.Mage
             FB = castingState.GetSpell(SpellId.Fireball);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Fireball";
 
             // 3.0.8 calcs
@@ -164,7 +166,8 @@ namespace Rawr.Mage
 
             AddSpell(needsDisplayCalculations, FB, X);
             AddSpell(needsDisplayCalculations, LB, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -185,6 +188,7 @@ namespace Rawr.Mage
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Frostfire Bolt";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
@@ -225,7 +229,8 @@ namespace Rawr.Mage
 
             AddSpell(needsDisplayCalculations, FFB, X);
             AddSpell(needsDisplayCalculations, LB, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -247,6 +252,7 @@ namespace Rawr.Mage
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Scorch";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
@@ -287,7 +293,8 @@ namespace Rawr.Mage
 
             AddSpell(needsDisplayCalculations, Sc, X);
             AddSpell(needsDisplayCalculations, LB, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -304,6 +311,7 @@ namespace Rawr.Mage
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Frostfire Bolt";
 
             // no Pyro
@@ -323,7 +331,8 @@ namespace Rawr.Mage
             if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
 
             AddSpell(needsDisplayCalculations, FFB, 1);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -345,6 +354,7 @@ namespace Rawr.Mage
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Fireball";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
@@ -455,7 +465,8 @@ namespace Rawr.Mage
 
             AddSpell(needsDisplayCalculations, FB, X);
             AddSpell(needsDisplayCalculations, Sc, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -480,6 +491,7 @@ namespace Rawr.Mage
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Fireball";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
@@ -655,7 +667,8 @@ namespace Rawr.Mage
             AddSpell(needsDisplayCalculations, FB, X);
             AddSpell(needsDisplayCalculations, Sc, Y);
             AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -680,6 +693,7 @@ namespace Rawr.Mage
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Frostfire Bolt";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
@@ -787,7 +801,8 @@ namespace Rawr.Mage
             AddSpell(needsDisplayCalculations, FFB, X);
             AddSpell(needsDisplayCalculations, Sc, Y);
             AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
@@ -809,6 +824,7 @@ namespace Rawr.Mage
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Sc = castingState.GetSpell(SpellId.Scorch);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
+            Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
             sequence = "Frostfire Bolt";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
@@ -849,7 +865,8 @@ namespace Rawr.Mage
 
             AddSpell(needsDisplayCalculations, FFB, X);
             AddSpell(needsDisplayCalculations, Sc, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K);
+            AddSpell(needsDisplayCalculations, Pyro, K * (1 - T8));
+            AddSpell(needsDisplayCalculations, PyroSpam, K * T8);
             Calculate();
         }
     }
