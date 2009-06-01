@@ -26,9 +26,13 @@ namespace Rawr.Rogue.FinishingMoves
             var evisMin = 245f + (rank - 1f)*185f + evisMod;
             var evisMax = 365f + (rank - 1f)*185f + evisMod;
 
-            var finisherDmg = (evisMin + evisMax)/2f;
-            finisherDmg *= ( 1f + Talents.Add(Talents.ImprovedEviscerate, Talents.FindWeakness, Talents.Aggression, Talents.HungerForBlood.Damage));
-            finisherDmg = finisherDmg * (1f - combatFactors.ProbMhCrit) + (finisherDmg * 2f) * (combatFactors.ProbMhCrit + GlyphOfEviscerateBonus);
+            var baseFinisherDmg = (evisMin + evisMax)/2f;
+            baseFinisherDmg *= (1f + Talents.Add(Talents.ImprovedEviscerate, Talents.FindWeakness, Talents.Aggression, Talents.HungerForBlood.Damage));
+
+            var critDamage = (baseFinisherDmg * 2f * CritChance(combatFactors, calcOpts));
+            var nonCritDamage = baseFinisherDmg * ( 1f - CritChance(combatFactors, calcOpts) );
+
+            var finisherDmg = critDamage + nonCritDamage;
             finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
 
             if (!Talents.SurpriseAttacks.HasPoints)
@@ -36,6 +40,11 @@ namespace Rawr.Rogue.FinishingMoves
 
             finisherDmg *= combatFactors.DamageReduction;
             return finisherDmg / cycleTime.Duration;
+        }
+
+        private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
+        {
+            return combatFactors.ProbMhCrit + GlyphOfEviscerateBonus + CritBonusFromTurnTheTables(calcOpts);
         }
 
         private static float GlyphOfEviscerateBonus

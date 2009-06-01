@@ -31,7 +31,10 @@ namespace Rawr.Rogue.FinishingMoves
             var dpAverageStackSize = CalcAverageStackSize(calcOpts, whiteAttacks, rank);
             var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;
             damage *= ( 1f + Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.HungerForBlood.Damage) );
-            return damage / cycleTime.Duration;
+
+            var nonCritDamage = damage * ( 1 - CritChance(combatFactors, calcOpts) );
+            var critDamage = damage * 2 * CritChance(combatFactors, calcOpts);
+            return (nonCritDamage + critDamage) / cycleTime.Duration;
         }
 
         private static float CalcAverageStackSize(CalculationOptionsRogue calcOpts, WhiteAttacks whiteAttacks, int rank)
@@ -49,6 +52,11 @@ namespace Rawr.Rogue.FinishingMoves
             }
 
             return Math.Min(rank, Math.Min(5, totalHits / DeadlyPoison.ChanceToApplyPoison));
+        }
+
+        private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
+        {
+            return combatFactors.ProbMhCrit + CritBonusFromTurnTheTables(calcOpts);
         }
     }
 }
