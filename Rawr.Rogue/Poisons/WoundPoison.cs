@@ -20,7 +20,7 @@ namespace Rawr.Rogue.Poisons
 
         public override float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon )
         {
-            var baseDamage = ( 231f + 0.04f * stats.AttackPower ) *(1f + Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage));
+            var baseDamage = (231f + 0.04f*stats.AttackPower) * Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage).Multiplier;
             var poisonHits = hits * ChanceToApply(weapon) * combatFactors.ProbPoisonHit;
             return baseDamage * poisonHits / cycleTime.Duration;
         }

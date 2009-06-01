@@ -33,7 +33,7 @@ namespace Rawr.Rogue.ComboPointGenerators
         public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
         {
             var baseDamage = BaseAttackDamage(combatFactors);
-            baseDamage *= (1f + Talents.Add(Talents.FindWeakness, Talents.Opportunity, Talents.DirtyDeeds, Talents.HungerForBlood.Damage));
+            baseDamage *= Talents.Add(Talents.FindWeakness, Talents.Opportunity, Talents.DirtyDeeds, Talents.HungerForBlood.Damage).Multiplier;
             baseDamage *= BonusIfTargetIsPoisoned(calcOpts);
             baseDamage *= combatFactors.DamageReduction;
 

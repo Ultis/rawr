@@ -27,7 +27,7 @@ namespace Rawr.Rogue.FinishingMoves
             var evisMax = 365f + (rank - 1f)*185f + evisMod;
 
             var baseFinisherDmg = (evisMin + evisMax)/2f;
-            baseFinisherDmg *= (1f + Talents.Add(Talents.ImprovedEviscerate, Talents.FindWeakness, Talents.Aggression, Talents.HungerForBlood.Damage));
+            baseFinisherDmg *= Talents.Add(Talents.ImprovedEviscerate, Talents.FindWeakness, Talents.Aggression, Talents.HungerForBlood.Damage).Multiplier;
 
             var critDamage = (baseFinisherDmg * 2f * CritChance(combatFactors, calcOpts));
             var nonCritDamage = baseFinisherDmg * ( 1f - CritChance(combatFactors, calcOpts) );

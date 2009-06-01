@@ -16,7 +16,7 @@ namespace Rawr.Rogue.Poisons
         public override float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon )
         {
             //TODO:  model loss of stacks due to envenom
-            return STACK_SIZE * (296f + .12f * stats.AttackPower) * (1f + Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage)) / DURATION;
+            return STACK_SIZE * (296f + .12f * stats.AttackPower) * Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage).Multiplier / DURATION;
         }
 
         public static float ChanceToApplyPoison

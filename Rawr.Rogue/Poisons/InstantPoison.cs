@@ -16,7 +16,7 @@ namespace Rawr.Rogue.Poisons
         {
             var damage = hits * ChanceToApply(weapon) * (300f + .10f * stats.AttackPower);
             damage *= combatFactors.ProbPoisonHit;
-            damage *= (1f + Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage));
+            damage *= Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage).Multiplier;
             return damage/cycleTime.Duration;
         }
 

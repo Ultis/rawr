@@ -42,7 +42,7 @@ namespace Rawr.Rogue.FinishingMoves
                     break;
             }
 
-            finisherDmg *= ( 1f + Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness, Talents.DirtyDeeds, Talents.HungerForBlood.Damage) );
+            finisherDmg *= Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness, Talents.DirtyDeeds, Talents.HungerForBlood.Damage).Multiplier;
             finisherDmg *= ( 1f + stats.BonusBleedDamageMultiplier );
             finisherDmg *= ( 1f - combatFactors.YellowMissChance );
             finisherDmg *= combatFactors.Tier7TwoPieceRuptureBonusDamage;

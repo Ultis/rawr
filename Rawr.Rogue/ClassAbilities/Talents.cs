@@ -2,86 +2,68 @@
 
 namespace Rawr.Rogue.ClassAbilities
 {
-    public class Talents
+    public abstract class Talents
     {
-        private delegate int TalentDelegate();
-
-        private delegate float CalculationDelegate( int talentPoints );
-
-        private Talents(TalentDelegate talent, CalculationDelegate calculation)
+        private Talents(TalentDelegate talent)
         {
             _talent = talent;
-            _calculation = calculation;
-        }
-
-        private Talents(TalentDelegate talent, params float[] multipliers)
-        {
-            _talent = talent;
-            _bonuses.Add(0f);
-            _bonuses.AddRange(multipliers);
-            _calculation = PullFromList;
         }
 
         private readonly TalentDelegate _talent;
-        private readonly List<float> _bonuses = new List<float>();
-        private static RogueTalents _talents = new RogueTalents();
-        private readonly CalculationDelegate _calculation;
+        protected static RogueTalents _talents = new RogueTalents();
+        protected delegate int TalentDelegate();
+        protected delegate float CalculationDelegate(int talentPoints);
 
         //---------------------------------------------------------------------
         //Assassination Talents
         //---------------------------------------------------------------------
-        public static readonly Talents ImprovedEviscerate = new Talents(() => _talents.ImprovedEviscerate, .07f, .14f, .20f);
-        public static readonly Talents Malice = new Talents(() => _talents.Malice, 1f, 2f, 3f, 4f, 5f);
-        public static readonly Talents Ruthlessness = new Talents(() => _talents.Ruthlessness, .2f, .4f, .6f);
-        public static readonly Talents BloodSpatter = new Talents(() => _talents.BloodSpatter, 0.15f, .030f);
+        public static readonly Talents ImprovedEviscerate = new TalentBonusPulledFromList(() => _talents.ImprovedEviscerate, .07f, .14f, .20f);
+        public static readonly Talents Malice = new TalentBonusPulledFromList(() => _talents.Malice, 1f, 2f, 3f, 4f, 5f);
+        public static readonly Talents Ruthlessness = new TalentBonusPulledFromList(() => _talents.Ruthlessness, .2f, .4f, .6f);
+        public static readonly Talents BloodSpatter = new TalentBonusPulledFromList(() => _talents.BloodSpatter, 0.15f, .030f);
 
         public class PuncturingWounds
         {
-            public static readonly Talents Mutilate = new Talents(() => _talents.PuncturingWounds, 0.05f, 0.10f, 0.15f);
-            public static readonly Talents Backstab = new Talents(() => _talents.PuncturingWounds, 0.1f, 0.2f, 0.3f);
+            public static readonly Talents Mutilate = new TalentBonusPulledFromList(() => _talents.PuncturingWounds, 0.05f, 0.10f, 0.15f);
+            public static readonly Talents Backstab = new TalentBonusPulledFromList(() => _talents.PuncturingWounds, 0.1f, 0.2f, 0.3f);
         }
 
-        public static readonly Talents Vigor = new Talents(() => _talents.Vigor, 10f);
-        public static readonly Talents ImprovedExposeArmor = new Talents(() => _talents.ImprovedExposeArmor, 5f, 10f);
-        public static readonly Talents Lethality = new Talents(() => _talents.Lethality, 0.06f, 0.12f, 0.18f, 0.24f, 0.30f);
-        public static readonly Talents VilePoisons = new Talents(() => _talents.VilePoisons, 0.07f, 0.14f, 0.2f);
+        public static readonly Talents Vigor = new TalentBonusPulledFromList(() => _talents.Vigor, 10f);
+        public static readonly Talents ImprovedExposeArmor = new TalentBonusPulledFromList(() => _talents.ImprovedExposeArmor, 5f, 10f);
+        public static readonly Talents Lethality = new TalentBonusPulledFromList(() => _talents.Lethality, 0.06f, 0.12f, 0.18f, 0.24f, 0.30f);
+        public static readonly Talents VilePoisons = new TalentBonusPulledFromList(() => _talents.VilePoisons, 0.07f, 0.14f, 0.2f);
 		
         public class ImprovedPoisons
         {
-            public static readonly Talents DeadlyPoison = new Talents(() => _talents.ImprovedPoisons, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
-            public static readonly Talents InstantPoison = new Talents(() => _talents.ImprovedPoisons, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f);
+            public static readonly Talents DeadlyPoison = new TalentBonusPulledFromList(() => _talents.ImprovedPoisons, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
+            public static readonly Talents InstantPoison = new TalentBonusPulledFromList(() => _talents.ImprovedPoisons, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f);
         }
         //NEED:  Cold Blood
-        public static readonly Talents QuickRecovery = new Talents(() => _talents.QuickRecovery, 0.4f, .8f);
-        public static readonly Talents SealFate = new Talents(() => _talents.SealFate, .2f, .4f, .6f, .8f, 1f);
-        public static readonly Talents Murder = new Talents(() => _talents.Murder, .02f, .04f);
-        public static readonly Talents DeadlyBrew = new Talents(() => _talents.DeadlyBrew, 0, 0);
+        public static readonly Talents QuickRecovery = new TalentBonusPulledFromList(() => _talents.QuickRecovery, 0.4f, .8f);
+        public static readonly Talents SealFate = new TalentBonusPulledFromList(() => _talents.SealFate, .2f, .4f, .6f, .8f, 1f);
+        public static readonly Talents Murder = new TalentBonusPulledFromList(() => _talents.Murder, .02f, .04f);
+        public static readonly Talents DeadlyBrew = new TalentBonusPulledFromList(() => _talents.DeadlyBrew, 0, 0);
 
-        public static readonly Talents FocusedAttacks = new Talents(() => _talents.FocusedAttacks, .66f, 1.32f, 2f);//energy per rank (e.g. .33*2, .66*2, 1*2)
+        public static readonly Talents FocusedAttacks = new TalentBonusPulledFromList(() => _talents.FocusedAttacks, .66f, 1.32f, 2f);//energy per rank (e.g. .33*2, .66*2, 1*2)
 
-        public static readonly Talents FindWeakness = new Talents(() => _talents.FindWeakness, .2f, .4f, .6f);
+        public static readonly Talents FindWeakness = new TalentBonusPulledFromList(() => _talents.FindWeakness, .2f, .4f, .6f);
 
         public class MasterPoisoner
         {
-            public static readonly Talents Crit = new Talents(() => _talents.MasterPoisoner, 1f, 2f, 3f);
-            public static readonly Talents DeadlyPoisonApplication = new Talents(() => _talents.MasterPoisoner, .15f, .30f, .45f);
+            public static readonly Talents Crit = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, 1f, 2f, 3f);
+            public static readonly Talents DeadlyPoisonApplication = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, .15f, .30f, .45f);
         }
 
-        public static readonly Talents TurnTheTables = new Talents(() => _talents.TurnTheTables, .02f, .04f, .06f);
-        public static readonly Talents CutToTheChase = new Talents(() => _talents.CutToTheChase, .2f, .4f, .6f, .8f, 1f);
+        public static readonly Talents TurnTheTables = new TalentBonusPulledFromList(() => _talents.TurnTheTables, .02f, .04f, .06f);
+        public static readonly Talents CutToTheChase = new TalentBonusPulledFromList(() => _talents.CutToTheChase, .2f, .4f, .6f, .8f, 1f);
 
         public class HungerForBlood
         {
-            public static readonly Talents EnergyPerSecond = new Talents(() => _talents.HungerForBlood, -0.25f);
-            public static readonly Talents Damage = new Talents(() => _talents.HungerForBlood, HungerForBloodCalc);
+            public static readonly Talents EnergyPerSecond = new TalentBonusPulledFromList(() => _talents.HungerForBlood, -0.25f);
+            public static readonly Talents Damage = new TalentBonusCalculatedFromMethod(() => _talents.HungerForBlood, HungerForBloodCalc);
 
             private static float HungerForBloodCalc(int talent)
             {
-                if(talent == 0f)
-                {
-                    return 0f;
-                }
-
                 return 0.15f + ( Glyphs.GlyphOfHungerforBlood ? .03f : 0f );
             }
         }
@@ -89,103 +71,90 @@ namespace Rawr.Rogue.ClassAbilities
         //---------------------------------------------------------------------
         //Combat Talents
         //---------------------------------------------------------------------
-        public static readonly Talents ImprovedSinisterStrike = new Talents(() => _talents.ImprovedSinisterStrike, 3f, 5f);
-        public static readonly Talents DualWieldSpecialization = new Talents(() => _talents.DualWieldSpecialization, 0.5f, 0.1f, 0.15f, 0.2f, 0.25f);
-        public static readonly Talents ImprovedSliceAndDice = new Talents(() => _talents.ImprovedSliceAndDice, 0.25f, 0.50f);
-        public static readonly Talents Precision = new Talents(() => _talents.Precision, 1f, 2f, 3f, 4f, 5f);
+        public static readonly Talents ImprovedSinisterStrike = new TalentBonusPulledFromList(() => _talents.ImprovedSinisterStrike, 3f, 5f);
+        public static readonly Talents DualWieldSpecialization = new TalentBonusPulledFromList(() => _talents.DualWieldSpecialization, 0.5f, 0.1f, 0.15f, 0.2f, 0.25f);
+        public static readonly Talents ImprovedSliceAndDice = new TalentBonusPulledFromList(() => _talents.ImprovedSliceAndDice, 0.25f, 0.50f);
+        public static readonly Talents Precision = new TalentBonusPulledFromList(() => _talents.Precision, 1f, 2f, 3f, 4f, 5f);
         //NEED  Endurance - is there a need for this one?
         //NEED: Riposte (might be another CPG class)
-        public static readonly Talents CloseQuartersCombat = new Talents(() => _talents.CloseQuartersCombat, 1f, 2f, 3f, 4f, 5f);
-        public static readonly Talents Aggression = new Talents(() => _talents.Aggression, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
-        public static readonly Talents LightningReflexes = new Talents(() => _talents.LightningReflexes, .04f, .07f, .10f);
-        public static readonly Talents MaceSpecialization = new Talents(() => _talents.MaceSpecialization, .03f, .06f, .9f, .12f, .15f);
+        public static readonly Talents CloseQuartersCombat = new TalentBonusPulledFromList(() => _talents.CloseQuartersCombat, 1f, 2f, 3f, 4f, 5f);
+        public static readonly Talents Aggression = new TalentBonusPulledFromList(() => _talents.Aggression, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
+        public static readonly Talents LightningReflexes = new TalentBonusPulledFromList(() => _talents.LightningReflexes, .04f, .07f, .10f);
+        public static readonly Talents MaceSpecialization = new TalentBonusPulledFromList(() => _talents.MaceSpecialization, .03f, .06f, .9f, .12f, .15f);
 		
         public class BladeFlurry
         {
-            public static readonly Talents Haste = new Talents(() => _talents.BladeFlurry, 0.2f);
-            public static readonly Talents EnergyCost = new Talents(() => _talents.BladeFlurry, EnergyCostWithGlyph);   
+            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.2f);
+            public static readonly Talents EnergyCost = new TalentBonusCalculatedFromMethod(() => _talents.BladeFlurry, EnergyCostWithGlyph);   
 
             public static float EnergyCostWithGlyph(int points)
             {
-                if(points == 0 || Glyphs.GlyphOfBladeFlurry)
-                {
-                    return 0;
-                }
-                return 25f/120f;
+                return Glyphs.GlyphOfBladeFlurry ? 0f : 25f/120f;
             }
         }
 
-        public static readonly Talents SwordSpecialization = new Talents(() => _talents.SwordSpecialization, 0.01f, 0.02f, 0.03f, 0.04f, 0.5f);
-        public static readonly Talents WeaponExpertise = new Talents(() => _talents.WeaponExpertise, 5, 10);
-        public static readonly Talents BladeTwisting = new Talents(() => _talents.BladeTwisting, 0.05f, 0.1f);
-        public static readonly Talents Vitality = new Talents(() => _talents.Vitality, .8f, 1.6f, 2.5f);
+        public static readonly Talents SwordSpecialization = new TalentBonusPulledFromList(() => _talents.SwordSpecialization, 0.01f, 0.02f, 0.03f, 0.04f, 0.5f);
+        public static readonly Talents WeaponExpertise = new TalentBonusPulledFromList(() => _talents.WeaponExpertise, 5, 10);
+        public static readonly Talents BladeTwisting = new TalentBonusPulledFromList(() => _talents.BladeTwisting, 0.05f, 0.1f);
+        public static readonly Talents Vitality = new TalentBonusPulledFromList(() => _talents.Vitality, .8f, 1.6f, 2.5f);
 
         public class AdrenalineRush
         {
-            public static readonly Talents Energy = new Talents(() => _talents.AdrenalineRush, EnergyBonusCalc);
+            public static readonly Talents Energy = new TalentBonusCalculatedFromMethod(() => _talents.AdrenalineRush, EnergyBonusCalc);
 
             private static float EnergyBonusCalc(int talent)
             {
-                if(talent ==0f)
-                {
-                    return 0f;
-                }
                 return ( 150f + ( Glyphs.GlyphOfAdrenalineRush ? 50f : 0f ) ) / 180f;
             }
         }
 
-        public static readonly Talents CombatPotency = new Talents(() => _talents.CombatPotency, .6f, 1.2f, 1.8f, 2.4f, 3f); //energy per success
+        public static readonly Talents CombatPotency = new TalentBonusPulledFromList(() => _talents.CombatPotency, .6f, 1.2f, 1.8f, 2.4f, 3f); //energy per success
 
         //NEED: Unfair Advantage??
-        public static readonly Talents SurpriseAttacks = new Talents(() => _talents.SurpriseAttacks, 0.1f);
+        public static readonly Talents SurpriseAttacks = new TalentBonusPulledFromList(() => _talents.SurpriseAttacks, 0.1f);
 
         public class SavageCombat
         {
-            public static readonly Talents AttackPower = new Talents(() => _talents.SavageCombat, .2f, .4f);
-            public static readonly Talents Damage = new Talents(() => _talents.SavageCombat, .2f, .4f);
+            public static readonly Talents AttackPower = new TalentBonusPulledFromList(() => _talents.SavageCombat, .2f, .4f);
+            public static readonly Talents Damage = new TalentBonusPulledFromList(() => _talents.SavageCombat, .2f, .4f);
         }
 
-        public static readonly Talents PreyOnTheWeak = new Talents(() => _talents.PreyOnTheWeak, .2f, .4f, .6f, .8f, 1f);
+        public static readonly Talents PreyOnTheWeak = new TalentBonusPulledFromList(() => _talents.PreyOnTheWeak, .2f, .4f, .6f, .8f, 1f);
 
         //NEED  Killing Spree (might be another CPG class, but generates 0 CPs).
 
         //---------------------------------------------------------------------
         //Subtlety Talents
         //---------------------------------------------------------------------
-        public static readonly Talents RelentlessStrikes = new Talents(() => _talents.RelentlessStrikes, 1f, 2f, 3f, 4f, 5f);  //Average energy returned per combo point
-        public static readonly Talents Opportunity = new Talents(() => _talents.Opportunity, 0.1f, 0.2f);
+        public static readonly Talents RelentlessStrikes = new TalentBonusPulledFromList(() => _talents.RelentlessStrikes, 1f, 2f, 3f, 4f, 5f);  //Average energy returned per combo point
+        public static readonly Talents Opportunity = new TalentBonusPulledFromList(() => _talents.Opportunity, 0.1f, 0.2f);
         //NEED:  Ghostly Strike (might be another CPG class)
 
         public class SerratedBlades
         {
-            public static readonly Talents ArmorPenetration = new Talents(() => _talents.SerratedBlades, 0.00f, 0.00f, 0.00f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
-            public static readonly Talents Rupture = new Talents(() => _talents.SerratedBlades, 0.1f, 0.2f, 0.3f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
+            public static readonly Talents ArmorPenetration = new TalentBonusPulledFromList(() => _talents.SerratedBlades, 0.00f, 0.00f, 0.00f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
+            public static readonly Talents Rupture = new TalentBonusPulledFromList(() => _talents.SerratedBlades, 0.1f, 0.2f, 0.3f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
         }
 
-        public static readonly Talents DirtyDeeds = new Talents(() => _talents.DirtyDeeds, 0.035f, 0.07f);
-        public static readonly Talents Deadliness = new Talents(() => _talents.Deadliness, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
+        public static readonly Talents DirtyDeeds = new TalentBonusPulledFromList(() => _talents.DirtyDeeds, 0.035f, 0.07f);
+        public static readonly Talents Deadliness = new TalentBonusPulledFromList(() => _talents.Deadliness, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
 
         //NEED Premeditation
         public class SinisterCalling
         {
-            public static readonly Talents Agility = new Talents(() => _talents.SinisterCalling, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
-            public static readonly Talents HemoAndBackstab = new Talents(() => _talents.SinisterCalling, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
+            public static readonly Talents Agility = new TalentBonusPulledFromList(() => _talents.SinisterCalling, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
+            public static readonly Talents HemoAndBackstab = new TalentBonusPulledFromList(() => _talents.SinisterCalling, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
         }
 
-        //NEED  HAT 
         //NEED  Shadowstep
         //NEED  Filthy Tricks
 
         public class SlaughterFromTheShadows
         {
-            public static readonly Talents BackstabAndAmbushEnergyCost = new Talents(() => _talents.SlaughterFromTheShadows, 3f, 6f, 9f, 12f, 15f);
-            public static readonly Talents HemoEnergyCost = new Talents(() => _talents.SlaughterFromTheShadows, 1f, 2f, 3f, 4f, 5f);
+            public static readonly Talents BackstabAndAmbushEnergyCost = new TalentBonusPulledFromList(() => _talents.SlaughterFromTheShadows, 3f, 6f, 9f, 12f, 15f);
+            public static readonly Talents HemoEnergyCost = new TalentBonusPulledFromList(() => _talents.SlaughterFromTheShadows, 1f, 2f, 3f, 4f, 5f);
         }
 
-        private float PullFromList(int talent)
-        {
-            return _bonuses[_talent()];
-        }
         //---------------------------------------------------------------------
         //Class Initializers and Methods
         //---------------------------------------------------------------------
@@ -193,38 +162,87 @@ namespace Rawr.Rogue.ClassAbilities
         {
             _talents = talents;
         }
-
-        public float Bonus
-        {
-            get { return _calculation(_talent()); }
-        }
+        
+        public abstract float Bonus { get; }
 
         public float Multiplier
         {
             get { return 1f + Bonus; }
         }
 
-        public int Points { get { return _talent(); } }
-        public bool HasPoints { get { return _talent() > 0; } }
-
-        public static float Add(params Talents[] talents)
+        public virtual bool HasPoints
         {
-            var dmg = 1f;
-            foreach (var talent in talents)
-            {
-                dmg += talent.Bonus;
-            }
-            return dmg;
+            get { return _talent() > 0; }
         }
 
-        public static float Multiply(params Talents[] talents)
+        public static Talents Add(params Talents[] talents)
         {
-            var dmg = 1f;
-            foreach (var talent in talents)
+            return new AddedTalents(talents);
+        }
+
+        //---------------------------------------------------------------------
+        // Sub Classes
+        //---------------------------------------------------------------------
+        protected class TalentBonusPulledFromList : Talents
+        {
+            public TalentBonusPulledFromList(TalentDelegate talent, params float[] multipliers)
+                : base(talent)
             {
-                dmg *= talent.Multiplier;
+                _bonuses = new float[multipliers.Length + 1];
+                _bonuses[0] = 0f;
+                multipliers.CopyTo(_bonuses, 1);
             }
-            return dmg;
+
+            private readonly float[] _bonuses;
+
+            public override float Bonus
+            {
+                get { return _bonuses[_talent()]; }
+            }
+        }
+
+        protected class TalentBonusCalculatedFromMethod : Talents
+        {
+            public TalentBonusCalculatedFromMethod(TalentDelegate talent, CalculationDelegate calculation)
+                : base(talent)
+            {
+                _calculation = calculation;
+            }
+
+            private readonly CalculationDelegate _calculation;
+
+            public override float Bonus
+            {
+                get { return _talent() == 0 ? 0f : _calculation(_talent()); }
+            }
+        }
+
+        protected class AddedTalents : Talents
+        {
+            public AddedTalents(params Talents[] talents) : base(null)
+            {
+                _talentList.AddRange(talents);
+            }
+
+            private readonly List<Talents> _talentList  = new List<Talents>();
+
+            public override float Bonus
+            {
+                get
+                {
+                    var dmg = 1f;
+                    foreach (var talent in _talentList)
+                    {
+                        dmg += talent.Bonus;
+                    }
+                    return dmg;
+                }
+            }
+
+            public override bool HasPoints
+            {
+                get { return true; }
+            }
         }
     }
 }
