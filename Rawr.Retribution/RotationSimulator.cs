@@ -48,9 +48,9 @@ namespace Rawr.Retribution
                 if (!gcdUsed)
                 {
                     minNext = sol.FightLength;
-                    foreach (SimulatorAbility simab in abilities)
+                    foreach (Ability ab in rot.Priorities)
                     {
-                        if (simab.NextUse < minNext) minNext = simab.NextUse;
+                        if (abilities[(int)ab].NextUse < minNext) minNext = abilities[(int)ab].NextUse;
                     }
                     currentTime = minNext;
                 }

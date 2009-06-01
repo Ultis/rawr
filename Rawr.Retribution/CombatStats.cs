@@ -78,7 +78,9 @@ namespace Rawr.Retribution
             else targetArmor = StatConversion.NPC_BOSS_ARMOR;
 
             float dr = StatConversion.GetArmorDamageReduction(Character.Level, targetArmor, Stats.ArmorPenetration, 0f, Stats.ArmorPenetrationRating);
-            ArmorReduction = 1f - dr * ((1 - awUptime) + .25f * _talents.SanctifiedWrath * awUptime);
+            float drAW = dr * ((1 - awUptime) + (1 - .25f * _talents.SanctifiedWrath) * awUptime);
+            float drNoAW = dr;
+            ArmorReduction = 1f - drAW;
 
             BaseWeaponSpeed = _character.MainHand == null ? 3.5f : _character.MainHand.Speed;
             float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
