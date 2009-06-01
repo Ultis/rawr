@@ -1976,15 +1976,15 @@ namespace Rawr
             });
             #endregion
             #region Moonkin tier 4/5/6 sets
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Malorne Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ManaRestorePerCast = .05f * 120 },
                 SetName = "Malorne Regalia",
                 SetThreshold = 2
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mana = 120f }, 0f, 0f, 0.1f, 1));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Malorne Regalia 4 Piece Bonus",
@@ -2103,8 +2103,8 @@ namespace Rawr
                 SetName = "Nightsong Garb",
                 SetThreshold = 4
             });
-            #endregion
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.08f, 1));
+            #endregion
             #region Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {
