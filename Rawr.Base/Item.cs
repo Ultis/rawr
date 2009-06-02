@@ -1371,7 +1371,11 @@ namespace Rawr
 
         public Stats GetTotalStats() { return AccumulateTotalStats(null, null); }
         public Stats GetTotalStats(Character character) { return AccumulateTotalStats(character, null); }
+#if SILVERLIGHT
+        public Stats AccumulateTotalStats(Character character, Stats unsafeStatsAccumulator)
+#else
         public unsafe Stats AccumulateTotalStats(Character character, Stats unsafeStatsAccumulator)
+#endif
 		{
             if (cachedTotalStats != null && Item.LastChange <= cachedTime)
             {
@@ -1425,9 +1429,11 @@ namespace Rawr
             else
             {
                 Stats totalItemStats = new Stats();
+#if !SILVERLIGHT
                 fixed (float* pRawAdditiveData = totalItemStats._rawAdditiveData, pRawMultiplicativeData = totalItemStats._rawMultiplicativeData, pRawNoStackData = totalItemStats._rawNoStackData)
                 {
                     totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+#endif
                     totalItemStats.AccumulateUnsafe(Item.Stats, true);
                     if (gem1) totalItemStats.AccumulateUnsafe(Gem1.Stats, true);
                     if (gem2) totalItemStats.AccumulateUnsafe(Gem2.Stats, true);
@@ -1462,7 +1468,11 @@ namespace Rawr
                             unsafeStatsAccumulator.AccumulateUnsafe(cachedTotalStats);
                         }
                     }
+#if !SILVERLIGHT
+
+                    totalItemStats.EndUnsafe();
                 }
+#endif
                 return totalItemStats;
             }
 		}

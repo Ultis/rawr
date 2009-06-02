@@ -491,7 +491,12 @@ namespace Rawr {
     /// A Stats object represents a collection of stats on an object, such as an Item, Enchant, or Buff.
     /// </summary>
     [Serializable]
-    public unsafe class Stats {
+#if SILVERLIGHT
+    public class Stats
+#else
+    public unsafe class Stats
+#endif
+    {
         internal float[] _rawAdditiveData = new float[AdditiveStatCount];
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
@@ -4532,6 +4537,18 @@ namespace Rawr {
             }
         }
 
+#if SILVERLIGHT
+        public void AccumulateUnsafe(Stats data)
+        {
+            Accumulate(data);
+        }
+
+        public void AccumulateUnsafe(Stats data, bool generateSparseIfNeeded)
+        {
+            if (generateSparseIfNeeded && data._sparseIndices == null) data.GenerateSparseData();
+            Accumulate(data);
+        }
+#else
         private float* pRawAdditiveData;
         private float* pRawMultiplicativeData;
         private float* pRawNoStackData;
@@ -4630,6 +4647,7 @@ namespace Rawr {
                 _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
             }
         }
+#endif
 
         public bool Equals(Stats other)
         {

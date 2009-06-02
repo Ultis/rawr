@@ -899,11 +899,17 @@ namespace Rawr
             return comparisonCalculations;
         }
 
+#if SILVERLIGHT
+        public virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
+#else
         public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
+#endif
 		{
+#if !SILVERLIGHT
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
                 stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+#endif
                 for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
                 {
                     if (slot != (int)Character.CharacterSlot.OffHand || IncludeOffHandInCalculations(character))
@@ -917,9 +923,11 @@ namespace Rawr
                 }
                 if (additionalItem != null)
                     stats.AccumulateUnsafe(additionalItem.Stats);
+#if !SILVERLIGHT
                 stats.EndUnsafe();
             }
-		}
+#endif
+        }
 
         public virtual Stats GetItemStats(Character character, Item additionalItem)
         {
@@ -1002,18 +1010,26 @@ namespace Rawr
                 }
         }
 
+#if SILVERLIGHT
+        public virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
+#else
         public unsafe virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
+#endif
         {
+#if !SILVERLIGHT
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
                 stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+#endif
                 foreach (Buff buff in buffs)
                     if (buff != null)
                     {
                         stats.AccumulateUnsafe(buff.Stats, true);
                     }
+#if !SILVERLIGHT
                 stats.EndUnsafe();
             }
+#endif
         }
 
         public virtual Stats GetBuffsStats(List<string> buffs)
