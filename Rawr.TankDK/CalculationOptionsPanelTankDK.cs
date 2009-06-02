@@ -68,7 +68,15 @@ namespace Rawr.TankDK
                 options.SurvivalWeight = (float)(numSurvivalWeight.Value);
                 Character.OnCalculationsInvalidated();
             }
+        }
 
+        private void numIncomingDamage_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.IncomingDamage = (uint)(numIncomingDamage.Value);
+                Character.OnCalculationsInvalidated();
+            }
         }
 
     }
@@ -76,9 +84,15 @@ namespace Rawr.TankDK
     [Serializable]
     public class CalculationOptionsTankDK : ICalculationOptionBase
     {
+        public enum Presence
+        {
+            Blood, Frost, Unholy
+        }
+
         public int TargetLevel = 83;
         public float ThreatWeight = 0.05f;
-        public float SurvivalWeight = 1.10f;
+        public float SurvivalWeight = 1.00f;
+        public uint IncomingDamage = 25000;
 
         public string GetXml()
         {

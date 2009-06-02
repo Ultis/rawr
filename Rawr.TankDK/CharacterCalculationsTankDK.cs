@@ -27,17 +27,13 @@ namespace Rawr.TankDK
         public float SurvivalWeight { get; set; }
         public float ThreatWeight { get; set; }
 
-        public float AvoidancePreDR { get; set; }
-        public float AvoidancePostDR { get; set; }
         public float TotalMitigation { get; set; }  // What's the difference between this and Mitigation above?
         public float DamageTaken { get; set; }
-//        public float CritReduction { get; set; }
-//        public float CappedCritReduction { get; set; }
 
         public float ArmorDamageReduction { get; set; }
         public float Armor { get; set; }
 
-        public float Crit { get; set; } // What's the difference between this and CritReduction above?
+        public float Crit { get; set; }
         public float Defense { get; set; }
         public float DefenseRating { get; set; }
         public float DefenseRatingNeeded { get; set; }
@@ -90,16 +86,17 @@ namespace Rawr.TankDK
             dict["Hit Rating"] = BasicStats.HitRating.ToString("F0");
             dict["Haste Rating"] = BasicStats.HasteRating.ToString("F0");
             dict["Crit Rating"] = BasicStats.CritRating.ToString("F0");
+            dict["Physical Crit"] = (BasicStats.PhysicalCrit * 100f).ToString("F2");
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
             dict["Armor Penetration"] = BasicStats.ArmorPenetration.ToString("F0");
             dict["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString("F0");
 
-            dict["Overall Points"] = String.Format("{0:0,0}", (Mitigation + Survival));
+            dict["Overall Points"] = String.Format("{0:0.0}", (Mitigation + Survival));
             // Modify above to:
             //dict["Overall Points"] = OverallPoints.ToString("F1"); 
-            dict["Mitigation Points"] = String.Format("{0:0,0}", Mitigation); // Unmodified Mitigation.
-            dict["Survival Points"] = String.Format("{0:0,0}", Survival); // Unmodified Survival
+            dict["Mitigation Points"] = String.Format("{0:0.0}", Mitigation); // Unmodified Mitigation.
+            dict["Survival Points"] = String.Format("{0:0.0}", Survival); // Unmodified Survival
 
             dict["Crit"] = Crit.ToString("F2");
             dict["Defense"] = Defense.ToString("F0");

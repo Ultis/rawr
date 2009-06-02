@@ -8,28 +8,54 @@ namespace Rawr.TankDK
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", Character.CharacterClass.DeathKnight)]
     class CalculationsTankDK : CalculationsBase
     {
+        /// <summary>
+        /// Setup constants that need to be answered.
+        /// </summary>
+        #region Constants
+        private static readonly float critImpact = 1f;  // How severe is getting crit? 1 = 100%
+        private static readonly float BaseThreatValue = 1000f; // Base value of threat modified by Threat weight.
+        private static readonly float BasePhysicalCrit = 0f;  // Base Physical crit rate of 6.5%
+
+        #endregion // Constants
+
+
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
 				////Relevant Gem IDs for TankDKs
 				//Red
-				int[] subtle = { 39907, 40000, 40115, 42151 };
+				int[] subtle = { 39907, 40000, 40115, 42151 }; //
+                int[] bold = { }; // +Str
+                int[] bright = { }; // +AP
+                int[] delicate = { }; // +Agi
+                int[] flashing = { }; // +Parry
 
 				//Purple
 				int[] regal = { 39938, 40031, 40138 };
+                int[] balanced = { }; // +AP +Stam
+                int[] defenders = { }; // +Parry +Stam
 
 				//Blue
-				int[] solid = { 39919, 40008, 40119, 36767 };
+				int[] solid = { 39919, 40008, 40119, 36767 }; // +Stam
 
 				//Green
-				int[] enduring = { 39976, 40089, 40167 };
+				int[] enduring = { 39976, 40089, 40167 }; // +Def +Stam
 
 				//Yellow
-				int[] thick = { 39916, 40015, 40126, 42157 };
+				int[] thick = { 39916, 40015, 40126, 42157 }; // +def
+                int[] gleaming = { }; // +Crit.
 
 				//Orange
 				int[] stalwart = { 39964, 40056, 40160 };
+                int[] accurate = { }; // +Hit +Expertise
+                int[] deadly = { }; // +agi +crit
+                int[] deft = { }; // +Agi +Haste
+                int[] etched = { }; // +hit +Str
+                int[] glimmering = { }; // +parry +def
+                int[] glinting = { }; // +Agi +Hit
+
+
 
 				//Meta
 				int austere = 41380;
@@ -147,7 +173,7 @@ namespace Rawr.TankDK
                         "Summary:Mitigation Points",
                         "Summary:Overall Points",
 
-                        "Basic Stats:Strength",
+                        "Basic Stats:Strength*Unbreakable Armor not factored in.",
 					    "Basic Stats:Agility",
                         "Basic Stats:Stamina",
 					    "Basic Stats:Attack Power",
@@ -162,12 +188,12 @@ namespace Rawr.TankDK
 
                         "Defense:Crit*Enemy's crit chance on you",
                         "Defense:Defense Rating",
-                        "Defense:Defense*Value over base skill of 400",
+                        "Defense:Defense",
                         "Defense:Defense Rating needed",
 
                         "Advanced Stats:Miss",
                         "Advanced Stats:Dodge",
-                        "Advanced Stats:Parry*With Blade Barrier",
+                        "Advanced Stats:Parry*With Blade Barrier and Str bonus from Unbreakable Armor's average uptime.",
                         "Advanced Stats:Total Avoidance",
                         "Advanced Stats:Armor Damage Reduction",
 
@@ -268,20 +294,14 @@ namespace Rawr.TankDK
         /// </summary>
         /// <returns>A new instance of the model's custom ComparisonCalculation class, 
         /// which inherits from ComparisonCalculationBase</returns>
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
-        {
-            return new ComparisonCalculationTankDK();
-        }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTankDK(); }
 
         /// <summary>
         /// Method to get a new instance of the model's custom CharacterCalculations class.
         /// </summary>
         /// <returns>A new instance of the model's custom CharacterCalculations class, 
         /// which inherits from CharacterCalculationsBase</returns>
-        public override CharacterCalculationsBase CreateNewCharacterCalculations()
-        {
-            return new CharacterCalculationsTankDK();
-        }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTankDK(); }
 
         /// <summary>
         /// An array of strings which define what calculations (in addition to the subpoint ratings)
@@ -325,6 +345,8 @@ namespace Rawr.TankDK
             CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
             // Validate opts 
             if (null == opts) return null;
+            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
+            ShotRotation sr = new ShotRotation();
 
             // Setup basic data from the character.
             // Baseline numbers of race & Class.
@@ -336,9 +358,16 @@ namespace Rawr.TankDK
             // The full character data.
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
             calcs.BasicStats = stats;
             calcs.TargetLevel = targetLevel;
+
+            // Add in factors for Unbreakable Armor when passing in the values for calculating Parry values.
+            // Need to ensure that for DKs we include Parry from str effected by DR.
+            // Talent: Unbreakable Armor specific numbers:
+            // UA runs for 20 secs w/ a 2 min cooldown.
+            float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
+            // Increases str by 25% when active.
+            stats.Strength = (stats.Strength * (1f + uaUptime) * .25f);
 
             // Get all the character avoidance numbers including deminishing returns.
             // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
@@ -346,95 +375,124 @@ namespace Rawr.TankDK
             for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
             {
                 // GetDRAvoidanceChance returns a dec. percentage.
-                // Since CurrentAvoidance is a int percent, need to multiply by 100.
+                // Since CurrentAvoidance is a percent, need to multiply by 100.
                 fAvoidance[i] = (StatConversion.GetDRAvoidanceChance(character, stats, (HitResult)i, targetLevel) * 100f);
             }
- 
-            // Avoidance is a mis-nomer it's really current likelihood of getting hit.
-            float currentAvoidance = 100.0f;
-            
+
+            float fChanceToGetHit = 100.0f;
+
             // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
             calcs.Miss = fAvoidance[(int)HitResult.Miss];
-            currentAvoidance -= calcs.Miss;
+            fChanceToGetHit -= calcs.Miss;
             // Dodge needs to be factored in here.
-            calcs.Dodge = Math.Min(currentAvoidance, fAvoidance[(int)HitResult.Dodge]);
-            currentAvoidance -= calcs.Dodge;
-            calcs.Parry = Math.Min(currentAvoidance, fAvoidance[(int)HitResult.Parry]);
-            currentAvoidance -= calcs.Parry;
+            calcs.Dodge = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Dodge]);
+            fChanceToGetHit -= calcs.Dodge;
+            // Pary factors
+            calcs.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
+            fChanceToGetHit -= calcs.Parry;
 
             // 5 + level difference == 5.6% crit chance for Raid bosses. 
-            calcs.Crit = (5.0f + levelDifference ) - fAvoidance[(int)HitResult.Crit];
+            calcs.Crit = (5.0f + levelDifference) - fAvoidance[(int)HitResult.Crit];
             float attackerCrit = Math.Max(0.0f, calcs.Crit);
             calcs.DefenseRating = stats.DefenseRating;
-            calcs.Defense = StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense;
+            // Adding the base Defense skill + plus all our stats.
+            calcs.Defense = (StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense) + 400;
             calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, targetLevel);
 
-            // Talent: Unbreakable Armor specific number.
-            float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
-            float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f)/* * (1.0f - character.DeathKnightTalents.FrostAura * 0.01f)*/ *
-                                (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime);
+            // The values below represent that values of the talents in mitigating damage.  
+            // BB == 1% reduction per point.
+            // UA == 5% reduction avaeraged by it's uptime.  
+            // ImpFrostPre == 1% reduction per point.
+            float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f) *
+                              //(1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime) * // Pulling out UA from Talent_Dr since I would argue it is a pure mitigation tactic.
+                              (1.0f - character.DeathKnightTalents.ImprovedFrostPresence * 0.01f);
 
-            // TODO: (Shazear)
-            // Break out the Surival, Mitigation and Threat math into their own functions.
-            // The goal is to make things more clear so when tweaks are required they can be easily read
-            // and isolated from other aspects of the paperdoll.
+            // Talent: Mark of Blood //////////////////////////////////////////////////////////
+            // Target is healed for 4% of max health per hit for up to 20 hits or 20 secs. 
+            // 3 Min cooldown.
+            float fMoBHPModifier = 0f;
 
-//***** Survival Rating *****
-
-            // Armor Damage Reduction is capped at 75%
-            calcs.ArmorDamageReduction = Math.Min(0.75f, stats.Armor / (stats.Armor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
-
-            float hp = calcs.BasicStats.Health;
-
-            calcs.Survival = hp / (talent_dr * (1.0f - calcs.ArmorDamageReduction) * (1.0f + attackerCrit / 100.0f));
-            calcs.SurvivalWeight = opts.SurvivalWeight;
-
-
-//***** Mitigation Rating *****
-
-            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
-            float ibfReduction = 0.2f + (stats.Defense + calcs.Defense) * 0.0014f;
-            if (character.DeathKnightTalents.GlyphofIceboundFortitude == true)
-            {
-                ibfReduction = 0.3f + ((stats.Defense + calcs.Defense) * 0.0014f);
-            }
-            float ibfDR = (ibfReduction * ibfUptime);
-
+            // Talent: Bone Shield ////////////////////////////////////////////////////////
             float bsDR = 0.0f;
+            float bsUptime = 0f;
             if (character.DeathKnightTalents.BoneShield > 0)
             {
-                float bsUptime = ((8.0f * (100.0f - currentAvoidance) + 60.0f * currentAvoidance)) / (120.0f * 100.0f);
+                uint BSStacks = 4;  // The number of bones by default.
                 if (character.DeathKnightTalents.GlyphofBoneShield == true)
                 {
-                    bsUptime = bsUptime + (bsUptime * 0.5f);
+                    BSStacks += 2;
                 }
+
+                bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
+                            (BSStacks * 2f) /                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
+                            ((100f - fChanceToGetHit) / 100)   // Loose a bone every time we get hit.
+                            / 120.0f);                          // 120 sec cooldown.
+                // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
             }
 
-            float complete_dr = (1.0f - calcs.ArmorDamageReduction) * (1.0f - ibfDR) * (1.0f - bsDR) * talent_dr;
+            // TODO: Figure out why the order of these sections matters.
+
+            #region ***** Mitigation Rating *****
+
+            // TODO: Integrate the Proc effect of the Sigil of the Unfaltering Knight.
+            // It hasn't been working since it was moved to a SpecialEffect.
+            // TODO: Integrate Magic Suppression.
+            // TODO: Integrate OnUse def trinkets like for Dodge and such.
+
+            // IceBound Fortitude. ////////////////////////////////////////////////////////
+            // Talent: GuileofGorefiend increases IBF by 2 sec per point.
+            // IBF has a 60 sec CD.
+            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
+            // IBF reduces damage taken by 20% + some amount(?) based on defense.
+            float ibfReduction = 0.2f + calcs.Defense * 0.0014f;
+            if (character.DeathKnightTalents.GlyphofIceboundFortitude == true)
+            {
+                // Glyphed to 30% + some amount(?)
+                ibfReduction += 0.1f;
+            }
+            float ibfDR = (ibfReduction * ibfUptime);
 
 
-            float critImpact = 1.0f;
-            float critHitAvoidance = currentAvoidance + attackerCrit * critImpact;
+            // Assuming Frost Fever is always active.
+            // Talent: Improved Icy Touch ////////////////////////////////////////////////////////
+            // Reduces target Attack speed by 2% per point.  3pts max.
+            float IITDR = 0f;
+            IITDR = (float)Math.Min(0.06f, character.DeathKnightTalents.ImprovedIcyTouch * 0.02f);
 
-            calcs.Mitigation = 10000.0f / (complete_dr * (critHitAvoidance / 100.0f));
-            
+            // Why are some talents factored in both Survival and Mitigation?  A the very least they should only be in Mitigation.
+            float complete_dr = (1.0f - calcs.ArmorDamageReduction)
+                                * (1.0f - ibfDR)
+                                * (1.0f - bsDR)
+                                * (1f - IITDR)
+                                * (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime)  // Adding UA to just mitigation complete DR.
+                                * talent_dr
+                                * (1f - .05f * character.DeathKnightTalents.ImprovedBloodPresence); // addition 5% benefit from Heals landing on the tank per point.
 
+            float critHitAvoidance = fChanceToGetHit + attackerCrit * critImpact;
 
-// ***** THREAT *****
+            calcs.Mitigation = opts.IncomingDamage / (complete_dr * (critHitAvoidance / 100.0f));
 
+            #endregion
+
+            #region ***** THREAT *****
+
+            float fDamageTotal = 0f; 
             if (character.MainHand != null)
             {
-                float hitBonus = (float)(stats.HitRating / (32.78998947f * 100.0f) + stats.PhysicalHit);
+                // TODO: Implment DW Tanking - as of 3.1 it's still unrealistic, but hey.  Gotta be complete.
+                // TODO: Shot rotation
+                // TODO: Single vs. Multi Target tanking.
+                float hitBonus = StatConversion.GetHitFromRating(stats.HitRating, character.Class) + stats.PhysicalHit;
+                // 8% default miss rate vs lvl 83
                 float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
                 if ((opts.TargetLevel - 80f) < 3)
                 {
                     chanceMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
                 }
 
-                calcs.Expertise = stats.Expertise + (float)Math.Floor((stats.ExpertiseRating / 32.78998947f) / 0.25f);
-
-                if (character.Race == Character.CharacterRace.Dwarf && 
+                calcs.Expertise = stats.Expertise + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating);
+                if (character.Race == Character.CharacterRace.Dwarf &&
                     (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace))
                 {
                     calcs.Expertise += 5;
@@ -451,7 +509,7 @@ namespace Rawr.TankDK
                     calcs.Expertise += 5;
                 }
 
-
+                // More Unreferenced Constants.
                 float chanceParry = Math.Max(0.0f, 0.15f - (calcs.Expertise * 0.0025f));
                 float chanceDodge = Math.Max(0.0f, 0.065f - (calcs.Expertise * 0.0025f));
                 float hitChance = 1.0f - (chanceMiss + chanceDodge + chanceParry);
@@ -460,31 +518,91 @@ namespace Rawr.TankDK
                 calcs.TargetMiss = chanceMiss;
                 calcs.TargetParry = chanceParry;
 
-                float physCrits = .0065f;
-                physCrits += stats.CritRating / 4591f;
-                physCrits += stats.Agility / 6250f;
-                physCrits += .01f * (float)(character.DeathKnightTalents.DarkConviction
-                    + character.DeathKnightTalents.EbonPlaguebringer);
+                // Base crit chance of 0% 
+                float physCrits = BasePhysicalCrit;
+                physCrits += stats.PhysicalCrit;
+                calcs.BasicStats.PhysicalCrit = physCrits;
 
-                float weaponDmg = (character.MainHand.Item.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
-
-                // Haste trinket (Meteorite Whetstone)
-                calcs.BasicStats.HasteRating += calcs.BasicStats.HasteRatingOnPhysicalAttack * 10 / 45;
-                float totalStaticHaste = 1.0f + (calcs.BasicStats.HasteRating / 32.78998947f / 100.0f);
+                float totalStaticHaste = 1.0f + (StatConversion.GetHasteFromRating(calcs.BasicStats.HasteRating, character.Class));
+                // 4% haste from ITalons
+                // 5% haste from IITalons
                 totalStaticHaste *= 1.0f + (character.DeathKnightTalents.IcyTalons * 0.04f + character.DeathKnightTalents.ImprovedIcyTalons * 0.05f);
 
-                calcs.Threat = weaponDmg / (character.MainHand.Speed / totalStaticHaste);
+                // Currently only taking into account 2h tanking.
+                // Every 14 AP == +1DPS
+                float fDamageWhite = (character.MainHand.Item.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
 
-                calcs.Threat *= hitChance * (physCrits + 1.0f);
+                // White Damage modifiers:
+                fDamageWhite *= (1f + 0.04f * character.DeathKnightTalents.Necrosis); // 4% shadow damage added to auto attacks per point.
+                fDamageWhite *= (1f + 0.01f * character.DeathKnightTalents.Desecration); // 1% additional damage done while on unholy ground.
 
-                calcs.Threat *= 1.0f + stats.ThreatIncreaseMultiplier;
+                // TODO: Entry point for shot rotation function.
+                float fDamageSpecial = 0f;
+                 // 2-hander weapon specialization.
+                float f2hWeaponDamageMultiplier = 0f;
+                if (character.MainHand.Type == Item.ItemType.TwoHandAxe
+                    || character.MainHand.Type == Item.ItemType.TwoHandMace
+                    || character.MainHand.Type == Item.ItemType.TwoHandSword)
+                {
+                    f2hWeaponDamageMultiplier = (1f + .02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
+                }
 
-                calcs.ThreatWeight = 1000.0f * opts.ThreatWeight;
+                // Threat here is damage output by the main weapon as affected by haste.
+                fDamageWhite = fDamageWhite / (character.MainHand.Speed / totalStaticHaste);
 
-                
+                fDamageTotal = fDamageWhite + fDamageSpecial;
+
+                // Remove hitchance problems, add Crit chance..
+                fDamageTotal *= hitChance;
+                // Increase the total damage done by the chance of crits hitting and each crit does 150% damage.
+                fDamageTotal += fDamageTotal * physCrits * 1.5f;
+
+                // For right now all damage is only looking at melee damage.  
+                // so Annihillation is going in full.  Once we get shot rotation, I'll break it out.
+                fDamageTotal = (fDamageWhite + fDamageSpecial)
+                                * (1f + .02f * bsUptime) // Bone Shield 2% damage increase when active.
+                                * (f2hWeaponDamageMultiplier) // 2h Weapon spec.
+                                ;
+
+                calcs.Threat = fDamageTotal;
+
+                // Threat buffs.
+                calcs.Threat *= 1.0f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
+
+                calcs.ThreatWeight = BaseThreatValue * opts.ThreatWeight;
+
+
             }
 
-            
+            #endregion
+
+            #region ***** Survival Rating *****
+
+            // TODO: Integrate Buffs & Debuffs into this function.  Right now there are none.
+            // Assuming the Boss has no ArPen
+            // From http://www.skeletonjack.com/2009/05/14/dk-tanking-armor-cap/#comments
+            // 75% armor cap.  Not sure if this is for DK or for all Tanks.  So I'm just going to handle it here.
+            // I'll do more research and see if it needs to go into the general function.
+            calcs.ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(targetLevel, stats.Armor, 0f, 0f, 0f));
+
+            // Adding in the extra 10% health here for frost presence so it's not default in the UI anymore.
+            float hp = (calcs.BasicStats.Health * 1.1f);
+
+            // Talent: Improved Blood Presence ///////////////////////////////////////////////////
+            if (character.DeathKnightTalents.ImprovedBloodPresence > 0)
+            {
+                // HACK: Since damage is so low, I'm bringing forward the ThreatWeight modifier as well.
+                // Increase equiv. HP by incoming healing that happens due to damage done.
+                // 2% of damage done healed per point of IBP 
+                hp += ((fDamageTotal * calcs.ThreatWeight) * character.DeathKnightTalents.ImprovedBloodPresence * 0.02f);
+            }
+
+            calcs.Survival = hp / (talent_dr * (1.0f - calcs.ArmorDamageReduction) * (1.0f + attackerCrit / 100.0f));
+            calcs.SurvivalWeight = opts.SurvivalWeight;
+
+            #endregion
+
+
 
             return calcs;
         }
@@ -515,79 +633,54 @@ namespace Rawr.TankDK
             // Basic racial & class baseline.
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            // Why was this pulled?
-            //Stats statsEnchants = GetEnchantsStats(character);  
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.VeteranOfTheThirdWar),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
-                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,
+                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare + talents.VeteranOfTheThirdWar),
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
                 BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
-                Dodge = 0.01f * talents.Anticipation,
-                Miss = 0.01f * talents.FrigidDreadplate,
-
+                // Currently SpellHit doesn't have an effect.
+                SpellHit = 0.01f * (float)(talents.Virulence),
+                Dodge = (0.01f * talents.Anticipation),
+                Miss = (0.01f * talents.FrigidDreadplate),
             };
+            // The crit work from talents was getting to complicated to include in the construction.  
+            // Talent: VisciousStrikes improve Crit by 3% so converting that to rating. 
+            // TODO: Talent BloodyVengence +1% crit for 30 secs after a crit per point & stacks 3x.  
+            statsTalents.PhysicalCrit += (0.03f * (float)(talents.ViciousStrikes));
+            // Dark Conviction (5pts) & EbonPlagueBringer (3pts) each increase Crit chance by 1% per point.
+            // All threat right now is looking at melee strikes.  So adding in Annihilation stright away.
+            statsTalents.PhysicalCrit += (.01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer + talents.Annihilation));
+
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
 
+            // We gather up everything here:
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
-            statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
-            statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
-            statsTotal.BonusStrengthMultiplier = statsGearEnchantsBuffs.BonusStrengthMultiplier;
-            statsTotal.BonusStaminaMultiplier = statsGearEnchantsBuffs.BonusStaminaMultiplier;
-            statsTotal.BaseArmorMultiplier = statsGearEnchantsBuffs.BaseArmorMultiplier;
+            // Stack only the info we care about.
+            statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
 
-            statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-            statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            // Apply Stat modifiers
+            statsTotal.Strength = (float)Math.Floor(ApplyMultiplier(statsGearEnchantsBuffs.Strength, statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor(ApplyMultiplier(statsGearEnchantsBuffs.Agility, statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(ApplyMultiplier(statsGearEnchantsBuffs.Stamina, statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            statsTotal.Armor = (float)Math.Floor(ApplyMultiplier((statsGearEnchantsBuffs.Armor + StatConversion.GetArmorFromAgility(statsTotal.Agility)), statsGearEnchantsBuffs.BaseArmorMultiplier) + 
+                                ApplyMultiplier(statsGearEnchantsBuffs.BonusArmor, statsGearEnchantsBuffs.BonusArmorMultiplier));
 
-            statsTotal.Armor = (float)Math.Floor(statsGearEnchantsBuffs.Armor * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier) * 1.80f + 2f * statsTotal.Agility);
-            statsTotal.Armor *= 1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier;
-            statsTotal.BonusArmor = statsGearEnchantsBuffs.BonusArmor;
-            statsTotal.Armor += statsTotal.BonusArmor;
-
-            statsTotal.Health = (float)Math.Floor((statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * 1.10f);
-            statsTotal.Health *= (1f + statsGearEnchantsBuffs.BonusHealthMultiplier);
-
-            statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
+            statsTotal.Health = (float)Math.Floor(ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsGearEnchantsBuffs.BonusHealthMultiplier));
 
             if (talents.BladedArmor > 0)
             {
                 statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
             }
-
-            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
-
-            statsTotal.DefenseRating = statsGearEnchantsBuffs.DefenseRating;
-            statsTotal.DodgeRating = statsGearEnchantsBuffs.DodgeRating;
-            statsTotal.ParryRating = statsGearEnchantsBuffs.ParryRating;
-
-            statsTotal.Defense = statsGearEnchantsBuffs.Defense;
-            statsTotal.Dodge = 0.03463600f + statsGearEnchantsBuffs.Dodge;
-            statsTotal.Parry = 0.050f + statsGearEnchantsBuffs.Parry;
-            statsTotal.Miss = 0.050f + statsGearEnchantsBuffs.Miss;
-
-            statsTotal.Resilience = statsGearEnchantsBuffs.Resilience;
+            statsTotal.AttackPower = (float)Math.Floor(ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsGearEnchantsBuffs.BonusAttackPowerMultiplier));
+            statsTotal.CritRating = (float)Math.Floor(ApplyMultiplier((statsGearEnchantsBuffs.CritRating + statsGearEnchantsBuffs.CritMeleeRating), statsGearEnchantsBuffs.BonusCritMultiplier));
             
-
-            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
-            statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
-            statsTotal.SpellHit = statsGearEnchantsBuffs.SpellHit;
-            statsTotal.PhysicalHit = statsGearEnchantsBuffs.PhysicalHit;
-            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
-            statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
-            statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
-
-            statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-
-            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
+            statsTotal.CritRating += statsGearEnchantsBuffs.LotPCritRating + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
 
             return (statsTotal);
         }
@@ -620,14 +713,12 @@ namespace Rawr.TankDK
         {
             Stats s = new Stats()
             {
-                Health = stats.Health,
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
-                //Intellect = stats.Intellect, INT & Spirit are relevent?  Really?
-                //Spirit = stats.Spirit,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
+                Health = stats.Health,
 
                 DefenseRating = stats.DefenseRating,
                 ParryRating = stats.ParryRating,
@@ -636,15 +727,16 @@ namespace Rawr.TankDK
                 Defense = stats.Defense,
                 Dodge = stats.Dodge,
                 Parry = stats.Parry,
+                Miss = stats.Miss,
 
                 Resilience = stats.Resilience,
 
-                // Why was AP, crit, haste, Weapon damage etc removed?  Since it playes into Threat production?
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-                //ArmorPenetration = stats.ArmorPenetration,
+                ArmorPenetration = stats.ArmorPenetration,
                 ExpertiseRating = stats.ExpertiseRating,
+                Expertise = stats.Expertise,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
                 PhysicalCrit = stats.PhysicalCrit,
@@ -659,18 +751,24 @@ namespace Rawr.TankDK
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+ 
+           // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
+                ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
                 LotPCritRating = stats.LotPCritRating,
                 CritMeleeRating = stats.CritMeleeRating,
-                WindfuryAPBonus = stats.WindfuryAPBonus,
                 Bloodlust = stats.Bloodlust,
 
                 // Bringing in some of the relavent stats from DPSDK.
-
+                // General Damage Mods.
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
 
+                // Ability mods.
                 BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
                 BonusDeathCoilDamage = stats.BonusDeathCoilDamage,
                 BonusDeathStrikeDamage = stats.BonusDeathStrikeDamage,
@@ -690,26 +788,7 @@ namespace Rawr.TankDK
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    if (effect.Trigger == Trigger.DamageDone ||
-                        effect.Trigger == Trigger.DamageSpellCast ||
-                        effect.Trigger == Trigger.DamageSpellCrit ||
-                        effect.Trigger == Trigger.DamageSpellHit ||
-                        effect.Trigger == Trigger.SpellCast ||
-                        effect.Trigger == Trigger.SpellCrit ||
-                        effect.Trigger == Trigger.SpellHit ||
-                        effect.Trigger == Trigger.DoTTick ||
-                        effect.Trigger == Trigger.MeleeCrit ||
-                        effect.Trigger == Trigger.MeleeHit ||
-                        effect.Trigger == Trigger.PhysicalCrit ||
-                        effect.Trigger == Trigger.PhysicalHit ||
-                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
-                        effect.Trigger == Trigger.IcyTouchHit ||
-                        effect.Trigger == Trigger.PlagueStrikeHit ||
-                        effect.Trigger == Trigger.RuneStrikeHit ||
-                        effect.Trigger == Trigger.Use)
-                    {
-                        s.AddSpecialEffect(effect);
-                    }
+                    s.AddSpecialEffect(effect);
                 }
             }
             return s;
@@ -732,8 +811,10 @@ namespace Rawr.TankDK
             bResults |= (stats.AttackPower != 0);
             bResults |= (stats.HitRating != 0);
             bResults |= (stats.CritRating != 0);
+            bResults |= (stats.PhysicalCrit != 0);
             bResults |= (stats.ArmorPenetration != 0);
             bResults |= (stats.ExpertiseRating != 0);
+            bResults |= (stats.Expertise != 0);
             bResults |= (stats.HasteRating != 0);
             bResults |= (stats.WeaponDamage != 0);
             bResults |= (stats.BonusArmor != 0);
@@ -743,8 +824,10 @@ namespace Rawr.TankDK
             bResults |= (stats.Resilience != 0);
             bResults |= (stats.Dodge != 0);
             bResults |= (stats.Parry != 0);
+            bResults |= (stats.Miss != 0);
             bResults |= (stats.Defense != 0);
             bResults |= (stats.BonusArmorMultiplier != 0);
+            bResults |= (stats.BaseArmorMultiplier != 0);
             bResults |= (stats.BonusHealthMultiplier != 0);
             bResults |= (stats.BonusStrengthMultiplier != 0);
             bResults |= (stats.BonusStaminaMultiplier != 0);
@@ -753,9 +836,10 @@ namespace Rawr.TankDK
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusSpellPowerMultiplier != 0);
+            bResults |= (stats.ThreatIncreaseMultiplier != 0);
+            bResults |= (stats.ThreatReductionMultiplier != 0);
             bResults |= (stats.CritMeleeRating != 0);
             bResults |= (stats.LotPCritRating != 0);
-            bResults |= (stats.WindfuryAPBonus != 0);
             bResults |= (stats.Bloodlust != 0);
 
             // Bringing in the damage stuff from DPSDK for better threat data
@@ -798,448 +882,10 @@ namespace Rawr.TankDK
             return bResults;
         }
 
-        #region old functions 
-
-        /// <summary>
-        /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
-        /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
-        /// those total stats for the character, and any calculationoptions on the character, perform all the 
-        /// calculations required to come up with the final calculations defined in 
-        /// CharacterDisplayCalculationLabels, including an Overall rating, and all Sub ratings defined in 
-        /// SubPointNameColors.
-        /// </summary>
-        /// <param name="character">The character to perform calculations for.</param>
-        /// <param name="additionalItem">An additional item to treat the character as wearing.
-        /// This is used for gems, which don't have a slot on the character to fit in, so are just
-        /// added onto the character, in order to get gem calculations.</param>
-        /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
-        /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
-        /// CharacterCalculationsBase comments for more details.</returns>
-        public /*override*/ CharacterCalculationsBase GetCharacterCalculations_old(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        private float ApplyMultiplier(float baseValue, float multiplier)
         {
-            // TODO: (Shazear) 
-            // There are a number of constants declared below and used immediately.  
-            // Need to break out those constants so as things change in game from patch to patch, we 
-            // don't need to hunt down each value individually.
-
-            // Import the option values from the options tab on the UI.
-            CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
-            // Validate opts 
-            if (null == opts) return null;
-
-            // Setup basic data from the character.
-            // Baseline numbers of race & Class.
-            Stats raceStats = GetRaceStats(character);
-            // Level differences.
-            int targetLevel = opts.TargetLevel;
-            int characterLevel = character.Level;
-            float levelDifference = (targetLevel - characterLevel) * 0.2f;
-            // The full character data.
-            Stats stats = GetCharacterStats(character, additionalItem);
-
-            // Talent: Unbreakable Armor specific number.
-            float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
-
-            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
-            calcs.BasicStats = stats;
-            calcs.TargetLevel = targetLevel;
-
-            float baseAgi = raceStats.Agility;
-            float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
-            //float defSkill = stats.DefenseRating / 4.918498039f;
-
-            float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * (1.0f / 73.52941176f) + stats.Defense * 0.04f;
-            float missNonDR = stats.Miss * 100f - levelDifference + stats.Defense * 0.04f;
-            float parryNonDR = stats.Parry * 100f - levelDifference + stats.Defense * 0.04f;
-
-            float dodgePreDR = (stats.Agility - baseAgi) * (1.0f/73.52941176f) + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); 
-            float missPreDR = (defSkill * 0.04f);
-            float parryRatingFromStr = stats.Strength * 0.25f * (1.0f + uaUptime * 0.25f);
-            float parryPreDR = (defSkill * 0.04f) + (stats.ParryRating + parryRatingFromStr) / 49.18498611f;
-
-            float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
-            float missPostDR = 1f / (1f / 16.0f + 0.9560f / missPreDR); 
-            float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
-
-            float dodgeTotal = dodgeNonDR + dodgePostDR;
-            float missTotal = missNonDR + missPostDR;
-            float parryTotal = parryNonDR + parryPostDR;
-
-
-            calculateDRValues_old(calcs, dodgePreDR, missPreDR, parryPreDR, dodgePostDR, missPostDR, parryPostDR);
-
-            float currentAvoidance = 100.0f;
-
-            calcs.Miss = missTotal; 
-            currentAvoidance -= missTotal;
-
-            calcs.Dodge = Math.Min(currentAvoidance, dodgeTotal); 
-            currentAvoidance -= Math.Min(currentAvoidance, dodgeTotal);
-
-            calcs.Parry = Math.Min(currentAvoidance, parryTotal); 
-            currentAvoidance -= Math.Min(currentAvoidance, parryTotal);
-
-            float critReduction = (stats.Defense + defSkill) * 0.04f + stats.Resilience / 81.97497559f;
-
-            float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - critReduction);
-            calcs.Crit = 5.0f + levelDifference - critReduction;
-            calcs.Defense = defSkill + stats.Defense;
-            calcs.DefenseRating = stats.DefenseRating;
-            calcs.DefenseRatingNeeded = (calcs.Crit / 0.04f) * 4.918498039f;
-
-
-            float talent_dr = (1.0f - character.DeathKnightTalents.BladeBarrier * 0.01f)/* * (1.0f - character.DeathKnightTalents.FrostAura * 0.01f)*/ *
-                                (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime);
-
-            // TODO: (Shazear)
-            // Break out the Surival, Mitigation and Threat math into their own functions.
-            // The goal is to make things more clear so when tweaks are required they can be easily read
-            // and isolated from other aspects of the paperdoll.
-
-//***** Survival Rating *****
-
-            float armor = stats.Armor;
-            // Armor Damage Reduction is capped at 75%
-            float armor_dr = Math.Min(0.75f, armor / (armor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
-
-            calcs.ArmorDamageReduction = armor_dr;
-
-            float hp = calcs.BasicStats.Health;
-
-            calcs.Survival = hp / (talent_dr * (1.0f - armor_dr) * (1.0f + attackerCrit / 100.0f));
-            calcs.SurvivalWeight = opts.SurvivalWeight;
-
-
-//***** Mitigation Rating *****
-
-            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
-            float ibfReduction = 0.2f + (stats.Defense + defSkill) * 0.0014f;
-            if (character.DeathKnightTalents.GlyphofIceboundFortitude == true)
-            {
-                ibfReduction = 0.3f + ((stats.Defense + defSkill) * 0.0014f);
-            }
-            float ibfDR = (ibfReduction * ibfUptime);
-
-            float bsDR = 0.0f;
-            if (character.DeathKnightTalents.BoneShield > 0)
-            {
-                float bsUptime = ((8.0f * (100.0f - currentAvoidance) + 60.0f * currentAvoidance)) / (120.0f * 100.0f);
-                if (character.DeathKnightTalents.GlyphofBoneShield == true)
-                {
-                    bsUptime = bsUptime + (bsUptime * 0.5f);
-                }
-                bsDR = 0.2f * bsUptime;
-            }
-
-            float complete_dr = (1.0f - armor_dr) * (1.0f - ibfDR) * (1.0f - bsDR) * talent_dr;
-
-
-            float critImpact = 1.0f;
-            float critHitAvoidance = currentAvoidance + attackerCrit * critImpact;
-
-            calcs.Mitigation = 10000.0f / (complete_dr * (critHitAvoidance / 100.0f));
-            
-
-
-// ***** THREAT *****
-
-            if (character.MainHand != null)
-            {
-                float hitBonus = (float)(stats.HitRating / (32.78998947f * 100.0f) + stats.PhysicalHit);
-                float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
-                if ((opts.TargetLevel - 80f) < 3)
-                {
-                    chanceMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
-                }
-
-                calcs.Expertise = stats.Expertise + (float)Math.Floor((stats.ExpertiseRating / 32.78998947f) / 0.25f);
-
-                if (character.Race == Character.CharacterRace.Dwarf && 
-                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace))
-                {
-                    calcs.Expertise += 5;
-                }
-                if (character.Race == Character.CharacterRace.Human &&
-                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace ||
-                    character.MainHand.Type == Item.ItemType.TwoHandSword || character.MainHand.Type == Item.ItemType.OneHandSword))
-                {
-                    calcs.Expertise += 3;
-                }
-                if (character.Race == Character.CharacterRace.Orc &&
-                    (character.MainHand.Type == Item.ItemType.TwoHandAxe || character.MainHand.Type == Item.ItemType.OneHandAxe))
-                {
-                    calcs.Expertise += 5;
-                }
-
-
-                float chanceParry = Math.Max(0.0f, 0.15f - (calcs.Expertise * 0.0025f));
-                float chanceDodge = Math.Max(0.0f, 0.065f - (calcs.Expertise * 0.0025f));
-                float hitChance = 1.0f - (chanceMiss + chanceDodge + chanceParry);
-
-                calcs.TargetDodge = chanceDodge;
-                calcs.TargetMiss = chanceMiss;
-                calcs.TargetParry = chanceParry;
-
-                float physCrits = .0065f;
-                physCrits += stats.CritRating / 4591f;
-                physCrits += stats.Agility / 6250f;
-                physCrits += .01f * (float)(character.DeathKnightTalents.DarkConviction
-                    + character.DeathKnightTalents.EbonPlaguebringer);
-
-                float weaponDmg = (character.MainHand.Item.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
-
-                // Haste trinket (Meteorite Whetstone)
-                calcs.BasicStats.HasteRating += calcs.BasicStats.HasteRatingOnPhysicalAttack * 10 / 45;
-                float totalStaticHaste = 1.0f + (calcs.BasicStats.HasteRating / 32.78998947f / 100.0f);
-                totalStaticHaste *= 1.0f + (character.DeathKnightTalents.IcyTalons * 0.04f + character.DeathKnightTalents.ImprovedIcyTalons * 0.05f);
-
-                calcs.Threat = weaponDmg / (character.MainHand.Speed / totalStaticHaste);
-
-                calcs.Threat *= hitChance * (physCrits + 1.0f);
-
-                calcs.Threat *= 1.0f + stats.ThreatIncreaseMultiplier;
-
-                calcs.ThreatWeight = 1000.0f * opts.ThreatWeight;
-
-                
-            }
-
-            
-
-            return calcs;
+            return (baseValue * (1f + multiplier));
         }
-
-        /// <summary>
-        /// calculates the effectivenes of avoidance ratings after diminishing returns
-        /// </summary>
-        /// <param name="calcs"></param>
-        /// <param name="dodgePreDR"></param>
-        /// <param name="missPreDR"></param>
-        /// <param name="parryPreDR"></param>
-        /// <param name="dodgePostDR"></param>
-        /// <param name="missPostDR"></param>
-        /// <param name="parryPostDR"></param>
-        private static void calculateDRValues_old(CharacterCalculationsTankDK calcs, float dodgePreDR, float missPreDR, float parryPreDR, float dodgePostDR, float missPostDR, float parryPostDR)
-        {
-            /*
-            float dodgePreEffect = 1.0f / 39.34798813f;
-            float parryPreEffect = 1.0f / 49.18498611f;
-
-            float defPreEffect = 0.04f / 4.918498039f;
-
-            float dodgePostEffect = 1f / (1f / 88.129021f + 0.9560f / (dodgePreDR + dodgePreEffect)) - dodgePostDR;
-            float parryPostEffect = 1f / (1f / 47.003525f + 0.9560f / (parryPreDR + parryPreEffect)) - parryPostDR;
-
-            calcs.DRDodge = dodgePostEffect / dodgePreEffect * 100.0f;
-            calcs.DRParry = parryPostEffect / parryPreEffect * 100.0f;
-
-            float defPostEffect = 1f / (1f / 88.129021f + 0.9560f / (dodgePreDR + defPreEffect)) - dodgePostDR;
-            defPostEffect += 1f / (1f / 47.003525f + 0.9560f / (parryPreDR + defPreEffect)) - parryPostDR;
-            defPostEffect += 1f / (1f / 16.0f + 0.9560f / (missPreDR + defPreEffect)) - missPostDR;
-
-            calcs.DRDefense = defPostEffect / (3.0f * defPreEffect) * 100.0f;
-             */
-        }
-
-        /// <summary>
-        /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
-        /// combine all of the information about the character, including race, gear, enchants, buffs,
-        /// calculationoptions, etc., to form a single combined Stats object. Three of the methods below
-        /// can be called from this method to help total up stats: GetItemStats(character, additionalItem),
-        /// GetEnchantsStats(character), and GetBuffsStats(character.ActiveBuffs).
-        /// </summary>
-        /// <param name="character">The character whose stats should be totaled.</param>
-        /// <param name="additionalItem">An additional item to treat the character as wearing.
-        /// This is used for gems, which don't have a slot on the character to fit in, so are just
-        /// added onto the character, in order to get gem calculations.</param>
-        /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
-        public /*override*/ Stats GetCharacterStats_old(Character character, Item additionalItem)
-        {
-            // Validate that character.CalculationOptions != NULL
-            if (null == character.CalculationOptions)
-            {
-                // Possibly put some error text here.
-                return null;
-            }
-            CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
-            DeathKnightTalents talents = character.DeathKnightTalents;
-
-            // Basic racial & class baseline.
-            Stats statsRace = GetRaceStats(character);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            // Why was this pulled?
-            //Stats statsEnchants = GetEnchantsStats(character);  
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsTalents = new Stats()
-            {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
-                BaseArmorMultiplier = .03f * (float)(talents.Toughness),
-                BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
-                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,
-                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
-                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
-                Dodge = 0.01f * talents.Anticipation,
-                Miss = 0.01f * talents.FrigidDreadplate,
-
-            };
-            Stats statsTotal = new Stats();
-            Stats statsGearEnchantsBuffs = new Stats();
-
-            /*
-            //calculate drums uptime...if it lands on an even minute mark ignore it, as it will have a duration of 0
-            float drumsEffectiveFightDuration = (float)calcOpts.FightLength - 1f;
-            float numDrums = drumsEffectiveFightDuration % 2;
-            float drumsUptime = (numDrums * .5f) / (float)calcOpts.FightLength;
-
-            // Drums of War - 60 AP/30 SD
-            if (calcOpts.DrumsOfWar)
-            {
-                statsBuffs.AttackPower += drumsUptime * 60f;
-            }
-
-            // Drums of Battle - 80 Haste
-            if (calcOpts.DrumsOfBattle)
-            {
-                statsBuffs.HasteRating += drumsUptime * 80f;
-            }
-            */
-
-            // Ferocious Inspiriation  **Temp fix - FI increases all damage, not just physical damage
-            /*
-            if (character.ActiveBuffsContains("Ferocious Inspiration"))
-            {
-                statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) *
-                    (float)Math.Pow(1.03f, calcOpts.FerociousInspiration - 1f)) - 1f;
-            }
-            */
-
-            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
-
-            statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
-            statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
-            statsTotal.BonusStrengthMultiplier = statsGearEnchantsBuffs.BonusStrengthMultiplier;
-            statsTotal.BonusStaminaMultiplier = statsGearEnchantsBuffs.BonusStaminaMultiplier;
-            statsTotal.BaseArmorMultiplier = statsGearEnchantsBuffs.BaseArmorMultiplier;
-
-            statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-            statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-
-            //Do we really need Int and spirit?  Pulling it.
-            //statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-            //statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
-
-            statsTotal.Armor = (float)Math.Floor(statsGearEnchantsBuffs.Armor * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier) * 1.80f + 2f * statsTotal.Agility);
-            statsTotal.Armor *= 1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier;
-
-            statsTotal.BonusArmor = statsGearEnchantsBuffs.BonusArmor;
-
-            statsTotal.Health = (float)Math.Floor((statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * 1.10f);
-            statsTotal.Health *= (1f + statsGearEnchantsBuffs.BonusHealthMultiplier);
-
-            //Do we really need Mana calc?  Pulling it.
-            //statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
-            statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
-
-            statsTotal.Armor += statsTotal.BonusArmor;
-
-            if (talents.BladedArmor > 0)
-            {
-                statsTotal.AttackPower += (statsGearEnchantsBuffs.Armor / 180f) * (float)talents.BladedArmor;
-            }
-
-            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
-
-            statsTotal.DefenseRating = statsGearEnchantsBuffs.DefenseRating;
-            statsTotal.DodgeRating = statsGearEnchantsBuffs.DodgeRating;
-            statsTotal.ParryRating = statsGearEnchantsBuffs.ParryRating;
-
-            statsTotal.Defense = statsGearEnchantsBuffs.Defense;
-            statsTotal.Dodge = 0.03463600f + statsGearEnchantsBuffs.Dodge;
-            statsTotal.Parry = 0.050f + statsGearEnchantsBuffs.Parry;
-            statsTotal.Miss = 0.050f + statsGearEnchantsBuffs.Miss;
-
-            statsTotal.Resilience = statsGearEnchantsBuffs.Resilience;
-            
-
-            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
-            statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
-            statsTotal.SpellHit = statsGearEnchantsBuffs.SpellHit;
-            statsTotal.PhysicalHit = statsGearEnchantsBuffs.PhysicalHit;
-            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
-            statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
-            statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
-
-            statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-
-            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
-
-            return (statsTotal);
-        }
-
-
-        private Stats GetRaceStats_old(Character character)
-        {
-            // Base stats static class implemented... 
-            // Moving this function to pull those values
-            // Keeping this old function for a couple set of unittests and then will purge.
-            Stats statsRace;
-            switch (character.Race)
-            {
-                case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 0f, Health = 2169f };
-                    break;
-                case Character.CharacterRace.Dwarf:
-                    statsRace = new Stats() { Strength = 110f, Agility = 69f, Stamina = 102f, Intellect = 28f, Spirit = 41f, Armor = 0f, Health = 2199f };
-                    break;
-                case Character.CharacterRace.NightElf:
-                    statsRace = new Stats() { Strength = 105f, Agility = 78f, Stamina = 98f, Intellect = 29f, Spirit = 42f, Armor = 0f, Health = 2159f,
-                                                Miss = 0.02f};
-                    break;
-                case Character.CharacterRace.Gnome:
-                    statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 0f, Health = 2159f };
-                    break;
-                case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 0f, Health = 2159f,
-                                                PhysicalHit = 0.01f, SpellHit = 0.01f};
-                    break;
-                case Character.CharacterRace.Orc:
-                    statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 0f, Health = 2189f };
-                    break;
-                case Character.CharacterRace.Troll:
-                    statsRace = new Stats() { Strength = 109f, Agility = 75f, Stamina = 100f, Intellect = 25f, Spirit = 43f, Armor = 0f, Health = 2179f };
-                    break;
-                case Character.CharacterRace.Undead:
-                    statsRace = new Stats() { Strength = 107f, Agility = 71f, Stamina = 100f, Intellect = 27f, Spirit = 47f, Armor = 0f, Health = 2179f };
-                    break;
-                case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats() { Strength = 105f, Agility = 75f, Stamina = 97f, Intellect = 33f, Spirit = 41f, Armor = 0f, Health = 2149f };
-                    break;
-                case Character.CharacterRace.Tauren:
-                    statsRace = new Stats() { Strength = 113f, Agility = 68f, Stamina = 101f, Intellect = 24f, Spirit = 34f, Armor = 0f, Health = 2298f };
-                    break;
-
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-            // Derived stats base amount, common to all races
-            statsRace.Strength += 67f;
-            statsRace.Agility += 39f;
-            statsRace.Stamina += 61f;
-            statsRace.Intellect += 6f;
-            statsRace.Spirit += 17f;
-
-            statsRace.Health += 5792;
-            statsRace.AttackPower = 202f + (67f * 2);
-
-            return statsRace;
-        }
-#endregion
-
 
         /// <summary>
         /// Deserializes the model's CalculationOptions data object from xml
