@@ -355,6 +355,8 @@ namespace Rawr
         }
 
         // Returns a Percentage
+        public static float GetResilienceCritReduction(float Rating) { return GetResilienceFromRating(Rating); }
+        public static float GetResilienceCritReduction(float Rating, Character.CharacterClass Class) { return GetResilienceFromRating(Rating); }
         public static float GetResilienceFromRating(float Rating, Character.CharacterClass Class) { return GetResilienceFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Resilience)
@@ -617,7 +619,7 @@ namespace Rawr
         {
             float levelModifier = (TargetLevel - character.Level) * 0.2f;
             float defSkill = (GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
-            float defSkillMod = (defSkill * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
+            float defSkillMod = ((defSkill - (TargetLevel * 5)) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
             float baseAvoid = 0.0f;
             float modifiedAvoid = defSkillMod;
             float finalAvoid = 0f; // I know it breaks my lack of redundancy rule, but it helps w/ readability.
@@ -651,7 +653,7 @@ namespace Rawr
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
                     break;
                 case HitResult.Crit:
-                    modifiedAvoid += (GetResilienceFromRating(stats.Resilience) * 100f);
+                    modifiedAvoid += (GetResilienceCritReduction(stats.Resilience) * 100f);
                     break;
             }
 

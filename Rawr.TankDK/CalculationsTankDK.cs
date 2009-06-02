@@ -367,7 +367,7 @@ namespace Rawr.TankDK
             // UA runs for 20 secs w/ a 2 min cooldown.
             float uaUptime = character.DeathKnightTalents.UnbreakableArmor > 0 ? 20.0f / 120.0f : 0.0f;
             // Increases str by 25% when active.
-            stats.Strength = (stats.Strength * (1f + uaUptime) * .25f);
+            stats.Strength += (stats.Strength * 0.25f * uaUptime);
 
             // Get all the character avoidance numbers including deminishing returns.
             // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
@@ -395,8 +395,7 @@ namespace Rawr.TankDK
             calcs.Crit = (5.0f + levelDifference) - fAvoidance[(int)HitResult.Crit];
             float attackerCrit = Math.Max(0.0f, calcs.Crit);
             calcs.DefenseRating = stats.DefenseRating;
-            // Adding the base Defense skill + plus all our stats.
-            calcs.Defense = (StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense) + 400;
+            calcs.Defense = (StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
             calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, targetLevel);
 
             // The values below represent that values of the talents in mitigating damage.  
@@ -646,6 +645,7 @@ namespace Rawr.TankDK
                 SpellHit = 0.01f * (float)(talents.Virulence),
                 Dodge = (0.01f * talents.Anticipation),
                 Miss = (0.01f * talents.FrigidDreadplate),
+                Defense = 400, // Adding in the base 400 Defense skill all tanks are expected to have.  There are too many places where this just kinda stuck in.  It should be attached to the toon.
             };
             // The crit work from talents was getting to complicated to include in the construction.  
             // Talent: VisciousStrikes improve Crit by 3% so converting that to rating. 
