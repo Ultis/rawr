@@ -134,7 +134,7 @@
                  * c = rage conversion value
                  * s = weapon speed
                  * f = hit factor */
-                const float c = 0.0091107836f * 80f * 80f + 3.225598133f * 80f + 4.2652911f; // = ~320.6
+                const float c = 453.3f;//0.0091107836f * 80f * 80f + 3.225598133f * 80f + 4.2652911f; // = ~320.6
                 float R = 0f;
                 R = 3.75f * d / c + f * s / 2.0f;
                 R *= (1.0f + 0.25f * _talents.EndlessRage);
