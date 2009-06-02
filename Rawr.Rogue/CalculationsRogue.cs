@@ -268,35 +268,6 @@ namespace Rawr.Rogue
             return statsTotal;
         }
 
-        public Stats GetBuffsStats(Character character)
-        {
-            var statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            // buffs from DPSWarr
-            //Add Expose Weakness since it's not listed as an AP buff
-            if (statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += 200f;
-
-            //Mongoose
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
-            {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-            }
-            if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673)
-            {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
-            }
-
-            ////Executioner
-            //if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
-            //{
-            //    statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-            //}
-
-            return statsBuffs;
-        }
-
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             switch (chartName)
