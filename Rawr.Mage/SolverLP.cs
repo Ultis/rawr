@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+#if SILVERLIGHT
+    public sealed class SolverLP : IComparable<SolverLP>
+#else
     public unsafe sealed class SolverLP : IComparable<SolverLP>
+#endif
     {
         private int cRows;
         private int cCols;
@@ -16,11 +20,27 @@ namespace Rawr.Mage
         public StringBuilder Log = new StringBuilder();
         //public int[] disabledHex;
 
+#if SILVERLIGHT
+        private double[] pRowScale;
+        private double[] pColumnScale;
+        private double[] pCost;
+#else
         private double* pRowScale;
         private double* pColumnScale;
         private double* pCost;
+#endif
         private SparseMatrix sparseMatrix;
 
+#if SILVERLIGHT
+        public void BeginSafe(double[] pRowScale, double[] pColumnScale, double[] pCost, double[] pData, double[] pValue, int[] pRow, int[] pCol)
+        {
+            this.pRowScale = pRowScale;
+            this.pColumnScale = pColumnScale;
+            this.pCost = pCost;
+            sparseMatrix = lp.A;
+            sparseMatrix.BeginSafe(pData, pValue, pRow, pCol);
+        }
+#else
         public void BeginUnsafe(double* pRowScale, double* pColumnScale, double* pCost, double* pData, double* pValue, int* pRow, int* pCol)
         {
             this.pRowScale = pRowScale;
@@ -29,6 +49,7 @@ namespace Rawr.Mage
             sparseMatrix = lp.A;
             sparseMatrix.BeginUnsafe(pData, pValue, pRow, pCol);
         }
+#endif
 
         public void EndUnsafe()
         {

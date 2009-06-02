@@ -831,7 +831,11 @@ namespace Rawr.Mage
         }
 
         // rawStats is only valid for calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0, otherwise it is the same as baseStats
+#if SILVERLIGHT
+        private void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, out List<double> tpsList)
+#else
         private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, out List<double> tpsList)
+#endif
         {
             segmentList = new List<Segment>();
             if (segmentCooldowns)
@@ -998,10 +1002,16 @@ namespace Rawr.Mage
             }
             calculationResult.SegmentList = segmentList;
 
+#if !SILVERLIGHT
             fixed (double* pRowScale = lp.ArraySet.rowScale, pColumnScale = lp.ArraySet.columnScale, pCost = lp.ArraySet._cost, pData = lp.ArraySet.SparseMatrixData, pValue = lp.ArraySet.SparseMatrixValue)
             fixed (int* pRow = lp.ArraySet.SparseMatrixRow, pCol = lp.ArraySet.SparseMatrixCol)
+#endif
             {
+#if SILVERLIGHT
+                lp.BeginSafe(lp.ArraySet.rowScale, lp.ArraySet.columnScale, lp.ArraySet._cost, lp.ArraySet.SparseMatrixData, lp.ArraySet.SparseMatrixValue, lp.ArraySet.SparseMatrixRow, lp.ArraySet.SparseMatrixCol);
+#else
                 lp.BeginUnsafe(pRowScale, pColumnScale, pCost, pData, pValue, pRow, pCol);
+#endif
 
                 #region Set LP Scaling
                 lp.SetRowScaleUnsafe(rowManaRegen, 0.1);

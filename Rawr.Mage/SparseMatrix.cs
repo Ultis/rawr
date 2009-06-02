@@ -5,13 +5,33 @@ using System.Text;
 namespace Rawr.Mage
 {
     // only one should exist at a time, otherwise behavior unspecified
+#if SILVERLIGHT
+    public class SparseMatrix
+#else
     public unsafe class SparseMatrix
+#endif
     {
+#if SILVERLIGHT
+        private double[] pData;
+        internal double[] pValue;
+        private int[] pRow;
+        private int[] pCol;
+#else
         private double* pData;
         internal double* pValue;
         private int* pRow;
         private int* pCol;
+#endif
 
+#if SILVERLIGHT
+        public void BeginSafe(double[] pData, double[] pValue, int[] pRow, int[] pCol)
+        {
+            this.pData = pData;
+            this.pValue = pValue;
+            this.pRow = pRow;
+            this.pCol = pCol;
+        }
+#else
         public void BeginUnsafe(double* pData, double* pValue, int* pRow, int* pCol)
         {
             this.pData = pData;
@@ -19,6 +39,7 @@ namespace Rawr.Mage
             this.pRow = pRow;
             this.pCol = pCol;
         }
+#endif
 
         public void EndUnsafe()
         {

@@ -1245,7 +1245,11 @@ namespace Rawr.Mage
             if (weight > 0) sb.AppendFormat(format, weight);
         }
 
+#if SILVERLIGHT
+        public GenericArcane(string name, CastingState castingState, double X00, double X01, double X02, double X10, double X11, double X12, double X20, double X22, double X30, double X32, double X40, double X41, double X42, double X50, double X51, double X52, double X60, double X61, double X62, double X70, double X71, double X72, double X80, double X81, double X82, double X90, double X91, double X92)
+#else
         public unsafe GenericArcane(string name, CastingState castingState, double X00, double X01, double X02, double X10, double X11, double X12, double X20, double X22, double X30, double X32, double X40, double X41, double X42, double X50, double X51, double X52, double X60, double X61, double X62, double X70, double X71, double X72, double X80, double X81, double X82, double X90, double X91, double X92)
+#endif
             : base(castingState)
         {
             Name = name;
@@ -1274,6 +1278,203 @@ namespace Rawr.Mage
             double MB = 0.04 * castingState.MageTalents.MissileBarrage;
             double T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
+#if SILVERLIGHT
+            double[] U = arraySet.LU_U;
+            double[] x = X;
+            {
+                M.BeginSafe();
+
+                for (int replace = size - 1; replace >= size - 1; replace--)
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        for (int j = 0; j < size; j++)
+                        {
+                            U[i * size + j] = 0;
+                        }
+                    }
+
+                    //U[i * rows + j]
+
+                    //AB0,MB0,ABar+: S00
+                    //AB0       => AB1,MB0,ABar+    X00*(1-MB)
+                    //AB0       => AB1,MB1,ABar+    X00*MB
+                    //ABar      => AB0,MB0,ABar-    X01*(1-MB)
+                    //ABar      => AB0,MB2,ABar-    X01*MB
+                    //AM        => AB0,MB0,ABar+    X02
+                    U[s00 * size + s00] = X02 - 1;
+                    U[s01 * size + s00] = X01 * (1 - MB);
+                    U[s02 * size + s00] = X01 * MB;
+                    U[s10 * size + s00] = X00 * (1 - MB);
+                    U[s11 * size + s00] = X00 * MB;
+
+                    //AB0,MB0,ABar-: S01
+                    //AB0       => AB1,MB0,ABar+    X20*(1-MB)
+                    //AB0       => AB1,MB1,ABar+    X20*MB
+                    //AM        => AB0,MB0,ABar+    X22
+                    U[s00 * size + s01] = X22;
+                    U[s01 * size + s01] = -1;
+                    U[s10 * size + s01] = X20 * (1 - MB);
+                    U[s11 * size + s01] = X20 * MB;
+
+                    //AB0,MB2,ABar-: S02
+                    //AB0       => AB1,MB2,ABar+    X30
+                    //MBAM      => AB0,MB0,ABar+    X32*(1-T8)
+                    //MBAM      => AB0,MB2,ABar+    X32*T8
+                    U[s00 * size + s02] = X32 * (1 - T8);
+                    U[s02 * size + s02] = -1;
+                    U[s03 * size + s02] = X32 * T8;
+                    U[s12 * size + s02] = X30;
+
+                    //AB0,MB2,ABar+: S03
+                    //AB0       => AB1,MB2,ABar+    X90
+                    //ABar      => AB0,MB2,ABar-    X91
+                    //MBAM      => AB0,MB0,ABar+    X92*(1-T8)
+                    //MBAM      => AB0,MB2,ABar+    X92*T8
+                    U[s00 * size + s03] = X92 * (1 - T8);
+                    U[s02 * size + s03] = X91;
+                    U[s03 * size + s03] = X92 * T8 - 1;
+                    U[s12 * size + s03] = X90;
+
+                    //AB1,MB0,ABar+: S10
+                    //AB1       => AB2,MB0,ABar+    X10*(1-MB)
+                    //AB1       => AB2,MB1,ABar+    X10*MB
+                    //ABar1     => AB0,MB0,ABar-    X11*(1-MB)
+                    //ABar1     => AB0,MB2,ABar-    X11*MB
+                    //AM1       => AB0,MB0,ABar+    X12
+                    U[s00 * size + s10] = X12;
+                    U[s01 * size + s10] = X11 * (1 - MB);
+                    U[s02 * size + s10] = X11 * MB;
+                    U[s20 * size + s10] = X10 * (1 - MB);
+                    U[s21 * size + s10] = X10 * MB;
+                    U[s10 * size + s10] = -1;
+
+                    //AB1,MB1,ABar+: S11
+                    //AB1       => AB2,MB2,ABar+    X10
+                    //ABar1     => AB0,MB2,ABar-    X11
+                    //MBAM1     => AB0,MB0,ABar+    X12*(1-T8)
+                    //MBAM1     => AB0,MB2,ABar+    X12*T8
+                    U[s00 * size + s11] = X12 * (1 - T8);
+                    U[s02 * size + s11] = X11;
+                    U[s03 * size + s11] = X12 * T8;
+                    U[s22 * size + s11] = X10;
+                    U[s11 * size + s11] = -1;
+
+                    //AB1,MB2,ABar+: S12
+                    //AB1       => AB2,MB2,ABar+    X40
+                    //ABar1     => AB0,MB2,ABar-    X41
+                    //MBAM1     => AB0,MB0,ABar+    X42*(1-T8)
+                    //MBAM1     => AB0,MB2,ABar+    X42*T8
+                    U[s00 * size + s12] = X42 * (1 - T8);
+                    U[s02 * size + s12] = X41;
+                    U[s03 * size + s12] = X42 * T8;
+                    U[s22 * size + s12] = X40;
+                    U[s12 * size + s12] = -1;
+
+                    //AB2,MB0,ABar+: S20
+                    //AB2       => AB3,MB0,ABar+    X50*(1-MB)
+                    //AB2       => AB3,MB1,ABar+    X50*MB
+                    //ABar2     => AB0,MB0,ABar-    X51*(1-MB)
+                    //ABar2     => AB0,MB2,ABar-    X51*MB
+                    //AM2       => AB0,MB0,ABar+    X52
+                    U[s00 * size + s20] = X52;
+                    U[s01 * size + s20] = X51 * (1 - MB);
+                    U[s02 * size + s20] = X51 * MB;
+                    U[s30 * size + s20] = X50 * (1 - MB);
+                    U[s31 * size + s20] = X50 * MB;
+                    U[s20 * size + s20] = -1;
+
+                    //AB2,MB1,ABar+: S21
+                    //AB2       => AB3,MB2,ABar+    X50
+                    //ABar2     => AB0,MB2,ABar-    X51
+                    //MBAM2     => AB0,MB0,ABar+    X52*(1-T8)
+                    //MBAM2     => AB0,MB2,ABar+    X52*T8
+                    U[s00 * size + s21] = X52 * (1 - T8);
+                    U[s02 * size + s21] = X51;
+                    U[s03 * size + s21] = X52 * T8;
+                    U[s32 * size + s21] = X50;
+                    U[s21 * size + s21] = -1;
+
+                    //AB2,MB2,ABar+: S22
+                    //AB2       => AB3,MB2,ABar+    X60
+                    //ABar2     => AB0,MB2,ABar-    X61
+                    //MBAM2     => AB0,MB0,ABar+    X62*(1-T8)
+                    //MBAM2     => AB0,MB2,ABar+    X62*T8
+                    U[s00 * size + s22] = X62 * (1 - T8);
+                    U[s02 * size + s22] = X61;
+                    U[s03 * size + s22] = X62 * T8;
+                    U[s32 * size + s22] = X60;
+                    U[s22 * size + s22] = -1;
+
+                    //AB3,MB0,ABar+: S30
+                    //AB3       => AB3,MB0,ABar+    X70*(1-MB)
+                    //AB3       => AB3,MB1,ABar+    X70*MB
+                    //ABar3     => AB0,MB0,ABar-    X71*(1-MB)
+                    //ABar3     => AB0,MB2,ABar-    X71*MB
+                    //AM3       => AB0,MB0,ABar+    X72
+                    U[s00 * size + s30] = X72;
+                    U[s01 * size + s30] = X71 * (1 - MB);
+                    U[s02 * size + s30] = X71 * MB;
+                    U[s30 * size + s30] = X70 * (1 - MB) - 1;
+                    U[s31 * size + s30] = X70 * MB;
+
+                    //AB3,MB1,ABar+: S31
+                    //AB3       => AB3,MB2,ABar+    X70
+                    //ABar3     => AB0,MB2,ABar-    X71
+                    //MBAM3     => AB0,MB0,ABar+    X72*(1-T8)
+                    //MBAM3     => AB0,MB2,ABar+    X72*T8
+                    U[s00 * size + s31] = X72 * (1 - T8);
+                    U[s02 * size + s31] = X71;
+                    U[s03 * size + s31] = X72 * T8;
+                    U[s32 * size + s31] = X70;
+                    U[s31 * size + s31] = -1;
+
+                    //AB3,MB2,ABar+: S32
+                    //AB3       => AB3,MB2,ABar+    X80
+                    //ABar3     => AB0,MB2,ABar-    X81
+                    //MBAM3     => AB0,MB0,ABar+    X82*(1-T8)
+                    //MBAM3     => AB0,MB2,ABar+    X82*T8
+                    U[s00 * size + s32] = X82 * (1 - T8);
+                    U[s02 * size + s32] = X81;
+                    U[s03 * size + s32] = X82 * T8;
+                    U[s32 * size + s32] = X80 - 1;
+
+                    // the above system is singular, "guess" which one is dependent and replace with sum=1
+                    // since not all states are used always we'll get a singular system anyway sometimes, but in those cases the FSolve should still work ok on the nonsingular part
+                    for (int i = 0; i < size; i++) x[i] = 0;
+
+                    if (replace < size)
+                    {
+                        for (int i = 0; i < size; i++)
+                        {
+                            U[replace * size + i] = 1;
+                        }
+
+                        x[replace] = 1;
+                    }
+
+                    M.Decompose();
+                    if (!M.Singular) break;
+                }
+                M.FSolve(x);
+
+                M.EndUnsafe();
+
+                S00 = x[s00];
+                S01 = x[s01];
+                S02 = x[s02];
+                S03 = x[s03];
+                S10 = x[s10];
+                S11 = x[s11];
+                S12 = x[s12];
+                S20 = x[s20];
+                S21 = x[s21];
+                S22 = x[s22];
+                S30 = x[s30];
+                S31 = x[s31];
+                S32 = x[s32];
+            }
+#else
             fixed (double* U = arraySet.LU_U, x = X)
             fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
             fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
@@ -1470,6 +1671,7 @@ namespace Rawr.Mage
                 S31 = x[s31];
                 S32 = x[s32];
             }
+#endif
 
             AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
             AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);

@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+#if SILVERLIGHT
+    public class LP
+#else
     public unsafe class LP
+#endif
     {
         internal SparseMatrix A;
         private int[] extraConstraintsUsed;
@@ -40,6 +44,28 @@ namespace Rawr.Mage
 
         private bool disabledDirty;
 
+#if SILVERLIGHT
+        private double[] a;
+        private double[] U;
+        private double[] d;
+        private double[] x;
+        private double[] w;
+        private double[] ww;
+        private double[] wd;
+        private double[] c;
+        private double[] u;
+        private double[] cost;
+        private double[] sparseValue;
+        private double[] D;
+        private ArrayOffset<double>[] pD;
+        private int[] B;
+        private int[] V;
+        private int[] sparseRow;
+        private int[] sparseCol;
+        private int[] flags;
+        private double[] lb;
+        private double[] ub;
+#else
         private double* a;
         private double* U;
         private double* d;
@@ -49,7 +75,6 @@ namespace Rawr.Mage
         private double* wd;
         private double* c;
         private double* u;
-        //private double* b;
         private double* cost;
         private double* sparseValue;
         private double* D;
@@ -63,6 +88,7 @@ namespace Rawr.Mage
         private double* ub;
         private double* beta;
         private double* betaBackup;
+#endif
 
         private const double epsPrimal = 1.0e-7;
         private const double epsPrimalLow = 1.0e-6;
@@ -289,7 +315,11 @@ namespace Rawr.Mage
             if (numExtraConstraints > arraySet.maxExtra)
             {
                 arraySet.maxExtra += 32;
+#if SILVERLIGHT
+                arraySet._pD = new ArrayOffset<double>[arraySet.maxExtra];
+#else
                 arraySet._pD = new double*[arraySet.maxExtra];
+#endif
             }
             if (extraConstraintsUsed == null) extraConstraintsUsed = new int[32];
             if (numExtraConstraints > extraConstraintsUsed.Length)
@@ -417,14 +447,81 @@ namespace Rawr.Mage
 
         private bool ColdStart;
 
-        private unsafe void SetupExtraConstraints()
+        private void SetupExtraConstraints()
         {
             for (int i = 0; i < numExtraConstraints; i++)
             {
+#if SILVERLIGHT
+                pD[i] = new ArrayOffset<double>(D, extraConstraintsUsed[i] * cols);
+#else
                 pD[i] = D + (extraConstraintsUsed[i] * cols);
+#endif
             }
         }
 
+#if SILVERLIGHT
+        public double[] SolvePrimal(bool prepareForDual)
+        {
+            if (hardInfeasibility) return new double[cols + 1];
+            double[] ret = null;
+
+            this.a = arraySet.SparseMatrixData;
+            this.U = arraySet.LU_U;
+            this.d = arraySet._d;
+            this.x = arraySet._x;
+            this.w = arraySet._w;
+            this.ww = arraySet._ww;
+            this.wd = arraySet._wd;
+            this.c = arraySet._c;
+            this.u = arraySet._u;
+            this.cost = arraySet._cost;
+            this.sparseValue = arraySet.SparseMatrixValue;
+            this.D = arraySet.extraConstraints;
+            this.B = _B;
+            this.V = _V;
+            this.sparseRow = arraySet.SparseMatrixRow;
+            this.sparseCol = arraySet.SparseMatrixCol;
+            this.flags = _flags;
+            this.lb = _lb;
+            this.ub = _ub;
+            this.pD = arraySet._pD;
+
+            SetupExtraConstraints();
+
+            lu.BeginSafe();
+            if (prepareForDual)
+            {
+                this.cost = arraySet._costWorking;
+                LoadCost();
+                PerturbCost();
+            }
+            ret = SolvePrimalUnsafe(prepareForDual, prepareForDual, false, true);
+            lu.EndUnsafe();
+
+            this.a = null;
+            this.U = null;
+            this.d = null;
+            this.x = null;
+            this.w = null;
+            this.ww = null;
+            this.wd = null;
+            this.c = null;
+            this.u = null;
+            this.cost = null;
+            this.sparseValue = null;
+            this.D = null;
+            this.pD = null;
+            this.B = null;
+            this.V = null;
+            this.sparseRow = null;
+            this.sparseCol = null;
+            this.flags = null;
+            this.lb = null;
+            this.ub = null;
+
+            return ret;
+        }
+#else
         public unsafe double[] SolvePrimal(bool prepareForDual)
         {
             if (hardInfeasibility) return new double[cols + 1];
@@ -491,8 +588,9 @@ namespace Rawr.Mage
 
             return ret;
         }
+#endif
 
-        private unsafe void Decompose()
+        private void Decompose()
         {
             for (int j = 0; j < rows; j++)
             {
@@ -520,7 +618,7 @@ namespace Rawr.Mage
             lu.Decompose();
         }
 
-        private unsafe void PatchSingularBasis()
+        private void PatchSingularBasis()
         {
             for (int j = lu.Rank; j < rows; j++)
             {
@@ -556,7 +654,7 @@ namespace Rawr.Mage
             return 0.0;
         }
 
-        private unsafe void ComputePrimalSolution(bool dualPhaseI)
+        private void ComputePrimalSolution(bool dualPhaseI)
         {
             Array.Clear(arraySet._d, 0, rows);
             //int j = 0;
@@ -599,12 +697,20 @@ namespace Rawr.Mage
                     {
                         int sCol1 = sparseCol[col];
                         int sCol2 = sparseCol[col + 1];
+#if SILVERLIGHT
+                        for (int i = sCol1; i < sCol2; i++)
+                        {
+                            d[sparseRow[i]] -= sparseValue[i] * v;
+                        }
+
+#else
                         int* sRow = sparseRow + sCol1;
                         double* sValue = sparseValue + sCol1;
                         for (int i = sCol1; i < sCol2; i++, sRow++, sValue++)
                         {
                             d[*sRow] -= *sValue * v;
                         }
+#endif
                         for (int k = 0; k < numExtraConstraints; k++)
                         {
                             d[baseRows + k] -= pD[k][col] * v;
@@ -619,7 +725,7 @@ namespace Rawr.Mage
             lu.FSolve(d);
         }
 
-        private unsafe bool IsPrimalFeasible(double eps)
+        private bool IsPrimalFeasible(double eps)
         {
             for (int i = 0; i < rows; i++)
             {
@@ -632,7 +738,7 @@ namespace Rawr.Mage
             return true;
         }
 
-        private unsafe void ComputeReducedCosts()
+        private void ComputeReducedCosts()
         {
             for (int i = 0; i < rows; i++)
             {
@@ -650,12 +756,20 @@ namespace Rawr.Mage
                     double costcol = cost[col];
                     int sCol1 = sparseCol[col];
                     int sCol2 = sparseCol[col + 1];
+#if SILVERLIGHT
+                    for (int i = sCol1; i < sCol2; i++)
+                    {
+                        costcol -= sparseValue[i] * u[sparseRow[i]];
+                    }
+
+#else
                     int* sRow = sparseRow + sCol1;
                     double* sValue = sparseValue + sCol1;
                     for (int i = sCol1; i < sCol2; i++, sRow++, sValue++)
                     {
                         costcol -= *sValue * u[*sRow];
                     }
+#endif
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
                         costcol -= pD[k][col] * u[baseRows + k];
@@ -669,7 +783,7 @@ namespace Rawr.Mage
             }
         }
 
-        private unsafe void ComputePhaseIReducedCosts(out double infeasibility, double eps)
+        private void ComputePhaseIReducedCosts(out double infeasibility, double eps)
         {
             infeasibility = 0.0;
             for (int i = 0; i < rows; i++)
@@ -697,12 +811,20 @@ namespace Rawr.Mage
                     double costcol = 0;
                     int sCol1 = sparseCol[col];
                     int sCol2 = sparseCol[col + 1];
+#if SILVERLIGHT
+                    for (int i = sCol1; i < sCol2; i++)
+                    {
+                        costcol -= sparseValue[i] * x[sparseRow[i]];
+                    }
+
+#else
                     int* sRow = sparseRow + sCol1;
                     double* sValue = sparseValue + sCol1;
                     for (int i = sCol1; i < sCol2; i++, sRow++, sValue++)
                     {
                         costcol -= *sValue * x[*sRow];
                     }
+#endif
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
                         costcol -= pD[k][col] * x[baseRows + k];
@@ -716,7 +838,7 @@ namespace Rawr.Mage
             }
         }
 
-        private unsafe double[] ComputeReturnSolution()
+        private double[] ComputeReturnSolution()
         {
             double[] ret = new double[cols + 1];
             double value = 0.0;
@@ -748,7 +870,7 @@ namespace Rawr.Mage
             return ret;
         }
 
-        private unsafe double ComputeValue()
+        private double ComputeValue()
         {
             double value = 0.0;
             for (int i = 0; i < rows; i++)
@@ -772,7 +894,7 @@ namespace Rawr.Mage
             return value;
         }
 
-        private unsafe double ComputeDualIValue()
+        private double ComputeDualIValue()
         {
             double value = 0.0;
             for (int i = 0; i < rows; i++)
@@ -795,7 +917,7 @@ namespace Rawr.Mage
             }
             return value;
         }
-        private unsafe int SelectPrimalIncoming(out double direction, bool prepareForDual)
+        private int SelectPrimalIncoming(out double direction, bool prepareForDual)
         {
             double maxc = (prepareForDual) ? epsDualI : epsDual;
             int maxj = -1;
@@ -825,7 +947,7 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private unsafe bool SelectPrimalOutgoing(int incoming, double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
+        private bool SelectPrimalOutgoing(int incoming, double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
         {
             // w = U \ (L \ A(:,j));
             int maxcol = V[incoming];
@@ -933,7 +1055,7 @@ namespace Rawr.Mage
             return true;
         }
 
-        private unsafe int SelectDualOutgoing(bool phaseI, out double delta, out int bound)
+        private int SelectDualOutgoing(bool phaseI, out double delta, out int bound)
         {
             double mind = 0.0;
             int mini = -1;
@@ -982,7 +1104,7 @@ namespace Rawr.Mage
             return mini;
         }
 
-        private unsafe bool ComputeDualPivotRow(bool phaseI, int outgoing)
+        private bool ComputeDualPivotRow(bool phaseI, int outgoing)
         {
             // x = z <- e_mini*A_B^-1
             for (int i = 0; i < rows; i++)
@@ -991,6 +1113,75 @@ namespace Rawr.Mage
             }
             lu.BSolve(x); // TODO exploit nature of x
 
+#if SILVERLIGHT
+            double eps = phaseI ? epsDualI : epsDual;
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                if (phaseI)
+                {
+                    if ((flags[col] & flagUB) != 0 && (flags[col] & flagLB) != 0) continue;
+                }
+                else
+                {
+                    if ((flags[col] & flagFix) != 0) continue;
+                }
+                if ((flags[col] & flagNLB) != 0 && c[j] > eps)
+                {
+                    // we lost dual feasibility
+                    // creative use of shifting
+                    double shift = eps - c[j];
+                    if (Math.Abs(shift) < 1.0e-5)
+                    {
+                        c[j] += shift;
+                        cost[col] += shift; // requires working copy for cost
+                        costWorkingDirty = true;
+                        shifted = true;
+                    }
+                    else
+                    {
+                        // fall back to dual phase I
+                        return false;
+                    }
+                }
+                else if ((flags[col] & flagNUB) != 0 && c[j] < -eps)
+                {
+                    // we lost dual feasibility
+                    // creative use of shifting
+                    double shift = -eps - c[j];
+                    if (Math.Abs(shift) < 1.0e-5)
+                    {
+                        c[j] += shift;
+                        cost[col] += shift; // requires working copy for cost
+                        costWorkingDirty = true;
+                        shifted = true;
+                    }
+                    else
+                    {
+                        // fall back to dual phase I
+                        return false;
+                    }
+                }
+                if (col < cols)
+                {
+                    wd[j] = 0;
+                    int sCol1 = sparseCol[col];
+                    int sCol2 = sparseCol[col + 1];
+                    for (int i = sCol1; i < sCol2; i++)
+                    {
+                        wd[j] += sparseValue[i] * x[sparseRow[i]];
+                    }
+                    for (int k = 0; k < numExtraConstraints; k++)
+                    {
+                        wd[j] += pD[k][col] * x[baseRows + k];
+                    }
+                }
+                else
+                {
+                    wd[j] = x[col - cols];
+                }
+            }
+#else
             double* cj = c;
             double* wdj = wd;
             int* Vj = V;
@@ -1064,18 +1255,16 @@ namespace Rawr.Mage
                     *wdj = x[col - cols];
                 }
             }
+#endif
             return true;
         }
 
-        private unsafe void SelectDualIncoming(bool phaseI, int outgoing, out int minj, out double minr)
+        private void SelectDualIncoming(bool phaseI, int outgoing, out int minj, out double minr)
         {
             double minrr = double.PositiveInfinity;
             minr = double.PositiveInfinity;
             minj = -1;
             double minv = 0.0;
-            double* cj = c;
-            double* wdj = wd;
-            int* Vj = V;
             double eps = phaseI ? epsDualI : epsDual;
             double direction = 1.0;
             if (phaseI)
@@ -1092,6 +1281,36 @@ namespace Rawr.Mage
                     direction = -1.0;
                 }
             }
+#if SILVERLIGHT
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                if (phaseI)
+                {
+                    if ((flags[col] & flagUB) != 0 && (flags[col] & flagLB) != 0) continue;
+                }
+                else
+                {
+                    if ((flags[col] & flagFix) != 0) continue;
+                }
+                double v = Math.Abs(wd[j]);
+                double wdir = direction * wd[j];
+                if (((flags[col] & flagNLB) != 0 && wdir < -epsPivot) || ((flags[col] & flagNUB) != 0 && wdir > epsPivot))
+                {
+                    double r = c[j] / wdir;
+                    if (r < minrr + epsZero && (r < minrr || v > minv))
+                    {
+                        minr = c[j] / wd[j];
+                        minrr = r;
+                        minj = j;
+                        minv = v;
+                    }
+                }
+            }
+#else
+            double* cj = c;
+            double* wdj = wd;
+            int* Vj = V;
             for (int j = 0; j < cols; j++, cj++, wdj++, Vj++)
             {
                 int col = *Vj;
@@ -1117,8 +1336,214 @@ namespace Rawr.Mage
                     }
                 }
             }
+#endif
         }
 
+#if SILVERLIGHT
+        private void SelectDualIncomingWithBoundFlips(bool phaseI, double delta, out int minj, out double minr)
+        {
+            minj = -1;
+            minr = double.PositiveInfinity;
+            //double minv = 0.0;
+            double eps = phaseI ? epsDualI : epsDual;
+            double epsp = epsPivot;
+            bool positive = (delta > 0);
+            if (!positive) delta = -delta;
+            int available = 0;
+            int allavailable = 0;
+            bool retried = false;
+
+        RETRY:
+            // mark eligible pivots and compute max step
+            double maxstep = double.PositiveInfinity;
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                flags[col] &= ~flagPivot2;
+                if (phaseI)
+                {
+                    if ((flags[col] & flagUB) != 0 && (flags[col] & flagLB) != 0)
+                    {
+                        flags[col] &= ~flagPivot;
+                        continue;
+                    }
+                }
+                else
+                {
+                    if ((flags[col] & flagFix) != 0)
+                    {
+                        flags[col] &= ~flagPivot;
+                        continue;
+                    }
+                }
+                double wdir;
+                if (positive)
+                    wdir = -wd[j];
+                else
+                    wdir = wd[j];
+                if (((flags[col] & flagNLB) != 0 && wdir < -epsp) || ((flags[col] & flagNUB) != 0 && wdir > epsp))
+                {
+                    double r;
+                    if (wdir > 0)
+                    {
+                        r = (c[j] + eps) / wdir;
+                    }
+                    else
+                    {
+                        r = (c[j] - eps) / wdir;
+                    }
+                    if (r < maxstep) maxstep = r;
+                    flags[col] |= flagPivot;
+                    available++;
+                    allavailable++;
+                }
+                else
+                {
+                    flags[col] &= ~flagPivot;
+                }
+            }
+            if (available == 0 && Math.Abs(delta) < epsPivot && !retried)
+            {
+                retried = true;
+                epsp = 1.0e-7;
+                goto RETRY;
+            }
+
+            double deltamin = 0.0;
+            double step = Math.Max(maxstep * 10.0, eps);
+            while (delta - deltamin > epsZero && allavailable > 0)
+            {
+                available = 0;
+                delta -= deltamin;
+                maxstep = double.PositiveInfinity;
+                deltamin = 0;
+                for (int j = 0; j < cols; j++)
+                {
+                    int col = V[j];
+                    flags[col] &= ~flagPivot2;
+                    if ((flags[col] & flagPivot) != 0)
+                    {
+                        double wdir;
+                        if (positive)
+                            wdir = -wd[j];
+                        else
+                            wdir = wd[j];
+                        double r;
+                        double v = Math.Abs(wd[j]);
+                        if (wdir > 0) // upper bound
+                        {
+                            r = (c[j] + eps) / wdir;
+                            if (c[j] - step * wdir < -eps)
+                            {
+                                flags[col] &= ~flagPivot;
+                                flags[col] |= flagPivot2;
+                                available++;
+                                allavailable--;
+                                if (phaseI)
+                                {
+                                    deltamin += (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * v;
+                                }
+                                else
+                                {
+                                    deltamin += (ub[col] - lb[col]) * v;
+                                }
+                            }
+                            else if (r < maxstep) maxstep = r;
+                        }
+                        else // lower bound
+                        {
+                            r = (c[j] - eps) / wdir;
+                            if (c[j] - step * wdir > eps)
+                            {
+                                flags[col] &= ~flagPivot;
+                                flags[col] |= flagPivot2;
+                                available++;
+                                allavailable--;
+                                if (phaseI)
+                                {
+                                    deltamin += (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * v;
+                                }
+                                else
+                                {
+                                    deltamin += (ub[col] - lb[col]) * v;
+                                }
+                            }
+                            else if (r < maxstep) maxstep = r;
+                        }
+                    }
+                }
+                step = 2.0 * maxstep;
+            }
+
+            while (delta >= 0 && (available > 0 || delta > epsZero))
+            {
+                maxstep = double.PositiveInfinity;
+                for (int j = 0; j < cols; j++)
+                {
+                    int col = V[j];
+                    if ((flags[col] & flagPivot2) != 0)
+                    {
+                        double wdir;
+                        if (positive)
+                            wdir = -wd[j];
+                        else
+                            wdir = wd[j];
+                        double r;
+                        if (wdir > 0)
+                        {
+                            r = (c[j] + eps) / wdir;
+                        }
+                        else
+                        {
+                            r = (c[j] - eps) / wdir;
+                        }
+                        if (r < maxstep) maxstep = r;
+                    }
+                }
+
+                minj = -1;
+                double minv = 0.0;
+                for (int j = 0; j < cols; j++)
+                {
+                    int col = V[j];
+                    if ((flags[col] & flagPivot2) != 0)
+                    {
+                        double wdir;
+                        if (positive)
+                            wdir = -wd[j];
+                        else
+                            wdir = wd[j];
+                        double r = c[j] / wdir;
+                        double v = Math.Abs(wd[j]);
+                        if (r <= maxstep)
+                        {
+                            if (phaseI)
+                            {
+                                delta -= (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * v;
+                            }
+                            else
+                            {
+                                delta -= (ub[col] - lb[col]) * v;
+                            }
+                            flags[col] &= ~flagPivot2;
+                            available--;
+                            if (v > minv)
+                            {
+                                minv = v;
+                                minj = j;
+                            }
+                        }
+                    }
+                }
+                if (minj == -1) return;
+            }
+
+            if (minj != -1)
+            {
+                minr = c[minj] / wd[minj];
+            }
+        }
+#else
         private unsafe void SelectDualIncomingWithBoundFlips(bool phaseI, double delta, out int minj, out double minr)
         {
             minj = -1;
@@ -1334,8 +1759,9 @@ namespace Rawr.Mage
                 minr = c[minj] / wd[minj];
             }
         }
+#endif
 
-        private unsafe void UpdatePrimal(double minr, int mini, int maxj)
+        private void UpdatePrimal(double minr, int mini, int maxj)
         {
             // minr = primal step
             // rd = dual step
@@ -1365,6 +1791,31 @@ namespace Rawr.Mage
             {
                 d[mini] = ub[V[maxj]] + minr;
             }
+#if SILVERLIGHT
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                if (col < cols)
+                {
+                    //double v = 0.0;
+                    int sCol1 = sparseCol[col];
+                    int sCol2 = sparseCol[col + 1];
+                    // TODO reinvestigate moving rd out of the loop once dual is more stable
+                    for (int i = sCol1; i < sCol2; i++)
+                    {
+                        c[j] -= rd * sparseValue[i] * x[sparseRow[i]];
+                    }
+                    for (int k = 0; k < numExtraConstraints; k++)
+                    {
+                        c[j] -= rd * pD[k][col] * x[baseRows + k];
+                    }
+                }
+                else
+                {
+                    c[j] -= rd * x[col - cols];
+                }
+            }
+#else
             double* cc = c;
             for (int j = 0; j < cols; j++, cc++)
             {
@@ -1392,10 +1843,11 @@ namespace Rawr.Mage
                     *cc -= rd * x[col - cols];
                 }
             }
+#endif
             c[maxj] = -rd;
         }
 
-        private unsafe void UpdateDual(bool phaseI, int minj, int mini, double minr, double delta, bool updatec)
+        private void UpdateDual(bool phaseI, int minj, int mini, double minr, double delta, bool updatec)
         {
             // w = U \ (L \ A(:,j));
             int mincol = V[minj];
@@ -1465,16 +1917,23 @@ namespace Rawr.Mage
             }
             if (updatec)
             {
+#if SILVERLIGHT
+                for (int j = 0; j < cols; j++)
+                {
+                    c[j] -= minr * wd[j];
+                }
+#else
                 double* ccols = c + cols;
                 for (double* cj = c, wdj = wd; cj < ccols; cj++, wdj++)
                 {
                     *cj -= minr * *wdj;
                 }
+#endif
                 c[minj] = -minr;
             }
         }
 
-        private unsafe void PerturbCost()
+        private void PerturbCost()
         {
             Random rnd = new Random(0);
             for (int i = 0; i < cols; i++)
@@ -1491,13 +1950,13 @@ namespace Rawr.Mage
             costWorkingDirty = true;
         }
 
-        private unsafe void LoadCost()
+        private void LoadCost()
         {
             Array.Copy(arraySet._cost, arraySet._costWorking, cols + rows);
             costWorkingDirty = false;
         }
 
-        private unsafe bool BoundFlip(bool phaseI, double dualStep, double eps, int incoming, bool flipBounds)
+        private bool BoundFlip(bool phaseI, double dualStep, double eps, int incoming, bool flipBounds)
         {
             bool needDualI = false;
             bool flipsDone = false;
@@ -1560,6 +2019,12 @@ namespace Rawr.Mage
                         {
                             int sCol1 = sparseCol[col];
                             int sCol2 = sparseCol[col + 1];
+#if SILVERLIGHT
+                            for (int i = sCol1; i < sCol2; i++)
+                            {
+                                x[sparseRow[i]] += v * sparseValue[i];
+                            }
+#else
                             int* sRow = sparseRow + sCol1;
                             int* sRow2 = sparseRow + sCol2;
                             double* sValue = sparseValue + sCol1;
@@ -1567,6 +2032,7 @@ namespace Rawr.Mage
                             {
                                 x[*sRow] += v * *sValue;
                             }
+#endif
                             for (int k = 0; k < numExtraConstraints; k++)
                             {
                                 x[baseRows + k] += v * pD[k][col];
@@ -1592,7 +2058,7 @@ namespace Rawr.Mage
             return needDualI;
         }
 
-        private unsafe void UpdateBounds()
+        private void UpdateBounds()
         {
             for (int j = 0; j < cols; j++)
             {
@@ -1612,7 +2078,7 @@ namespace Rawr.Mage
             }
         }
 
-        private unsafe bool PreprocessingSingletonConstraint()
+        private bool PreprocessingSingletonConstraint()
         {
             bool updated = false;
             // singleton row            
@@ -1695,7 +2161,7 @@ namespace Rawr.Mage
             return updated;
         }
 
-        private unsafe bool PreprocessingTightenBounds()
+        private bool PreprocessingTightenBounds()
         {
             bool updated = false;
             // singleton row            
@@ -1760,7 +2226,7 @@ namespace Rawr.Mage
             return updated;
         }
 
-        private unsafe void Preprocessing()
+        private void Preprocessing()
         {
             if (hardInfeasibility) return;
             bool updated;
@@ -1772,7 +2238,8 @@ namespace Rawr.Mage
             } while (updated && !hardInfeasibility);
         }
 
-        private unsafe void InitializeDSEWeights(bool identity)
+        /*
+        private void InitializeDSEWeights(bool identity)
         {
             if (identity)
             {
@@ -1797,9 +2264,9 @@ namespace Rawr.Mage
                     }
                 }
             }
-        }
+        }*/
 
-        private unsafe double[] SolvePrimalUnsafe(bool prepareForDual, bool verifyRefactoredOptimality, bool shortLimit, bool highPrecision)
+        private double[] SolvePrimalUnsafe(bool prepareForDual, bool verifyRefactoredOptimality, bool shortLimit, bool highPrecision)
         {
             // LU = A_B
             // d = x_B <- A_B^-1*b ... primal solution
@@ -2074,6 +2541,106 @@ namespace Rawr.Mage
             }
         }
 
+#if SILVERLIGHT
+        public double[] SolveDual(bool startWithPhaseI)
+        {
+            if (hardInfeasibility) return new double[cols + 1];
+            double[] ret = null;
+
+
+            this.a = arraySet.SparseMatrixData;
+            this.U = arraySet.LU_U;
+            this.d = arraySet._d;
+            this.x = arraySet._x;
+            this.w = arraySet._w;
+            this.ww = arraySet._ww;
+            this.wd = arraySet._wd;
+            this.c = arraySet._c;
+            this.u = arraySet._u;
+            this.cost = arraySet._costWorking;
+            this.sparseValue = arraySet.SparseMatrixValue;
+            this.D = arraySet.extraConstraints;
+            this.B = _B;
+            this.V = _V;
+            this.sparseRow = arraySet.SparseMatrixRow;
+            this.sparseCol = arraySet.SparseMatrixCol;
+            this.flags = _flags;
+            this.lb = _lb;
+            this.ub = _ub;
+            this.pD = arraySet._pD;
+
+            SetupExtraConstraints();
+
+            lu.BeginSafe();
+            LoadCost();
+            PerturbCost();
+            bool dualUnbounded;
+            shifted = false;
+            //Preprocessing();
+            ret = SolveDualUnsafe(startWithPhaseI, out dualUnbounded);
+            if (!dualUnbounded)
+            {
+                // unshifted might no longer be dual feasible for our tolerances
+                // reoptimize it with primal, dual phase II tolerances are ok
+                if (shifted)
+                {
+                    LoadCost();
+                    PerturbCost();
+                }
+                ret = SolvePrimalUnsafe(false, true, true, true);
+            }
+            if ((costWorkingDirty && !dualUnbounded) || ret == null)
+            {
+                if (costWorkingDirty) LoadCost();
+                int[] _Bcopy = null;
+                int[] _Vcopy = null;
+                int[] _flagscopy = null;
+                if (!dualUnbounded)
+                {
+                    // we're just reoptimizing for changes in cost vector
+                    // since we'll be reusing this basis for dual later
+                    // we should store the basis, because the basis on unperturbed problem
+                    // very likely is not dual feasible on perturbed system
+                    // since we're using deterministic perturbation the likelihood of remaining
+                    // dual feasible is much higher since changes due to shifting are very small
+                    _Bcopy = (int[])_B.Clone();
+                    _Vcopy = (int[])_V.Clone();
+                    _flagscopy = (int[])_flags.Clone();
+                }
+                ret = SolvePrimalUnsafe(false, false, false, false);
+                if (!dualUnbounded)
+                {
+                    _B = _Bcopy;
+                    _V = _Vcopy;
+                    _flags = _flagscopy;
+                }
+            }
+            lu.EndUnsafe();
+
+            this.a = null;
+            this.U = null;
+            this.d = null;
+            this.x = null;
+            this.w = null;
+            this.ww = null;
+            this.wd = null;
+            this.c = null;
+            this.u = null;
+            this.cost = null;
+            this.sparseValue = null;
+            this.pD = null;
+            this.D = null;
+            this.B = null;
+            this.V = null;
+            this.sparseRow = null;
+            this.sparseCol = null;
+            this.flags = null;
+            this.lb = null;
+            this.ub = null;
+
+            return ret;
+        }
+#else
         public unsafe double[] SolveDual(bool startWithPhaseI)
         {
             if (hardInfeasibility) return new double[cols + 1];
@@ -2180,8 +2747,9 @@ namespace Rawr.Mage
 
             return ret;
         }
+#endif
 
-        public unsafe double[] SolveDualUnsafe(bool startWithPhaseI, out bool dualUnbounded)
+        public double[] SolveDualUnsafe(bool startWithPhaseI, out bool dualUnbounded)
         {
             // LU = A_B
             // d = x_B <- A_B^-1*b ... primal solution

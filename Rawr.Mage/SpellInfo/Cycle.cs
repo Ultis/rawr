@@ -761,7 +761,11 @@ namespace Rawr.Mage
         Dictionary<Cycle, double> CycleWeight = new Dictionary<Cycle, double>();
         public string SpellDistribution;
 
+#if SILVERLIGHT
+        public GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription)
+#else
         public unsafe GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription)
+#endif
             : base(false, castingState)
         {
             Name = name;
@@ -779,6 +783,34 @@ namespace Rawr.Mage
 
             StateWeight = new double[size];
 
+#if SILVERLIGHT
+            M.BeginSafe();
+
+            Array.Clear(arraySet.LU_U, 0, size * size);
+
+            //U[i * rows + j]
+
+            foreach (CycleState state in StateList)
+            {
+                foreach (CycleStateTransition transition in state.Transitions)
+                {
+                    arraySet.LU_U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
+                }
+                arraySet.LU_U[state.Index * size + state.Index] -= 1.0;
+            }
+
+            for (int i = 0; i < size - 1; i++)
+            {
+                arraySet.LU_U[(size - 1) * size + i] = 1;
+            }
+
+            StateWeight[size - 1] = 1;
+
+            M.Decompose();
+            M.FSolve(StateWeight);
+
+            M.EndUnsafe();            
+#else
             fixed (double* U = arraySet.LU_U, x = StateWeight)
             fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
             fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
@@ -810,6 +842,7 @@ namespace Rawr.Mage
 
                 M.EndUnsafe();
             }
+#endif
 
             SpellWeight = new Dictionary<Spell, double>();
             CycleWeight = new Dictionary<Cycle, double>();

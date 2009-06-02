@@ -5,7 +5,37 @@ using System.Threading;
 
 namespace Rawr.Mage
 {
+#if SILVERLIGHT
+    public struct ArrayOffset<T>
+    {
+        private T[] array;
+        private int offset;
+
+        public ArrayOffset(T[] array, int offset)
+        {
+            this.array = array;
+            this.offset = offset;
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                return array[offset + index];
+            }
+            set
+            {
+                array[offset + index] = value;
+            }
+        }
+    }
+
+#endif
+#if SILVERLIGHT
+    public class ArraySet
+#else
     public unsafe class ArraySet
+#endif
     {
         public double[] SparseMatrixValue;
         public int[] SparseMatrixRow;
@@ -37,7 +67,11 @@ namespace Rawr.Mage
         public double[] _wd;
         public double[] _u;
         public double[] _c;
+#if SILVERLIGHT
+        public ArrayOffset<double>[] _pD;
+#else
         public double*[] _pD;
+#endif
         //internal static double[] _b;
         public double[] _cost;
         public double[] _costWorking;

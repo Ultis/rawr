@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+#if SILVERLIGHT
+    public class LU
+#else
     public unsafe class LU
+#endif
     {
         private int size;
         public int etaSize;
@@ -45,6 +49,17 @@ namespace Rawr.Mage
         // P E P' = I + P ep eta' P'
         // eta' P' = (P eta)'
 
+#if SILVERLIGHT
+        private double[] U;
+        private double[] sL;
+        private int[] P;
+        private int[] Q;
+        private int[] LJ;
+        private int[] sLI;
+        private int[] sLstart;
+        private double[] c;
+        private double[] c2;
+#else
         private double* U;
         private double* sL;
         private int* P;
@@ -54,7 +69,22 @@ namespace Rawr.Mage
         private int* sLstart;
         private double* c;
         private double* c2;
+#endif
 
+#if SILVERLIGHT
+        public void BeginSafe()
+        {
+            this.U = arraySet.LU_U;
+            this.sL = arraySet.LUsparseL;
+            this.P = arraySet.LU_P;
+            this.Q = arraySet.LU_Q;
+            this.LJ = arraySet.LU_LJ;
+            this.sLI = arraySet.LUsparseLI;
+            this.sLstart = arraySet.LUsparseLstart;
+            this.c = arraySet.LUcolumn;
+            this.c2 = arraySet.LUcolumn2;
+        }
+#else
         public void BeginUnsafe(double* U, double* sL, int* P, int* Q, int* LJ, int* sLI, int* sLstart, double* c, double* c2)
         {
             this.U = U;
@@ -67,6 +97,7 @@ namespace Rawr.Mage
             this.c = c;
             this.c2 = c2;
         }
+#endif
 
         public void EndUnsafe()
         {
@@ -97,13 +128,21 @@ namespace Rawr.Mage
             }
         }
 
+#if SILVERLIGHT
+        public void BSolve(double[] b)
+#else
         public unsafe void BSolve(double* b)
+#endif
         {
             BSolveU(b, c);
             BSolveL(c, b);
         }
 
+#if SILVERLIGHT
+        public void BSolveU(double[] b, double[] c)
+#else
         public unsafe void BSolveU(double* b, double* c)
+#endif
         {
             int i, k;
             for (i = 0; i < size; i++)
@@ -124,7 +163,11 @@ namespace Rawr.Mage
             }
         }
 
+#if SILVERLIGHT
+        public void BSolveL(double[] b, double[] c)
+#else
         public unsafe void BSolveL(double* b, double* c)
+#endif
         {
             int i, j;
             for (i = 0; i < size; i++)
@@ -168,13 +211,21 @@ namespace Rawr.Mage
             }
         }
 
+#if SILVERLIGHT
+        public void FSolve(double[] b)
+#else
         public unsafe void FSolve(double* b)
+#endif
         {
             FSolveL(b, c);
             FSolveU(c, b);
         }
 
+#if SILVERLIGHT
+        public void FSolveU(double[] b, double[] c)
+#else
         public unsafe void FSolveU(double* b, double* c)
+#endif
         {
             int i, k;
             for (i = 0; i < size; i++)
@@ -200,7 +251,11 @@ namespace Rawr.Mage
             }
         }
 
+#if SILVERLIGHT
+        public void FSolveL(double[] b, double[] c)
+#else
         public unsafe void FSolveL(double* b, double* c)
+#endif
         {
             // perform all eta operations and finally apply row permutation P
             int i, j;
@@ -258,7 +313,7 @@ namespace Rawr.Mage
         // Primal=0.000217759250424469, Decompose=7.53546090376799E-05 sparse L
         // Primal=0.00013135285568704, Decompose=1.44506264553419E-05 update rule
 
-        public unsafe void Decompose()
+        public void Decompose()
         {
             etaSize = 0; // reset eta file
             //Array.Clear(_L, 0, _L.Length);
@@ -379,7 +434,11 @@ namespace Rawr.Mage
         // a = [P' Ln...L0 aj]
 
         // replace column col in basis B with aj
+#if SILVERLIGHT
+        public void Update(double[] a, int col, out double pivot)
+#else
         public unsafe void Update(double* a, int col, out double pivot)
+#endif
         {
             int i, j, k;
             for (j = 0; j < size; j++)
