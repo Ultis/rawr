@@ -336,11 +336,6 @@ namespace Rawr.TankDK
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            // TODO: (Shazear) 
-            // There are a number of constants declared below and used immediately.  
-            // Need to break out those constants so as things change in game from patch to patch, we 
-            // don't need to hunt down each value individually.
-
             // Import the option values from the options tab on the UI.
             CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
             // Validate opts 
@@ -429,8 +424,6 @@ namespace Rawr.TankDK
                 // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
             }
-
-            // TODO: Figure out why the order of these sections matters.
 
             #region ***** Mitigation Rating *****
 
