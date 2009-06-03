@@ -33,7 +33,7 @@ namespace Rawr.DPSWarr {
             get {
                 float armorReduction;
                 if(_calcOpts==null){
-				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(80,12900,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
+				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(83,13083,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating)); // default is vs raid boss
                 }else{
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
                 }

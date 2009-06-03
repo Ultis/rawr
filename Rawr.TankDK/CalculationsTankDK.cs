@@ -341,7 +341,8 @@ namespace Rawr.TankDK
             // Validate opts 
             if (null == opts) return null;
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
-            ShotRotation sr = new ShotRotation();
+            // Ebs2002 commented this out, as it broke the build and wasn't working
+            //ShotRotation sr = new ShotRotation();
 
             // Setup basic data from the character.
             // Baseline numbers of race & Class.

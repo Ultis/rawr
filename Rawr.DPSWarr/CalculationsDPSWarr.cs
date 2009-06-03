@@ -10,6 +10,7 @@ namespace Rawr.DPSWarr
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase
     {
+        private static SpecialEffect bersEffect = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				////Relevant Gem IDs for DPSWarrs
@@ -551,7 +552,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          character.OffHand.Type == Item.ItemType.TwoHandSword)
                                          ? 0.10f : 0f),
                 BonusStaminaMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f,
-                BonusStrengthMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f,
+                BonusStrengthMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f + talents.ImprovedBerserkerStance * 0.04f,
                 Expertise = /*talents.Vitality * 2.0f +*/ talents.StrengthOfArms * 2.0f,
                 //BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
@@ -625,21 +626,82 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float fightDuration = calcOpts.Duration;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
-            float meleeHitsPerSecond = 1f / 1.5f;
-            if (character.MainHand != null && character.MainHand.Speed > 0f) { meleeHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus); }
-            if (character.OffHand  != null && character.OffHand.Speed  > 0f) { meleeHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus); }
-            float meleeHitInterval = 1f / meleeHitsPerSecond;
-            float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit;
-            float baseWeaponSpeed = character.MainHand != null ? character.MainHand.Speed : 2f;
+            float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
+            if (calcOpts.FuryStance)
+            {
+                Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
+                Skills.Ability ww = new Skills.WhirlWind(character, statsTotal, combatFactors, whiteAttacks);
+                mhHitsPerSecond = (bt.GetActivates() + ww.GetActivates()) / bt.GetRotation() * (1f - combatFactors.YellowMissChance);
+                ohHitsPerSecond = (ww.GetActivates()) / bt.GetRotation() * (1f - combatFactors.YellowMissChance);
+            }
+            else
+            {
+                mhHitsPerSecond = 1f / 1.5f;   
+            }
+            if (character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
+            if (character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
+            
+            float mhHitInterval = 1f / mhHitsPerSecond;
+            float ohHitInterval = 1f / ohHitsPerSecond;
+            float bothHitInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond);
+            float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+            float dmgDoneInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
             Stats statsProcs = new Stats();
+            Stats bersStats = null;
+            
+            // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
+            if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) // berserker enchant id
+            {
+                bersStats = character.MainHandEnchant.Stats;
+                if (bersEffect == null)
+                {
+                    Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
+                    if (bersEffectEnum.MoveNext())
+                    {
+                        bersEffect = bersEffectEnum.Current;
+                    }
+                }
+                statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration);
+            }
+            if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
+            {
+                bersStats = character.OffHandEnchant.Stats;
+                if (bersEffect == null)
+                {
+                    Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
+                    if (bersEffectEnum.MoveNext())
+                    {
+                        bersEffect = bersEffectEnum.Current;
+                    }
+                }
+                statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors.OffHand.Speed, fightDuration);
+                
+            }
+            /*Console.WriteLine("Test");*/
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
-                switch (effect.Trigger) {
-                    case Trigger.Use:                                   statsProcs += effect.GetAverageStats(0f,                    1f,         baseWeaponSpeed, fightDuration); break;
-                    case Trigger.MeleeHit:  case Trigger.PhysicalHit:   statsProcs += effect.GetAverageStats(meleeHitInterval,      1f,         baseWeaponSpeed, fightDuration); break;
-                    case Trigger.MeleeCrit: case Trigger.PhysicalCrit:  statsProcs += effect.GetAverageStats(meleeHitInterval,      chanceCrit, baseWeaponSpeed, fightDuration); break;
-                    case Trigger.DoTTick:                               statsProcs += effect.GetAverageStats(1.5f,                  1f,         baseWeaponSpeed, fightDuration); break;
-                    case Trigger.DamageDone:                            statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f,         baseWeaponSpeed, fightDuration); break;
+                if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
+                {
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.Use: 
+                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration); 
+                            break;
+                        case Trigger.MeleeHit:
+                        case Trigger.PhysicalHit: 
+                            statsProcs += effect.GetAverageStats(bothHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration);
+                            break;
+                        case Trigger.MeleeCrit:
+                        case Trigger.PhysicalCrit:
+                            statsProcs += effect.GetAverageStats(bothHitInterval, combatFactors.MhCrit, combatFactors.MainHand.Speed, fightDuration);
+                            break;
+                        case Trigger.DoTTick:
+                            statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                            break;
+                        case Trigger.DamageDone: // physical and dots
+                            statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors.MainHand.Speed, fightDuration); 
+                            break;
+                    }
                 }
             }
             // Warrior Abilities as SpecialEffects
@@ -649,17 +711,17 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
                         30f, 3f * 60f * IntenseCDMod);
-                    statsProcs += DeathWish.GetAverageStats(0f, 1f, baseWeaponSpeed, fightDuration);
+                    statsProcs += DeathWish.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
                 }
                 SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
                     12f, 5f * 60f * IntenseCDMod);
-                statsProcs += Recklessness.GetAverageStats(     0f, 1f, baseWeaponSpeed, fightDuration);
+                statsProcs += Recklessness.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
             }else{
                 SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },
                     10f, 5f * 60f);
-                statsProcs += ShatteringThrow.GetAverageStats(  0f, 1f, baseWeaponSpeed, fightDuration);
+                statsProcs += ShatteringThrow.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
             }
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
@@ -817,7 +879,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return statsBuffs;
         }
         public override void SetDefaults(Character character) {
+            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents  talents = character.WarriorTalents;
+            
+            if (calcOpts == null) calcOpts = new CalculationOptionsDPSWarr();
+            calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
             bool doit = false;
             bool removeother = false;
             // === BATTLE SHOUT ===   // Jothay: deactivated until better control can be put on it

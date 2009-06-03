@@ -152,7 +152,7 @@ namespace Rawr.DPSWarr
                                 (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1,
                                 StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1)));
             // DPS Fury
-            format = "{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%}% of DPS";
+            format = "{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%} of DPS";
             dictValues.Add("Description",       string.Format("DPS  : PerHit : RPS : #ActsD"));
             dictValues.Add("Bloodsurge",        string.Format(format,BS.GetDPS(), BS.GetDamageOnUse(), BS.GetRageUsePerSecond() ,BS.GetActivates(),BS.GetDPS()/TotalDPS));
             dictValues.Add("Bloodthirst",       string.Format(format,BT.GetDPS(), BT.GetDamageOnUse(), BT.GetRageUsePerSecond() ,BT.GetActivates(),BT.GetDPS()/TotalDPS));

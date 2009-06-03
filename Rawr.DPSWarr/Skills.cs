@@ -15,7 +15,7 @@
         private CombatFactors _combatFactors;
         private WhiteAttacks _whiteStats;
         private CalculationOptionsDPSWarr _calcOpts;
-        public const float ROTATION_LENGTH_FURY = 16.0f;
+        public const float ROTATION_LENGTH_FURY = 8.0f;
         public const float ROTATION_LENGTH_ARMS_GLYPH = 42.0f;
         public const float ROTATION_LENGTH_ARMS_NOGLYPH = 30.0f;
         #endregion
@@ -134,9 +134,13 @@
                  * c = rage conversion value
                  * s = weapon speed
                  * f = hit factor */
-                const float c = 453.3f;//0.0091107836f * 80f * 80f + 3.225598133f * 80f + 4.2652911f; // = ~320.6
-                float R = 0f;
-                R = 3.75f * d / c + f * s / 2.0f;
+                float c = 453.3f;
+                if (_character.Level != 80) c = 0.0091107836f * _character.Level * _character.Level + 3.225598133f * _character.Level + 4.2652911f; // = ~320.6;
+                float dmgRage = 7.5f * d / c;
+                float rps = f * s; // 3.5rage/sec baseline
+                float R = System.Math.Min((dmgRage + rps) / 2.0f, dmgRage*2.0f);
+                
+                //R = 3.75f * d / c + f * s / 2.0f;
                 R *= (1.0f + 0.25f * _talents.EndlessRage);
                 return R;
             }
@@ -517,8 +521,8 @@ attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your
                 TlntsAfctg = @"Bloodthirst (Requires talent to use ability)\n
 Unending Fury [Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by (2/4/6/8/10)%.]";
                 GlphsAfctg = @"Glyph of Bloodthirst [+100% from healing effect]";
-                Cd = 5f; // In Seconds
-                RageCost = 30f;
+                Cd = 4f; // In Seconds
+                RageCost = 20f;
                 CastTime = -1f; // In Seconds
                 StanceOkFury = true;
                 StanceOkArms = false;
@@ -530,7 +534,7 @@ Unending Fury [Increases the damage done by your Slam, Whirlwind and Bloodthirst
             public override float GetActivates() {
                 // Invalidators
                 if (!GetValided()||Talents.Bloodthirst==0f) { return 0f; }
-                return 3.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
+                return 2.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
                 // Actual Calcs
                 //return GetRotation() / Cd;
                 // ORIGINAL LINE
@@ -600,7 +604,7 @@ both melee weapons to each enemy.";
 
                 // Actual Calcs
                 //return GetRotation() / (Cd - (Talents.GlyphOfWhirlwind ? 2f : 0f));
-                return 2f;
+                return 1f;
                 // ORIGINAL LINE
                 //return 1.0f / (10f - (_talents.GlyphOfWhirlwind ? 2f : 0f));
             }
@@ -679,6 +683,19 @@ your next Slam instant for 5 sec.";
             public float hsActivates { get; set; }
             // Get/Set
             // Functions
+
+            // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
+            private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
+            {
+                float chanceWeDontProc = 1f;
+                Ability ww = new WhirlWind(this.Char, this.StatS, this.combatFactors, this.Whiteattacks);
+                Ability bt = new BloodThirst(this.Char, this.StatS, this.combatFactors, this.Whiteattacks);
+                chanceWeDontProc *= (1f - hsActivates * procChance * chanceMHhit);
+                chanceWeDontProc *= (1f - ww.GetActivates() * procChance * chanceMHhit)*(1f - ww.GetActivates() * procChance * chanceOHhit);
+                chanceWeDontProc *= (1f - bt.GetActivates() * procChance * chanceMHhit);
+                return 1f - chanceWeDontProc;
+            }
+            
             private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance) {
                 float hsPercent = (hsActivates) / (GetRotation() / combatFactors.MainHandSpeed);
                 float numProcs = 0.0f;
@@ -701,7 +718,7 @@ your next Slam instant for 5 sec.";
                             numWW++;
                         } else if (BTtimer <= 0) {
                             chanceWeDontProc *= (1f - procChance * chanceMHhit);
-                            BTtimer = 50;
+                            BTtimer = 40;
                             numBT++;
                         } else {
                             // We slam
@@ -729,15 +746,16 @@ your next Slam instant for 5 sec.";
                 float chanceOhHitLands = (1f - combatFactors.YellowMissChance - combatFactors.OhDodgeChance);
                 
                 float procs2 = CalcSlamProcs(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
+                float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
 
                 float procs = BT.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceOhHitLands
                     + hsActivates*chanceMhHitLands;// HS.GetActivates();
                 procs *= chance;
                 //procs /= GetRotation();
                 // procs = (procs / GetRotation()) - (chance * chance + 0.01f); // WTF is with squaring chance?
-                if (procs < 0) { procs = 0; }
-                if (procs > 5) { procs = 5; } // Only have 5 free GCDs in the rotation
-                return procs2;
+                if (procs2 < 0) { procs2 = 0; }
+                if (procs2 > 1) { procs2 = 1; } // Only have 1 free GCD in the default rotation
+                return procs3;
 
                 // ORIGINAL LINES
                 //float chance = _talents.Bloodsurge * 0.0666666666f;
@@ -1008,8 +1026,8 @@ while they are casting, their magical damage and healing will be reduced by (25/
                     // No TasteForBlood talent and but chance to activate via parry or dodge
                     cd = 1f / (
                         (combatFactors.MhDodgeChance + (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f)) * (1f / combatFactors.MainHandSpeed) +
-                        0.01f * GetLandedAtksPerSecNoSS() * combatFactors.MhExpertise * Talents.SwordSpecialization * 54f / 60f +
-                        0.03f * GCDPerc * GetLandedAtksPerSec() +
+                        /*0.01f * GetLandedAtksPerSecNoSS() * combatFactors.MhExpertise * Talents.SwordSpecialization * 54f / 60f +
+                        0.03f * GCDPerc * GetLandedAtksPerSec() +*/ // Removed this because it's causing stack overflow (try a fury spec in arms stance)
                         1f / (5f / 1000f)//+
                         //1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates()
                      );
@@ -1399,9 +1417,8 @@ extra point of rage into 38 additional damage. Only usable on enemies that have 
                 if (!Override && !GetValided()) { return 0f; }
 
                 float bonus =
-                    (1f +
-                    StatS.BonusSlamDamage +// 2 Pc T7 Set bonus
-                    (!Override?0.02f*Talents.UnendingFury:0f));// Talents
+                    (1f + StatS.BonusSlamDamage) *// 2 Pc T7 Set bonus
+                    (1f + 0.02f*Talents.UnendingFury);// Talents -- Removed "override" check because the talent works for all slams.
                 float dmg = bonus * (combatFactors.AvgMhWeaponDmg + 250);
                 return dmg;
             }

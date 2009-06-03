@@ -23,7 +23,15 @@ namespace Rawr.DPSWarr {
             RB_StanceFury.Checked = true;
         }
         protected override void LoadCalculationOptions() {
-            if (Character != null && Character.CalculationOptions == null) { Character.CalculationOptions = new CalculationOptionsDPSWarr(); return; }
+            if (Character != null && Character.CalculationOptions == null) { 
+                Character.CalculationOptions = new CalculationOptionsDPSWarr();
+                CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+                RB_StanceFury.Checked = opts.FuryStance;
+                RB_StanceArms.Checked = !RB_StanceFury.Checked;
+                Character.OnCalculationsInvalidated();
+                return; 
+            }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             if (calcOpts != null){
                 CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
@@ -41,6 +49,14 @@ namespace Rawr.DPSWarr {
                 RB_StanceArms.Checked = !calcOpts.FuryStance;
                 RB_TargSingle.Checked = !calcOpts.MultipleTargets;
                 RB_TargsStand.Checked = !calcOpts.MovingTargets;
+                if (Character != null)
+                {
+                    CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+                    RB_StanceFury.Checked = opts.FuryStance;
+                    RB_StanceArms.Checked = !RB_StanceFury.Checked;
+                    Character.OnCalculationsInvalidated();
+                }
             }
         }
         private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
