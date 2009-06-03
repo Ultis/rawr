@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr
 {
-    [Serializable]
+    
     public class SavedTalentSpecList : List<SavedTalentSpec>
     {
         public SavedTalentSpecList() : base() { }

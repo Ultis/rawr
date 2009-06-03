@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace Rawr //O O . .
 {
-    [Serializable]
+    
     public class Character
     {
         [XmlElement("Name")]

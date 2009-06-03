@@ -8,12 +8,12 @@ using System.Text;
 
 namespace Rawr
 {
-    [Serializable]
+    
     public class GemmingTemplateList : List<GemmingTemplate>
     {
     }
 
-	[Serializable]
+	
 	public class GemmingTemplate
 	{
 		[XmlElement("Id")]

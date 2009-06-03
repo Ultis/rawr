@@ -44,7 +44,7 @@ namespace Rawr
 
     delegate ItemLocation Construct();
 
-    [Serializable]
+    
     [XmlInclude(typeof(StaticDrop))]
     [XmlInclude(typeof(NoSource))]
     [XmlInclude(typeof(UnknownItem))]
@@ -86,7 +86,7 @@ namespace Rawr
         }
     }
 
-    [Serializable]
+    
     public class NoSource : ItemLocation
     {
         public NoSource():base("")
@@ -98,7 +98,7 @@ namespace Rawr
             return new NoSource();
         }
     }
-    [Serializable]
+    
     public class UnknownItem : ItemLocation
     {
         [XmlIgnore]
@@ -121,7 +121,7 @@ namespace Rawr
         }
     }
   
-    [Serializable]
+    
     public class VendorItem : ItemLocation
     {
 
@@ -273,7 +273,7 @@ namespace Rawr
         static SortedList<string, string> _bossToAreaMap = new SortedList<string, string>();
     }
   
-    [Serializable]
+    
     public class FactionItem : ItemLocation
     {
 
@@ -416,7 +416,7 @@ namespace Rawr
         }
     }
    
-    [Serializable]
+    
     public class PvpItem : ItemLocation
     {
         public string PointType{get;set;}
@@ -504,7 +504,7 @@ namespace Rawr
         static SortedList<string, string> _tokenMap = new SortedList<string, string>();
     }
    
-    [Serializable]
+    
     public class StaticDrop : ItemLocation
     {
         public string Area{get;set;}
@@ -539,7 +539,7 @@ namespace Rawr
         }
     }
    
-    [Serializable]
+    
     public class WorldDrop : ItemLocation
     {
         private WorldDrop()
@@ -585,7 +585,7 @@ namespace Rawr
 
     }
 
-    [Serializable]
+    
     public class CraftedItem : ItemLocation
     {
         private CraftedItem()
@@ -714,7 +714,7 @@ namespace Rawr
         }
     }
 
-    [Serializable]
+    
     public class QuestItem : ItemLocation
     {
         private QuestItem()
@@ -756,7 +756,7 @@ namespace Rawr
         }
     }
 
-    [Serializable]
+    
     public class ContainerItem : ItemLocation
     {
         public ContainerItem()
@@ -797,7 +797,7 @@ namespace Rawr
     }
 
     [XmlRoot("dictionary")]
-    [Serializable]
+    
     public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation>
     {
     }

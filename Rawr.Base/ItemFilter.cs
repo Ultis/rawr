@@ -9,12 +9,12 @@ using System.Xml.Serialization;
 
 namespace Rawr
 {
-    [Serializable]
+    
     public class ItemFilterRegexList : BindingList<ItemFilterRegex>
     {
     }
 
-    [Serializable]
+    
     public class ItemFilterRegex
     {
         public ItemFilterRegex()
@@ -126,14 +126,14 @@ namespace Rawr
         }
     }
 
-    [Serializable]
+    
     public class ItemTypeList : List<Item.ItemType>
     {
         public ItemTypeList() : base() { }
         public ItemTypeList(IEnumerable<Item.ItemType> collection) : base(collection) { }
     }
 
-    [Serializable]
+    
     public class ItemFilterData
     {
         public SerializableDictionary<string, ItemTypeList> RelevantItemTypes = new SerializableDictionary<string, ItemTypeList>();

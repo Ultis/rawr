@@ -42,7 +42,7 @@ namespace Rawr
         NUM_Trigger // Should always be the last entry.
     }
 
-    [Serializable]
+    
     public class SpecialEffect
     {
         public Trigger Trigger { get; set; }

@@ -9,7 +9,7 @@ using System.Reflection;
 namespace Rawr
 {
     // keep this in main namespace not to upset serializers
-    [Serializable()]
+    
     public class OptimizationRequirement
     {
         public string Calculation { get; set; }
@@ -206,7 +206,7 @@ namespace Rawr.Optimizer
         }
     }
 
-    [Serializable]
+    
     public class ComparisonCalculationUpgrades : ComparisonCalculationBase
     {
         public override string Name { get; set; }

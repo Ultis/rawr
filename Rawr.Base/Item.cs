@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace Rawr
 {
 	#region Item
-	[Serializable]
+	
 	public class Item : IComparable<Item>
 	{
 		[XmlElement("ItemLevel")]
@@ -1028,7 +1028,7 @@ namespace Rawr
     // it is a single instance of an item, it is not to be shared between multiple characters
     // or whatever, at least if you don't know what you are doing
     // if for whatever reason you reuse the same instance treat it as read only
-	[Serializable]
+	
 	public class ItemInstance : IComparable<ItemInstance>
 	{
 		[XmlElement("Id")]

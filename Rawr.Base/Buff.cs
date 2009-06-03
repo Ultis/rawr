@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
+using System.Linq;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -32,43 +32,31 @@ namespace Rawr
             get { return _conflictingBuffs ?? (_conflictingBuffs = new List<string>(new string[] { Group })); }
             set { _conflictingBuffs = value; }
         }
-
-        private static readonly string _savedFilePath;
-        static Buff() 
-        {
-            _savedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "BuffCache.xml");
-            LoadBuffs();
-            SaveBuffs();
-        }
         //washing virgin halo
         public Buff() { }
 
-        private static void SaveBuffs()
+        public static void SaveBuffs(StreamWriter writer)
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(_savedFilePath, false, Encoding.UTF8))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
-                    serializer.Serialize(writer, _allBuffs);
-                    writer.Close();
-                }
+                XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
+                serializer.Serialize(writer, _allBuffs);
+                writer.Close();
             } catch (Exception) {
                 // Log.Write(ex.Message);
                 // Log.Write(ex.StackTrace);
             }
         }
 
-        private static void LoadBuffs() {
+        public static void LoadBuffs(StreamReader reader) {
             try {
                 List<Buff> loadedBuffs = new List<Buff>();
                 try {
-                    if (File.Exists(_savedFilePath)) {
-                        using (StreamReader reader = new StreamReader(_savedFilePath, Encoding.UTF8)) {
-                            XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
-                            loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
-                            reader.Close();
-                        }
+                    if (reader != null)
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
+                        loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
+                        reader.Close();
                     }
                 } catch (System.Exception) {
                     //Log.Write(ex.Message);
@@ -135,7 +123,7 @@ namespace Rawr
                 if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantBuffs == null) {
                     if (Calculations.Instance != null) {
                         _cachedModel = Calculations.Instance.ToString();
-                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff));
+                        _relevantBuffs = new List<Buff>(AllBuffs.Where(buff => Calculations.IsBuffRelevant(buff)));
                     } else { _relevantBuffs = new List<Buff>(); }
                 }
                 return _relevantBuffs;
@@ -146,7 +134,7 @@ namespace Rawr
         public static List<Buff> AllSetBonuses {
             get {
                 if (_allSetBonuses == null) {
-                    _allSetBonuses = AllBuffs.FindAll(buff => !string.IsNullOrEmpty(buff.SetName));
+                    _allSetBonuses = new List<Buff>(AllBuffs.Where(buff => !string.IsNullOrEmpty(buff.SetName)));
                 }
                 return _allSetBonuses;
             }
@@ -167,8 +155,8 @@ namespace Rawr
                 if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantSetBonuses == null) {
                     if (Calculations.Instance != null) {
                         _cachedModel = Calculations.Instance.ToString();
-                        _relevantSetBonuses = AllBuffs.FindAll(buff =>
-                            Calculations.HasRelevantStats(buff.GetTotalStats()) && !string.IsNullOrEmpty(buff.SetName));
+                        _relevantSetBonuses = new List<Buff>(AllBuffs.Where(buff =>
+                            Calculations.HasRelevantStats(buff.GetTotalStats()) && !string.IsNullOrEmpty(buff.SetName)));
                     } else { _relevantSetBonuses = new List<Buff>(); }
                 }
                 return _relevantSetBonuses;

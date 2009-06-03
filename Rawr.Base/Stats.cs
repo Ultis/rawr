@@ -475,6 +475,21 @@ namespace Rawr {
         NUM_HitResult, // Always the last entry in the enum.
     }
 
+#if SILVERLIGHT
+    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    public sealed class DisplayNameAttribute : Attribute
+    {
+        public DisplayNameAttribute(string name)
+        {
+            _name = name;
+        }
+
+        private readonly string _name;
+
+        public string DisplayName { get { return _name; } }
+    }
+#endif
+
     [System.AttributeUsage(System.AttributeTargets.Property)]
     public class CommonStat : System.Attribute {
         public static float GetCommonStatMinimumRange(PropertyInfo property) {
@@ -490,10 +505,9 @@ namespace Rawr {
     /// <summary>
     /// A Stats object represents a collection of stats on an object, such as an Item, Enchant, or Buff.
     /// </summary>
-    [Serializable]
 #if SILVERLIGHT
     public class Stats
-#else
+#else    
     public unsafe class Stats
 #endif
     {
