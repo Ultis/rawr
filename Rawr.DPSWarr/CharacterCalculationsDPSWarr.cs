@@ -133,14 +133,17 @@ namespace Rawr.DPSWarr
                                 ArmorPenetrationMaceSpec));
             dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
             dictValues.Add("Hit Rating",
-                string.Format("{0}*{1:0.00%} Increased Chance to hit" + Environment.NewLine + "Note: This does not include Precision"
-                ,BasicStats.HitRating,StatConversion.GetHitFromRating(BasicStats.HitRating)));
-            dictValues.Add("Expertise", 
+                string.Format("{0}*{1:0.00%} Increased Chance to hit" +
+                                Environment.NewLine + "Note: This does not include Precision" +
+                                Environment.NewLine + Environment.NewLine + "You can free up {2:0} Rating",
+                                BasicStats.HitRating,StatConversion.GetHitFromRating(BasicStats.HitRating),
+                                StatConversion.GetRatingFromHit(.08f - StatConversion.GetHitFromRating(BasicStats.HitRating))*-1f));
+            dictValues.Add("Expertise",
                 string.Format("{0:0.00}*Expertise Rating {1}" +
                                 Environment.NewLine + "Num Displayed is Rating Converted + Strength of Arms" +
                                 Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}." +
-                                Environment.NewLine + "Main Hand Exp- {3:0.00} / {4:0.00%} [Includes Racial]" +
-                                Environment.NewLine + "Off Hand Exp- {5:0.00} / {6:0.00%} [Includes Racial]" +
+                                Environment.NewLine + "Main Hand Exp - {3:00.00} / {4:0.00%} [Includes Racial]" +
+                                Environment.NewLine + "Off Hand Exp    - {5:00.00} / {6:0.00%} [Includes Racial]" +
                                 Environment.NewLine + Environment.NewLine + "You can free up {7:0} Expertise ({8:0} Rating)",
                                 Expertise + BasicStats.Expertise,
                                 BasicStats.ExpertiseRating, StatConversion.GetDodgeParryReducFromExpertise(Expertise),

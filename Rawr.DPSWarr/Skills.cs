@@ -882,7 +882,7 @@ Trauma [Your melee critical strikes increase the effectiveness of Bleed effects 
                 float DmgBonusO75 = 0.25f*1.35f*((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage+combatFactors.MainHand.MinDamage)/2f) * (743f / 300000f);
                 float DmgBonusU75 = 0.75f*1.00f*((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage + combatFactors.MainHand.MinDamage) / 2f) * (743f / 300000f);
                 float DmgMod = (1f + StatS.BonusBleedDamageMultiplier);
-                DmgMod *= 1f + 0.1f * Talents.ImprovedRend;
+                DmgMod *= 1f + 0.10f * Talents.ImprovedRend + 0.15f * Talents.Trauma;
 
                 float TickSize = (DmgBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
                 return TickSize;
@@ -930,8 +930,8 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
                 //float mod = 100f;
                 float SD_GCDS = talent * hitspersec * latency /* * mod*/;
                 // END ACTUAL CALCS */
-
-                /*float fightDuration = CalcOpts.Duration;
+                /*
+                float fightDuration = CalcOpts.Duration;
                 float hasteBonus = StatConversion.GetPhysicalHasteFromRating(combatFactors.TotalHaste, Character.CharacterClass.Warrior);
                 hasteBonus = (1f + hasteBonus) * (1f + combatFactors.TotalHaste) * (1f + StatS.Bloodlust * 40f / fightDuration) - 1f;
                 float meleeHitsPerSecond = 1f / 1.5f;
@@ -945,7 +945,7 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
                     1f, 1.5f, Talents.SuddenDeath * (3f / 100f));
                 float procs = SuddenDeath.GetAverageProcsPerSecond(meleeHitInterval, 1f, baseWeaponSpeed, CalcOpts.Duration);
 
-                return procs * 1.5f;*/
+                return procs * 1.5f;//*/
                 return SD_GCDS;
             }
             public override float GetDamage() {
@@ -995,37 +995,34 @@ while they are casting, their magical damage and healing will be reduced by (25/
                 // Invalidators
                 if (!GetValided()) { return 0f; }
 
-                // Actual Calcs
-                {
-                    // TODO: 5 sec cooldown - (_talents.UnrelentingAssault*2.0f)
-                }
-                {
-                    // TODO: GlyphofOverpower "100% chance to activate when attacks are parried"
-                    // thereby making it so that it will activate on both Dodges and Parries instead
-                    // of Dodges alone, which are pretty much invalidated by the Expertise mechanic
-                }
                 // ACTUAL CALCS
                 Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
                 float GCDPerc = (Talents.TasteForBlood == 0 ? 0f : (1.5f - 0.5f * Talents.UnrelentingAssault / 1000f) / ((Talents.TasteForBlood > 1f) ? 6f : 9f));
 
-                float OP_GCDs = GetRotation() / 
-                    (((combatFactors.MhDodgeChance <= 0f /*&& (Talents.GlyphOfOverpower && combatFactors.MhParryChance <= 0f)*/) && Talents.TasteForBlood == 0f) ?
-                        0f
-                    :
-                        ((Talents.TasteForBlood == 0f) ? 1f /
-                            (
-                                (combatFactors.MhDodgeChance /*+ (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f)*/) * (1f / combatFactors.MainHandSpeed) +
-                                0.01f * GetLandedAtksPerSecNoSS() * combatFactors.MhExpertise * Talents.SwordSpecialization * 54f / 60f +
-                                0.03f * GCDPerc * GetLandedAtksPerSec() +
-                                1f / (5f / 1000f)//+
-                                //1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates()
-                             )
-                        :
-                        ((Talents.TasteForBlood > 1f) ? 6f : 9f ) ))
-                ;
+                float cd = 1f, result = 0;
+                
+                if(combatFactors.MhDodgeChance + (Talents.GlyphOfOverpower?combatFactors.MhParryChance:0f) <= 0f && Talents.TasteForBlood == 0f){
+                    // No TasteForBlood talent and no chance to activate otherwise
+                    cd = 0f;
+                }else if(Talents.TasteForBlood == 0f){
+                    // No TasteForBlood talent and but chance to activate via parry or dodge
+                    cd = 1f / (
+                        (combatFactors.MhDodgeChance + (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f)) * (1f / combatFactors.MainHandSpeed) +
+                        0.01f * GetLandedAtksPerSecNoSS() * combatFactors.MhExpertise * Talents.SwordSpecialization * 54f / 60f +
+                        0.03f * GCDPerc * GetLandedAtksPerSec() +
+                        1f / (5f / 1000f)//+
+                        //1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates()
+                     );
+                }// TODO: TasteForBlood talent AND chance to activate otherwise
+                else if(Talents.TasteForBlood > 0f){
+                    // TasteForBlood talent and NO chance to activate otherwise
+                    cd = 6f / (1f / 3f * Talents.TasteForBlood);
+                }
+
+                result = GetRotation() / cd;
                 // END ACTUAL CALCS
 
-                return OP_GCDs;
+                return result;
             }
             public override float GetDamage() {
                 // Invalidators
@@ -1250,12 +1247,12 @@ your target with your Sword. This effect cannot occur more than once every 6 sec
 target by (15/30)% for 15 sec.";
                 ReqMeleeWeap = false;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
+                MaxRange = 5f; // In Yards 
                 TlntsAfctg = @"Trauma [Requires Talent to use ability]";
                 GlphsAfctg = @"";
-                Cd = -1; // In Seconds
-                RageCost = -1;
-                CastTime = -1; // In Seconds
+                Cd = -1f; // In Seconds
+                RageCost = -1f;
+                CastTime = -1f; // In Seconds
                 StanceOkFury = true;
                 StanceOkArms = true;
                 StanceOkDef = true;
@@ -1272,7 +1269,7 @@ target by (15/30)% for 15 sec.";
             }
             public override float GetDamage() {
                 // Invalidators
-                if (!GetValided()) { return 0f; }
+                if (!GetValided() || Talents.Trauma == 0) { return 0f; }
 
                 // Base Damage
                 float Damage = Talents.Trauma * 0.15f;
@@ -1670,14 +1667,172 @@ average damage over 6 sec.";
                 return result;
             }
         }
+        // Passive Abilities
+        public class BattleShout : Ability {
+            // Constructors
+            public BattleShout(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;
+                Talents = c.WarriorTalents;
+                StatS = s;
+                combatFactors = cf;
+                Whiteattacks = wa;
+                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Name = "Battle Shout";
+                Desc = @"The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.";
+                ReqMeleeWeap = false;
+                ReqMeleeRange = false;
+                MaxRange = 20f; // In Yards 
+                TlntsAfctg = @"Booming Shout [Increases the area of effect and duration of your Battle Shout,
+Demoralizing Shout and Commanding Shout by (0.25/.050)%]\n
+Commanding Presence [Increases the melee attack power bonus of your Battle Shout and health bonus of your Commanding Shout by (0.05*Pts)%]";
+                GlphsAfctg = @"Glyph of Battle [Increases the duration of your Battle Shout ability by 1 min.]";
+                SetsAfctg = @"";
+                Cd = 2f*60f; // In Seconds // adding long cd to sim uptime
+                RageCost = 10f;
+                CastTime = -1f; // In Seconds
+                StanceOkFury = true;
+                StanceOkArms = true;
+                StanceOkDef  = true;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
+                // Invalidators
+                if (!GetValided()) { return 0f; }
+
+                float result = GetRotation() / ((Cd + (Talents.GlyphOfBattle?1f*60f:0f))*(1f+Talents.BoomingVoice*0.25f));
+
+                return result;
+            }
+        }
+        public class ShatteringThrow : Ability {
+            // Constructors
+            public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;
+                Talents = c.WarriorTalents;
+                StatS = s;
+                combatFactors = cf;
+                Whiteattacks = wa;
+                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Name = "Shattering Throw";
+                Desc = @"Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
+reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.";
+                ReqMeleeWeap = true;
+                ReqMeleeRange = false;
+                MaxRange = 30f; // In Yards 
+                TlntsAfctg = @"";
+                GlphsAfctg = @"";
+                SetsAfctg = @"";
+                Cd = 2f * 60f; // In Seconds // adding long cd to sim uptime
+                RageCost = 25f;
+                CastTime = 1.5f; // In Seconds
+                StanceOkFury = false;
+                StanceOkArms = true;
+                StanceOkDef = false;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
+                // Invalidators
+                if (!GetValided()) { return 0f; }
+
+                float result = GetRotation() / Cd;
+
+                return result;
+            }
+        }
+        public class DeathWish : Ability {
+            // Constructors
+            public DeathWish(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;
+                Talents = c.WarriorTalents;
+                StatS = s;
+                combatFactors = cf;
+                Whiteattacks = wa;
+                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Name = "Battle Shout";
+                Desc = @"When activated you become enraged, increasing your physical damage by 20% but increasing
+all damage taken by 5%. Lasts 30 sec.";
+                ReqMeleeWeap = false;
+                ReqMeleeRange = false;
+                MaxRange = 20f; // In Yards 
+                TlntsAfctg = @"Death Wish [Requires Talent to use Ability.]\n
+Intensify Rage [Reduces the cooldown of your Bloodrage, Berserker Rage, Recklessness and Death Wish abilities by (100/9*Pts)%]";
+                GlphsAfctg = @"";
+                SetsAfctg = @"";
+                Cd = 3f * 60f; // In Seconds // adding long cd to sim uptime
+                RageCost = 10f;
+                CastTime = -1f; // In Seconds
+                StanceOkFury = false;
+                StanceOkArms = true;
+                StanceOkDef = false;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
+                // Invalidators
+                if (!GetValided() || Talents.DeathWish == 0) { return 0f; }
+
+                float result = GetRotation() / (Cd*(100/9*Talents.IntensifyRage));
+
+                return result;
+            }
+        }
+        public class Recklessness : Ability {
+            // Constructors
+            public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;
+                Talents = c.WarriorTalents;
+                StatS = s;
+                combatFactors = cf;
+                Whiteattacks = wa;
+                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Name = "Recklessness";
+                Desc = @"Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.";
+                ReqMeleeWeap = false;
+                ReqMeleeRange = false;
+                MaxRange = 5f; // In Yards 
+                TlntsAfctg = @"Booming Shout [Increases the area of effect and duration of your Battle Shout,
+Demoralizing Shout and Commanding Shout by (0.25/.050)%]\n
+Commanding Presence [Increases the melee attack power bonus of your Battle Shout and health bonus of your Commanding Shout by (0.05*Pts)%]";
+                GlphsAfctg = @"Glyph of Battle [Increases the duration of your Battle Shout ability by 1 min.]";
+                SetsAfctg = @"";
+                Cd = 5f * 60f; // In Seconds // adding long cd to sim uptime
+                RageCost = -1f;
+                CastTime = -1f; // In Seconds
+                StanceOkFury = true;
+                StanceOkArms = false;
+                StanceOkDef = false;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
+                // Invalidators
+                if (!GetValided()) { return 0f; }
+
+                float result = GetRotation() / (Cd*(100/9*Talents.IntensifyRage));
+
+                return result;
+            }
+        }
         // Arms Rotation
+        #region ArmsRotVariables
         public float _MS_PerHit  = 0f;public float _MS_DPS  = 0f;public float _MS_GCDs  = 0f;public float _MS_GCDsD  = 0f;
         public float _RD_PerHit  = 0f;public float _RD_DPS  = 0f;public float _RD_GCDs  = 0f;public float _RD_GCDsD  = 0f;
         public float _OP_PerHit  = 0f;public float _OP_DPS  = 0f;public float _OP_GCDs  = 0f;public float _OP_GCDsD  = 0f;
         public float _SD_PerHit  = 0f;public float _SD_DPS  = 0f;public float _SD_GCDs  = 0f;public float _SD_GCDsD  = 0f;
         public float _SL_PerHit  = 0f;public float _SL_DPS  = 0f;public float _SL_GCDs  = 0f;public float _SL_GCDsD  = 0f;
         public float _BLS_PerHit = 0f;public float _BLS_DPS = 0f;public float _BLS_GCDs = 0f;public float _BLS_GCDsD = 0f;
-        public float _DW_PerHit  = 0f;public float _DW_DPS  = 0f;
+        public float _Shout_GCDs = 0f;public float _Shout_GCDsD = 0f;
+        public float _Shatt_GCDs = 0f;public float _Shatt_GCDsD = 0f;
+        public float _Death_GCDs = 0f;public float _Death_GCDsD = 0f;
+        public float _Reck_GCDs  = 0f;public float _Reck_GCDsD  = 0f;
+        public float _DW_PerHit  = 0f;public float _DW_DPS      = 0f;
+        #endregion
         public float MakeRotationandDoDPS_Arms() {
             // Starting Numbers
             float DPS_TTL = 0f;
@@ -1694,9 +1849,46 @@ average damage over 6 sec.";
             /*Ability DW = new DeepWounds(_character, _stats, _combatFactors, _whiteStats);
             _DW_PerHit = DW.GetDamageOnUse();
             _DW_DPS = DW.GetDPS();
-            DPS_TTL += _DW_DPS;*/
-            // DW is being handled in GetCharacterCalcs right now
+            DPS_TTL += _DW_DPS;
+            // DW is being handled in GetCharacterCalcs right now*/
             
+            // Periodic GCD users (DPS for these handled elsewhere)
+            // TODO: Enforce a "Maintaining" argument so we know if we are the ones putting this up or not
+            Ability Shout = new BattleShout(_character, _stats, _combatFactors, _whiteStats);
+            float Shout_GCDs = Shout.GetActivates();
+            if (Shout_GCDs > availGCDs) { Shout_GCDs = availGCDs; }
+            _Shout_GCDs = Shout_GCDs; _Shout_GCDs = _Shout_GCDs * duration / rotation;
+            GCDsused += (float)System.Math.Min(NumGCDs, Shout_GCDs);
+            availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+            if (availGCDs <= 0f) { return DPS_TTL; }
+            if (!_calcOpts.FuryStance) {
+                // TODO: Enforce a "Maintaining" argument so we know if we are the ones putting this up or not
+                Ability Shatt = new ShatteringThrow(_character, _stats, _combatFactors, _whiteStats);
+                float Shatt_GCDs = Shatt.GetActivates();
+                if (Shatt_GCDs > availGCDs) { Shatt_GCDs = availGCDs; }
+                _Shatt_GCDs = Shatt_GCDs; _Shatt_GCDs = _Shatt_GCDs * duration / rotation;
+                GCDsused += (float)System.Math.Min(NumGCDs, Shatt_GCDs);
+                availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+                if (availGCDs <= 0f) { return DPS_TTL; }
+            }else{
+                // TODO: Enforce a "Maintaining" argument so we know if we are the ones putting this up or not
+                Ability Death = new DeathWish(_character, _stats, _combatFactors, _whiteStats);
+                float Death_GCDs = Death.GetActivates();
+                if (Death_GCDs > availGCDs) { Death_GCDs = availGCDs; }
+                _Death_GCDs = Death_GCDs; _Death_GCDs = _Death_GCDs * duration / rotation;
+                GCDsused += (float)System.Math.Min(NumGCDs, Death_GCDs);
+                availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+                if (availGCDs <= 0f) { return DPS_TTL; }
+                // TODO: Enforce a "Maintaining" argument so we know if we are the ones putting this up or not
+                Ability Reck = new Recklessness(_character, _stats, _combatFactors, _whiteStats);
+                float Reck_GCDs = Reck.GetActivates();
+                if (Reck_GCDs > availGCDs) { Reck_GCDs = availGCDs; }
+                _Reck_GCDs = Reck_GCDs; _Reck_GCDs = _Reck_GCDs * duration / rotation;
+                GCDsused += (float)System.Math.Min(NumGCDs, Reck_GCDs);
+                availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+                if (availGCDs <= 0f) { return DPS_TTL; }
+            }
+
             // Periodic DPS (run only once every few rotations)
             Ability BLS = new Bladestorm(_character, _stats, _combatFactors, _whiteStats);
             float BLS_GCDs = BLS.GetActivates();

@@ -349,10 +349,14 @@ namespace Rawr
         /// </summary>
         /// <param name="Rating">Hit Rating</param>
         /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
-        public static float GetPhysicalHitFromRating(float Rating)
-        {
-            return Rating / RATING_PER_PHYSICALHIT;
-        }
+        public static float GetPhysicalHitFromRating(float Rating){return Rating / RATING_PER_PHYSICALHIT;}
+        public static float GetRatingFromHit(float value, Character.CharacterClass Class) { return GetRatingFromHit(value); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Hit)
+        /// </summary>
+        /// <param name="Rating">Hit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
+        public static float GetRatingFromHit(float value) { return value * RATING_PER_PHYSICALHIT; }
 
         // Returns a Percentage
         public static float GetResilienceCritReduction(float Rating) { return GetResilienceFromRating(Rating); }

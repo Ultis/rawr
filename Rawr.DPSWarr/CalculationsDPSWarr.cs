@@ -317,8 +317,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.BLS.GetActivates() * 6f + calculatedStats.BS.GetActivates() + calculatedStats.SD.GetActivates() +
                 calculatedStats.BT.GetActivates() + calculatedStats.WW.GetActivates();
             float OHAbilityActivates = 0f;
-            if (character.OffHand != null)
-                OHAbilityActivates = calculatedStats.WW.GetActivates() + calculatedStats.BLS.GetActivates() * 6f;
+            if (character.OffHand != null){OHAbilityActivates = calculatedStats.WW.GetActivates() + calculatedStats.BLS.GetActivates() * 6f;}
 
 
 
@@ -340,7 +339,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
                     + calculatedStats.SS.GetDPS() + calculatedStats.BLS.GetDPS();
             }else{
-                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + deepWounds.GetDPS();
+                calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetDamageOnUse();
+                calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS();
+                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + calculatedStats.SkillAttacks._DW_DPS;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
@@ -643,18 +644,23 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             // Warrior Abilities as SpecialEffects
             float IntenseCDMod = 1f - (100f/9f)*talents.IntensifyRage;
-            /*SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
-                new Stats() { ArmorPenetration = 0.20f, },
-                10f, 5f * 60f);
-            if (!calcOpts.FuryStance) { statsProcs += ShatteringThrow.GetAverageStats(  0f, 1f, baseWeaponSpeed, fightDuration); }
-            SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
-                new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
-                30f, 3f * 60f * IntenseCDMod);
-            if ( calcOpts.FuryStance) { statsProcs += DeathWish.GetAverageStats(        0f, 1f, baseWeaponSpeed, fightDuration); }
-            SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
-                new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
-                12f, 5f * 60f * IntenseCDMod);
-            if ( calcOpts.FuryStance) { statsProcs += Recklessness.GetAverageStats(     0f, 1f, baseWeaponSpeed, fightDuration); }*/
+            if (calcOpts.FuryStance) {
+                if (talents.DeathWish > 0) {
+                    SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
+                        new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
+                        30f, 3f * 60f * IntenseCDMod);
+                    statsProcs += DeathWish.GetAverageStats(0f, 1f, baseWeaponSpeed, fightDuration);
+                }
+                SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
+                    12f, 5f * 60f * IntenseCDMod);
+                statsProcs += Recklessness.GetAverageStats(     0f, 1f, baseWeaponSpeed, fightDuration);
+            }else{
+                SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
+                    new Stats() { ArmorPenetration = 0.20f, },
+                    10f, 5f * 60f);
+                statsProcs += ShatteringThrow.GetAverageStats(  0f, 1f, baseWeaponSpeed, fightDuration);
+            }
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
