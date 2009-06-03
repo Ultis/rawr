@@ -158,7 +158,7 @@ namespace Rawr
 
         public static Enchant FindEnchant(int id, Item.ItemSlot slot, Character character)
         {
-            return AllEnchants.First(enchant =>  (enchant.Id == id) && (enchant.FitsInSlot(slot, character) ||
+            return AllEnchants.FirstOrDefault(enchant => (enchant.Id == id) && (enchant.FitsInSlot(slot, character) ||
                   (enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OneHand))) ?? AllEnchants[0];
         }
 

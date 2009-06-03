@@ -61,7 +61,7 @@ namespace Rawr
                 } catch (System.Exception) {
                     //Log.Write(ex.Message);
 #if !DEBUG
-                    MessageBox.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.", "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Log.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.");//, "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     //The designer really doesn't like loading the stuff from a file
 #endif
                 }

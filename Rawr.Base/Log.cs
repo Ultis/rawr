@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 
 //i... hurt myself today
 namespace Rawr
@@ -19,5 +20,10 @@ namespace Rawr
 				    (ms < 100 ? "0" : "") + (ms < 10 ? "0" : "") + ms.ToString(), log);
             }
 		}
+
+        public static void Show(string message)
+        {
+            MessageBox.Show(message);
+        }
 	}
 }
