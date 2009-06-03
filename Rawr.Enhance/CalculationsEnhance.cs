@@ -321,6 +321,8 @@ namespace Rawr
 
             //3: Lavalash DPS
             float dpsLL = 0f;
+            damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
+            damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
             {
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
