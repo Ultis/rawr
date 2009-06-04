@@ -705,7 +705,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             // Warrior Abilities as SpecialEffects
-            float IntenseCDMod = 1f - (100f/9f)*talents.IntensifyRage;
+            float IntenseCDMod = 1f - (1f/9f)*talents.IntensifyRage;
             if (calcOpts.FuryStance) {
                 if (talents.DeathWish > 0) {
                     SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
@@ -713,10 +713,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         30f, 3f * 60f * IntenseCDMod);
                     statsProcs += DeathWish.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
                 }
-                SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
+                /*SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
                     12f, 5f * 60f * IntenseCDMod);
-                statsProcs += Recklessness.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
+                statsProcs += Recklessness.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
             }else{
                 SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },

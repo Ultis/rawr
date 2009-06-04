@@ -9,6 +9,7 @@ namespace Rawr.DPSWarr {
         public CalculationOptionsPanelDPSWarr() {
             InitializeComponent();
 
+            armorBosses.Add(10643, "Default Boss Armor");
             armorBosses.Add(10900, "Patchwerk");
             armorBosses.Add(12000, "Grobbulus");
             armorBosses.Add(13083, "-");
