@@ -44,9 +44,8 @@ namespace Rawr.UnitTests.Rogue.FinishingMoves
         {
             var calcOpts = new CalculationOptionsRogue { CpGenerator = new Backstab() };
             var character = new RogueTestCharacter(new RogueTalents { GlyphOfBackstab = true });
-            TalentsAndGlyphs.Initialize(character.RogueTalents, calcOpts);
+            TalentsAndGlyphs.Initialize(character.RogueTalents);
 
-            
             var cycle = new Cycle();
             var rupture = new CycleComponent(4, new Rupture());
             cycle.Components.Add(rupture);

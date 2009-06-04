@@ -39,7 +39,7 @@ namespace Rawr.UnitTests.Rogue
             sw.Start();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore] //slow test.  no need to run for the moment
         public void DictionaryTiming()
         {
             //this method is slow because of the boxing/unboxing of the enum value (int) to (object)

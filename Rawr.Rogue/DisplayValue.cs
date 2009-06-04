@@ -48,6 +48,9 @@ namespace Rawr.Rogue
         public static readonly DisplayValue WhiteDps = new DisplayValue("DPS Breakdown", "White DPS");
         public static readonly DisplayValue TotalDps = new DisplayValue("DPS Breakdown", "Total DPS");
 
+        public static readonly DisplayValue Dodge = new DisplayValue("Defenses", "Dodge");
+        public static readonly DisplayValue Parry = new DisplayValue("Defenses", "Parry");
+
         public override string ToString()
         {
             return Name;

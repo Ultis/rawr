@@ -195,7 +195,8 @@ namespace Rawr.Rogue
                 var totalHaste = 1f;
                 totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));  //TODO:  change from assuming SnD has a 100% uptime
                 totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-                totalHaste *= (1f + Talents.BladeFlurry.Haste.Bonus);
+                totalHaste *= Talents.BladeFlurry.Haste.Multiplier;
+                totalHaste *= Talents.LightningReflexes.Haste.Multiplier;
                 return totalHaste;
             }
         }

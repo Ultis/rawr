@@ -61,7 +61,7 @@ namespace Rawr.UnitTests.Rogue
         public CombatFactors CreateCombatFactors( RogueTalents talents )
         {
             var character = new RogueTestCharacter(talents);
-            TalentsAndGlyphs.Initialize(character.RogueTalents, new CalculationOptionsRogue());
+            TalentsAndGlyphs.Initialize(character.RogueTalents);
             return new CombatFactors(character, new Stats());
         }
     }

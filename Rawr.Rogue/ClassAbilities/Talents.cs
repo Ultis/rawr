@@ -41,7 +41,7 @@ namespace Rawr.Rogue.ClassAbilities
         //NEED:  Cold Blood
         public static readonly Talents QuickRecovery = new TalentBonusPulledFromList(() => _talents.QuickRecovery, 0.4f, .8f);
         public static readonly Talents SealFate = new TalentBonusPulledFromList(() => _talents.SealFate, .2f, .4f, .6f, .8f, 1f);
-        public static Talents Murder;  //class created below in Initialize Method
+        public static readonly Talents Murder = new TalentBonusPulledFromList(() => _talents.Murder, .2f, .4f);
         public static readonly Talents DeadlyBrew = new TalentBonusPulledFromList(() => _talents.DeadlyBrew, 0, 0);
 
         public static readonly Talents FocusedAttacks = new TalentBonusPulledFromList(() => _talents.FocusedAttacks, .66f, 1.32f, 2f);//energy per rank (e.g. .33*2, .66*2, 1*2)
@@ -74,17 +74,24 @@ namespace Rawr.Rogue.ClassAbilities
         public static readonly Talents ImprovedSinisterStrike = new TalentBonusPulledFromList(() => _talents.ImprovedSinisterStrike, 3f, 5f);
         public static readonly Talents DualWieldSpecialization = new TalentBonusPulledFromList(() => _talents.DualWieldSpecialization, 0.5f, 0.1f, 0.15f, 0.2f, 0.25f);
         public static readonly Talents ImprovedSliceAndDice = new TalentBonusPulledFromList(() => _talents.ImprovedSliceAndDice, 0.25f, 0.50f);
+        public static readonly Talents Deflection = new TalentBonusPulledFromList(() => _talents.Deflection, 2f, 4f, 6f);
         public static readonly Talents Precision = new TalentBonusPulledFromList(() => _talents.Precision, 1f, 2f, 3f, 4f, 5f);
         //NEED  Endurance - is there a need for this one?
         //NEED: Riposte (might be another CPG class)
         public static readonly Talents CloseQuartersCombat = new TalentBonusPulledFromList(() => _talents.CloseQuartersCombat, 1f, 2f, 3f, 4f, 5f);
         public static readonly Talents Aggression = new TalentBonusPulledFromList(() => _talents.Aggression, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
-        public static readonly Talents LightningReflexes = new TalentBonusPulledFromList(() => _talents.LightningReflexes, .04f, .07f, .10f);
+        
+        public class LightningReflexes
+        {
+            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.LightningReflexes, .04f, .07f, .10f);
+            public static readonly Talents Dodge = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 2f, 4f, 6f);
+        }
+
         public static readonly Talents MaceSpecialization = new TalentBonusPulledFromList(() => _talents.MaceSpecialization, .03f, .06f, .9f, .12f, .15f);
 		
         public class BladeFlurry
         {
-            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.2f);
+            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.025f);
             public static readonly Talents EnergyCost = new TalentBonusCalculatedFromMethod(() => _talents.BladeFlurry, EnergyCostWithGlyph);   
 
             public static float EnergyCostWithGlyph(int points)
@@ -132,7 +139,7 @@ namespace Rawr.Rogue.ClassAbilities
 
         public class SerratedBlades
         {
-            public static readonly Talents ArmorPenetration = new TalentBonusPulledFromList(() => _talents.SerratedBlades, 0.00f, 0.00f, 0.00f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
+            public static readonly Talents ArmorPenetration = new TalentBonusPulledFromList(() => _talents.SerratedBlades, 213.333333f, 426.666666f, 640f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
             public static readonly Talents Rupture = new TalentBonusPulledFromList(() => _talents.SerratedBlades, 0.1f, 0.2f, 0.3f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
         }
 
@@ -158,14 +165,19 @@ namespace Rawr.Rogue.ClassAbilities
         //---------------------------------------------------------------------
         //Class Initializers and Methods
         //---------------------------------------------------------------------
-        public static void Initialize(RogueTalents talents, CalculationOptionsRogue calcOpts)
+        public static void Initialize(RogueTalents talents)
         {
             _talents = talents;
-
-            var murderValues = calcOpts.TargetIsValidForMurder ? new[] {.02f, .04f} : new [] {0f, 0f};
-            Murder = new TalentBonusPulledFromList(() => _talents.Murder, murderValues);
         }
         
+        public static void InitializeMurder(CalculationOptionsRogue calcOpts)
+        {
+            if(!calcOpts.TargetIsValidForMurder)
+            {
+                ( (TalentBonusPulledFromList) Murder ).SetBonusValues(new [] {0f, 0f, 0f});
+            }            
+        }
+
         public abstract float Bonus { get; }
 
         public float Multiplier
@@ -196,11 +208,16 @@ namespace Rawr.Rogue.ClassAbilities
                 multipliers.CopyTo(_bonuses, 1);
             }
 
-            private readonly float[] _bonuses;
+            protected float[] _bonuses;
 
             public override float Bonus
             {
                 get { return _bonuses[_talent()]; }
+            }
+
+            public void SetBonusValues(float[] bonuses)
+            {
+                _bonuses = bonuses;
             }
         }
 

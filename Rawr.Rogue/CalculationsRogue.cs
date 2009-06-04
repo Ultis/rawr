@@ -80,8 +80,9 @@ namespace Rawr.Rogue
         /// 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            TalentsAndGlyphs.Initialize(character.RogueTalents); 
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            TalentsAndGlyphs.Initialize(character.RogueTalents, calcOpts);
+            Talents.InitializeMurder(calcOpts);
             var stats = GetCharacterStats(character, additionalItem);
             var combatFactors = new CombatFactors(character, stats);
             return GetCalculations(calcOpts, combatFactors, stats, needsDisplayCalculations);
@@ -165,6 +166,12 @@ namespace Rawr.Rogue
             displayedValues.AddRoundedDisplayValue(DisplayValue.SwordSpecDps, swordSpecDps);
             displayedValues.AddRoundedDisplayValue(DisplayValue.PoisonDps, poisonDps);
 
+            displayedValues.AddRoundedDisplayValue(DisplayValue.Dodge, stats.Dodge);
+            displayedValues.AddRoundedToolTip(DisplayValue.Dodge, "Dodge Rating: {0}", stats.DodgeRating);
+
+            displayedValues.AddRoundedDisplayValue(DisplayValue.Parry, stats.Parry);
+            displayedValues.AddRoundedToolTip(DisplayValue.Parry, "Parry Rating: {0}", stats.ParryRating);
+
             return displayedValues;
         }
 
@@ -185,10 +192,10 @@ namespace Rawr.Rogue
             var staBonus = (float) Math.Floor(statsGearEnchantsBuffs.Stamina*(1 + statsRace.BonusStaminaMultiplier));
 
             var statsTotal = new Stats();
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier)*(1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)*(1 + character.RogueTalents.Deadliness*0.02f)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier)*(1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)*(1 + character.RogueTalents.Vitality*0.01f)*(1 + character.RogueTalents.SinisterCalling*0.03f)) - 1;
+            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier)*(1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)*(Talents.Deadliness.Multiplier)*(Talents.SavageCombat.AttackPower.Multiplier)) - 1;
+            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier)*(1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)*(Talents.SinisterCalling.Agility.Multiplier)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier)*(1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier)*(1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)*(1 + character.RogueTalents.Vitality*0.02f)) - 1;
+            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier)*(1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
 
             statsTotal.Agility = (float) Math.Floor(agiBase*(1f + statsTotal.BonusAgilityMultiplier)) + (float) Math.Floor(agiBonus*(1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float) Math.Floor(strBase*(1f + statsTotal.BonusStrengthMultiplier)) + (float) Math.Floor(strBonus*(1 + statsTotal.BonusStrengthMultiplier));
@@ -197,43 +204,27 @@ namespace Rawr.Rogue
 
             statsTotal.AttackPower = (float)Math.Floor((statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1+statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.PhysicalHit = character.RogueTalents.Precision;
+            statsTotal.PhysicalHit = Talents.Precision.Bonus;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
-            statsTotal.Expertise += character.RogueTalents.WeaponExpertise*5.0f;
+            statsTotal.Expertise += Talents.WeaponExpertise.Bonus;
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
+            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration + Talents.SerratedBlades.ArmorPenetration.Bonus;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
-
-			var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-
-            switch (character.RogueTalents.SerratedBlades)
-            {
-                case 3:
-                    statsTotal.ArmorPenetration += 640f / calcOpts.TargetArmor;
-                    break;
-                case 2:
-                    statsTotal.ArmorPenetration += 434.4f / calcOpts.TargetArmor;
-                    break;
-                case 1:
-                    statsTotal.ArmorPenetration += 213.6f / calcOpts.TargetArmor;
-                    break;
-            }
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
 
             statsTotal.PhysicalCrit = -0.295f;
             statsTotal.PhysicalCrit += statsTotal.Agility*RogueConversions.AgilityToCrit;
-            statsTotal.PhysicalCrit += character.RogueTalents.Malice*1f;
+            statsTotal.PhysicalCrit += Talents.Malice.Bonus;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
 
-            statsTotal.Dodge += statsTotal.Agility*RogueConversions.AgilityToDodge;
-            statsTotal.Dodge += character.RogueTalents.LightningReflexes;
+            statsTotal.Dodge += Talents.LightningReflexes.Dodge.Bonus + statsTotal.Agility*RogueConversions.AgilityToDodge;
 
-            statsTotal.Parry += character.RogueTalents.Deflection;
+            statsTotal.Parry += 5f+ Talents.Deflection.Bonus;  //base rogue parry is 5%
 
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
