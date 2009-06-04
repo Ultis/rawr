@@ -1,5 +1,6 @@
 using System;
 using Rawr.Rogue.ClassAbilities;
+using Rawr.Rogue.ComboPointGenerators;
 
 namespace Rawr.Rogue.FinishingMoves
 {
@@ -22,26 +23,39 @@ namespace Rawr.Rogue.FinishingMoves
 
         public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
-            float finisherDmg;
+            float baseDamage;
+            float duration;
+
             switch (rank)
             {
                 case 5:
-                    finisherDmg = 8f * (stats.AttackPower * 0.0375f + 217f); 
+                    baseDamage = 8f * (stats.AttackPower * 0.0375f + 217f);
+                    duration = 16f;
                     break;
                 case 4:
-                    finisherDmg = 7f * (stats.AttackPower * 0.03428571f + 199f); 
+                    baseDamage = 7f * (stats.AttackPower * 0.03428571f + 199f);
+                    duration = 14f;
                     break;
                 case 3:
-                    finisherDmg = 6f * (stats.AttackPower * 0.03f + 181f);
+                    baseDamage = 6f * (stats.AttackPower * 0.03f + 181f);
+                    duration = 12f;
                     break;
                 case 2:
-                    finisherDmg = 5f * (stats.AttackPower * 0.024f + 163f);
+                    baseDamage = 5f * (stats.AttackPower * 0.024f + 163f);
+                    duration = 10f;
                     break;
                 default:
-                    finisherDmg = 4f * (stats.AttackPower * .015f + 145f);
+                    baseDamage = 4f * (stats.AttackPower * .015f + 145f);
+                    duration = 8f;
                     break;
             }
 
+            var baseDamagePerSecond = baseDamage / duration;
+            duration += BonusGlyphOfRuptureDuration;
+            duration += BonusDurationFromBackstab(calcOpts, combatFactors, cycleTime, duration);
+            var actualDuration = Math.Min(duration, cycleTime.Duration);
+
+            var finisherDmg = baseDamagePerSecond * actualDuration;
             finisherDmg *= Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness, Talents.DirtyDeeds, Talents.HungerForBlood.Damage).Multiplier;
             finisherDmg *= ( 1f + stats.BonusBleedDamageMultiplier );
             finisherDmg *= ( 1f - combatFactors.YellowMissChance );
@@ -51,5 +65,32 @@ namespace Rawr.Rogue.FinishingMoves
                 finisherDmg *= (1f - combatFactors.MhDodgeChance);
             return finisherDmg / cycleTime.Duration;
         }
+
+        public static float BonusDurationFromBackstab(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, CycleTime cycleTime, float ruptureDuration)
+        {
+            if (!Glyphs.GlyphOfBackstab || (calcOpts.CpGenerator.Name != Backstab.NAME))
+            {
+                return 0f;
+            }
+
+            var delayBetweenBackstabs = new Backstab().EnergyCost(combatFactors, calcOpts) / cycleTime.EnergyRegen;
+
+            if((delayBetweenBackstabs*3) < (ruptureDuration+4f))
+                return 6f;
+
+            if((delayBetweenBackstabs*2) < (ruptureDuration+2f))
+                return 4f;
+
+            if(delayBetweenBackstabs < ruptureDuration)
+                return 2f;
+            
+            return 0f;
+        }
+
+        private static float BonusGlyphOfRuptureDuration
+        {
+            get { return Glyphs.GlyphOfRupture ? 4f : 0f; }
+        }
     }
 }
+

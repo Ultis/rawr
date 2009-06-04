@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Rawr.UnitTests.Rawr.Rogue.Tests
+namespace Rawr.UnitTests.Rogue
 {
     [TestClass]
     public class TimingTests

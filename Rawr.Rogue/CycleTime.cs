@@ -6,31 +6,45 @@ namespace Rawr.Rogue
     {
         public CycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
         {
-            Duration = CalcCycleTime(calcOpts, combatFactors, whiteAttacks);
+            _calcOpts = calcOpts;
+            _combatFactors = combatFactors;
+            _whiteAttacks = whiteAttacks;
+
+            EnergyRegen = CalcEnergyRegen();
+            Duration = CalcCycleTime();
         }
 
+        private readonly CalculationOptionsRogue _calcOpts;
+        private readonly CombatFactors _combatFactors;
+        private readonly WhiteAttacks _whiteAttacks;
+
         public float Duration { get; set; }
+        public float EnergyRegen { get; set; }
 
-        private static float CalcCycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
+        private float CalcCycleTime()
         {
-            var energyRegen = combatFactors.BaseEnergyRegen;
-            energyRegen += Talents.CombatPotency.Bonus * whiteAttacks.OhHits;
-            energyRegen += Talents.FocusedAttacks.Bonus * (whiteAttacks.MhCrits + whiteAttacks.OhCrits);
-
-            if (calcOpts.TempMainHandEnchant.IsDeadlyPoison || calcOpts.TempOffHandEnchant.IsDeadlyPoison)
-            {
-                energyRegen += combatFactors.Tier8TwoPieceEnergyBonus;
-            }
-
-            var cpgDuration = calcOpts.CpGenerator.CalcDuration(calcOpts, energyRegen, combatFactors);
+            var cpgDuration = _calcOpts.CpGenerator.CalcDuration(_calcOpts, EnergyRegen, _combatFactors);
 
             var finisherEnergyCost = 0f;
-            foreach (var component in calcOpts.DpsCycle.Components)
+            foreach (var component in _calcOpts.DpsCycle.Components)
             {
-                finisherEnergyCost += component.Finisher.EnergyCost(combatFactors, component.Rank);
+                finisherEnergyCost += component.Finisher.EnergyCost(_combatFactors, component.Rank);
             }
 
-            return cpgDuration + (finisherEnergyCost / energyRegen);
+            return cpgDuration + (finisherEnergyCost / EnergyRegen);
+        }
+
+        public float CalcEnergyRegen()
+        {
+            var energyRegen = _combatFactors.BaseEnergyRegen;
+            energyRegen += Talents.CombatPotency.Bonus * _whiteAttacks.OhHits;
+            energyRegen += Talents.FocusedAttacks.Bonus * (_whiteAttacks.MhCrits + _whiteAttacks.OhCrits);
+
+            if (_calcOpts.TempMainHandEnchant.IsDeadlyPoison || _calcOpts.TempOffHandEnchant.IsDeadlyPoison)
+            {
+                energyRegen += _combatFactors.Tier8TwoPieceEnergyBonus;
+            }
+            return energyRegen;
         }
     }
 }

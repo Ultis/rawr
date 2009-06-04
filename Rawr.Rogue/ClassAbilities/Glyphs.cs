@@ -35,7 +35,7 @@ namespace Rawr.Rogue.ClassAbilities
         {
             List = new List<string> 
                         {
-                            //"Glyph of Backstab",
+                            "Glyph of Backstab",
                             "Glyph of Eviscerate", 
                             "Glyph of Mutilate", 
                             "Glyph of Hunger for Blood", 
@@ -47,7 +47,7 @@ namespace Rawr.Rogue.ClassAbilities
                             "Glyph of Slice and Dice", 
                             "Glyph of Feint", 
                             //"Glyph of Ghostly Strike",
-                            //"Glyph of Rupture",
+                            "Glyph of Rupture",
                             "Glyph of Blade Flurry", 
                             "Glyph of Adrenaline Rush"
                         };

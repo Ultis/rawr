@@ -6,7 +6,9 @@ namespace Rawr.Rogue.ComboPointGenerators
     [Serializable]
     public class Backstab : ComboPointGenerator
     {
-        public override string Name { get { return "Backstab"; } }
+        public const string NAME = "Backstab";
+
+        public override string Name { get { return NAME; } }
 
         public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
