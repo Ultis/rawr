@@ -26,7 +26,7 @@ namespace Rawr.DPSWarr {
         public float DamageBonus {
             get {
                 return (1+_stats.BonusPhysicalDamageMultiplier)*(1+_stats.BonusDamageMultiplier)*
-                    (1f+ (_talents.DeathWish*0.2f)*(30f/(180f*(1 - 0.11f*_talents.IntensifyRage))))*(1f+0.02f*_talents.WreckingCrew);
+                    (1f+0.02f*_talents.WreckingCrew);
             }
         }
         public float DamageReduction {

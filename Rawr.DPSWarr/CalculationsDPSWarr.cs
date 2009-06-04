@@ -557,7 +557,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 //BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 //BaseArmorMultiplier = talents.Toughness * 0.02f,
-                PhysicalHaste = talents.BloodFrenzy * 0.03f,
+                PhysicalHaste = talents.BloodFrenzy * 0.05f,
                 ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
                 PhysicalHit = talents.Precision * 1.0f,
             };
