@@ -178,13 +178,6 @@ namespace Rawr.Rogue
         {
             get
             {
-                /*
-                =10
-                    -15/31
-                    +2.5*Vitality/3
-                    -(1-GlyphOfBF)*BladeFlurry*25/120
-                    +
-                */
                 var energyRegen = 10f;
                 energyRegen += Talents.Vitality.Bonus;
                 energyRegen += Talents.AdrenalineRush.Energy.Bonus;

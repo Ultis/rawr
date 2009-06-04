@@ -62,6 +62,7 @@
             this.FeintDelayLabel = new System.Windows.Forms.Label();
             this.FeintDelayStepper = new System.Windows.Forms.NumericUpDown();
             this.Feint = new System.Windows.Forms.CheckBox();
+            this.MurderTalentCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBoxCycles.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -419,6 +420,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.MurderTalentCheckBox);
             this.groupBox5.Controls.Add(this.UseTurnTheTables);
             this.groupBox5.Controls.Add(this.TurnTheTablesNumericStepperLabel);
             this.groupBox5.Controls.Add(this.TurnTheTablesUptimePercent);
@@ -427,7 +429,7 @@
             this.groupBox5.Controls.Add(this.Feint);
             this.groupBox5.Location = new System.Drawing.Point(15, 417);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(258, 90);
+            this.groupBox5.Size = new System.Drawing.Size(258, 105);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Abilities";
@@ -507,6 +509,17 @@
             this.Feint.UseVisualStyleBackColor = true;
             this.Feint.CheckedChanged += new System.EventHandler(this.Feint_CheckedChanged);
             // 
+            // MurderTalentCheckBox
+            // 
+            this.MurderTalentCheckBox.AutoSize = true;
+            this.MurderTalentCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.MurderTalentCheckBox.Name = "MurderTalentCheckBox";
+            this.MurderTalentCheckBox.Size = new System.Drawing.Size(143, 17);
+            this.MurderTalentCheckBox.TabIndex = 6;
+            this.MurderTalentCheckBox.Text = "Target is valid for Murder";
+            this.MurderTalentCheckBox.UseVisualStyleBackColor = true;
+            this.MurderTalentCheckBox.CheckedChanged += new System.EventHandler(this.MurderTalentCheckBox_CheckedChanged);
+            // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -581,5 +594,6 @@
         private System.Windows.Forms.CheckBox UseTurnTheTables;
         private System.Windows.Forms.Label TurnTheTablesNumericStepperLabel;
         private System.Windows.Forms.NumericUpDown TurnTheTablesUptimePercent;
+        private System.Windows.Forms.CheckBox MurderTalentCheckBox;
     }
 }

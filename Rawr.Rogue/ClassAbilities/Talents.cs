@@ -41,12 +41,12 @@ namespace Rawr.Rogue.ClassAbilities
         //NEED:  Cold Blood
         public static readonly Talents QuickRecovery = new TalentBonusPulledFromList(() => _talents.QuickRecovery, 0.4f, .8f);
         public static readonly Talents SealFate = new TalentBonusPulledFromList(() => _talents.SealFate, .2f, .4f, .6f, .8f, 1f);
-        public static readonly Talents Murder = new TalentBonusPulledFromList(() => _talents.Murder, .02f, .04f);
+        public static Talents Murder;  //class created below in Initialize Method
         public static readonly Talents DeadlyBrew = new TalentBonusPulledFromList(() => _talents.DeadlyBrew, 0, 0);
 
         public static readonly Talents FocusedAttacks = new TalentBonusPulledFromList(() => _talents.FocusedAttacks, .66f, 1.32f, 2f);//energy per rank (e.g. .33*2, .66*2, 1*2)
 
-        public static readonly Talents FindWeakness = new TalentBonusPulledFromList(() => _talents.FindWeakness, .2f, .4f, .6f);
+        public static readonly Talents FindWeakness = new TalentBonusPulledFromList(() => _talents.FindWeakness, .02f, .04f, .06f);
 
         public class MasterPoisoner
         {
@@ -158,9 +158,12 @@ namespace Rawr.Rogue.ClassAbilities
         //---------------------------------------------------------------------
         //Class Initializers and Methods
         //---------------------------------------------------------------------
-        public static void Initialize(RogueTalents talents)
+        public static void Initialize(RogueTalents talents, CalculationOptionsRogue calcOpts)
         {
             _talents = talents;
+
+            var murderValues = calcOpts.TargetIsValidForMurder ? new[] {.02f, .04f} : new [] {0f, 0f};
+            Murder = new TalentBonusPulledFromList(() => _talents.Murder, murderValues);
         }
         
         public abstract float Bonus { get; }

@@ -30,7 +30,7 @@ namespace Rawr.Rogue.FinishingMoves
         {
             var dpAverageStackSize = CalcAverageStackSize(calcOpts, combatFactors, whiteAttacks, rank);
             var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;
-            damage *= Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.HungerForBlood.Damage).Multiplier;
+            damage *= Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.Murder, Talents.HungerForBlood.Damage).Multiplier;
 
             var nonCritDamage = damage * ( 1 - CritChance(combatFactors, calcOpts) );
             var critDamage = damage * 2 * CritChance(combatFactors, calcOpts);

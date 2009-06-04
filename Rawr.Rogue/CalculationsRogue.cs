@@ -80,9 +80,9 @@ namespace Rawr.Rogue
         /// 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            TalentsAndGlyphs.Initialize(character.RogueTalents);
-            var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
+            TalentsAndGlyphs.Initialize(character.RogueTalents, calcOpts);
+            var stats = GetCharacterStats(character, additionalItem);
             var combatFactors = new CombatFactors(character, stats);
             return GetCalculations(calcOpts, combatFactors, stats, needsDisplayCalculations);
         }

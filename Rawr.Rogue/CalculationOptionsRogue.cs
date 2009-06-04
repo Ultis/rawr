@@ -38,6 +38,8 @@ namespace Rawr.Rogue
         public ComboPointGenerator CpGenerator = new SinisterStrike();
         public Feint Feint = new Feint();
         public float TurnTheTablesUptime;
+        public bool TargetIsValidForMurder;
+
         public float ComboPointsNeededForCycle()
         {
             return DpsCycle.TotalComboPoints - (DpsCycle.Components.Count * Talents.Ruthlessness.Bonus);

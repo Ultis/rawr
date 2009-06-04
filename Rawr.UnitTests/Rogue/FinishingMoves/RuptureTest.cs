@@ -42,10 +42,11 @@ namespace Rawr.UnitTests.Rogue.FinishingMoves
 
         private static void TestBonusDuration(float ruptureDuration, float expectedBonus)
         {
-            var character = new RogueTestCharacter(new RogueTalents { GlyphOfBackstab = true });
-            TalentsAndGlyphs.Initialize(character.RogueTalents);
-
             var calcOpts = new CalculationOptionsRogue { CpGenerator = new Backstab() };
+            var character = new RogueTestCharacter(new RogueTalents { GlyphOfBackstab = true });
+            TalentsAndGlyphs.Initialize(character.RogueTalents, calcOpts);
+
+            
             var cycle = new Cycle();
             var rupture = new CycleComponent(4, new Rupture());
             cycle.Components.Add(rupture);

@@ -173,5 +173,11 @@ namespace Rawr.Rogue
             _calcOpts.TurnTheTablesUptime = (float) TurnTheTablesUptimePercent.Value/100f;
             UpdateCalculations();
         }
+
+        private void MurderTalentCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.TargetIsValidForMurder = MurderTalentCheckBox.Checked;
+            UpdateCalculations();
+        }
     }
 }
