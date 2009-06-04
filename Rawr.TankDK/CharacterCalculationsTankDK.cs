@@ -35,6 +35,7 @@ namespace Rawr.TankDK
 
         public float Crit { get; set; }
         public float Defense { get; set; }
+        public float Resilience { get; set; }
         public float DefenseRating { get; set; }
         public float DefenseRatingNeeded { get; set; }
 
@@ -56,7 +57,7 @@ namespace Rawr.TankDK
             switch (calculation)
             {
                 case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
-                case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicat math location?
+                case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicate math location?
                 case "Target Miss %": return TargetMiss * 100.0f; 
                 case "Target Parry %": return TargetParry * 100.0f; // Expertise related.
                 case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
@@ -100,6 +101,7 @@ namespace Rawr.TankDK
 
             dict["Crit"] = Crit.ToString("F2");
             dict["Defense"] = Defense.ToString("F0");
+            dict["Resilience"] = Resilience.ToString("F0");
             dict["Defense Rating"] = DefenseRating.ToString("F0");
             dict["Defense Rating needed"] = DefenseRatingNeeded.ToString("F0");
 

@@ -14,7 +14,7 @@ namespace Rawr.TankDK
         #region Constants
         private static readonly float critImpact = 1f;  // How severe is getting crit? 1 = 100%
         private static readonly float BaseThreatValue = 1000f; // Base value of threat modified by Threat weight.
-        private static readonly float BasePhysicalCrit = 0f;  // Base Physical crit rate of 6.5%
+        private static readonly float BasePhysicalCrit = 0f; 
 
         #endregion // Constants
 
@@ -184,11 +184,12 @@ namespace Rawr.TankDK
 					    "Basic Stats:Armor Penetration",
 					    "Basic Stats:Armor Penetration Rating",
                         "Basic Stats:Health",
-                        "Basic Stats:Armor",
+                        "Basic Stats:Armor*Including Frost Presence",
 
                         "Defense:Crit*Enemy's crit chance on you",
                         "Defense:Defense Rating",
                         "Defense:Defense",
+                        "Defense:Resilience",
                         "Defense:Defense Rating needed",
 
                         "Advanced Stats:Miss",
@@ -341,12 +342,8 @@ namespace Rawr.TankDK
             // Validate opts 
             if (null == opts) return null;
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
-            // Ebs2002 commented this out, as it broke the build and wasn't working
             //ShotRotation sr = new ShotRotation();
 
-            // Setup basic data from the character.
-            // Baseline numbers of race & Class.
-            Stats raceStats = GetRaceStats(character);
             // Level differences.
             int targetLevel = opts.TargetLevel;
             int characterLevel = character.Level;
@@ -387,12 +384,17 @@ namespace Rawr.TankDK
             calcs.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
             fChanceToGetHit -= calcs.Parry;
 
-            // 5 + level difference == 5.6% crit chance for Raid bosses. 
-            calcs.Crit = (5.0f + levelDifference) - fAvoidance[(int)HitResult.Crit];
-            float attackerCrit = Math.Max(0.0f, calcs.Crit);
+            // 5% + Level difference crit chance.  
+            float attackerCrit = Math.Max(0.0f, ((5.0f) - fAvoidance[(int)HitResult.Crit]));
+            calcs.Crit = attackerCrit;
             calcs.DefenseRating = stats.DefenseRating;
             calcs.Defense = (StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
+            calcs.Resilience = stats.Resilience;
             calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, targetLevel);
+            // Test of the Defense vs. DefenseRatingNeeded functions
+            // Assuming that 540 defense is the max to be uncritable, 
+            // if Def is > 540, then DefenseRatingNeeded should be 0 or less.
+            
 
             // The values below represent that values of the talents in mitigating damage.  
             // BB == 1% reduction per point.
@@ -641,6 +643,7 @@ namespace Rawr.TankDK
                 Miss = (0.01f * talents.FrigidDreadplate),
                 Defense = 400, // Adding in the base 400 Defense skill all tanks are expected to have.  There are too many places where this just kinda stuck in.  It should be attached to the toon.
             };
+            Stats statsFrost = GetFrostPresence();
             // The crit work from talents was getting to complicated to include in the construction.  
             // Talent: VisciousStrikes improve Crit by 3% so converting that to rating. 
             // TODO: Talent BloodyVengence +1% crit for 30 secs after a crit per point & stacks 3x.  
@@ -653,7 +656,7 @@ namespace Rawr.TankDK
             Stats statsGearEnchantsBuffs = new Stats();
 
             // We gather up everything here:
-            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
+            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents + statsFrost;
 
             // Stack only the info we care about.
             statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
@@ -879,6 +882,16 @@ namespace Rawr.TankDK
         private float ApplyMultiplier(float baseValue, float multiplier)
         {
             return (baseValue * (1f + multiplier));
+        }
+        private Stats GetFrostPresence()
+        {
+            Stats FrostyStats = new Stats();
+            FrostyStats.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
+            FrostyStats.BonusArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
+            FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
+            FrostyStats.DamageTakenMultiplier -= .05f;// Bonus of 5% damage reduced for frost presence.
+            FrostyStats.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
+            return FrostyStats;
         }
 
         /// <summary>

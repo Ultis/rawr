@@ -37,7 +37,7 @@ namespace Rawr
         public const float LEVEL_80_COMBATRATING_MODIFIER = 3.2789987789987789987789987789988f; // 82/52 * Math.Pow(131/63, ((80 - 70) / 10));
         public const float RATING_PER_ARMORPENETRATION = 1231.6239f ; // 4.69512177f / 1.25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_BLOCK = 1639.4994f; // 5f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_DEFENSE = 4.9184987f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
+        public const float RATING_PER_DEFENSE = 4.918498039f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
         public const float RATING_PER_DODGE = 3934.7985f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_EXPERTISE = 8.1974969f; // 2.5f * LEVEL_80_COMBATRATING_MODIFIER;
         public const float RATING_PER_PARRY = 4918.4987f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
@@ -621,7 +621,6 @@ namespace Rawr
         public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int TargetLevel) { return GetDRAvoidanceChance(character, stats, avoidanceType, (uint)TargetLevel); }
         public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, uint TargetLevel)
         {
-            float levelModifier = (TargetLevel - character.Level) * 0.2f;
             float defSkill = (GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
             float defSkillMod = ((defSkill - (TargetLevel * 5)) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
             float baseAvoid = 0.0f;
@@ -632,13 +631,13 @@ namespace Rawr
             switch (avoidanceType)
             {
                 case HitResult.Dodge:
-                    baseAvoid = ((stats.Dodge + GetDodgeFromAgility(stats.BaseAgility, character.Class)) * 100f) - levelModifier;
+                    baseAvoid = ((stats.Dodge + GetDodgeFromAgility(stats.BaseAgility, character.Class)) * 100f);
                     modifiedAvoid += (GetDodgeFromAgility((stats.Agility - stats.BaseAgility), character.Class) +
                                     GetDodgeFromRating(stats.DodgeRating) * 100f);
                     modifiedAvoid = DRMath(CAP_DODGE_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
                     break;
                 case HitResult.Parry:
-                    baseAvoid = stats.Parry * 100f - levelModifier;
+                    baseAvoid = stats.Parry * 100f;
                     float parryRatingFromStr = stats.Strength * 0.25f;
                     modifiedAvoid += (GetParryFromRating(stats.ParryRating + parryRatingFromStr) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
@@ -646,14 +645,14 @@ namespace Rawr
                 case HitResult.Miss:
                     // Base Miss rate according is 5%
                     // However, this can be talented up (e.g. Frigid Dreadplate, NE racial, etc.) 
-                    baseAvoid = stats.Miss * 100f - levelModifier;
+                    baseAvoid = stats.Miss * 100f;
                     modifiedAvoid = DRMath( (1f/CAP_MISSED[iClass]), DR_COEFFIENT[iClass], modifiedAvoid );
                     // Factoring in the Miss Cap. 
                     modifiedAvoid = Math.Min(CAP_MISSED[iClass], modifiedAvoid);
                     break;
                 case HitResult.Block:
                     // The 5% base block should be moved into stats.Block as a base value like the others
-                    baseAvoid = 5.0f + stats.Block - levelModifier;
+                    baseAvoid = 5.0f + stats.Block;
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
                     break;
                 case HitResult.Crit:
@@ -692,8 +691,8 @@ namespace Rawr
         {
             // Should be 689(DefRating) - stats.DefenseRating. vs. level 83 mob.
             // And/or 459.2(Resilience) - stats.ResilienceRating
-            float fAvoidance = GetDRAvoidanceChance(character, stats, HitResult.Crit, (uint)TargetLevel);
-            float critChance = (5.0f + ((TargetLevel - character.Level) * 0.2f)) - (fAvoidance * 100);
+            float fAvoidance = GetDRAvoidanceChance(character, stats, HitResult.Crit, TargetLevel);
+            float critChance = 5.0f - (fAvoidance * 100);
             return (critChance / DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * RATING_PER_DEFENSE;
         }
 
