@@ -775,10 +775,10 @@ focus on Survival Points.",
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier) * (1.0f + statsItems.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
-            if (statsTotal.GreatnessProc > 0)
-            {
-                statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15.0f / 48.0f);
-            }
+//            if (statsTotal.GreatnessProc > 0)
+//            {
+//                statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15.0f / 48.0f);
+//            }
             if (talents.GlyphOfSealOfVengeance && calcOpts.SealChoice == "Seal of Vengeance") 
             {
                 statsTotal.Expertise += 10.0f;
@@ -811,12 +811,11 @@ focus on Survival Points.",
             statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
             statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal, false);
             //statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness; // Nerfed in 3.1
 
-            #region Triggers
+            #region Triggers and SpecialEffect stats
             // temporary combat table, used for the implementation of special effects.
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
             float hitBonusSpell = StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + statsTotal.SpellHit;
