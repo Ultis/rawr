@@ -192,6 +192,7 @@ namespace Rawr.Rogue
             var staBonus = (float) Math.Floor(statsGearEnchantsBuffs.Stamina*(1 + statsRace.BonusStaminaMultiplier));
 
             var statsTotal = new Stats();
+            statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier; //TODO:  actually use in the model!!
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier)*(1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)*(Talents.Deadliness.Multiplier)*(Talents.SavageCombat.AttackPower.Multiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier)*(1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)*(Talents.SinisterCalling.Agility.Multiplier)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier)*(1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
@@ -216,7 +217,7 @@ namespace Rawr.Rogue
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
 
-            statsTotal.PhysicalCrit = -0.295f;
+            statsTotal.PhysicalCrit = -0.295f + (statsGearEnchantsBuffs.PhysicalCrit*100); //TODO: Change crit from whole numbers (e.g. 11) to percentages (e.g.  .11);
             statsTotal.PhysicalCrit += statsTotal.Agility*RogueConversions.AgilityToCrit;
             statsTotal.PhysicalCrit += Talents.Malice.Bonus;
 
