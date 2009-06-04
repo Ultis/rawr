@@ -43,12 +43,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return (combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus);
         }
 
-        protected override float ComboPointsGeneratedPerAttack
+        protected override float ComboPointsGeneratedPerAttack(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
-            get
-            {
-                return 1 + (Glyphs.GlyphOfSinisterStrike ? .5f : 0f);
-            }
+            return base.ComboPointsGeneratedPerAttack(combatFactors, calcOpts) + (Glyphs.GlyphOfSinisterStrike ? .5f : 0f);
         }
     }
 }

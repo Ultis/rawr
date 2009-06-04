@@ -25,9 +25,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus + CritBonusFromTurnTheTables(calcOpts);
 		}
 
-        protected override float ComboPointsGeneratedPerAttack
+        protected override float ComboPointsGeneratedPerAttack(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
 		{
-			get { return 2f; }
+            return base.ComboPointsGeneratedPerAttack(combatFactors, calcOpts) + 1;
 		}
 
         public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
@@ -40,7 +40,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors, calcOpts);
             var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors, calcOpts), 0);
 
-            return (critDamage + nonCritDamage) * (calcOpts.ComboPointsNeededForCycle() / ComboPointsGeneratedPerAttack) / cycleTime.Duration;
+            return (critDamage + nonCritDamage) * (calcOpts.ComboPointsNeededForCycle() / ComboPointsGeneratedPerAttack(combatFactors, calcOpts)) / cycleTime.Duration;
         }
 
         private static float BaseAttackDamage(CombatFactors combatFactors)
@@ -68,9 +68,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus;
         }
 
-        public override float OhHitsNeeded(float numCpg)
+        public override float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
-            return MhHitsNeeded(numCpg);
+            return MhHitsNeeded(combatFactors, calcOpts);
         }
     }
 }

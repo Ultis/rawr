@@ -28,7 +28,7 @@ namespace Rawr.Rogue.FinishingMoves
 
         public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
-            var dpAverageStackSize = CalcAverageStackSize(calcOpts, whiteAttacks, rank);
+            var dpAverageStackSize = CalcAverageStackSize(calcOpts, combatFactors, whiteAttacks, rank);
             var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;
             damage *= Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.HungerForBlood.Damage).Multiplier;
 
@@ -37,18 +37,18 @@ namespace Rawr.Rogue.FinishingMoves
             return (nonCritDamage + critDamage) / cycleTime.Duration;
         }
 
-        private static float CalcAverageStackSize(CalculationOptionsRogue calcOpts, WhiteAttacks whiteAttacks, int rank)
+        private static float CalcAverageStackSize(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks, int rank)
         {
             float totalHits = 0;
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison)
             {
                 totalHits += whiteAttacks.MhHits;
-                totalHits += calcOpts.CpGenerator.MhHitsNeeded(rank);
+                totalHits += calcOpts.CpGenerator.MhHitsNeeded(combatFactors, calcOpts);
             }
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison)
             {
                 totalHits += whiteAttacks.OhHits;
-                totalHits += calcOpts.CpGenerator.OhHitsNeeded(rank);
+                totalHits += calcOpts.CpGenerator.OhHitsNeeded(combatFactors, calcOpts);
             }
 
             return Math.Min(rank, Math.Min(5, totalHits / DeadlyPoison.ChanceToApplyPoison));

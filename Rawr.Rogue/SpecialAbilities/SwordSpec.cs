@@ -11,7 +11,7 @@ namespace Rawr.Rogue.SpecialAbilities
             {
                 //MH hits + CPG + finisher
                 ssHits += whiteAttacks.MhHits * Talents.SwordSpecialization.Bonus;
-                ssHits += calcOpts.CpGenerator.MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()) * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
+                ssHits += calcOpts.CpGenerator.MhHitsNeeded(combatFactors, calcOpts) * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
                 ssHits += 1f / cycleTime.Duration * Talents.SwordSpecialization.Bonus * combatFactors.ProbMhWhiteHit;
             }
             if (combatFactors.OffHand.Type == Item.ItemType.OneHandSword)

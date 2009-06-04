@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Xml.Serialization;
 using Rawr.Rogue.ClassAbilities;
 
@@ -17,55 +15,34 @@ namespace Rawr.Rogue.ComboPointGenerators
         public abstract string Name { get; }
         public abstract float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime);
         public abstract float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts );
+        public abstract float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts);
 
         public virtual float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
         {
-            return MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()) * EnergyCost(combatFactors, calcOpts) / regen;
+            return MhHitsNeeded(combatFactors, calcOpts) * EnergyCost(combatFactors, calcOpts) / regen;
         }
 
-        public virtual float MhHitsNeeded(float numCpg)
+        public virtual float MhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
-            return numCpg / ComboPointsGeneratedPerAttack;    
+            return calcOpts.ComboPointsNeededForCycle() / ComboPointsGeneratedPerAttack(combatFactors, calcOpts);    
         }
 
-        public virtual float OhHitsNeeded(float numCpg)
+        public virtual float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
             return 0f;
         }
 
-        public abstract float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts);
-        protected virtual float ComboPointsGeneratedPerAttack
+        protected virtual float ComboPointsGeneratedPerAttack( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
-            get { return 1; }
+            return 1 + (Talents.SealFate.Bonus * Crit(combatFactors, calcOpts)); 
         }
 
         protected float CritBonusFromTurnTheTables(CalculationOptionsRogue calcOpts)
         {
             return calcOpts.TurnTheTablesUptime * Talents.TurnTheTables.Bonus;
         }
-    }
 
-    public class ComboPointGeneratorList : List<ComboPointGenerator>
-    {
-        public ComboPointGeneratorList()
-        {
-            Add(new Mutilate());
-            Add(new Backstab());
-            Add(new SinisterStrike());
-            Add(new Hemo());
-            Add(new HonorAmongThieves(0f,0f));
-        }
-
-        public static ComboPointGenerator Get(string name)
-        {
-            foreach (var cpGenerator in new ComboPointGeneratorList())
-            {
-                if (name == cpGenerator.Name)
-                {
-                    return cpGenerator;
-                }
-            }
-            throw new InvalidDataException("Cannot find: " + name);
-        }
+        
+        
     }
 }

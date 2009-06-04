@@ -16,7 +16,7 @@ namespace Rawr.Rogue.Poisons
 
         public static float CalcPoisonDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CharacterCalculationsRogue calculatedStats, CycleTime cycleTime)
         {
-            var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.MhHits + calcOpts.CpGenerator.MhHitsNeeded(calcOpts.ComboPointsNeededForCycle()), cycleTime, combatFactors.MainHand);
+            var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.MhHits + calcOpts.CpGenerator.MhHitsNeeded(combatFactors, calcOpts), cycleTime, combatFactors.MainHand);
             calculatedStats.AddToolTip(DisplayValue.PoisonDps, "MH Poison DPS: " + Math.Round(mhPoisonDps, 2));
 
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)

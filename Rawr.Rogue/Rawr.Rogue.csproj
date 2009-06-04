@@ -105,6 +105,7 @@
     <Compile Include="CombatFactors.cs" />
     <Compile Include="ComboPointGenerators\Backstab.cs" />
     <Compile Include="ComboPointGenerators\ComboPointGenerator.cs" />
+    <Compile Include="ComboPointGenerators\ComboPointGeneratorList.cs" />
     <Compile Include="ComboPointGenerators\Hemo.cs" />
     <Compile Include="ComboPointGenerators\HonorAmongThieves.cs" />
     <Compile Include="ComboPointGenerators\Mutilate.cs" />
