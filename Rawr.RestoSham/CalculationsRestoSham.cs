@@ -135,6 +135,7 @@ namespace Rawr.RestoSham
                           "Totals:Time to OOM*In Seconds",
                           "Totals:Total Healed*Includes Burst and Sustained",
                           "Healing Style Breakdowns:Chosen Sequence",
+                          "Healing Style Breakdowns:Healing Stream HPS",
                           "Healing Style Breakdowns:RT+HW Spam HPS",
                           "Healing Style Breakdowns:RT+HW Spam MPS",
                           "Healing Style Breakdowns:RT+LHW Spam HPS",
@@ -525,6 +526,8 @@ namespace Rawr.RestoSham
                 calcStats.FightHPS = (calcStats.RTCHHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("RT+CH"))
                 calcStats.FightMPS = (calcStats.RTCHMPS * RCP) + ESMPS;
+            calcStats.HSTHeals = (((stats.SpellPower * .044f) + 25) * (1f + (character.ShamanTalents.RestorativeTotems * .15f)) * (1f + (character.ShamanTalents.GlyphofHealingStreamTotem ? .2f : 0))) / 2;
+            calcStats.FightHPS += calcStats.HSTHeals;
             #endregion
             #region Final Stats
             calcStats.TillOOM = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;

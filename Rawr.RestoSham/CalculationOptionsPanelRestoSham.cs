@@ -50,12 +50,6 @@ namespace Rawr.RestoSham
             UpdateTrackBarLabel(tbOverhealing);
             #endregion
             #region Glyphs Page:
-            chkELWGlyph.Checked = options.ELWGlyph;
-            chkGlyphCH.Checked = options.GlyphCH;
-            chkWaterShield2.Checked = options.WaterShield2;
-            chkWaterShield3.Checked = options.WaterShield3;
-            chkLHW.Checked = options.LHWPlus;
-            chkManaTide2.Checked = options.ManaTidePlus;
             #endregion
             #region Relics Page:
             // Check for what totem is equipped and check the appropriate option on the totems page
@@ -180,15 +174,6 @@ namespace Rawr.RestoSham
             }
         }
 
-        private void chkManaTide2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["ManaTidePlus"] = chkManaTide2.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void chkWaterShield_CheckedChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
@@ -198,56 +183,11 @@ namespace Rawr.RestoSham
             }
         }
 
-        private void chkWaterShield2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["WaterShield2"] = chkWaterShield2.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkWaterShield3_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["WaterShield3"] = chkWaterShield3.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkLHW_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["LHWPlus"] = chkLHW.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void chkMT_CheckedChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
             {
                 this["TankHeal"] = chkMT.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkELWGlyph_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["ELWGlyph"] = chkELWGlyph.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGlyphCH_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["GlyphCH"] = chkGlyphCH.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -354,6 +294,11 @@ namespace Rawr.RestoSham
             }
         }
         #endregion
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     #region Calculations, do not edit.

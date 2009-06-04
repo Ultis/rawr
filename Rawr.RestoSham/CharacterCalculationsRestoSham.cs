@@ -39,6 +39,7 @@ namespace Rawr.RestoSham
         public float TillOOM { get; set; }
         public float FightHPS { get; set; }
         public string ChosenSequence { get; set; }
+        public float HSTHeals { get; set; }
         public float HWSpamHPS { get; set; }
         public float HWSpamMPS { get; set; }
         public float LHWSpamHPS { get; set; }
@@ -70,6 +71,7 @@ namespace Rawr.RestoSham
             values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
             values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
             values.Add("Chosen Sequence", ChosenSequence.ToString());
+            values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
             values.Add("RT+HW Spam HPS", Math.Round(RTHWHPS, 0).ToString());
             values.Add("RT+HW Spam MPS", Math.Round(RTHWMPS, 0).ToString());
             values.Add("RT+LHW Spam HPS", Math.Round(RTLHWHPS, 0).ToString());
