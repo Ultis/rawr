@@ -26,8 +26,13 @@ namespace Rawr.HolyPriest
 
             CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
 
-            cbRotation.SelectedIndex = calcOpts.Rotation;
-            panelCustom.Visible = calcOpts.Rotation == 10;
+            if (calcOpts.Rotation > 0)
+            {   // Fix for Legacy
+                calcOpts.Role = (CalculationOptionsPriest.eRole)calcOpts.Rotation;
+                calcOpts.Rotation = 0;
+            }
+            cbRotation.SelectedIndex = (int)calcOpts.Role;
+            panelCustom.Visible = calcOpts.Role == CalculationOptionsPriest.eRole.CUSTOM;
 
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -102,9 +107,9 @@ namespace Rawr.HolyPriest
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.Rotation = cbRotation.SelectedIndex;
+                calcOpts.Role = (CalculationOptionsPriest.eRole)cbRotation.SelectedIndex;
                 Character.OnCalculationsInvalidated();
-                panelCustom.Visible = calcOpts.Rotation == 10;
+                panelCustom.Visible = calcOpts.Role == CalculationOptionsPriest.eRole.CUSTOM;
             }
         }
 
@@ -362,7 +367,13 @@ namespace Rawr.HolyPriest
         private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
         public int ManaPot = 4;
         public int ManaAmt { get { return manaAmt[ManaPot]; } }
-        public int Rotation = 0;
+        public enum eRole
+        {
+            AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
+            Disc_Tank_GH, Disc_Tank_FH, Disc_Raid, CUSTOM
+        };
+        public eRole Role = 0;
+        public int Rotation = 0;    // LEGACY
         public float FSRRatio = 93f;
         public float FightLengthSeconds = 480f;
         public float Serendipity = 75f;

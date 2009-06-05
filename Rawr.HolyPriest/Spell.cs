@@ -468,13 +468,13 @@ namespace Rawr.HolyPriest
     public class CircleOfHealing : Spell
     {
         private static readonly List<SpellData> SpellRankTable = new List<SpellData>(){   
-            new SpellData(1, 50,  246,  270, 0f),
-            new SpellData(1, 56,  288,  318, 0f),
-            new SpellData(1, 60,  327,  361, 0f),
-            new SpellData(1, 65,  370,  408, 0f),
-            new SpellData(1, 70,  409,  451, 0f),
-            new SpellData(1, 75,  589,  651, 0f),
-            new SpellData(1, 80,  684,  756, 0f),
+            new SpellData(1, 50,  343,  379, 0f),
+            new SpellData(1, 56,  403,  445, 0f),
+            new SpellData(1, 60,  458,  506, 0f),
+            new SpellData(1, 65,  518,  572, 0f),
+            new SpellData(1, 70,  572,  632, 0f),
+            new SpellData(1, 75,  825,  911, 0f),
+            new SpellData(1, 80,  958,  1058, 0f),
         };
 
         public override float AvgTotHeal
@@ -784,7 +784,7 @@ namespace Rawr.HolyPriest
         }
 
         public PrayerOfMending(Stats stats, Character character, int targets)
-            : base(string.Format("Prayer of Mending ({0} targets)", targets), stats, character, SpellRankTable, 15, 2.3f / 3.5f, Color.Cyan)
+            : base(string.Format("Prayer of Mending ({0} targets)", targets), stats, character, SpellRankTable, 15, 1.5f / 3.5f, Color.Cyan)
         {
             Targets = targets;
             Calculate(stats, character);
@@ -875,7 +875,7 @@ namespace Rawr.HolyPriest
 
         protected void Calculate(Stats stats, Character character)
         {
-            MinHeal = MaxHeal = (MinHeal * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
+            MinHeal = MaxHeal = (MinHeal //* (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
                 + stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef)
                 + stats.SpellPower * character.PriestTalents.BorrowedTime * 0.08f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f
@@ -1169,6 +1169,33 @@ namespace Rawr.HolyPriest
         public override string ToString()
         {
             return String.Format("{0}",
+                Name);
+        }
+    }
+
+    public class Resurrection : Spell
+    {
+        public Resurrection(Stats stats, Character character)
+            : base("Resurrection", stats, character, new List<SpellData>() { new SpellData(1, 10, 0, 0, 10f) }, 60, 0, Color.Gray)
+        {
+            Calculate(stats, character);
+        }
+
+        protected void Calculate(Stats stats, Character character)
+        {
+            MinHeal = MaxHeal = 0;
+            ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
+                );
+            CritChance = 0.0f;
+            CritCoef = 1.0f;
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("- *Cast Time: {0}\r\nCost: {1}\r\n{2}",
+                CastTime.ToString("0.00"),
+                ManaCost.ToString("0"),
                 Name);
         }
     }

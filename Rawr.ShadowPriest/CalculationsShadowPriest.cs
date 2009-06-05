@@ -674,11 +674,11 @@ namespace Rawr.ShadowPriest
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
                 + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
-            statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
-            statsTotal.Health += (statsTotal.Stamina - 20f) * 10f + 20f;
+            statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
-            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
             statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
 

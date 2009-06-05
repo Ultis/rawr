@@ -52,35 +52,35 @@ namespace Rawr.HolyPriest
 
     public class Solver : BaseSolver
     {
-        private int Rotation;
+        private CalculationOptionsPriest.eRole role;
       
         public Solver(Stats _stats, Character _char)
             : base(_stats, _char)
         {
-            Rotation = calculationOptions.Rotation;
+            role = calculationOptions.Role;
 
-            if (Rotation == 0) // OOOH MAGIC TANK ROTATION!!!
+            if (role == CalculationOptionsPriest.eRole.AUTO_Tank) // OOOH MAGIC TANK ROTATION!!!
             {
                 Role = "Auto ";
                 if (character.PriestTalents.Penance > 0)
                 {
                     if (character.PriestTalents.DivineFury < 5)
-                        Rotation = 8; // Disc-MT, Using Flash Heal instead of GH
+                        role = CalculationOptionsPriest.eRole.Disc_Tank_FH; // Disc-MT, Using Flash Heal instead of GH
                     else
-                        Rotation = 7; // Disc-MT
+                        role = CalculationOptionsPriest.eRole.Disc_Tank_GH; // Disc-MT
                 }
                 else
-                    Rotation = 5; // Holy-MT
+                    role = CalculationOptionsPriest.eRole.Holy_Tank; // Holy-MT
             }
-            else if (Rotation == 1) // Raid rotation
+            else if (role == CalculationOptionsPriest.eRole.AUTO_Raid) // Raid rotation
             {
                 Role = "Auto ";
                 if (character.PriestTalents.Penance > 0)
-                    Rotation = 9; // Disc-Raid (PW:S/Penance/Flash)
+                    role = CalculationOptionsPriest.eRole.Disc_Raid; // Disc-Raid (PW:S/Penance/Flash)
                 else if (character.PriestTalents.CircleOfHealing > 0)
-                    Rotation = 6; // Holy-Raid (CoH/FH)
+                    role = CalculationOptionsPriest.eRole.Holy_Raid; // Holy-Raid (CoH/FH)
                 else
-                    Rotation = 3; // Fallback to Flash Heal raid.
+                    role = CalculationOptionsPriest.eRole.Flash_Heal; // Fallback to Flash Heal raid.
 
             }
         }
@@ -144,8 +144,10 @@ namespace Rawr.HolyPriest
                 // Juggle out the original spell haste and put in new.
                 if (UseProcs.HasteRating > 0)
                 {
-                    simstats.SpellHaste -= StatConversion.GetSpellHasteFromRating(simstats.HasteRating);
-                    simstats.SpellHaste += StatConversion.GetSpellHasteFromRating(UseProcs.HasteRating + simstats.HasteRating);
+                    simstats.SpellHaste = (1 + simstats.SpellHaste)
+                        / (1 + StatConversion.GetSpellHasteFromRating(simstats.HasteRating))
+                        * (1 + StatConversion.GetSpellHasteFromRating(UseProcs.HasteRating + simstats.HasteRating))
+                        - 1;
                 }
                 UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
                 UseProcs.Intellect = (float)Math.Round(UseProcs.Intellect * (1 + simstats.BonusIntellectMultiplier));
@@ -158,7 +160,8 @@ namespace Rawr.HolyPriest
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + simstats.HealingReceivedMultiplier);
 
             // Add on Renewed Hope crit & Grace for Disc Maintank Rotation.
-            if (Rotation == 7)
+            if (role == CalculationOptionsPriest.eRole.Disc_Tank_FH
+                || role == CalculationOptionsPriest.eRole.Disc_Tank_GH)
             {
                 simstats.SpellCrit += character.PriestTalents.RenewedHope * 0.02f;
                 healmultiplier *= (1 + character.PriestTalents.Grace * 0.045f);
@@ -186,30 +189,52 @@ namespace Rawr.HolyPriest
             //PrayerOfHealing proh_serendipity_3 = new PrayerOfHealing(simstats, character, 5, character.PriestTalents.Serendipity * 0.04f * 3);
 
             // Borrowed Time Haste
-            simstats.SpellHaste += character.PriestTalents.BorrowedTime * 0.05f;
+            float oldSpellHaste = simstats.SpellHaste, oldSpellPower = simstats.SpellPower;
+            simstats.SpellHaste = (1 + simstats.SpellHaste) * (1 + character.PriestTalents.BorrowedTime * 0.05f) - 1;
+            if (simstats.PWSBonusSpellPowerProc > 0)
+                simstats.SpellPower += simstats.PWSBonusSpellPowerProc;
             Heal gh_bt = new Heal(simstats, character);
             FlashHeal fh_bt = new FlashHeal(simstats, character);
             Penance penance_bt = new Penance(simstats, character);
-            simstats.SpellHaste -= character.PriestTalents.BorrowedTime * 0.05f;
+            PowerWordShield pws_bt = new PowerWordShield(simstats, character);
+            PrayerOfMending prom_1_bt = new PrayerOfMending(simstats, character, 1);
+            PrayerOfMending prom_4_bt = new PrayerOfMending(simstats, character, 4);
+            PrayerOfHealing proh_max_bt = new PrayerOfHealing(simstats, character);
+            simstats.SpellHaste = oldSpellHaste;
+            simstats.SpellPower = oldSpellPower;
 
             List<Spell> sr = new List<Spell>();
-            switch (Rotation)
+            switch (role)
             {
-                case 2:     // Greater Heal Spam
+                case CalculationOptionsPriest.eRole.Greater_Heal:     // Greater Heal Spam
                     Role += "Greater Heal";
                     sr.Add(gh);
                     break;
-                case 3:     // Flash Heal Spam
+                case CalculationOptionsPriest.eRole.Flash_Heal:     // Flash Heal Spam
                     Role += "Flash Heal";
                     sr.Add(fh);
                     break;
-                case 4:     // Circle of Healing/Prayer of Healing spam
-                    Role += "CoH + PoH";
-                    sr.Add(coh);
-                    sr.Add(proh_max);
-                    sr.Add(proh_max);
+                case CalculationOptionsPriest.eRole.CoH_PoH:     // Circle of Healing/Prayer of Healing spam
+                    if (character.PriestTalents.CircleOfHealing > 0)
+                    {
+                        Role += "CoH + PoH";
+                        sr.Add(coh);
+                        sr.Add(proh_max);
+                        sr.Add(proh_max);
+                    }
+                    else if (character.PriestTalents.BorrowedTime > 0)
+                    {
+                        Role += "PWS + PoH";
+                        sr.Add(pws);
+                        sr.Add(proh_max_bt);
+                    }
+                    else
+                    {
+                        Role += "PoH";
+                        sr.Add(proh_max);
+                    }
                     break;
-                case 5:     // Holy MT Healing, renew + prom + ghx5 repeat
+                case CalculationOptionsPriest.eRole.Holy_Tank:     // Holy MT Healing, renew + prom + ghx5 repeat
                     Role += "Holy Tank";
                     sr.Add(renew);      // 1.5s 1.5  -13.5 -??.?
                     sr.Add(prom_1);     // 1.5s 3.0  -12.0 -8.5
@@ -219,7 +244,7 @@ namespace Rawr.HolyPriest
                     sr.Add(gh);         // 2.5s 13.0 -2    -??
                     sr.Add(gh);         // 2.5s 15.5 -??   -??   Although, adjusted for haste and improved holy conc, this gets better and better.
                     break;
-                case 6:     // Holy Raid Healing, prom, coh, fhx2, proh, coh, fhx2, proh (2 haste stacks if serendipity)
+                case CalculationOptionsPriest.eRole.Holy_Raid:     // Holy Raid Healing, prom, coh, fhx2, proh, coh, fhx2, proh (2 haste stacks if serendipity)
                     Role += "Holy Raid";
                     sr.Add(prom_4);   // 1.5s 1.5 -8.5
                     sr.Add(coh);        // 1.5s 3.0 -7.0
@@ -232,7 +257,7 @@ namespace Rawr.HolyPriest
                     sr.Add(proh_serendipity_2);
                     // Repeat
                     break;
-                case 7:     // Disc MT Healing, pws, penance, prom, gh, penance
+                case CalculationOptionsPriest.eRole.Disc_Tank_GH:     // Disc MT Healing, pws, penance, prom, gh, penance
                     Role += "Disc Tank w/Gheal";
                     sr.Add(pws);        // 1.5s 1.5  -15.0 -2.5 -??   -??
                     sr.Add(penance_bt); // 1.5s 3.0  -13.5 -1.0 -??   -6.5
@@ -247,12 +272,12 @@ namespace Rawr.HolyPriest
                     sr.Add(gh);         // 2.5s 23.0 -??   -??  -3.5  -3.5
                     // repeat
                     break;
-                case 8:     // Disc MT Healing, pws, penance, prom, fh - Does not have Divine Fury.
+                case CalculationOptionsPriest.eRole.Disc_Tank_FH:     // Disc MT Healing, pws, penance, prom, fh - Does not have Divine Fury.
                     Role += "Disc Tank w/Fheal";
                     sr.Add(pws);        // 1.5s 1.5  -15.0 -2.5 -??   -??
                     sr.Add(penance_bt); // 1.5s 3.0  -13.5 -1.0 -??   -6.5
-                    sr.Add(prom_1);     // 1.5s 4.5  -12.0 -??  -8.5  -5.0
-                    sr.Add(fh);         // 1.5s 6.0  -10.5 -??  -7.0  -3.5
+                    sr.Add(prom_1_bt);  // 1.5s 4.5  -12.0 -??  -8.5  -5.0
+                    sr.Add(fh_bt);      // 1.5s 6.0  -10.5 -??  -7.0  -3.5
                     sr.Add(fh);         // 1.5s 7.5  -9.0  -??  -5.5  -2.0
                     sr.Add(fh);         // 1.5s 9.0  -7.5  -??  -4.0  -0.5
                     sr.Add(fh);         // 1.5s 10.5 -6.0  -??  -2.5  -??
@@ -266,12 +291,12 @@ namespace Rawr.HolyPriest
                     sr.Add(fh);         // 1.5s 19.0 -??   -??  -3.5  -3.0
                     // repeat
                     break;
-                case 9:     // Disc Raid Healing, pws, penance, prom, pw:s, fh, fh
+                case CalculationOptionsPriest.eRole.Disc_Raid:     // Disc Raid Healing, pws, penance, prom, pw:s, fh, fh
                     Role += "Disc Raid";
                     sr.Add(pws);        // 1.5  1.5  -2.5  -??   -??
                     sr.Add(penance_bt); // 1.5  3.0  -1.0  -8.0  -??
-                    sr.Add(prom_4);   // 1.5  4.5  -??   -6.5  -8.5
-                    sr.Add(pws);        // 1.5  6.0  -2.5  -5.0  -7.0
+                    sr.Add(prom_4_bt);  // 1.5  4.5  -??   -6.5  -8.5
+                    sr.Add(pws_bt);     // 1.5  6.0  -2.5  -5.0  -7.0
                     sr.Add(fh_bt);      // 1.5  7.5  -1.0  -3.5  -5.5
                     // repeat
                     break;
@@ -282,7 +307,7 @@ namespace Rawr.HolyPriest
             foreach (Spell s in sr)
                 ActionList += "\r\n- " + s.Name;
 
-            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, holyconccast = 0, holyconccrit = 0, pwscasts = 0;
+            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, castlandctr = 0, crittable = 0, holyconccast = 0, holyconccrit = 0, pwscasts = 0;
             for (int x = 0; x < sr.Count; x++)
             {
                 float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
@@ -295,6 +320,7 @@ namespace Rawr.HolyPriest
                     mcost = sr[x].ManaCost;
                     mcost -= simstats.ManaGainOnGreaterHealOverheal * calculationOptions.Serendipity / 100f;
                     castctr++;
+                    castlandctr++;
                     crittable += sr[x].CritChance;
                     holyconccast++;
                     holyconccrit += sr[x].CritChance;
@@ -309,6 +335,7 @@ namespace Rawr.HolyPriest
                     mcost -= mcost * solctr;
                     solctr = 0;
                     castctr++;
+                    castlandctr++;
                     crittable += sr[x].CritChance;
                     holyconccast++;
                     holyconccrit += sr[x].CritChance;
@@ -319,7 +346,8 @@ namespace Rawr.HolyPriest
                     rheal = sr[x].AvgTotHeal * healmultiplier;
                     absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     mcost = sr[x].ManaCost;
-                    castctr += 3f; // Penance counts as 3 casts for some purposes.
+                    castctr++;
+                    castlandctr += 3f; // Penance counts as 3 casts for some purposes.
                     crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, 3f);
                 }
                 else if (sr[x] == coh)
@@ -328,17 +356,19 @@ namespace Rawr.HolyPriest
                     heal = coh.AvgTotHeal * healmultiplier;
                     solctr = 1f - (1f - solctr) * (1f - sol5chance);
                     mcost = coh.ManaCost;
-                    castctr += sr[x].Targets;
+                    castctr++;
+                    castlandctr += sr[x].Targets;
                     crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, sr[x].Targets);
                 }
-                else if (sr[x] == proh_max || sr[x] == proh_serendipity_2)
+                else if (sr[x] == proh_max || sr[x] == proh_serendipity_2 || sr[x] == proh_max_bt)
                 {
                     clen = sr[x].CastTime;
                     heal = sr[x].AvgTotHeal * healmultiplier;
                     solctr = 1f - (1f - solctr) * (1f - sol5chance);
                     absorb = sr[x].AvgCrit * sr[x].Targets * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.01f;
                     mcost = sr[x].ManaCost;
-                    castctr += sr[x].Targets;
+                    castctr++;
+                    castlandctr += sr[x].Targets;
                     crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, sr[x].Targets);
                 }
                 else if (sr[x] == renew)
@@ -347,29 +377,32 @@ namespace Rawr.HolyPriest
                     heal = renew.AvgTotHeal * healmultiplier;
                     mcost = renew.ManaCost;
                     castctr++;
+                    castlandctr++;
                     if (character.PriestTalents.ImprovedRenew > 0)
                     {
                         holyconccast++;
                         holyconccrit += renew.CritChance;
                     }
                 }
-                else if (sr[x] == pws)
+                else if (sr[x] == pws || sr[x] == pws_bt)
                 {
-                    clen = pws.GlobalCooldown;
-                    absorb = pws.AvgTotHeal;
-                    mcost = pws.ManaCost;
+                    clen = sr[x].GlobalCooldown;
+                    absorb = sr[x].AvgTotHeal;
+                    mcost = sr[x].ManaCost;
                     if (character.PriestTalents.GlyphofPowerWordShield)
                         heal = absorb * 0.2f;   // Not entirely right, but close enough.
                     castctr++;
+                    castlandctr++;
                     pwscasts++;
                 }
-                else if (sr[x] == prom_1 || sr[x] == prom_4)
+                else if (sr[x] == prom_1 || sr[x] == prom_4 || sr[x] == prom_1_bt || sr[x] == prom_4_bt)
                 {
                     clen = sr[x].GlobalCooldown;
                     heal = sr[x].AvgTotHeal * healmultiplier;
                     absorb = sr[x].AvgCrit * sr[x].Targets * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     mcost = sr[x].ManaCost;
-                    castctr += sr[x].Targets;
+                    castctr++;
+                    castlandctr += sr[x].Targets;
                     crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, sr[x].Targets);
                 }
                 absorb += valanyrProc * (heal + rheal);
@@ -379,7 +412,16 @@ namespace Rawr.HolyPriest
                 //metareductiontot += metaSpellCostReduction;
             }
 
-            float avgcastlen = cyclelen / castctr;
+            // Real Cyclelen also has time for FSR. To get 80% FSR, a cycle of 20 seconds needs to include:
+            // (20 + 5) / 0.8 = 31.25 seconds. (31.25 - 5 - 20 = 6.25 / 31.25 = 0.2 seconds of FSR regen).
+            //float realcyclelen = (cyclelen + 5f) / (calculationOptions.FSRRatio / 100f);
+            // Extra fudge model: (As you approach 100% FSR, realcyclelen approaches cyclelen)
+            //float realcyclelen = (cyclelen + 5f * (1f - (float)Math.Pow(calculationOptions.FSRRatio / 100f, 2f))) / (calculationOptions.FSRRatio / 100f);
+            // Xtreme fudge model: Cast 25 seconds, 5 seconds no casting, then slap on FSR.
+            // ((25 + 5) / FSR) / 25 * cyclelen = realcyclelen.
+            float realcyclelen = cyclelen * ((25f + 5f) / (calculationOptions.FSRRatio / 100f)) / 25f;
+            float avgcastlen = realcyclelen / castctr;
+            float avgcastlandlen = realcyclelen / castlandctr;
             float avgcritcast = crittable / sr.Count;
 
             float periodicRegenOutFSR = StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
@@ -440,11 +482,15 @@ namespace Rawr.HolyPriest
                     if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
                     {
                         if (se.Trigger == Trigger.SpellCast
-                            || se.Trigger == Trigger.HealingSpellCast
-                            || se.Trigger == Trigger.HealingSpellHit)
+                            || se.Trigger == Trigger.HealingSpellCast)
                         {
                             tmpregen = se.GetAverageStats(avgcastlen, 1f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
                                 + se.GetAverageStats(avgcastlen, 1f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                        }
+                        else if (se.Trigger == Trigger.HealingSpellHit)
+                        {
+                            tmpregen = se.GetAverageStats(avgcastlandlen, 1f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                + se.GetAverageStats(avgcastlandlen, 1f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
                         }
                         else if (se.Trigger == Trigger.SpellCrit
                             || se.Trigger == Trigger.HealingSpellCrit)
@@ -542,14 +588,6 @@ namespace Rawr.HolyPriest
           
             ActionList += "\r\n\r\nMana Options:";
 
-            // Real Cyclelen also has time for FSR. To get 80% FSR, a cycle of 20 seconds needs to include:
-            // (20 + 5) / 0.8 = 31.25 seconds. (31.25 - 5 - 20 = 6.25 / 31.25 = 0.2 seconds of FSR regen).
-            //float realcyclelen = (cyclelen + 5f) / (calculationOptions.FSRRatio / 100f);
-            // Extra fudge model: (As you approach 100% FSR, realcyclelen approaches cyclelen)
-            //float realcyclelen = (cyclelen + 5f * (1f - (float)Math.Pow(calculationOptions.FSRRatio / 100f, 2f))) / (calculationOptions.FSRRatio / 100f);
-            // Xtreme fudge model: Cast 25 seconds, 5 seconds no casting, then slap on FSR.
-            // ((25 + 5) / FSR) / 25 * cyclelen = realcyclelen.
-            float realcyclelen = cyclelen * ((25f + 5f) / (calculationOptions.FSRRatio / 100f)) / 25f;
             float mp1use = manacost / realcyclelen;
 
             if (mp1use > regen && character.Race == Character.CharacterRace.BloodElf)
@@ -585,7 +623,12 @@ namespace Rawr.HolyPriest
                 ActionList += string.Format("\r\n- Used Hymn of Hope");
                 regen += tmpregen;
             }
-                         
+
+            if (mp1use > regen)
+            {
+                ActionList += string.Format("\r\n- {0} mp5 deficit. Could use more mana!", ((mp1use - regen) * 5).ToString("0"));
+            }
+
             calculatedStats.HPSBurstPoints = healamount / cyclelen;
             // Sustained is limited by how much mana you regenerate over the time it would take to cast the spells, divided by the cost.
             if (regen > mp1use) // Regenerating more mana than we can use. Dont make user believe this is an upgrade.
@@ -693,8 +736,10 @@ namespace Rawr.HolyPriest
                 // Juggle out the original spell haste and put in new.
                 if (UseProcs.HasteRating > 0)
                 {
-                    simstats.SpellHaste -= StatConversion.GetSpellHasteFromRating(simstats.HasteRating);
-                    simstats.SpellHaste += StatConversion.GetSpellHasteFromRating(UseProcs.HasteRating + simstats.HasteRating);
+                    simstats.SpellHaste = (1 + simstats.SpellHaste) 
+                        / (1 + StatConversion.GetSpellHasteFromRating(simstats.HasteRating))
+                        * (1 + StatConversion.GetSpellHasteFromRating(UseProcs.HasteRating + simstats.HasteRating))
+                        - 1;
                 }
                 UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
                 UseProcs.Intellect = (float)Math.Round(UseProcs.Intellect * (1 + simstats.BonusIntellectMultiplier));
@@ -715,6 +760,22 @@ namespace Rawr.HolyPriest
             // Add on Renewed Hope crit for Disc Maintank Rotation, adjusted by uptime of Weakened Soul
             float WeakenedSoulUptime = (float)Math.Min(1f, calculationOptions.PWSCast * 15f / calculationOptions.FightLengthSeconds);
             simstats.SpellCrit += character.PriestTalents.RenewedHope * 0.02f * WeakenedSoulUptime;
+            int instantCasts = calculationOptions.CoHCast + calculationOptions.DispelCast + calculationOptions.HolyNovaCast
+                + calculationOptions.PenanceCast + calculationOptions.ProMCast + calculationOptions.PWSCast
+                + calculationOptions.RenewCast;
+            int nonInstantCasts = calculationOptions.BindingHealCast + calculationOptions.DivineHymnCast
+                + calculationOptions.FlashHealCast + calculationOptions.GreaterHealCast + calculationOptions.MDCast
+                + calculationOptions.PoHCast;
+
+            float BorrowedTimeHaste = character.PriestTalents.BorrowedTime * 0.05f * (nonInstantCasts > 0 ? (float)Math.Min(calculationOptions.PWSCast / nonInstantCasts, 1f) : 1f);
+            if (BorrowedTimeHaste > 0)
+                simstats.SpellHaste = (1 + simstats.SpellHaste) * (1 + BorrowedTimeHaste) - 1;
+            if (simstats.PWSBonusSpellPowerProc > 0 && calculationOptions.PWSCast > 0)
+            {
+                float timeBetweenShields = calculationOptions.FightLengthSeconds / calculationOptions.PWSCast;
+                float bonusSpellPower = simstats.PWSBonusSpellPowerProc * (float)Math.Min(1f, 5 / timeBetweenShields);
+                simstats.SpellPower += bonusSpellPower;
+            }
 
             int TotalCasts = 0;
             float ManaUsed = 0f;
@@ -863,8 +924,12 @@ namespace Rawr.HolyPriest
                 TimeUsed += pws.GlobalCooldown * calculationOptions.PWSCast;
                 BaseTimeUsed += 1.5f * calculationOptions.PWSCast;
                 AbsorbHeal += pws.AvgTotHeal * calculationOptions.PWSCast;
-                float pwsglyphheal = pws.AvgTotHeal * 0.2f * healmultiplier * ((character.PriestTalents.GlyphofPowerWordShield) ? 0.2f : 0.0f);
-                OtherHeal += pwsglyphheal * (1f - simstats.SpellCrit) + pwsglyphheal * 1.5f * simstats.SpellCrit;
+                if (character.PriestTalents.GlyphofPowerWordShield)
+                {
+                    float pwsglyphheal = pws.AvgTotHeal * 0.2f * healmultiplier * 0.2f;
+                    OtherHeal += pwsglyphheal * (1f - simstats.SpellCrit) + pwsglyphheal * 1.5f * simstats.SpellCrit;
+                    CritCounter += simstats.SpellCrit * calculationOptions.PWSCast;
+                }
             }
 
             // Circle of Healing
@@ -1003,14 +1068,14 @@ namespace Rawr.HolyPriest
                                 || se.Trigger == Trigger.HealingSpellCast
                                 || se.Trigger == Trigger.HealingSpellHit)
                             {
-                                tmpregen = se.GetAverageStats(TimeUsed / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
-                                    + se.GetAverageStats(TimeUsed / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                                tmpregen = se.GetAverageStats(calculationOptions.FightLengthSeconds / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                    + se.GetAverageStats(calculationOptions.FightLengthSeconds / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
                             }
                             else if (se.Trigger == Trigger.SpellCrit
                                 || se.Trigger == Trigger.HealingSpellCrit)
                             {
-                                tmpregen = se.GetAverageStats(TimeUsed / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).ManaRestore
-                                    + se.GetAverageStats(TimeUsed / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                                tmpregen = se.GetAverageStats(calculationOptions.FightLengthSeconds / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).ManaRestore
+                                    + se.GetAverageStats(calculationOptions.FightLengthSeconds / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
                             }
                             else if (se.Trigger == Trigger.Use)
                             {

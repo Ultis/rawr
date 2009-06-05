@@ -97,7 +97,7 @@ namespace Rawr.HolyPriest
                 ((BasicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f).ToString("0.00"),
                 character.PriestTalents.HolySpecialization, character.PriestTalents.RenewedHope, character.PriestTalents.RenewedHope * 2));
             dictValues.Add("Spell Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({6}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown", 
-                (BasicStats.SpellHaste * 100f).ToString("0.00"), (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString(), (character.PriestTalents.Enlightenment * 2).ToString("0"), (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f - character.PriestTalents.Enlightenment * 2f).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00"), character.PriestTalents.Enlightenment));
+                (BasicStats.SpellHaste * 100f).ToString("0.00"), (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString(), (character.PriestTalents.Enlightenment * 2).ToString("0"), (((1 + BasicStats.SpellHaste) / (1 + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating)) / (1 + character.PriestTalents.Enlightenment * 0.02f) - 1) * 100f).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00"), character.PriestTalents.Enlightenment));
             dictValues.Add("Armor", string.Format("{0}*{1}% Damage Reduction.",
                 (BasicStats.Armor + BasicStats.BonusArmor).ToString("0"),
                 (StatConversion.GetArmorDamageReduction(80, (BasicStats.Armor + BasicStats.BonusArmor), 0f, 0f, 0f) * 100f).ToString("0.00")));
@@ -151,7 +151,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Resistance", ResistanceString);
 
             BaseSolver solver;
-            if ((character.CalculationOptions as CalculationOptionsPriest).Rotation == 10)
+            if ((character.CalculationOptions as CalculationOptionsPriest).Role == CalculationOptionsPriest.eRole.CUSTOM)
                 solver = new AdvancedSolver(BasicStats, character);
             else
                 solver = new Solver(BasicStats, character);
@@ -190,7 +190,7 @@ namespace Rawr.HolyPriest
             else
                 dictValues.Add("Gift of the Naaru", "-");
             dictValues.Add("Divine Hymn", new DivineHymn(BasicStats, character).ToString());
-
+            dictValues.Add("Resurrection", new Resurrection(BasicStats, character).ToString());
 
             return dictValues;
         }

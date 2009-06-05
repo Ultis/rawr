@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Maek TalentHandler.cs
+// Fix Serendipity
+
+using System;
 using System.Collections.Generic;
 
 using Rawr;
@@ -305,6 +308,7 @@ namespace Rawr.HolyPriest
                     "Spells:Penance",
                     "Spells:Gift of the Naaru",
                     "Spells:Divine Hymn",
+                    "Spells:Resurrection",
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -416,7 +420,7 @@ namespace Rawr.HolyPriest
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
             BaseSolver solver;
-            if (calculationOptions.Rotation == 10)
+            if (calculationOptions.Role == CalculationOptionsPriest.eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else
                 solver = new Solver(stats, character);
@@ -472,7 +476,7 @@ namespace Rawr.HolyPriest
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
-            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
             statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
             return statsTotal;
         }
@@ -491,7 +495,7 @@ namespace Rawr.HolyPriest
                     _currentChartName = chartName;
                     CharacterCalculationsHolyPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     BaseSolver mssolver;
-                    if ((character.CalculationOptions as CalculationOptionsPriest).Rotation == 10)
+                    if ((character.CalculationOptions as CalculationOptionsPriest).Role == CalculationOptionsPriest.eRole.CUSTOM)
                         mssolver = new AdvancedSolver(mscalcs.BasicStats, character);
                     else
                         mssolver = new Solver(mscalcs.BasicStats, character);

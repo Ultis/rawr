@@ -170,7 +170,7 @@ namespace Rawr.ShadowPriest
                 if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
                     return spell;
                 if (spell.SpellStatistics.CooldownReset > 0 
-                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown))
+                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 2))// spell.GlobalCooldown))
                     return null;
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
@@ -631,7 +631,7 @@ namespace Rawr.ShadowPriest
                 tmpregen = simStats.Mana * 0.5f * sf_rat;
                 ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
                 regen += tmpregen;
-                SustainDPS -= MF.DpS * sf_rat;
+                //SustainDPS -= MF.DpS * sf_rat; You will actually gain dps from using it, so no reason to do this anymore.
                 Rotation += "\r\n- Used Shadowfiend";
             }
 
