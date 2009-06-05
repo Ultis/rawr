@@ -1,8 +1,27 @@
-Rawr v2.2.5.0
+Rawr v2.2.6.0
 ------------
-Welcome to Rawr 2.2.5.0.
+Welcome to Rawr 2.2.6.0.
    
 Recent Changes:
+v2.2.6.0
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all 
+the 3.1 modeling changes.
+ - Fix for startup crash, also improved startup performance.
+ - Several new advanced options in the Optimizer and Batch Tools. Fix for Optimizer crashes.
+ - Rawr.Cat: Fix for FB damage calculations.
+ - Rawr.Hunter: Significant improvements all over.
+ - Rawr.Rogue: Further progress.
+ - Rawr.Mage: Correction to DoT overlap calculations.
+ - Rawr.DPSWarr: Further improvements to a variety of formulae and features.
+ - Rawr.Moonkin: Fix for 4T8 proc rate.
+ - Rawr.Healadin: Improvements to proc values. Fix for some base stats
+ - Rawr.Retribution: Improvements to proc values. Fix for a couple talent calculations.
+ - Rawr.ProtWarr: Improvements to proc values.
+ - Rawr.RestoSham: Updates to glyphs, and added healing stream calculations.
+ - Rawr.Elemental: Fix for haste valuing from buffs.
+ - Rawr.HolyPriest: Haste fixes and tweaks.
+ - Rawr.ShadowPriest: Haste fixes.
+
 v2.2.5.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all 
 the 3.1 modeling changes.
