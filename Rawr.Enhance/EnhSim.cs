@@ -42,8 +42,8 @@ namespace Rawr.Enhance
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
 
             sb.AppendLine("race                            " + character.Race.ToString().ToLower());
-            sb.AppendLine("mh_speed                        " + MHSpeed.ToString());
-            sb.AppendLine("oh_speed                        " + OHSpeed.ToString());
+            sb.AppendLine("mh_speed                        " + MHSpeed.ToString("F1", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_speed                        " + OHSpeed.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_dps                          " + wdpsMH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
             float chanceCrit = cs.DisplayMeleeCrit * 100f;
