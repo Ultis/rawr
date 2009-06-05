@@ -136,7 +136,7 @@ namespace Rawr.Hunter
         {
             if (options.Rabid > 0)
             {
-                float frequency = 45.0f * (1.0f + character.HunterTalents.Longevity * 0.1f);
+                float frequency = 45.0f * (1.0f - character.HunterTalents.Longevity * 0.1f);
                 float uptime = 20.0f / frequency;
                 float tagetdodge = (0.05f + options.TargetLevel * 0.005f) - (character.HunterTalents.AnimalHandler * 0.125f);
                 float basechancetoapply = 0.5f * (calculatedStats.BasicStats.HitRating - tagetdodge);
