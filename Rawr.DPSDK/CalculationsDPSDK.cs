@@ -1301,11 +1301,11 @@ namespace Rawr.DPSDK
             Stats statsTalents = new Stats()
             {
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
-                BonusArmorMultiplier = .03f * (float)(talents.Toughness),
+                BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
-                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
-                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker)
+                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
+                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
             };
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
@@ -1427,7 +1427,11 @@ namespace Rawr.DPSDK
             statsTotal.Health = (float)Math.Floor(statsTotal.Health + (statsTotal.Stamina * 10f));
             statsTotal.Mana = (float)Math.Floor(statsTotal.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
-            statsTotal.Armor = (float)Math.Floor((statsTotal.Armor + statsTotal.BonusArmor + 2f * statsTotal.Agility) * 1f);
+            // Copy from TankDK.
+            // statsTotal.Armor = (float)Math.Floor((statsTotal.Armor + statsTotal.BonusArmor + 2f * statsTotal.Agility) * 1f);
+            statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
+                                StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
+                                StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
 
             statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
 

@@ -682,6 +682,8 @@ namespace Rawr
                 S.BonusIntellectMultiplier = 0.05f;
             else if (characterRace == Character.CharacterRace.Human)
                 S.BonusSpiritMultiplier = 0.03f;
+            else if (characterRace == Character.CharacterRace.NightElf)
+                S.Miss += 0.02f;
             else if (characterRace == Character.CharacterRace.Tauren)
                 S.Health = S.Health * 1.05f;
             #endregion

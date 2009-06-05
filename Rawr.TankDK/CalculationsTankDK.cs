@@ -169,9 +169,25 @@ namespace Rawr.TankDK
                     List<string> labels = new List<string>(new string[]
                     {
 
-                        "Summary:Survival Points",
-                        "Summary:Mitigation Points",
-                        "Summary:Overall Points",
+					    @"Summary:Survival Points*Survival Points represents the total raw physical damage 
+(pre-mitigation) you can take before dying. Unlike 
+Mitigation Points, you should not attempt to maximize this, 
+but rather get 'enough' of it, and then focus on Mitigation. 
+'Enough' can vary greatly by fight and by your healers, but 
+keeping it roughly even with Mitigation Points is a good 
+way to maintain 'enough' as you progress. If you find that 
+you are being killed by burst damage, focus on Survival Points.",
+					    @"Summary:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
+on average, through armor mitigation and avoidance. It is directly 
+relational to your Damage Taken. Ideally, you want to maximize 
+Mitigation Points, while maintaining 'enough' Survival Points 
+(see Survival Points). If you find yourself dying due to healers 
+running OOM, or being too busy healing you and letting other 
+raid members die, then focus on Mitigation Points.",
+					    @"Summary:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+Overall is typically, but not always, the best way to rate gear. 
+For specific encounters, closer attention to Mitigation and 
+Survival Points individually may be important.",
 
                         "Basic Stats:Strength*Unbreakable Armor not factored in.",
 					    "Basic Stats:Agility",
@@ -351,6 +367,7 @@ namespace Rawr.TankDK
             // The full character data.
             Stats stats = GetCharacterStats(character, additionalItem);
 
+            calcs.BasicStrength = stats.Strength;
             calcs.BasicStats = stats;
             calcs.TargetLevel = targetLevel;
 
@@ -407,7 +424,7 @@ namespace Rawr.TankDK
             // Talent: Mark of Blood //////////////////////////////////////////////////////////
             // Target is healed for 4% of max health per hit for up to 20 hits or 20 secs. 
             // 3 Min cooldown.
-            float fMoBHPModifier = 0f;
+            //float fMoBHPModifier = 0f;
 
             // Talent: Bone Shield ////////////////////////////////////////////////////////
             float bsDR = 0.0f;
@@ -437,10 +454,14 @@ namespace Rawr.TankDK
 
             // IceBound Fortitude. ////////////////////////////////////////////////////////
             // Talent: GuileofGorefiend increases IBF by 2 sec per point.
+            // Four T7 increases IBF by 3 sec.
             // IBF has a 60 sec CD.
-            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
+            Boolean fourT7 = character.ActiveBuffsContains("Scourgeborne Plate 4 Piece Bonus");
+            float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + (fourT7 ? 3.0f : 0.0f)) / 60.0f;
             // IBF reduces damage taken by 20% + some amount(?) based on defense.
-            float ibfReduction = 0.2f + calcs.Defense * 0.0014f;
+            // float ibfReduction = 0.2f + calcs.Defense * 0.0014f;
+            // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
+            float ibfReduction = 0.2f + ((calcs.Defense - 400) * 0.03f / 28.0f);
             if (character.DeathKnightTalents.GlyphofIceboundFortitude == true)
             {
                 // Glyphed to 30% + some amount(?)
@@ -460,7 +481,8 @@ namespace Rawr.TankDK
                                 * (1.0f - ibfDR)
                                 * (1.0f - bsDR)
                                 * (1f - IITDR)
-                                * (1.0f - character.DeathKnightTalents.UnbreakableArmor * 0.05f * uaUptime)  // Adding UA to just mitigation complete DR.
+                                * (1.0f + stats.DamageTakenMultiplier) // Take in account Frost Presence.
+                                * (1.0f - character.DeathKnightTalents.UnbreakableArmor * (character.DeathKnightTalents.GlyphofUnbreakableArmor == true ? 0.06f : 0.05f) * uaUptime)  // Adding UA to just mitigation complete DR.
                                 * talent_dr
                                 * (1f - .05f * character.DeathKnightTalents.ImprovedBloodPresence); // addition 5% benefit from Heals landing on the tank per point.
 
@@ -537,7 +559,8 @@ namespace Rawr.TankDK
                 float f2hWeaponDamageMultiplier = 0f;
                 if (character.MainHand.Type == Item.ItemType.TwoHandAxe
                     || character.MainHand.Type == Item.ItemType.TwoHandMace
-                    || character.MainHand.Type == Item.ItemType.TwoHandSword)
+                    || character.MainHand.Type == Item.ItemType.TwoHandSword
+                    || character.MainHand.Type == Item.ItemType.Polearm)
                 {
                     f2hWeaponDamageMultiplier = (1f + .02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
                 }
@@ -581,7 +604,9 @@ namespace Rawr.TankDK
             calcs.ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(targetLevel, stats.Armor, 0f, 0f, 0f));
 
             // Adding in the extra 10% health here for frost presence so it's not default in the UI anymore.
-            float hp = (calcs.BasicStats.Health * 1.1f);
+            // float hp = (calcs.BasicStats.Health * 1.1f); 
+            // The extra 10% health for Frost presence is now include in the UI by default.
+            float hp = calcs.BasicStats.Health;
 
             // Talent: Improved Blood Presence ///////////////////////////////////////////////////
             if (character.DeathKnightTalents.ImprovedBloodPresence > 0)
@@ -634,7 +659,7 @@ namespace Rawr.TankDK
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.VeteranOfTheThirdWar),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
-                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare + talents.VeteranOfTheThirdWar),
+                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
                 BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
                 // Currently SpellHit doesn't have an effect.
@@ -662,20 +687,24 @@ namespace Rawr.TankDK
             statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
 
             // Apply Stat modifiers
-            statsTotal.Strength = (float)Math.Floor(ApplyMultiplier(statsGearEnchantsBuffs.Strength, statsGearEnchantsBuffs.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Floor(ApplyMultiplier(statsGearEnchantsBuffs.Agility, statsGearEnchantsBuffs.BonusAgilityMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(ApplyMultiplier(statsGearEnchantsBuffs.Stamina, statsGearEnchantsBuffs.BonusStaminaMultiplier));
-            statsTotal.Armor = (float)Math.Floor(ApplyMultiplier((statsGearEnchantsBuffs.Armor + StatConversion.GetArmorFromAgility(statsTotal.Agility)), statsGearEnchantsBuffs.BaseArmorMultiplier) + 
-                                ApplyMultiplier(statsGearEnchantsBuffs.BonusArmor, statsGearEnchantsBuffs.BonusArmorMultiplier));
+            statsTotal.Strength = (float)Math.Floor(StatConversion.ApplyMultiplier(statsGearEnchantsBuffs.Strength, statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor(StatConversion.ApplyMultiplier(statsGearEnchantsBuffs.Agility, statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(StatConversion.ApplyMultiplier(statsGearEnchantsBuffs.Stamina, statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            // Thoughness increases armor value only from the base armor of items.
+            /* statsTotal.Armor = (float)Math.Floor(ApplyMultiplier((statsGearEnchantsBuffs.Armor + StatConversion.GetArmorFromAgility(statsTotal.Agility)), statsGearEnchantsBuffs.BaseArmorMultiplier) +
+                                ApplyMultiplier(statsGearEnchantsBuffs.BonusArmor, statsGearEnchantsBuffs.BonusArmorMultiplier)); */
+            statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
+                                StatConversion.ApplyMultiplier(statsGearEnchantsBuffs.Armor, statsGearEnchantsBuffs.BaseArmorMultiplier) +
+                                StatConversion.ApplyMultiplier(statsGearEnchantsBuffs.BonusArmor, statsGearEnchantsBuffs.BonusArmorMultiplier));
 
-            statsTotal.Health = (float)Math.Floor(ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsGearEnchantsBuffs.BonusHealthMultiplier));
+            statsTotal.Health = (float)Math.Floor(StatConversion.ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsGearEnchantsBuffs.BonusHealthMultiplier));
 
             if (talents.BladedArmor > 0)
             {
                 statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
             }
-            statsTotal.AttackPower = (float)Math.Floor(ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsGearEnchantsBuffs.BonusAttackPowerMultiplier));
-            statsTotal.CritRating = (float)Math.Floor(ApplyMultiplier((statsGearEnchantsBuffs.CritRating + statsGearEnchantsBuffs.CritMeleeRating), statsGearEnchantsBuffs.BonusCritMultiplier));
+            statsTotal.AttackPower = (float)Math.Floor(StatConversion.ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsGearEnchantsBuffs.BonusAttackPowerMultiplier));
+            statsTotal.CritRating = (float)Math.Floor(StatConversion.ApplyMultiplier((statsGearEnchantsBuffs.CritRating + statsGearEnchantsBuffs.CritMeleeRating), statsGearEnchantsBuffs.BonusCritMultiplier));
             
             statsTotal.CritRating += statsGearEnchantsBuffs.LotPCritRating + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
 
@@ -751,6 +780,9 @@ namespace Rawr.TankDK
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
  
+                // Frost presence.
+                DamageTakenMultiplier = stats.DamageTakenMultiplier,
+ 
            // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
@@ -775,6 +807,10 @@ namespace Rawr.TankDK
                 BonusObliterateDamage = stats.BonusObliterateDamage,
                 BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
 
+                BonusPlagueStrikeCrit = stats.BonusPlagueStrikeCrit,
+                BonusIceboundFortitudeDuration = stats.BonusIceboundFortitudeDuration,
+                BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
+                BonusAntiMagicShellDamageReduction = stats.BonusAntiMagicShellDamageReduction,
             };
 
             // Also bringing in the trigger events from DPSDK - 
@@ -833,6 +869,7 @@ namespace Rawr.TankDK
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusSpellPowerMultiplier != 0);
+            bResults |= (stats.DamageTakenMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
             bResults |= (stats.CritMeleeRating != 0);
@@ -852,6 +889,11 @@ namespace Rawr.TankDK
             bResults |= (stats.BonusIcyTouchDamage != 0);
             bResults |= (stats.BonusObliterateDamage != 0);
             bResults |= (stats.BonusScourgeStrikeDamage != 0);
+
+            bResults |= (stats.BonusPlagueStrikeCrit != 0);
+            bResults |= (stats.BonusIceboundFortitudeDuration != 0);
+            bResults |= (stats.BonusRuneStrikeMultiplier != 0);
+            bResults |= (stats.BonusAntiMagicShellDamageReduction != 0);
 
             if (bResults)
             {
@@ -879,15 +921,10 @@ namespace Rawr.TankDK
             return bResults;
         }
 
-        private float ApplyMultiplier(float baseValue, float multiplier)
-        {
-            return (baseValue * (1f + multiplier));
-        }
         private Stats GetFrostPresence()
         {
             Stats FrostyStats = new Stats();
             FrostyStats.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
-            FrostyStats.BonusArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
             FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
             FrostyStats.DamageTakenMultiplier -= .05f;// Bonus of 5% damage reduced for frost presence.
             FrostyStats.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.

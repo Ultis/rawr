@@ -24,9 +24,9 @@ namespace Rawr.DPSDK
             realDuration, totalMeleeAbilities,
         totalSpellAbilities;
 
-        public CombatTable(Character c, Stats stats, CalculationOptionsDPSDK calcOpts)
+        public CombatTable(Character c, Stats stats, CalculationOptionsDPSDK calcOpts) :
+            this(c, new CharacterCalculationsDPSDK(), stats, calcOpts)
         {
-            new CombatTable(c, new CharacterCalculationsDPSDK(), stats, calcOpts);
         }
 
         public CombatTable(Character c, CharacterCalculationsDPSDK calcs, Stats stats, CalculationOptionsDPSDK calcOpts)

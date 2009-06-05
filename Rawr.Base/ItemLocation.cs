@@ -542,13 +542,8 @@ namespace Rawr
     
     public class WorldDrop : ItemLocation
     {
-        private WorldDrop()
-        {
-            Source = ItemSource.WorldDrop;
-        }
-
-
-        string Location{get;set;}
+        public string Location { get; set; }
+        public bool Heroic { get; set; }
 
         [XmlIgnore]
         public override string Description
@@ -557,22 +552,32 @@ namespace Rawr
             {
                 if(Location != null)
                 {
-                    return string.Format("Trash drop in {0}", Location);
+                    return string.Format("Trash drop in {0}{1}", Location, Heroic ? " Heroic" : "");
                 }
                 return "World Drop";
             }
         }
+        public WorldDrop()
+        {
+            Source = ItemSource.WorldDrop;
+        }
+
+
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
-
 
             WebRequestWrapper wrw = new WebRequestWrapper();
             XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
 
-            XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@area");
-            if(subNode != null)
+            XmlNode subNodeArea = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@area");
+            if(subNodeArea != null)
             {
-                Location = subNode.InnerText;
+                Location = subNodeArea.InnerText;
+            }
+            XmlNode subNodeHeroic = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@heroic");
+            if (subNodeHeroic != null)
+            {
+                Heroic = (subNodeHeroic.InnerText == "1");
             }
 
             return this;

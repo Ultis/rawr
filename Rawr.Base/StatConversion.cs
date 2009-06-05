@@ -450,6 +450,11 @@ namespace Rawr
         {
             return 0.001f + Spirit * REGEN_CONSTANT * (float)Math.Sqrt(Intellect);
         }
+
+        public static float ApplyMultiplier(float baseValue, float multiplier)
+        {
+            return (baseValue * (1f + multiplier));
+        }
         #endregion
 
         #region Functions for More complex things.

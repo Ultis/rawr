@@ -14,6 +14,7 @@ namespace Rawr.TankDK
         }
 
         public Stats BasicStats { get; set; }
+        public float BasicStrength { get; set; }
         public int TargetLevel { get; set; }
 
         public float Dodge { get; set; }
@@ -81,7 +82,7 @@ namespace Rawr.TankDK
 
             dict["Health"] = BasicStats.Health.ToString("F0");
             dict["Armor"] = BasicStats.Armor.ToString("F0");
-            dict["Strength"] = BasicStats.Strength.ToString("F0");
+            dict["Strength"] = BasicStrength.ToString("F0");
             dict["Agility"] = BasicStats.Agility.ToString("F0");
             dict["Stamina"] = BasicStats.Stamina.ToString("F0");
             dict["Hit Rating"] = BasicStats.HitRating.ToString("F0");

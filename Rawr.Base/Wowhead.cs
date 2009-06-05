@@ -272,6 +272,12 @@ namespace Rawr
 					n = n.Replace("\\'", "'");
 				}
 
+                if (source == "2")
+                {
+                    WorldDrop locInfo = new WorldDrop();
+                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                }
+
                 if (source == "5")
                 {
                     // if we only have vendor information then we will want to download the normal html page and scrape the currency information
@@ -526,6 +532,13 @@ namespace Rawr
                     if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
                 }
             }
+            else
+                if ((!string.IsNullOrEmpty(source)) && (source == "2"))
+                {
+                    WorldDrop locInfo = new WorldDrop();
+                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                }
+
 
             if (item.Slot == Item.ItemSlot.Meta)
             {
@@ -688,8 +701,8 @@ namespace Rawr
 					break;
 
 				case "armorbonus":
-					item.Stats.Armor -= float.Parse(value);
-					item.Stats.BonusArmor = float.Parse(value);
+                    item.Stats.Armor -= float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                    item.Stats.BonusArmor = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 				
 				case "healthrgn":
@@ -952,6 +965,7 @@ namespace Rawr
 					else if (locationZone is ContainerItem) (locationZone as ContainerItem).Area = zonename;
 					else if (locationZone is QuestItem) (locationZone as QuestItem).Area = zonename;
 					else if (locationZone is CraftedItem) (locationZone as CraftedItem).Skill = value;
+                    else if (locationZone is WorldDrop) (locationZone as WorldDrop).Location = zonename;
 					break;
 
 				case "c": //Zone again, used for quests
@@ -974,6 +988,7 @@ namespace Rawr
 					ItemLocation locationDifficulty = item.LocationInfo;
 					if (locationDifficulty is StaticDrop) (locationDifficulty as StaticDrop).Heroic = value == "2";
                     else if (locationDifficulty is ContainerItem) (locationDifficulty as ContainerItem).Heroic = value == "2";
+                    else if (locationDifficulty is WorldDrop) (locationDifficulty as WorldDrop).Heroic = (value == "2");
                     break;
 
 				case "s":   // Source (755 = Jewelcrafting apparently?)
