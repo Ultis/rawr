@@ -109,26 +109,10 @@ namespace Rawr
 
 		private static FormMain _instance;
 		public static FormMain Instance { get { return FormMain._instance; } }
-        public void LoadCaches()
-        {
-            string basePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar);
-            string buffPath = Path.Combine(basePath, "BuffCache.xml");
-            string enchantPath = Path.Combine(basePath, "EnchantCache.xml");
-            
-            if (File.Exists(buffPath)) Buff.LoadBuffs(new StreamReader(buffPath, Encoding.UTF8));
-            else Buff.LoadBuffs(null);
-            Buff.SaveBuffs(new StreamWriter(buffPath, false, Encoding.UTF8));
-            
-            if (File.Exists(enchantPath)) Enchant.LoadEnchants(new StreamReader(enchantPath, Encoding.UTF8));
-            else Enchant.LoadEnchants(null);
-            Enchant.SaveEnchants(new StreamWriter(enchantPath, false, Encoding.UTF8));
-        }
-
 		public FormMain()
 		{
 			_instance = this;
 			_splash.Show();
-            LoadCaches();
 			_statusForm = new Status();
 			Application.DoEvents();
 
