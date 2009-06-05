@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Serialization;
+using System.Windows.Forms;
 using System.IO;
-using System.Linq;
 
 namespace Rawr
 {
@@ -87,6 +86,14 @@ namespace Rawr
         private static EnchantList _allEnchants = null;
         private static readonly string _SaveFilePath;
 
+
+        static Enchant()
+        {
+            _SaveFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
+            LoadEnchants();
+            SaveEnchants();
+        }
+
         public Enchant() { }
         /// <summary>
         /// Creates a new Enchant, representing an enchant to a single slot.
@@ -158,8 +165,18 @@ namespace Rawr
 
         public static Enchant FindEnchant(int id, Item.ItemSlot slot, Character character)
         {
-            return AllEnchants.FirstOrDefault(enchant => (enchant.Id == id) && (enchant.FitsInSlot(slot, character) ||
-                  (enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OneHand))) ?? AllEnchants[0];
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
+            return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant)
+            {
+                return (enchant.Id == id) && (enchant.FitsInSlot(slot, character) ||
+                  (enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OneHand));
+            })) ?? AllEnchants[0];
         }
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character)
@@ -169,15 +186,39 @@ namespace Rawr
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, CalculationsBase model)
         {
-            return new List<Enchant>(AllEnchants.Where(enchant =>  model.IsEnchantRelevant(enchant) &&
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
+            return AllEnchants.FindAll(new Predicate<Enchant>(
+                delegate(Enchant enchant)
+                {
+                    return model.IsEnchantRelevant(enchant) &&
                         (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None)
-                        || enchant.Slot == Item.ItemSlot.None));
+                        || enchant.Slot == Item.ItemSlot.None;
+                }
+            ));
         }
 
         public static List<Enchant> FindAllEnchants(Item.ItemSlot slot, Character character)
         {
-            return new List<Enchant>(AllEnchants.Where(enchant =>(enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None)
-                        || enchant.Slot == Item.ItemSlot.None));
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
+            return AllEnchants.FindAll(new Predicate<Enchant>(
+                delegate(Enchant enchant)
+                {
+                    return (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None)
+                        || enchant.Slot == Item.ItemSlot.None;
+                }
+            ));
         }
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, List<string> availableIds)
@@ -187,15 +228,21 @@ namespace Rawr
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, List<string> availableIds, CalculationsBase model)
         {
-            return new List<Enchant>(AllEnchants.Where(enchant =>((model.IsEnchantRelevant(enchant) &&
+            return AllEnchants.FindAll(new Predicate<Enchant>(
+                delegate(Enchant enchant)
+                {
+                    return ((model.IsEnchantRelevant(enchant) &&
                         (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
                         && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
-                        || enchant.Id == 0));
+                        || enchant.Id == 0;
+                }
+            ));
         }
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character[] characters, List<string> availableIds, CalculationsBase[] models)
         {
-            return new List<Enchant>(AllEnchants.Where<Enchant>(delegate(Enchant enchant)
+            return AllEnchants.FindAll(new Predicate<Enchant>(
+                delegate(Enchant enchant)
                 {
                     bool isRelevant = false;
                     for (int i = 0; i < models.Length; i++)
@@ -213,25 +260,31 @@ namespace Rawr
             ));
         }
 
-        public static void SaveEnchants(StreamWriter writer)
+        private static void SaveEnchants()
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));
-                serializer.Serialize(writer, _allEnchants);
-                writer.Close();
+                using (StreamWriter writer = new StreamWriter(_SaveFilePath, false, Encoding.UTF8))
+                {
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnchantList));
+                    serializer.Serialize(writer, _allEnchants);
+                    writer.Close();
+                }
             }
             catch { }
         }
 
-        public static void LoadEnchants(StreamReader reader)
+        private static void LoadEnchants()
         {
 
             try
             {
-                if (reader != null)
+                if (File.Exists(_SaveFilePath))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));
+                    string xml = System.IO.File.ReadAllText(_SaveFilePath);
+                    xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnchantList));
+                    System.IO.StringReader reader = new System.IO.StringReader(xml);
                     _allEnchants = (EnchantList)serializer.Deserialize(reader);
                     reader.Close();
                 }

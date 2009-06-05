@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Linq;
+using System.Windows.Forms;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace Rawr //O O . .
 {
-    
+    [Serializable]
     public class Character
     {
         [XmlElement("Name")]
@@ -339,12 +339,12 @@ namespace Rawr //O O . .
 
         public bool ActiveBuffsContains(string buff)
         {
-            return _activeBuffs.Any(b => b.Name == buff);
+            return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
         }
 
         public bool ActiveBuffsConflictingBuffContains(string conflictingBuff)
         {
-			return _activeBuffs.Any(x => x.ConflictingBuffs.Contains(conflictingBuff));
+			return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
         }
 
 
@@ -786,12 +786,12 @@ namespace Rawr //O O . .
         private ItemAvailability GetItemAvailability(string id, string gemId, string fullId)
         {
             string anyGem = id + ".*.*.*";
-            List<string> list = new List<string>(_availableItems.Where(x => x.StartsWith(id)));
+            List<string> list = _availableItems.FindAll(x => x.StartsWith(id));
             if (list.Contains(gemId + ".*"))
             {
                 return ItemAvailability.Available;
             }
-            else if (list.Any(x => x.StartsWith(gemId)))
+            else if (list.FindIndex(x => x.StartsWith(gemId)) >= 0)
             {
                 return ItemAvailability.AvailableWithEnchantRestrictions;
             }
@@ -799,7 +799,7 @@ namespace Rawr //O O . .
             {
                 return ItemAvailability.RegemmingAllowed;
             }
-            else if (list.Any(x => x.StartsWith(anyGem)))
+            else if (list.FindIndex(x => x.StartsWith(anyGem)) >= 0)
             {
                 return ItemAvailability.RegemmingAllowedWithEnchantRestrictions;
             }
@@ -817,10 +817,10 @@ namespace Rawr //O O . .
             if (id.StartsWith("-") || regemmingAllowed || item.IsGem)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.Any(x => x.StartsWith(anyGem)))
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem)) >= 0)
                 {
                     _availableItems.Remove(id);
-                    _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(anyGem)));
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem));
                 }
                 else
                 {
@@ -839,10 +839,10 @@ namespace Rawr //O O . .
             if (id.StartsWith("-") || regemmingAllowed)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.Any(x => x.StartsWith(anyGem)))
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem)) >= 0)
                 {
                     _availableItems.Remove(id);
-                    _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(anyGem)));
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem));
                 }
                 else
                 {
@@ -852,9 +852,9 @@ namespace Rawr //O O . .
             else
             {
                 // enabled toggle
-                if (_availableItems.Any(x => x.StartsWith(gemId)))
+                if (_availableItems.FindIndex(x => x.StartsWith(gemId)) >= 0)
                 {
-                    _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(gemId)));
+                    _availableItems.RemoveAll(x => x.StartsWith(gemId));
                 }
                 else
                 {
@@ -875,13 +875,13 @@ namespace Rawr //O O . .
                 case ItemAvailability.Available:
                     if (enchant != null)
                     {
-                        _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(gemId)));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
                         _availableItems.Add(gemId + "." + enchant.Id.ToString());
                     }
                     else
                     {
                         // any => all
-                        _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(gemId)));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
                         foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
                             _availableItems.Add(gemId + "." + e.Id.ToString());
@@ -902,20 +902,20 @@ namespace Rawr //O O . .
                     }
                     else
                     {
-                        _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(gemId)));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
                         _availableItems.Add(gemId + ".*");
                     }
                     break;
                 case ItemAvailability.RegemmingAllowed:
                     if (enchant != null)
                     {
-                        _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(id)));
+                        _availableItems.RemoveAll(x => x.StartsWith(id));
                         _availableItems.Add(anyGem + "." + enchant.Id.ToString());
                     }
                     else
                     {
                         // any => all
-                        _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(id)));
+                        _availableItems.RemoveAll(x => x.StartsWith(id));
                         foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
                             _availableItems.Add(anyGem + "." + e.Id.ToString());
@@ -936,7 +936,7 @@ namespace Rawr //O O . .
                     }
                     else
                     {
-                        _availableItems = new List<string>(_availableItems.Where(x => !x.StartsWith(id)));
+                        _availableItems.RemoveAll(x => x.StartsWith(id));
                         _availableItems.Add(id);
                     }
                     break;
@@ -1314,7 +1314,7 @@ namespace Rawr //O O . .
             }
 
             // eliminate searching in active buffs: first remove all set bonuses, then add active ones
-            ActiveBuffs = new List<Buff>(ActiveBuffs.Where(buff => string.IsNullOrEmpty(buff.SetName)));
+            ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
             foreach (KeyValuePair<string, int> pair in setCounts)
             {
                 foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
@@ -1326,6 +1326,35 @@ namespace Rawr //O O . .
                 }
             }
         }
+
+        //public void RecalculateSetBonuses()
+        //{
+        //    //Compute Set Bonuses
+        //    Dictionary<string, int> setCounts = new Dictionary<string, int>();
+        //    foreach (Item item in new Item[] {Back, Chest, Feet, Finger1, Finger2, Hands, Head, Legs, Neck,
+        //        Shirt, Shoulders, Tabard, Trinket1, Trinket2, Waist, MainHand, OffHand, Ranged, Wrist})
+        //    {
+        //        if (item != null && !string.IsNullOrEmpty(item.SetName))
+        //        {
+        //            int count;
+        //            setCounts.TryGetValue(item.SetName, out count);
+        //            setCounts[item.SetName] = count + 1;
+        //        }
+        //    }
+
+        //    // eliminate searching in active buffs: first remove all set bonuses, then add active ones
+        //    ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
+        //    foreach (KeyValuePair<string, int> pair in setCounts)
+        //    {
+        //        foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
+        //        {
+        //            if (pair.Value >= buff.SetThreshold)
+        //            {
+        //                ActiveBuffs.Add(buff);
+        //            }
+        //        }
+        //    }
+        //}
 
         [XmlIgnore]
         public ItemInstance this[CharacterSlot slot]
@@ -1758,7 +1787,7 @@ namespace Rawr //O O . .
                 }
                 catch (Exception)
                 {
-                    Log.Show("There was an error attempting to open this character.");
+                    MessageBox.Show("There was an error attempting to open this character.");
                     character = new Character();
                 }
             }
@@ -1786,8 +1815,8 @@ namespace Rawr //O O . .
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);
-                    character._activeBuffs = new List<Buff>(character._activeBuffsXml.Select(buff => Buff.GetBuffByName(buff)));
-                    character._activeBuffs = new List<Buff>(character._activeBuffs.Where(buff => buff != null));
+                    character._activeBuffs = character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff));
+                    character._activeBuffs.RemoveAll(buff => buff == null);
                     character.RecalculateSetBonuses(); // now you can call it
                     foreach (ItemInstance item in character.CustomItemInstances)
                     {
@@ -1797,7 +1826,7 @@ namespace Rawr //O O . .
 				}
 				catch (Exception)
 				{
-				    Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
+					MessageBox.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 					character = new Character();
 				}
             }
