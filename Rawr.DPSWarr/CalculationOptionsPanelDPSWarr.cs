@@ -34,24 +34,16 @@ namespace Rawr.DPSWarr {
                 return; 
             }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            if (calcOpts != null){
+            if (calcOpts != null) {
                 CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
-                switch (calcOpts.ToughnessLvl) {
-                    case 3: CB_ToughLvl.SelectedIndex = 1; break;
-                    case 5: CB_ToughLvl.SelectedIndex = 2; break;
-                    case 7: CB_ToughLvl.SelectedIndex = 3; break;
-                    case 10: CB_ToughLvl.SelectedIndex = 4; break;
-                    case 30: CB_ToughLvl.SelectedIndex = 5; break;
-                    case 50: CB_ToughLvl.SelectedIndex = 6; break;
-                    default: CB_ToughLvl.SelectedIndex = 0; break;
-                }
                 CB_Duration.Value = (decimal)calcOpts.Duration;
-                RB_StanceArms.Checked = !calcOpts.FuryStance;
-                RB_TargSingle.Checked = !calcOpts.MultipleTargets;
-                RB_TargsStand.Checked = !calcOpts.MovingTargets;
-                if (Character != null)
-                {
+                RB_StanceArms.Checked    = !calcOpts.FuryStance;
+                CK_MultiTargs.Checked    = calcOpts.MultipleTargets;    CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
+                CK_MovingTargs.Checked   =  calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
+                CK_StunningTargs.Checked =  calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
+                CK_DisarmTargs.Checked   =  calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
+                if (Character != null) {
                     CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
                     RB_StanceFury.Checked = opts.FuryStance;
@@ -77,19 +69,6 @@ namespace Rawr.DPSWarr {
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void CB_ToughLvl_SelectedIndexChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            switch (CB_ToughLvl.SelectedIndex) {
-                case 1: calcOpts.ToughnessLvl = 3; break;
-                case 2: calcOpts.ToughnessLvl = 5; break;
-                case 3: calcOpts.ToughnessLvl = 7; break;
-                case 4: calcOpts.ToughnessLvl = 10; break;
-                case 5: calcOpts.ToughnessLvl = 30; break;
-                case 6: calcOpts.ToughnessLvl = 50; break;
-                default: calcOpts.ToughnessLvl = 0; break;
-            }
-            Character.OnCalculationsInvalidated();
-        }
         private void RB_StanceFury_CheckedChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.FuryStance = RB_StanceFury.Checked;
@@ -100,26 +79,61 @@ namespace Rawr.DPSWarr {
             calcOpts.Duration = (float)CB_Duration.Value;
             Character.OnCalculationsInvalidated();
         }
-        private void RB_TargSingle_CheckedChanged(object sender, EventArgs e) {
+        private void CK_MultiTargs_CheckedChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.MultipleTargets = RB_TargMultiple.Checked;
+            calcOpts.MultipleTargets = CK_MultiTargs.Checked;
+            CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
             Character.OnCalculationsInvalidated();
         }
-        private void RB_TargStanding_CheckedChanged(object sender, EventArgs e) {
+        private void CB_MultiTargs_ValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.MovingTargets = RB_TargsMove.Checked;
+            calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CK_MovingTargs_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.MovingTargets = CK_MovingTargs.Checked;
+            this.CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_MovingTargs_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.MovingTargetsPerc = (int)CB_MoveTargsPerc.Value;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CK_StunningTargs_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.StunningTargets = CK_StunningTargs.Checked;
+            CB_StunningTargsPerc.Enabled = calcOpts.StunningTargets;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_StunningTargs_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.StunningTargetsPerc = (int)CB_StunningTargsPerc.Value;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CK_DisarmingTargs_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.DisarmingTargets = CK_DisarmTargs.Checked;
+            CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_DisarmingTargs_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
             Character.OnCalculationsInvalidated();
         }
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
         public int TargetLevel = 83;
-        public int TargetArmor = 12900;
-        public int ToughnessLvl = 0;
+        public int TargetArmor = 10643;
         public float Duration = 300;
         public bool FuryStance = true;
-        public bool MultipleTargets = false;
-        public bool MovingTargets = false;
+        public bool MultipleTargets = false; public int MultipleTargetsPerc = 0;
+        public bool MovingTargets   = false; public int MovingTargetsPerc   = 0;
+        public bool StunningTargets = false; public int StunningTargetsPerc = 0;
+        public bool DisarmingTargets= false; public int DisarmingTargetsPerc= 0;
         public WarriorTalents talents = null;
         public string GetXml() {
             var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));

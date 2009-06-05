@@ -89,15 +89,13 @@ namespace Rawr.DPSWarr
                         "Base Stats:Agility",
                         "Base Stats:Haste",
                         "Base Stats:Crit",
-                        @"Base Stats:Armor Penetration*Rating to Cap with buffs/debuffs applied
+                        @"Base Stats:Armor Penetration*Rating to Cap with bonuses applied
 1232-None
-1074-Sndr
-1039-Sndr+FF
-0916-Sndr+FF+Arms
-0731-Sndr+FF+Arms+Mace",
+1109-Arms(123)
+0924-Arms(123)+Mace(185)",
                         "Base Stats:Damage Reduction*Should be exact opposite of ArP in Percentage (%)",
                         @"Base Stats:Hit Rating*8.00% chance to miss base for Yellow Attacks
-Precision 0- 8%-0%=8%=263 Rating soft cap
+Precision 0- 8%-0%=8%=262 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
 Precision 2- 8%-2%=6%=197 Rating soft cap
 Precision 3- 8%-3%=5%=164 Rating soft cap",
@@ -567,7 +565,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
-            float staBonus = (float)Math.Floor((statsGearEnchantsBuffs.Stamina + (float)calcOpts.ToughnessLvl) * (1 + statsRace.BonusStaminaMultiplier));
+            float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
             //float strModifier = (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier);
             //float racialStr = /*(float)Math.Floor*/(statsRace.Strength * strModifier);
             //float gearStr = /*(float)Math.Floor*/(statsGearEnchantsBuffs.Strength * strModifier);

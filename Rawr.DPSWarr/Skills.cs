@@ -1526,7 +1526,7 @@ Causes 173.25 additional damage against Dazed targets";
                 return Damage;
             }
         }
-        public class DeepWounds : Ability {
+        public class DeepWounds : DoT {
             // Constructors
             public DeepWounds(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;
@@ -1573,88 +1573,10 @@ average damage over 6 sec.";
                 // Invalidators
                 if (!GetValided() || Talents.DeepWounds == 0) { return 0f; }
 
-
-
-
-                // Abilities
-
-                /* float mhCrits = (1f / combatFactors.MainHandSpeed) * combatFactors.MhCrit * (1f - heroicStrikePercent);
-                float ohCrits = (1f / combatFactors.OffHandSpeed) * combatFactors.OhCrit;
-
-                #region Fury Deep Wounds
-                float heroicCrits = (1 / combatFactors.MainHandSpeed) * combatFactors.MhYellowCrit * heroicStrikePercent;
-                float bloodThirstCrits = BT.GetActivates() * combatFactors.MhYellowCrit;
-                float whirlWindCrits = WW.GetActivates() * combatFactors.MhYellowCrit;
-
-                float bloodsurgeCrits = 0;
-                if (Talents.Bloodsurge > 1) {
-                    bloodsurgeCrits = (0.2f / 3 * Talents.Bloodsurge)
-                        * (3 * (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance) + 7 * heroicStrikesPerSecond)
-                        / 10 * combatFactors.MhCrit;
-                }
-                #endregion
-
-                #region Arms Deep Wounds
-                float mortalStrikeCrits = MS.GetActivates() * combatFactors.MhYellowCrit;
-                float overPowerCrits = OP.GetActivates() * (combatFactors.MhYellowCrit + (Talents.ImprovedOverpower * 0.25f) > 1 ? 1.0f : (combatFactors.MhYellowCrit + (Talents.ImprovedOverpower * 0.25f)));
-                float suddenDeathCrits = SD.GetActivates() * combatFactors.MhYellowCrit;
-                float slamCrits = SL.GetActivates() * combatFactors.MhYellowCrit;
-                float bladestormCrits = BLS.GetActivates() * combatFactors.MhYellowCrit;
-                float swordspecCrits = SS.GetActivates() * combatFactors.MhCrit;
-                #endregion
-
-                float deepWoundsDamage = combatFactors.AvgMhWeaponDmg * (mhCrits + heroicCrits + bloodThirstCrits + whirlWindCrits + bloodsurgeCrits
-                                                                        + mortalStrikeCrits + overPowerCrits + suddenDeathCrits + slamCrits + bladestormCrits + swordspecCrits);
-                deepWoundsDamage += combatFactors.AvgOhWeaponDmg * ohCrits;
-                deepWoundsDamage *= 1 + StatS.BonusBleedDamageMultiplier;
-                deepWoundsDamage *= 0.16f * Talents.DeepWounds;
-                deepWoundsDamage *= 1 + Talents.Trauma * 0.15f * TR.GetActivates();
-                deepWoundsDamage *= combatFactors.DamageBonus;
-
-                return deepWoundsDamage;*/
-                
-                
-                
-                
-                // Spread this damage over rotation length (turns it into DPS)
-                //Damage /= GetRotation();
-
-                // Ensure that we are not doing negative Damage
-                //if (Damage < 0) { Damage = 0; }
-
-                //return Damage;
-
-                // LANDSOUL'S VERSION
-                //Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
-                //Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
-                //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                //Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
-                //Ability TR = new Trauma(Char, StatS, combatFactors, Whiteattacks);
-                //Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                //Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
-                //Ability BLS = new Bladestorm(Char, StatS, combatFactors, Whiteattacks);
-                //Ability SS = new Swordspec(Char, StatS, combatFactors, Whiteattacks);
-
-                //float mhCrits = (1f / combatFactors.MainHandSpeed) * combatFactors.MhCrit * (1f - heroicStrikePercent);
-                //float ohCrits = (1f / combatFactors.OffHandSpeed) * combatFactors.OhCrit;
-
-                //float avgwpdmg = (/*AB54 %DIM*/1.122f * ((StatS.AttackPower / 14f + combatFactors.AvgMhWeaponDmg) * combatFactors.MainHandSpeed) */*AB56 %wepmod*/1.06f);
-
-                //float critspersec = 
-                ///*MeleeMH*/		    /* 0.078588f*/	(1f/combatFactors.TotalHaste)*(combatFactors.MhCrit)*/*AH48 Heroic Strike Difference*/1.0452f+(0.01f*/*AH24 sword exp bonus*/0f*Talents.IntensifyRage*/*R66 landed hits/sec no SS 0.9367f*/GetLandedAtksPerSecNoSS())*54f/60f*(combatFactors.MhCrit) + 
-                ///*Mortal Strike*/	/* 0.042531f*/	(combatFactors.MhYellowCrit+0.1f*/*C40 4 pc T8 set bonus*/0f)/(MS.GetActivates()) +
-                ///*Execute*/		    /* 0.019085f*/	SD.GetActivates()*combatFactors.MhYellowCrit +
-                ///*Overpower*/		/* 0.123237f*/	(OP.GetActivates()==0f?0f:(combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower>1f?1f:combatFactors.MhYellowCrit+0.25f*Talents.ImprovedOverpower)/6f) +
-                //// /*Heroics*/		/*-0.003395f*/	+
-                ///*Slam*/		    /* 0.043861f*/SL.GetActivates()*combatFactors.MhYellowCrit
-
-                //;
-
                 // doing it this way because Deep Wounds triggering off of a MH crit and Deep Wounds triggering off of an OH crit do diff damage.
                 // GetDamage is doing the average damage of a deep wounds trigger
                 float damage = combatFactors.AvgMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates+ohActivates) +
                     combatFactors.AvgOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates+ohActivates);
-                
                 
                 return damage;
             }
@@ -1671,8 +1593,7 @@ average damage over 6 sec.";
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
                 return Damage;
             }
-            public float GetTTLTickingTime() { return Cd; }
-            public float GetNumTicks() { return GetTTLTickingTime() / CastTime; }
+            public override float GetNumTicks() { return GetTTLTickingTime() / CastTime; }
             //public override float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
             public override float GetDPS() {
                 //float dmgonuse = GetDamageOnUse();
