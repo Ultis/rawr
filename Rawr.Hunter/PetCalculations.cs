@@ -21,6 +21,7 @@ namespace Rawr.Hunter
         double whiteAttackSpeed;
 
         public double ferociousInspirationUptime;
+        private List<double> freqs = new List<double>();
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsBuffs, PetFamily petfamily, Stats gearStats)
         {
@@ -99,7 +100,8 @@ namespace Rawr.Hunter
             #endregion
 
             #region Attack Speed
-            whiteAttackSpeed = getWhiteAttackSpeed();
+            getWhiteAttackSpeed();
+            getSpecialAttackSpeed();
             #endregion
 
             #region AP
@@ -107,7 +109,7 @@ namespace Rawr.Hunter
             petStats.AttackPower = (petStats.Strength - 10) * 2;
             petStats.AttackPower += calculatedStats.BasicStats.RangedAttackPower * 0.22f;
             petStats.AttackPower *= 1.0f + 0.1f * character.HunterTalents.TrueshotAura;
-            petStats.AttackPower *= 1.0f + getRabidProcEffect();
+            petStats.AttackPower *= 1.0f + getRabidProcEffect(petStats.PhysicalHit);
             petStats.AttackPower *= 1.0f + getSerenityEffect();
             petStats.AttackPower += getFuriousHowlEffect();
             petStats.AttackPower += getT8Bonus();
@@ -132,109 +134,27 @@ namespace Rawr.Hunter
             calculatedStats.PetStats = petStats;
         }
 
-        private float getRabidProcEffect()
+        private float getRabidProcEffect(double physhit)
         {
             if (options.Rabid > 0)
             {
                 float frequency = 45.0f * (1.0f - character.HunterTalents.Longevity * 0.1f);
                 float uptime = 20.0f / frequency;
-                float tagetdodge = (0.05f + options.TargetLevel * 0.005f) - (character.HunterTalents.AnimalHandler * 0.125f);
-                float basechancetoapply = 0.5f * (calculatedStats.BasicStats.HitRating - tagetdodge);
-                float comphit = (float)((1f / whiteAttackSpeed) + (1f / specialAttackSpeed));
-                float chancetomaintain = (float)(frequency / comphit);
-                float[] chancetoapply = new float[5];
-                chancetoapply[0] = basechancetoapply;
-                if (chancetomaintain >= 2)
-                    chancetoapply[1] = (1 - chancetoapply[0]) * basechancetoapply;
-                else
-                    chancetoapply[1] = 0;
+                float targetdodge = (0.05f + (options.TargetLevel - 80) * 0.005f) - character.HunterTalents.AnimalHandler * 0.0125f;
+                float chancetoapply = (float)(0.5f * (physhit - targetdodge));
+                float avgattackstofull = 5 / chancetoapply;
+                float timetofull = (float)(avgattackstofull * specialAttackSpeed);
 
-                if (chancetomaintain >= 3)
-                    chancetoapply[2] = (1 - (chancetoapply[0] + chancetoapply[1])) * basechancetoapply;
-                else
-                    chancetoapply[2] = 0;
-                if (chancetomaintain >= 4)
-                    chancetoapply[3] = (1 - (chancetoapply[0] + chancetoapply[1] + chancetoapply[2])) * basechancetoapply;
-                else
-                    chancetoapply[3] = 0;
-                if (chancetomaintain >= 5)
-                    chancetoapply[4] = (1 - (chancetoapply[0] + chancetoapply[1] + chancetoapply[2] + chancetoapply[3])) * basechancetoapply;
-                else
-                    chancetoapply[4] = 0;
-                float totalchance = chancetoapply[0] + chancetoapply[1] + chancetoapply[2] + chancetoapply[3] + chancetoapply[4];
-                float falloffchance = 1 - totalchance;
-                if (falloffchance < 0)
-                    falloffchance = 0;
-
-                float timetoincrement = 0;
-                if (1 - falloffchance != 0)
-                {
-                    for (int i = 0; i < 5; i++)
-                    {
-                        timetoincrement += (chancetoapply[i] / totalchance) * comphit * (i + 1);
-                    }
-                }
-                float timeonmax = timetoincrement + (comphit * falloffchance);
-                float[] timetoreach = new float[7];
-                for (int i = 0; i < 6; i++)
-                {
-                    timetoreach[i] = i * timetoincrement;
-                }
-                timetoreach[6] = 20;
-                float[] chancetomax = new float[6];
-                float[] timespent = new float[7];
-                if (falloffchance == 1)
-                {
-                    for (int i = 0; i < 6; i++)
-                    {
-                        chancetomax[i] = 0;
-                        timespent[i] = 0;
-                    }
-                }
-                else
-                {
-                    chancetomax[0] = 0;
-                    chancetomax[1] = falloffchance;
-                    chancetomax[2] = (1 - chancetomax[1]) * falloffchance;
-                    chancetomax[3] = (1 - chancetomax[2]) * falloffchance;
-                    chancetomax[4] = (1 - chancetomax[3]) * falloffchance;
-                    chancetomax[5] = 1 - chancetomax[1] - chancetomax[2] - chancetomax[3] - chancetomax[4]; 
-                    if (timetoreach[1] == 0)
-                    {
-                        for (int i = 0; i < 5; i++)
-                        {
-                            timespent[i] = 0;
-                        }
-                    }
-                    else
-                    {
-                        timespent[0] = timetoreach[1];
-                        timespent[1] = timetoincrement * (1 - timespent[0]);
-                        timespent[2] = timetoincrement * (1 - timespent[0] + timespent[1]);
-                        timespent[3] = timetoincrement * (1 - timespent[0] + timespent[1] + timespent[2]);
-                        timespent[4] = timetoincrement * (1 - timespent[0] + timespent[1] + timespent[2] + timespent[3]);
-                        timespent[5] = timetoincrement * (1 - timespent[0] + timespent[1] + timespent[2] + timespent[3] + timespent[4]);
-                    }
-                }
-                timespent[6] = frequency - 20;
-                float totaltime = 0;
-                for (int i = 0; i < 7; i++)
-                    totaltime += timespent[i];
-
-                float[] percenttime = new float[7];
-                for (int i = 0; i < 7; i++)
-                {
-                    percenttime[i] = timespent[i] / totaltime;
-                }
-                float[] total = new float[7];
-                for (int i = 0; i < 7; i++)
-                {
-                    total[0] = percenttime[0] * (i * 0.05f);
-                }
                 float result = 0;
-                for (int i = 0; i < 7; i++)
-                    result += total[i];
-
+                if (timetofull > 20)
+                {
+                    result = (float)(specialAttackSpeed * chancetoapply * 0.5f);
+                }
+                else
+                {
+                    result = (timetofull / 20) * 0.125f;
+                    result += ((20 - timetofull) / 20) * 0.25f;
+                }
                 return result;
             }
             else
@@ -327,10 +247,8 @@ namespace Rawr.Hunter
             {PetAttacks.Acid, new PetSkill(10, 20, -1, 2, 124, 176)},
        };
 
-        private double getSpecialDPS(double bonus, double critmiss, double damageFromAP)
+        private void getSpecialAttackSpeed()
         {
-            List<PetSkill> skills = new List<PetSkill>(); ;
-
             //Add an attack to the rotation if it isn't None and isn't already in the rotation
 
             if (options.PetPriority1 != PetAttacks.None)
@@ -344,16 +262,7 @@ namespace Rawr.Hunter
 
             if (options.PetPriority4 != PetAttacks.None && options.PetPriority4 != options.PetPriority1 && options.PetPriority4 != options.PetPriority2 && options.PetPriority4 != options.PetPriority3)
                 skills.Add(skillLibrary[options.PetPriority4]);
-
-            if (skills.Count == 0)
-                return 0;
-            else
-                return getSpecialDPSFromSkills(skills, bonus, critmiss, damageFromAP);
-        }
-
-        private double getSpecialDPSFromSkills(List<PetSkill> skills, double bonus, double critmiss, double damageFromAP)
-        {
-            double dps = 0;
+            
             int i = 0;
             double L = 1;
             double N = 0;
@@ -426,33 +335,59 @@ namespace Rawr.Hunter
                         Freq = 0;
                 }
 
+                if (Freq > 0)
+                {
+                    specialAttackSpeed += 1 / Freq;
+                }
+                freqs.Add(Freq);
+            }
+            specialAttackSpeed = 1/specialAttackSpeed;
+        }
+
+        private List<PetSkill> skills = new List<PetSkill>();
+        
+        private double getSpecialDPS(double bonus, double critmiss, double damageFromAP)
+        {
+            if (skills.Count == 0)
+                return 0;
+            else
+                return getSpecialDPSFromSkills(bonus, critmiss, damageFromAP);
+        }
+
+        private double getSpecialDPSFromSkills(double bonus, double critmiss, double damageFromAP)
+        {
+            double dps = 0;
+            int i = 0;
+
+            foreach (PetSkill S in skills)
+            {
                 switch (skills[i].Type)
                 {
                     case 0:
-                        dps += getFocusDumpDPS(Freq, bonus, critmiss, damageFromAP);
+                        dps += getFocusDumpDPS(freqs[i], bonus, critmiss, damageFromAP);
                         break;
                     case 1:
-                        dps += getPhysicalSpecialDPS(Freq, bonus, critmiss, damageFromAP, S.Min, S.Max);
+                        dps += getPhysicalSpecialDPS(freqs[i], bonus, critmiss, damageFromAP, S.Min, S.Max);
                         break;
                     case 2:
-                        dps += getSpellSpecialDPS(Freq, bonus, S.Min, S.Max);
+                        dps += getSpellSpecialDPS(freqs[i], bonus, S.Min, S.Max);
                         break;
                     case 3:
                         break; //Non-damaging, Calculations still done because we need the info for the next skill in the rotation
                     case 4:
-                        dps += getSavageRendDPS(Freq, bonus, damageFromAP);
+                        dps += getSavageRendDPS(freqs[i], bonus, damageFromAP);
                         break;
                     case 5:
-                        dps += getFireBreathDPS(Freq, bonus);
+                        dps += getFireBreathDPS(freqs[i], bonus);
                         break;
                     case 6:
-                        dps += getPoisonSpitDps(Freq, bonus);
+                        dps += getPoisonSpitDps(freqs[i], bonus);
                         break;
                     case 7: 
-                        dps += getSpiritSmackDPS(Freq, bonus);
+                        dps += getSpiritSmackDPS(freqs[i], bonus);
                         break;
                     case 8:
-                        dps += getScorpidPoionDPS(Freq, bonus);
+                        dps += getScorpidPoionDPS(freqs[i], bonus);
                         break;
                 }
                 i++;
@@ -545,7 +480,7 @@ namespace Rawr.Hunter
             return ferociousInspirationUptime * benefit;
         }
 
-        private double getWhiteAttackSpeed()
+        private void getWhiteAttackSpeed()
         {
             double spdMod = 1.0f + character.HunterTalents.SerpentsSwiftness * 0.04;
             spdMod *= 1.3f; //Net effect of one heroism
@@ -554,7 +489,7 @@ namespace Rawr.Hunter
 
             double spd = 2.0 / spdMod;
             spd /= 1 + getFrenzyEffect(spd);
-            return spd;
+            whiteAttackSpeed = spd;
         }
 
         private double getFrenzyEffect(double spd)
