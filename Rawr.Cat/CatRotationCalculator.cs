@@ -29,7 +29,8 @@ namespace Rawr.Cat
 		public float ShredDamage { get; set; }
 		public float RakeDamage { get; set; }
 		public float RipDamage { get; set; }
-		public float BiteDamage { get; set; }
+		public float BiteBaseDamage { get; set; }
+		public float BiteCPDamage { get; set; }
 
 		public float MangleEnergy { get; set; }
 		public float ShredEnergy { get; set; }
@@ -44,7 +45,7 @@ namespace Rawr.Cat
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
 			float ripDuration, float rakeDuration, float savageRoarBonusDuration, float berserkDuration, float attackSpeed, 
 			bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float chanceExtraCPPerHit, float cpgEnergyCostMultiplier, float clearcastOnBleedChance,
-			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteDamage, 
+			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteBaseDamage, float biteCPDamage,
 			float mangleEnergy, float shredEnergy, float rakeEnergy, float ripEnergy, float biteEnergy, float roarEnergy)
 		{
 			Stats = stats;
@@ -70,7 +71,8 @@ namespace Rawr.Cat
 			ShredDamage = shredDamage;
 			RakeDamage = rakeDamage;
 			RipDamage = ripDamage;
-			BiteDamage = biteDamage;
+			BiteBaseDamage = biteBaseDamage;
+			BiteCPDamage = biteCPDamage;
 			
 			MangleEnergy = mangleEnergy;
 			ShredEnergy = shredEnergy;
@@ -235,7 +237,7 @@ namespace Rawr.Cat
 				{
 					float energyAvailablePerRipCycle = totalEnergyAvailable / ripCycleCount;
 					float biteCycleCP = Math.Min(5f, CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy));
-					float biteDamageMultiplier = Math.Min(1f, (1f + biteCycleCP) / 6f); //A 1pt Bite does 2/6 of full dmaage, 2pt does 3/6, 3pt does 4/6, 4pt does 5/6, 5pt does 6/6
+					float biteDamageMultiplier = Math.Min(1f, (BiteBaseDamage + BiteCPDamage * biteCycleCP) / (BiteBaseDamage + BiteCPDamage * 5f));
 
 					biteCount += ripCycleCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
 					cpgCount += ripCycleCount * (biteCycleCP / CPPerCPG);
@@ -247,7 +249,7 @@ namespace Rawr.Cat
 				{
 					float energyAvailablePerRipCycle = totalEnergyAvailable / ripCycleCount;
 					float biteCycleCP = Math.Min(5f, CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy));
-					float biteDamageMultiplier = Math.Min(1f, (1f + biteCycleCP) / 6f); //A 1pt Bite does 2/6 of full dmaage, 2pt does 3/6, 3pt does 4/6, 4pt does 5/6, 5pt does 6/6
+					float biteDamageMultiplier = Math.Min(1f, (BiteBaseDamage + BiteCPDamage * biteCycleCP) / (BiteBaseDamage + BiteCPDamage * 5f));
 
 					biteCount += ripCycleCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
 					cpgCount += ripCycleCount * (biteCycleCP / CPPerCPG);
@@ -274,7 +276,7 @@ namespace Rawr.Cat
 			float rakeDamageTotal = rakeCount * RakeDamage;
 			float shredDamageTotal = shredCount * ShredDamage;
 			float ripDamageTotal = ripCount * RipDamage * (ripDuration / 12f);
-			float biteDamageTotal = biteCount * BiteDamage;
+			float biteDamageTotal = biteCount * (BiteBaseDamage + BiteCPDamage * 5f);
 
 			float damageTotal = meleeDamageTotal + mangleDamageTotal + rakeDamageTotal + shredDamageTotal + ripDamageTotal + biteDamageTotal;
 			#endregion

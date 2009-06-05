@@ -279,7 +279,8 @@ namespace Rawr.Cat
 			float rakeDamageRaw = (190f + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
 			float rakeDamageDot = (1161f + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
 			float ripDamageRaw = (3204f + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-			float biteDamageRaw = (1640f + stats.AttackPower * 0.24f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
+			float biteBaseDamageRaw = 190f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
+			float biteCPDamageRaw = (290f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
 
 			float meleeDamageAverage =	chanceGlance * meleeDamageRaw * glanceMultiplier +
 										chanceCrit * meleeDamageRaw * critMultiplier +
@@ -288,7 +289,8 @@ namespace Rawr.Cat
 			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;
 			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + rakeDamageDot;
 			float ripDamageAverage = ((1f - chanceCritBleed) * ripDamageRaw + chanceCritBleed * ripDamageRaw * critMultiplierBleed);
-			float biteDamageAverage = (1f - chanceCritBite) * biteDamageRaw + chanceCritBite * biteDamageRaw * critMultiplier;
+			float biteBaseDamageAverage = (1f - chanceCritBite) * biteBaseDamageRaw + chanceCritBite * biteBaseDamageRaw * critMultiplier;
+			float biteCPDamageAverage = (1f - chanceCritBite) * biteCPDamageRaw + chanceCritBite * biteCPDamageRaw * critMultiplier;
 			#endregion
 
 			#region Energy Costs
@@ -317,7 +319,7 @@ namespace Rawr.Cat
 				character.DruidTalents.Berserk > 0 ? (character.DruidTalents.GlyphOfBerserk ? 20f : 15f) : 0f, attackSpeed, 
 				character.DruidTalents.OmenOfClarity > 0, character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCrit * stats.BonusCPOnCrit, 
 				cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
-				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
+				rakeDamageAverage, ripDamageAverage, biteBaseDamageAverage, biteCPDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
 
@@ -362,8 +364,8 @@ namespace Rawr.Cat
 			calculatedStats.RakeDamagePerSwing = rakeDamageAverage * chanceNonAvoided;
 			calculatedStats.RipDamagePerHit = ripDamageRaw * ripDurationMultiplier;
 			calculatedStats.RipDamagePerSwing = ripDamageAverage * chanceNonAvoided * ripDurationMultiplier;
-			calculatedStats.BiteDamagePerHit = biteDamageRaw;
-			calculatedStats.BiteDamagePerSwing = biteDamageAverage * chanceNonAvoided;
+			calculatedStats.BiteDamagePerHit = biteBaseDamageRaw + biteCPDamageRaw * 5f;
+			calculatedStats.BiteDamagePerSwing = (biteBaseDamageAverage + biteCPDamageAverage * 5f) * chanceNonAvoided;
 
 			float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCrit);
 			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS;
