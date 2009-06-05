@@ -113,7 +113,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Fury):Bloodsurge",
                         "DPS Breakdown (Fury):Bloodthirst",
                         "DPS Breakdown (Fury):Whirlwind",
-                        "DPS Breakdown (Fury):Heroic Strike",
 
                         "DPS Breakdown (Arms):Mortal Strike",
                         "DPS Breakdown (Arms):Rend",
@@ -125,6 +124,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Sweeping Strikes",
 
                         "DPS Breakdown (General):Deep Wounds",
+                        "DPS Breakdown (General):Heroic Strike",
                         "DPS Breakdown (General):White DPS",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Rotation
@@ -340,7 +340,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }else{
                 calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetDamageOnUse();
                 calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS();
-                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + calculatedStats.SkillAttacks._DW_DPS;
+                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS + calculatedStats.SkillAttacks._DW_DPS + calculatedStats.HS.GetDPS();
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 

@@ -364,12 +364,12 @@ namespace Rawr
         public int EndlessRage { get { return _data[27]; } set { _data[27] = value; } }
 
         /// <summary>
-        /// Increases your attack speed by [3*Pts]%. In addition your Rend and Deep Wounds abilities
+        /// Increases your attack speed by [5*Pts]%. In addition your Rend and Deep Wounds abilities
         /// also increase all physical damage caused to that target by [2*Pts]%.
         /// </summary>
         [TalentData(28, "Blood Frenzy", 2, 0, 3, 9, -1, new string[] {
-@"Increases your attack speed by 3%. In addition your Rend and Deep Wounds abilities also increase all physical damage caused to that target by 2%.",
-@"Increases your attack speed by 6%. In addition your Rend and Deep Wounds abilities also increase all physical damage caused to that target by 4%.",}, "ability_warrior_bloodfrenzy")]
+@"Increases your attack speed by 5%. In addition your Rend and Deep Wounds abilities also increase all physical damage caused to that target by 2%.",
+@"Increases your attack speed by 10%. In addition your Rend and Deep Wounds abilities also increase all physical damage caused to that target by 4%.",}, "ability_warrior_bloodfrenzy")]
         public int BloodFrenzy { get { return _data[28]; } set { _data[28] = value; } }
 
         /// <summary>

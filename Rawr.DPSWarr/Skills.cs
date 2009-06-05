@@ -28,7 +28,7 @@
                 _stats = stats;
                 _combatFactors = combatFactors;
                 _character = character;
-                HS_Freq = 0.0f;
+                //HS_Freq = 0.0f;
             }
             // Variables
             private readonly WarriorTalents _talents;
@@ -41,7 +41,9 @@
             // Functions
             public float CalcMhWhiteDPS() {
                 float wepSpeed = _combatFactors.MainHandSpeed;
-                if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f) {
+                if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand &&
+                    (_character.OffHand != null && _combatFactors.OffHand.Slot == Item.ItemSlot.TwoHand) &&
+                    _talents.TitansGrip != 1f) {
                     wepSpeed += (1.5f - (0.5f * _talents.ImprovedSlam)) / 5f;
                 }
                 float mhWhiteDPS = MhAvgSwingDmg();
@@ -55,14 +57,14 @@
                 float ohWhiteDPS = OhAvgSwingDmg();
                 ohWhiteDPS /= _combatFactors.OffHandSpeed;
                 //ohWhiteDPS *= _combatFactors.DamageReduction;
-                if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 && (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
+                if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 &&
+                    (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
                     return ohWhiteDPS;
                 } else {
                     return 0f;
                 }
             }
-            public float MhAvgSwingDmg()
-            {
+            public float MhAvgSwingDmg() {
                 float mhWhiteSwing = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;
                 mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1+_combatFactors.BonusWhiteCritDmg);
                 mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
@@ -71,10 +73,8 @@
                 mhWhiteSwing *= _combatFactors.DamageReduction;
                 
                 return mhWhiteSwing;
-                
             }
-            public float OhAvgSwingDmg()
-            {
+            public float OhAvgSwingDmg() {
                 float ohWhiteSwing = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;
                 ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
                 ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
@@ -376,7 +376,10 @@
             }
             #endregion
             #region Rage Calcs
-            public virtual float BloodRageGainRagePerSec() { return (20 + 5 * Talents.ImprovedBloodrage) / (60 * (1 - 1.0f / 9.0f * Talents.IntensifyRage)); }
+            public virtual float BloodRageGainRagePerSec() {
+                return (20f * (1f + 0.25f * Talents.ImprovedBloodrage)) /
+                    (60f * (1f - 1.0f / 9.0f * Talents.IntensifyRage));
+            }
             public virtual float AngerManagementRagePerSec() { return Talents.AngerManagement / 3.0f; }
             public virtual float ImprovedBerserkerRagePerSec() { return Talents.ImprovedBerserkerRage * 10 / (30 * (1 - 1.0f / 9.0f * Talents.IntensifyRage)); }
             public virtual float OtherRageGenPerSec() {
@@ -471,7 +474,8 @@
             public virtual float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
             public virtual float OtherRage() {
                 float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
-                if (combatFactors.OffHand != null && combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
+                if (combatFactors.OffHand != null && combatFactors.OffHand.DPS > 0 &&
+                    (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
                     rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
                 rage *= combatFactors.TotalHaste;
                 rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
@@ -1308,6 +1312,63 @@ target by (15/30)% for 15 sec.";
                 return Damage;
             }
         }
+        public class ThunderClap : Ability {
+            // Constructors
+            public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;
+                Talents = c.WarriorTalents;
+                StatS = s;
+                combatFactors = cf;
+                Whiteattacks = wa;
+                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Name = "Thunder Clap";
+                Desc = @"Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec
+and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.";
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
+                TlntsAfctg = @"Improved Thunder Clap [Reduces rage cost by (1/2/4) points, increases the damage by
+(10*Pts)% and the slowing effect by an additional (ROUNDUP(10-10/3*Pts))%.]
+Incite [+(5*Pts)% Critical Strike chance]";
+                GlphsAfctg = @"Glyph of Thunder Clap [+2 yards to radius]";
+                Cd = 6f; // In Seconds
+                RageCost = 20f;
+                CastTime = -1f; // In Seconds
+                StanceOkFury = false;
+                StanceOkArms = true;
+                StanceOkDef = true;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetDamage() {
+                // Invalidators
+                if (!GetValided()) { return 0f; }
+
+                // Base Damage
+                float Damage = 300 + StatS.AttackPower * 0.12f;
+
+                // Talents/Glyphs Affecting
+
+                // Ensure that we are not doing negative Damage
+                if (Damage < 0) { Damage = 0; }
+
+                return Damage;
+            }
+            public override float GetDamageOnUse() {
+                float Damage = GetDamage(); // Base Damage
+                Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
+                Damage *= combatFactors.DamageReduction; // Global Damage Penalties
+
+                float Crit = combatFactors.MhYellowCrit + (Talents.Incite * 0.05f);
+
+                Damage *= (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                    + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
+
+                if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
+                return Damage;
+            }
+        }
         // Mixed Abilities
         public class Execute : Ability {
             // Constructors
@@ -1441,10 +1502,10 @@ Causes 173.25 additional damage against Dazed targets";
                 TlntsAfctg = @"Improved Heroic Strike [Reduces the rage cost of your Heroic Strike ability by (1/2/3)]";
                 GlphsAfctg = @"Glyph of Heroic Strike [You gain 10 rage when you critically strike with your Heroic Strike ability.]";
                 Cd = 0/*(MHWeapon!=null?MHWeaponSpeed:0)*/; // In Seconds
-                RageCost = 15/*-(_talents.ImprovedHeroicStrike*1f)*/;
-                CastTime = 0; // In Seconds // Replaces a white hit
+                RageCost = 15f-(Talents.ImprovedHeroicStrike*1f);
+                CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = true;
-                StanceOkArms = false;
+                StanceOkArms = true;
                 StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
             }
@@ -1462,9 +1523,6 @@ Causes 173.25 additional damage against Dazed targets";
                 heroicStrikesPerSecond = hsHits;
                 
                 return hsHits * GetRotation();
-
-                // ORIGINAL LINE
-                //return (_talents.ImprovedSlam == 2 ? (1.5f /*- (0.5f * _talents.ImprovedSlam)*/ / 5) : 0);
             }
             public override float heroicStrikeRageCost() {
                 if (!GetValided()) { return 0f; }
@@ -1473,54 +1531,31 @@ Causes 173.25 additional damage against Dazed targets";
                 if (Talents.GlyphOfHeroicStrike) rageCost -= 10.0f * combatFactors.MhCrit; // Glyph bonus rage on crit
                 rageCost += Whiteattacks.GetSwingRage(combatFactors.MainHand, true);
                 return rageCost;
-                // Ebs: Removing this and replacing with the WhiteAttacks call
-                /*
-                //MHAverageDamage*ArmorDeal*15/4/cVal*(1+mhCritBonus*mhCrit-glanceChance*glanceReduc-whiteMiss-dodgeMH)+7/2*(1+mhCrit-whiteMiss-whiteDodge)
-                float rage = combatFactors.AvgMhWeaponDmg * combatFactors.DamageReduction * 15.0f / 4 / 320.6f;
-                rage *= (1.0f + combatFactors.MhCrit * combatFactors.BonusWhiteCritDmg
-                                - (1.0f - combatFactors.ProbMhWhiteHit) - (0.25f * 0.35f));
-                rage += 7.0f / 2.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit));
-                //int modNumber = 0; if (_talents.GlyphOfHeroicStrike) { modNumber = 10; }
-                //rage += 1.0f * (1 + _combatFactors.MhCrit - (1.0f - _combatFactors.ProbMhWhiteHit)) * modNumber;
-
-                return rage; */
             }
             public override float GetDamage() {
                 // Invalidators
                 if (!GetValided()) { return 0f; }
 
                 // Base Damage
-                // Ebs: removed this, the ability only deals 495 base damage (since it replaces a white attack)
-                //heroicStrikePercent = combatFactors.MainHandSpeed /* * HeroicStrikeHits(0)*/;
-                /*if (heroicStrikePercent > 1) { heroicStrikePercent = 1; }
-                float damageIncrease = heroicStrikePercent * (495 + combatFactors.AvgMhWeaponDmg * (0.25f * 0.35f));
-                */
                 float damageIncrease = combatFactors.AvgMhWeaponDmg + 495f;
                 // Talents Affecting
-
-                // Spread this damage over rotation length (turns it into DPS)
-                //damageIncrease /= GetRotation();
 
                 // Ensure that we are not doing negative Damage
                 if (damageIncrease < 0) { damageIncrease = 0; }
 
                 return damageIncrease;
-
-                // ORIGINAL LINES
-                //heroicStrikePercent = _combatFactors.MainHandSpeed * HeroicStrikeHits(0);
-                //if (heroicStrikePercent > 1) { heroicStrikePercent = 1; }
-                //float damageIncrease = heroicStrikePercent * _combatFactors.DamageReduction * ((_combatFactors.DamageBonus * 495)
-                //                       + _combatFactors.DamageReduction * _combatFactors.AvgMhWeaponDmg * (((_combatFactors.MhYellowCrit) - (_combatFactors.MhCrit)) *
-                //                       (1 + (_combatFactors.BonusYellowCritDmg - _combatFactors.BonusWhiteCritDmg)) + (_combatFactors.WhiteMissChance - _combatFactors.YellowMissChance) + (0.25f * 0.35f)));
-                //if (damageIncrease < 0) { damageIncrease = 0; }
-                //return damageIncrease;
             }
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
+
+                float Crit = 0f;
+                Crit = combatFactors.MhYellowCrit + (Talents.Incite * 0.05f); // Add additional crit chance for Incite
+                if (Crit > 1f) { Crit = 1f; } //Range check resulting crit factor
+
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
                 Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
-                    + combatFactors.MhYellowCrit * combatFactors.BonusYellowCritDmg); // Attack Table
+                    + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
 
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
                 return Damage;
@@ -1588,7 +1623,7 @@ average damage over 6 sec.";
                 //Damage *= combatFactors.DamageReduction; // Global Damage Penalties
                 Damage *= (1f + StatS.BonusBleedDamageMultiplier);
                 Damage *= combatFactors.DamageBonus; // Avg_hWeaponDmg no longer has DamageBonus in, we were double-dipping
-                if (Talents.TitansGrip == 1) Damage *= 0.9f; // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
+                if (Talents.TitansGrip == 1 && Char.OffHand != null && Char.OffHand.Slot == Item.ItemSlot.TwoHand) { Damage *= 0.9f; } // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
 
                 if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
                 return Damage;
@@ -1781,7 +1816,8 @@ Commanding Presence [Increases the melee attack power bonus of your Battle Shout
             float availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
 
             // White DPS
-            DPS_TTL += _whiteStats.CalcMhWhiteDPS();
+            /*DPS_TTL += _whiteStats.CalcMhWhiteDPS();
+            // White DPS is being handled in CharacterCalculationsBase() now*/
 
             // Passive DPS (occurs regardless)
             /*Ability DW = new DeepWounds(_character, _stats, _combatFactors, _whiteStats);
@@ -1897,7 +1933,7 @@ Commanding Presence [Increases the melee attack power bonus of your Battle Shout
             DPS_TTL += _SL_DPS;
             if (availGCDs <= 0f) { return DPS_TTL; }
 
-            // Priority 6 : Heroic Strike, never
+            // Priority 6 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
 
             // Return result
             return DPS_TTL;

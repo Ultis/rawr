@@ -77,7 +77,9 @@ namespace Rawr.DPSWarr {
         public float YellowMissChance { get { var missChance = 0.08f - HitPercent; return missChance < 0f ? 0f : missChance; } }
         public float WhiteMissChance {
             get {
-                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1f ? 0.08f : 0.27f );
+                var missChance = (MainHand.Slot == Item.ItemSlot.TwoHand &&
+                    (OffHand != null && OffHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip == 1f) ?
+                    0.27f : 0.08f);
                 missChance -= HitPercent; // hit percent is 0.05f for 5%, not 5f for 5%
                 return missChance < 0f ? 0f : missChance; 
             }
