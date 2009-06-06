@@ -643,8 +643,7 @@ namespace Rawr
                     break;
                 case HitResult.Parry:
                     baseAvoid = stats.Parry * 100f;
-                    float parryRatingFromStr = stats.Strength * 0.25f;
-                    modifiedAvoid += (GetParryFromRating(stats.ParryRating + parryRatingFromStr) * 100f);
+                    modifiedAvoid += (GetParryFromRating(stats.ParryRating) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
                     break;
                 case HitResult.Miss:
