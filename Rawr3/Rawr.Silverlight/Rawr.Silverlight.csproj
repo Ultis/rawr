@@ -1,0 +1,406 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E5177B6E-4D62-4506-BD70-E657540A9C4D}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rawr.Silverlight</RootNamespace>
+    <AssemblyName>Rawr.Silverlight</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>Rawr.Silverlight.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>Rawr.Silverlight.App</SilverlightAppEntry>
+    <TestPageFileName>TestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.ComponentModel.DataAnnotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.ComponentModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.dll">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\Silverlight\v3.0\System.Runtime.Serialization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls.Data.DataForm.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.DataForm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Data.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.dll" />
+    <Reference Include="System.Windows.Controls.Input.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Input.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Layout.Toolkit.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Toolkit.dll">
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BuffsControl.xaml.cs">
+      <DependentUpon>BuffsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalculationDisplay.xaml.cs">
+      <DependentUpon>CalculationDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ComparisonGraph.xaml.cs">
+      <DependentUpon>ComparisonGraph.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ComparisonGraphBar.xaml.cs">
+      <DependentUpon>ComparisonGraphBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ComparisonGraphItem.xaml.cs">
+      <DependentUpon>ComparisonGraphItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\GemConverter.cs" />
+    <Compile Include="Converters\IconPathConverter.cs" />
+    <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
+      <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GemmingTemplates.xaml.cs">
+      <DependentUpon>GemmingTemplates.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\IncreaseQuota.xaml.cs">
+      <DependentUpon>IncreaseQuota.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ItemEditor.xaml.cs">
+      <DependentUpon>ItemEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ItemBrowser.xaml.cs">
+      <DependentUpon>ItemBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RelevantItemRefinement.xaml.cs">
+      <DependentUpon>RelevantItemRefinement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SpecialEffectEditor.xaml.cs">
+      <DependentUpon>SpecialEffectEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\StatControl.xaml.cs">
+      <DependentUpon>StatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FileUtils.cs" />
+    <Compile Include="GroupBox\Groupbox.cs" />
+    <Compile Include="Items\ItemTooltip.xaml.cs">
+      <DependentUpon>ItemTooltip.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GraphDisplay.xaml.cs">
+      <DependentUpon>GraphDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ErrorWindow.xaml.cs">
+      <DependentUpon>ErrorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Icons.cs" />
+    <Compile Include="Items\ItemButton.xaml.cs">
+      <DependentUpon>ItemButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\ItemButtonWithEnchant.xaml.cs">
+      <DependentUpon>ItemButtonWithEnchant.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\ItemListControl.xaml.cs">
+      <DependentUpon>ItemListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Talents\GlyphControl.xaml.cs">
+      <DependentUpon>GlyphControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Talents\TalentItem.xaml.cs">
+      <DependentUpon>TalentItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Talents\TalentPicker.xaml.cs">
+      <DependentUpon>TalentPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Talents\TalentTree.xaml.cs">
+      <DependentUpon>TalentTree.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AppManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="App.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BuffsControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CalculationDisplay.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ComparisonGraph.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ComparisonGraphBar.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ComparisonGraphItem.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ArmoryLoadDialog.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\GemmingTemplates.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\IncreaseQuota.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ItemEditor.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ItemBrowser.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\RelevantItemRefinement.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\SpecialEffectEditor.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\StatControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GroupBox\generic.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\ItemTooltip.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GraphDisplay.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ErrorWindow.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\ItemButton.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\ItemButtonWithEnchant.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\ItemListControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SplashScreen.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Talents\GlyphControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Talents\TalentItem.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Talents\TalentPicker.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Talents\TalentTree.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Rawr.Splash.png">
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
+      <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
+      <Name>Rawr.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
+      <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
+      <Name>Rawr.Healadin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.csproj">
+      <Project>{F515017D-CBC1-40E8-9E73-33AF171D697E}</Project>
+      <Name>Rawr.Retribution</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\across-left-green.png">
+    </Resource>
+    <Resource Include="Images\across-left-grey.png">
+    </Resource>
+    <Resource Include="Images\across-left-yellow.png">
+    </Resource>
+    <Resource Include="Images\across-right-green.png">
+    </Resource>
+    <Resource Include="Images\across-right-grey.png">
+    </Resource>
+    <Resource Include="Images\across-right-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-1-green.png">
+    </Resource>
+    <Resource Include="Images\down-1-grey.png">
+    </Resource>
+    <Resource Include="Images\down-1-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-2-green.png">
+    </Resource>
+    <Resource Include="Images\down-2-grey.png">
+    </Resource>
+    <Resource Include="Images\down-2-left-green.png">
+    </Resource>
+    <Resource Include="Images\down-2-left-grey.png">
+    </Resource>
+    <Resource Include="Images\down-2-left-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-2-right-green.png">
+    </Resource>
+    <Resource Include="Images\down-2-right-grey.png">
+    </Resource>
+    <Resource Include="Images\down-2-right-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-2-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-3-green.png">
+    </Resource>
+    <Resource Include="Images\down-3-grey.png">
+    </Resource>
+    <Resource Include="Images\down-3-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-4-green.png">
+    </Resource>
+    <Resource Include="Images\down-4-grey.png">
+    </Resource>
+    <Resource Include="Images\down-4-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-left-green.png">
+    </Resource>
+    <Resource Include="Images\down-left-grey.png">
+    </Resource>
+    <Resource Include="Images\down-left-yellow.png">
+    </Resource>
+    <Resource Include="Images\down-right-green.png">
+    </Resource>
+    <Resource Include="Images\down-right-grey.png">
+    </Resource>
+    <Resource Include="Images\down-right-yellow.png">
+    </Resource>
+    <Resource Include="Images\icon-over-green.png">
+    </Resource>
+    <Resource Include="Images\icon-over-grey.png" />
+    <Resource Include="Images\icon-over-yellow.png">
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\temp.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\icon-16.png" />
+    <Content Include="Images\icon-32.png" />
+    <Content Include="Images\icon-64.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\V3.0\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

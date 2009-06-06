@@ -1,0 +1,20 @@
+﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+    <Deployment.Parts>
+    </Deployment.Parts>
+  <Deployment.ApplicationIdentity>
+    <ApplicationIdentity
+      ShortName="Rawr"
+      Title="Rawrlight">
+      <ApplicationIdentity.Blurb>
+        A World of Warcraft theorycrafting program.
+      </ApplicationIdentity.Blurb>
+      <ApplicationIdentity.Icons>
+        <Icon Size="64x64">Images/icon-64.png</Icon>
+        <Icon Size="32x32">Images/icon-32.png</Icon>
+        <Icon Size="16x16">Images/icon-16.png</Icon>
+      </ApplicationIdentity.Icons>
+    </ApplicationIdentity>
+  </Deployment.ApplicationIdentity>
+</Deployment>

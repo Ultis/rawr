@@ -1,0 +1,95 @@
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using Rawr;
+
+namespace Rawr.Silverlight
+{
+	public partial class ItemButton : UserControl
+	{
+
+        private Character.CharacterSlot slot;
+        public Character.CharacterSlot Slot
+        {
+            get { return slot; }
+            set
+            {
+                slot = value;
+                ComparisonItemList.Slot = slot;
+            }
+        }
+
+        private ItemInstance item;
+        private Character character;
+        public Character Character
+        {
+            get { return character; }
+            set
+            {
+                if (character != null) character.AvailableItemsChanged -= new EventHandler(character_CalculationsInvalidated);
+                character = value;
+                ComparisonItemList.Character = character;
+                if (character != null)
+                {
+                    character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
+                    character_CalculationsInvalidated(null, null);
+                }
+            }
+        }
+
+        public void character_CalculationsInvalidated(object sender, EventArgs e)
+        {
+            if (character != null)
+            {
+                item = character[Slot];
+                if (item == null)
+                {
+                    IconImage.Source = null;
+                    ItemTooltip.ItemInstance = null;
+                }
+                else
+                {
+                    IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
+                    ItemTooltip.ItemInstance = item;
+                }
+            }
+        }
+
+		public ItemButton()
+		{
+			// Required to initialize variables
+			InitializeComponent();
+		}
+
+        private void UserControl_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ItemTooltip.Hide();
+            ComparisonItemList.IsShown = false;
+            ListPopup.IsOpen = false;
+        }
+
+        private void MainButton_Click(object sender, RoutedEventArgs e)
+        {
+            ItemTooltip.Hide();
+            ComparisonItemList.IsShown = true;
+            ListPopup.IsOpen = true;
+        }
+
+        private void MainButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!ListPopup.IsOpen) ItemTooltip.Show(MainButton, 72, 0);
+        }
+
+        private void MainButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ItemTooltip.Hide();
+        }
+
+	}
+}

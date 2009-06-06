@@ -35,26 +35,26 @@ namespace Rawr.Healadin
             chkJotP.Checked = calcOpts.JotP;
             chkLoHSelf.Checked = calcOpts.LoHSelf;
 
-            trkReplenishment.Value = (int)(calcOpts.Replenishment * 100);
+            trkReplenishment.Value = (int)Math.Round(calcOpts.Replenishment * 100);
             lblReplenishment.Text = trkReplenishment.Value + "%";
-
-            trkBoLUp.Value = (int)(calcOpts.BoLUp * 100);
+            
+            trkBoLUp.Value = (int)Math.Round(calcOpts.BoLUp * 100);
             lblBoLUp.Text = trkBoLUp.Value + "%";
 
-            trkBoLEff.Value = (int)(calcOpts.BoLEff * 100);
+            trkBoLEff.Value = (int)Math.Round(calcOpts.BoLEff * 100);
             lblBoLEff.Text = trkBoLEff.Value + "%";
 
-            trkBurstScale.Value = (int)(calcOpts.BurstScale * 100);
+            trkBurstScale.Value = (int)Math.Round(calcOpts.BurstScale * 100);
             lblBurstScale.Text = trkBurstScale.Value + "%";
 
-            trkHS.Value = (int)(calcOpts.HolyShock * 100);
+            trkHS.Value = (int)Math.Round(calcOpts.HolyShock * 100);
             lblHS.Text = trkHS.Value + "%";
 
-            trkSacredShield.Value = (int)(calcOpts.SSUptime * 100);
+            trkSacredShield.Value = (int)Math.Round(calcOpts.SSUptime * 100);
             lblSacredShield.Text = trkSacredShield.Value + "%";
 
             chkIoL.Checked = calcOpts.InfusionOfLight;
-            trkIoLRatio.Value = (int)(calcOpts.IoLHolyLight * 100f);
+            trkIoLRatio.Value = (int)Math.Round(calcOpts.IoLHolyLight * 100f);
             lblIoLHL.Text = trkIoLRatio.Value + "% HL";
             lblIoLFoL.Text = (100 - trkIoLRatio.Value) + "% FoL";
             trkIoLRatio.Enabled = calcOpts.InfusionOfLight;

@@ -1,0 +1,422 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rawr.Healadin
+{
+    public abstract class Heal
+    {
+        private Rotation _rotation;
+        public Rotation Rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                _rotation = value;
+                _stats = _rotation.Stats;
+                _talents = _rotation.Talents;
+            }
+        }
+
+        private Stats _stats;
+        protected Stats Stats { get { return _stats; } }
+
+        private PaladinTalents _talents;
+        protected PaladinTalents Talents { get { return _talents; } }
+
+        public Heal(Rotation rotation)
+        {
+            Rotation = rotation;
+        }
+
+        public float HPS() { return AverageHealed() / CastTime(); }
+        public float MPS() { return AverageCost() / CastTime(); }
+        public float HPM() { return AverageHealed() / AverageCost(); }
+        public float CastTime() { return (float)Math.Max(1f, (BaseCastTime - AbilityCastTimeReduction()) / (1f + Stats.SpellHaste));}
+
+        public float AverageCost()
+        {
+            return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
+                * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)))
+                - BaseMana * .12f * Talents.Illumination * ChanceToCrit();
+        }
+
+        public float AverageHealed()
+        {
+            return BaseHealed() * (1f - ChanceToCrit()) + CritHealed() * ChanceToCrit();
+        }
+
+        public float CritHealed() { return BaseHealed() * 1.5f * (1f + Stats.BonusCritHealMultiplier) * AbilityCritMultiplier(); }
+
+        public float BaseHealed()
+        {
+            float heal = AbilityHealed();
+
+            heal *= Talents.GlyphOfSealOfLight ? 1.05f : 1;
+            heal *= 1f + Stats.HealingReceivedMultiplier;
+            heal *= 1f - Rotation.DivinePleas * 15f / Rotation.FightLength * .5f;
+            heal *= 1f + .01f * Talents.Divinity;
+            heal *= AbilityHealedMultiplier();
+            heal *= (1f + Talents.HealingLight * .04f);
+
+            return heal;
+        }
+
+        public float ChanceToCrit()
+        {
+            return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance + Talents.HolyPower * .01f));
+        }
+        public float CostReduction() { return Stats.SpellsManaReduction + AbilityCostReduction(); }
+
+        public float ExtraCritChance { get; set; }
+        public bool DivineIllumination { get; set; }
+
+        protected abstract float AbilityHealed();
+        protected virtual float AbilityCritChance() { return 0f; }
+        protected virtual float AbilityCostReduction() { return 0f; }
+        protected virtual float AbilityCastTimeReduction() { return 0f; }
+        protected virtual float AbilityCostMultiplier() { return 1f; }
+        protected virtual float AbilityHealedMultiplier() { return 1f; }
+        protected virtual float AbilityCritMultiplier() { return 1f; }
+
+        public abstract float BaseCastTime { get; }
+        public abstract float BaseMana { get; }
+
+        public override string ToString()
+        {
+            return string.Format("Average Heal: {0}\nAverage Cost: {1}\nHPS: {2}\nHPM: {3}\nCast Time: {4} sec\nCrit Chance: {5}%",
+                AverageHealed().ToString("N0"),
+                AverageCost().ToString("N0"),
+                HPS().ToString("N0"),
+                HPM().ToString("N2"),
+                CastTime().ToString("N2"),
+                (ChanceToCrit() * 100).ToString("N2"));
+        }
+    }
+
+    public class FlashOfLight : Heal
+    {
+        public FlashOfLight(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return 307f; } }
+
+        protected override float AbilityCritChance()
+        {
+            return (Talents.GlyphOfFlashOfLight ? .05f : 0f) + Stats.FlashOfLightCrit;
+        }
+
+        protected override float AbilityHealedMultiplier()
+        {
+            return 1f + Stats.FlashOfLightMultiplier;
+        }
+
+        protected override float AbilityHealed()
+        {
+            const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
+            return (835.5f + (Stats.SpellPower + Stats.FlashOfLightSpellPower) * fol_coef);
+        }
+
+    }
+
+    public class HolyLight : Heal
+    {
+        public HolyLight(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 2.5f; } }
+        public override float BaseMana { get { return 1274f; } }
+
+        protected override float AbilityCritChance()
+        {
+            return Talents.SanctifiedLight * .02f + Stats.HolyLightCrit;
+        }
+
+        protected override float AbilityCostReduction()
+        {
+            return Stats.HolyLightManaCostReduction;
+        }
+
+        protected override float AbilityCostMultiplier()
+        {
+            return 1f - Stats.HolyLightPercentManaReduction;
+        }
+
+        protected override float AbilityCastTimeReduction()
+        {
+            return .5f / 3 * Talents.LightsGrace;
+        }
+
+        protected override float AbilityHealed()
+        {
+            const float hl_coef = 2.5f / 3.5f * 66f / 35f * 1.25f;
+            return (5166f + (Stats.HolyLightSpellPower + Stats.SpellPower) * hl_coef);
+        }
+
+        public float GlyphOfHolyLight(float hlHealed)
+        {
+            return hlHealed * (Talents.GlyphOfHolyLight ? .1f * Rotation.CalcOpts.GHL_Targets : 0f);
+        }
+
+    }
+
+    public class HolyShock : Heal
+    {
+        public HolyShock(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return 790f; } }
+
+        protected override float AbilityCritChance()
+        {
+            return Talents.SanctifiedLight * .02f + Stats.HolyShockCrit;
+        }
+
+        protected override float AbilityCostMultiplier()
+        {
+            return 1f - .02f * Talents.Benediction;
+        }
+
+        protected override float AbilityHealed()
+        {
+            const float hs_coef = 1.5f / 3.5f * 66f / 35f;
+            return (2500f + Stats.SpellPower * hs_coef);
+        }
+
+        public float Usage()
+        {
+            return Casts() * AverageCost();
+        }
+
+        public float Casts()
+        {
+            return Rotation.FightLength * Rotation.CalcOpts.HolyShock / Cooldown();
+        }
+
+        public float Time()
+        {
+            return Casts() * CastTime();
+        }
+
+        public float Healed()
+        {
+            return Casts() * AverageHealed();
+        }
+
+        public float Cooldown()
+        {
+            return Talents.GlyphOfHolyShock ? 5f : 6f;
+        }
+
+        protected override float AbilityCritMultiplier()
+        {
+             return 1f + Stats.HolyShockHoTOnCrit;
+        }
+
+    }
+
+    public abstract class Spell
+    {
+
+        private Rotation _rotation;
+        public Rotation Rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                _rotation = value;
+                _stats = _rotation.Stats;
+                _talents = _rotation.Talents;
+            }
+        }
+
+        private Stats _stats;
+        protected Stats Stats { get { return _stats; } }
+
+        private PaladinTalents _talents;
+        protected PaladinTalents Talents { get { return _talents; } }
+
+        public Spell(Rotation rotation)
+        {
+            Rotation = rotation;
+        }
+
+        public float Uptime { get; set; }
+        public float Duration { get; set; }
+        public float BaseCost { get; set; }
+
+        public float Cost()
+        {
+            return (BaseCost - Stats.SpellsManaReduction) * (1f - .02f * Talents.Benediction);
+        }
+
+        public float Casts()
+        {
+            return (float)Math.Ceiling(Uptime / Duration);
+        }
+
+        public float CastTime()
+        {
+            return (float)Math.Max(1f, 1.5f / (1f + Stats.SpellHaste));
+        }
+
+        public virtual float Time()
+        {
+            return Casts() * CastTime();
+        }
+
+        public virtual float Usage()
+        {
+            return Casts() * Cost();
+        }
+
+    }
+
+    public class SacredShield : Spell
+    {
+        public SacredShield(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 30f + Talents.DivineGuardian * 15f;
+            Uptime = Rotation.CalcOpts.Length * 60f * Rotation.CalcOpts.SSUptime;
+            BaseCost = 527f;         
+        }
+
+        public float ICD()
+        {
+            return 6f - Stats.SacredShieldICDReduction;
+        }
+
+        public float ProcAbsorb()
+        {
+            return (500f + .75f * Stats.SpellPower) * (1f + Talents.DivineGuardian * .1f);
+        }
+
+        public float TotalAborb()
+        {
+            return Uptime / ICD() * ProcAbsorb();
+        }
+
+        public float CastAborb()
+        {
+            return Duration / ICD() * ProcAbsorb();
+        }
+
+        public float HPM()
+        {
+            return ProcAbsorb() * Duration / ICD() / Cost(); 
+        }
+
+        public float HPS()
+        {
+            return TotalAborb() / Time();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Proc Absorb: {0}\nCast Absorb: {1}\nAverage Cost: {2}\nHPS: {3}\nHPM: {4}\n",
+                ProcAbsorb().ToString("N0"),
+                CastAborb().ToString("N0"),
+                Cost().ToString("N0"),
+                HPS().ToString("N0"),
+                HPM().ToString("N2"));
+        }
+
+    }
+
+    public class BeaconOfLight : Spell
+    {
+        public BeaconOfLight(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 60f + (Talents.GlyphOfBeaconOfLight ? 30f : 0f);
+            Uptime = Rotation.CalcOpts.Length * 60f * Rotation.CalcOpts.BoLUp;
+            BaseCost = 1537f;
+        }
+
+        public float HealingDone(float procableHealing)
+        {
+            return procableHealing * Rotation.CalcOpts.BoLUp * Rotation.CalcOpts.BoLEff;
+        }
+
+    }
+
+    public class JudgementsOfThePure : Spell
+    {
+        public JudgementsOfThePure(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 60f;
+            Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
+            BaseCost = 219f;
+        }
+
+    }
+
+    public class DivineIllumination : Spell
+    {
+
+        public HolyLight HL_DI { get; set; }
+
+        public DivineIllumination(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 180f;
+            Uptime = Rotation.FightLength;
+            BaseCost = 0f;
+            HL_DI = new HolyLight(rotation) { DivineIllumination = true };
+        }
+
+        public float Healed()
+        {
+            return HL_DI.HPS() * Time();
+        }
+
+        public override float Time()
+        {
+            return 15f * Casts() * Rotation.CalcOpts.Activity;
+        }
+
+        public override float Usage()
+        {
+            return Time() * HL_DI.MPS();
+        }
+
+    }
+
+    public class DivineFavor : Spell
+    {
+
+        public HolyLight HL_DF { get; set; }
+
+        public DivineFavor(Rotation rotation)
+            : base(rotation)
+        {
+            Duration = 120f;
+            Uptime = Rotation.FightLength;
+            BaseCost = 130f;
+            HL_DF = new HolyLight(rotation) { ExtraCritChance = 1f };
+        }
+
+        public float Healed()
+        {
+            return HL_DF.AverageHealed() * Casts();
+        }
+
+        public override float Time()
+        {
+            return HL_DF.CastTime() * Casts();
+        }
+
+        public override float Usage()
+        {
+            return Casts() * (Cost() + HL_DF.AverageCost());
+        }
+
+    }
+}

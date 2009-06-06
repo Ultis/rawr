@@ -1,0 +1,131 @@
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using Rawr;
+
+namespace Rawr.Silverlight
+{
+	public partial class ItemButtonWithEnchant : UserControl
+	{
+
+        private Character.CharacterSlot slot;
+        public Character.CharacterSlot Slot
+        {
+            get { return slot; }
+            set
+            {
+                slot = value;
+                ComparisonItemList.Slot = slot;
+                ComparisonEnchantList.Slot = slot;
+            }
+        }
+
+        private ItemInstance item;
+        private Character character;
+        public Character Character
+        {
+            get { return character; }
+            set
+            {
+                if (character != null) character.AvailableItemsChanged -= new EventHandler(character_CalculationsInvalidated);
+                character = value;
+                ComparisonItemList.Character = character;
+                ComparisonEnchantList.Character = character;
+                if (character != null)
+                {
+                    character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
+                    character_CalculationsInvalidated(null, null);
+                }
+            }
+        }
+
+        public void character_CalculationsInvalidated(object sender, EventArgs e)
+        {
+            if (character != null)
+            {
+                item = character[Slot];
+                if (item == null)
+                {
+                    IconImage.Source = null;
+                    EnchantButton.Content = "";
+                    ItemTooltip.ItemInstance = null;
+                    EnchantTooltip.ItemInstance = null;
+                }
+                else
+                {
+                    IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
+                    EnchantButton.Content = item.Enchant.ShortName;
+                    ItemTooltip.ItemInstance = item;
+
+                    Item eItem = new Item();
+                    eItem.Name = item.Enchant.Name;
+                    eItem.Quality = Item.ItemQuality.Temp;
+                    eItem.Stats = item.Enchant.Stats;
+                    EnchantTooltip.Item = eItem;
+                }
+            }
+        }
+
+		public ItemButtonWithEnchant()
+		{
+			// Required to initialize variables
+            InitializeComponent();
+            ComparisonEnchantList.Enchant = true;
+		}
+
+        private void MainButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ItemTooltip.Hide();
+            ComparisonItemList.IsShown = true;
+            ListPopup.IsOpen = true;
+        }
+
+        private void MainButton_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ItemTooltip.Hide();
+            ComparisonItemList.IsShown = false;
+            ListPopup.IsOpen = false;
+        }
+
+        private void MainButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!ListPopup.IsOpen) ItemTooltip.Show(MainButton, 72, 0);
+        }
+
+        private void MainButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ItemTooltip.Hide();
+        }
+
+        private void EnchantButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (!EnchantPopup.IsOpen) EnchantTooltip.Show(EnchantButton, 72, 0);
+        }
+
+        private void EnchantButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            EnchantTooltip.Hide();
+        }
+
+        private void EnchantButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            EnchantTooltip.Hide();
+            ComparisonEnchantList.IsShown = true;
+            EnchantPopup.IsOpen = true;
+        }
+
+        private void EnchantButton_LostFocus(object sender, RoutedEventArgs e)
+        {
+            EnchantTooltip.Hide();
+            ComparisonEnchantList.IsShown = false;
+            EnchantPopup.IsOpen = false;
+        }
+
+	}
+}

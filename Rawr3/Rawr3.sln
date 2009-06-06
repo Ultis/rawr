@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight", "Rawr.Silverlight\Rawr.Silverlight.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight.Web", "Rawr.Silverlight.Web\Rawr.Silverlight.Web.csproj", "{039EB027-018A-4422-B51E-9ED81879465F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "Rawr.Base\Rawr.Base.csproj", "{48170BE2-2CF6-4068-B36C-189072D49093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "Rawr.Retribution\Rawr.Retribution.csproj", "{F515017D-CBC1-40E8-9E73-33AF171D697E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin", "Rawr.Healadin\Rawr.Healadin.csproj", "{92719321-9235-4886-BDD6-010723C3EFFA}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs03.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Rawr.Base\\Rawr.Base.csproj
+		SccProjectName1 = Rawr.Base
+		SccLocalPath1 = Rawr.Base
+		SccProjectUniqueName2 = Rawr.Healadin\\Rawr.Healadin.csproj
+		SccProjectName2 = Rawr.Healadin
+		SccLocalPath2 = Rawr.Healadin
+		SccProjectUniqueName3 = Rawr.Retribution\\Rawr.Retribution.csproj
+		SccProjectName3 = Rawr.Retribution
+		SccLocalPath3 = Rawr.Retribution
+		SccProjectUniqueName4 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
+		SccProjectName4 = Rawr.Silverlight.Web
+		SccLocalPath4 = Rawr.Silverlight.Web
+		SccProjectUniqueName5 = Rawr.Silverlight\\Rawr.Silverlight.csproj
+		SccProjectName5 = Rawr.Silverlight
+		SccLocalPath5 = Rawr.Silverlight
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5177B6E-4D62-4506-BD70-E657540A9C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5177B6E-4D62-4506-BD70-E657540A9C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5177B6E-4D62-4506-BD70-E657540A9C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5177B6E-4D62-4506-BD70-E657540A9C4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039EB027-018A-4422-B51E-9ED81879465F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039EB027-018A-4422-B51E-9ED81879465F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039EB027-018A-4422-B51E-9ED81879465F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039EB027-018A-4422-B51E-9ED81879465F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48170BE2-2CF6-4068-B36C-189072D49093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48170BE2-2CF6-4068-B36C-189072D49093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48170BE2-2CF6-4068-B36C-189072D49093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48170BE2-2CF6-4068-B36C-189072D49093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F515017D-CBC1-40E8-9E73-33AF171D697E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F515017D-CBC1-40E8-9E73-33AF171D697E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F515017D-CBC1-40E8-9E73-33AF171D697E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F515017D-CBC1-40E8-9E73-33AF171D697E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92719321-9235-4886-BDD6-010723C3EFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92719321-9235-4886-BDD6-010723C3EFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92719321-9235-4886-BDD6-010723C3EFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92719321-9235-4886-BDD6-010723C3EFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

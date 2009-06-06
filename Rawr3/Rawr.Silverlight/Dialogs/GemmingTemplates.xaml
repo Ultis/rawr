@@ -1,0 +1,83 @@
+﻿<basics:ChildWindow
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+	x:Class="Rawr.Silverlight.GemmingTemplates"
+	Title="Edit Gemming Templates"
+	Height="350" Width="360">
+	<Grid x:Name="LayoutRoot" Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="2" Margin="4,2,4,4" />
+		<Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" HorizontalAlignment="Right"  Margin="4,2,83,4" Grid.Row="2" />
+		<data:DataGrid x:Name="TemplateGrid" Grid.RowSpan="1" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="4,4,4,2" CanUserReorderColumns="False"
+		CanUserResizeColumns="False" CanUserSortColumns="False" RowDetailsVisibilityMode="Collapsed" GridLinesVisibility="Horizontal">
+			<data:DataGrid.Columns>
+				<data:DataGridCheckBoxColumn Width="40" Binding="{Binding Path=Enabled}" />
+				<data:DataGridTemplateColumn Width="50" Header="Red">
+ 					<data:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+								<Image Width="32" Height="32"
+								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=RedGem}"/>
+							</Button>
+						</DataTemplate>
+					</data:DataGridTemplateColumn.CellTemplate>
+				</data:DataGridTemplateColumn>
+				<data:DataGridTemplateColumn Width="50" Header="Yellow">
+ 					<data:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+								<Image Width="32" Height="32"
+								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=YellowGem}"/>
+							</Button>
+						</DataTemplate>
+					</data:DataGridTemplateColumn.CellTemplate>
+				</data:DataGridTemplateColumn>
+				<data:DataGridTemplateColumn Width="50" Header="Blue">
+ 					<data:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+								<Image Width="32" Height="32"
+								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=BlueGem}"/>
+							</Button>
+						</DataTemplate>
+					</data:DataGridTemplateColumn.CellTemplate>
+				</data:DataGridTemplateColumn>
+				<data:DataGridTemplateColumn Width="50" Header="Prismatic">
+ 					<data:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+								<Image Width="32" Height="32"
+								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=PrismaticGem}"/>
+							</Button>
+						</DataTemplate>
+					</data:DataGridTemplateColumn.CellTemplate>
+				</data:DataGridTemplateColumn>
+				<data:DataGridTemplateColumn Width="50" Header="Meta">
+ 					<data:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+								<Image Width="32" Height="32"
+								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=MetaGem}"/>
+							</Button>
+						</DataTemplate>
+					</data:DataGridTemplateColumn.CellTemplate>
+				</data:DataGridTemplateColumn>
+			</data:DataGrid.Columns>
+		</data:DataGrid>
+		<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4,2,4,2" HorizontalAlignment="Center">
+			<TextBlock VerticalAlignment="Center" Text="Top Gemmings to Show:" Margin="0,0,2,0"/>
+			<inputToolkit:NumericUpDown d:LayoutOverrides="Height" Width="50" Margin="2,0,0,0"/>
+		</StackPanel>
+	</Grid>
+</basics:ChildWindow>

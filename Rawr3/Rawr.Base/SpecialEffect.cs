@@ -1,0 +1,1081 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rawr
+{
+    public enum Trigger : int
+    {
+        Use,
+        SpellHit,
+        SpellCrit,
+        SpellCast,
+        SpellMiss,
+        DamageSpellHit,
+        DamageSpellCrit,
+        DamageSpellCast,
+        HealingSpellHit,
+        HealingSpellCrit,
+        HealingSpellCast,
+        MeleeHit,
+        MeleeCrit,
+        PhysicalHit,
+        PhysicalCrit,
+        ManaGem,
+        DoTTick,
+        DamageDone,
+        MageNukeCast,
+        JudgementHit,
+        HolyShield,
+        ShieldofRighteousness,
+        CrusaderStrikeHit,
+        InsectSwarmTick,
+        ShamanLightningBolt,
+        ShamanLavaLash,
+        ShamanShock,
+        ShamanStormStrike,
+        BloodStrikeOrHeartStrikeHit,
+        PlagueStrikeHit,
+        IcyTouchHit,
+        RuneStrikeHit,
+
+        NUM_Trigger // Should always be the last entry.
+    }
+
+    public class SpecialEffect
+    {
+        public static CalculationMode EffectMode { get; set; }
+
+        public Trigger Trigger { get; set; }
+        public Stats Stats { get; set; }
+        public float Duration { get; set; }
+        public float Cooldown { get; set; }
+        public float Chance { get; set; }
+        public int MaxStack { get; set; }
+
+        private abstract class Interpolator
+        {
+            protected float[,] grid;
+            protected float procChanceMin;
+            protected float procChanceMax;
+            protected const int procChanceN = 100;
+            protected float intervalMin;
+            protected float intervalMax;
+            protected const int intervalN = 100;
+            protected float fightDuration;
+            protected SpecialEffect effect;
+
+            public Interpolator(SpecialEffect effect, float fightDuration)
+            {
+                this.effect = effect;
+                this.fightDuration = fightDuration;
+            }
+
+            public float this[float procChance, float interval]
+            {
+                get
+                {
+                    bool updateGrid = false;
+                    if (grid == null)
+                    {
+                        procChanceMin = 0.5f * procChance;
+                        procChanceMax = Math.Min(1.0f, 1.5f * procChance);
+                        intervalMin = 0.5f * interval;
+                        intervalMax = 1.5f * interval;
+                        grid = new float[procChanceN + 1, intervalN + 1];
+                        updateGrid = true;
+                    }
+                    if (procChance < procChanceMin)
+                    {
+                        procChanceMin = 0.5f * procChance;
+                        updateGrid = true;
+                    }
+                    if (procChance > procChanceMax)
+                    {
+                        procChanceMax = Math.Min(1.0f, 1.5f * procChance);
+                        updateGrid = true;
+                    }
+                    if (interval < intervalMin)
+                    {
+                        intervalMin = 0.5f * interval;
+                        updateGrid = true;
+                    }
+                    if (interval > intervalMax)
+                    {
+                        intervalMax = 1.5f * interval;
+                        updateGrid = true;
+                    }
+                    if (updateGrid)
+                    {
+                        UpdateGrid();
+                    }
+                    float p = (procChance - procChanceMin) / (procChanceMax - procChanceMin);
+                    float x = p * procChanceN;
+                    int i = (int)x;
+                    x -= i;
+                    float ivl = (interval - intervalMin) / (intervalMax - intervalMin);
+                    float y = ivl * intervalN;
+                    int j = (int)y;
+                    y -= j;
+                    if (i >= procChanceN)
+                    {
+                        // treat 100% proc chance or higher as 100%, might want to consider throwing exception instead
+                        return grid[procChanceN, j] + y * (grid[procChanceN, j + 1] - grid[procChanceN, j]);
+                    }
+                    else
+                    {
+                        float v0 = grid[i, j] + x * (grid[i + 1, j] - grid[i, j]);
+                        float v1 = grid[i, j + 1] + x * (grid[i + 1, j + 1] - grid[i, j + 1]);
+                        return v0 + y * (v1 - v0);
+                    }
+                }
+            }
+
+            private void UpdateGrid()
+            {
+                for (int i = 0; i <= procChanceN; i++)
+                {
+                    for (int j = 0; j <= intervalN; j++)
+                    {
+                        grid[i, j] = Evaluate(procChanceMin + (float)i / procChanceN * (procChanceMax - procChanceMin), intervalMin + (float)j / intervalN * (intervalMax - intervalMin));
+                    }
+                }
+            }
+
+            protected abstract float Evaluate(float procChance, float interval);
+        }
+
+        private class UptimeInterpolator : Interpolator
+        {
+            public UptimeInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration) { }
+
+            protected override float Evaluate(float procChance, float interval)
+            {
+                if (fightDuration <= effect.Duration)
+                {
+                    double n = fightDuration / interval;
+                    double p = procChance;
+                    return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
+                }
+                else if (fightDuration <= effect.Cooldown)
+                {
+                    double D = effect.Duration / interval;
+                    double n = fightDuration / interval - D;
+                    double p = procChance;
+                    return (float)((D - Math.Pow(1 - p, n) * (1 - p) / p * (1 - Math.Pow(1 - p, D))) / (fightDuration / interval));
+                }
+                else
+                {
+                    // X : number of intervals under proc effect
+                    // Pr(X >= r*d + i) = Pr(NegBin(r,p) <= n - r*c - i) = I_p(r, n - r*c - i)
+                    // E(X) = sum_i i * Pr(X == i) = sum_i i * (Pr(X >= i) - Pr(X >= i+1))
+                    //      = sum_i Pr(X >= i) = sum_r sum_i=1..d I_p(r, n - r*c - i)
+                    double d = effect.Duration / interval;
+                    double n = fightDuration / interval;
+                    double p = procChance;
+
+                    double c = effect.Cooldown / interval;
+                    if (c < 1.0) c = 1.0;
+                    double x = n;
+
+                    double averageUptime = 0.0;
+                    int r = 1;
+                    while (x > 0)
+                    {
+                        averageUptime += SpecialFunction.Ibeta(r, x, p) * Math.Min(d, x);
+                        // TODO: consider replacing with sum/integral over d
+                        r++;
+                        x -= c;
+                    }
+                    return (float)(averageUptime / n);
+                }
+            }
+        }
+
+        private class ProcsPerSecondInterpolator : Interpolator
+        {
+            public ProcsPerSecondInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration) { }
+
+            protected override float Evaluate(float procChance, float interval)
+            {
+                double c = effect.Cooldown / interval;
+                if (c < 1.0) c = 1.0;
+                double n = fightDuration / interval;
+                double x = n;
+                double p = procChance;
+
+                double averageProcs = 0.0;
+                int r = 1;
+                while (x > 0)
+                {
+                    averageProcs += SpecialFunction.Ibeta(r, x, p);
+                    r++;
+                    x -= c;
+                }
+                return (float)(averageProcs / fightDuration);
+            }
+        }
+
+        private Dictionary<float, Interpolator> interpolator = new Dictionary<float, Interpolator>();
+
+        public enum CalculationMode
+        {
+            Simple,
+            Advanced,
+            Interpolation
+        }
+
+        private static CalculationMode Mode = CalculationMode.Interpolation;
+
+        static SpecialEffect()
+        {
+            UpdateCalculationMode();
+        }
+
+        public static void UpdateCalculationMode()
+        {
+            switch ((int)EffectMode)
+            {
+                case 0:
+                    Mode = CalculationMode.Simple;
+                    break;
+                case 1:
+                    Mode = CalculationMode.Advanced;
+                    SpecialFunction.MACHEP = 5.9604645E-8;
+                    break;
+                case 2:
+                    Mode = CalculationMode.Advanced;
+                    SpecialFunction.MACHEP = 1.11022302462515654042E-16;
+                    break;
+                case 3:
+                    Mode = CalculationMode.Interpolation;
+                    SpecialFunction.MACHEP = 1.11022302462515654042E-16;
+                    break;
+            }
+        }
+
+        public SpecialEffect()
+        {
+            Chance = 1.0f;
+            MaxStack = 1;
+        }
+
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown)
+        {
+            Chance = 1.0f;
+            MaxStack = 1;
+            Trigger = trigger;
+            Duration = duration;
+            Cooldown = cooldown;
+            Stats = stats;
+        }
+
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance)
+        {
+            Chance = chance;
+            MaxStack = 1;
+            Trigger = trigger;
+            Duration = duration;
+            Cooldown = cooldown;
+            Stats = stats;
+        }
+
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance, int maxStack)
+        {
+            Chance = chance;
+            MaxStack = maxStack;
+            Trigger = trigger;
+            Duration = duration;
+            Cooldown = cooldown;
+            Stats = stats;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        public Stats GetAverageStats()
+        {
+            return GetAverageStats(0.0f);
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        public Stats GetAverageStats(float triggerInterval)
+        {
+            return GetAverageStats(triggerInterval, 1.0f, 3.0f, 0.0f);
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        public Stats GetAverageStats(float triggerInterval, float triggerChance)
+        {
+            return GetAverageStats(triggerInterval, triggerChance, 3.0f, 0.0f); ;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed)
+        {
+            return GetAverageStats(triggerInterval, triggerChance, attackSpeed, 0.0f); ;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            if (MaxStack > 1)
+            {
+                return Stats * GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else if (Duration == 0f)
+            {
+                return Stats * GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else
+            {
+                return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+        }
+
+        /// <summary>
+        /// Computes average stack size given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageStackSize(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            return GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration, 1);
+        }
+
+        /// <summary>
+        /// Computes average stack size given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="stackReset">Number of times the stack resets.</param>
+        public float GetAverageStackSize(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, int stackReset)
+        {
+            float averageStack = 0;
+            if ((MaxStack > 1) && (Cooldown == 0f))
+            {
+                // Simplified handling for stacking procs
+                float probToStack = 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
+                
+
+                if (probToStack > 0)
+                {
+                    if (fightDuration == 0.0f)
+                        averageStack = MaxStack;        // Infinite time, it will stack to Max
+                    else
+                    {
+                        // For now, assume it stacks to max, if it can stack at all
+                        float buildTime = triggerInterval / triggerChance * MaxStack * stackReset;
+                        float value;
+                        if (fightDuration > buildTime)
+                            value = buildTime * (MaxStack - 1) / 2 + (fightDuration - buildTime) * MaxStack;
+                        else
+                            value = buildTime * (MaxStack - 1) / 2;
+
+                        averageStack = value / fightDuration;
+                    }
+                }
+                else
+                {
+                    // Handle it like single stack only for now
+                    // Since no cooldown, assume it isn't stacking because Duration <  ( triggerInterval / triggerChance )
+                    averageStack = Duration / (triggerInterval / triggerChance);       // Average Uptime
+                }
+                return averageStack;
+            }
+            else
+                return GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+        }
+
+        /// <summary>
+        /// Computes average uptime of the effect given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        public float GetAverageUptime(float triggerInterval, float triggerChance)
+        {
+            return GetAverageUptime(triggerInterval, triggerChance, 3f, 0f);
+        }
+
+        /// <summary>
+        /// Computes average uptime of the effect given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed)
+        {
+            return GetAverageUptime(triggerInterval, triggerChance, attackSpeed, 0f);
+        }
+
+        /// <summary>
+        /// Computes average uptime of (atleast 1 stack of) the effect given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            if (triggerChance == 0f)
+            {
+                return 0f;
+            }
+
+            if (Cooldown > Duration)
+            {
+                // fight duration is used only in this case, for the cooldown < duration case the other approximations are good enough
+                if (fightDuration == 0f)
+                {
+                    return Duration / (Cooldown + triggerInterval / triggerChance / GetChance(attackSpeed));
+                }
+                else
+                {
+                    // activeTime(T) := average time the effect is up given we are out of cooldown and there is T time left
+                    // activeTime(T) = 0 if T <= 0
+                    // activeTime(T) = chance * (min(duration, T) + activeTime(T - cooldown)) + (1 - chance) * activeTime(T - interval)
+                    // activeTime[T] = chance * (min(D, T) + activeTime[T - C]) + (1 - chance) * activeTime[T - 1]
+
+                    // activeTime[0] = 0
+                    // activeTime[1] = p
+                    // activeTime[2] = p * 2 + (1 - p) * activeTime[1]
+                    // activeTime[3] = p * 3 + (1 - p) * activeTime[2]
+                    // ...
+                    // activeTime[D] = p * D + (1 - p) * activeTime[D - 1]
+
+                    // H[0] = 0
+                    // H[n] = n * p + (1 - p) * H[n - 1]
+                    // H[n] = 1 - 1/p + n + (1 - p)^n * (1/p - 1)
+                    //      = n + (1 - p)/p * ((1 - p)^n - 1)
+                    // activeTime[n] = n - (1 - p)/p * (1 - (1 - p)^n)
+                    // activeTime[D] = D - (1 - p)/p * (1 - (1 - p)^D)
+
+                    // activeTime[D + 1] = p * D + (1 - p) * activeTime[D]
+                    // activeTime[D + 2] = p * D + (1 - p) * (p * D + (1 - p) * activeTime[D])
+                    //                   = p * D + p * (1 - p) * D + (1 - p) ^ 2 * activeTime[D]
+                    //                   = p * (2 - p) * D + (1 - p) ^ 2 * activeTime[D]
+                    // activeTime[D + 3] = p * D + (1 - p) * [p * (2 - p) * D + (1 - p) ^ 2 * activeTime[D]]
+                    //                   = p * D * (1 + (1 - p) * (2 - p)) + (1 - p) ^ 3 * activeTime[D]
+                    // activeTime[D + 4] = p * D * (1 + (1 - p) * (1 + (1 - p) * (2 - p))) + (1 - p) ^ 4 * activeTime[D]
+
+                    // K[1] = 1
+                    // K[n] = 1 + (1 - p) * K[n - 1]
+                    // K[n] = 1/p + (1-p)^(n-1) * (p - 1) / p
+                    //      = (1 - (1-p) ^ n) / p
+
+                    // activeTime[D + n] = p * D * (1 - (1-p) ^ n) / p + (1 - p) ^ n * activeTime[D]
+                    //                   = D + (1 - p) ^ n * (activeTime[D] - D)
+                    //                   = D - (1 - p) ^ n * (1 - p)/p * (1 - (1 - p)^D)
+
+                    // activeTime[C] = activeTime[D + C - D] = D + (1 - p) ^ (C - D) * (activeTime[D] - D)
+                    //               = D - (1 - p) ^ (C - D) * (1 - p)/p * (1 - (1 - p)^D)
+
+                    // activeTime[C + 1] = p * (D + activeTime[1]) + (1 - p) * activeTime[C]
+                    //                   = p * D + p * activeTime[1] + (1 - p) * activeTime[C]
+                    // activeTime[C + 2] = p * D + p * activeTime[2] + (1 - p) * (p * D + p * activeTime[1] + (1 - p) * activeTime[C])
+                    //                   = p * D * K[2] + p * activeTime[2] + (1 - p) * p * activeTime[1] + (1 - p) ^ 2 * activeTime[C]
+
+                    // activeTime[2] - p * 2 = (1 - p) * activeTime[1]
+                    // activeTime[C + 2] = p * D * K[2] + p * activeTime[2] + p * (activeTime[2] - p * 2) + (1 - p) ^ 2 * activeTime[C]
+                    //                   = p * D * K[2] + 2 * p * activeTime[2] - 2 * p ^ 2 + (1 - p) ^ 2 * activeTime[C]
+                    // activeTime[C + 3] = p * D * K[3] + p * activeTime[3] + (1 - p) * (2 * p * activeTime[2] - 2 * p ^ 2 + (1 - p) ^ 2 * activeTime[C])
+                    //                   = p * D * K[3] + p * activeTime[3] + 2 * p * (activeTime[3] - 3 * p) - 2 * p ^ 2 * (1 - p) + (1 - p) ^ 3 * activeTime[C]
+                    //                   = p * D * K[3] + 3 * p * activeTime[3] - 3 * 2 * p ^ 2 - 2 * p ^ 2 * (1 - p) + (1 - p) ^ 3 * activeTime[C]
+                    //                   = p * D * K[3] + 3 * p * activeTime[3] - 2 * p ^ 2 * (4 - p) + (1 - p) ^ 3 * activeTime[C]
+
+                    // activeTime[C + 1] = p * D + p * p + (1 - p) * activeTime[C]
+                    // activeTime[C + 2] = p * D * K[2] + 2 * (p * (2 - p) - (1 - p) * (1 - (1 - p)^2)) + (1 - p) ^ 2 * activeTime[C]
+
+                    // activeTime[C + n] = p * D * K[n] + p * H[n] + (1 - p) * (p * H[n - 1] + (1 - p) * (p * H[n - 2] + ...))
+                    // p * H[n] = p * (n + (1 - p)/p * ((1 - p)^n - 1)) = p * n - (1 - p) * (1 - (1 - p)^n)
+                    // sum_i=0..n p * (1 - p)^(i - 1) * H[i]
+                    // p * (1 - p) ^ (i - 1) * H[i] = p * i * (1 - p) ^ (i - 1) - (1 - p) ^ i * (1 - (1 - p)^i)
+                    // sum_i=0..n p * (1 - p)^(i - 1) * H[i] = p * n * (1 - p) ^ (n - 1) - (1 - p) ^ n * (1 - (1 - p)^n)    +    p * (n - 1) * (1 - p) ^ (n - 2) - (1 - p) ^ (n - 1) * (1 - (1 - p)^(n - 1)) + ...
+                    // - (1 - p) ^ n * (1 - (1 - p)^n) + (1 - p) ^ (n - 1) * (p * n - 1 + (1 - p)^(n - 1)))
+
+                    // activeTime[C + 4] = p * D * K[4] + p * activeTime[4] + (1 - p) * (3 * p * activeTime[3] - 2 * p ^ 2 * (4 - p)) + (1 - p) ^ 4 * activeTime[C]
+                    // p * activeTime[4] + (1 - p) * (3 * p * activeTime[3] - 2 * p ^ 2 * (4 - p)) = 
+                    // p * activeTime[4] + 3 * p * (1 - p) * activeTime[3] - 2 * p ^ 2 * (4 - p) * (1 - p) =
+                    // p * activeTime[4] + 3 * p * (activeTime[4] - 4 * p) - 2 * p ^ 2 * (4 - p) * (1 - p) =
+                    // 4 * p * activeTime[4] - p ^ 2 * (3 * 4 + (1 - p) * (3 * 2 + (1 - p) * (2 * 1 + (1 - p) * 1 * 0)))
+
+                    // R[0] = 0
+                    // R[n] = n * (n - 1) + (1 - p) * R[n - 1]
+                    // R[n] = 2*p^(-2) * ((1 - p)^n - 1 - n)  +  2*p^(-3) * (1 - (1-p)^n)  +  n*(n + 1)/p
+                    //      = [p^2*n*(n + 1) + 2*p*((1 - p)^n - 1 - n) + 2* (1 - (1-p)^n)] / p^3
+                    //      = [p^2*n*(n + 1) - 2*p*n - 2*p*(1 - (1 - p)^n) + 2* (1 - (1-p)^n)] / p^3
+                    //      = [p*n*(p*n + p - 2) + 2*(1 - (1-p)^n) * (1 - p)] / p^3
+
+                    // S[n] := n * p * H[n] - p ^ 2 * R[n] =
+                    // n * (p * n - (1 - p) * (1 - (1 - p)^n)) - [n*(p*n + p - 2) + 2/p*(1 - (1-p)^n) * (1 - p)]
+                    // p * n^2 - n*(p*n + p - 2) - (2/p * (1 - p) + n * (1 - p)) * (1 - (1 - p)^n)
+                    // n * (2 - p) - (2/p + n) * (1 - p) * (1 - (1 - p)^n)
+
+                    // activeTime[C + n] = p * D * K[n] + n * (2 - p) - (2/p + n) * (1 - p) * (1 - (1 - p)^n) + (1 - p) ^ n * activeTime[C]
+                    //                   = (D - (2/p + n) * (1 - p)) * (1 - (1-p) ^ n) + n * (2 - p) + (1 - p) ^ n * activeTime[C]
+                    //                   = 
+                    // activeTime[C + n] = p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C]
+
+                    // activeTime[k*C+n] = p * (D + activeTime[(k-1)*C+n]) + (1 - p) * activeTime[k*C+n-1]
+
+                    // p * T * D / (p * C + 1)
+
+                    // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
+                    //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
+                    if (triggerInterval > 0 && Mode == CalculationMode.Advanced)
+                    {
+                        if (fightDuration <= Duration)
+                        {
+                            double n = fightDuration / triggerInterval;
+                            double p = triggerChance * GetChance(attackSpeed);
+                            return (float)((n - (1 - p) / p * (1 - Math.Pow(1 - p, n))) / n);
+                        }
+                        else if (fightDuration <= Cooldown)
+                        {
+                            double D = Duration / triggerInterval;
+                            double n = fightDuration / triggerInterval - D;
+                            double p = triggerChance * GetChance(attackSpeed);
+                            return (float)((D - Math.Pow(1 - p, n) * (1 - p) / p * (1 - Math.Pow(1 - p, D))) / (fightDuration / triggerInterval));
+                        }
+                        else
+                        {
+                            // X : number of intervals under proc effect
+                            // Pr(X >= r*d + i) = Pr(NegBin(r,p) <= n - r*c - i) = I_p(r, n - r*c - i)
+                            // E(X) = sum_i i * Pr(X == i) = sum_i i * (Pr(X >= i) - Pr(X >= i+1))
+                            //      = sum_i Pr(X >= i) = sum_r sum_i=1..d I_p(r, n - r*c - i)
+                            double d = Duration / triggerInterval;
+                            double n = fightDuration / triggerInterval;
+                            double p = triggerChance * GetChance(attackSpeed);
+
+                            double c = Cooldown / triggerInterval;
+                            if (c < 1.0) c = 1.0;
+                            double x = n;
+
+                            double averageUptime = 0.0;
+                            int r = 1;
+                            while (x > 0)
+                            {
+                                averageUptime += SpecialFunction.Ibeta(r, x, p) * Math.Min(d, x);
+                                r++;
+                                x -= c;
+                            }
+                            return (float)(averageUptime / n);
+                        }
+                    }
+                    else if (triggerInterval > 0 && Mode == CalculationMode.Interpolation)
+                    {
+                        lock (interpolator)
+                        {
+                            Interpolator i;
+                            if (!interpolator.TryGetValue(fightDuration, out i))
+                            {
+                                i = new UptimeInterpolator(this, fightDuration);
+                                interpolator[fightDuration] = i;
+                            }
+                            return i[triggerChance * GetChance(attackSpeed), triggerInterval];
+                        }
+                    }
+                    else
+                    {
+                        float p = triggerChance * GetChance(attackSpeed);
+                        // simple approximation
+                        float t = fightDuration - triggerInterval / p;
+                        float cc = Cooldown + triggerInterval / p;
+                        float total = (float)Math.Floor(t / cc) * Duration;
+                        t -= (float)Math.Floor(t / cc) * cc;
+                        total += Math.Min(t, Duration);
+                        return total / fightDuration;
+                    }
+                }
+            }
+            else if (Cooldown == 0.0f)
+            {
+                if (triggerInterval >= Duration) return Duration / triggerInterval * GetChance(attackSpeed) * triggerChance;
+                else return 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
+            }
+            else
+            {
+                //P(E0) = P(E0|S0)*P(S0) + P(E0|!S0) * (1 - P(S0))
+                //=1 - (1 - P(S0)) + P(E0|!S0) * (1 - P(S0))
+                //=1 + P(!S0) * (1 - P(E0|!S0))
+                //=1 + (1 - P0) * (1 - P(E0|!S0))
+
+                //P(E0|!S0) = P(S1|!S0) + P(E0|!S0,!S1)*P(!S1|!S0)
+
+                //P(S1|!S0) = P(!S0|S1)*P(S1)/P(!S0) = P0 / (1 - P0)
+                //P(!S1|!S0) = P(!S0|!S1)*P(!S1)/P(!S0) = P(!S0|!S1)
+
+                //P(E0|!S0) = P0 / (1 - P0) + P(E0|!S0,!S1)*P(!S0|!S1)
+
+                //P(E0|!S0,!S1) = P(S2|!S0,!S1) + P(E0|!S0,!S1,!S2)*P(!S2|!S0,!S1)
+
+                //P(S2|!S0,!S1) = P(!S0,S1)/P(!S0,!S1) = (P(!S0) - P(!S0,!S1))/P(!S0,!S1)
+
+                //P(!S0,!S1) = P(!S0|!S1) * P(!S1) = P(!S0|!S1) * (1 - P0)
+
+
+
+                //P(S0|!S1,!S2,...,!SC) = PT
+                //P(S0|Sn) = 0, 0 < n <= C
+
+                //P(S0) = P(S0|S1)*P(S1) + P(S0|!S1)*P(!S1)
+                //=P(S0|!S1)*(1 - P(S0))
+
+                //P(S0) * (1 + P(S0|!S1)) = P(S0|!S1)
+                //P(S0) = P(S0|!S1) / (1 + P(S0|!S1))
+
+                //P(S0|!S1) = P(S0|!S1,S2)*P(S2|!S1) + P(S0|!S1,!S2)*P(!S2|!S1)
+                //=P(S0|!S1,S2)*P(S1|!S0) + P(S0|!S1,!S2)*P(!S1|!S0)
+                //=P(S0|!S1,!S2)*(1 - P(S0|!S1))
+
+                //P(S0|!S1) * (1 + P(S0|!S1,!S2)) = P(S0|!S1,!S2)
+                //P(S0|!S1) = P(S0|!S1,!S2) / (1 + P(S0|!S1,!S2))
+
+
+                //P(S0|!S1,!S2) = P(S0|!S1,!S2,S3)*P(S3|!S1,!S2) + P(S0|!S1,!S2,!S3)*P(!S3|!S1,!S2)
+                //=P(S0|!S1,!S2,!S3)*P(!S3|!S1,!S2) = P(S0|!S1,!S2,!S3) * (1 - P(S0|!S1,!S2))
+
+                //P(!S3|!S1,!S2) = P(!S2|!S0,!S1) = P(!S0|!S2,!S1)*P(!S1,!S0) / P(!S0,!S1) = P(!S0|!S2,!S1) = 1 - P(S0|!S1,!S2)
+
+                //P(S0|!S1,!S2) = P(S0|!S1,!S2,!S3) / (1 + P(S0|!S1,!S2,!S3))
+
+                //PC = PT / (1 + PT)
+                //PC_1 = PC / (1 + PC) = PT / (1 + PT) / ((1 + 2 * PT) / (1 + PT)) = PT / (1 + 2 * PT)
+                //PC_2 = PT / (1 + 2 * PT) / ((1 + 3 * PT) / (1 + 2 * PT)) = PT / (1 + 3 * PT)
+
+
+                //P0 = PT / (1 + C * PT)
+
+
+
+                //P0 / (1 - P0) = PT / (1 + C * PT) / ((1 + (C - 1) * PT) / (1 + C * PT)) = PT / (1 + (C - 1) * PT) = P1
+
+                //Pk = PT / (1 + (C - k) * PT)
+
+                //P(E0) = 1 + (1 - P0) * (1 - P(E0|!S0))
+
+                //P(E0|!S0) = P0 / (1 - P0) + P(E0|!S0,!S1)*P(!S0|!S1)
+                //=P1 + P(E0|!S0,!S1)*(1 - P1)
+
+
+                //P(E0|!S0,!S1) = P(S2|!S0,!S1) + P(E0|!S0,!S1,!S2)*P(!S2|!S0,!S1)
+
+
+                //P(S2|!S0,!S1) = P(!S0|S2,!S1) * P(S2,!S1) / P(!S0,!S1) = P(S1,!S0) / P(!S0,!S1) = P(!S0|S1) * P(S1) / [P(!S0|!S1) * P(!S1)]
+                //=P0 / [(1 - P(S0|!S1)) * (1 - P0) = P0 / [(1 - P1) * (1 - P0)]
+                //=P1 / (1 - P1) = P2
+
+
+                //P(E0|!S0,!S1) = P2 + P(E0|!S0,!S1,!S2)*(1 - P2)
+
+
+                //P(E0|!S0,!S1,!S2,...,!SD-1) = 0
+
+
+                //PED = 0
+
+                //PED_1 = PD_1
+
+                //PED_2 = PD_2 + PD_1 * (1 - PD_2) = PD_2 + PD_1 - PD_1 * PD_2 =
+                //[PT * (1 + (C - D + 1) * PT) + PT * (1 + (C - D + 2) * PT) - PT * PT] / [(1 + (C - D + 2) * PT) * (1 + (C - D + 1) * PT)]
+                //PT * 2 * [(1 + (C - D + 1) * PT)] / [(1 + (C - D + 2) * PT) * (1 + (C - D + 1) * PT)]
+                //2 * PT / (1 + (C - D + 2) * PT) = 2 * PD_2
+                //PED_3 = 3 * PD_3
+                //PE0 = D * P0, if D < C
+
+                //P(E0|!S0,!S1,...,!SC-1) = PC + P(E0|!S0,!S1,!S2,...,!SC)*(1 - PC)
+
+
+                //P(E0|!S0,!S1,!S2,...,!SC) = P(E0|!S0-C,SC+1)*P(SC+1|!S0-C) + P(E0|!S0-C,!SC+1)*P(!SC+1|!S0-C)
+                //=P(SC+1|!S0-C) + P(E0|!S0-C,!SC+1)*P(!SC+1|!S0-C)
+
+
+                //P(SC+1|!S0-C) = P(!S0-C,SC+1) / P(!S0-C) = P(!S0,!S1-C,SC+1) / P(!S0-C) = P(!S0|!S1-C,SC+1) * P(!S0-C-1,SC) / P(!S0-C) = 
+                //(1 - PT) * P(SC|!S0-C-1) * P(!S0-C-1) / [P(!SC|!S0-C-1) * P(!S0-C-1)] = 
+                //(1 - PT) * P(SC|!S0-C-1) / P(!SC|!S0-C-1)
+                //= (1 - PT) * PT / (1 - PT) = PT
+
+
+                //P(E0|!S0,!S1,!S2,...,!SC) = PT + P(E0|!S0-C,!SC+1) * (1 - PT)
+
+
+                //PED = 0
+                //PED_1 = PT
+
+                //PED_2 = PT + PED_1 * (1 - PT) = PT + PT * (1 - PT) = 2 * PT - PT * PT = 1 - (1 - 2 * PT + PT * PT) = 1 - (1 - PT) ^ 2
+
+                //PED_3 = PT + PED_2 * (1 - PT) = PT + [1 - (1 - PT) ^ 2] * (1 - PT) =
+                //PT + [(1 - PT) - (1 - PT) ^ 3] = 1 - (1 - PT) ^ 3
+
+
+                //PEC = 1 - (1 - PT) ^ (D - C)
+
+
+                //PEC_1 = PC-1 + PEC*(1 - PC-1)
+
+                //PEC_2 = PC-2 + PEC_1*(1 - PC-2) = PC-2 + [PC-1 + PEC*(1 - PC-1)]*(1 - PC-2) = PC_2 + PC_1 - PC_1 * PC_2 + PEC*(1 - PC_1)*(1 - PC_2)
+                //= 1 - (1 - PC_1)*(1 - PC_2) + PEC * (1 - PC_1)*(1 - PC_2) = 1 - (1 - PC_1)*(1 - PC_2) * (1 - PEC)
+
+
+                //(1 - PC_1)*(1 - PC_2) = 1 - [PC_2 + PC_1 - PC_1 * PC_2] = 1 - 2 * PC_2
+
+                //PEC_2 = 1 - (1 - 2 * PC_2) * (1 - PEC)
+
+                //PE0 = 1 - (1 - C * P0) * (1 - PEC)
+                //= 1 - (1 - C * PT / (1 + C * PT)) * (1 - PEC)
+                //= 1 - 1 / (1 + C * PT) * (1 - PEC)
+
+                //= 1 - 1 / (1 + C * PT) * (1 - PT) ^ (D - C)
+                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * GetChance(attackSpeed)) * (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), (Duration - Cooldown) / triggerInterval);
+            }
+
+        }
+
+        /// <summary>
+        /// Computes average number of procs per second given the frequency of triggers.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageProcsPerSecond(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            // derivation from recurrence relation
+            // Procs[n] := average number of procs given fight length n
+            // p := proc rate
+            // q := 1-p
+            // C := Cooldown / triggerInterval (assume C = 1 if cooldown less than trigger interval)
+
+            // Procs[n] = p + p * Procs[n-C] + q * Procs[n-1]
+            // split the function definition in segments of size C and solve each segment separately
+            // that way the recurrence is only nonhomogeneous first order
+            // Procs[n,k] = p + p * Procs[n,k-1] + q * Procs[n-1,k]
+
+            // for k = 0 solve
+            // Procs[n,0] = p + q * Procs[n-1,0]
+            // Procs[0,0] = 0
+
+            // solution is
+            // Procs[n;0] = 1 - q^n
+
+            // for further segments let k be the previous segment and Procs(n)=Procs[n,k] the closed form
+            // solution for previous segment
+            // the homogeneous part has solution of form A + B * q^n
+            // the particular solution is obtained using method of undetermined coefficient using the
+            // form of n * P(n) * q^n, where P is polynomial of order k
+            // we can more generally just set the form of Procs2(n)=Procs[n,k+1] as
+            // Procs2(n):=q^n*sum(A[i] * n^i, i, 0, k+1)+sum(B[i]*n^i,i,0,k+1);
+            // using the recurrence
+            // eq: Procs2(n) = p + p * Procs(n) + q * Procs2(n-1);
+            // we compute the missing coefficients
+            // splitqn(eq):=makelist(ratcoef(eq,q^n,i),i,0,1);
+            // spliteq(eq,var,order):=makelist(ratcoef(eq,var,i),i,0,order);
+            // eqlist: flatten(map(splitqn,makelist(ratcoef(eq,n,i),i,0,k+1)));
+            // ev (tellsimp (0^0, 1), simp: false);
+            // solution: solve(append(eqlist,[Procs2(0)=Procs(C)]),append(makelist(A[i],i,0,k+1),makelist(B[i],i,0,k+1)))[1];
+            // Procs2s : subst(solution,Procs2(n));
+            // Procs2s : ratsubst(Q,q^C,facsum(subst(q,1-p,ratsimp(subst(1-p,q,Procs2s))),q^n));
+
+            // for the first few k we obtain the following (Q := q^C)
+
+            // Procs[n;0] = 1 - q^n
+            // Procs[n;1] = 2 - (1 + Q + p * n) * q^n
+            // Procs[n;2] = 3 - (1 + Q + Q^2 + p * (n + (C + n)*Q) + p^2 * n*(n+1)/2) * q^n
+            // Procs[n;3] = 4 - (1 + Q + Q^2 + Q^3 + p * (n + (C + n)*Q + (2*C + n)*Q^2) + p^2 * ((C^2+(2*n+1)*C+n^2+n)*Q+n^2+n)/2  + p^3 * (n*(n+1)*(n+2))/3!) * q^n
+
+            // analyzing the form we can obtain the following generalization
+            // Procs(n,k):=k+1-sum(sum(binomial(C*j+n+i-1,i)*q^(C*j+n)*p^i,j,0,k-i),i,0,k);
+            // which can be verified with the recurrence
+
+            // rearranging the sumation
+            // Procs(n,k):=k+1-sum(q^(C*j+n)*sum(binomial(C*j+n+i-1,i)*p^i,i,0,k-j),j,0,k);
+
+            // we inspect the inner sum which has the following form
+            // G(K,kj,p):=sum(binomial(K+i,i)*p^i*(1-p)^K,i,0,kj);
+            // for K = 0 we get
+            // sum(p^i,i,0,kj)
+            // which can be evaluated to
+            // G[0](kj,p):=(1-p^(kj-1))/(1-p);
+            // we can express G in terms of G with lower K as follows
+            // G[K+1](kj,p)=(1-p)^K*sum((1-p)*p^i*binomial(K+i+1,i),i,0,kj);
+            // G[K+1](kj,p)=((1-p)^K/(K+1)!*(sum((p^i*(K+i+1)*(K+i)!)/i!,i,0,kj)-sum(i*(p^i*(K+i)!)/i!,i,1,kj+1)));
+            // G[K+1](kj,p)=sum((1-p)^K/K!*(p^i*(K+i)!)/i!,i,0,kj)-(1-p)^K/(K+1)!*(kj+1)*(p^(kj+1)*(K+kj+1)!)/(kj+1)!;
+            // G[K+1](kj,p)=G[K](kj,p)-(1-p)^K/(K+1)!*(p^(kj+1)*(K+kj+1)!)/kj!;
+            // G[K+1](kj,p)=G[K](kj,p)-(1-p)^K*p^(kj+1)*binomial(K+kj+1,kj);
+            
+            // this gives us an alternative formulation of G
+            // G2(K,kj,p):=(1-p^(kj+1))/(1-p)-sum((1-p)^i*p^(kj+1)*binomial(i+kj+1,kj),i,0,K-1);
+
+            // we can now rephrase the Procs function using this to get
+            // Procs3(n,k):=k+1-(1-p)*sum(G2(C*j+n-1,k-j,p),j,0,k);
+            // =sum(p^(k-j+1),j,0,k)+sum(sum(binomial(k-j+i+1,k-j)*(1-p)^(i+1),i,0,j*C+n-2)*p^(k-j+1),j,0,k);
+
+            // we observe that we can express the inner expression in terms of negative binomial
+            // Procs3(n,k):=sum(sum(binomial(r-1+i,r-1)*(1-p)^(i),i,0,k*C-(r-1)*C+n-1)*p^r,r,1,k+1);
+            // Procs3(n,k)=sum(sum(Pr(NegBin(r,p)=i),i,0,k*C-(r-1)*C+n-1),r,1,k+1);
+            // using the cumulative probability density for negative binomial we can express Procs as
+
+            // P(x):=sum(I[p](r+1,x-r*C),r,0,floor(x/C))
+            // where I[p] is incomplete beta function
+
+            if (fightDuration == 0.0f)
+            {
+                // this is special case, meaning that we have infinite fight duration, so we have
+                // a proc on average every Cooldown + triggerInterval / p
+                float pp = triggerChance * GetChance(attackSpeed);
+                if (pp == 0.0) return 0.0f;
+                return 1.0f / (Cooldown + triggerInterval / pp);
+            }
+            if (triggerInterval == 0.0f)
+            {
+                // this is a special case, meaning that it basically auto triggers on cooldown
+                return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
+            }
+
+            if (Mode == CalculationMode.Advanced)
+            {
+                double c = Cooldown / triggerInterval;
+                if (c < 1.0) c = 1.0;
+                double n = fightDuration / triggerInterval;
+                double x = n;
+                double p = triggerChance * GetChance(attackSpeed);
+
+                double averageProcs = 0.0;
+                int r = 1;
+                while (x > 0)
+                {
+                    averageProcs += SpecialFunction.Ibeta(r, x, p);
+                    r++;
+                    x -= c;
+                }
+                return (float)(averageProcs / fightDuration);
+            }
+            else if (Mode == CalculationMode.Interpolation)
+            {
+                lock (interpolator)
+                {
+                    Interpolator i;
+                    if (!interpolator.TryGetValue(fightDuration, out i))
+                    {
+                        i = new ProcsPerSecondInterpolator(this, fightDuration);
+                        interpolator[fightDuration] = i;
+                    }
+                    return i[triggerChance * GetChance(attackSpeed), triggerInterval];
+                }
+            }
+            else
+            {
+                float p = triggerChance * GetChance(attackSpeed);
+                // simple approximation
+                float t = fightDuration - triggerInterval / p;
+                float cc = Cooldown + triggerInterval / p;
+                return (1 + (float)Math.Floor(t / cc)) / fightDuration;
+            }
+        }
+
+        public bool UsesPPM()
+        {
+            return Chance < 0;
+        }
+
+        public float GetChance(float attackspeed)
+        {
+            if (Chance < 0)
+            {
+                return -Chance / 60f * attackspeed;
+            }
+            else return Chance;
+        }
+
+        private string StackString
+        {
+            get
+            {
+                return MaxStack + "x";
+            }
+        }
+
+        private string CooldownString
+        {
+            get
+            {
+                int cooldown = (int)Cooldown;
+                if (cooldown % 60 == 0)
+                {
+                    return (cooldown / 60).ToString() + " Min";
+                }
+                else
+                {
+                    return cooldown.ToString() + " Sec";
+                }
+            }
+        }
+
+        private string DurationString
+        {
+            get
+            {
+                return ((int)Duration).ToString() + " Sec";
+            }
+        }
+
+        private string ChanceString
+        {
+            get
+            {
+                if (Chance < 0) return (-Chance).ToString("N2") + " PPM";
+                else return (Chance * 100).ToString("N0") + "%";
+            }
+        }
+
+        private string TriggerString
+        {
+            get
+            {
+                switch (Trigger)
+                {
+                    case Trigger.DamageSpellCast:
+                        return "on Damaging Spell Cast";
+                    case Trigger.DamageDone:
+                        return "on Damage Dealt";
+                    case Trigger.DamageSpellCrit:
+                        return "on Damaging Spell Crit";
+                    case Trigger.DamageSpellHit:
+                        return "on Damaging Spell Hit";
+                    case Trigger.HealingSpellCast:
+                        return "on Healing Cast";
+                    case Trigger.HealingSpellCrit:
+                        return "on Healing Crit";
+                    case Trigger.HealingSpellHit:
+                        return "on Healing Hit";
+                    case Trigger.MeleeCrit:
+                        return "on Melee Crit";
+                    case Trigger.MeleeHit:
+                        return "on Melee Hit";
+                    case Trigger.SpellCast:
+                        return "on Spell Cast";
+                    case Trigger.SpellCrit:
+                        return "on Spell Crit";
+                    case Trigger.SpellHit:
+                        return "on Spell Hit";
+                    case Trigger.SpellMiss:
+                        return "on Spell Miss";
+                    case Trigger.Use:
+                        return "";
+                    case Trigger.PhysicalHit:
+                        return "on Physical Hit";
+                    case Trigger.PhysicalCrit:
+                        return "on Physical Crit";
+                    case Trigger.ManaGem:
+                        return "on Mana Gem";
+                    case Trigger.MageNukeCast:
+                        return "on Mage Nuke Cast";
+                    case Trigger.JudgementHit:
+                        return "on Judgement";
+                    case Trigger.HolyShield:
+                        return "on Holy Shield cast";
+                    case Trigger.ShieldofRighteousness:
+                        return "on ShoR cast";
+                    case Trigger.CrusaderStrikeHit:
+                        return "on Crusader Strike";
+                    case Trigger.InsectSwarmTick :
+                        return "on Insect Swarm Tick";
+                    case Trigger.ShamanLightningBolt:
+                        return "on Lightning Bolt Cast";
+                    case Trigger.ShamanLavaLash:
+                        return "on Lava Lash Hit";
+                    case Trigger.ShamanShock:
+                        return "on Shock Hit";
+                    case Trigger.ShamanStormStrike:
+                        return "on Stormstrike Hit";
+                    case Trigger.BloodStrikeOrHeartStrikeHit:
+                        return "on Blood Strike or Heart Strike";
+                    case Trigger.IcyTouchHit:
+                        return "on Icy Touch";
+                    case Trigger.PlagueStrikeHit:
+                        return "on Plague Strike";
+                    case Trigger.RuneStrikeHit:
+                        return "on Rune Strike";
+                    default:
+                        return Trigger.ToString();
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder s = new StringBuilder();
+            if (MaxStack > 1) { s.Append(StackString); s.Append(" "); }
+            
+            s.Append(Stats.ToString());
+            s.Append(" (");
+
+            bool needsSpace = false;
+            if (Duration > 0)
+            {
+                s.Append(DurationString);
+                needsSpace = true;
+            }
+            if (Chance < 1)
+            {
+                if (needsSpace) s.Append(" ");
+                s.Append(ChanceString);
+                needsSpace = true;
+            }
+
+            if (Trigger != Trigger.Use)
+            {
+                if (needsSpace) s.Append(" ");
+                s.Append(TriggerString);
+                needsSpace = true;
+            }
+            if (Cooldown > 0)
+            {
+                if (needsSpace) s.Append("/");
+                s.Append(CooldownString);
+            }
+            s.Append(")");
+            return s.ToString();
+        }
+    }
+}
