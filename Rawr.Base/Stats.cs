@@ -277,7 +277,8 @@ namespace Rawr {
         Heal1Min,
         Healed,
         ManaRestore,
-        SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast
+        SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
+        HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
@@ -2764,6 +2765,15 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Next Healing Spell Mana Cost Reduction")]
+        [Category("Equipment Effects")]
+        public float HealingOmenProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealingOmenProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealingOmenProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

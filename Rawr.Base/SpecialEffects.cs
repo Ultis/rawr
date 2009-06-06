@@ -765,11 +765,13 @@ namespace Rawr
             else if (line.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
             {
                 stats.ManacostReduceWithin15OnHealingCast += 450;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HealingOmenProc = 450 }, 0, 0, 0.02f));
             }
             else if (line.StartsWith("Your healing spells have a chance to make your next heal cast within 15 sec cost 800 less mana."))
             {
                 // Soul Preserver
                 stats.ManacostReduceWithin15OnHealingCast += 800;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HealingOmenProc = 800 }, 0, 0, 0.02f));
             }
             else if ((match = Regex.Match(line, @"Your damaging and healing spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec.")).Success)
             {

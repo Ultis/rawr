@@ -183,13 +183,13 @@ namespace Rawr.Tree
             //Attempt to handle new SpecialEffect for this
             foreach (Rawr.SpecialEffect effect in cachedStats.SpecialEffects())
             {
-               if (effect.Trigger == Trigger.SpellCast && (effect.Stats.ManacostReduceWithin15OnHealingCast > 0))
-                   newManaCost = OmenProc(effect.Chance, effect.Stats.ManacostReduceWithin15OnHealingCast);
+                if (effect.Trigger == Trigger.SpellCast && (effect.Stats.HealingOmenProc > 0))
+                   newManaCost = OmenProc(effect.Chance, effect.Stats.HealingOmenProc);
             }
 
-            // Handle case of stat not being created as a SpecialEffect
-            if (cachedStats.ManacostReduceWithin15OnHealingCast > 0)
-                newManaCost = OmenProc(0.02f, cachedStats.ManacostReduceWithin15OnHealingCast);
+//            // Handle case of stat not being created as a SpecialEffect
+//            if (cachedStats.ManacostReduceWithin15OnHealingCast > 0)
+//                newManaCost = OmenProc(0.02f, cachedStats.ManacostReduceWithin15OnHealingCast);
 
             return newManaCost;
         }
@@ -278,18 +278,6 @@ namespace Rawr.Tree
                 (1 + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
-        }
-    }
-
-    public class HealingTouchChain : HealingTouch
-    {
-        public HealingTouchChain(CharacterCalculationsTree calcs, Stats calculatedStats)
-            : base(calcs, calculatedStats)
-        {
-            float d = 0.5f * critPercent * calculatedStats.SpellHasteFor5SecOnCrit_50;
-            speed = (1 + (calculatedStats.HasteRating) / TreeConstants.HasteRatingToHaste);
-            speed *= 1 + calculatedStats.SpellHaste + d;
-            applyHaste();
         }
     }
 

@@ -413,7 +413,7 @@ namespace Rawr.Tree
                     // Heal interval measures time between HoTs as well, direct heals are a different interval
                     resultNew += effect.GetAverageStats(HealInterval, 1.0f, CastInterval, FightDuration);
                 }
-                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit )
+                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
                 {
                     resultNew += effect.GetAverageStats(CastInterval, CritsRatio, CastInterval, FightDuration);
                 }
@@ -436,6 +436,7 @@ namespace Rawr.Tree
                 SpellCombatManaRegeneration = resultNew.SpellCombatManaRegeneration,
                 BonusHealingReceived = resultNew.BonusHealingReceived,
                 SpellsManaReduction = resultNew.SpellsManaReduction,
+                HighestStat = resultNew.HighestStat,
                 
             };
         }
@@ -1309,7 +1310,6 @@ namespace Rawr.Tree
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + character.DruidTalents.HeartOfTheWild * 0.04f));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
-            statsTotal.Spirit += statsTotal.SpiritFor20SecOnUse2Min / 6f;
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
@@ -1318,7 +1318,7 @@ namespace Rawr.Tree
 //            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
             statsTotal.ExtraSpiritWhileCasting = 0f;
 
-            if (statsTotal.GreatnessProc>0) {
+            /*if (statsTotal.GreatnessProc>0) {
                 // Highest stat in combat
                 if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect)
                 {
@@ -1332,6 +1332,29 @@ namespace Rawr.Tree
                 else {
                     // int proc (Greatness)
                     float extraInt = statsTotal.GreatnessProc * 15f / 50f;
+                    extraInt *= 1 + statsTotal.BonusIntellectMultiplier;
+                    extraInt *= 1 + character.DruidTalents.HeartOfTheWild * 0.04f;
+                    extraInt *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
+                    statsTotal.Intellect += (float)Math.Floor(extraInt);
+                }
+            }*/
+
+            if (statsTotal.HighestStat > 0)
+            {
+                // Highest stat in combat
+                if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect)
+                {
+                    // spirit proc (Greatness)
+                    float extraSpi = statsTotal.HighestStat;
+                    extraSpi *= 1 + statsTotal.BonusSpiritMultiplier;
+                    extraSpi *= 1 + character.DruidTalents.LivingSpirit * 0.05f;
+                    extraSpi *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
+                    statsTotal.Spirit += (float)Math.Floor(extraSpi);
+                }
+                else
+                {
+                    // int proc (Greatness)
+                    float extraInt = statsTotal.HighestStat;
                     extraInt *= 1 + statsTotal.BonusIntellectMultiplier;
                     extraInt *= 1 + character.DruidTalents.HeartOfTheWild * 0.04f;
                     extraInt *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
@@ -1598,7 +1621,8 @@ namespace Rawr.Tree
                 #endregion
                 #region Trinkets
                 BonusManaPotion = stats.BonusManaPotion,
-                GreatnessProc = stats.GreatnessProc,
+//                GreatnessProc = stats.GreatnessProc,
+                HighestStat = stats.HighestStat,
                 #endregion
                 #region Idols and Sets
                 TreeOfLifeAura = stats.TreeOfLifeAura,
@@ -1617,7 +1641,8 @@ namespace Rawr.Tree
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
                 NourishSpellpower = stats.NourishSpellpower,
                 SpellsManaReduction = stats.SpellsManaReduction,
-                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
+                HealingOmenProc = stats.HealingOmenProc,
+//                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
                 SwiftmendBonus = stats.SwiftmendBonus,
                 #endregion
                 #region Gems
@@ -1650,8 +1675,8 @@ namespace Rawr.Tree
 
         public bool HasRelevantSpecialEffectStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore 
-                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus) > 0;
+            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
+                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus + stats.HealingOmenProc) > 0;
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -1677,12 +1702,14 @@ namespace Rawr.Tree
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
                 + stats.BonusManaPotion + stats.ExtraSpiritWhileCasting
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
-                + stats.GreatnessProc + stats.TreeOfLifeAura + stats.ReduceRegrowthCost
+                //+ stats.GreatnessProc 
+                + stats.HighestStat + stats.TreeOfLifeAura + stats.ReduceRegrowthCost
                 + stats.ReduceRejuvenationCost + stats.RejuvenationSpellpower + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
                 stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
-                stats.ManacostReduceWithin15OnHealingCast + stats.SwiftmendBonus
+//                stats.ManacostReduceWithin15OnHealingCast +
+                stats.HealingOmenProc + stats.SwiftmendBonus
                 > 0)
                 return true;
 
