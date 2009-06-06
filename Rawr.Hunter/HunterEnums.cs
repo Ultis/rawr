@@ -154,7 +154,17 @@ namespace Rawr.Hunter
         public static double AIMED_BONUS_DMG = 408.0;
 
         public static double HAWK_BONUS_AP = 300.0;
+        
+        
+        
+        public static double BASE_MISS_PERCENT = 0.05;
+        public static double CHAR_LEVEL = 80.0;
+        
+        public static double HUNTERS_MARK = 500.0;
     }
+    
+   
+   
 
     public enum PetTrees
     { 

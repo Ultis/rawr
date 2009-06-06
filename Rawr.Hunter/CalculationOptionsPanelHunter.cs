@@ -107,6 +107,7 @@ namespace Rawr.Hunter
             options.WolverineBite = 0;
             numThunderstomp.Value = 0;
             options.Thunderstomp = 0;
+            options.duration = 360;
 
             PopulateAbilities();
 
@@ -451,6 +452,16 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
+        
+        private void duration_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+            	options.duration = (int)duration.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        
         
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {

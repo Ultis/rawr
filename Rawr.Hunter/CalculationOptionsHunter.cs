@@ -26,6 +26,7 @@ namespace Rawr.Hunter
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
 		
+		
 		// pet stuff
 		private int _cobraReflexes = 2;
 		private int	_spikedCollar  = 1;
@@ -42,6 +43,8 @@ namespace Rawr.Hunter
 		
         private bool _useCustomShotRotation = false;
 
+        public int duration {get; set;}
+        
         public PetAttacks PetPriority1
         {
             get { return _petPriority1; }

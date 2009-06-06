@@ -82,7 +82,6 @@ namespace Rawr.Hunter
         private string[] customChartNames = null;
         private List<Item.ItemType> relevantItemTypes = null;
         private Dictionary<string, Color> subPointNameColors = null;
-      
 		public CalculationsHunter()
 		{
 			characterDisplayCalculationLabels = new string[] {
@@ -93,8 +92,8 @@ namespace Rawr.Hunter
 				"Basic Stats:Crit Rating",
 				"Basic Stats:Hit Rating",
 				"Basic Stats:Armor Penetration",
-				"Basic Stats:Haste Rating",
-				"Basic Stats:MP5",				
+				"Basic Stats:Haste",
+				"Basic Stats:Mana Per Second",				
 				"Basic Calculated Stats:Health",
 				"Basic Calculated Stats:Mana",
 				"Basic Calculated Stats:Hit Percentage",
@@ -109,6 +108,15 @@ namespace Rawr.Hunter
 				"Pet Stats:Pet Base DPS",
 				"Pet Stats:Pet Special DPS*Based on all damaging or DPS boosting skills on auto-cast",
 				"Pet Stats:Pet KC DPS",
+				"Shot Stats:Auto Shot",
+				"Shot Stats:Steady Shot",
+				"Shot Stats:Serpent Sting",
+				"Shot Stats:Arcane Shot",
+				"Shot Stats:Explosive Shot",
+				"Shot Stats:Chimaera Shot",
+				"Shot Stats:Aimed Shot",
+				"Shot Stats:Multi Shot",
+				"Shot Stats:Black Arrow",
                 "Intermediate Stats:Autoshot DPS",
                 "Intermediate Stats:Steady Spam",
                 "Intermediate Stats:AS 3xSteady",
@@ -265,6 +273,7 @@ namespace Rawr.Hunter
 				BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 				BonusCritMultiplier = stats.BonusCritMultiplier,
 				BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+				BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
 				BonusManaPotion = stats.BonusManaPotion,
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
@@ -274,6 +283,7 @@ namespace Rawr.Hunter
 				PhysicalCrit = stats.PhysicalCrit,
 				CritRating = stats.CritRating,
 				RangedCritRating = stats.RangedCritRating,
+				DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				DrumsOfBattle = stats.DrumsOfBattle,
 				DrumsOfWar = stats.DrumsOfWar,
 				ExposeWeakness = stats.ExposeWeakness,
@@ -287,6 +297,7 @@ namespace Rawr.Hunter
 				Miss = stats.Miss,
 				Mp5 = stats.Mp5,
 				ScopeDamage = stats.ScopeDamage,
+				Spirit = stats.Spirit,
 				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
 				ShatteredSunMightProc = stats.ShatteredSunMightProc,
 				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
@@ -310,11 +321,13 @@ namespace Rawr.Hunter
 			stats.BonusPetDamageMultiplier +
 			stats.BonusDamageMultiplier +
 			stats.BonusStaminaMultiplier +
+			stats.BonusSpiritMultiplier +
 			stats.BonusPetCritChance +
 			stats.PhysicalCrit +
 			stats.CritRating +
 			stats.RangedCritRating +
 			stats.DrumsOfBattle +
+			stats.DamageTakenMultiplier +
 			stats.DrumsOfWar +
 			stats.ExposeWeakness +
 			stats.HasteRating +
@@ -325,6 +338,7 @@ namespace Rawr.Hunter
 			stats.HitRating +
 			stats.RangedHitRating +
 			stats.Intellect +
+			stats.Spirit +
 			stats.Mp5 + 
 			stats.ScopeDamage +
 			stats.ShatteredSunAcumenProc +
@@ -357,9 +371,7 @@ namespace Rawr.Hunter
 		public override bool IsItemRelevant(Item item)
 		{
 			bool returnValue;
-			if ((item.Slot == Item.ItemSlot.Ranged && item.Type == Item.ItemType.Idol) ||
-				//its a feral staff if it has that much AP
-				(item.Slot == Item.ItemSlot.TwoHand && item.Type == Item.ItemType.Staff && item.Stats.AttackPower >= 292))
+			if (item.Slot == Item.ItemSlot.Ranged && item.Type == Item.ItemType.Idol)
 			{
 				returnValue = false;
 			}
@@ -392,6 +404,769 @@ namespace Rawr.Hunter
 				//skip all the calculations if there is no ranged weapon
 				return calculatedStats;
 			}
+			
+			
+		
+			
+			#region May 2009 Haste Calcs
+			
+			double hasteFromRacial = 1;
+			if(character.Race == Character.CharacterRace.Troll)
+			{
+				hasteFromRacial += 0.1 * CalcUptime ( 10, (3 * 60), options.duration);
+			}
+								
+			//default quiver speed
+			calculatedStats.hasteFromBase = 15.0;
+			
+			// haste from haste rating
+			calculatedStats.hasteFromRating = calculatedStats.BasicStats.HasteRating / HunterRatings.HASTE_RATING_PER_PERCENT;
+			
+			// serpent swiftness, 
+			calculatedStats.hasteFromTalentsStatic = 4.0 * character.HunterTalents.SerpentsSwiftness ;
+							
+			//rapid fire * (  duration/cooldown-depends on talent rapid killing)
+			
+			calculatedStats.hasteFromProcs = 50.0 ;
+			if (character.HunterTalents.GlyphOfRapidFire == true)
+			{
+				calculatedStats.hasteFromProcs += 8.0;
+			}
+			
+			double rapidFireCooldown = ( 5 -  (1.0 * character.HunterTalents.RapidKilling) ) * 60 ;
+			calculatedStats.hasteFromProcs *= CalcUptime(15, rapidFireCooldown , options.duration);
+		
+			
+			calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste  * 100;
+			
+			
+			double autoShotPreProcs = 1.0;
+			{
+				autoShotPreProcs *=  (1.0 + calculatedStats.hasteFromBase / 100.0) ;
+				autoShotPreProcs *=  (1.0 + calculatedStats.hasteFromRating / 100.0) ;
+				autoShotPreProcs *=  (1.0 + calculatedStats.hasteFromTalentsStatic / 100.0) ;
+				autoShotPreProcs *=  (1.0 + calculatedStats.hasteFromProcs / 100.0) ;
+				autoShotPreProcs *=  (1.0 + calculatedStats.hasteFromRangedBuffs / 100);
+				autoShotPreProcs *= hasteFromRacial;
+				autoShotPreProcs = (character.Ranged.Item.Speed / autoShotPreProcs) ;
+				
+			}
+			
+			// improved aspect of the hawk, improved aspect of the hawk glyph, 	
+			calculatedStats.hasteFromTalentsProc = 3.0 * character.HunterTalents.ImprovedAspectOfTheHawk;
+			{
+				if ((character.HunterTalents.ImprovedAspectOfTheHawk >= 1) && (character.HunterTalents.GlyphOfTheHawk == true))
+				{
+					calculatedStats.hasteFromTalentsProc += 6.0;
+				}
+				// uptime =  12 second duration /  time between procs aka ( autoshot speed / chancetoproc )
+				calculatedStats.hasteFromTalentsProc *= 12.0 / ( autoShotPreProcs  / 0.1 ) ;
+			}
+				
+			calculatedStats.hasteEffectsTotal = 1.0;
+			
+				calculatedStats.hasteEffectsTotal *=  (1.0 + calculatedStats.hasteFromBase / 100.0) ;
+				calculatedStats.hasteEffectsTotal *=  (1.0 + calculatedStats.hasteFromRating / 100.0) ;
+				calculatedStats.hasteEffectsTotal *=  (1.0 + calculatedStats.hasteFromTalentsProc / 100.0) ;
+				calculatedStats.hasteEffectsTotal *=  (1.0 + calculatedStats.hasteFromTalentsStatic / 100.0) ;
+				calculatedStats.hasteEffectsTotal *=  (1.0 + calculatedStats.hasteFromProcs / 100.0) ;	
+				calculatedStats.hasteEffectsTotal *=  (1.0 + calculatedStats.hasteFromRangedBuffs / 100);
+				calculatedStats.hasteEffectsTotal *= hasteFromRacial;
+				calculatedStats.hasteEffectsTotal =  (calculatedStats.hasteEffectsTotal - 1.0) * 100;
+				
+				double hasteMultiplier = 1.0 +  (calculatedStats.hasteEffectsTotal /100);
+			
+			#endregion
+			
+			#region May 2009 Shot Speeds
+			double autoShotSpeed;
+			if ((character.Ranged.Speed / hasteMultiplier <= 0.5 ))
+            {
+            	autoShotSpeed = (float) 0.5;
+            }
+            else
+           	{
+            	autoShotSpeed = (float)(character.Ranged.Speed / hasteMultiplier );
+            }
+			
+            double shotsPerSec = 1/autoShotSpeed;
+            
+            shotsPerSec += 1/1.5;
+            
+            double GCD = 1.5;
+            
+            
+            
+            
+            
+            
+			
+			#endregion
+			
+						
+			#region May 2009 Hit Chance
+			double missPercent = HunterRatings.BASE_MISS_PERCENT ;
+			calculatedStats.hitBase = 1.0 - HunterRatings.BASE_MISS_PERCENT;
+			
+			
+			double levelDifference = options.TargetLevel - HunterRatings.CHAR_LEVEL;
+			
+			calculatedStats.hitLevelAdjustment = 0;
+			if (levelDifference <= 2.0)
+			{
+				missPercent += (levelDifference * 5) * 0.1;
+				calculatedStats.hitLevelAdjustment = 0 - (( (levelDifference * 5) * 0.1)/100);
+			}
+			else
+			{
+				missPercent += 2.0 + (((levelDifference * 5) - 10) * 0.4);
+				calculatedStats.hitLevelAdjustment = 0 - ((2.0 + (((levelDifference * 5) - 10) * 0.4))/100);
+			}
+			missPercent = missPercent / 100;			
+			
+			double bonusHit = (calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100;
+					bonusHit += character.HunterTalents.FocusedAim / 100;
+			
+			calculatedStats.hitRating = (calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100;
+					
+			calculatedStats.hitFromTalents = (1.0 * character.HunterTalents.FocusedAim) / 100;
+			
+			
+			//TODO: Find how to get Heroic Presence + any Hit Chance buffs
+			calculatedStats.hitFromBuffs = statsBuffs.SpellHit;
+				
+		
+			
+			calculatedStats.hitOverall = calculatedStats.hitBase;
+			calculatedStats.hitOverall += calculatedStats.hitLevelAdjustment;
+			calculatedStats.hitOverall += calculatedStats.hitRating;
+			calculatedStats.hitOverall += calculatedStats.hitFromTalents;
+			calculatedStats.hitOverall += calculatedStats.hitFromBuffs;
+			
+			if (calculatedStats.hitOverall >= 1.0)
+			{
+				calculatedStats.hitOverall = 1.0;
+			}
+			
+			double hitChance = calculatedStats.hitOverall;
+					
+			#endregion
+			
+			
+			#region May 2009 Crit Chance
+			
+			double critHitPercent = HunterRatings.BASE_CRIT_PERCENT;
+			calculatedStats.critBase = HunterRatings.BASE_CRIT_PERCENT;      
+   
+			critHitPercent += (calculatedStats.BasicStats.Agility / HunterRatings.AGILITY_PER_CRIT) / 100;
+			calculatedStats.critFromAgi = (calculatedStats.BasicStats.Agility / HunterRatings.AGILITY_PER_CRIT) / 100;
+			
+			critHitPercent += (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100 ;
+			calculatedStats.critFromRating = (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100 ;
+			
+			//TODO:  	+= Proc Crit
+			
+			critHitPercent += character.HunterTalents.LethalShots * 0.01;
+			critHitPercent += character.HunterTalents.KillerInstinct * 0.01;
+			critHitPercent += character.HunterTalents.MasterMarksman * 0.01;
+			calculatedStats.critFromTalents = (character.HunterTalents.LethalShots * 0.01) + (character.HunterTalents.KillerInstinct * 0.01) + (character.HunterTalents.MasterMarksman * 0.01);
+			
+			// += talents.mastertactician ( 10% chance to proc on "successful attack" for 8 seconds = 2% per point)
+			double masterTacticianUptime = CalcUptime(8, (0.1 * hitChance * shotsPerSec ), options.duration);
+			critHitPercent += 0.02 * character.HunterTalents.MasterTactician * masterTacticianUptime;
+			
+			
+			// Crit From target debuffs / player buffs TODO: Check this
+			critHitPercent += statsBuffs.PhysicalCrit;
+			calculatedStats.critFromBuffs = statsBuffs.PhysicalCrit;
+
+			//
+			double critdepression = 0;
+			
+			if ( levelDifference > 2)
+			{
+				critdepression = 0.03 + (levelDifference * 0.006);
+			}
+			else
+			{
+				critdepression += (levelDifference * 5 * 0.04) / 100;
+			}
+			
+			critHitPercent -= critdepression;
+			calculatedStats.critfromDepression	= 0 - critdepression;	
+			
+			calculatedStats.critRateOverall = critHitPercent;
+			
+			
+			
+			
+			double normalHitPercent = 1.0 - critHitPercent;
+			
+			
+			
+			#endregion
+
+			#region May 2009 Ranged Attackpower
+			
+			double apFromBase = 0 + HunterRatings.CHAR_LEVEL * 2;
+			double apFromAgil = 0 +(calculatedStats.BasicStats.Agility ) - 10;
+			double apFromCarefulAim = 0 +(character.HunterTalents.CarefulAim / 3) * (calculatedStats.BasicStats.Intellect);
+			double apFromHunterVsWild = 0 + (character.HunterTalents.HunterVsWild * 0.1) * (calculatedStats.BasicStats.Stamina);
+			double apFromGear = 0 + calculatedStats.BasicStats.AttackPower;
+			//double apFromBuffs = 0 + character.ActiveBuffs.
+			double apFromBloodFury = 0;
+			if(character.Race == Character.CharacterRace.Orc)
+			{
+				apFromBloodFury = (4 * HunterRatings.CHAR_LEVEL) + 2;
+				apFromBloodFury *= CalcUptime(15, 120, options.duration);
+				
+			}
+			double apFromAspectOfTheHawk = 300;
+			double apFromAspectMastery = (character.HunterTalents.AspectMastery * .3 * apFromAspectOfTheHawk);
+			                          
+			double apFromFuriousHowl = 0;
+			if ( options.PetFamily == PetFamily.Wolf)
+			{
+				
+				apFromFuriousHowl = 320 * CalcUptime(20,40, options.duration);
+			}
+			double apFromCallOfTheWild = 1; 
+			apFromCallOfTheWild	+= options.CallOfTheWild * (CalcUptime(20,300, options.duration) * 0.1);
+			
+			//TODO:
+			//double apFromOnProcEffects = 
+			
+			
+			double apFromTrueshotAura = 1 + (0.1 * character.HunterTalents.TrueshotAura);
+			if (character.HunterTalents.TrueshotAura == 0)
+			{
+				apFromTrueshotAura = calculatedStats.BasicStats.BonusAttackPowerMultiplier + calculatedStats.BasicStats.BonusRangedAttackPowerMultiplier;
+			}
+
+			double apFromHuntersMark = HunterRatings.HUNTERS_MARK;
+			apFromHuntersMark += HunterRatings.HUNTERS_MARK * 0.1 * character.HunterTalents.ImprovedHuntersMark ;
+			if (character.HunterTalents.GlyphOfHuntersMark == true)
+			{
+				apFromHuntersMark += 0.2 * HunterRatings.HUNTERS_MARK;
+			}
+			double critPercent = HunterRatings.BASE_CRIT_PERCENT;
+			critPercent += (calculatedStats.BasicStats.Agility / HunterRatings.AGILITY_PER_CRIT) / 100;
+			critPercent += (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100 ;
+			//double attackRate;
+			
+			// TODO: Figure out Expose Weakness
+			double apFromExposeWeakness = 0;
+			if (character.HunterTalents.ExposeWeakness > 0)
+			{
+				apFromExposeWeakness =  0.25 * calculatedStats.BasicStats.Agility;
+				apFromExposeWeakness *= CalcUptime(7, ((character.HunterTalents.ExposeWeakness / 3) *  critHitPercent * hitChance * shotsPerSec), options.duration  );
+			}
+			
+			
+			double RAP = 0;
+			RAP += apFromBase;
+			RAP += apFromAgil;
+			RAP += apFromCarefulAim;
+			RAP += apFromHunterVsWild;
+			RAP += apFromGear;
+			//RAP += apFromBuffs; //already included in gear-stat
+			RAP += apFromBloodFury;
+			RAP += apFromAspectOfTheHawk;
+			RAP += apFromAspectMastery;
+			RAP += apFromFuriousHowl;
+			RAP += apFromExposeWeakness;
+			//RAP += apFromOnProcEffects;
+			RAP *= apFromCallOfTheWild;
+			RAP *= apFromTrueshotAura;
+			RAP += apFromHuntersMark;
+			
+			
+			calculatedStats.RAPtotal = RAP;
+			
+			calculatedStats.apFromBase = apFromBase;
+			calculatedStats.apFromAgil = apFromAgil;
+			calculatedStats.apFromCarefulAim = apFromCarefulAim;
+			calculatedStats.apFromHunterVsWild = apFromHunterVsWild;
+			calculatedStats.apFromGear = apFromGear;
+			calculatedStats.apFromBloodFury = apFromBloodFury;
+			calculatedStats.apFromAspectOfTheHawk = apFromAspectOfTheHawk;
+			calculatedStats.apFromAspectMastery = apFromAspectMastery;
+			calculatedStats.apFromFuriousHowl = apFromFuriousHowl;
+			calculatedStats.apFromCallOfTheWild = (apFromCallOfTheWild - 1)*100;
+			calculatedStats.apFromTrueshotAura = (apFromTrueshotAura - 1)*100;
+			calculatedStats.apFromHuntersMark = apFromHuntersMark;
+			
+
+			#endregion
+			
+			#region May 2009 Mana Regen
+			double manaPerSecond = calculatedStats.BasicStats.Mp5 / 5;
+			manaPerSecond += 0.6 * Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit * 0.005575 ;
+			manaPerSecond += (statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana);
+			//TODO: add judgement of wisdom
+			//RapidRecuperation
+			manaPerSecond += (0.02* character.HunterTalents.RapidRecuperation * calculatedStats.BasicStats.Mana / 3) * CalcUptime(15, rapidFireCooldown , options.duration);
+			
+			calculatedStats.manaRegenGearBuffs = calculatedStats.BasicStats.Mp5 / 5;
+			calculatedStats.manaRegenBase = Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit * 0.005575 ;
+      	 	calculatedStats.manaRegenReplenishment = (statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana);
+				
+			calculatedStats.manaRegenTotal = manaPerSecond	;
+			
+			
+		
+			
+			
+			
+			
+		
+			#endregion
+			
+			#region May 2009 Armor Reduction
+			
+			
+			int targetArmor = options.TargetArmor;
+			float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				calculatedStats.BasicStats.ArmorPenetration, 0f, calculatedStats.BasicStats.ArmorPenetrationRating); 
+			calculatedStats.damageReductionFromArmor = damageReduction;
+			
+			
+			
+			#endregion
+			
+			#region May 2009 Damage Boosts
+			
+			//Beastial Wrath
+			double beastialWrathCooldown = (2 * 60);
+			if( character.HunterTalents.GlyphOfBestialWrath == true)
+			{
+				beastialWrathCooldown -= 20;
+			}
+			beastialWrathCooldown *= 1 - 0.1 * character.HunterTalents.Longevity;
+			
+			double beastialWrathUptime = CalcUptime ( 18, beastialWrathCooldown, options.duration) ;
+			
+			double blackArrowUptime = CalcUptime ( 15, 30, options.duration);
+			
+			
+			//TODO: calculate this properly
+			double ferociousInspirationUptime = 1;
+			
+			
+			
+			double autoShotDamageBoost = 1;
+			double steadyShotDamageBoost = 1;
+			double explosiveShotDamageBoost = 1;
+			double arcaneShotDamageBoost = 1;
+			double aimedShotDamageBoost = 1;
+			double blackarrowDamageBoost = 1;
+			double serpentStingDamageBoost = 1;
+			double multiShotDamageBoost = 1;
+			double volleyDamageBoost = 1;
+
+			double globalDamageBoost = 1;
+			
+			//Improved Tracking
+			globalDamageBoost *= 1 + 0.01 * character.HunterTalents.ImprovedTracking;
+			//Marked For Death
+			globalDamageBoost *= 1 + 0.01 * character.HunterTalents.MarkedForDeath;
+			//Ranged Weapon Specialization
+			globalDamageBoost *= 1 + 0.01 * character.HunterTalents.RangedWeaponSpecialization;
+			//Focused Fire
+			globalDamageBoost *= 1 + 0.01 * character.HunterTalents.FocusedFire;
+			//Beast Within
+			globalDamageBoost *= 1 + (0.01 * character.HunterTalents.TheBeastWithin) * beastialWrathUptime;
+			//Sanc. Retribution Aura
+			globalDamageBoost *= 1 + statsBuffs.BonusDamageMultiplier;
+			//Black Arrow Damage Multiplier
+			globalDamageBoost *= 1 + (0.06 * character.HunterTalents.BlackArrow) * blackArrowUptime;
+			//Noxious Stings
+			globalDamageBoost *= 1 + (0.01 * character.HunterTalents.NoxiousStings);
+			//Ferocious Inspiration
+			globalDamageBoost *= 1 + (0.01 * character.HunterTalents.FerociousInspiration) * ferociousInspirationUptime;
+			
+			//DamageTakenDebuffs
+			globalDamageBoost *= 1.0 + statsBuffs.DamageTakenMultiplier;
+			
+			
+			
+			
+			steadyShotDamageBoost *= globalDamageBoost;
+			autoShotDamageBoost *= globalDamageBoost;
+			explosiveShotDamageBoost *= globalDamageBoost;
+			arcaneShotDamageBoost *= globalDamageBoost;
+			aimedShotDamageBoost *= globalDamageBoost;
+			blackarrowDamageBoost *= globalDamageBoost;
+			serpentStingDamageBoost *= globalDamageBoost;
+			multiShotDamageBoost *= globalDamageBoost;
+			volleyDamageBoost *= globalDamageBoost;
+			
+			//Sniper Training
+			double sniperTrainingModifier = 1 + 0.02 * character.HunterTalents.SniperTraining;
+			steadyShotDamageBoost *= sniperTrainingModifier;
+			aimedShotDamageBoost *= sniperTrainingModifier;
+			blackarrowDamageBoost *= sniperTrainingModifier;
+			explosiveShotDamageBoost *= sniperTrainingModifier;
+
+			//Improved Stings
+			double improvedStingsModifier = 1 + 0.1 * character.HunterTalents.ImprovedStings;
+			serpentStingDamageBoost *= improvedStingsModifier;
+			
+			//Improved Arcane Shot 
+			double improvedArcaneShotModifier = 1 + 0.05 * character.HunterTalents.ImprovedArcaneShot;
+			arcaneShotDamageBoost *= improvedArcaneShotModifier;
+			
+			//Barrage
+			double barrageModifier = 1 + 0.04 * character.HunterTalents.Barrage;
+			multiShotDamageBoost *= barrageModifier;
+			aimedShotDamageBoost *= barrageModifier;
+			volleyDamageBoost *= barrageModifier;
+		
+			//TrapMastery
+			double trapMasteryModifier = 1 + 0.1 * character.HunterTalents.TrapMastery;
+			blackarrowDamageBoost *= trapMasteryModifier;
+			
+			// T.N.T.
+			double TNTModifier = 1 + 0.02 * character.HunterTalents.TNT;
+			explosiveShotDamageBoost *= TNTModifier;
+			blackarrowDamageBoost *= TNTModifier;
+			
+			// Steady Shot Glyph
+			if (character.HunterTalents.GlyphOfSteadyShot == true)
+			{
+				steadyShotDamageBoost *= 1 + 0.1;
+			}
+
+			
+			
+			
+			#endregion
+			
+			
+			#region May 2009 Bonus Crit Chance
+			
+			double arcaneBonusCritChance = 1;
+			double steadyBonusCritChance = 1;
+			double explosiveBonusCritChance = 1;
+			double multiShotBonusCritChance = 1;
+			double aimedBonusCritChance = 1;
+			
+			//Improved Barrage
+			double improvedBarrageModifier = 1 + 0.04 * character.HunterTalents.ImprovedBarrage;
+			multiShotBonusCritChance *= improvedBarrageModifier;
+			aimedBonusCritChance *= improvedBarrageModifier;
+			// Survival instincts
+			double survivalInstinctsModifier =1 + 0.02 *character.HunterTalents.SurvivalInstincts ;
+			arcaneBonusCritChance *= survivalInstinctsModifier;
+			steadyBonusCritChance *= survivalInstinctsModifier;
+			explosiveBonusCritChance *= survivalInstinctsModifier;
+			// Explosive Shot Glyph
+			if (character.HunterTalents.GlyphOfExplosiveShot == true)
+			{
+				explosiveBonusCritChance *= 1 + 0.04;
+			}
+		
+			//Trueshot Aura Glyph
+			if (character.HunterTalents.GlyphOfTrueshotAura == true)
+			{
+				if (character.HunterTalents.TrueshotAura > 0)
+				{
+					aimedBonusCritChance *= 1 + 0.1;
+				}
+			}
+			
+			
+			#endregion
+			
+			#region May 2009 Bonus Crit Damage
+			double arcaneBonusCritDamage = 1;
+			double aimedBonusCritDamage = 1;
+			double steadyBonusCritDamage = 1;
+			double killBonusCritDamage = 1;
+			double chimeraBonusCritDamage = 1;
+			double autoBonusCritDamage = 1;
+			double multiShotBonusCritDamage = 1;
+			
+			
+			double globalBonusCritDamage = 1;
+			
+			//MortalShots
+			globalBonusCritDamage *= 1 + 0.06 * character.HunterTalents.MortalShots;
+			//CritDamageMetaGems
+			globalBonusCritDamage *= 1 + statsBaseGear.CritBonusDamage; 
+			
+			
+			arcaneBonusCritDamage *= globalBonusCritDamage;
+			aimedBonusCritDamage *= globalBonusCritDamage;
+			steadyBonusCritDamage *= globalBonusCritDamage;
+			killBonusCritDamage *= globalBonusCritDamage; 
+			chimeraBonusCritDamage *= globalBonusCritDamage; 
+			autoBonusCritDamage *= globalBonusCritDamage;
+			multiShotBonusCritDamage *= globalBonusCritDamage;
+			
+			
+			//Marked For Death
+			double markedForDeathModifier = 1 + 0.02 * character.HunterTalents.MarkedForDeath;
+			aimedBonusCritDamage *= markedForDeathModifier;
+			arcaneBonusCritDamage *= markedForDeathModifier;
+			steadyBonusCritDamage *= markedForDeathModifier;
+			killBonusCritDamage *= markedForDeathModifier;
+			chimeraBonusCritDamage *= markedForDeathModifier;
+		
+			
+			
+			
+			#endregion
+			
+			
+			
+			// shot calcs
+			
+			#region May 2009 Steady Shot Calcs
+			
+			//double steadyShotDPS;
+			
+	
+			//unmodified weapon damage, plus ammo, plus [RAP * 0.1 + 252]
+			double normalSteadyShotDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+			normalSteadyShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
+			normalSteadyShotDamage += 252 + RAP *0.1;
+			
+			
+			double steadyCastTime;
+			if ((2.0 / (1+ calculatedStats.hasteEffectsTotal/100 ) <= 1.5 ))
+            {
+            	steadyCastTime = (float) 1.5;
+            }
+            else
+            {
+            	steadyCastTime = (float)(2.0 / (1+ calculatedStats.hasteEffectsTotal/100));
+            }
+			
+
+     
+            
+            
+            
+            //TODO: Crit add Gronn Stalker set bonus
+            double steadyCrit = critHitPercent * steadyBonusCritChance;
+            double steadyHit = hitChance;
+            double steadyDamageNormal = normalSteadyShotDamage;
+            double steadyDamageCrit = normalSteadyShotDamage * (1.0 + ( steadyBonusCritDamage));
+            double steadyDamageTotal = (steadyDamageNormal * (1 - steadyCrit) + (steadyDamageCrit * steadyCrit) ) ;
+            //steadyDamageTotal = steadyDamageTotal * (1.0  -  damageReduction) ;
+            
+            //TODO: find mana cost
+            double steadyManaCost = 200;
+            double steadyDamagePerMana = steadyDamageTotal / steadyManaCost;
+            double steadyDPS = ((steadyDamageTotal * steadyShotDamageBoost *(1.0 - damageReduction))  / steadyCastTime) * steadyHit;
+            
+  
+            
+    		calculatedStats.steadyCrit = steadyCrit;
+    		calculatedStats.steadyHit = steadyHit;
+    		calculatedStats.steadyDamageNormal = steadyDamageNormal;
+    		calculatedStats.steadyDamageCrit = steadyDamageCrit;
+    		calculatedStats.steadyDamageTotal = steadyDamageTotal;
+    		calculatedStats.steadyDamagePerMana = steadyDamagePerMana;
+    		calculatedStats.steadyDPS = steadyDPS;
+            
+ 			double steadySpamTilOOM = CalcTimeToOOM ( (1/ steadyCastTime),  steadyDamagePerMana , calculatedStats.BasicStats.Mana, manaPerSecond);
+ 			
+ 			//double steadySpamAoVuptime;
+ 			//if (steadySpamTilOOM <= 0)
+ 			//{
+ 			//	steadySpamAoVuptime = 0;
+ 			//}
+ 			//else
+ 			//{
+ 				//steadySpamAoVuptime = CalcUptime ( Time till fullmana, steadySpamTilOOM, options.duration );
+ 			//}
+            calculatedStats.SteadySpamDPS = steadyDPS;
+			//steadyShotDPS  = average damage * speed * hit chance
+			
+			
+			#endregion	
+			
+			#region May 2009 AutoShot
+			
+
+            
+            //unmodified weapon damage, plus ammo, plus +damage from gear, plus [RAP / 14 * Weapon Speed]
+			double normalAutoShotDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+			normalAutoShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
+			normalAutoShotDamage += statsBaseGear.WeaponDamage;
+			normalAutoShotDamage += RAP / 14 * character.Ranged.Item.Speed;
+            
+            
+            
+      
+            double autoCrit = critHitPercent;
+            double autoHit = hitChance;
+            double autoDamageNormal = normalAutoShotDamage;
+       
+            double autoDamageCrit = normalAutoShotDamage * (1.0 + 1.0 * autoBonusCritDamage);
+            double autoDamageTotal = (autoDamageNormal * (1 - autoCrit) + (autoDamageCrit * autoCrit) ) ;
+    		double wildQuiverDamageTotal = autoDamageTotal * 0.8;
+    		double wildQuiverFrequency = 0 ;
+    		double wildQuiverDPS = 0;
+    		if (character.HunterTalents.WildQuiver > 0 )
+    		{
+    			wildQuiverFrequency = ((autoShotSpeed * autoHit) /  (character.HunterTalents.WildQuiver * 0.04)) ;
+    			wildQuiverDPS = wildQuiverDamageTotal / wildQuiverFrequency;
+    		}
+         	
+         	
+            
+            
+    		double autoDPS = ((autoDamageTotal * autoShotDamageBoost * (1.0 - damageReduction))   / autoShotSpeed) * autoHit;
+    		autoDPS += wildQuiverDPS;
+            
+            
+            
+            
+            
+            calculatedStats.AutoshotDPS = autoDPS;
+            
+			
+			#endregion
+			
+			#region May 2009 Serpent Sting
+			
+			
+			double serpentStingDamageNormal = 0;
+			
+			double serpentStingDamageBase = 1210;
+			
+			serpentStingDamageNormal += serpentStingDamageBase;
+			serpentStingDamageNormal += RAP * 0.2;
+			
+			double serpentTicks = 5;
+			double serpentDuration = 15;
+			double serpentDamageperTick = serpentStingDamageNormal / serpentTicks;
+			if ( character.HunterTalents.GlyphOfSerpentSting == true)
+			{
+				serpentTicks += 2;
+				serpentDuration += 6;
+				serpentStingDamageNormal = serpentDamageperTick * serpentTicks;
+			}
+
+            //TODO: find mana cost
+            double serpentManaCost = 454;
+            double serpentDamagePerMana = serpentStingDamageNormal / serpentManaCost;
+            
+            double resistRate = 0.045;
+            double serpentDPS = (((serpentStingDamageNormal/serpentDuration) * serpentStingDamageBoost *(1.0 - resistRate))  / 1.5) * hitChance;
+			
+			calculatedStats.SerpentDPS = serpentDPS;
+			
+			#endregion
+			
+			#region May 2009 Aimed Shot
+			
+			double aimedShotNormalDamage = autoDamageNormal + 408;
+			double aimedShotCastTime = GCD;
+			double aimedShotCD = 10;
+			if (character.HunterTalents.GlyphOfAimedShot)
+			{
+				aimedShotCD -= 2;
+			}
+			double aimedShotHit = hitChance;
+			double aimedShotCrit = critHitPercent * aimedBonusCritChance;
+			double aimedShotCritDamage = aimedShotNormalDamage * ( 1 + 1 * aimedBonusCritDamage);
+			double aimedShotDamageTotal = (aimedShotNormalDamage * (1 - aimedShotCrit) + (aimedShotCritDamage * aimedShotCrit));
+			double aimedShotDPS = ((aimedShotDamageTotal * aimedShotDamageBoost * (1 - damageReduction) ) / aimedShotCastTime) * aimedShotHit;
+			double aimedShotDPCD = aimedShotDPS / aimedShotCD;
+			calculatedStats.aimedDPCD = aimedShotDPCD;
+			
+			#endregion
+			#region May 2009 Explosive Shot
+			double explosiveShotNormalDamage = 425 + (RAP * 0.14);
+			//double es
+			
+			
+			#endregion
+			
+			#region May 2009 Arcane Shot
+			double arcaneShotDamageNormal = RAP * 0.15 + 492;
+			double arcaneShotCastTime = GCD	;
+			double arcaneCD = 6;
+			double arcaneCrit = critHitPercent * arcaneBonusCritChance;
+            double arcaneHit = hitChance;
+			double arcaneShotCritDamage =  arcaneShotDamageNormal * (1.0 + 1.0 * arcaneBonusCritDamage);
+			double arcaneDamageTotal = (arcaneShotDamageNormal * (1 - arcaneCrit) + (arcaneShotCritDamage * arcaneCrit));
+			double arcaneDPS =  ((arcaneDamageTotal * arcaneShotDamageBoost ) / arcaneShotCastTime) * arcaneHit;
+			double arcaneDPCD = arcaneDPS/arcaneCD;
+            calculatedStats.arcaneDPS = arcaneDPCD;
+			
+			#endregion
+			
+			#region May 2009 Multi Shot
+			
+			double multiShotNormalDamage = autoDamageNormal + 408;
+			double multiShotCastTime = GCD;
+			double multiShotCD = 10;
+			if (character.HunterTalents.GlyphOfMultiShot)
+			{
+				multiShotCD -= 1;
+			}
+			double multiShotHit = hitChance;
+			double multiShotCrit = critHitPercent * multiShotBonusCritChance;
+			double multiShotCritDamage = multiShotNormalDamage * ( 1.0 + 1.0 * multiShotBonusCritDamage);
+			double multiShotDamageTotal = (multiShotNormalDamage * (1 - multiShotCrit) + (multiShotCritDamage * multiShotCrit));
+			double multiShotDPS = ((multiShotDamageTotal * multiShotDamageBoost * (1 - damageReduction) ) /multiShotCastTime ) * multiShotHit;
+			double multishotDPCD = multiShotDPS / multiShotCD;
+			calculatedStats.multiDPCD = multishotDPCD;
+			
+			
+			
+			
+			#endregion
+			
+			#region May 2009 Black Arrow
+			#endregion
+			#region May 2009 Kill Shot
+			#endregion
+			#region May 2009 Chimaera Shot
+			#endregion
+			
+			
+			
+			
+			#region Rotations
+			//double rotationTime = 0;
+			//double currentTime = 0;
+			
+			
+			//double AS3steady = 0;
+			//rotationTime = 6;
+			
+			//Arcane Shot cd = 6
+			//Steady cd = 1.5
+			//Steady cd = 1.5
+			//Steady cd = 1.5
+			
+			
+			
+			
+			
+			
+			
+			
+			#endregion
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
             double hawkRAPBonus = HunterRatings.HAWK_BONUS_AP * (1.0 + 0.3 * character.HunterTalents.AspectMastery);
 
@@ -401,20 +1176,37 @@ namespace Rawr.Hunter
 
             {
                 totalStaticHaste *= (1.0 + .04 * character.HunterTalents.SerpentsSwiftness) * HunterRatings.QUIVER_SPEED_INCREASE;
-                totalStaticHaste *= (1.0 + calculatedStats.BasicStats.PhysicalHaste);
+              //  totalStaticHaste *= (1.0 + calculatedStats.BasicStats.PhysicalHaste);
             }
 
             double normalAutoshotsPerSecond = 0.0;
+            totalStaticHaste = 1+ calculatedStats.hasteEffectsTotal/100;
             if (character.Ranged != null)
             {
                 calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Item.Speed / (totalStaticHaste));
                 normalAutoshotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed;
             }
-
-            calculatedStats.SteadySpeed = (float)(2.0 / totalStaticHaste);
-
+			
+            //even if steady shot goes faster, the gcd is still 1.5
+            if ((2.0 / (1+ calculatedStats.hasteEffectsTotal/100 ) <= 1.5 ))
+            {
+            	calculatedStats.SteadySpeed = (float) 1.5;
+            }
+            else
+            {
+            	calculatedStats.SteadySpeed = (float)(2.0 / (1+ calculatedStats.hasteEffectsTotal/100));
+            }
+            
             #endregion
 
+            
+            
+            
+            
+            
+            
+            
+            
             #region OnProc Haste effects
 
             // Model Quickshots
@@ -452,7 +1244,7 @@ namespace Rawr.Hunter
 
             #region Critical Hit Damage
 
-            double autoshotCritDmgModifier = 1.0;
+          //  double autoshotCritDmgModifier = 1.0;
             double abilitiesCritDmgModifier = 1.0 + character.HunterTalents.MortalShots * 0.06;
 
             #endregion
@@ -492,6 +1284,9 @@ namespace Rawr.Hunter
 
             #endregion
 
+            
+            /*
+            
             #region Autoshot
             calculatedStats.AutoshotDPS = 0;
             if (character.Ranged != null)
@@ -509,20 +1304,43 @@ namespace Rawr.Hunter
 
                 autoshotDmg *= talentModifiers;
 
-				int targetArmor = options.TargetArmor;
-				float armorReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+				int targetsArmor = options.TargetArmor;
+				float armorReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetsArmor,
 				calculatedStats.BasicStats.ArmorPenetration, 0f, calculatedStats.BasicStats.ArmorPenetrationRating);//double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
                 //double armorReduction = (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
                 autoshotDmg *= 1.0 - armorReduction;
 
-                calculatedStats.AutoshotDPS = autoshotDmg / (calculatedStats.BaseAttackSpeed * (1.0 - quickShotsUpTime) + (calculatedStats.BaseAttackSpeed / (1.0f + quickShotHaste)) * quickShotsUpTime);
+
+                calculatedStats.AutoshotDPS = autoshotDmg / autoShotSpeed;
                 calculatedStats.AutoshotDPS *= talentDmgModifiers;
             }
 
             #endregion
+            
+            */
 
+            double highestDpsRotation = calculatedStats.SteadySpamDPS;
+            // if other rotation is higher -> that rotation is highest dps;
+            // if next rotation is higher -> that rotation is highest dps;
+            if (character.HunterTalents.AimedShot < 1)
+            {
+            	highestDpsRotation += calculatedStats.multiDPCD;
+            }
+            else
+            {
+            	highestDpsRotation += calculatedStats.aimedDPCD;
+            }
+            highestDpsRotation += calculatedStats.arcaneDPS;	
+            highestDpsRotation += calculatedStats.SerpentDPS;	
+            highestDpsRotation += calculatedStats.AutoshotDPS;
+            
+            
+            
+            
+            
             calculatedStats.PetDpsPoints = pet.getDPS();
+            calculatedStats.HunterDpsPoints = (float) highestDpsRotation;
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
             return calculatedStats;
@@ -559,10 +1377,12 @@ namespace Rawr.Hunter
 			statsTotal.BonusArcaneDamageMultiplier = ((1 + statsRace.BonusArcaneDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusArcaneDamageMultiplier)) - 1;
 			statsTotal.BonusPetDamageMultiplier = ((1 + statsGearEnchantsBuffs.BonusPetDamageMultiplier) * (1 + statsRace.BonusPetDamageMultiplier)) - 1;
 			statsTotal.BonusSteadyShotDamageMultiplier = ((1 + statsGearEnchantsBuffs.BonusSteadyShotDamageMultiplier) * (1 + statsRace.BonusSteadyShotDamageMultiplier) * (1 + statsTalents.BonusSteadyShotDamageMultiplier)) - 1;
-
+			statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (statsTalents.BonusSpiritMultiplier)) - 1;
+			
 			statsTotal.Agility = (statsRace.Agility + statsGearEnchantsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier);
 			statsTotal.Intellect = (statsRace.Intellect + statsGearEnchantsBuffs.Intellect) * (1 + statsTotal.BonusIntellectMultiplier);
 			statsTotal.Stamina = (statsRace.Stamina + statsGearEnchantsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier); 
+			statsTotal.Spirit = (statsRace.Spirit + statsGearEnchantsBuffs.Spirit);  // * (1 + statsTotal.BonusSpiritMultiplier);
 			
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
 			statsTotal.Armor = (float)Math.Round((statsGearEnchantsBuffs.Armor + statsRace.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
@@ -576,12 +1396,15 @@ namespace Rawr.Hunter
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
             statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
+            
             statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsGearEnchantsBuffs.RangedCritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating + statsGearEnchantsBuffs.RangedHasteRating;
             // Haste trinket (Meteorite Whetstone)
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
+           // statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
+            statsTotal.RangedHaste = statsGearEnchantsBuffs.RangedHaste;
+            	
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
-
+			
 			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating + (decimal)statsGearEnchantsBuffs.RangedHitRating);
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
@@ -622,8 +1445,8 @@ namespace Rawr.Hunter
 								+ statsTalents.PhysicalCrit
                                 + statsTotal.PhysicalCrit);
 
-		
-			
+			statsTotal.AttackPower = statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower;
+			statsTotal.BonusRangedAttackPowerMultiplier = statsGearEnchantsBuffs.BonusRangedAttackPowerMultiplier;
 			//TODO:Target Resilience
 			//TODO:Darkmoon Card: Wrath
 
@@ -655,6 +1478,8 @@ namespace Rawr.Hunter
 		{
 			Stats talents = new Stats();
 
+			
+			
 
             // Marksmanship Talents
 			{
@@ -693,6 +1518,58 @@ namespace Rawr.Hunter
 
 			return talents;
 		}
+		
+		public double CalcUptime(double duration, double cooldown, double length)
+		{
+			double durationleft = length;
+			double numBuff = 0;
+			if( duration >= cooldown)
+			{
+				return 1;
+			}
+			
+			while (durationleft > 0)
+			{
+				if (durationleft > duration)
+				{	
+					numBuff += 1;
+				}
+				else
+				{
+					numBuff += (durationleft / duration);
+				}
+				durationleft -= cooldown;
+			}
+			return ((numBuff * duration) / length);
+			
+		}
+		
+		public double CalcTimeToOOM (double shotsPerSecond, double shotsAvgManaUse, double mana, double regen)
+		{
+			double manaUsePerSecond = (1/shotsAvgManaUse) * shotsPerSecond;
+			if (manaUsePerSecond <= regen)
+				return 0;
+			else
+			{
+				manaUsePerSecond -= regen;
+				double timeTilOOM = mana / manaUsePerSecond;
+				return timeTilOOM;
+			}
+		}
+		
+		public double AspectOfViperRegen (double shotsPerSecond, double weaponspeed, double mana, bool glyph)
+		{
+			double manaPerSecond = 0;
+			manaPerSecond += mana * weaponspeed * shotsPerSecond;
+			if (glyph == true)
+			{
+				manaPerSecond *= 1.1;
+			}
+			manaPerSecond += 0.04 * mana / 3;
+			return manaPerSecond;
+		}
+		
+		
 
 		private Stats GetPetStats(CalculationOptionsHunter options, CharacterCalculationsHunter hunterStats, Character character)
 		{
