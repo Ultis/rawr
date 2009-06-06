@@ -902,7 +902,15 @@ namespace Rawr.Mage
                     string[] lines = calculationOptions.CooldownRestrictions.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string line in lines)
                     {
+#if SILVERLIGHT
+                        string[] tokens = line.Split(new char[] { '-', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < tokens.Length; i++)
+                        {
+                            tokens[i] = tokens[i].Trim();
+                        }
+#else
                         string[] tokens = line.Split(new char[] { '-', ':', ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+#endif
                         if (tokens.Length == 3)
                         {
                             CooldownRestriction restriction = new CooldownRestriction();

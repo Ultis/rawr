@@ -650,7 +650,9 @@ namespace Rawr.Mage
 
             sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);
+#if !SILVERLIGHT
             if (displaySolver == null || SolverLogForm.Instance.IsSolverEnabled(displaySolver))
+#endif
             {
                 CalculationOptions.SequenceReconstruction = sequence;
             }
@@ -776,7 +778,9 @@ namespace Rawr.Mage
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
                 displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
+#if !SILVERLIGHT
                 SolverLogForm.Instance.EnableSolver(displaySolver);
+#endif
                 CalculationOptions.SequenceReconstruction = null;
                 return ret;
             }
@@ -806,7 +810,9 @@ namespace Rawr.Mage
             CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
             smp.displaySolver = displaySolver;
             Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal(true);
+#if !SILVERLIGHT
             SolverLogForm.Instance.DisableSolver(displaySolver);
+#endif
             ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
             return ret;
         }

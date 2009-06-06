@@ -2526,6 +2526,7 @@ namespace Rawr.Mage
 
         public void ValidateBaseIntegrity()
         {
+#if !SILVERLIGHT
             for (int i = 0; i < cols + rows; i++)
             {
                 if ((_flags[i] & flagN) != 0)
@@ -2539,6 +2540,7 @@ namespace Rawr.Mage
                     System.Diagnostics.Trace.Assert(Array.IndexOf(_B, i) != -1, "Basis corruption");
                 }
             }
+#endif
         }
 
 #if SILVERLIGHT

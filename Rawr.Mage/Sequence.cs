@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace Rawr.Mage.SequenceReconstruction
 {

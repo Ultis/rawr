@@ -32,35 +32,41 @@ namespace Rawr.Mage.StateDescription
 
             SkipList = new List<TokenType>();
 
-            regex = new Regex(@"[^\(\)!\|\+-]+", RegexOptions.Compiled);
+#if SILVERLIGHT
+            RegexOptions ropt = RegexOptions.None;
+#else
+            RegexOptions ropt = RegexOptions.Compiled;
+#endif
+
+            regex = new Regex(@"[^\(\)!\|\+-]+", ropt);
             Patterns.Add(TokenType.STATE, regex);
             Tokens.Add(TokenType.STATE);
 
-            regex = new Regex(@"\|", RegexOptions.Compiled);
+            regex = new Regex(@"\|", ropt);
             Patterns.Add(TokenType.INTERSECTION, regex);
             Tokens.Add(TokenType.INTERSECTION);
 
-            regex = new Regex(@"\+", RegexOptions.Compiled);
+            regex = new Regex(@"\+", ropt);
             Patterns.Add(TokenType.UNION, regex);
             Tokens.Add(TokenType.UNION);
 
-            regex = new Regex(@"-", RegexOptions.Compiled);
+            regex = new Regex(@"-", ropt);
             Patterns.Add(TokenType.DIFFERENCE, regex);
             Tokens.Add(TokenType.DIFFERENCE);
 
-            regex = new Regex(@"!", RegexOptions.Compiled);
+            regex = new Regex(@"!", ropt);
             Patterns.Add(TokenType.COMPLEMENT, regex);
             Tokens.Add(TokenType.COMPLEMENT);
 
-            regex = new Regex(@"\(", RegexOptions.Compiled);
+            regex = new Regex(@"\(", ropt);
             Patterns.Add(TokenType.BROPEN, regex);
             Tokens.Add(TokenType.BROPEN);
 
-            regex = new Regex(@"\)", RegexOptions.Compiled);
+            regex = new Regex(@"\)", ropt);
             Patterns.Add(TokenType.BRCLOSE, regex);
             Tokens.Add(TokenType.BRCLOSE);
 
-            regex = new Regex(@"^$", RegexOptions.Compiled);
+            regex = new Regex(@"^$", ropt);
             Patterns.Add(TokenType.EOF, regex);
             Tokens.Add(TokenType.EOF);
 

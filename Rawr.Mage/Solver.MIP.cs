@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace Rawr.Mage
 {
@@ -277,7 +280,9 @@ namespace Rawr.Mage
                     if (maxValue < upperBound - 0.00001)
                     {
                         upperBound = maxValue;
+#if !SILVERLIGHT
                         System.Diagnostics.Trace.WriteLine("Upper bound lowered to " + upperBound + " at round " + round);
+#endif
                     }
                     // the node was already probed, so at the very least we have the child nodes
                     // probe each child and add them to leaf nodes
@@ -298,7 +303,9 @@ namespace Rawr.Mage
                 }
             } while (round < sizeLimit && leafNodes.Count > 0 && !cancellationPending);
 
+#if !SILVERLIGHT
             if (round < sizeLimit && !cancellationPending) System.Diagnostics.Trace.WriteLine("Full search complete at round " + round);
+#endif
 
             if (leafNodes.Count == 0 && incumbent != null)
             {
@@ -350,12 +357,16 @@ namespace Rawr.Mage
                         if (currentNode.Depth < highestBacktrack)
                         {
                             highestBacktrack = currentNode.Depth;
+#if !SILVERLIGHT
                             System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+#endif
                         }
                     } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                     if (currentNode.Index >= currentNode.Children.Count)
                     {
+#if !SILVERLIGHT
                         System.Diagnostics.Trace.WriteLine("Full search complete at round = " + round);
+#endif
                         upperBound = lowerBound;
                         break; // we explored the whole search space
                     }
@@ -386,7 +397,9 @@ namespace Rawr.Mage
                                     if (currentNode.Depth < highestBacktrack)
                                     {
                                         highestBacktrack = currentNode.Depth;
+#if !SILVERLIGHT
                                         System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+#endif
                                     }
                                 } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                             }
@@ -446,7 +459,9 @@ namespace Rawr.Mage
                                         if (currentNode.Depth < highestBacktrack)
                                         {
                                             highestBacktrack = currentNode.Depth;
+#if !SILVERLIGHT
                                             System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+#endif
                                         }
                                     } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                                 }
@@ -475,7 +490,9 @@ namespace Rawr.Mage
                                     if (currentNode.Depth < highestBacktrack)
                                     {
                                         highestBacktrack = currentNode.Depth;
+#if !SILVERLIGHT
                                         System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+#endif
                                     }
                                 } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                             }
@@ -587,7 +604,9 @@ namespace Rawr.Mage
                         // we found a new lower bound
                         lowerBound = value;
                         incumbent = lp;
+#if !SILVERLIGHT
                         System.Diagnostics.Trace.WriteLine("Probe value = " + lowerBound + ", root = " + node.Value + ", round = " + round);
+#endif
                         currentNode.ProbeValue = value;
                         while (currentNode != node)
                         {
@@ -647,7 +666,9 @@ namespace Rawr.Mage
                 if (lp.Value < upperBound - 0.00001)
                 {
                     upperBound = lp.Value;
+#if !SILVERLIGHT
                     System.Diagnostics.Trace.WriteLine("Upper bound lowered to " + upperBound + " at round " + heap.Count);
+#endif
                 }
                 // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                 // if this one is valid than all others are sub-optimal
@@ -660,14 +681,18 @@ namespace Rawr.Mage
                 }*/
                 if (heap.Count > maxHeap)
                 {
+#if !SILVERLIGHT
                     System.Windows.Forms.MessageBox.Show("SMP algorithm exceeded maximum allowed computation limit. Displaying the last working solution. Increase the limit in options if you would like to compute the correct solution.");
+#endif
                     break;
                 }
                 valid = IsLpValid();
             } while (heap.Count > 0 && !valid && !cancellationPending);
             if (valid)
             {
+#if !SILVERLIGHT
                 System.Diagnostics.Trace.WriteLine("Full search complete at round = " + heap.Count);
+#endif
                 lowerBound = upperBound;
             }
             heap = null;

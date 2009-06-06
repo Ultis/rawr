@@ -13,7 +13,11 @@ namespace Rawr.Mage.SequenceReconstruction
         public Cooldown Type;
     }
 
+#if SILVERLIGHT
+    public class SequenceItem
+#else
     public class SequenceItem : ICloneable
+#endif
     {
         public static CharacterCalculationsMage Calculations;
 
@@ -213,10 +217,12 @@ namespace Rawr.Mage.SequenceReconstruction
 
         #region ICloneable Members
 
+#if !SILVERLIGHT
         object ICloneable.Clone()
         {
             return Clone();
         }
+#endif
 
         public SequenceItem Clone()
         {

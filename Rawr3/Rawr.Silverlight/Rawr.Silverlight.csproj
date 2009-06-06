@@ -314,6 +314,10 @@
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.csproj">
+      <Project>{F0F978C4-0F75-4487-B29C-C9C1AE726EC5}</Project>
+      <Name>Rawr.Mage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.csproj">
       <Project>{F515017D-CBC1-40E8-9E73-33AF171D697E}</Project>
       <Name>Rawr.Retribution</Name>

@@ -52,6 +52,7 @@ namespace Rawr.Silverlight
             {
                 Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
                 Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
+                Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
                 Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
 
                 new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
@@ -91,7 +92,7 @@ namespace Rawr.Silverlight
         public void CheckLoadFinished()
         {
             if (!itemcacheFinished || !enchantFinished || !buffFinished) return;
-            Character testChar =
+            /*Character testChar =
                 new Character("Ermad", "Bonechewer", Character.CharacterRegion.US,
                 Character.CharacterRace.Human,
                 new ItemInstance(46180, 41401, 42148, 0, 3820),
@@ -114,12 +115,13 @@ namespace Rawr.Silverlight
                 new ItemInstance(39716, 0, 0, 0, 1128),
                 new ItemInstance(40705, 0, 0, 0, 0),
                 null,
-                null);
-            testChar.Class = Character.CharacterClass.Paladin;
+                null);*/
+            Character testChar = new Character();
+            testChar.Class = Character.CharacterClass.Mage;
             testChar.WaistBlacksmithingSocketEnabled = true;
-            testChar.CalculationOptions = new Rawr.Healadin.CalculationOptionsHealadin();
-            testChar.PaladinTalents = new PaladinTalents("503500520200130531005152210000000000000000000000000005032050203000000000000000.0000001000000100100000010000001010");
-            testChar.CurrentModel = "Healadin";           
+            testChar.CalculationOptions = new Rawr.Mage.CalculationOptionsMage();
+            //testChar.PaladinTalents = new PaladinTalents("503500520200130531005152210000000000000000000000000005032050203000000000000000.0000001000000100100000010000001010");
+            testChar.CurrentModel = "Mage";           
 
             //((Grid)RootVisual).Children.RemoveAt(0);
             ((Grid)RootVisual).Children.Add(new MainPage(testChar));

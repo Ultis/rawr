@@ -68,6 +68,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="ItemCache.cs" />
     <Compile Include="ItemFilter.cs" />
+    <Compile Include="ListUtils.cs" />
     <Compile Include="NetworkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SavedTalentSpec.cs" />

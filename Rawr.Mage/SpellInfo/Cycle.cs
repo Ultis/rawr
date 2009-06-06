@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace Rawr.Mage
 {
@@ -527,7 +530,7 @@ namespace Rawr.Mage
         {
             get
             {
-                if (sequence == null) sequence = string.Join("-", spellList.ConvertAll<string>(spell => (spell != null) ? spell.Name : "Pause").ToArray());
+                if (sequence == null) sequence = string.Join("-", spellList.ConvertAll(spell => (spell != null) ? spell.Name : "Pause").ToArray());
                 return sequence;
             }
         }
@@ -952,7 +955,11 @@ namespace Rawr.Mage
                 remainingStates.RemoveAt(remainingStates.Count - 1);
 
                 List<CycleControlledStateTransition> transitions = GetStateTransitions(state);
+#if SILVERLIGHT
+                state.Transitions = transitions.ConvertAll(transition => (CycleStateTransition)transition).ToList();
+#else
                 state.Transitions = transitions.ConvertAll(transition => (CycleStateTransition)transition);
+#endif
                 foreach (CycleControlledStateTransition transition in transitions)
                 {
                     if (transition.TargetState != state && !processedStates.Contains(transition.TargetState) && !remainingStates.Contains(transition.TargetState))

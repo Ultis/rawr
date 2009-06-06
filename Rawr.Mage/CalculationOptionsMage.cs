@@ -6,7 +6,6 @@ using System.Xml;
 
 namespace Rawr.Mage
 {
-    [Serializable]
     public class SpellWeight
     {
         public SpellId Spell { get; set; }
@@ -20,7 +19,6 @@ namespace Rawr.Mage
         public StateDescription.StateDescriptionDelegate IsMatch { get; set; }
     }
 
-    [Serializable]
     public sealed class CalculationOptionsMage : ICalculationOptionBase
     {
         private int playerLevel;
@@ -257,7 +255,7 @@ namespace Rawr.Mage
             return clone;
         }
 
-        private CalculationOptionsMage()
+        public CalculationOptionsMage()
         {
             TargetLevel = 83;
             AoeTargetLevel = 80;

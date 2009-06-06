@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+#if SILVERLIGHT
+using System.Windows.Media;
+#else
 using System.Drawing;
+#endif
 
 namespace Rawr.Mage
 {
@@ -45,24 +49,24 @@ namespace Rawr.Mage
 
         public CalculationsMage()
         {
-            _subPointNameColorsRating = new Dictionary<string, System.Drawing.Color>();
-            _subPointNameColorsRating.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
-            _subPointNameColorsRating.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
+            _subPointNameColorsRating = new Dictionary<string, Color>();
+            _subPointNameColorsRating.Add("Dps", Color.FromArgb(255, 0, 128, 255));
+            _subPointNameColorsRating.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
 
             _subPointNameColorsMana = new Dictionary<string, Color>();
-            _subPointNameColorsMana.Add("Mana", System.Drawing.Color.FromArgb(0, 0, 255));
+            _subPointNameColorsMana.Add("Mana", Color.FromArgb(255, 0, 0, 255));
 
             _subPointNameColors = _subPointNameColorsRating;
         }
 
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        private Dictionary<string, System.Drawing.Color> _subPointNameColorsRating = null;
-        private Dictionary<string, System.Drawing.Color> _subPointNameColorsMana = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        private Dictionary<string, Color> _subPointNameColors = null;
+        private Dictionary<string, Color> _subPointNameColorsRating = null;
+        private Dictionary<string, Color> _subPointNameColorsMana = null;
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
-                Dictionary<string, System.Drawing.Color> ret = _subPointNameColors;
+                Dictionary<string, Color> ret = _subPointNameColors;
                 _subPointNameColors = _subPointNameColorsRating;
                 return ret;
             }
@@ -211,8 +215,12 @@ namespace Rawr.Mage
             }
         }
 
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        private CalculationOptionsPanelMage _calculationOptionsPanel = null;
+#if SILVERLIGHT
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get
             {
@@ -1009,6 +1017,7 @@ namespace Rawr.Mage
             return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds, span.Milliseconds);
         }
 
+#if !SILVERLIGHT
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             Rectangle rectSubPoint;
@@ -1908,6 +1917,7 @@ namespace Rawr.Mage
 					break;
             }
         }
+#endif
 
         private string[] _optimizableCalculationLabels = null;
         public override string[] OptimizableCalculationLabels

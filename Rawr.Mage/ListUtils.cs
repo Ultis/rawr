@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-	public class ListUtils
+	public static class ListUtils
 	{
 		public static List<T> Intersect<T>(List<T> left, List<T> right)
 		{
