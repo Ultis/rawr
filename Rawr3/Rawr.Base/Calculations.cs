@@ -1401,6 +1401,8 @@ namespace Rawr
             set;
         }
 
+        System.Windows.Controls.UserControl PanelControl { get; }
+
 		/// <summary>
 		/// Sets default values for each CalculationOption used by the model, if they don't already exist, 
 		/// and then populates the controls with the current values in Character.CalculationOptions. You

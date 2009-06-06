@@ -32,9 +32,9 @@ namespace Rawr.Silverlight
         private bool itemcacheFinished;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            RootVisual = new Grid();
-            SplashScreen ss = new SplashScreen();
-            ((Grid)RootVisual).Children.Add(ss);
+            Grid g = new Grid();
+            g.Children.Add(new SplashScreen());
+            RootVisual = g;
 
             if (!FileUtils.HasQuota(5120))
             {
@@ -52,7 +52,6 @@ namespace Rawr.Silverlight
             {
                 Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
                 Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
-
                 Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
 
                 new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
@@ -120,10 +119,9 @@ namespace Rawr.Silverlight
             testChar.WaistBlacksmithingSocketEnabled = true;
             testChar.CalculationOptions = new Rawr.Healadin.CalculationOptionsHealadin();
             testChar.PaladinTalents = new PaladinTalents("503500520200130531005152210000000000000000000000000005032050203000000000000000.0000001000000100100000010000001010");
-            testChar.CurrentModel = "Healadin";
-            
+            testChar.CurrentModel = "Healadin";           
 
-            ((Grid)RootVisual).Children.RemoveAt(0);
+            //((Grid)RootVisual).Children.RemoveAt(0);
             ((Grid)RootVisual).Children.Add(new MainPage(testChar));
         }
 

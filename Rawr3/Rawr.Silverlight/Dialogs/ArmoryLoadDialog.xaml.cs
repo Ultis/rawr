@@ -14,6 +14,11 @@ namespace Rawr.Silverlight
 {
     public partial class ArmoryLoadDialog : ChildWindow
     {
+
+        public string CharacterName { get; private set; }
+        public string Realm { get; private set; }
+        public Character.CharacterRegion Region { get; private set; }
+
         public ArmoryLoadDialog()
         {
             InitializeComponent();
@@ -21,6 +26,11 @@ namespace Rawr.Silverlight
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            CharacterName = NameText.Text;
+            Realm = RealmText.Text;
+            Region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion),
+                ((ComboBoxItem)RegionCombo.SelectedItem).Content.ToString(), false);
+
             this.DialogResult = true;
         }
 

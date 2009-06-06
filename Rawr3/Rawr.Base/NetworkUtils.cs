@@ -1,0 +1,75 @@
+﻿using System;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.IO;
+using System.Xml.Linq;
+using System.Collections.Generic;
+
+namespace Rawr
+{
+    public class NetworkUtils
+    {
+
+        public XDocument Result { get; private set; }
+        public EventHandler DocumentReady;
+
+        public NetworkUtils() { }
+        public NetworkUtils(EventHandler handler) : this()
+        {
+            DocumentReady += handler;
+        }
+
+        public void DownloadDocument(Uri uri)
+        {
+            WebClient client = new WebClient();
+            client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
+            client.DownloadStringAsync(uri);
+        }
+
+        private void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            if (e.Error == null && e.Cancelled == false)
+            {
+                using (StringReader sr = new StringReader(e.Result))
+                {
+                    Result = XDocument.Load(sr);
+                }
+            }
+            else
+            {
+                Result = null;
+            }
+            if (DocumentReady != null) DocumentReady.Invoke(this, EventArgs.Empty);
+        }
+
+        public void GetCharacterSheetDocument(string characterName, string realm, Character.CharacterRegion region)
+        {
+            DownloadDocument(new Uri(string.Format(Settings.NetworkSettings.Default.CharacterSheetURI,
+                _domains[region], realm, characterName), UriKind.Relative));
+        }
+
+        public void GetTalentTreeDocument(string characterName, string realm, Character.CharacterRegion region)
+        {
+            DownloadDocument(new Uri(string.Format(Settings.NetworkSettings.Default.CharacterTalentURI,
+                _domains[region], realm, characterName), UriKind.Relative));
+        }
+
+        private static Dictionary<Character.CharacterRegion, string> _domains;
+        static NetworkUtils()
+        {
+            _domains = new Dictionary<Character.CharacterRegion, string>();
+            _domains.Add(Character.CharacterRegion.US, "www");
+            _domains.Add(Character.CharacterRegion.EU, "eu");
+            _domains.Add(Character.CharacterRegion.KR, "kr");
+            _domains.Add(Character.CharacterRegion.TW, "tw");
+            _domains.Add(Character.CharacterRegion.CN, "cn");
+        }
+    }
+}

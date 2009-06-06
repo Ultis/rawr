@@ -141,6 +141,9 @@
     <Compile Include="Dialogs\StatControl.xaml.cs">
       <DependentUpon>StatControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Status.xaml.cs">
+      <DependentUpon>Status.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileUtils.cs" />
     <Compile Include="GroupBox\Groupbox.cs" />
     <Compile Include="Items\ItemTooltip.xaml.cs">
@@ -242,7 +245,11 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="GroupBox\generic.xaml">
+    <Page Include="Dialogs\Status.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="themes\generic.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -296,8 +303,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Rawr.Splash.png">
-    </Resource>
+    <Resource Include="Images\Rawr.Splash.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

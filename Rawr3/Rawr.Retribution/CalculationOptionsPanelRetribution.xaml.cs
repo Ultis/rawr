@@ -20,6 +20,7 @@ namespace Rawr.Retribution
         }
 
         #region ICalculationOptionsPanel Members
+        public UserControl PanelControl { get { return this; } }
 
         private Character character;
         public Character Character
@@ -31,12 +32,17 @@ namespace Rawr.Retribution
             set
             {
                 character = value;
+                LoadCalculationOptions();
             }
         }
 
+        private bool _loadingCalculationOptions;
         public void LoadCalculationOptions()
         {
-            ;
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsRetribution();
+
+            _loadingCalculationOptions = false;
         }
 
         #endregion

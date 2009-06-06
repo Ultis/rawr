@@ -7,7 +7,7 @@
 	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	mc:Ignorable="d"
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
-	xmlns:System_Windows_Controls_Primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=System.Windows.Controls.Layout.Toolkit" xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm" x:Class="Rawr.Silverlight.MainPage" 
+	xmlns:System_Windows_Controls_Primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=System.Windows.Controls.Layout.Toolkit" xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm" x:Class="Rawr.Silverlight.MainPage" 
     d:DesignWidth="912" d:DesignHeight="776" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 	<UserControl.DataContext>
 		<Rawr:Character/>
@@ -191,9 +191,7 @@
     				</Grid>
     			</controls:TabItem>
     			<controls:TabItem x:Name="OptionsTab" Header="Options">
-    				<Grid>
-    					<dataControls:DataForm x:Name="OptionsData" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" CanUserAddItems="False" CanUserDeleteItems="False"/>
-    				</Grid>
+    				<ScrollViewer x:Name="OptionsView" Margin="0,0,0,0" BorderThickness="0,0,0,0" Padding="0,0,0,0" VerticalScrollBarVisibility="Auto"/>
     			</controls:TabItem>
     		</controls:TabControl>
     	</controls:DockPanel>

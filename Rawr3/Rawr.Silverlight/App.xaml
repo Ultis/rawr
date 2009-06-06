@@ -5,7 +5,9 @@
 			 xmlns:local="clr-namespace:Rawr.Silverlight"
              mc:Ignorable="d">
 	<Application.Resources>
-        <local:IconPathConverter x:Key="IconPathConverter"/>
-        <local:GemColorConverter x:Key="GemColorConverter"/>
+		<ResourceDictionary>
+			<local:IconPathConverter x:Key="IconPathConverter"/>
+			<local:GemColorConverter x:Key="GemColorConverter"/>
+		</ResourceDictionary>
     </Application.Resources>		 
 </Application>

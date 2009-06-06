@@ -10,13 +10,24 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Rawr;
 
 namespace Rawr.Silverlight
 {
     public partial class MainPage : UserControl
     {
+
+        private Status status;
+        public Status Status
+        {
+            set { status = value; }
+            get
+            {
+                if (status == null) status = new Status();
+                return status;
+            }
+        }
 
         private ItemBrowser itemSearch = null;
         public ItemBrowser ItemSearch
@@ -42,9 +53,10 @@ namespace Rawr.Silverlight
                     }
 
                     character = value;
+                    character.IsLoading = true;
                     DataContext = character;
                     Calculations.LoadModel(Calculations.Models[character.CurrentModel]);
-
+                    Calculations.CalculationOptionsPanel.Character = character;
                     HeadButton.Character = character;
                     NeckButton.Character = character;
                     ShoulderButton.Character = character;
@@ -68,12 +80,12 @@ namespace Rawr.Silverlight
 
                     BuffControl.Character = character;
                     ComparisonGraph.Character = character;
-                    OptionsData.CurrentItem = character.CalculationOptions;
 
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
 
                     character_CalculationsInvalidated(this, EventArgs.Empty);
                     ItemCache.OnItemsChanged();
+                    Character.IsLoading = false;
                 }
             }
         }
@@ -110,10 +122,26 @@ namespace Rawr.Silverlight
             MainHandButton.Slot = Character.CharacterSlot.MainHand;
             OffHandButton.Slot = Character.CharacterSlot.OffHand;
             RangedButton.Slot = Character.CharacterSlot.Ranged;
-
+            OptionsView.Content = Calculations.CalculationOptionsPanel;
             Character = c;
 
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
+            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
+            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+
+            StatusMessaging.Ready = true;
+        }
+
+        private void Calculations_ModelChanged(object sender, EventArgs e)
+        {
+            OptionsView.Content = Calculations.CalculationOptionsPanel;
+
+            Character = Character;
+        }
+
+        private void Calculations_ModelChanging(object sender, EventArgs e)
+        {
+            Character.SerializeCalculationOptions();
         }
 
         private void Instance_ItemsChanged(object sender, EventArgs e)
@@ -162,10 +190,26 @@ namespace Rawr.Silverlight
 
         private void armoryLoad_Closed(object sender, EventArgs e)
         {
+            ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
             if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
-                new ErrorWindow() { Message = "Not yet implemented." }.Show();
+                Status.Show();
+                Armory armory = new Armory(armory_ResultReady);
+                armory.GetCharacter(ald.CharacterName, ald.Realm, ald.Region);
+                StatusMessaging.UpdateStatus("Loading Character", "Queued");
             }
+        }
+
+        private void armory_ResultReady(object sender, EventArgs e)
+        {
+            Armory armory = sender as Armory;
+            if (armory != null && armory.CharacterResult != null)
+            {
+                StatusMessaging.UpdateStatus("Loading Character", "In Progress");
+                Character = armory.CharacterResult;
+            }
+            StatusMessaging.UpdateStatusFinished("Loading Character");
+            Status = null;
         }
 
         private void ShowItemRefinement()

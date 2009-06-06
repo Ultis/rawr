@@ -21,6 +21,8 @@ namespace Rawr.Healadin
         }
 
         #region ICalculationOptionsPanel Members
+        public UserControl PanelControl { get { return this; } }
+
         private Character character;
         public Character Character
         {
@@ -31,12 +33,17 @@ namespace Rawr.Healadin
             set
             {
                 character = value;
+                LoadCalculationOptions();
             }
         }
 
+        private bool _loadingCalculationOptions;
         public void LoadCalculationOptions()
         {
-            ;
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsHealadin();
+
+            _loadingCalculationOptions = false;
         }
         #endregion
     }
