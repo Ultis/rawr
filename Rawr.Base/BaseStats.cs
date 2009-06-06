@@ -36,6 +36,11 @@ namespace Rawr
             Stats S = new Stats();
 
             #region Base Stats
+            #region All Classes
+            S.Miss = 0.05f;
+            S.Block = 0.0f;
+            S.Parry = 0.0f;
+            #endregion
             switch (characterClass)
             {
                 #region Death Knight
@@ -47,6 +52,7 @@ namespace Rawr
                     S.AttackPower = 220;
                     S.PhysicalCrit = 0.0319f;
                     S.Dodge = 0.034636f;
+                    S.Parry = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0f;
                     switch (characterRace)
@@ -185,6 +191,7 @@ namespace Rawr
                     S.RangedAttackPower = 150;
                     S.PhysicalCrit = -0.0153f;
                     S.Dodge = -0.0545f;
+                    S.Parry = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0360f;
                     switch (characterRace)
@@ -314,6 +321,8 @@ namespace Rawr
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0345f;
                     S.Dodge = 0.032685f;
+                    S.Parry = 0.05f;
+                    S.Block = 0.05f;
                     switch (characterRace)
                     {
                         case Character.CharacterRace.BloodElf:
@@ -425,6 +434,7 @@ namespace Rawr
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.047f;
                     S.Dodge = -0.0059f;
+                    S.Parry = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0f;
                     switch (characterRace)
@@ -499,6 +509,7 @@ namespace Rawr
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.0292f;
                     S.Dodge = 0.01675f;
+                    S.Block = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.022f;
                     switch (characterRace)
@@ -598,6 +609,8 @@ namespace Rawr
                     S.AttackPower = 220;
                     S.PhysicalCrit = 0.03192f;
                     S.Dodge = 0.034636f;
+                    S.Parry = 0.05f;
+                    S.Block = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0f;
                     switch (characterRace)
