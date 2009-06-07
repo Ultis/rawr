@@ -309,5 +309,26 @@ namespace Rawr
 			}
 			dialog.Dispose();
 		}
+
+        private void exportToLootPlanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (ComparisonCalculationUpgrades upgrade in comparisonGraph1.ItemCalculations)
+                {
+                    ItemInstance item = upgrade.ItemInstance;
+                    if (item != null)
+                    {
+                        sb.AppendFormat("{0}:{1} Upgrade Score;",
+                            item.Id,
+                            upgrade.OverallPoints);
+                    }
+                }
+
+                Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
+            }
+            catch { }
+        }
     }
 }
