@@ -53,34 +53,62 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Base\BaseStats.cs">
+      <Link>BaseStats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Buff.cs">
+      <Link>Buff.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\ClassGlyphs.cs">
+      <Link>ClassGlyphs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Enchant.cs">
+      <Link>Enchant.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\EnumHelper.cs">
+      <Link>EnumHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Item.cs">
+      <Link>Item.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs">
+      <Link>SavedTalentSpec.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SerializableDictionary.cs">
+      <Link>SerializableDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialEffect.cs">
+      <Link>SpecialEffect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialEffects.cs">
+      <Link>SpecialEffects.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialFunction.cs">
+      <Link>SpecialFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\StatConversion.cs">
+      <Link>StatConversion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Stats.cs">
+      <Link>Stats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\StatusMessaging.cs">
+      <Link>StatusMessaging.cs</Link>
+    </Compile>
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
-    <Compile Include="BaseStats.cs" />
-    <Compile Include="Buff.cs" />
     <Compile Include="Calculations.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
-    <Compile Include="CustomStats.cs" />
-    <Compile Include="Enchant.cs" />
-    <Compile Include="EnumHelper.cs" />
     <Compile Include="GemmingTemplate.cs" />
-    <Compile Include="Item.cs" />
     <Compile Include="ItemCache.cs" />
     <Compile Include="ItemFilter.cs" />
     <Compile Include="ListUtils.cs" />
     <Compile Include="NetworkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SavedTalentSpec.cs" />
-    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Settings\CacheSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\NetworkSettings.cs" />
-    <Compile Include="SpecialEffect.cs" />
-    <Compile Include="SpecialFunction.cs" />
-    <Compile Include="StatConversion.cs" />
-    <Compile Include="Stats.cs" />
-    <Compile Include="StatusMessaging.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

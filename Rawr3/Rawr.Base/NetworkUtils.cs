@@ -51,13 +51,13 @@ namespace Rawr
 
         public void GetCharacterSheetDocument(string characterName, string realm, Character.CharacterRegion region)
         {
-            DownloadDocument(new Uri(string.Format(Settings.NetworkSettings.Default.CharacterSheetURI,
+            DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.CharacterSheetURI,
                 _domains[region], realm, characterName), UriKind.Relative));
         }
 
         public void GetTalentTreeDocument(string characterName, string realm, Character.CharacterRegion region)
         {
-            DownloadDocument(new Uri(string.Format(Settings.NetworkSettings.Default.CharacterTalentURI,
+            DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.CharacterTalentURI,
                 _domains[region], realm, characterName), UriKind.Relative));
         }
 

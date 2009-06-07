@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.ComponentModel;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace Rawr
 {
@@ -70,6 +73,7 @@ namespace Rawr
         [XmlElement("LocalizedName")]
         public string _localizedName;
         
+#if !SILVERLIGHT
         public ItemLocation LocationInfo
 		{
 			get
@@ -77,6 +81,7 @@ namespace Rawr
 				return LocationFactory.Lookup(Id);
 			}
 		}
+#endif
 
         [XmlIgnore]
         public DateTime LastChange { get; set; }
@@ -188,7 +193,7 @@ namespace Rawr
             }
 			set 
             { 
-                _slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), value);
+                _slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), value, false);
                 UpdateGemInformation();
             }
 		}
@@ -242,7 +247,7 @@ namespace Rawr
 		public string TypeString
 		{
 			get { return _type.ToString(); }
-			set { _type = (ItemType)Enum.Parse(typeof(ItemType), value); }
+			set { _type = (ItemType)Enum.Parse(typeof(ItemType), value, false); }
 		}
 		[XmlIgnore]
 		public int MinDamage
@@ -361,19 +366,19 @@ namespace Rawr
 		public string SocketColor1String
 		{
 			get { return _socketColor1.ToString(); }
-			set { _socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+			set { _socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value, false); }
 		}
 		[XmlIgnore]
 		public string SocketColor2String
 		{
 			get { return _socketColor2.ToString(); }
-			set { _socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+			set { _socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value, false); }
 		}
 		[XmlIgnore]
 		public string SocketColor3String
 		{
 			get { return _socketColor3.ToString(); }
-			set { _socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+			set { _socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value, false); }
 		}
 		[XmlIgnore]
 		public Stats SocketBonus
@@ -704,12 +709,19 @@ namespace Rawr
 			}
 		}
 
+#if SILVERLIGHT
+		public static Dictionary<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap { get; private set; }
+		static Item()
+		{
+            Dictionary<Item.ItemSlot, Character.CharacterSlot> list = new Dictionary<Item.ItemSlot, Character.CharacterSlot>();
+#else
+
 		public static SortedList<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap { get; private set; }
 		static Item()
 		{
-			SortedList<Item.ItemSlot, Character.CharacterSlot> list = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
-
-			foreach (Item.ItemSlot iSlot in Enum.GetValues(typeof(Item.ItemSlot)))
+            SortedList<Item.ItemSlot, Character.CharacterSlot> list = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
+#endif
+            foreach (Item.ItemSlot iSlot in EnumHelper.GetValues(typeof(Item.ItemSlot)))
 			{
 				list[iSlot] = Character.CharacterSlot.None;
 			}
@@ -734,7 +746,11 @@ namespace Rawr
 			list[Item.ItemSlot.Ranged] = Character.CharacterSlot.Ranged;
 			list[Item.ItemSlot.Projectile] = Character.CharacterSlot.Projectile;
 			list[Item.ItemSlot.ProjectileBag] = Character.CharacterSlot.ProjectileBag;
-			list.TrimExcess();
+#if SILVERLIGHT
+            list.OrderBy(kvp => (int)kvp.Key);
+#else
+            list.TrimExcess();
+#endif
 			DefaultSlotMap = list;
 		}
 
@@ -991,6 +1007,9 @@ namespace Rawr
 			if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
+#if SILVERLIGHT
+                return new Item();
+#else
 				Item newItem = useWowhead ? Wowhead.GetItem(wowheadSite, id.ToString(), false) : Armory.GetItem(id);
                 if (newItem != null)
                 {
@@ -1003,15 +1022,17 @@ namespace Rawr
                     ItemCache.AddItem(newItem, raiseEvent);
                 }
 				return ItemCache.FindItemById(id);
+#endif
 			}
 		}
 
 		/// <summary>
 		/// Used by optimizer to cache dictionary search result
 		/// </summary>
+#if !SILVERLIGHT
         [XmlIgnore]
         internal Optimizer.ItemAvailabilityInformation AvailabilityInformation;
-
+#endif
 		#region IComparable<Item> Members
 
 		public int CompareTo(Item other)

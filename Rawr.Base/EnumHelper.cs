@@ -2,12 +2,16 @@
 using System.Net;
 using System.Reflection;
 using System.Collections.Generic;
+#if SILVERLIGHT
 using System.Linq;
+#endif
 
 namespace Rawr
 {
     public static class EnumHelper
     {
+
+#if SILVERLIGHT
         public static T[] GetValues<T>()
         {
             Type enumType = typeof(T);
@@ -52,6 +56,11 @@ namespace Rawr
             }
 
             return values.ToArray();
+#else
+        public static Array GetValues(Type enumType)
+        {
+            return Enum.GetValues(enumType);
+#endif
         }
 
     }

@@ -15,6 +15,12 @@ namespace Rawr
 {
     public static class ListUtils
     {
+
+        public static T Find<T>(this IEnumerable<T> source, Predicate<T> match)
+        {
+            return source.FirstOrDefault(t => match(t));
+        }
+
         public static int FindLastIndex<T>(this IEnumerable<T> source, Predicate<T> match)
         {
             var v = source
@@ -45,6 +51,7 @@ namespace Rawr
         {
             return (from item in source select converter(item));
         }
+
 
         public static int FindIndex<T>(this IEnumerable<T> source, Predicate<T> match)
         {
@@ -97,6 +104,11 @@ namespace Rawr
             int num3 = list.Count - index;
             list.RemoveRange(index, list.Count - index);
             return num3;
+        }
+
+        public static List<T> FindAll<T>(this List<T> list, Predicate<T> match)
+        {
+           return new List<T>(list.Where(t => match(t)));
         }
     }
 }

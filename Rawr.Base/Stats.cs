@@ -5,6 +5,9 @@ using System.Reflection;
 using System.ComponentModel;
 using System.Reflection.Emit;
 using System.Xml.Serialization;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace Rawr {
     enum AdditiveStat : int {
@@ -5057,10 +5060,10 @@ namespace Rawr {
                 }
             }
 
-            AdditiveStatCount = Enum.GetValues(typeof(AdditiveStat)).Length;
-            MultiplicativeStatCount = Enum.GetValues(typeof(MultiplicativeStat)).Length;
-            InverseMultiplicativeStatCount = Enum.GetValues(typeof(InverseMultiplicativeStat)).Length;
-            NonStackingStatCount = Enum.GetValues(typeof(NonStackingStat)).Length;
+            AdditiveStatCount = EnumHelper.GetValues(typeof(AdditiveStat)).Length;
+            MultiplicativeStatCount = EnumHelper.GetValues(typeof(MultiplicativeStat)).Length;
+            InverseMultiplicativeStatCount = EnumHelper.GetValues(typeof(InverseMultiplicativeStat)).Length;
+            NonStackingStatCount = EnumHelper.GetValues(typeof(NonStackingStat)).Length;
         }
 
         public static PropertyInfo[] PropertyInfoCache
@@ -5102,7 +5105,11 @@ namespace Rawr {
 
         public IDictionary<PropertyInfo, float> Values(StatFilter filter)
         {
+#if SILVERLIGHT
+            Dictionary<PropertyInfo, float> dict = new Dictionary<PropertyInfo, float>();
+#else
             SortedList<PropertyInfo, float> dict = new SortedList<PropertyInfo, float>(new PropertyComparer());
+#endif
             foreach (PropertyInfo info in PropertyInfoCache)
             {
                 if (info.PropertyType.IsAssignableFrom(typeof(float)))
@@ -5114,6 +5121,9 @@ namespace Rawr {
                     }
                 }
             }
+#if SILVERLIGHT
+            dict.OrderBy(kvp => kvp.Key, new PropertyComparer());
+#endif
             return dict;
         }
     }
@@ -5157,15 +5167,23 @@ namespace Rawr {
             return System.Text.RegularExpressions.Regex.Replace(
                     name,
                     "([A-Z])",
-                    " $1",
-                    System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
+                    " $1"
+#if SILVERLIGHT
+                    );
+#else
+                    ,System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
+#endif
         }
         public static string UnSpaceCamel(String name) {
             return System.Text.RegularExpressions.Regex.Replace(
                     name,
                     "( )",
-                    "",
-                    System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
+                    ""
+#if SILVERLIGHT
+                    );
+#else
+                    ,System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
+#endif
         }
     }
 }

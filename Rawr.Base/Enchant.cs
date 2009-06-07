@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -86,13 +86,14 @@ namespace Rawr
         private static EnchantList _allEnchants = null;
         private static readonly string _SaveFilePath;
 
-
+#if !SILVERLIGHT
         static Enchant()
         {
-            _SaveFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
+            _SaveFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
             LoadEnchants();
             SaveEnchants();
         }
+#endif
 
         public Enchant() { }
         /// <summary>
@@ -260,6 +261,26 @@ namespace Rawr
             ));
         }
 
+#if SILVERLIGHT
+        public static void Save(StreamWriter writer)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));
+            serializer.Serialize(writer, _allEnchants);
+            writer.Close();
+        }
+
+        public static void Load(StreamReader reader)
+        {
+            _allEnchants = null;
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));
+                _allEnchants = (EnchantList)serializer.Deserialize(reader);
+                reader.Close();
+            }
+            catch { }
+            finally { _allEnchants = _allEnchants ?? new EnchantList(); }
+#else
         private static void SaveEnchants()
         {
             try
@@ -297,7 +318,7 @@ namespace Rawr
                     _allEnchants = new EnchantList();
                 }
             }
-
+#endif
             List<Enchant> defaultEnchants = GetDefaultEnchants();
             for (int defaultEnchantIndex = 0; defaultEnchantIndex < defaultEnchants.Count; defaultEnchantIndex++)
             {

@@ -129,13 +129,13 @@ namespace Rawr.Silverlight
 
             ModelCombo.ItemsSource = Calculations.Models.Keys;
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
 
             Character c = new Character();
             c.CurrentModel = ConfigModel;
             c.Class = Calculations.ModelClasses[c.CurrentModel];
             Character = c;
 
+            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
 
             StatusMessaging.Ready = true;

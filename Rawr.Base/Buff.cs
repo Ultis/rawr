@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -33,10 +32,32 @@ namespace Rawr
             set { _conflictingBuffs = value; }
         }
 
+#if SILVERLIGHT
+        public static void Save(StreamWriter writer)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+            serializer.Serialize(writer, _allBuffs);
+            writer.Close();
+        }
+
+        public static void Load(StreamReader reader)
+        {
+            try
+            {
+                List<Buff> loadedBuffs = null;
+                try
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+                    loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
+                    reader.Close();
+                }
+                catch { }
+                finally { loadedBuffs = loadedBuffs ?? new List<Buff>(); }
+#else
         private static readonly string _savedFilePath;
         static Buff() 
         {
-            _savedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "BuffCache.xml");
+            _savedFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "BuffCache.xml");
             LoadBuffs();
             SaveBuffs();
         }
@@ -73,10 +94,12 @@ namespace Rawr
                 } catch (System.Exception) {
                     //Log.Write(ex.Message);
 #if !DEBUG
-                    MessageBox.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.", "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Log.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.");//, "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     //The designer really doesn't like loading the stuff from a file
 #endif
                 }
+            
+#endif
                 //the serializer doens't throw an exception in the designer, just sets the value null, have to move this outside the try cactch
                 loadedBuffs = loadedBuffs ?? new List<Buff>();
                 List<Buff> defaultBuffs = GetDefaultBuffs();
@@ -93,7 +116,6 @@ namespace Rawr
                 CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
             } catch { }
         }
-
         private static void CacheSetBonuses() {
             foreach (Buff buff in AllBuffs) {
                 string setName = buff.SetName;
