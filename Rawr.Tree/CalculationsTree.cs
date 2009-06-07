@@ -629,21 +629,14 @@ namespace Rawr.Tree
             #endregion
 
             #region Mana regeneration
-            float spiritRegen = CalculateManaRegen(stats.Intellect, stats.Spirit);
-            float spiritRegenPlusMDF = CalculateManaRegen(stats.Intellect, stats.ExtraSpiritWhileCasting + stats.Spirit);
+            float spiritRegen = StatConversion.GetSpiritRegenSec(stats.Intellect, stats.Spirit); // CalculateManaRegen(stats.Intellect, stats.Spirit);
 
-            /*     TODO: Decide if we can into CalculateManaRegen. Check if we still need SpellCombatManaRegeneration scaling
-                      if (calcOpts.newManaRegen) */
-            {
-                spiritRegen *= 0.6f;
-                spiritRegenPlusMDF *= 0.6f; 
-                stats.SpellCombatManaRegeneration *= 5f / 3f;
-            } 
+            spiritRegen *= 5.0f;    // Change to MP5, since GetSpiritRegenSec works per sec 
             
             float replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
-            float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegenPlusMDF * stats.SpellCombatManaRegeneration;
-            float ManaRegenOutFSR = stats.Mp5 + replenishment + spiritRegenPlusMDF;
-            float ManaRegenOutFSRNoCast =  stats.Mp5 + replenishment + 0.2f * spiritRegen + 0.8f * spiritRegenPlusMDF;
+            float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegen * stats.SpellCombatManaRegeneration;
+            float ManaRegenOutFSR = stats.Mp5 + replenishment + spiritRegen;
+            float ManaRegenOutFSRNoCast =  stats.Mp5 + replenishment + 0.2f * spiritRegen + 0.8f * spiritRegen;
 
             float ratio = .01f * calcOpts.FSRRatio;
             float manaRegen = ratio * ManaRegenInFSR + (1 - ratio) * ManaRegenOutFSR;
@@ -1287,7 +1280,8 @@ namespace Rawr.Tree
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
 
-            Stats statsRace = GetRacialBaseStats(character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); //( GetRacialBaseStats(character.Race);
+            TreeConstants.BaseMana = statsRace.Mana;    // Setup TreeConstant
 
             Stats statsTalents = new Stats();
 
@@ -1372,7 +1366,7 @@ namespace Rawr.Tree
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (character.DruidTalents.Dreamstate > 0 ? character.DruidTalents.Dreamstate * 0.03f + 0.01f : 0f));
 
             statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + (statsTotal.SpellCrit*100.0f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
-            statsTotal.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
+            statsTotal.SpellCombatManaRegeneration += 0.1f * 5f / 3f* character.DruidTalents.Intensity;
 
             // SpellPower (actually healing only, but we have no damaging spells, so np)
             statsTotal.SpellPower += ((statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting) * character.DruidTalents.ImprovedTreeOfLife * 0.05f);
@@ -1380,6 +1374,7 @@ namespace Rawr.Tree
             return statsTotal;
         }
 
+        /* Removed, since we rather use BaseStats
         private static Stats GetRacialBaseStats(Character.CharacterRace race)
         {
             Stats statsRace = new Stats();
@@ -1405,7 +1400,7 @@ namespace Rawr.Tree
                 statsRace.Spirit = 161f;
             }
             return statsRace;
-        }
+        }*/
 
         private ComparisonCalculationTree getRotationData(Character character, int rotation, String rotationName)
         {
@@ -1718,9 +1713,10 @@ namespace Rawr.Tree
                 return false;
             */
 
-            if (stats.SpellCombatManaRegeneration == 0.3f)
+/*          Not sure why this was in here  
+ *          if (stats.SpellCombatManaRegeneration == 0.3f)
                 return false;
-
+            */
             return (stats.SpellCombatManaRegeneration + stats.Intellect > 0);
         }
 
@@ -1741,17 +1737,19 @@ namespace Rawr.Tree
             return calcOpts;
         }
 
-        public float CalculateManaRegen(float intel, float spi)
+ /*     Removed since we rather use StatConversion.GetSpiritRegen  
+  *     public float CalculateManaRegen(float intel, float spi)
         {
             float baseRegen = 0.005575f;  // TODO: Decide if we should put 0.6f change in 3.1 in here, or is this function for out of combat regen
             return (float)Math.Round(5f * (0.001f + (float)Math.Sqrt(intel) * spi * baseRegen));
-        }
+        } */
     }
 
     public static class TreeConstants
     {
+        // Master is now in Base.BaseStats and Base.StatConversion
         // Source: http://www.wowwiki.com/Base_mana
-        public static float BaseMana = 3496f;
-        public static float HasteRatingToHaste = 3279f;
+        public static float BaseMana;  // Keep since this is more convenient reference than calling the whole BaseStats function every time // = 3496f;
+        //public static float HasteRatingToHaste = 3279f;
     }
 }

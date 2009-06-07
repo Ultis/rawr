@@ -39,10 +39,10 @@ namespace Rawr.Tree
 
         public void doHasteCalcs()
         {
-            haste = (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);
+            haste = (1 + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating));
             spellhaste = 1 + BasicStats.SpellHaste;
-            float hard = (1.5f / (1f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
-            float soft = (1.5f * (1.0f - 0.04f * LocalCharacter.DruidTalents.GiftOfTheEarthmother) / (1.0f * spellhaste) - 1) * TreeConstants.HasteRatingToHaste;
+            float hard = (1.5f / (1f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
+            float soft = (1.5f * (1.0f - 0.04f * LocalCharacter.DruidTalents.GiftOfTheEarthmother) / (1.0f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
             haste_until_hard_cap = hard - BasicStats.HasteRating;
             haste_until_soft_cap = soft - BasicStats.HasteRating;
         }

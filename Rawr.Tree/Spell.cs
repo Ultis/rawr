@@ -118,7 +118,7 @@ namespace Rawr.Tree
 
         public void Initialize(CharacterCalculationsTree calcs, Stats calculatedStats)
         {
-            speed = (1 + (calculatedStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            speed = (1 + StatConversion.GetSpellHasteFromRating(calculatedStats.HasteRating) );
             speed *= (1 + calculatedStats.SpellHaste);
             critModifier *= 1f + calculatedStats.BonusCritHealMultiplier;
             NGmod = calcs.LocalCharacter.DruidTalents.NaturesGrace / 3f;
