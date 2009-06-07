@@ -3,7 +3,10 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
+
     public class Hemo : ComboPointGenerator
     {
         public override string Name { get { return "Hemo"; } }

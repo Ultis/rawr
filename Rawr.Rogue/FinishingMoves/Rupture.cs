@@ -4,7 +4,9 @@ using Rawr.Rogue.ComboPointGenerators;
 
 namespace Rawr.Rogue.FinishingMoves
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class Rupture : FinisherBase
     {
         public const string NAME = "Rupture";

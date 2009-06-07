@@ -3,7 +3,9 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.Poisons
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class DeadlyPoison : PoisonBase
     {
         public override string Name { get { return "Deadly Poison"; } }

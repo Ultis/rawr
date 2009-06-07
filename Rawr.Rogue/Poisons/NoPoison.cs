@@ -2,7 +2,9 @@ using System;
 
 namespace Rawr.Rogue.Poisons
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class NoPoison : PoisonBase
     {
         public override string Name { get { return "None"; } }

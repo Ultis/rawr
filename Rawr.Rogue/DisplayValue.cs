@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+#if SILVERLIGHT
+    using System.Linq;
+#endif
 
 namespace Rawr.Rogue
 {
@@ -58,7 +61,11 @@ namespace Rawr.Rogue
 
         public static string[] GroupedList()
         {
-            return _list.ConvertAll<string>(GroupedNameConverter).ToArray();
+            #if SILVERLIGHT
+                return _list.ConvertAll<DisplayValue, string>(GroupedNameConverter).ToArray(); 
+            #else
+                return _list.ConvertAll<string>(GroupedNameConverter).ToArray();
+            #endif
         }
 
         private static string GroupedNameConverter(DisplayValue displayValue)

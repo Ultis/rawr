@@ -3,11 +3,13 @@ using System.Xml.Serialization;
 
 namespace Rawr.Rogue.Poisons
 {
+#if (SILVERLIGHT == false)
     [Serializable]
     [XmlInclude(typeof(NoPoison))]
     [XmlInclude(typeof(DeadlyPoison))]
     [XmlInclude(typeof(InstantPoison))]
     [XmlInclude(typeof(WoundPoison))]
+#endif
     public abstract class PoisonBase
     {
         public abstract string Name { get; }

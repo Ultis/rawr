@@ -3,7 +3,9 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.FinishingMoves
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class Evis : FinisherBase
     {
         public const string NAME = "Evis";

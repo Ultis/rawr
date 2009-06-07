@@ -4,7 +4,9 @@ using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class Mutilate : ComboPointGenerator
     {
         public override string Name { get { return "Mutilate"; } }

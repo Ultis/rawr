@@ -2,7 +2,9 @@ using System;
 
 namespace Rawr.Rogue.FinishingMoves
 {
+    #if (SILVERLIGHT == false)
     [Serializable]
+    #endif
     public class NoFinisher : FinisherBase
     {
         public override char Id { get { return 'Z'; } }

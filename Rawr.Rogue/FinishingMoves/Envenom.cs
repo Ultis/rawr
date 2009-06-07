@@ -4,7 +4,9 @@ using Rawr.Rogue.Poisons;
 
 namespace Rawr.Rogue.FinishingMoves
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class Envenom : FinisherBase
     {
         public const string NAME = "Envenom";

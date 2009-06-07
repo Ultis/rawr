@@ -3,7 +3,10 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.SpecialAbilities
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
+
     public class Feint
     {
         public Feint() : this(0f){}

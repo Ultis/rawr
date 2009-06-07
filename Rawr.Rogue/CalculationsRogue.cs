@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 using Rawr.Rogue.BasicStats;
@@ -9,19 +8,40 @@ using Rawr.Rogue.FinishingMoves;
 using Rawr.Rogue.Poisons;
 using Rawr.Rogue.SpecialAbilities;
 
+#if SILVERLIGHT
+    using System.Windows.Media;
+#else
+    using System.Drawing;
+#endif
+
 namespace Rawr.Rogue
 {
     [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", Character.CharacterClass.Rogue)]
     public class CalculationsRogue : CalculationsBase
     {
         public CalculationsRogue(){}
-        private readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelRogue();
-        private readonly string[] _customChartNames = new[] {"Combat Table"};
-        private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.Red}};
 
+        private CalculationOptionsPanelRogue _calculationOptionsPanel = null;
+#if SILVERLIGHT
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
-            get { return _calculationOptionsPanel; }
+            get
+            {
+                if (_calculationOptionsPanel == null)
+                {
+                    _calculationOptionsPanel = new CalculationOptionsPanelRogue();
+                }
+                return _calculationOptionsPanel;
+            }
+        }
+
+        private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.FromArgb(255, 200, 0,0)}};
+        public override Dictionary<string, Color> SubPointNameColors
+        {
+            get { return _subPointNameColors; }
         }
 
         public override string[] CharacterDisplayCalculationLabels
@@ -29,11 +49,7 @@ namespace Rawr.Rogue
             get { return DisplayValue.GroupedList(); }
         }
 
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get { return _subPointNameColors; }
-        }
-
+        private readonly string[] _customChartNames = new[] { "Combat Table" };
         public override string[] CustomChartNames
         {
             get { return _customChartNames; }

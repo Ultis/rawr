@@ -3,7 +3,9 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class Backstab : ComboPointGenerator
     {
         public const string NAME = "Backstab";

@@ -3,7 +3,10 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.Poisons
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
+
     public class WoundPoison : PoisonBase
     {
         private const float PROCS_PER_MINUTE = 21.43f;

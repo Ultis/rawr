@@ -3,8 +3,10 @@ using System;
 
 namespace Rawr.Rogue.FinishingMoves
 {
+#if (SILVERLIGHT == false)
     [Serializable]
-	public class Finishers : List<FinisherBase>
+#endif
+    public class Finishers : List<FinisherBase>
     {
         public Finishers()
         {

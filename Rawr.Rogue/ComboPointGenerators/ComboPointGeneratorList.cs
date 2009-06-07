@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,7 +24,7 @@ namespace Rawr.Rogue.ComboPointGenerators
                     return cpGenerator;
                 }
             }
-            throw new InvalidDataException("Cannot find: " + name);
+            throw new Exception("Cannot find: " + name);
         }
     }
 }

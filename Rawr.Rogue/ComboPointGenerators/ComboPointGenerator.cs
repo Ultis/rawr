@@ -4,12 +4,14 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
+#if (SILVERLIGHT == false)
     [Serializable]
     [XmlInclude(typeof(Mutilate))]
     [XmlInclude(typeof(Backstab))]
     [XmlInclude(typeof(SinisterStrike))]
     [XmlInclude(typeof(Hemo))]
     [XmlInclude(typeof(HonorAmongThieves))]
+#endif
     public abstract class ComboPointGenerator 
     {
         public abstract string Name { get; }

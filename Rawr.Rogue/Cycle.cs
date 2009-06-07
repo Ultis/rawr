@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rawr.Rogue.FinishingMoves;
+#if SILVERLIGHT
+    using System.Linq;
+#endif
 
 namespace Rawr.Rogue
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class Cycle
     {
         private readonly List<CycleComponent> _components = new List<CycleComponent>();
@@ -46,7 +51,9 @@ namespace Rawr.Rogue
         }
     }
 
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class CycleComponent
     {
         private FinisherBase _finisher;

@@ -2,7 +2,9 @@
 
 namespace Rawr.Rogue.ComboPointGenerators
 {
+#if (SILVERLIGHT == false)
     [Serializable]
+#endif
     public class HonorAmongThieves : ComboPointGenerator
     {
         private readonly float _hemosPerCycle;
