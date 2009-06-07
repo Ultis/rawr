@@ -1365,8 +1365,9 @@ namespace Rawr.Tree
             statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f);
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (character.DruidTalents.Dreamstate > 0 ? character.DruidTalents.Dreamstate * 0.03f + 0.01f : 0f));
 
-            statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + (statsTotal.SpellCrit*100.0f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
-            statsTotal.SpellCombatManaRegeneration += 0.1f * 5f / 3f* character.DruidTalents.Intensity;
+//            statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + (statsTotal.SpellCrit*100.0f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
+            statsTotal.SpellCrit = (float)Math.Round( (StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) + StatConversion.GetSpellCritFromRating(statsTotal.CritRating) + (statsTotal.SpellCrit) + 0.01f * character.DruidTalents.NaturalPerfection) * 100f, 2);
+            statsTotal.SpellCombatManaRegeneration += 0.1f * 5f / 3f * character.DruidTalents.Intensity;
 
             // SpellPower (actually healing only, but we have no damaging spells, so np)
             statsTotal.SpellPower += ((statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting) * character.DruidTalents.ImprovedTreeOfLife * 0.05f);
