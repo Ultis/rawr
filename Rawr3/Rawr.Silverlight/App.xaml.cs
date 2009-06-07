@@ -56,6 +56,7 @@ namespace Rawr.Silverlight
 				Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
 				Calculations.RegisterModel(typeof(Rawr.Bear.CalculationsBear));
 				Calculations.RegisterModel(typeof(Rawr.Cat.CalculationsCat));
+				Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
 				Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
 
                 new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
