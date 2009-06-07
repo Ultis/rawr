@@ -37,9 +37,9 @@ namespace Rawr.Silverlight
             g.Children.Add(new SplashScreen());
             RootVisual = g;
 
-            if (!FileUtils.HasQuota(5120))
+            if (!FileUtils.HasQuota(20480))
             {
-                IncreaseQuota iq = new IncreaseQuota(5120);
+				IncreaseQuota iq = new IncreaseQuota(20480);
                 iq.Closed += new EventHandler(iq_Closed);
                 iq.Show();
             }
@@ -53,7 +53,10 @@ namespace Rawr.Silverlight
             {
                 Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
                 Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
-                Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
+				Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
+				Calculations.RegisterModel(typeof(Rawr.Bear.CalculationsBear));
+				Calculations.RegisterModel(typeof(Rawr.Cat.CalculationsCat));
+				Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
 
                 new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
                 new FileUtils("EnchantCache.xml", new EventHandler(EnchantCache_Ready));

@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="Rawr.Bear.CalculationOptionsPanelBear"
+	xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm"  
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    >
+    <Grid x:Name="LayoutRoot" Background="White">
+		<dataControls:DataForm ItemsSource="{Binding Path=Character.CalculationOptions}"></dataControls:DataForm>
+    </Grid>
+</UserControl>

@@ -317,6 +317,14 @@
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.csproj">
+      <Project>{81DB6449-FD88-44F8-BFF0-2FB5C196AD69}</Project>
+      <Name>Rawr.Bear</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Cat\Rawr.Cat.csproj">
+      <Project>{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}</Project>
+      <Name>Rawr.Cat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
