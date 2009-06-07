@@ -467,17 +467,17 @@ namespace Rawr
         /// <param name="AttackerLevel">Level of Attacker</param>
         /// <param name="TargetLevel">Level of Target</param>
         /// <param name="TargetArmor">Armor of Target</param>
-        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire)</param>
-        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc)</param>
-        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be rolled into ArmorIgnoreBuffs and then set this to 0)</param>
+        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
+        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
+        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
         /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
         public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
             float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
         {
             float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
-            TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
+            TargetArmor *= (1f - ArmorIgnoreDebuffs);
             float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-            TargetArmor -= ArPCap * Math.Min(1f, GetArmorPenetrationFromRating(ArmorPenetrationRating));
+            TargetArmor -= ArPCap * Math.Min(1f, GetArmorPenetrationFromRating(ArmorPenetrationRating) + ArmorIgnoreBuffs);
             
             return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
         }
