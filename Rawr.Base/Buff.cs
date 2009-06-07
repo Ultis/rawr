@@ -49,10 +49,13 @@ namespace Rawr
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
                     loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
-                    reader.Close();
                 }
                 catch { }
-                finally { loadedBuffs = loadedBuffs ?? new List<Buff>(); }
+                finally
+                {
+                    reader.Close();
+                    loadedBuffs = loadedBuffs ?? new List<Buff>();
+                }
 #else
         private static readonly string _savedFilePath;
         static Buff() 

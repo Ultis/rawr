@@ -5169,7 +5169,7 @@ namespace Rawr {
                     "([A-Z])",
                     " $1"
 #if SILVERLIGHT
-                    );
+                    ).Trim();
 #else
                     ,System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
 #endif
@@ -5180,7 +5180,7 @@ namespace Rawr {
                     "( )",
                     ""
 #if SILVERLIGHT
-                    );
+                    ).Trim();
 #else
                     ,System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
 #endif

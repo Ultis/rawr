@@ -235,6 +235,7 @@ namespace Rawr.Silverlight
                 return pts;
             }
         }
+        public int Points() { return PointsBelowRow(12); }
 
         private Dictionary<int, TalentDataAttribute> talentAttributes;
         public TalentDataAttribute GetAttribute(int index)

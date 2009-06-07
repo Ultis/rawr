@@ -279,7 +279,11 @@ namespace Rawr
                 reader.Close();
             }
             catch { }
-            finally { _allEnchants = _allEnchants ?? new EnchantList(); }
+            finally
+            {
+                reader.Close();
+                _allEnchants = _allEnchants ?? new EnchantList();
+            }
 #else
         private static void SaveEnchants()
         {

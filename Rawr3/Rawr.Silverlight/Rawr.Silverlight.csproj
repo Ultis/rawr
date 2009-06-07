@@ -175,6 +175,9 @@
     <Compile Include="Talents\GlyphControl.xaml.cs">
       <DependentUpon>GlyphControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Talents\SaveTalentSpecDialog.xaml.cs">
+      <DependentUpon>SaveTalentSpecDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Talents\TalentItem.xaml.cs">
       <DependentUpon>TalentItem.xaml</DependentUpon>
     </Compile>
@@ -246,6 +249,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\Status.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Talents\SaveTalentSpecDialog.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

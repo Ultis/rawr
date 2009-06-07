@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -24,6 +26,40 @@ namespace Rawr
 
         public SavedTalentSpec() : this("", null, 0, 0, 0) { ; }
 
+        public static SavedTalentSpecList AllSpecs { get; private set; }
+        public static void Load(StreamReader reader)
+        {
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SavedTalentSpecList));
+                AllSpecs = (SavedTalentSpecList)serializer.Deserialize(reader);
+                reader.Close();
+            }
+            catch { }
+            finally
+            {
+                reader.Close();
+                if (AllSpecs == null) AllSpecs = new SavedTalentSpecList();
+            }
+        }
+
+        public static void Save(StreamWriter writer)
+        {
+            XmlSerializer serilizer = new XmlSerializer(typeof(SavedTalentSpecList));
+            serilizer.Serialize(writer, AllSpecs);
+            writer.Close();
+        }
+
+        public static SavedTalentSpecList SpecsFor(Character.CharacterClass charClass)
+        {
+            SavedTalentSpecList ret = new SavedTalentSpecList();
+            foreach (SavedTalentSpec sts in AllSpecs)
+            {
+                if (sts.Class == charClass) ret.Add(sts);
+            }
+            return ret;
+        }
+
         public SavedTalentSpec(String name, TalentsBase talentSpec, int tree1, int tree2, int tree3)
         {
             Name = name;
@@ -33,16 +69,7 @@ namespace Rawr
             if (talentSpec != null)
             {
                 Spec = talentSpec.ToString();
-                if (talentSpec.GetType() == typeof(DeathKnightTalents)) Class = Character.CharacterClass.DeathKnight;
-                if (talentSpec.GetType() == typeof(WarriorTalents)) Class = Character.CharacterClass.Warrior;
-                if (talentSpec.GetType() == typeof(PaladinTalents)) Class = Character.CharacterClass.Paladin;
-                if (talentSpec.GetType() == typeof(ShamanTalents)) Class = Character.CharacterClass.Shaman;
-                if (talentSpec.GetType() == typeof(HunterTalents)) Class = Character.CharacterClass.Hunter;
-                if (talentSpec.GetType() == typeof(RogueTalents)) Class = Character.CharacterClass.Rogue;
-                if (talentSpec.GetType() == typeof(DruidTalents)) Class = Character.CharacterClass.Druid;
-                if (talentSpec.GetType() == typeof(WarlockTalents)) Class = Character.CharacterClass.Warlock;
-                if (talentSpec.GetType() == typeof(PriestTalents)) Class = Character.CharacterClass.Priest;
-                if (talentSpec.GetType() == typeof(MageTalents)) Class = Character.CharacterClass.Mage;
+                Class = talentSpec.GetClass();
             }
         }
 

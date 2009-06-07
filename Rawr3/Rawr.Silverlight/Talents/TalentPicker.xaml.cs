@@ -39,6 +39,8 @@ namespace Rawr.Silverlight
             Tree3.Talents = Character.CurrentTalents;
             TreeTab3.Header = Tree3.TreeName;
             Glyph.Character = Character;
+            
+            UpdateSavedSpecs();
         }
 
 		public TalentPicker()
@@ -57,9 +59,84 @@ namespace Rawr.Silverlight
 
         public void TalentsChanged(object sender, EventArgs e)
         {
+            UpdateSavedSpecs();
             Character.OnCalculationsInvalidated();
         }
 
-        //private SavedTalentSpec currentSpec;
+        public bool HasCustomSpec { get; private set; }
+
+        private bool updating;
+        private void UpdateSavedSpecs()
+        {
+            SavedTalentSpecList savedSpecs = SavedTalentSpec.SpecsFor(Character.Class);
+            SavedTalentSpec current = null;
+            updating = true;
+            foreach (SavedTalentSpec sts in savedSpecs)
+            {
+                if (sts.Equals(Character.CurrentTalents))
+                {
+                    current = sts;
+                    break;
+                }
+            }
+
+            if (current != null)
+            {
+                HasCustomSpec = false;
+                SavedCombo.ItemsSource = savedSpecs;
+                SavedCombo.SelectedItem = current;
+                SaveDeleteButton.Content = "Delete";
+            }
+            else
+            {
+                HasCustomSpec = true;
+                current = new SavedTalentSpec("Custom", Character.CurrentTalents, Tree1.Points(), Tree2.Points(), Tree3.Points());
+                SavedTalentSpecList currentList = new SavedTalentSpecList();
+                currentList.AddRange(savedSpecs);
+                currentList.Add(current);
+                SavedCombo.ItemsSource = null;
+                SavedCombo.ItemsSource = currentList;
+                SavedCombo.SelectedItem = current;
+                SaveDeleteButton.Content = "Save";
+            }
+            updating = false;
+        }
+
+        private void SaveDelete_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SavedTalentSpec currentSpec = SavedCombo.SelectedItem as SavedTalentSpec;
+            if (HasCustomSpec)
+            {
+                SaveTalentSpecDialog dialog = new SaveTalentSpecDialog(currentSpec.TalentSpec(),
+                    currentSpec.Tree1, currentSpec.Tree2, currentSpec.Tree3);
+                dialog.Closed += new EventHandler(dialog_Closed);
+                dialog.Show();
+            }
+            else
+            {
+                SavedTalentSpec.AllSpecs.Remove(currentSpec);
+                UpdateSavedSpecs();
+            }
+        }
+
+        private void dialog_Closed(object sender, EventArgs e)
+        {
+            if (((ChildWindow)sender).DialogResult.GetValueOrDefault(false))
+            {
+                UpdateSavedSpecs();
+            }
+        }
+
+        private void SavedCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!updating)
+            {
+                SavedTalentSpec newSpec = SavedCombo.SelectedItem as SavedTalentSpec;
+                Character.CurrentTalents = newSpec.TalentSpec();
+                character_ClassChanged(this, EventArgs.Empty);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
 	}
 }

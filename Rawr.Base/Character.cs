@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Windows.Forms;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace Rawr //O O . .
 {
-    [Serializable]
+
     public class Character
     {
         [XmlElement("Name")]
@@ -162,7 +161,9 @@ namespace Rawr //O O . .
 		public int Level { get { return 80; } }
 
         public string CalculationToOptimize { get; set; }
+#if !SILVERLIGHT
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
+#endif
 
 		[XmlElement("WarriorTalents")]
 		public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } 
@@ -300,6 +301,12 @@ namespace Rawr //O O . .
             set { _region = value; }
         }
         [XmlIgnore]
+        public int RegionIndex
+        {
+            get { return (int)Region; }
+            set { Region = (CharacterRegion)value; }
+        }
+        [XmlIgnore]
         public CharacterRace Race
         {
             get { return _race; }
@@ -313,6 +320,14 @@ namespace Rawr //O O . .
                 }
             }
         }
+
+        [XmlIgnore]
+        public int RaceIndex
+        {
+            get { return (int)Race; }
+            set { Race = (CharacterRace)value; }
+        }
+
         [XmlIgnore]
         public Character.CharacterFaction Faction
         {
@@ -329,6 +344,12 @@ namespace Rawr //O O . .
 			}
         }
 
+        [XmlIgnore]
+        public int ClassIndex
+        {
+            get { return (int)Class; }
+            set { Class = (CharacterClass)value; }
+        }
 
         [XmlIgnore]
         public List<Buff> ActiveBuffs
@@ -651,16 +672,16 @@ namespace Rawr //O O . .
         {
             if (clone)
             {
-                WarriorTalents = character.WarriorTalents.Clone();
-                PaladinTalents = character.PaladinTalents.Clone();
-                HunterTalents = character.HunterTalents.Clone();
-                RogueTalents = character.RogueTalents.Clone();
-                PriestTalents = character.PriestTalents.Clone();
-                ShamanTalents = character.ShamanTalents.Clone();
-                MageTalents = character.MageTalents.Clone();
-                WarlockTalents = character.WarlockTalents.Clone();
-                DruidTalents = character.DruidTalents.Clone();
-                DeathKnightTalents = character.DeathKnightTalents.Clone();
+                WarriorTalents = (WarriorTalents)character.WarriorTalents.Clone();
+                PaladinTalents = (PaladinTalents)character.PaladinTalents.Clone();
+                HunterTalents = (HunterTalents)character.HunterTalents.Clone();
+                RogueTalents = (RogueTalents)character.RogueTalents.Clone();
+                PriestTalents = (PriestTalents)character.PriestTalents.Clone();
+                ShamanTalents = (ShamanTalents)character.ShamanTalents.Clone();
+                MageTalents = (MageTalents)character.MageTalents.Clone();
+                WarlockTalents = (WarlockTalents)character.WarlockTalents.Clone();
+                DruidTalents = (DruidTalents)character.DruidTalents.Clone();
+                DeathKnightTalents = (DeathKnightTalents)character.DeathKnightTalents.Clone();
             }
             else
             {
@@ -1111,7 +1132,11 @@ namespace Rawr //O O . .
             {
                 if (_characterSlots == null)
                 {
+#if SILVERLIGHT
+                    _characterSlots = EnumHelper.GetValues<CharacterSlot>();
+#else
                     _characterSlots = (CharacterSlot[])Enum.GetValues(typeof(CharacterSlot));
+#endif
                 }
                 return _characterSlots;
             }
@@ -1758,7 +1783,9 @@ namespace Rawr //O O . .
             clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;
             clone.WristBlacksmithingSocketEnabled = this.WristBlacksmithingSocketEnabled;
             clone.HandsBlacksmithingSocketEnabled = this.HandsBlacksmithingSocketEnabled;
+#if !SILVERLIGHT
             clone.OptimizationRequirements = this.OptimizationRequirements;
+#endif
             clone.CalculationToOptimize = this.CalculationToOptimize;
 			return clone;
 		}
@@ -1766,7 +1793,7 @@ namespace Rawr //O O . .
         public void Save(string path)
         {
 			SerializeCalculationOptions();
-            _activeBuffsXml = _activeBuffs.ConvertAll(buff => buff.Name);
+            _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
 
 			using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
@@ -1776,6 +1803,7 @@ namespace Rawr //O O . .
             }
 		}
 
+#if !SILVERLIGHT
         public static Character Load(string path)
         {
             Character character;
@@ -1787,7 +1815,7 @@ namespace Rawr //O O . .
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("There was an error attempting to open this character.");
+                    Log.Show("There was an error attempting to open this character.");
                     character = new Character();
                 }
             }
@@ -1796,7 +1824,7 @@ namespace Rawr //O O . .
 
             return character;
         }
-
+#endif
         public static Character LoadFromXml(string xml)
         {
             Character character;
@@ -1815,7 +1843,7 @@ namespace Rawr //O O . .
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);
-                    character._activeBuffs = character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff));
+                    character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
                     character._activeBuffs.RemoveAll(buff => buff == null);
                     character.RecalculateSetBonuses(); // now you can call it
                     foreach (ItemInstance item in character.CustomItemInstances)
@@ -1826,7 +1854,9 @@ namespace Rawr //O O . .
 				}
 				catch (Exception)
 				{
-					MessageBox.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
+#if !SILVERLIGHT
+					Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
+#endif
 					character = new Character();
 				}
             }

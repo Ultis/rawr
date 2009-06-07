@@ -13,7 +13,7 @@
     <form id="form1" runat="server" style="height:100%;">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <div  style="height:100%;">
-            <asp:Silverlight ID="Xaml1" runat="server" Source="~/ClientBin/Rawr.Silverlight.xap" MinimumVersion="2.0.31005.0" Width="100%" Height="100%" />
+            <asp:Silverlight ID="Xaml1" runat="server" Source="~/ClientBin/Rawr.Silverlight.xap" MinimumVersion="3.0.40307.0" Width="100%" Height="100%" />
         </div>
     </form>
 </body>

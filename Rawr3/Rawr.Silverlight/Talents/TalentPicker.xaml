@@ -38,7 +38,7 @@
 				</Grid>
 			</controls:TabItem>
 		</controls:TabControl>
-		<ComboBox Height="22" Margin="0,-2,67,0" VerticalAlignment="Top"/>
-		<Button HorizontalAlignment="Right" Margin="0,-2,0,0" VerticalAlignment="Top" Width="63" Content="Delete"/>
+		<ComboBox x:Name="SavedCombo" Height="22" Margin="0,-2,67,0" VerticalAlignment="Top" SelectionChanged="SavedCombo_SelectionChanged"/>
+		<Button x:Name="SaveDeleteButton" HorizontalAlignment="Right" Margin="0,-2,0,0" VerticalAlignment="Top" Width="63" Content="Delete" Click="SaveDelete_Click"/>
 	</Grid>
 </UserControl>

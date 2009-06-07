@@ -23,7 +23,7 @@ namespace Rawr.Silverlight
             set
             {
                 talentData = value;
-                current =  talentData == null ? 0 : TalentTree.Talents.Data[talentData.Index];
+                current =  talentData == null ? 0 : (int)Math.Min(TalentTree.Talents.Data[talentData.Index], talentData.MaxPoints);
             }
         }
 

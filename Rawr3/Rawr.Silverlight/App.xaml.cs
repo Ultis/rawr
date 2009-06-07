@@ -30,6 +30,7 @@ namespace Rawr.Silverlight
         private bool enchantFinished;
         private bool buffFinished;
         private bool itemcacheFinished;
+        private bool talentsFinished;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Grid g = new Grid();
@@ -57,6 +58,7 @@ namespace Rawr.Silverlight
                 new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
                 new FileUtils("EnchantCache.xml", new EventHandler(EnchantCache_Ready));
                 new FileUtils("ItemCache.xml", new EventHandler(ItemCache_Ready));
+                new FileUtils("Talents.xml", new EventHandler(Talents_Ready));
             }
             else
             {
@@ -92,9 +94,17 @@ namespace Rawr.Silverlight
             CheckLoadFinished();
         }
 
+        private void Talents_Ready(object sender, EventArgs e)
+        {
+            FileUtils f = sender as FileUtils;
+            talentsFinished = true;
+            SavedTalentSpec.Load(f.Reader);
+            CheckLoadFinished();
+        }
+
         public void CheckLoadFinished()
         {
-            if (!itemcacheFinished || !enchantFinished || !buffFinished) return;
+            if (!itemcacheFinished || !enchantFinished || !buffFinished || !talentsFinished) return;
 
             ((Grid)RootVisual).Children.RemoveAt(0);
             ((Grid)RootVisual).Children.Add(new MainPage());

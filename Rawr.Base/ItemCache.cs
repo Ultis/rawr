@@ -1,25 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
 using System.Xml.Serialization;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace Rawr
 {
 	public static class ItemCache
 	{
-		public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "ItemCache.xml");
+#if !SILVERLIGHT
+		public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "ItemCache.xml");
+#endif
+
 		private static ItemCacheInstance _instance = new ItemCacheInstance();
 		public static ItemCacheInstance Instance
 		{
 			get { return _instance; }
 			set { _instance = value; }
 		}
+#if SILVERLIGHT
+		public static Dictionary<int, Item> Items { get { return _instance.Items; } }
+#else
+        public static SortedDictionary<int, Item> Items { get { return _instance.Items; } }
+#endif
 
-		public static SortedDictionary<int, Item> Items { get { return _instance.Items; } }
-
-		public static void InvalidateCachedStats() { Instance.InvalidateCachedStats(); }
+        public static void InvalidateCachedStats() { Instance.InvalidateCachedStats(); }
 	
 		public static Item FindItemById(int id) { return _instance.FindItemById(id); }
         public static bool ContainsItemId(int id) { return _instance.ContainsItemId(id); }
@@ -37,9 +45,13 @@ namespace Rawr
         public static Item[] GetRelevantItems(CalculationsBase model) { return _instance.GetRelevantItems(model); }
 
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
-
+#if SILVERLIGHT
+        public static void Save(StreamWriter writer) { _instance.Save(writer); }
+        public static void Load(StreamReader reader) { _instance.Load(reader); }
+#else
 		public static void Save() { _instance.Save(); }
 		public static void Load() { _instance.Load(); }
+#endif
 	}
 
 	public class ItemCacheInstance
@@ -47,15 +59,30 @@ namespace Rawr
 		public ItemCacheInstance() { }
 		public ItemCacheInstance(ItemCacheInstance instanceToClone)
 		{
-			_items = new SortedDictionary<int, Item>();
-			foreach (KeyValuePair<int, Item> kvp in instanceToClone.Items)
+#if SILVERLIGHT
+			_items = new Dictionary<int, Item>();
+#else
+            _items = new SortedDictionary<int, Item>();
+#endif
+            foreach (KeyValuePair<int, Item> kvp in instanceToClone.Items)
 			{
                 _items[kvp.Key] = kvp.Value;
 			}
 		}
 
-		private SortedDictionary<int, Item> _items;
-		public SortedDictionary<int, Item> Items
+#if SILVERLIGHT
+        private Dictionary<int, Item> _items;
+        public Dictionary<int, Item> Items
+        {
+            get
+            {
+                if (_items == null) _items = new Dictionary<int, Item>();
+                return _items;
+            }
+        }
+#else
+        private SortedDictionary<int, Item> _items;
+        public SortedDictionary<int, Item> Items
 		{
 			get
 			{
@@ -64,8 +91,9 @@ namespace Rawr
 				return _items;
 			}
 		}
+#endif
 
-		public void InvalidateCachedStats()
+        public void InvalidateCachedStats()
         {
             foreach (Item item in Items.Values)
             {
@@ -106,6 +134,9 @@ namespace Rawr
             }
             item.LastChange = DateTime.Now;
             Items[item.Id] = item;
+#if SILVERLIGHT
+            Items.OrderBy(kvp => kvp.Key);
+#endif
 
 			if (raiseEvent) OnItemsChanged();
 			return item;
@@ -185,7 +216,32 @@ namespace Rawr
 			_relevantItems = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
+#if SILVERLIGHT
+        public void Save(StreamWriter writer)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
+            serializer.Serialize(writer, new List<Item>(AllItems));
+            writer.Close();
+        }
 
+        public void Load(StreamReader reader)
+        {
+            _items = new Dictionary<int, Item>();
+            List<Item> listItems = new List<Item>();
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
+            listItems = (List<Item>)serializer.Deserialize(reader);
+            reader.Close();
+
+            if (listItems != null)
+            {
+                foreach (Item item in listItems)
+                {
+                    AddItem(item, false);
+                }
+            }
+            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+        }
+#else
 		public void Save()
 		{
 #if !AGGREGATE_ITEMS
@@ -237,7 +293,7 @@ namespace Rawr
 				}
 				catch (Exception)
 				{
-					MessageBox.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
+					Log.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
 				}
 			}
 			foreach (Item item in listItems)
@@ -252,7 +308,7 @@ namespace Rawr
 			ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
-
+#endif
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			_relevantItems = null;

@@ -51,9 +51,9 @@ namespace Rawr.Silverlight
                     sw.Write(sr.ReadToEnd());
                     sw.Close();
 
-                    StreamReady.Invoke(this, EventArgs.Empty);
                 }
             }
+            if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
         }
 
         private IsolatedStorageFileStream ISFileStream()
