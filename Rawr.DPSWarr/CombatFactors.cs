@@ -9,6 +9,7 @@ namespace Rawr.DPSWarr {
             _talents = character.WarriorTalents;
             _calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             _characterRace = character.Race;
+            _character = character;
         }
         #region Global Variables
         private Stats _stats;
@@ -17,7 +18,8 @@ namespace Rawr.DPSWarr {
         private WarriorTalents _talents;
         private CalculationOptionsDPSWarr _calcOpts;
         private Character.CharacterRace _characterRace;
-
+        private Character _character;
+        
         public Item MainHand { get { return _mainHand; } }
         public Item OffHand { get { return _offHand; } }
         #endregion
@@ -32,10 +34,12 @@ namespace Rawr.DPSWarr {
         public float DamageReduction {
             get {
                 float armorReduction;
+                float arpenBuffs = ((_character.MainHand != null && _character.MainHand.Type == Item.ItemType.TwoHandMace) ? _talents.MaceSpecialization * 0.03f : 0.00f) +
+                    (_calcOpts.FuryStance == false ? 0.1f : 0.0f);
                 if(_calcOpts==null){
-				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(83,13083,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating)); // default is vs raid boss
+				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(83,10643,_stats.ArmorPenetration,arpenBuffs,_stats.ArmorPenetrationRating)); // default is vs raid boss
                 }else{
-                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,0f,_stats.ArmorPenetrationRating));
+                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel,_calcOpts.TargetArmor,_stats.ArmorPenetration,arpenBuffs,_stats.ArmorPenetrationRating));
                 }
 
                 return armorReduction;

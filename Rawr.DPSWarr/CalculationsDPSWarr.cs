@@ -556,7 +556,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 //BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
-                ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
+                // Removing this line, and instead adding it to CombatFactors as a buff, since statsTotal.ArmorPenetration includes arp from debuffs and not buffs, and they need to be separate
+                //ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
                 PhysicalHit = talents.Precision * 1.0f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -596,7 +597,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
             //statsTotal.PhysicalHaste += statsTalents.PhysicalHaste;
 
-            statsTotal.ArmorPenetration += ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
+            // Removing this line, and instead adding it to CombatFactors as a buff, since statsTotal.ArmorPenetration includes arp from debuffs and not buffs, and they need to be separate
+            //statsTotal.ArmorPenetration += ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
 
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
             // handle boss level difference
