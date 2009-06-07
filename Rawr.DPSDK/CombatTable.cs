@@ -11,7 +11,6 @@ namespace Rawr.DPSDK
         public DeathKnightTalents talents;
         public Stats stats;
         public CalculationOptionsDPSDK calcOpts;
-        public Boolean DW;
 
         public Weapon MH, OH;
 
@@ -22,7 +21,7 @@ namespace Rawr.DPSDK
             spellCrits, spellResist, 
             totalMHMiss, totalOHMiss,
             realDuration, totalMeleeAbilities,
-        totalSpellAbilities;
+        totalSpellAbilities, normalizationFactor;
 
         public CombatTable(Character c, Stats stats, CalculationOptionsDPSDK calcOpts) :
             this(c, new CharacterCalculationsDPSDK(), stats, calcOpts)
@@ -196,7 +195,7 @@ namespace Rawr.DPSDK
             }
 
 
-            MH = new Weapon(null, null, null, 0f);
+            MH = new Weapon(null, stats, calcOpts, 0f);
             OH = new Weapon(null, null, null, 0f);
 
             if (character.MainHand != null)
@@ -205,6 +204,19 @@ namespace Rawr.DPSDK
                 calcs.MHAttackSpeed = MH.hastedSpeed;
                 calcs.MHWeaponDamage = MH.damage;
                 calcs.MHExpertise = MH.effectiveExpertise;
+                if (character.MainHand.Item.Type == Item.ItemType.TwoHandAxe
+                    || character.MainHand.Item.Type == Item.ItemType.TwoHandMace
+                    || character.MainHand.Item.Type == Item.ItemType.TwoHandSword
+                    || character.MainHand.Item.Type == Item.ItemType.Polearm)
+                {
+                    normalizationFactor = 3.3f;
+                    MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
+                    combinedSwingTime = MH.hastedSpeed;
+                    calcs.OHAttackSpeed = 0f;
+                    calcs.OHWeaponDamage = 0f;
+                    calcs.OHExpertise = 0f;
+                }
+                else normalizationFactor = 2.4f;
             }
 
             if (character.OffHand != null)
@@ -213,7 +225,6 @@ namespace Rawr.DPSDK
 
                 float OHMult = .05f * (float)talents.NervesOfColdSteel;
                 OH.damage *= .5f + OHMult;
-                DW = true;
 
                 //need this for weapon swing procs
                 //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
@@ -223,19 +234,11 @@ namespace Rawr.DPSDK
                 calcs.OHWeaponDamage = OH.damage;
                 calcs.OHExpertise = OH.effectiveExpertise;
             }
-            else
-            {
-                MH.damage *= 1f + (.02f * talents.TwoHandedWeaponSpecialization);
-                combinedSwingTime = MH.hastedSpeed;
-                calcs.OHAttackSpeed = 0f;
-                calcs.OHWeaponDamage = 0f;
-                calcs.OHExpertise = 0f;
-            }
 
             if (character.MainHand == null && character.OffHand == null)
             {
                 combinedSwingTime = 2f;
-                MH = new Weapon(null, stats, calcOpts, 0f);
+                normalizationFactor = 2.4f;
             }
         }
     }

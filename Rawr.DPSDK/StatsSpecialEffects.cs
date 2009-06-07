@@ -6,23 +6,22 @@ namespace Rawr.DPSDK
 {
     class StatsSpecialEffects
     {
-        public static Character character;
-        public static Stats stats;
-        public static CombatTable combatTable;
+        public Character character;
+        public Stats stats;
+        public CombatTable combatTable;
 
-        public static Stats getSpecialEffects(CalculationOptionsDPSDK calcOpts, SpecialEffect effect)
+        public StatsSpecialEffects(Character c, Stats s, CombatTable t)
+        {
+            character = c;
+            stats = s;
+            combatTable = t;
+        }
+
+
+        public Stats getSpecialEffects(CalculationOptionsDPSDK calcOpts, SpecialEffect effect)
         {
             Stats statsAverage = new Stats();
             Rotation rotation = calcOpts.rotation;
-            if (combatTable == null)
-            {
-                new CombatTable(character, stats, calcOpts);
-            }
-            if (combatTable.MH == null)
-            {
-                combatTable.MH = new Weapon(null, new Stats(), calcOpts, 0f);
-                combatTable.combinedSwingTime = 2.0f;
-            }
             if (effect.Trigger == Trigger.Use)
             {
                 statsAverage += effect.GetAverageStats();

@@ -89,8 +89,7 @@ namespace Rawr.DPSDK
                 new Stats() { HitRating = 10 },
                 new Stats() { ExpertiseRating = 10 },
                 new Stats() { HasteRating = 10 },
-                new Stats() { ArmorPenetrationRating = 10 },
-                //new Stats() { SpellPower = 11.17f },
+                new Stats() { ArmorPenetrationRating = 10 }
             };
 
             for (int index = 0; index < statsList.Length; index++)
@@ -255,7 +254,7 @@ namespace Rawr.DPSDK
         public bool DrumsOfWar = false;
         public int FerociousInspiration = 1;
         public bool HammerOfWrath = false;
-        public bool Ghoul = true;
+        public bool Ghoul = false;
         public float BloodwormsUptime = 0.25f;
         public float GhoulUptime = 1f;
         public Presence presence = Presence.Blood;
