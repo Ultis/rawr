@@ -68,16 +68,26 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Healadin\CalculationsHealadin.cs">
+      <Link>CalculationsHealadin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Healadin\CharacterCalculationsHealadin.cs">
+      <Link>CharacterCalculationsHealadin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Healadin\ComparisonCalculationHealadin.cs">
+      <Link>ComparisonCalculationHealadin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Healadin\Rotation.cs">
+      <Link>Rotation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Healadin\Spell.cs">
+      <Link>Spell.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsHealadin.cs" />
     <Compile Include="CalculationOptionsPanelHealadin.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHealadin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsHealadin.cs" />
-    <Compile Include="CharacterCalculationsHealadin.cs" />
-    <Compile Include="ComparisonCalculationHealadin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rotation.cs" />
-    <Compile Include="Spell.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

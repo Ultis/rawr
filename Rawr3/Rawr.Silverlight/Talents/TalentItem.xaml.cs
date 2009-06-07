@@ -24,7 +24,6 @@ namespace Rawr.Silverlight
             {
                 talentData = value;
                 current =  talentData == null ? 0 : TalentTree.Talents.Data[talentData.Index];
-                Update();
             }
         }
 

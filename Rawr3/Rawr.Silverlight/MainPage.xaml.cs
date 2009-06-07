@@ -50,6 +50,7 @@ namespace Rawr.Silverlight
                     if (character != null)
                     {
                         character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
+                        character.ClassChanged -= new EventHandler(character_ClassChanged);
                     }
 
                     character = value;
@@ -82,6 +83,9 @@ namespace Rawr.Silverlight
                     ComparisonGraph.Character = character;
 
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
+                    character.ClassChanged += new EventHandler(character_ClassChanged);
+
+                    character_ClassChanged(this, EventArgs.Empty);
 
                     character_CalculationsInvalidated(this, EventArgs.Empty);
                     ItemCache.OnItemsChanged();
@@ -92,13 +96,13 @@ namespace Rawr.Silverlight
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.Wait;
             CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(character, null, true, true, true);
             CalculationDisplay.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
+            this.Cursor = Cursors.Arrow;
         }
 
-        public MainPage() : this(new Character()) { }
-
-        public MainPage(Character c)
+        public MainPage()
         {
             InitializeComponent();
 			if (Application.Current.RunningOffline) OfflineInstallButton.Visibility = Visibility.Collapsed;
@@ -122,27 +126,52 @@ namespace Rawr.Silverlight
             MainHandButton.Slot = Character.CharacterSlot.MainHand;
             OffHandButton.Slot = Character.CharacterSlot.OffHand;
             RangedButton.Slot = Character.CharacterSlot.Ranged;
-            OptionsView.Content = Calculations.CalculationOptionsPanel;
+
+            ModelCombo.ItemsSource = Calculations.Models.Keys;
+            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
+
+            Character c = new Character();
+            c.CurrentModel = ConfigModel;
+            c.Class = Calculations.ModelClasses[c.CurrentModel];
             Character = c;
 
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
-            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
-            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 
             StatusMessaging.Ready = true;
         }
 
+        private string ConfigModel { get { return "Healadin"; } }
+
         private void Calculations_ModelChanged(object sender, EventArgs e)
         {
+            foreach (string item in ModelCombo.Items)
+            {
+                if (item == Character.CurrentModel)
+                {
+                    ModelCombo.SelectedItem = item;
+                }
+            }
             OptionsView.Content = Calculations.CalculationOptionsPanel;
-
-            Character = Character;
+            if (!Character.IsLoading) Character = Character;
         }
 
         private void Calculations_ModelChanging(object sender, EventArgs e)
         {
             Character.SerializeCalculationOptions();
         }
+
+
+        private void ModelCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!Character.IsLoading)
+            {
+                Character.CurrentModel = ModelCombo.SelectedItem as string;
+                Character.Class = Calculations.ModelClasses[Character.CurrentModel];
+                Calculations.LoadModel(Calculations.GetModel(Character.CurrentModel));
+            }
+        }
+
 
         private void Instance_ItemsChanged(object sender, EventArgs e)
         {
@@ -160,7 +189,11 @@ namespace Rawr.Silverlight
 
         private void NewCharacter()
         {
-            new ErrorWindow() { Message = "Not yet implemented." }.Show();
+            Character c = new Character();
+            c.CurrentModel = Character.CurrentModel;
+            c.Class = Character.Class;
+            c.Race = Character.Race;
+            Character = c;
         }
 
         private void OpenCharacter()
@@ -241,7 +274,8 @@ namespace Rawr.Silverlight
                     else if (newIndex == 3) SaveCharacter();
                     else if (newIndex == 4) SaveCharacter();
                     else if (newIndex == 6) LoadFromArmory();
-                    else if (newIndex == 7) LoadFromArmory();
+                    //else if (newIndex == 7) LoadFromProfiler(0;
+                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
         }
@@ -304,6 +338,16 @@ namespace Rawr.Silverlight
                 }
             }
 
+        }
+
+        private void character_ClassChanged(object sender, EventArgs e)
+        {
+            ClassCombo.SelectedIndex = Character.ClassIndex;
+        }
+
+        private void ClassCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Character.ClassIndex = ClassCombo.SelectedIndex;
         }
 
     }

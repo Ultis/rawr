@@ -8,23 +8,6 @@ namespace Rawr.Healadin
     {
 
         #region Model Properties
-        public CalculationsHealadin()
-            : base()
-        {
-            _subPointNameColorsMana = new Dictionary<string, System.Drawing.Color>();
-            _subPointNameColorsMana.Add("Mana", System.Drawing.Color.FromArgb(0, 0, 255));
-
-
-            _subPointNameColorsTime = new Dictionary<string, System.Drawing.Color>();
-            _subPointNameColorsTime.Add("Seconds", System.Drawing.Color.Green);
-
-            _subPointNameColorsRating = new Dictionary<string, System.Drawing.Color>();
-            _subPointNameColorsRating.Add("Fight Healing", System.Drawing.Color.Red);
-            _subPointNameColorsRating.Add("Burst Healing", System.Drawing.Color.CornflowerBlue);
-
-            _subPointNameColors = _subPointNameColorsRating;
-        }
-
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -127,8 +110,13 @@ namespace Rawr.Healadin
             }
         }
 
+#if SILVERLIGHT
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get
             {
@@ -202,20 +190,37 @@ namespace Rawr.Healadin
             }
         }
 
-        private Dictionary<string, System.Drawing.Color> _subPointNameColorsMana = null;
-        private Dictionary<string, System.Drawing.Color> _subPointNameColorsRating = null;
-        private Dictionary<string, System.Drawing.Color> _subPointNameColorsTime = null;
+#if SILVERLIGHT
+        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
+        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+                    _subPointNameColors.Add("Fight Healing", System.Windows.Media.Colors.Red);
+                    _subPointNameColors.Add("Burst Healing", System.Windows.Media.Colors.Cyan);
+                }
+                return _subPointNameColors;
+            }
+        }
+#else
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get
             {
-                Dictionary<string, System.Drawing.Color> ret = _subPointNameColors;
-                _subPointNameColors = _subPointNameColorsRating;
-                return ret;
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                    _subPointNameColors.Add("Fight Healing", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("Burst Healing", System.Drawing.Color.CornflowerBlue);
+                }
+                return _subPointNameColors;
             }
         }
+#endif
 
         private List<Item.ItemType> _relevantItemTypes = null;
         public override List<Item.ItemType> RelevantItemTypes
@@ -373,7 +378,6 @@ namespace Rawr.Healadin
         {
             if (chartName == "Mana Pool Breakdown")
             {
-                _subPointNameColors = _subPointNameColorsMana;
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
 
@@ -399,7 +403,6 @@ namespace Rawr.Healadin
             }
             else if (chartName == "Mana Usage Breakdown")
             {
-                _subPointNameColors = _subPointNameColorsMana;
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
 
@@ -442,7 +445,6 @@ namespace Rawr.Healadin
             }
             else if (chartName == "Rotation Breakdown")
             {
-                _subPointNameColors = _subPointNameColorsTime;
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
 

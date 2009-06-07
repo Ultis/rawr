@@ -19,7 +19,9 @@ namespace Rawr.Silverlight
 		{
 			// Required to initialize variables
 			InitializeComponent();
-            
+            talentAttributes = new Dictionary<int, TalentDataAttribute>();
+            prereqArrows = new Dictionary<int, Image>();
+            belowRow = new Dictionary<int, int>();
 		}
 
         public EventHandler TalentsChanged;
@@ -35,7 +37,23 @@ namespace Rawr.Silverlight
                 if (value != null)
                 {
                     talents = value;
-                    Clear();
+                    for (int r = 1; r <= 11; r++)
+                    {
+                        for (int c = 1; c <= 4; c++)
+                        {
+                            this[r, c].TalentData = null;
+                        }
+                    }
+                    talentAttributes.Clear();
+                    belowRow.Clear();
+                    if (prereqArrows != null)
+                    {
+                        foreach (KeyValuePair<int, Image> kvp in prereqArrows)
+                        {
+                            GridPanel.Children.Remove(kvp.Value);
+                        }
+                    }
+                    prereqArrows.Clear();
                     Class = talents.GetClass();
                     TreeName = ((string[])Talents.GetType().GetField("TreeNames").GetValue(Talents))[Tree];
                     BackgroundImage.Source = Icons.TreeBackground(Class, TreeName);
@@ -50,6 +68,13 @@ namespace Rawr.Silverlight
                             talentAttributes[talentData.Index] = talentData;
                         }
                     }
+                    for (int r = 1; r <= 11; r++)
+                    {
+                        for (int c = 1; c <= 4; c++)
+                        {
+                            this[r, c].Update();
+                        }
+                    }
                     UpdatePrereqs();
                 }
             }
@@ -57,26 +82,6 @@ namespace Rawr.Silverlight
 
         public int Tree { get; set; }
         public string TreeName { get; private set; }
-
-        public void Clear()
-        {
-            for (int r = 1; r <= 11; r++)
-            {
-                for (int c = 1; c <= 4; c++)
-                {
-                    this[r, c].TalentData = null;
-                }
-            }
-            talentAttributes = new Dictionary<int, TalentDataAttribute>();
-            if (prereqArrows != null)
-            {
-                foreach (KeyValuePair<int, Image> kvp in prereqArrows)
-                {
-                    GridPanel.Children.Remove(kvp.Value);
-                }
-            }
-            prereqArrows = new Dictionary<int, Image>();
-        }
 
         private Dictionary<int,Image> prereqArrows;
         public void UpdatePrereqs()
@@ -200,6 +205,7 @@ namespace Rawr.Silverlight
 
         public void RankChanged()
         {
+            belowRow.Clear();
             for (int r = 1; r <= 11; r++)
             {
                 for (int c = 1; c <= 4; c++)
@@ -211,17 +217,23 @@ namespace Rawr.Silverlight
             if (TalentsChanged != null) TalentsChanged.Invoke(this, EventArgs.Empty);
         }
 
+        private Dictionary<int, int> belowRow;
         public int PointsBelowRow(int row)
         {
-            int pts = 0;
-            for (int r = 1; r < row; r++)
+            if (belowRow.ContainsKey(row)) return belowRow[row];
+            else
             {
-                for (int c = 1; c <= 4; c++)
+                int pts = 0;
+                for (int r = 1; r < row; r++)
                 {
-                    pts += this[r, c].Current;
+                    for (int c = 1; c <= 4; c++)
+                    {
+                        pts += this[r, c].Current;
+                    }
                 }
+                belowRow[row] = pts;
+                return pts;
             }
-            return pts;
         }
 
         private Dictionary<int, TalentDataAttribute> talentAttributes;

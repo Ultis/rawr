@@ -51,22 +51,44 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Retribution\CalculationsRetribution.cs">
+      <Link>CalculationsRetribution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\CharacterCalculationsRetribution.cs">
+      <Link>CharacterCalculationsRetribution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\CombatStats.cs">
+      <Link>CombatStats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\ComparisonCalculationRetribution.cs">
+      <Link>ComparisonCalculationRetribution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\Enum.cs">
+      <Link>Enum.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\Rotation.cs">
+      <Link>Rotation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\RotationParameters.cs">
+      <Link>RotationParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\RotationSimulator.cs">
+      <Link>RotationSimulator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\RotationSolution.cs">
+      <Link>RotationSolution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\SimulatorAbility.cs">
+      <Link>SimulatorAbility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\Skill.cs">
+      <Link>Skill.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsPanelRetribution.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRetribution.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalculationOptionsRetribution.cs" />
-    <Compile Include="CalculationsRetribution.cs" />
-    <Compile Include="CharacterCalculationsRetribution.cs" />
-    <Compile Include="CombatStats.cs" />
-    <Compile Include="ComparisonCalculationRetribution.cs" />
-    <Compile Include="Enum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rotation.cs" />
-    <Compile Include="RotationParameters.cs" />
-    <Compile Include="RotationSimulator.cs" />
-    <Compile Include="RotationSolution.cs" />
-    <Compile Include="SimulatorAbility.cs" />
-    <Compile Include="Skill.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

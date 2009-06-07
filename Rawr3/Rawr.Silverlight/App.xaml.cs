@@ -53,7 +53,6 @@ namespace Rawr.Silverlight
                 Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
                 Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
                 Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
-                Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
 
                 new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
                 new FileUtils("EnchantCache.xml", new EventHandler(EnchantCache_Ready));
@@ -61,7 +60,11 @@ namespace Rawr.Silverlight
             }
             else
             {
-
+                new ErrorWindow()
+                {
+                    Message = "Rawr will not work if you do not allow it to increase its available"
+                        + "storage size. Please referesh this page and and accept to continue."
+                }.Show();
             }
         }
 
@@ -92,39 +95,9 @@ namespace Rawr.Silverlight
         public void CheckLoadFinished()
         {
             if (!itemcacheFinished || !enchantFinished || !buffFinished) return;
-            /*Character testChar =
-                new Character("Ermad", "Bonechewer", Character.CharacterRegion.US,
-                Character.CharacterRace.Human,
-                new ItemInstance(46180, 41401, 42148, 0, 3820),
-                new ItemInstance(44662, 40012, 0, 0, 0),
-                new ItemInstance(40573, 40012, 0, 0, 3810),
-                new ItemInstance(45541, 0, 0, 0, 3831),
-                new ItemInstance(40569, 40012, 40012, 0, 3832),
-                new ItemInstance(6833, 0, 0, 0, 0),
-                new ItemInstance(5976, 0, 0, 0, 0),
-                new ItemInstance(45252, 40012, 0, 0, 2332),
-                new ItemInstance(40570, 42148, 40012, 0, 3246),
-                new ItemInstance(45554, 40012, 40012, 40012, 0),
-                new ItemInstance(40572, 42148, 40012, 0, 3721),
-                new ItemInstance(45434, 40012, 0, 0, 3826),
-                new ItemInstance(45235, 0, 0, 0, 0),
-                new ItemInstance(45946, 40012, 0, 0, 0),
-                new ItemInstance(45490, 0, 0, 0, 0),
-                new ItemInstance(44255, 0, 0, 0, 0),
-                new ItemInstance(40396, 0, 0, 0, 3834),
-                new ItemInstance(39716, 0, 0, 0, 1128),
-                new ItemInstance(40705, 0, 0, 0, 0),
-                null,
-                null);*/
-            Character testChar = new Character();
-            testChar.Class = Character.CharacterClass.Mage;
-            testChar.WaistBlacksmithingSocketEnabled = true;
-            testChar.CalculationOptions = new Rawr.Mage.CalculationOptionsMage();
-            //testChar.PaladinTalents = new PaladinTalents("503500520200130531005152210000000000000000000000000005032050203000000000000000.0000001000000100100000010000001010");
-            testChar.CurrentModel = "Mage";           
 
-            //((Grid)RootVisual).Children.RemoveAt(0);
-            ((Grid)RootVisual).Children.Add(new MainPage(testChar));
+            ((Grid)RootVisual).Children.RemoveAt(0);
+            ((Grid)RootVisual).Children.Add(new MainPage());
         }
 
         private void Application_Exit(object sender, EventArgs e)

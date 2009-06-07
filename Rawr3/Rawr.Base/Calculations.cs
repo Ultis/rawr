@@ -10,7 +10,6 @@ namespace Rawr
 {
 	public class Calculations
 	{
-        private static readonly string[] ModelsStrings = { "Retribution" };
 
 		private static Dictionary<string, string> _modelIcons = null;
 		public static Dictionary<string, string> ModelIcons
@@ -317,13 +316,13 @@ namespace Rawr
 
         public static string ValidModel(string model)
         {
-            if (Models.ContainsKey(model))
+            if (model != null && Models.ContainsKey(model))
             {
                 return model;
             }
             if (Models.Keys.Count > 0)
             {
-                return ModelsStrings[0];
+                foreach (string key in Models.Keys) return key;
             }
             return null;
         }

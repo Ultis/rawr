@@ -438,11 +438,15 @@ namespace Rawr //O O . .
 			{
 				if (string.IsNullOrEmpty(_currentModel))
 				{
-                    foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
+                    if (Calculations.Instance != null)
                     {
-                        if (kvp.Value == Calculations.Instance.GetType())
-                            _currentModel = kvp.Key;
+                        foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
+                        {
+                            if (kvp.Value == Calculations.Instance.GetType())
+                                _currentModel = kvp.Key;
+                        }
                     }
+                    else _currentModel = Calculations.ValidModel(null);
 				}
 				return _currentModel;
 			}

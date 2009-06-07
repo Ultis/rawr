@@ -160,7 +160,7 @@
     						<ComboBoxItem Content="Draenei"/>
     					</ComboBox>
     					<TextBlock HorizontalAlignment="Left" Margin="111,44,0,0" VerticalAlignment="Top" Text="Class:" TextWrapping="Wrap"/>
-    					<ComboBox x:Name="ClassCombo" Margin="111,60,108,0" VerticalAlignment="Top" Height="24" SelectedIndex="{Binding Mode=TwoWay, Path=ClassIndex}">
+    					<ComboBox x:Name="ClassCombo" Margin="111,60,108,0" VerticalAlignment="Top" Height="24" SelectionChanged="ClassCombo_SelectionChanged">
     						<ComboBoxItem Visibility="Collapsed"/>
     						<ComboBoxItem Content="Warrior"/>
     						<ComboBoxItem Content="Paladin"/>
@@ -175,7 +175,7 @@
     						<ComboBoxItem Content="Druid"/>		
     					</ComboBox>
     					<TextBlock HorizontalAlignment="Right" Margin="0,44,61,0" VerticalAlignment="Top" Text="Model:" TextWrapping="Wrap" Width="43"/>
-    					<ComboBox x:Name="ModelCombo" HorizontalAlignment="Right" Margin="0,60,0,0" VerticalAlignment="Top" Width="104" d:LayoutOverrides="HorizontalAlignment" Height="24"/>
+    					<ComboBox x:Name="ModelCombo" SelectionChanged="ModelCombo_SelectionChanged" HorizontalAlignment="Right" Margin="0,60,0,0" VerticalAlignment="Top" Width="104" d:LayoutOverrides="HorizontalAlignment" Height="24"/>
     					<CheckBox x:Name="EnforceGemCheck" HorizontalAlignment="Left" Margin="0,88,0,0" VerticalAlignment="Top" Content="Enforce Gem Requirements*" IsChecked="{Binding Mode=TwoWay, Path=EnforceGemRequirements}"/>
     					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="0,109,0,0"/>
     				</Grid>

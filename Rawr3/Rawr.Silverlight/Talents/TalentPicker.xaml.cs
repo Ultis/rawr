@@ -20,18 +20,25 @@ namespace Rawr.Silverlight
             get { return character; }
             set
             {
-                if (value != null)
+                if (character != null) character.ClassChanged -= new EventHandler(character_ClassChanged);
+                character = value;
+                if (character != null)
                 {
-                    character = value;
-                    Tree1.Talents = Character.CurrentTalents;
-                    TreeTab1.Header = Tree1.TreeName;
-                    Tree2.Talents = Character.CurrentTalents;
-                    TreeTab2.Header = Tree2.TreeName;
-                    Tree3.Talents = Character.CurrentTalents;
-                    TreeTab3.Header = Tree3.TreeName;
-                    Glyph.Character = Character;
+                    character.ClassChanged += new EventHandler(character_ClassChanged);
+                    character_ClassChanged(this, EventArgs.Empty);
                 }
             }
+        }
+
+        private void character_ClassChanged(object sender, EventArgs e)
+        {
+            Tree1.Talents = Character.CurrentTalents;
+            TreeTab1.Header = Tree1.TreeName;
+            Tree2.Talents = Character.CurrentTalents;
+            TreeTab2.Header = Tree2.TreeName;
+            Tree3.Talents = Character.CurrentTalents;
+            TreeTab3.Header = Tree3.TreeName;
+            Glyph.Character = Character;
         }
 
 		public TalentPicker()

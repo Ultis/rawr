@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.Retribution
 {
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", Character.CharacterClass.Paladin)]
-    class CalculationsRetribution : CalculationsBase
+    public class CalculationsRetribution : CalculationsBase
     {
 
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -166,8 +166,6 @@ namespace Rawr.Retribution
                 return _optimizableCalculationLabels;
             }
         }
-
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
         /// and a color for each. These colors will be used in the charts.
@@ -177,6 +175,22 @@ namespace Rawr.Retribution
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
+#if SILVERLIGHT
+        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
+        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+                    _subPointNameColors.Add("DPS", System.Windows.Media.Colors.Red);
+                }
+                return _subPointNameColors;
+            }
+        }
+#else
+        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get
@@ -189,6 +203,7 @@ namespace Rawr.Retribution
                 return _subPointNameColors;
             }
         }
+#endif
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
@@ -262,9 +277,13 @@ namespace Rawr.Retribution
             }
         }
 
-
+#if SILVERLIGHT
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRetribution()); }
         }
