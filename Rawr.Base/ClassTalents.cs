@@ -90,6 +90,20 @@ namespace Rawr
             }
             return ret.ToString();
         }
+
+        public Character.CharacterClass GetClass()
+        {
+            if (this.GetType() == typeof(WarlockTalents)) return Character.CharacterClass.Warlock;
+            else if (this.GetType() == typeof(MageTalents)) return Character.CharacterClass.Mage;
+            else if (this.GetType() == typeof(PriestTalents)) return Character.CharacterClass.Priest;
+            else if (this.GetType() == typeof(DruidTalents)) return Character.CharacterClass.Druid;
+            else if (this.GetType() == typeof(RogueTalents)) return Character.CharacterClass.Rogue;
+            else if (this.GetType() == typeof(HunterTalents)) return Character.CharacterClass.Hunter;
+            else if (this.GetType() == typeof(ShamanTalents)) return Character.CharacterClass.Shaman;
+            else if (this.GetType() == typeof(DeathKnightTalents)) return Character.CharacterClass.DeathKnight;
+            else if (this.GetType() == typeof(PaladinTalents)) return Character.CharacterClass.Paladin;
+            else return Character.CharacterClass.Warrior;
+        }
     }
 
     public partial class WarriorTalents : TalentsBase, ICloneable {
