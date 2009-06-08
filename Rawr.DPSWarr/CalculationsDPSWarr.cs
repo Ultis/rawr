@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+#if SILVERLIGHT
 using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
 namespace Rawr.DPSWarr
 {
@@ -198,10 +202,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 
                 if (_subPointNameColors == null){
 #if SILVERLIGHT
-                    _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.FromArgb(255,255,0,0));
+                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,255,0,0));
 #else
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                    _subPointNameColors = new Dictionary<string, Color>();
                     _subPointNameColors.Add("DPS", Color.Red);
 #endif
                 }
