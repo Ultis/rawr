@@ -319,12 +319,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float OHAbilityActivates = 0f;
             if (character.OffHand != null){OHAbilityActivates = calculatedStats.WW.GetActivates() + calculatedStats.BLS.GetActivates() * 6f;}
 
-
+            
 
             deepWounds.SetAllAbilityActivates(MHAbilityActivates, OHAbilityActivates);
             calculatedStats.DW = deepWounds;
-            calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetTickSize();
-            calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS();
+            calculatedStats.Rot._DW_PerHit = deepWounds.GetTickSize();
+            calculatedStats.Rot._DW_DPS = deepWounds.GetDPS();
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
