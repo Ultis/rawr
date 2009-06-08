@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace Rawr.Silverlight
 {
@@ -26,15 +27,23 @@ namespace Rawr.Silverlight
                 isPopulated = value;
                 if (!isPopulated)
                 {
-                    ListControl.Items.Clear();
                     if (IsShown) BuildListItems();
                 }
             }
         }
 
-        public bool Enchant { get; set; }
+        public bool IsEnchantList { get; set; }
 
-        public Character.CharacterSlot Slot { get; set; }
+		private Character.CharacterSlot _slot;
+		public Character.CharacterSlot Slot
+		{
+			get { return _slot; }
+			set
+			{
+				_slot = value;
+				IsPopulated = false;
+			}
+		}
 
         public Character character;
         public Character Character
@@ -61,9 +70,30 @@ namespace Rawr.Silverlight
             set
             {
                 isShown = value;
-                if (isShown && !IsPopulated) BuildListItems();
+				if (isShown && !IsPopulated) BuildListItems();
+				if (isShown) listBoxItems.Focus();
             }
         }
+
+		// Using a DependencyProperty as the backing store for Items.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty ItemsProperty =
+			DependencyProperty.Register("Items", 
+			typeof(ItemListItemCollection), 
+			typeof(ItemListControl),
+			new PropertyMetadata(null));
+		public ItemListItemCollection Items
+		{
+			get
+			{
+				ItemListItemCollection items = (ItemListItemCollection)GetValue(ItemsProperty);
+				if (items == null)
+				{
+					Items = items = new ItemListItemCollection();
+				}
+				return items;
+			}
+			set { SetValue(ItemsProperty, value); }
+		}
         #endregion
 
         private void BuildListItems()
@@ -71,9 +101,8 @@ namespace Rawr.Silverlight
             if (Character == null) return;
             bool seenEquippedItem = (Character[Slot] == null);
 
-            List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
-            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>(relevantItemInstances.Count + 1);
-            if (Enchant)
+            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+            if (IsEnchantList)
             {
                 CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
                 if (Character != null && current != null)
@@ -83,7 +112,8 @@ namespace Rawr.Silverlight
             }
             else
             {
-                if (relevantItemInstances.Count > 0)
+				List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
+				if (relevantItemInstances.Count > 0)
                 {
                     foreach (ItemInstance item in relevantItemInstances)
                     {
@@ -94,111 +124,147 @@ namespace Rawr.Silverlight
                 if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(Character[Slot], Character, Slot));
             }
 
-            float maxPoints = itemCalculations.Max(c => c.OverallPoints);
+            float maxValue = itemCalculations.Count == 0 ? 100f : itemCalculations.Max(c => c.OverallPoints);
 
-            foreach (ComparisonCalculationBase calc in itemCalculations.OrderByDescending(c => c.OverallPoints))
-            {
-                ListBoxItem item = new ListBoxItem();
-                item.MouseEnter += new MouseEventHandler(item_MouseEnter);
-                item.MouseLeave += new MouseEventHandler(item_MouseLeave);
-                StackPanel spMain = new StackPanel();
-                item.Content = spMain;
-
-                StackPanel spName = new StackPanel();
-                spName.Orientation = Orientation.Horizontal;
-
-                if (calc.ItemInstance != null)
-                {
-                    item.Tag = calc.ItemInstance;
-                    if (calc.ItemInstance == Character[Slot])
-                        item.Background = new SolidColorBrush(Color.FromArgb(50, 0, 255, 0));
-
-                    Image itemIcon = new Image();
-                    itemIcon.Width = 32; itemIcon.Height = 32;
-                    itemIcon.Margin = new Thickness(0, 0, 4, 2);
-                    itemIcon.Source = Icons.ItemIcon(calc.ItemInstance.Item.IconPath);
-                    spName.Children.Add(itemIcon);
-                }
-                else
-                {
-                    item.Tag = calc.Item;
-                    if (Math.Abs(calc.Item.Id % 10000) == Character[Slot].EnchantId)
-                        item.Background = new SolidColorBrush(Color.FromArgb(50, 0, 255, 0));
-                }
-
-                TextBlock itemName = new TextBlock();
-                itemName.VerticalAlignment = VerticalAlignment.Center;
-                itemName.Text = calc.Name;
-                itemName.TextWrapping = TextWrapping.Wrap;
-                itemName.MaxWidth = ListControl.Width - 66;
-                spName.Children.Add(itemName);
-
-                spMain.Children.Add(spName);
-
-                StackPanel spCalcs = new StackPanel();
-                spCalcs.Orientation = Orientation.Horizontal;
-
-                int i = 0;
-                foreach (Color subColor in Calculations.SubPointNameColors.Values)
-                {
-                    Rectangle r = new Rectangle();
-                    r.Height = 2;
-                    r.Width = calc.SubPoints[i++] / maxPoints * (ListControl.Width - 30);
-                    r.Fill = new SolidColorBrush(subColor);
-                    spCalcs.Children.Add(r);
-                }
-                spMain.Children.Add(spCalcs);
-
-                ListControl.Items.Add(item);
-            }
+			Items.Clear();
+			List<ItemListItem> itemListItems = new List<ItemListItem>();
+			ItemListItem selectedItem = null;
+			int selectedEnchantId = 0;
+			if (IsEnchantList)
+			{
+				Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
+				if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
+			}
+			else
+			{
+				ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+				emptyCalcs.Name = "Empty";
+				emptyCalcs.Item = new Item();
+				emptyCalcs.Item.Name = "Empty";
+				emptyCalcs.ItemInstance = new ItemInstance();
+				emptyCalcs.ItemInstance.Id = -1;
+				emptyCalcs.Equipped = Character[Slot] == null;
+				itemCalculations.Add(emptyCalcs);
+			}
+			foreach (ComparisonCalculationBase calc in itemCalculations)
+			{
+				ItemListItem itemListItem = new ItemListItem(calc, maxValue, 344d);
+				itemListItems.Add(itemListItem);
+				if (IsEnchantList)
+				{
+					if (itemListItem.EnchantId == selectedEnchantId)
+						selectedItem = itemListItem;
+				}
+				else
+				{
+					if (calc.ItemInstance == Character[Slot] ||
+						(calc.ItemInstance.Id == -1 && Character[Slot] == null))
+						selectedItem = itemListItem;
+				}
+			}
+			Items.AddRange(itemListItems);
+			listBoxItems.SelectedItem = selectedItem;
+			listBoxItems.Focus();
             IsPopulated = true;
         }
 
+		private void BuildSorts()
+		{
+			comboBoxSort.Items.Clear();
+			comboBoxSort.Items.Add("Alphabetical");
+			comboBoxSort.Items.Add("Overall");
+			foreach (var kvp in Calculations.SubPointNameColors)
+				comboBoxSort.Items.Add(kvp.Key);
+			comboBoxSort.SelectedIndex = 1;
+		}
+
         private void item_MouseLeave(object sender, MouseEventArgs e)
         {
-            ItemTooltip.Hide();
+			FrameworkElement fe = sender as FrameworkElement;
+			ItemTooltip.Hide();
         }
 
         private void item_MouseEnter(object sender, MouseEventArgs e)
         {
-            ItemInstance ii = ((ListBoxItem)sender).Tag as ItemInstance;
-            Item i = ((ListBoxItem)sender).Tag as Item;
+			FrameworkElement fe = sender as FrameworkElement;
+			ItemListItem listItem = fe.DataContext as ItemListItem;
 
-            if (ii != null) ItemTooltip.ItemInstance = ii;
-            else ItemTooltip.Item = i;
+			if (listItem.ItemInstance != null) ItemTooltip.ItemInstance = listItem.ItemInstance;
+			else ItemTooltip.Item = listItem.Item;
 
-            ItemTooltip.Show((ListBoxItem)sender, 267, 0);
+			ItemTooltip.Show(fe, 367, 0);
         }
 
 		public ItemListControl()
 		{
 			// Required to initialize variables
 			InitializeComponent();
+			this.DataContext = this;
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+			BuildSorts();
 		}
 
-        private void ListControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			BuildSorts();
+		}
+
+        private void listBoxItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                if (Enchant)
+                if (IsEnchantList)
                 {
-                    Item item = (Item)((ListBoxItem)((ListBox)sender).SelectedItem).Tag;
+                    ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
                     ItemInstance copy = Character[Slot].Clone();
-                    copy.EnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
+                    copy.EnchantId = listItem.EnchantId;
                     IsShown = false;
                     IsPopulated = false;
                     Character[Slot] = copy;
                 }
                 else
                 {
-                    ItemInstance newItem = (ItemInstance)((ListBoxItem)((ListBox)sender).SelectedItem).Tag;
+                    ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
                     IsShown = false;
                     IsPopulated = false;
-                    Character[Slot] = newItem;
+					Character[Slot] = listItem.ItemInstance.Id == -1 ? null : listItem.ItemInstance;
                 }
+				this.Close();
             }
             catch { }
         }
-		
+
+		private void UserControl_LostFocus(object sender, RoutedEventArgs e)
+		{
+			FrameworkElement focus = (FocusManager.GetFocusedElement() as FrameworkElement);
+			if (focus is ComboBoxItem && comboBoxSort.Items.Contains(focus.DataContext))
+				focus = comboBoxSort;
+			DependencyObject parent = VisualTreeHelper.GetParent(focus);
+			while (parent != null && parent != this)
+				parent = VisualTreeHelper.GetParent(parent);
+			if (parent == null)
+			{
+				//focus isn't within this control
+				this.Close();
+			}
+		}
+
+		private void Close()
+		{
+			this.IsShown = false;
+			if (this.Parent is Popup)
+				(this.Parent as Popup).IsOpen = false;
+		}
+
+		private void Filter_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			(sender as TextBox).GetBindingExpression(TextBox.TextProperty).UpdateSource();
+		}
+
+		private void comboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (comboBoxSort.SelectedIndex >= 0)
+				Items.Sort = (ComparisonGraph.ComparisonSort)(comboBoxSort.SelectedIndex - 2);
+		}
 	}
 }

@@ -76,21 +76,35 @@ namespace Rawr.Silverlight
 		{
 			// Required to initialize variables
             InitializeComponent();
-            ComparisonEnchantList.Enchant = true;
+            ComparisonEnchantList.IsEnchantList = true;
+		}
+
+		private void EnsurePopupsVisible()
+		{
+			GeneralTransform transform = TransformToVisual(Application.Current.RootVisual);
+			double distBetweenBottomOfPopupAndBottomOfWindow =
+				Application.Current.RootVisual.DesiredSize.Height -
+				transform.Transform(new Point(0, ComparisonItemList.Height)).Y;
+			if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+			{
+				ListPopup.VerticalOffset = distBetweenBottomOfPopupAndBottomOfWindow;
+			} 
+			distBetweenBottomOfPopupAndBottomOfWindow =
+				 Application.Current.RootVisual.DesiredSize.Height -
+				 transform.Transform(new Point(0, 66 + ComparisonEnchantList.Height)).Y;
+			if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+			{
+				EnchantPopup.VerticalOffset = 66 + distBetweenBottomOfPopupAndBottomOfWindow;
+			}
 		}
 
         private void MainButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            ItemTooltip.Hide();
+			ItemTooltip.Hide();
+			EnsurePopupsVisible();
             ComparisonItemList.IsShown = true;
             ListPopup.IsOpen = true;
-        }
-
-        private void MainButton_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ItemTooltip.Hide();
-            ComparisonItemList.IsShown = false;
-            ListPopup.IsOpen = false;
+			ComparisonItemList.Focus();
         }
 
         private void MainButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -103,29 +117,24 @@ namespace Rawr.Silverlight
             ItemTooltip.Hide();
         }
 
-        private void EnchantButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (!EnchantPopup.IsOpen) EnchantTooltip.Show(EnchantButton, 72, 0);
-        }
-
-        private void EnchantButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            EnchantTooltip.Hide();
-        }
-
         private void EnchantButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            EnchantTooltip.Hide();
-            ComparisonEnchantList.IsShown = true;
-            EnchantPopup.IsOpen = true;
+			EnchantTooltip.Hide();
+			EnsurePopupsVisible();
+			ComparisonEnchantList.IsShown = true;
+			EnchantPopup.IsOpen = true;
+			ComparisonEnchantList.Focus();
         }
 
-        private void EnchantButton_LostFocus(object sender, RoutedEventArgs e)
-        {
-            EnchantTooltip.Hide();
-            ComparisonEnchantList.IsShown = false;
-            EnchantPopup.IsOpen = false;
-        }
+		private void EnchantButton_MouseEnter(object sender, MouseEventArgs e)
+		{
+			if (!EnchantPopup.IsOpen) EnchantTooltip.Show(EnchantButton, 72, 0);
+		}
+
+		private void EnchantButton_MouseLeave(object sender, MouseEventArgs e)
+		{
+			EnchantTooltip.Hide();
+		}
 
 	}
 }

@@ -109,9 +109,11 @@ namespace Rawr.Silverlight
                 }
                 character = value;
                 character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
-                CustomCombo.ItemsSource = new List<string>(Calculations.CustomChartNames);
-                CustomCombo.SelectedIndex = Calculations.CustomChartNames.Length > 0 ? 0 : -1;
-                UpdateGraph();
+
+				//CustomCombo.ItemsSource = new List<string>(Calculations.CustomChartNames);
+				//CustomCombo.SelectedIndex = Calculations.CustomChartNames.Length > 0 ? 0 : -1;
+
+				UpdateGraph();
             }
         }
         #endregion

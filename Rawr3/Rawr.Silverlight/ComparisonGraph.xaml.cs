@@ -178,5 +178,12 @@ namespace Rawr.Silverlight
                 }
 			}
         }
+
+		public enum ComparisonSort
+		{
+			//SubPoints will be their index, such as 0 or 1
+			Overall = -1,
+			Alphabetical = -2
+		}
     }
 }

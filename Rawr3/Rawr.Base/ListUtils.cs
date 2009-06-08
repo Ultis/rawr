@@ -56,26 +56,28 @@ namespace Rawr
         public static int FindIndex<T>(this IEnumerable<T> source, Predicate<T> match)
         {
             var v = source
-            .Select((item, index) => new { item = item, position = index })
-            .Where(x => match(x.item)).FirstOrDefault();
-            return v.position;
+            .Select((item, index) => new { Item = item, Position = index })
+            .Where(x => match(x.Item))
+			.FirstOrDefault();
+			return v == null ? -1 : v.Position;
         }
 
         public static int FindIndex<T>(this IEnumerable<T> source, int startIndex, Predicate<T> match)
         {
             var v = source
-            .Select((item, index) => new { item = item, position = index })
-            .Where((x, index) => match(x.item) && (index >= startIndex)).FirstOrDefault();
-            return v.position;
-        }
+            .Select((item, index) => new { Item = item, Position = index })
+            .Where(x => (x.Position >= startIndex) && match(x.Item))
+			.FirstOrDefault();
+			return v == null ? -1 : v.Position;
+		}
 
         public static int FindIndex<T>(this IEnumerable<T> source, int startIndex, int count, Predicate<T> match)
         {
             var v = source
-            .Where((obj, index) => (index >= startIndex) && (index <= count))
-            .Select((item, index) => new { item = item, position = index })
-            .Where((x, index) => match(x.item) && (index >= startIndex) && (index <= count)).FirstOrDefault();
-            return v.position;
+            .Select((item, index) => new { Item = item, Position = index })
+			.Where(x => (x.Position >= startIndex) && (x.Position <= startIndex + count) && match(x.Item))
+			.FirstOrDefault();
+			return v == null ? -1 : v.Position;
         }
 
         public static int RemoveAll<T>(this List<T> list, Predicate<T> match)

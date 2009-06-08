@@ -146,6 +146,8 @@
     </Compile>
     <Compile Include="FileUtils.cs" />
     <Compile Include="GroupBox\Groupbox.cs" />
+    <Compile Include="Items\ItemListItem.cs" />
+    <Compile Include="Items\ItemListItemCollection.cs" />
     <Compile Include="Items\ItemTooltip.xaml.cs">
       <DependentUpon>ItemTooltip.xaml</DependentUpon>
     </Compile>

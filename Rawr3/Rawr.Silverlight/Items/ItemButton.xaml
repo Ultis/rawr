@@ -7,8 +7,7 @@
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
 	xmlns:local="clr-namespace:Rawr.Silverlight"
 	x:Class="Rawr.Silverlight.ItemButton"
-	Width="70" Height="70"
-	LostFocus="UserControl_LostFocus">
+	Width="70" Height="70">
 	<Grid x:Name="LayoutRoot">
 				<Button x:Name="MainButton" Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70" Click="MainButton_Click" MouseEnter="MainButton_MouseEnter" MouseLeave="MainButton_MouseLeave">
 					<Image x:Name="IconImage" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center"/>

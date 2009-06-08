@@ -155,7 +155,7 @@ namespace Rawr.Cat
 			{
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
-					//"Hit Test",
+						"Hit Test",
 						//"Relative Stat Values",
 					};
 				return _customChartNames;

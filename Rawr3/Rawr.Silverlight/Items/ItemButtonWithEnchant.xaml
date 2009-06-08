@@ -7,13 +7,13 @@
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
 	xmlns:local="clr-namespace:Rawr.Silverlight"
 	x:Class="Rawr.Silverlight.ItemButtonWithEnchant"
-	Width="70" Height="83">
+	Width="70" Height="85">
 
 	<Grid x:Name="LayoutRoot">
-		<Button x:Name="EnchantButton" Height="18" VerticalAlignment="Bottom" FontSize="10" 
-		 Click="EnchantButton_Clicked" LostFocus="EnchantButton_LostFocus" MouseEnter="EnchantButton_MouseEnter" MouseLeave="EnchantButton_MouseLeave"/>
-		<Button x:Name="MainButton" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="70" Margin="0,0,0,13"
-			 Click="MainButton_Clicked" LostFocus="MainButton_LostFocus" MouseEnter="MainButton_MouseEnter" MouseLeave="MainButton_MouseLeave">
+		<Button x:Name="EnchantButton" Height="20" VerticalAlignment="Bottom" FontSize="10" 
+		 Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="EnchantButton_MouseLeave"/>
+		<Button x:Name="MainButton" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="70" Margin="0,0,0,15"
+			 Click="MainButton_Clicked" MouseEnter="MainButton_MouseEnter" MouseLeave="MainButton_MouseLeave">
 			<Image x:Name="IconImage" Height="Auto" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
 		</Button>
 		<Popup x:Name="ListPopup" HorizontalOffset="72">

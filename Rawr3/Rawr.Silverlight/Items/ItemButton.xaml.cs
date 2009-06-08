@@ -67,19 +67,26 @@ namespace Rawr.Silverlight
 			InitializeComponent();
 		}
 
-        private void UserControl_LostFocus(object sender, RoutedEventArgs e)
-        {
-            ItemTooltip.Hide();
-            ComparisonItemList.IsShown = false;
-            ListPopup.IsOpen = false;
-        }
+		private void EnsurePopupsVisible()
+		{
+			GeneralTransform transform = TransformToVisual(Application.Current.RootVisual);
+			double distBetweenBottomOfPopupAndBottomOfWindow =
+				Application.Current.RootVisual.DesiredSize.Height -
+				transform.Transform(new Point(0, ComparisonItemList.Height)).Y;
+			if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+			{
+				ListPopup.VerticalOffset = distBetweenBottomOfPopupAndBottomOfWindow;
+			}
+		}
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
-            ItemTooltip.Hide();
+			ItemTooltip.Hide();
+			EnsurePopupsVisible();
             ComparisonItemList.IsShown = true;
             ListPopup.IsOpen = true;
-        }
+			ComparisonItemList.Focus();
+		}
 
         private void MainButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
