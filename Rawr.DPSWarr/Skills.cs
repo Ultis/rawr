@@ -1521,6 +1521,10 @@ namespace Rawr.DPSWarr {
                 float result = GetDmgOverTickingTime(acts) / rot;
                 return result;
             }
+            public override float GetDPS()
+            {
+                return GetTickSize() / GetTickLength();
+            }
         }
         public class Rend : DoT {
             // Constructors

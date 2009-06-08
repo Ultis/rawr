@@ -323,8 +323,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             deepWounds.SetAllAbilityActivates(MHAbilityActivates, OHAbilityActivates);
             calculatedStats.DW = deepWounds;
-            calculatedStats.Rot._DW_PerHit = deepWounds.GetTickSize();
-            calculatedStats.Rot._DW_DPS = deepWounds.GetDPS(deepWounds.GetActivates() / deepWounds.GetNumTicks());
+            calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetTickSize();
+            calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS();
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
@@ -336,7 +336,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                                            calculatedStats.BLS,calculatedStats.SW,calculatedStats.RD);
 
             if(calculatedStats.MS.GetRotation()==Skills.ROTATION_LENGTH_FURY){
-                calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + calculatedStats.BT.GetDPS()
+                calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH + calculatedStats.BT.GetDPS()
                     + calculatedStats.WW.GetDPS() + calculatedStats.HS.GetDPS() + calculatedStats.BS.GetDPS()
                     + calculatedStats.DW.GetDPS() + calculatedStats.MS.GetDPS() + calculatedStats.SD.GetDPS()
                     + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
