@@ -170,7 +170,7 @@ namespace Rawr.DPSWarr
             dictValues.Add("Sweeping Strikes",  string.Format(format,SW.GetDPS()          ,SW.GetDamageOnUse() ,SW.GetActivates()     ,SW.GetActivates()      ,SW.GetDPS()          /TotalDPS));
             // DPS General
             dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
-            dictValues.Add("Heroic Strike",     string.Format(format,HS.GetDPS()          ,HS.GetDamageOnUse() ,HS.heroicStrikeRageCost(),HS.GetActivates(),HS.GetDPS()/TotalDPS));
+            dictValues.Add("Heroic Strike",     string.Format(format,HS.GetDPS()          ,HS.GetDamageOnUse() ,Rot.heroicStrikeRageCost(),HS.GetActivates(),HS.GetDPS()/TotalDPS));
             dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}" + 
                                 Environment.NewLine + "Off Hand- {5:0.00}" + 
                                 Environment.NewLine + "{6:00.0%} of DPS",

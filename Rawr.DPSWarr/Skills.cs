@@ -330,7 +330,7 @@ namespace Rawr.DPSWarr {
                 float rot = GetRotation();
                 return adou / rot;
             }
-            public virtual float GetLandedAtksPerSecNoSS() {
+            /*public virtual float GetLandedAtksPerSecNoSS() {
                 Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
                 Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
                 Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
@@ -385,123 +385,123 @@ namespace Rawr.DPSWarr {
                 float result = combatFactors.MhYellowCrit * (SL_Acts/HS.GetRotation() + HS_Acts/HS.GetRotation());
 
                 return result;
-            }
+            }*/
             #endregion
-            #region Rage Calcs
-            public virtual float BloodRageGainRagePerSec() {
-                return (20f * (1f + 0.25f * Talents.ImprovedBloodrage)) /
-                    (60f * (1f - 1.0f / 9.0f * Talents.IntensifyRage));
-            }
-            public virtual float AngerManagementRagePerSec() { return Talents.AngerManagement / 3.0f; }
-            public virtual float ImprovedBerserkerRagePerSec() { return Talents.ImprovedBerserkerRage * 10 / (30 * (1 - 1.0f / 9.0f * Talents.IntensifyRage)); }
-            public virtual float OtherRageGenPerSec() {
-                // Ebs: Removed a lot of this due to crit chances already being factored in the WhiteAttacks class
-                float rage;// = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
-                //if (combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
-                //    rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
-                //rage *= combatFactors.TotalHaste;
-                rage /*+*/= AngerManagementRagePerSec() + ImprovedBerserkerRagePerSec() + BloodRageGainRagePerSec();
+        //    #region Rage Calcs
+        //    public virtual float BloodRageGainRagePerSec() {
+        //        return (20f * (1f + 0.25f * Talents.ImprovedBloodrage)) /
+        //            (60f * (1f - 1.0f / 9.0f * Talents.IntensifyRage));
+        //    }
+        //    public virtual float AngerManagementRagePerSec() { return Talents.AngerManagement / 3.0f; }
+        //    public virtual float ImprovedBerserkerRagePerSec() { return Talents.ImprovedBerserkerRage * 10 / (30 * (1 - 1.0f / 9.0f * Talents.IntensifyRage)); }
+        //    public virtual float OtherRageGenPerSec() {
+        //        // Ebs: Removed a lot of this due to crit chances already being factored in the WhiteAttacks class
+        //        float rage;// = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
+        //        //if (combatFactors.OffHand.DPS > 0 && (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
+        //        //    rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
+        //        //rage *= combatFactors.TotalHaste;
+        //        rage /*+*/= AngerManagementRagePerSec() + ImprovedBerserkerRagePerSec() + BloodRageGainRagePerSec();
                 
-                // 4pcT7
-                if (StatS.DreadnaughtBonusRageProc != 0f)
-                    rage += 5.0f * 0.1f * ((Talents.DeepWounds > 0f ? 1f : 0f) + (CalcOpts.FuryStance == false ? 1f / 3f : 0f));
+        //        // 4pcT7
+        //        if (StatS.DreadnaughtBonusRageProc != 0f)
+        //            rage += 5.0f * 0.1f * ((Talents.DeepWounds > 0f ? 1f : 0f) + (CalcOpts.FuryStance == false ? 1f / 3f : 0f));
 
-                rage *= 1 + Talents.EndlessRage * 0.25f;
+        //        rage *= 1 + Talents.EndlessRage * 0.25f;
 
-                return rage;
-            }
-            public virtual float neededRagePerSecond(Ability BT, Ability WW, Ability MS, Ability OP, Ability SD,
-                                                    Ability SL,/*Ability BS,*/ Ability BLS, Ability SW, Ability RND)
-            {
-                float BTRage = BT.GetRageUsePerSecond();
-                float WWRage = WW.GetRageUsePerSecond();
-                float MSRage = MS.GetRageUsePerSecond();
-                float OPRage = OP.GetRageUsePerSecond();
-                float SDRage = SD.GetRageUsePerSecond();
-                float SlamRage = SL.GetRageUsePerSecond();
-                float BloodSurgeRage = bloodsurgeRPS;// BS.GetRageUsePerSecond();
-                float BladestormRage = BLS.GetRageUsePerSecond();
-                float SweepingRage = SW.GetRageUsePerSecond();
-                float RendRage = RND.GetRageUsePerSecond();
-                // Total
-                float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage + 
-                    BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
-                return rage;
-            }
-            public virtual float neededRage() {
-                Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
-                float BTRage = BT.GetRageUsePerSecond();
-                //float BTRage = BloodThirstHits() * 30; // ORIGINAL LINE
+        //        return rage;
+        //    }
+        //    public virtual float neededRagePerSecond(Ability BT, Ability WW, Ability MS, Ability OP, Ability SD,
+        //                                            Ability SL,/*Ability BS,*/ Ability BLS, Ability SW, Ability RND)
+        //    {
+        //        float BTRage = BT.GetRageUsePerSecond();
+        //        float WWRage = WW.GetRageUsePerSecond();
+        //        float MSRage = MS.GetRageUsePerSecond();
+        //        float OPRage = OP.GetRageUsePerSecond();
+        //        float SDRage = SD.GetRageUsePerSecond();
+        //        float SlamRage = SL.GetRageUsePerSecond();
+        //        float BloodSurgeRage = bloodsurgeRPS;// BS.GetRageUsePerSecond();
+        //        float BladestormRage = BLS.GetRageUsePerSecond();
+        //        float SweepingRage = SW.GetRageUsePerSecond();
+        //        float RendRage = RND.GetRageUsePerSecond();
+        //        // Total
+        //        float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage + 
+        //            BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
+        //        return rage;
+        //    }
+        //    public virtual float neededRage() {
+        //        Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
+        //        float BTRage = BT.GetRageUsePerSecond();
+        //        //float BTRage = BloodThirstHits() * 30; // ORIGINAL LINE
 
-                Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
-                float WWRage = WW.GetRageUsePerSecond();
-                //float WWRage = WhirlWindHits() * 30; // ORIGINAL LINE
+        //        Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
+        //        float WWRage = WW.GetRageUsePerSecond();
+        //        //float WWRage = WhirlWindHits() * 30; // ORIGINAL LINE
 
-                Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
-                float MSRage = MS.GetRageUsePerSecond();
-                //float MSRage = MortalStrikeHits() * 30; // ORIGINAL LINE
+        //        Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
+        //        float MSRage = MS.GetRageUsePerSecond();
+        //        //float MSRage = MortalStrikeHits() * 30; // ORIGINAL LINE
 
-                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                float OPRage = OP.GetRageUsePerSecond();
-                //float OPRage = OverpowerHits() * 5; // ORIGINAL LINE
+        //        Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+        //        float OPRage = OP.GetRageUsePerSecond();
+        //        //float OPRage = OverpowerHits() * 5; // ORIGINAL LINE
 
-                Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
-                float SDRage = SD.GetRageUsePerSecond();
-                //float SDRage = SuddenDeathHits() * 10; // ORIGINAL LINE
+        //        Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
+        //        float SDRage = SD.GetRageUsePerSecond();
+        //        //float SDRage = SuddenDeathHits() * 10; // ORIGINAL LINE
 
-                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                float SlamRage = SL.GetRageUsePerSecond();
-                //float SlamRage = SlamHits() * 15; // ORIGINAL LINE
+        //        Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+        //        float SlamRage = SL.GetRageUsePerSecond();
+        //        //float SlamRage = SlamHits() * 15; // ORIGINAL LINE
 
-                Ability BS = new BloodSurge(Char, StatS, combatFactors, Whiteattacks);
-                float BloodSurgeRage = BS.GetRageUsePerSecond();
-                // NO ORIGINAL LINE
+        //        Ability BS = new BloodSurge(Char, StatS, combatFactors, Whiteattacks);
+        //        float BloodSurgeRage = BS.GetRageUsePerSecond();
+        //        // NO ORIGINAL LINE
 
-                Ability BLS = new Bladestorm(Char, StatS, combatFactors, Whiteattacks);
-                float BladestormRage = BLS.GetRageUsePerSecond();
-                //float BladestormRage = BladestormHits() * 30; // ORIGINAL LINE
+        //        Ability BLS = new Bladestorm(Char, StatS, combatFactors, Whiteattacks);
+        //        float BladestormRage = BLS.GetRageUsePerSecond();
+        //        //float BladestormRage = BladestormHits() * 30; // ORIGINAL LINE
 
-                Ability SW = new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks);
-                float SweepingRage = SW.GetRageUsePerSecond();
-                //float SweepingRage = SweepingHits() * (_talents.GlyphOfSweepingStrikes ? 0 : 30); // ORIGINAL LINE
+        //        Ability SW = new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks);
+        //        float SweepingRage = SW.GetRageUsePerSecond();
+        //        //float SweepingRage = SweepingHits() * (_talents.GlyphOfSweepingStrikes ? 0 : 30); // ORIGINAL LINE
 
-                Ability RND = new Rend(Char, StatS, combatFactors, Whiteattacks);
-                float RendRage = RND.GetRageUsePerSecond();
-                //float RendRage = RendHits() * 10; // ORIGINAL LINE
+        //        Ability RND = new Rend(Char, StatS, combatFactors, Whiteattacks);
+        //        float RendRage = RND.GetRageUsePerSecond();
+        //        //float RendRage = RendHits() * 10; // ORIGINAL LINE
 
-                // Total
-                float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage
-                    + BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
-                return rage;
-            }
-            public virtual float freeRage(Ability BT, Ability WW, Ability MS, Ability OP, Ability SD,
-                                         Ability SL,/*Ability BS,*/ Ability BLS, Ability SW, Ability RND)
-            {
-                if (Char.MainHand == null) { return 0f; }
-                float white = Whiteattacks.whiteRageGenPerSec();
-                float other = OtherRageGenPerSec();
-                float death = SD.GetRageUsePerSecond();
-                float needy = neededRagePerSecond(BT, WW, MS, OP, SD, SL,/*BS,*/ BLS, SW, RND);
-                return white + other + death - needy;
-            }
-            public virtual float heroicStrikeRageCost() { return 0f; }
-            public virtual float BloodRageGain() { return (20f + 5f * Talents.ImprovedBloodrage) / (60f * (1f - 0.11f * Talents.IntensifyRage)); }
-            public virtual float AngerManagementGain() { return Talents.AngerManagement / 3.0f; }
-            public virtual float ImprovedBerserkerRage() { return Talents.ImprovedBerserkerRage * 10f / (30f * (1f - 0.11f * Talents.IntensifyRage)); }
-            public virtual float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
-            public virtual float OtherRage() {
-                if (Char.MainHand == null) { return 0f; }
-                float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
-                if (combatFactors.OffHand != null && combatFactors.OffHand.DPS > 0 &&
-                    (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
-                    rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
-                rage *= combatFactors.TotalHaste;
-                rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
-                rage *= 1 + Talents.EndlessRage * 0.25f;
+        //        // Total
+        //        float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage
+        //            + BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
+        //        return rage;
+        //    }
+        //    public virtual float freeRage(Ability BT, Ability WW, Ability MS, Ability OP, Ability SD,
+        //                                 Ability SL,/*Ability BS,*/ Ability BLS, Ability SW, Ability RND)
+        //    {
+        //        if (Char.MainHand == null) { return 0f; }
+        //        float white = Whiteattacks.whiteRageGenPerSec();
+        //        float other = OtherRageGenPerSec();
+        //        float death = SD.GetRageUsePerSecond();
+        //        float needy = neededRagePerSecond(BT, WW, MS, OP, SD, SL,/*BS,*/ BLS, SW, RND);
+        //        return white + other + death - needy;
+        //    }
+        //    public virtual float heroicStrikeRageCost() { return 0f; }
+        //    public virtual float BloodRageGain() { return (20f + 5f * Talents.ImprovedBloodrage) / (60f * (1f - 0.11f * Talents.IntensifyRage)); }
+        //    public virtual float AngerManagementGain() { return Talents.AngerManagement / 3.0f; }
+        //    public virtual float ImprovedBerserkerRage() { return Talents.ImprovedBerserkerRage * 10f / (30f * (1f - 0.11f * Talents.IntensifyRage)); }
+        //    public virtual float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
+        //    public virtual float OtherRage() {
+        //        if (Char.MainHand == null) { return 0f; }
+        //        float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
+        //        if (combatFactors.OffHand != null && combatFactors.OffHand.DPS > 0 &&
+        //            (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
+        //            rage += 7.0f / 8.0f * (1 + combatFactors.OhCrit - (1.0f - combatFactors.ProbOhWhiteHit));
+        //        rage *= combatFactors.TotalHaste;
+        //        rage += AngerManagementGain() + ImprovedBerserkerRage() + BloodRageGain() + UnbridledWrathGain();
+        //        rage *= 1 + Talents.EndlessRage * 0.25f;
 
-                return rage;
-            }
-            #endregion
+        //        return rage;
+        //    }
+        //    #endregion
         }
         #endregion
 
@@ -637,9 +637,9 @@ namespace Rawr.DPSWarr {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Bloodsurge";
-                SL = new Slam(c, s, cf, wa);
-                Whirlwind = new WhirlWind(c, s, cf, wa);
-                Bloodthirst = new BloodThirst(c, s, cf, wa);
+                //SL = new Slam(c, s, cf, wa);
+                //Whirlwind = new WhirlWind(c, s, cf, wa);
+                //Bloodthirst = new BloodThirst(c, s, cf, wa);
                 ReqTalent = true;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
@@ -813,8 +813,11 @@ namespace Rawr.DPSWarr {
             }
             // Variables
             private Execute EXECUTE;
+            private float FREERAGE;
             // Get/Set
             public Execute Execute { get { return EXECUTE; } set { EXECUTE = value; } }
+            public float LandedAtksPerSec { get; set; }
+            public float FreeRage { get { return FREERAGE; } set { EXECUTE.FreeRage = value; FREERAGE = value; } }
             // Functions
             public override float GetActivates() { return GetActivates(true); }
             public override float GetActivates(bool Override) {
@@ -823,7 +826,7 @@ namespace Rawr.DPSWarr {
 
                 // ACTUAL CALCS
                 float talent = 3f * Talents.SuddenDeath / 100f;
-                float hitspersec = (Override ? 1f : GetLandedAtksPerSec());
+                float hitspersec = (Override ? 1f : LandedAtksPerSec);
                 float latency = (1.5f);
                 //float mod = 100f;
                 float SD_GCDS = talent * hitspersec * latency /* * mod*/;
@@ -883,7 +886,7 @@ namespace Rawr.DPSWarr {
                 if (!GetValided()) { return 0f; }
 
                 // ACTUAL CALCS
-                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
                 float GCDPerc = (Talents.TasteForBlood == 0 ? 0f : (1.5f - 0.5f * Talents.UnrelentingAssault / 1000f) / ((Talents.TasteForBlood > 1f) ? 6f : 9f));
 
                 float cd = 1f, result = 0;
@@ -952,7 +955,9 @@ namespace Rawr.DPSWarr {
                 StanceOkDef = true;
             }
             // Variables
+            private Ability WW;
             // Get/Set
+            public Ability WhirlWind { get { return WW; } set { WW = value; } }
             // Functions
             public override float GetActivates() {
                 // Invalidators
@@ -966,7 +971,7 @@ namespace Rawr.DPSWarr {
                 if (!GetValided() || Talents.Bladestorm == 0) { return 0f; }
 
                 // Base Damage
-                Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
+                //Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
                 float Damage = WW.GetDamage(true);
 
                 // Talents/Glyphs Affecting
@@ -1007,16 +1012,21 @@ namespace Rawr.DPSWarr {
                 StanceOkDef = true;
             }
             // Variables
+            private Ability SL, MS, OP, SD;
             // Get/Set
+            public Ability Slam { get { return SL; } set { SL = value; } }
+            public Ability MortalStrike { get { return MS; } set { MS = value; } }
+            public Ability Overpower { get { return OP; } set { OP = value; } }
+            public Ability SuddenDeath { get { return SD; } set { SD = value; } }
             // Functions
             public override float GetActivates() {
                 // Invalidators
                 if (!GetValided() || Talents.SwordSpecialization == 0) { return 0f; }
                 
-                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
-                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
+                //Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
+                //Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+                //Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
                 // Actual Calcs
                 if (combatFactors.MainHand.Type != Item.ItemType.TwoHandSword) { return 0.0f; }
                 float wepSpeed = combatFactors.MainHandSpeed;
@@ -1198,22 +1208,14 @@ namespace Rawr.DPSWarr {
             }
             // Variables
             // Get/Set
+            public float FreeRage { get; set; }
             // Functions
             public override float GetActivates() {if (!GetValided()) { return 0f; }return 0f;}
             public override float GetDamage() { return GetDamage(false); }
             public override float GetDamage(bool Override) {
                 if (!Override && !GetValided()) { return 0f; }
 
-                float freerage = (float)System.Math.Max(0f,freeRage(
-                    new BloodThirst(Char,StatS,combatFactors,Whiteattacks),
-                    new WhirlWind(Char, StatS, combatFactors, Whiteattacks),
-                    new MortalStrike(Char, StatS, combatFactors, Whiteattacks),
-                    new OverPower(Char, StatS, combatFactors, Whiteattacks),
-                    new Suddendeath(Char, StatS, combatFactors, Whiteattacks),
-                    new Slam(Char, StatS, combatFactors, Whiteattacks),
-                    new Bladestorm(Char, StatS, combatFactors, Whiteattacks),
-                    new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks),
-                    new Rend(Char, StatS, combatFactors, Whiteattacks)));
+                float freerage = (float)System.Math.Max(0f,FreeRage);
                 if (Override && freerage <= (RageCost - (Talents.ImprovedExecute * 2.5f))) {
                     freerage = RageCost - (Talents.ImprovedExecute * 2.5f);
                 }else if (freerage <= 0f) {
@@ -1386,35 +1388,26 @@ namespace Rawr.DPSWarr {
             }
             // Variables
             // Get/Set
+            public float ActsPerSec { get; set; }
             // Functions
             public override float GetActivates() {
                 if (!GetValided()) { return 0f; }
-
+                
                 // HS per second
-                float hsHits = (/*rageModifier +*/ freeRage(
-                    new BloodThirst(Char, StatS, combatFactors, Whiteattacks),
-                    new WhirlWind(Char, StatS, combatFactors, Whiteattacks),
-                    new MortalStrike(Char, StatS, combatFactors, Whiteattacks),
-                    new OverPower(Char, StatS, combatFactors, Whiteattacks),
-                    new Suddendeath(Char, StatS, combatFactors, Whiteattacks),
-                    new Slam(Char, StatS, combatFactors, Whiteattacks),
-                    new Bladestorm(Char, StatS, combatFactors, Whiteattacks),
-                    new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks),
-                    new Rend(Char, StatS, combatFactors, Whiteattacks))
-                    / heroicStrikeRageCost());
-
+                float hsHits = ActsPerSec;
+                
                 if (hsHits < 0) { hsHits = 0; }
                 heroicStrikesPerSecond = hsHits;
                 
                 return hsHits * GetRotation();
             }
-            public override float heroicStrikeRageCost() {
+            /*public override float heroicStrikeRageCost() {
                 if (!GetValided()) { return 0f; }
                 float rageCost = this.RageCost;
                 if (Talents.GlyphOfHeroicStrike) { rageCost -= 10.0f * combatFactors.MhCrit; } // Glyph bonus rage on crit
                 rageCost += Whiteattacks.GetSwingRage(combatFactors.MainHand, true);
                 return rageCost;
-            }
+            }*/
             public override float GetDamageOnUse() {
                 if (!GetValided()) { return 0f; }
                 float Damage = GetDamage(); // Base Damage
@@ -1453,6 +1446,7 @@ namespace Rawr.DPSWarr {
                 DamageBonus = Talents.ImprovedCleave * 0.40f;
             }
             // Variables
+            public float ActsPerSec { get; set; }
             // Get/Set
             // Functions
             public override float GetActivates() {
@@ -1460,24 +1454,14 @@ namespace Rawr.DPSWarr {
                 if (!GetValided()) { return 0f; }
 
                 // HS per second
-                float hsHits = (/*rageModifier +*/ freeRage(
-                    new BloodThirst(Char, StatS, combatFactors, Whiteattacks),
-                    new WhirlWind(Char, StatS, combatFactors, Whiteattacks),
-                    new MortalStrike(Char, StatS, combatFactors, Whiteattacks),
-                    new OverPower(Char, StatS, combatFactors, Whiteattacks),
-                    new Suddendeath(Char, StatS, combatFactors, Whiteattacks),
-                    new Slam(Char, StatS, combatFactors, Whiteattacks),
-                    new Bladestorm(Char, StatS, combatFactors, Whiteattacks),
-                    new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks),
-                    new Rend(Char, StatS, combatFactors, Whiteattacks)
-                    ) / heroicStrikeRageCost());
+                float hsHits = ActsPerSec;
 
                 if (hsHits < 0) { hsHits = 0; }
                 heroicStrikesPerSecond = hsHits;
                 
                 return hsHits * GetRotation();
             }
-            public override float heroicStrikeRageCost() {
+            public float heroicStrikeRageCost() {
                 if (!GetValided()) { return 0f; }
                 return RageCost + Whiteattacks.GetSwingRage(combatFactors.MainHand, true);
             }
@@ -1612,10 +1596,12 @@ namespace Rawr.DPSWarr {
 
                 Damage *= (1f + StatS.BonusBleedDamageMultiplier);
                 Damage *= combatFactors.DamageBonus;
-                if (Talents.TitansGrip == 1 && Char.OffHand != null && Char.OffHand.Slot == Item.ItemSlot.TwoHand) { Damage *= 0.9f; } // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
+                
+                // Removed, titan's grip is included in DamageBonus
+                //if (Talents.TitansGrip == 1 && Char.OffHand != null && Char.OffHand.Slot == Item.ItemSlot.TwoHand) { Damage *= 0.9f; } // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
 
                 // Ensure that we are not doing negative Damage
-                return (float)Math.Max(0f,Damage);
+                return (float)Math.Max(0f,Damage / Duration * TimeBtwnTicks);
             }
         }
         #endregion
