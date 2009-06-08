@@ -1575,7 +1575,11 @@ namespace Rawr.DPSDK
         public void GetTalents(Character character)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            calcOpts.talents = character.DeathKnightTalents;
+            // When switching from TankDK to DPSDK, I see calcOpts as null.  Check first before using.
+            if (null != calcOpts)
+            {
+                calcOpts.talents = character.DeathKnightTalents;
+            }
         }
     }
 }

@@ -61,6 +61,15 @@ namespace Rawr.TankDK
             }
         }
 
+        private void numPercThreatFromSpell_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.PercThreatFromSpells = (float)(numPercThreatFromSpell.Value);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void numSurvivalWeight_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
@@ -79,6 +88,14 @@ namespace Rawr.TankDK
             }
         }
 
+        private void numPercIncFromMagic_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.PercentIncomingFromMagic = (float)(numPercIncFromMagic.Value);
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
@@ -90,9 +107,11 @@ namespace Rawr.TankDK
         }
 
         public int TargetLevel = 83;
-        public float ThreatWeight = 0.05f;
+        public float ThreatWeight = 1.00f;
         public float SurvivalWeight = 1.00f;
         public uint IncomingDamage = 25000;
+        public float PercThreatFromSpells = .5f;
+        public float PercentIncomingFromMagic = .5f;
 
         public string GetXml()
         {

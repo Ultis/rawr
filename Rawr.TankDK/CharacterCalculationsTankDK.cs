@@ -9,7 +9,7 @@ namespace Rawr.TankDK
     {
 
         public override float OverallPoints {
-            get { return Survival * SurvivalWeight + Mitigation + Threat * ThreatWeight; }
+            get { return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); }
             set {   } 
         }
 

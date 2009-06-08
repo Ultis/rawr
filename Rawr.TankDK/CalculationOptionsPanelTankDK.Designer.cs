@@ -36,9 +36,15 @@
             this.numSurvivalWeight = new System.Windows.Forms.NumericUpDown();
             this.numIncomingDamage = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
+            this.numPercThreatFromSpell = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numPercIncFromMagic = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPercThreatFromSpell)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -84,7 +90,7 @@
             131072});
             this.numThreatWeight.Location = new System.Drawing.Point(150, 36);
             this.numThreatWeight.Maximum = new decimal(new int[] {
-            2,
+            5,
             0,
             0,
             0});
@@ -95,13 +101,13 @@
             10,
             0,
             0,
-            131072});
+            65536});
             this.numThreatWeight.ValueChanged += new System.EventHandler(this.numThreatWeight_ValueChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 62);
+            this.label3.Location = new System.Drawing.Point(3, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 4;
@@ -115,7 +121,7 @@
             0,
             0,
             131072});
-            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 62);
+            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 95);
             this.numSurvivalWeight.Maximum = new decimal(new int[] {
             5,
             0,
@@ -123,7 +129,7 @@
             0});
             this.numSurvivalWeight.Name = "numSurvivalWeight";
             this.numSurvivalWeight.Size = new System.Drawing.Size(105, 20);
-            this.numSurvivalWeight.TabIndex = 5;
+            this.numSurvivalWeight.TabIndex = 7;
             this.numSurvivalWeight.Value = new decimal(new int[] {
             10,
             0,
@@ -138,7 +144,7 @@
             0,
             0,
             0});
-            this.numIncomingDamage.Location = new System.Drawing.Point(150, 89);
+            this.numIncomingDamage.Location = new System.Drawing.Point(150, 122);
             this.numIncomingDamage.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -151,7 +157,8 @@
             0});
             this.numIncomingDamage.Name = "numIncomingDamage";
             this.numIncomingDamage.Size = new System.Drawing.Size(105, 20);
-            this.numIncomingDamage.TabIndex = 7;
+            this.numIncomingDamage.TabIndex = 9;
+            this.numIncomingDamage.ThousandsSeparator = true;
             this.numIncomingDamage.Value = new decimal(new int[] {
             25000,
             0,
@@ -162,14 +169,84 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 89);
+            this.label4.Location = new System.Drawing.Point(3, 122);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Incoming Damage";
             // 
+            // numPercThreatFromSpell
+            // 
+            this.numPercThreatFromSpell.DecimalPlaces = 2;
+            this.numPercThreatFromSpell.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numPercThreatFromSpell.Location = new System.Drawing.Point(150, 62);
+            this.numPercThreatFromSpell.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numPercThreatFromSpell.Name = "numPercThreatFromSpell";
+            this.numPercThreatFromSpell.Size = new System.Drawing.Size(105, 20);
+            this.numPercThreatFromSpell.TabIndex = 5;
+            this.numPercThreatFromSpell.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numPercThreatFromSpell.ValueChanged += new System.EventHandler(this.numPercThreatFromSpell_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 62);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(141, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "% Threat from Spells/Effects";
+            // 
+            // numPercIncFromMagic
+            // 
+            this.numPercIncFromMagic.DecimalPlaces = 2;
+            this.numPercIncFromMagic.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numPercIncFromMagic.Location = new System.Drawing.Point(150, 150);
+            this.numPercIncFromMagic.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numPercIncFromMagic.Name = "numPercIncFromMagic";
+            this.numPercIncFromMagic.Size = new System.Drawing.Size(105, 20);
+            this.numPercIncFromMagic.TabIndex = 11;
+            this.numPercIncFromMagic.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numPercIncFromMagic.ValueChanged += new System.EventHandler(this.numPercIncFromMagic_ValueChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 150);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(116, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "% Incoming from Magic";
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.numPercIncFromMagic);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.numPercThreatFromSpell);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.numIncomingDamage);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numSurvivalWeight);
@@ -183,6 +260,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPercThreatFromSpell)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -198,5 +277,9 @@
         private System.Windows.Forms.NumericUpDown numSurvivalWeight;
         private System.Windows.Forms.NumericUpDown numIncomingDamage;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numPercThreatFromSpell;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numPercIncFromMagic;
+        private System.Windows.Forms.Label label6;
     }
 }

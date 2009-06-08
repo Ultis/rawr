@@ -1064,9 +1064,11 @@ namespace Rawr
 		{
 			try
 			{
-				return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ","").Contains(TargetClass.ToString())) &&
-					(RelevantItemTypes.Contains(item.Type)) && HasRelevantStats(item.Stats);
-			}
+                bool b = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()));
+                b = (RelevantItemTypes.Contains(item.Type));
+                b = HasRelevantStats(item.Stats);
+                return b;
+            }
 			catch (Exception )
 			{
 				return false;
