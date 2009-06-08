@@ -1,4 +1,6 @@
-﻿namespace Rawr.DPSWarr {
+﻿using System;
+
+namespace Rawr.DPSWarr {
     public class Skills {
         public Skills(Character character,WarriorTalents talents, Stats stats, CombatFactors combatFactors,WhiteAttacks whiteStats) {
             _character = character;
@@ -19,7 +21,7 @@
         public const float ROTATION_LENGTH_ARMS_GLYPH = 42.0f;
         public const float ROTATION_LENGTH_ARMS_NOGLYPH = 30.0f;
         #endregion
-
+        #region Base
         // White Damage + White Rage Generated
         public class WhiteAttacks {
             // Constructors
@@ -145,32 +147,29 @@
                 return R;
             }
         }
-        // Abilities
+        // Ability class base
         public class Ability {
             // Constructors
             /// <summary>
-            /// Ability: Stores information pertaining to character class abilities
+            /// Stores information pertaining to character class abilities
             /// </summary>
             /// <param name="c">The Character to run the calculations against</param>
             /// <param name="s">The Stats to run the calculations against</param>
             /// <param name="cf">The combatFactors to run the calculations against</param>
             /// <param name="wa">The WhiteAttacks to run the calculations against</param>
             /// <param name="name">The name of the ability</param>
-            /// <param name="desc">The full description of the ability (and it's ranks)</param>
+            /// <param name="reqmeleeweap">Abilties that require a specific talent will yield 0 dps without that talent</param>
             /// <param name="reqmeleeweap">Abilities that require a melee weapon will provide zero dps when the main hand item is null</param>
             /// <param name="reqmeleerange">This will be used for movement fights, the % of time in movement will drop this abilities dps if it requires melee distance</param>
             /// <param name="maxrange">The maximum distance for the abilities use (in yards). Currently identifying Melee Range as 5 (yards). -1 means distance doesn't affect this ability.</param>
-            /// <param name="tlntsafctg">Talents Affecting: The name of the talent [and it's effect (staged:1/2/3/4/5)]</param>
-            /// <param name="glphsafctg">Glyphs Affecting: The name of the glyph [and it's effect]</param>
-            /// <param name="setsafctg">Sets Affecting: The name of the set [and it's effect]</param>
             /// <param name="cd">The cooldown of the ability. Glyphs Affecting cooldowns should have the modifier in the constructor</param>
             /// <param name="ragecost">The amount of rage used by this ability. Glyphs which sometimes/always reduce rage cost should have the modifier in the constructor</param>
             /// <param name="casttime">The cast time required to complete this ability action. Use -1 for instant attacks.</param>
             /// <param name="stancef">The ability can be activated from Fury (Berserker) Stance</param>
             /// <param name="stancea">The ability can be activated from Arms (Battle) Stance</param>
             /// <param name="stanced">The ability can be activated from Defensive Stance</param>
-            public Ability(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, string name, string desc,
-                bool reqmeleeweap, bool reqmeleerange, float maxrange, string tlntsafctg, string glphsafctg, string setsafctg,
+            public Ability(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, string name,
+                bool reqtalent, bool reqmeleeweap, bool reqmeleerange, float maxrange, 
                 float cd, float ragecost, float casttime, bool stancef, bool stancea, bool stanced)
             {
                 // Character related
@@ -182,13 +181,10 @@
                 if (Char != null) { CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr; } else { CalcOpts = null; }
                 // Ability Related
                 Name = name;
-                Desc = desc;
+                ReqTalent = reqtalent;
                 ReqMeleeWeap = reqmeleeweap;
                 ReqMeleeRange = reqmeleerange;
                 MaxRange = maxrange; // In Yards 
-                TlntsAfctg = tlntsafctg;
-                GlphsAfctg = glphsafctg;
-                SetsAfctg = setsafctg;
                 Cd = cd; // In Seconds
                 RageCost = ragecost;
                 CastTime = casttime; // In Seconds
@@ -206,34 +202,30 @@
                 CalcOpts = null;
                 // Ability Related
                 Name = "Invalid";
-                Desc = "Invalid";
+                ReqTalent = false;
                 ReqMeleeWeap = false;
                 ReqMeleeRange = false;
-                MaxRange = -1; // In Yards 
-                TlntsAfctg = "Invalid";
-                GlphsAfctg = "Invalid";
-                SetsAfctg = "Invalid";
-                Cd = -1; // In Seconds
-                RageCost = -1;
-                CastTime = -1; // In Seconds
+                MaxRange = 5f; // In Yards 
+                Cd = -1f; // In Seconds
+                RageCost = -1f;
+                CastTime = -1f; // In Seconds
                 StanceOkFury = false;
                 StanceOkArms = false;
                 StanceOkDef = false;
             }
             #region Variables
             private string NAME;
-            private string DESC;
+            private float DAMAGEBASE;
+            private float DAMAGEBONUS;
+            private bool REQTALENT;
             private bool REQMELEEWEAP;
             private bool REQMELEERRANGE;
             private float MAXRANGE; // In Yards 
-            private string TLNTSAFCTG;
-            private string GLPHSAFCTG;
-            private string SETSAFCTG;
             private float CD; // In Seconds
             private float RAGECOST;
             private float CASTTIME; // In Seconds
-            private bool STANCEOKFURY; // The ability can be used in Fury Stance
-            private bool STANCEOKARMS; // The ability can be used in Arms Stance
+            private bool STANCEOKARMS; // The ability can be used in Battle Stance
+            private bool STANCEOKFURY; // The ability can be used in Berserker Stance
             private bool STANCEOKDEF;  // The ability can be used in Defensive Stance
             public float heroicStrikesPerSecond;
             public float heroicStrikePercent;
@@ -247,16 +239,15 @@
             #region Get/Set
             public float bloodsurgeRPS { get; set; }
             public string Name { get { return NAME; } set { NAME = value; } }
-            public string Desc { get { return DESC; } set { DESC = value; } }
+            public bool ReqTalent { get { return REQTALENT; } set { REQTALENT = value; } }
             public bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
             public bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
             public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards 
-            public string TlntsAfctg { get { return TLNTSAFCTG; } set { TLNTSAFCTG = value; } }
-            public string GlphsAfctg { get { return GLPHSAFCTG; } set { GLPHSAFCTG = value; } }
-            public string SetsAfctg { get { return SETSAFCTG; } set { SETSAFCTG = value; } }
             public float Cd { get { return CD; } set { CD = value; } } // In Seconds
             public float RageCost { get { return RAGECOST; } set { RAGECOST = value; } }
-            public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } }
+            public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } } // In Seconds
+            public float DamageBase { get { return DAMAGEBASE; } set { DAMAGEBASE = value; } }
+            public float DamageBonus { get { return DAMAGEBONUS; } set { DAMAGEBONUS = value; } }
             public bool StanceOkFury { get { return STANCEOKFURY; } set { STANCEOKFURY = value; } }
             public bool StanceOkArms { get { return STANCEOKARMS; } set { STANCEOKARMS = value; } }
             public bool StanceOkDef { get { return STANCEOKDEF; } set { STANCEOKDEF = value; } }
@@ -298,10 +289,15 @@
                     }
                 }
             }
-            public virtual bool  GetValided() {
-                // Invalidators
+            public virtual bool GetValided() {return GetValided(0);}
+            public virtual bool GetValided(int TalentLvl) {
+                // Null crap is bad
                 if (Char == null || CalcOpts == null || Talents == null) { return false; }
+                // Talent Requirements
+                if (ReqTalent && TalentLvl == 0) { return false; }
+                // Need a weapon
                 if (ReqMeleeWeap && (Char.MainHand == null || Char.MainHand.MaxDamage == 0)){return false;}
+                // Proper Stance
                 if ((CalcOpts.FuryStance && !StanceOkFury)
                     || (!CalcOpts.FuryStance && !StanceOkArms)
                     /*||( CalcOpts.DefStance  && !StanceOkDef )*/ ) { return false; }
@@ -311,7 +307,7 @@
             public virtual float GetActivates(bool Override) { return 0f; } // Number of times used in rotation
             public virtual float GetHealing() { return 0f; }
             public virtual float GetDamage() { return GetDamage(false); }
-            public virtual float GetDamage(bool Override) { return 0f; }
+            public virtual float GetDamage(bool Override) { return (float)Math.Max(0f,DamageBase * (1f + DamageBonus)); }
             public virtual float GetAvgDamage() { return GetDamage() * GetActivates(); }
             public virtual float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
@@ -335,7 +331,7 @@
                 return adou / rot;
             }
             public virtual float GetLandedAtksPerSecNoSS() {
-                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
                 Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
                 Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
 
@@ -374,6 +370,22 @@
 
                 return GetLandedAtksPerSecNoSS() + sspec;
             }
+            public float GetCritHsSlamPerSec() {
+                Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
+                Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
+                Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
+                Ability HS = new HeroicStrike(Char, StatS, combatFactors, Whiteattacks);
+
+                float MS_Acts = MS.GetActivates();
+                float OP_Acts = OP.GetActivates();
+                float SD_Acts = SD.GetActivates();
+                float HS_Acts = HS.GetActivates();
+                float SL_Acts = GetRotation() / 1.5f - MS_Acts - OP_Acts - SD_Acts;
+
+                float result = combatFactors.MhYellowCrit * (SL_Acts/HS.GetRotation() + HS_Acts/HS.GetRotation());
+
+                return result;
+            }
             #endregion
             #region Rage Calcs
             public virtual float BloodRageGainRagePerSec() {
@@ -398,19 +410,22 @@
 
                 return rage;
             }
-            public virtual float neededRagePerSecond() {
-                Ability BT = new BloodThirst(   Char, StatS, combatFactors, Whiteattacks); float BTRage = BT.GetRageUsePerSecond();
-                Ability WW = new WhirlWind(     Char, StatS, combatFactors, Whiteattacks); float WWRage = WW.GetRageUsePerSecond();
-                Ability MS = new Mortalstrike(  Char, StatS, combatFactors, Whiteattacks); float MSRage = MS.GetRageUsePerSecond();
-                Ability OP = new OverPower(     Char, StatS, combatFactors, Whiteattacks); float OPRage = OP.GetRageUsePerSecond();
-                Ability SD = new Suddendeath(   Char, StatS, combatFactors, Whiteattacks); float SDRage = SD.GetRageUsePerSecond();
-                Ability SL = new Slam(          Char, StatS, combatFactors, Whiteattacks); float SlamRage = SL.GetRageUsePerSecond();
-                /*Ability BS = new BloodSurge(Char, StatS, combatFactors, Whiteattacks);*/ float BloodSurgeRage = bloodsurgeRPS;// BS.GetRageUsePerSecond();
-                Ability BLS = new Bladestorm(   Char, StatS, combatFactors, Whiteattacks); float BladestormRage = BLS.GetRageUsePerSecond();
-                Ability SW = new SweepingStrikes(Char,StatS, combatFactors, Whiteattacks); float SweepingRage = SW.GetRageUsePerSecond();
-                Ability RND = new Rend(         Char, StatS, combatFactors, Whiteattacks); float RendRage = RND.GetRageUsePerSecond();
+            public virtual float neededRagePerSecond(Ability BT, Ability WW, Ability MS, Ability OP, Ability SD,
+                                                    Ability SL,/*Ability BS,*/ Ability BLS, Ability SW, Ability RND)
+            {
+                float BTRage = BT.GetRageUsePerSecond();
+                float WWRage = WW.GetRageUsePerSecond();
+                float MSRage = MS.GetRageUsePerSecond();
+                float OPRage = OP.GetRageUsePerSecond();
+                float SDRage = SD.GetRageUsePerSecond();
+                float SlamRage = SL.GetRageUsePerSecond();
+                float BloodSurgeRage = bloodsurgeRPS;// BS.GetRageUsePerSecond();
+                float BladestormRage = BLS.GetRageUsePerSecond();
+                float SweepingRage = SW.GetRageUsePerSecond();
+                float RendRage = RND.GetRageUsePerSecond();
                 // Total
-                float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage + BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
+                float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage + 
+                    BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
                 return rage;
             }
             public virtual float neededRage() {
@@ -422,7 +437,7 @@
                 float WWRage = WW.GetRageUsePerSecond();
                 //float WWRage = WhirlWindHits() * 30; // ORIGINAL LINE
 
-                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
                 float MSRage = MS.GetRageUsePerSecond();
                 //float MSRage = MortalStrikeHits() * 30; // ORIGINAL LINE
 
@@ -459,12 +474,14 @@
                     + BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
                 return rage;
             }
-            public virtual float freeRage() {
-                Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
+            public virtual float freeRage(Ability BT, Ability WW, Ability MS, Ability OP, Ability SD,
+                                         Ability SL,/*Ability BS,*/ Ability BLS, Ability SW, Ability RND)
+            {
+                if (Char.MainHand == null) { return 0f; }
                 float white = Whiteattacks.whiteRageGenPerSec();
                 float other = OtherRageGenPerSec();
                 float death = SD.GetRageUsePerSecond();
-                float needy = neededRagePerSecond();
+                float needy = neededRagePerSecond(BT, WW, MS, OP, SD, SL,/*BS,*/ BLS, SW, RND);
                 return white + other + death - needy;
             }
             public virtual float heroicStrikeRageCost() { return 0f; }
@@ -473,6 +490,7 @@
             public virtual float ImprovedBerserkerRage() { return Talents.ImprovedBerserkerRage * 10f / (30f * (1f - 0.11f * Talents.IntensifyRage)); }
             public virtual float UnbridledWrathGain() { return Talents.UnbridledWrath * 3.0f / 60.0f; }
             public virtual float OtherRage() {
+                if (Char.MainHand == null) { return 0f; }
                 float rage = (14.0f / 8.0f * (1 + combatFactors.MhCrit - (1.0f - combatFactors.ProbMhWhiteHit)));
                 if (combatFactors.OffHand != null && combatFactors.OffHand.DPS > 0 &&
                     (combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || Talents.TitansGrip == 1))
@@ -485,119 +503,77 @@
             }
             #endregion
         }
-        public class DoT : Ability {
-            // Constructors
-            public DoT(){}
-            // Variables
-            // Get/Set
-            // Functions
-            public virtual float GetTickSize() { return 0f; }
-            public virtual float GetTTLTickingTime() { return Cd; }
-            public virtual float GetTickLength() { return CastTime; }
-            public virtual float GetNumTicks() { return GetTTLTickingTime() / GetTickLength(); }
-            public virtual float GetDmgOverTickingTime() { return GetTickSize() * GetNumTicks(); }
-            public virtual float GetDmgOverTickingTime(float acts) { return GetTickSize() * (GetNumTicks() * acts); }
-            public override float GetDPS(float acts) {
-                float dmgonuse = GetTickSize();
-                float numticks = GetNumTicks()*acts;
-                float rot = GetRotation();
-                float result = GetDmgOverTickingTime(acts) / rot;
-                return result;
-                //return GetRotation() / GetDmgOverTickingTime();
-            }
-        }
+        #endregion
+
+        #region Direct Damage Abilities
         // Fury Abilities
         public class BloodThirst : Ability {
             // Constructors
-            public BloodThirst(Character c,Stats s,CombatFactors cf,WhiteAttacks wa){
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+            /// <summary>
+            /// Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee
+            /// attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.
+            /// </summary>
+            /// <TalentsAffecting>Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Bloodthirst [+100% from healing effect]</GlyphsAffecting>
+            public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "Bloodthirst";
-                Desc = @"Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee
-attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power";
+                ReqTalent = true;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Bloodthirst (Requires talent to use ability)\n
-Unending Fury [Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by (2/4/6/8/10)%.]";
-                GlphsAfctg = @"Glyph of Bloodthirst [+100% from healing effect]";
                 Cd = 4f; // In Seconds
-                RageCost = 20f;
-                CastTime = -1f; // In Seconds
+                RageCost = 20f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
-                StanceOkArms = false;
-                StanceOkDef = false;
+                DamageBase = StatS.AttackPower * 50f / 100f;
+                DamageBonus = Talents.UnendingFury * 0.02f;
             }
             // Variables
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
-                if (!GetValided()||Talents.Bloodthirst==0f) { return 0f; }
+                if (!GetValided(Talents.Bloodthirst)) { return 0f; }
                 return 2.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
-                // Actual Calcs
-                //return GetRotation() / Cd;
-                // ORIGINAL LINE
-                //return (3.0f / 16) * Talents.Bloodthirst;
             }
             public override float GetHealing() {
                 // ToDo: Bloodthirst healing effect, also adding in GlyphOfBloodthirst (+100% healing)
                 return StatS.Health / 100.0f * (Talents.GlyphOfBloodthirst?2f:1f);
             }
-            public override float GetDamage() {
-                // Invalidators
-                if (!GetValided()||Talents.Bloodthirst==0f) { return 0f; }
-
-                // Base Damage
-                float Damage = (StatS.AttackPower * 50.0f / 100f);
-                
-                // Talents Affecting
-                Damage *= (1.00f + Talents.UnendingFury * 0.02f);
-
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-                
-                return Damage;
-            }
+            public override float GetDamage() {if (!GetValided(Talents.Bloodthirst)) { return 0f; }return base.GetDamage();}
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
-                Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
-                    + combatFactors.MhYellowCrit * combatFactors.BonusYellowCritDmg); // Attack Table
 
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-                return Damage;
+                float Crit = 0f;
+                // Add additional crit chance for Incite
+                // & Range check resulting crit factor
+                Crit = (float)Math.Min(1f,combatFactors.MhYellowCrit + StatS.MortalstrikeBloodthirstCritIncrease);
+
+                Damage *= (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                    + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
+
+                return (float)Math.Max(0f, Damage);
             }
         }
         public class WhirlWind : Ability {
             // Constructors
+            /// <summary>
+            /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,    
+            /// causing weapon damage from both melee weapons to each enemy.
+            /// </summary>
+            /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Whirlwind [-2 sec Cooldown]</GlyphsAffecting>
             public WhirlWind(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "WhirlWind";
-                Desc = @"In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from
-both melee weapons to each enemy.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Improved Whirlwind [Damage increased by (10%/20%)]";
-                GlphsAfctg = @"Glyph of Whirlwind [Cooldown Reduced by 2 sec.]";
                 Cd = 10f; // In Seconds
-                RageCost = 25f;
-                CastTime = -1f; // In Seconds
+                RageCost = 25f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
-                StanceOkArms = false;
-                StanceOkDef = false;
+                DamageBonus = Talents.ImprovedWhirlwind * 0.10f + Talents.UnendingFury * 0.02f;
             }
             // Variables
             // Get/Set
@@ -614,9 +590,7 @@ both melee weapons to each enemy.";
             }
             // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
             public override float GetDamage(bool Override) {return GetDamage(Override, false);}
-            /// <summary>
-            /// 
-            /// </summary>
+            /// <summary></summary>
             /// <param name="Override">When true, do not check for Bers Stance</param>
             /// <param name="isOffHand">When true, do calculations for off-hand damage instead of main-hand</param>
             /// <returns>Unmitigated damage of a single hit</returns>
@@ -629,17 +603,10 @@ both melee weapons to each enemy.";
                 if (isOffHand) {
                     if (this.Char.OffHand != null && this.Char.OffHand.Item != null) {
                         Damage = combatFactors.NormalizedOhWeaponDmg * (0.50f + Talents.DualWieldSpecialization * 0.025f);
-                    } else { Damage = 0f; }
-                } else { Damage = combatFactors.NormalizedMhWeaponDmg; }
+                    }else{ Damage = 0f; }
+                }else{ Damage = combatFactors.NormalizedMhWeaponDmg; }
 
-                // Talents Affecting
-                Damage *= (1.00f + Talents.ImprovedWhirlwind * 0.10f);
-                if (!Override) { Damage *= (1.00f + Talents.UnendingFury * 0.02f); }
-
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-
-                return Damage;
+                return (float)Math.Max(0f, Damage * (1f + DamageBonus));
             }
             public override float GetDamageOnUse() {
                 float DamageMH = GetDamage(); // Base Damage
@@ -660,43 +627,44 @@ both melee weapons to each enemy.";
         }
         public class BloodSurge : Ability {
             // Constructors
+            /// <summary>
+            /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making
+            /// your next Slam instant for 5 sec.
+            /// </summary>
+            /// <TalentsAffecting>Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
             public BloodSurge(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Name = "BloodSurge";
-                Desc = @"Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making
-your next Slam instant for 5 sec.";
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Bloodsurge";
+                SL = new Slam(c, s, cf, wa);
+                Whirlwind = new WhirlWind(c, s, cf, wa);
+                Bloodthirst = new BloodThirst(c, s, cf, wa);
+                ReqTalent = true;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
-                TlntsAfctg = @"Bloodsurge (Requires Talent to use ability) [(7%/13%/20%) chance]";
-                GlphsAfctg = @"";
-                Cd = 5; // In Seconds
-                RageCost = 15;
-                CastTime = -1; // In Seconds
+                Cd = 5f; // In Seconds
+                RageCost = 15f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
-                StanceOkArms = false;
-                StanceOkDef  = false;
                 hsActivates = 0.0f;
             }
             // Variables
             public float hsActivates { get; set; }
+            private Slam SL;
+            private WhirlWind WW;
+            private BloodThirst BT;
             // Get/Set
+            public Slam Slam { get { return SL; } set { SL = value; } }
+            public WhirlWind Whirlwind { get { return WW; } set { WW = value; } }
+            public BloodThirst Bloodthirst { get { return BT; } set { BT = value; } }
             // Functions
 
             // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
-            private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
-            {
+            private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance){
                 float chanceWeDontProc = 1f;
-                Ability ww = new WhirlWind(this.Char, this.StatS, this.combatFactors, this.Whiteattacks);
-                Ability bt = new BloodThirst(this.Char, this.StatS, this.combatFactors, this.Whiteattacks);
                 chanceWeDontProc *= (1f - hsActivates * procChance * chanceMHhit);
-                chanceWeDontProc *= (1f - ww.GetActivates() * procChance * chanceMHhit)*(1f - ww.GetActivates() * procChance * chanceOHhit);
-                chanceWeDontProc *= (1f - bt.GetActivates() * procChance * chanceMHhit);
+                chanceWeDontProc *= (1f - Whirlwind.GetActivates() * procChance * chanceMHhit) * (1f - Whirlwind.GetActivates() * procChance * chanceOHhit);
+                chanceWeDontProc *= (1f - Bloodthirst.GetActivates() * procChance * chanceMHhit);
                 return 1f - chanceWeDontProc;
             }
             
@@ -713,7 +681,7 @@ your next Slam instant for 5 sec.";
                 for (int timeStamp = 0; timeStamp < GetRotation()*10; timeStamp++) {
                     if (whiteTimer <= 0) {
                         chanceWeDontProc *= (1f - hsPercent * procChance * chanceMHhit);
-                        whiteTimer = (int)System.Math.Ceiling(combatFactors.MainHandSpeed*10);
+                        whiteTimer = (int)Math.Ceiling(combatFactors.MainHandSpeed*10);
                     }
                     if (timeStamp % GCD == 0) {
                         if (WWtimer <= 0) {
@@ -738,11 +706,9 @@ your next Slam instant for 5 sec.";
             }
             public override float GetActivates() {
                 // Invalidators
-                if (!GetValided() || Talents.Bloodsurge == 0) { return 0f; }
+                if (!GetValided(Talents.Bloodsurge)) { return 0f; }
 
                 // Actual Calcs
-                Ability BT = new BloodThirst(Char, StatS, combatFactors, Whiteattacks);
-                Ability WW = new WhirlWind(Char, StatS, combatFactors, Whiteattacks);
                 //Ability HS = new HeroicStrike(Char, StatS, combatFactors, Whiteattacks);
                 
                 float chance = Talents.Bloodsurge * 0.20f / 3f;
@@ -752,7 +718,7 @@ your next Slam instant for 5 sec.";
                 float procs2 = CalcSlamProcs(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
                 float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
 
-                float procs = BT.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceMhHitLands + WW.GetActivates()*chanceOhHitLands
+                float procs = BT.GetActivates() * chanceMhHitLands + Whirlwind.GetActivates() * chanceMhHitLands + Whirlwind.GetActivates() * chanceOhHitLands
                     + hsActivates*chanceMhHitLands;// HS.GetActivates();
                 procs *= chance;
                 //procs /= GetRotation();
@@ -770,180 +736,90 @@ your next Slam instant for 5 sec.";
                 //return procs;
             }
             public override float GetDamage() {
-                // Invalidators
-                if (!GetValided() || Talents.Bloodsurge == 0) { return 0f; }
-
-                // Base Damage
-                Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                float Damage = SL.GetDamage(true);
-                //Damage *= (combatFactors.AvgMhWeaponDmg + combatFactors.DamageBonus * 250f);
-
-                // Talents Affecting
-                //Damage *= (1f + StatS.BonusSlamDamage);
-                //Damage *= (1f + Talents.UnendingFury * 0.02f);
-
-                // Spread this damage over rotaion length (turns it into DPS)
-                //Damage *= GetRotation();
-
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-
-                return Damage;
-
-                // ORIGINAL LINES
-                //float slamDamage = BloodsurgeProcs() / (1 - _combatFactors.MhDodgeChance - _combatFactors.YellowMissChance);
-                //slamDamage *= (1 - _combatFactors.MhDodgeChance - _combatFactors.YellowMissChance + _combatFactors.MhYellowCrit * _combatFactors.BonusYellowCritDmg);
-                //slamDamage *= _combatFactors.DamageReduction * (1 + _stats.BonusSlamDamage) * (1 + 0.02f * _talents.UnendingFury) * (_combatFactors.AvgMhWeaponDmg + (_combatFactors.DamageBonus * 250));
-                //if (slamDamage < 0) { slamDamage = 0; }
-                //return slamDamage;
+                if (!GetValided(Talents.Bloodsurge)) { return 0f; }
+                return (float)Math.Max(0f,Slam.GetDamage(true));
             }
+        }
+        // Arms Abilities
+        public class MortalStrike : Ability {
+            // Constructors
+            /// <summary>
+            /// A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
+            /// the effectiveness of any healing by 50% for 10 sec.
+            /// </summary>
+            /// <TalentsAffecting>
+            /// Mortal Strike (Requires Talent),
+            /// Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% damage, -(1/3*Pts) sec cooldown]
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Mortal Strike [+10% damage]</GlyphsAffecting>
+            public MortalStrike(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Mortal Strike";
+                ReqTalent = true;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                Cd = 6f; // In Seconds
+                RageCost = 30f;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
+                DamageBonus = Talents.ImprovedMortalStrike / 3f * 0.1f +
+                              (Talents.GlyphOfMortalStrike ? 0.1f : 0f);
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
+                if (!GetValided(Talents.MortalStrike)) { return 0f; }
+                return (float)Math.Max(0f,GetRotation() / (Cd - (Talents.ImprovedMortalStrike / 3.0f)));
+            }
+            public override float GetDamage() {if (!GetValided(Talents.MortalStrike)) { return 0f; }return base.GetDamage();}
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
-                Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
-                    + combatFactors.MhYellowCrit * combatFactors.BonusYellowCritDmg); // Attack Table
-                
-                if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
-                return Damage;
-            }
-        }
-        // Arms Abilities
-        public class Mortalstrike : Ability {
-            // Constructors
-            public Mortalstrike(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Name = "Mortal Strike";
-                Desc = @"A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
-the effectiveness of any healing by 50% for 10 sec.";
-                ReqMeleeWeap = true;
-                ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Mortal Strike (Requires Talent to use Ability)\n
-Improved Mortal Strike [Increases the dmage caused by your Mortal Strike ability by (3%/6%/10%) and reduces
-the cooldown by (0.333/.666/1) sec.]";
-                GlphsAfctg = @"Glyph of Mortal Strike [+10% to this ability's Damage]";
-                Cd = 6f; // In Seconds
-                RageCost = 30f;
-                CastTime = -1f; // In Seconds
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef  = true;
-            }
-            // Variables
-            // Get/Set
-            // Functions
-            public override float GetActivates() {
-                // Invalidators
-                if (!GetValided() || Talents.MortalStrike == 0) { return 0f; }
 
-                // Actual Calcs
-                return GetRotation() / (Cd - (Talents.ImprovedMortalStrike / 3.0f));
+                float Crit = 0f;
+                Crit = combatFactors.MhYellowCrit + StatS.MortalstrikeBloodthirstCritIncrease; // Add additional crit chance for Incite
+                if (Crit > 1f) { Crit = 1f; } //Range check resulting crit factor
+
+                Damage *= (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                    + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
+
+                return (float)Math.Max(0f,Damage);
             }
-            public override float GetDamage() {
-                // Invalidators
-                if (!GetValided() || Talents.MortalStrike == 0) { return 0f; }
-
-                // Base Damage
-                float Damage = combatFactors.NormalizedMhWeaponDmg + 380;
-
-                // Talents/Glyphs Affecting
-                Damage *= (1f + Talents.ImprovedMortalStrike / 3f * 0.10f);
-                Damage *= (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f));
-
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-
-                return Damage;
-            }
-        }
-        public class Rend : DoT {
-            // Constructors
-            public Rend(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Name = "Rend";
-                Desc = @"Wounds the target causing them to bleed for 380 damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS)
-(based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.";
-                ReqMeleeWeap = true;
-                ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Improved Rend [Increases the Bleed Damage done by your Rend ability by (10/20)%]\n
-Trauma [Your melee critical strikes increase the effectiveness of Bleed effects on the target by (15/30)% for 15 sec.]";
-                GlphsAfctg = @"Glyph of Rending [+6 sec to bleed time (damage is added to, not spread further)]";
-                Cd = 15f; // In Seconds // adding cd time to sim not using it again until it falls off
-                RageCost = 10f;
-                CastTime = 3f; // In Seconds // adding cast time to sim the ticks
-                StanceOkFury = false;
-                StanceOkArms = true;
-                StanceOkDef = true;
-            }
-            // Variables
-            // Get/Set
-            // Functions
-            public override float GetActivates() {
-                // Invalidators
-                if (!GetValided()) { return 0f; }
-                float RendGCDs = GetRotation() / GetTTLTickingTime();
-                return RendGCDs;
-            }
-            public override float GetTickSize() {
-                // Invalidators
-                if (!GetValided()) { return 0f; }
-
-                float DmgBase = 380f;
-                float DmgBonusO75 = 0.25f*1.35f*((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage+combatFactors.MainHand.MinDamage)/2f) * (743f / 300000f);
-                float DmgBonusU75 = 0.75f*1.00f*((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage + combatFactors.MainHand.MinDamage) / 2f) * (743f / 300000f);
-                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier);
-                DmgMod *= 1f + 0.10f * Talents.ImprovedRend + 0.15f * Talents.Trauma;
-
-                float TickSize = (DmgBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
-                return TickSize;
-            }
-            public override float GetTTLTickingTime() { return (Cd + (Talents.GlyphOfRending ? 6f : 0f)); }
         }
         public class Suddendeath : Ability {
             // Constructors
+            /// <summary>
+            /// Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of
+            /// the target's Health state. This Execute only uses up to 30 total rage. In addition,
+            /// you keep at least (3/7/10) rage after using Execute.
+            /// </summary>
+            /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
+            /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
             public Suddendeath(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "SuddenDeath";
-                Desc = @"Your melee hits have a (3/6/9)% chance of allowing the use of Execute regardless of
-the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least
-(3/7/10) rage after using Execute.";
-                ReqMeleeWeap = true;
-                ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Sudden Death (Requires talent to use ability) (Talent modifies Chance to proc and rage kept after)\n
-Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
-                GlphsAfctg = @"Glyph of Execute [Ability acts as if it had 10 additional rage]";
-                Cd = 6f; // In Seconds
-                RageCost = 15f; // 30 is the max it will use, glyph will take this to 40, cast cost will drop from 15 to 10 with max ImpExec
-                CastTime = -1f; // In Seconds
-                StanceOkFury = true;
+                Execute = new Execute(c, s, cf, wa);
+                RageCost = Execute.RageCost;
+                ReqTalent = true;
+                ReqMeleeWeap = Execute.ReqMeleeWeap;
+                ReqMeleeRange = Execute.ReqMeleeRange;
+                Cd = Execute.Cd;
                 StanceOkArms = true;
-                StanceOkDef = false;
             }
             // Variables
+            private Execute EXECUTE;
             // Get/Set
+            public Execute Execute { get { return EXECUTE; } set { EXECUTE = value; } }
             // Functions
             public override float GetActivates() { return GetActivates(true); }
             public override float GetActivates(bool Override) {
                 // Invalidators
-                if (!GetValided() || Talents.SuddenDeath == 0) { return 0f; }
+                if (!GetValided(Talents.SuddenDeath)) { return 0f; }
 
                 // ACTUAL CALCS
                 float talent = 3f * Talents.SuddenDeath / 100f;
@@ -971,44 +847,33 @@ Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5)]";
                 return SD_GCDS;
             }
             public override float GetDamage() {
-                // Invalidators
-                if (!GetValided() || Talents.SuddenDeath == 0) { return 0f; }
+                if (!GetValided(Talents.SuddenDeath)) { return 0f; }
 
-                Ability Ex = new Execute(Char, StatS, combatFactors, Whiteattacks);
-                float Damage = Ex.GetDamage(true);
+                float Damage = Execute.GetDamage(true);
 
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-
-                return Damage;
+                return (float)Math.Max(0f,Damage);
             }
         }
         public class OverPower : Ability {
             // Constructors
+            /// <summary>
+            /// Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges.
+            /// The Overpower cannot be blocked, dodged or parried.
+            /// </summary>
+            /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
+            /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
             public OverPower(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "Overpower";
-                Desc = @"Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges.
-The Overpower cannot be blocked, dodged or parried.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Improved Overpower [Increases the critical strike chance of your overpower ability by (25%/50%)]\n
-Unrelenting Assault [Reduces the cooldown of your Overpower and Revenge abilities by (2/4) sec and
-increases the damage done by both abilities by (10/20)%. In addition, if you strike a player with Overpower
-while they are casting, their magical damage and healing will be reduced by (25/50)% for 6 sec.]";
-                GlphsAfctg = @"Glyph of Overpower [+100% chance to enable your Overpower when your attacks are parried.]";
-                Cd = 5f; // In Seconds
-                RageCost = 5f;
-                CastTime = -1f; // In Seconds
-                StanceOkFury = false;
+                Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
+                RageCost = 5f - (Talents.FocusedRage * 1f);
                 StanceOkArms = true;
-                StanceOkDef = false;
+                DamageBase = combatFactors.NormalizedMhWeaponDmg;
+                DamageBonus = (0.1f * Talents.UnrelentingAssault);
             }
             // Variables
             // Get/Set
@@ -1046,13 +911,8 @@ while they are casting, their magical damage and healing will be reduced by (25/
 
                 return result;
             }
-            public override float GetDamage() {
-                // Invalidators
-                if (!GetValided()) { return 0f; }
-
-                return (combatFactors.NormalizedMhWeaponDmg) * (1f + 0.1f * Talents.UnrelentingAssault);
-            }
             public override float GetDamageOnUse() {
+                if (!GetValided()) { return 0f; }
                 float Damage = GetDamage(); // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
@@ -1060,13 +920,19 @@ while they are casting, their magical damage and healing will be reduced by (25/
                     (1f - combatFactors.YellowMissChance // cant be dodged
                     + (System.Math.Min(1f-combatFactors.YellowMissChance,(combatFactors.MhYellowCrit + 0.25f * Talents.ImprovedOverpower))
                       * combatFactors.BonusYellowCritDmg)); // Attack Table
-
-                if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
-                return Damage;
+                return (float)Math.Max(0f,Damage);
             }
         }
         public class Bladestorm : Ability {
             // Constructors
+            /// <summary>
+            /// Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will
+            /// perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot
+            /// perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped
+            /// unless killed.
+            /// </summary>
+            /// <TalentsAffecting>Bladestorm [Requires talent to use Ability]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Bladestorm [Cooldown Reduced by 15 sec]</GlyphsAffecting>
             public Bladestorm(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1075,17 +941,11 @@ while they are casting, their magical damage and healing will be reduced by (25/
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Bladestorm";
-                Desc = @"Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will
-perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot
-perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped
-unless killed.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Bladestorm [Requires talent to use Ability]";
-                GlphsAfctg = @"Glyph of Bladestorm [Cooldown Reduced by 15 sec]";
                 Cd = 90f; // In Seconds
-                RageCost = 25f;
+                RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
                 StanceOkFury = true;
                 StanceOkArms = true;
@@ -1122,6 +982,12 @@ unless killed.";
         }
         public class Swordspec : Ability {
             // Constructors
+            /// <summary>
+            /// Gives a (1*Pts)% chance to get an extra attack on the same target after hitting
+            /// your target with your Sword. This effect cannot occur more than once every 6 seconds.
+            /// </summary>
+            /// <TalentsAffecting>Sword Specialization (Requires Talent)</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
             public Swordspec(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1130,16 +996,12 @@ unless killed.";
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Sword Specialization";
-                Desc = @"Gives a (1/2/3/4/5)% chance to get an extra attack on the same target after hitting
-your target with your Sword. This effect cannot occur more than once every 6 seconds.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
-                TlntsAfctg = @"Sword Specialization (Requires talent to use Ability)";
-                GlphsAfctg = @"";
+                MaxRange = 5f; // In Yards 
                 Cd = 6f; // In Seconds
-                RageCost = -1;
-                CastTime = -1; // In Seconds
+                RageCost = -1f;
+                CastTime = -1f; // In Seconds
                 StanceOkFury = true;
                 StanceOkArms = true;
                 StanceOkDef = true;
@@ -1152,7 +1014,7 @@ your target with your Sword. This effect cannot occur more than once every 6 sec
                 if (!GetValided() || Talents.SwordSpecialization == 0) { return 0f; }
                 
                 Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                Ability MS = new Mortalstrike(Char, StatS, combatFactors, Whiteattacks);
+                Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
                 Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
                 Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
                 // Actual Calcs
@@ -1198,6 +1060,11 @@ your target with your Sword. This effect cannot occur more than once every 6 sec
         }
         public class SweepingStrikes : Ability {
             // Constructors
+            /// <summary>
+            /// Your next 5 melee attacks strike an additional nearby opponent.
+            /// </summary>
+            /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Sweeping Strikes [-30 Rage cost]</GlyphsAffecting>
             public SweepingStrikes(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1206,18 +1073,14 @@ your target with your Sword. This effect cannot occur more than once every 6 sec
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Sweeping Strikes";
-                Desc = @"Your next 5 melee attacks strike an additional nearby opponent.";
                 ReqMeleeWeap = false;
                 ReqMeleeRange = true;
-                MaxRange = 5; // In Yards 
-                TlntsAfctg = @"Sweeping Strikes [Requires talent to use ability]";
-                GlphsAfctg = @"Glyph of Mortal Strike [+10% to this ability's Damage]";
+                MaxRange = 5f; // In Yards 
                 Cd = 30f; // In Seconds
-                RageCost = 30f/*-(Talents.GlyphofSweepingStrikes?:30f:0f)*/;
-                CastTime = -1; // In Seconds
+                RageCost = 30f/*-(Talents.GlyphofSweepingStrikes?:30f:0f)*/ - (Talents.FocusedRage * 1f);
+                CastTime = -1f; // In Seconds
                 StanceOkFury = true;
                 StanceOkArms = true;
-                StanceOkDef = false;
             }
             // Variables
             // Get/Set
@@ -1255,65 +1118,17 @@ your target with your Sword. This effect cannot occur more than once every 6 sec
                 return Damage;
             }
         }
-        public class Trauma : Ability {
-            // Constructors
-            public Trauma(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Name = "Trauma";
-                Desc = @"Your melee critical strikes increase the effectiveness of Bleed Effects on the
-target by (15/30)% for 15 sec.";
-                ReqMeleeWeap = false;
-                ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Trauma [Requires Talent to use ability]";
-                GlphsAfctg = @"";
-                Cd = -1f; // In Seconds
-                RageCost = -1f;
-                CastTime = -1f; // In Seconds
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef = true;
-            }
-            // Variables
-            // Get/Set
-            // Functions
-            public override float GetActivates() {
-                // Invalidators
-                if (!GetValided() || Talents.Trauma == 0) { return 0f; }
-
-                // Actual Calcs
-                return combatFactors.MhCrit;
-            }
-            public override float GetDamage() {
-                // Invalidators
-                if (!GetValided() || Talents.Trauma == 0) { return 0f; }
-
-                // Base Damage
-                float Damage = Talents.Trauma * 0.15f;
-
-                // Talents Affecting
-
-                // Spread this damage over rotation length (turns it into DPS)
-
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-
-                return Damage;
-            }
-            public override float GetDamageOnUse() {
-                float Damage = GetDamage(); // Base Damage
-
-                if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
-                return Damage;
-            }
-        }
         public class ThunderClap : Ability {
             // Constructors
+            /// <summary>
+            /// Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec
+            /// and doing [300+AP*0.12] damage to them. Damage increased by attack power.
+            /// This ability causes additional threat.
+            /// </summary>
+            /// <TalentsAffecting>Improved Thunder Clap [Reduces rage cost by (1/2/4) points, increases the damage by
+            /// (10*Pts)% and the slowing effect by an additional (ROUNDUP(10-10/3*Pts))%.]
+            /// Incite [+(5*Pts)% Critical Strike chance]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Thunder Clap [+2 yards to radius]</GlyphsAffecting>
             public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1322,17 +1137,11 @@ target by (15/30)% for 15 sec.";
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Thunder Clap";
-                Desc = @"Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec
-and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
-                TlntsAfctg = @"Improved Thunder Clap [Reduces rage cost by (1/2/4) points, increases the damage by
-(10*Pts)% and the slowing effect by an additional (ROUNDUP(10-10/3*Pts))%.]
-Incite [+(5*Pts)% Critical Strike chance]";
-                GlphsAfctg = @"Glyph of Thunder Clap [+2 yards to radius]";
                 Cd = 6f; // In Seconds
-                RageCost = 20f;
+                RageCost = 20f - (Talents.FocusedRage * 1f);
                 CastTime = -1f; // In Seconds
                 StanceOkFury = false;
                 StanceOkArms = true;
@@ -1369,123 +1178,194 @@ Incite [+(5*Pts)% Critical Strike chance]";
                 return Damage;
             }
         }
-        // Mixed Abilities
         public class Execute : Ability {
             // Constructors
+            /// <summary>
+            /// Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each
+            /// extra point of rage into 38 additional damage. Only usable on enemies that have less
+            /// than 20% health.
+            /// </summary>
+            /// <TalentsAffecting>Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</GlyphsAffecting>
             public Execute(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "Execute";
-                Desc = @"Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each
-extra point of rage into 38 additional damage. Only usable on enemies that have less than 20% health.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]";
-                GlphsAfctg = @"Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]";
-                Cd = -1f; // In Seconds
-                RageCost = 15f;
-                CastTime = -1f; // In Seconds
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef = false;
+                RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
+                StanceOkFury = StanceOkArms = true;
             }
             // Variables
             // Get/Set
             // Functions
-            public override float GetActivates() {
-                // Invalidators
-                if (!GetValided()) { return 0f; }
-
-                return 0f;
-            }
+            public override float GetActivates() {if (!GetValided()) { return 0f; }return 0f;}
             public override float GetDamage() { return GetDamage(false); }
             public override float GetDamage(bool Override) {
-                // Invalidators
                 if (!Override && !GetValided()) { return 0f; }
 
-                float freerage = freeRage();
-                if (Override && freerage <= (RageCost - (Talents.ImprovedExecute * 0.25f))) {
-                    freerage = RageCost - (Talents.ImprovedExecute * 0.25f);
+                float freerage = (float)System.Math.Max(0f,freeRage(
+                    new BloodThirst(Char,StatS,combatFactors,Whiteattacks),
+                    new WhirlWind(Char, StatS, combatFactors, Whiteattacks),
+                    new MortalStrike(Char, StatS, combatFactors, Whiteattacks),
+                    new OverPower(Char, StatS, combatFactors, Whiteattacks),
+                    new Suddendeath(Char, StatS, combatFactors, Whiteattacks),
+                    new Slam(Char, StatS, combatFactors, Whiteattacks),
+                    new Bladestorm(Char, StatS, combatFactors, Whiteattacks),
+                    new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks),
+                    new Rend(Char, StatS, combatFactors, Whiteattacks)));
+                if (Override && freerage <= (RageCost - (Talents.ImprovedExecute * 2.5f))) {
+                    freerage = RageCost - (Talents.ImprovedExecute * 2.5f);
                 }else if (freerage <= 0f) {
                     return 0.0f; // No Free Rage = 0 damage
                 }
                 float executeRage = freerage * GetRotation();
-                executeRage -= (Cd - 2.5f * Talents.ImprovedExecute);
                 if (Override && executeRage > 30f) { executeRage = 30f; }
                 executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
+                executeRage -= RageCost;
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
-                // Ensure that we are not doing negative Damage
-                if (Damage < 0) { Damage = 0; }
-
-                return Damage;
+                return (float)Math.Max(0f,Damage);
             }
         }
         public class Slam : Ability {
             // Constructors
+            /// <summary>Slams the opponent, causing weapon damage plus 250.</summary>
+            /// <TalentsAffecting>Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</TalentsAffecting>
+            /// <SetsAffecting>T7 Deadnaught Battlegear 2 Pc [+10% Damage]</SetsAffecting>
             public Slam(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "Slam";
-                Desc = @"Slams the opponent, causing weapon damage plus 250.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]";
-                GlphsAfctg = @"";
-                SetsAfctg = @"Deadnaught Battlegear 2 Pc [+10% Slam Damage]";
-                Cd = -1f; // In Seconds
-                RageCost = 15f;
-                CastTime = 1.5f; // In Seconds
-                StanceOkFury = false;
-                StanceOkArms = true;
-                StanceOkDef = true;
+                RageCost = 15f - (Talents.FocusedRage * 1f);
+                CastTime = 1.5f - (Talents.ImprovedSlam * 0.5f); // In Seconds
+                StanceOkArms = StanceOkDef = true;
+                DamageBase = combatFactors.AvgMhWeaponDmg + 250;
+                DamageBonus = (Talents.UnendingFury * 0.02f) + (StatS.BonusSlamDamage);
             }
             // Variables
             // Get/Set
             // Functions
-            public override float GetActivates() {
-                // Invalidators
-                if (!GetValided()) { return 0f; }
-
-                //Ability MS = new Mortalstrike(Char,StatS,combatFactors,Whiteattacks);
-                //Ability OP = new OverPower(Char,StatS,combatFactors,Whiteattacks);
-                //Ability SD = new Suddendeath(Char,StatS,combatFactors,Whiteattacks);
-                //Ability RND = new Rend(Char,StatS,combatFactors,Whiteattacks);
-                //float MS_A = MS.GetActivates();
-                //float RND_A = RND.GetActivates();
-                //float OP_A = OP.GetActivates();
-                //float SD_A = SD.GetActivates();
-                //float GCDPerc = (float)System.Math.Max(0f, GetRotation() / 1.5f - MS_A - OP_A - SD_A - RND_A);
-                //float result = (float)System.Math.Floor(GCDPerc);
-
-                return 0f;
-                //return result;
-            }
+            public override float GetActivates() {if (!GetValided()) { return 0f; }return 0f;}
             public override float GetDamage() { return GetDamage(false); }
             public override float GetDamage(bool Override) {
-                // Invalidators
                 if (!Override && !GetValided()) { return 0f; }
-
-                float bonus =
-                    (1f + StatS.BonusSlamDamage) *// 2 Pc T7 Set bonus
-                    (1f + 0.02f*Talents.UnendingFury);// Talents -- Removed "override" check because the talent works for all slams.
-                float dmg = bonus * (combatFactors.AvgMhWeaponDmg + 250);
-                return dmg;
+                return DamageBase * (1f + DamageBonus);
             }
         }
-        public class HeroicStrike : Ability {
+        // Prot Abilities
+        public class ShieldSlam : Ability {
+            /// <summary>
+            /// Instant, 6 sec cd, 20 Rage, Melee Range, Shields (Any)
+            /// Slam the target with your shield, causing 990 to 1040 damage, modified by you shield block
+            /// value, and dispels 1 magic effect on the target. Also causes a high amount of threat.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        public class Revenge : Ability {
+            /// <summary>
+            /// Instant, 1 sec cd, 5 Rage, Melee Range, Melee Weapon (Def)
+            /// Instantly counterattack the enemy for 2399 to 2787 damage. Revenge is only usable after the
+            /// warrior blocks, dodges or parries an attack.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        public class ConcussionBlow : Ability {
+            /// <summary>
+            /// Instant, 30 sec cd, 12 Rage, Melee Range, Melee Weapon (Any)
+            /// Stuns the opponent for 5 sec and deals 2419 damage (based upon attack power).
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        public class Devastate : Ability {
+            /// <summary>
+            /// Instant, No Cd, 12 Rage, Melee Range, 1h Melee Weapon (Any)
+            /// Sunder the target's armor causing the Sunder Armor effect. In addition, causes 50% of weapon
+            /// damage plus 101 for each application of Sunder Armor on the target. The Sunder Armor effect
+            /// can stack up to 5 times.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        public class Shockwave : Ability {
+            /// <summary>
+            /// Instant, 20 sec Cd, 12 Rage, (Any)
+            /// Sends a wave of force in front of the warrior, causing 2419 damage (based upon attack power)
+            /// and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        public class MockingBlow : Ability {
+            /// <summary>
+            /// Instant, 1 min Cooldown, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
+            /// A mocking attack that causes weapon damage, a moderate amount of threat and forces the
+            /// target to focus attacks on you for 6 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        // PvP Abilities
+        public class Pummel : Ability{
+            /// <summary>
+            /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Zerker)
+            /// Pummel the target, interupting spellcasting and preventing any spell in that school
+            /// from being cast for 4 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        // Mixed Abilities
+        public class VictoryRush : Ability{
+            /// <summary>
+            /// Instant, No Cd, No Rage, Melee Range, (Battle, Zerker)
+            /// Instant attack the target causing 1424 damage. Can only be used within 25 sec after you
+            /// kill an enemy that yields experience or honor. Damage is based on your attack power.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        public class HeroicThrow : Ability {
+            /// <summary>
+            /// Instant, 1 min Cd, 30 yd, Melee Weapon (Any)
+            /// Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability
+            /// causes high threat.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        #endregion
+        #region OnAttack Abilities
+        public class OnAttack : Ability {
             // Constructors
+            public OnAttack() { }
+            // Variables
+            // Get/Set
+            // Functions
+        };
+        public class HeroicStrike : OnAttack {
+            // Constructors
+            /// <summary>
+            /// A strong attack that increases melee damage by 495 and causes a high amount of
+            /// threat. Causes 173.25 additional damage against Dazed targets
+            /// </summary>
+            /// <TalentsAffecting>Improved Heroic Strike [Reduces the rage cost of your Heroic Strike ability by (1/2/3)]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Heroic Strike [You gain 10 rage when you critically strike with your Heroic Strike ability.]</GlyphsAffecting>
             public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1494,30 +1374,34 @@ extra point of rage into 38 additional damage. Only usable on enemies that have 
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Heroic Strike";
-                Desc = @"A strong attack that increases melee damage by 495 and causes a high amount of threat.
-Causes 173.25 additional damage against Dazed targets";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = 5; // In Yards 
-                TlntsAfctg = @"Improved Heroic Strike [Reduces the rage cost of your Heroic Strike ability by (1/2/3)]";
-                GlphsAfctg = @"Glyph of Heroic Strike [You gain 10 rage when you critically strike with your Heroic Strike ability.]";
                 Cd = 0/*(MHWeapon!=null?MHWeaponSpeed:0)*/; // In Seconds
-                RageCost = 15f-(Talents.ImprovedHeroicStrike*1f);
+                RageCost = 15f - (Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
                 CastTime = 0f; // In Seconds // Replaces a white hit
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef = true;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
+                DamageBase = combatFactors.AvgMhWeaponDmg + 495f;
             }
             // Variables
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
                 if (!GetValided()) { return 0f; }
 
                 // HS per second
-                float hsHits = (/*rageModifier +*/ freeRage() / heroicStrikeRageCost());
+                float hsHits = (/*rageModifier +*/ freeRage(
+                    new BloodThirst(Char, StatS, combatFactors, Whiteattacks),
+                    new WhirlWind(Char, StatS, combatFactors, Whiteattacks),
+                    new MortalStrike(Char, StatS, combatFactors, Whiteattacks),
+                    new OverPower(Char, StatS, combatFactors, Whiteattacks),
+                    new Suddendeath(Char, StatS, combatFactors, Whiteattacks),
+                    new Slam(Char, StatS, combatFactors, Whiteattacks),
+                    new Bladestorm(Char, StatS, combatFactors, Whiteattacks),
+                    new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks),
+                    new Rend(Char, StatS, combatFactors, Whiteattacks))
+                    / heroicStrikeRageCost());
 
                 if (hsHits < 0) { hsHits = 0; }
                 heroicStrikesPerSecond = hsHits;
@@ -1527,23 +1411,75 @@ Causes 173.25 additional damage against Dazed targets";
             public override float heroicStrikeRageCost() {
                 if (!GetValided()) { return 0f; }
                 float rageCost = this.RageCost;
-                rageCost -= Talents.ImprovedHeroicStrike; // Imp HS
-                if (Talents.GlyphOfHeroicStrike) rageCost -= 10.0f * combatFactors.MhCrit; // Glyph bonus rage on crit
+                if (Talents.GlyphOfHeroicStrike) { rageCost -= 10.0f * combatFactors.MhCrit; } // Glyph bonus rage on crit
                 rageCost += Whiteattacks.GetSwingRage(combatFactors.MainHand, true);
                 return rageCost;
             }
-            public override float GetDamage() {
+            public override float GetDamageOnUse() {
+                if (!GetValided()) { return 0f; }
+                float Damage = GetDamage(); // Base Damage
+
+                float Crit = 0f;
+                Crit = combatFactors.MhYellowCrit + (Talents.Incite * 0.05f); // Add additional crit chance for Incite
+                if (Crit > 1f) { Crit = 1f; } //Range check resulting crit factor
+
+                Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
+                Damage *= combatFactors.DamageReduction; // Global Damage Penalties
+                Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                    + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
+
+                return (float)Math.Max(0f,Damage);
+            }
+        }
+        public class Cleave : OnAttack {
+            // Constructors
+            /// <summary>
+            /// A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.
+            /// </summary>
+            /// <TalentsAffecting>Improved Cleave [+(40*Pts)% Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Cleaving [+1 targets hit]</GlyphsAffecting>
+            public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Cleave";
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                RageCost = 20f - (Talents.FocusedRage * 1f);
+                //Talents.GlyphOfCleaving;
+                CastTime = 0f; // In Seconds // Replaces a white hit
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                bloodsurgeRPS = 0.0f;
+                DamageBase = combatFactors.AvgMhWeaponDmg + 222f;
+                DamageBonus = Talents.ImprovedCleave * 0.40f;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
                 // Invalidators
                 if (!GetValided()) { return 0f; }
 
-                // Base Damage
-                float damageIncrease = combatFactors.AvgMhWeaponDmg + 495f;
-                // Talents Affecting
+                // HS per second
+                float hsHits = (/*rageModifier +*/ freeRage(
+                    new BloodThirst(Char, StatS, combatFactors, Whiteattacks),
+                    new WhirlWind(Char, StatS, combatFactors, Whiteattacks),
+                    new MortalStrike(Char, StatS, combatFactors, Whiteattacks),
+                    new OverPower(Char, StatS, combatFactors, Whiteattacks),
+                    new Suddendeath(Char, StatS, combatFactors, Whiteattacks),
+                    new Slam(Char, StatS, combatFactors, Whiteattacks),
+                    new Bladestorm(Char, StatS, combatFactors, Whiteattacks),
+                    new SweepingStrikes(Char, StatS, combatFactors, Whiteattacks),
+                    new Rend(Char, StatS, combatFactors, Whiteattacks)
+                    ) / heroicStrikeRageCost());
 
-                // Ensure that we are not doing negative Damage
-                if (damageIncrease < 0) { damageIncrease = 0; }
-
-                return damageIncrease;
+                if (hsHits < 0) { hsHits = 0; }
+                heroicStrikesPerSecond = hsHits;
+                
+                return hsHits * GetRotation();
+            }
+            public override float heroicStrikeRageCost() {
+                if (!GetValided()) { return 0f; }
+                return RageCost + Whiteattacks.GetSwingRage(combatFactors.MainHand, true);
             }
             public override float GetDamageOnUse() {
                 float Damage = GetDamage(); // Base Damage
@@ -1557,33 +1493,94 @@ Causes 173.25 additional damage against Dazed targets";
                 Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
                     + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
 
-                if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
-                return Damage;
+                return (float)Math.Max(0f,Damage);
+            }
+        }
+        #endregion
+        #region DoT Abilities
+        public class DoT : Ability {
+            // Constructors
+            public DoT(){}
+            // Variables
+            private float DURATION; // In Seconds
+            private float TIMEBTWNTICKS; // In Seconds
+            // Get/Set
+            public float Duration      { get { return DURATION;      } set { DURATION      = value; } } // In Seconds
+            public float TimeBtwnTicks { get { return TIMEBTWNTICKS; } set { TIMEBTWNTICKS = value; } } // In Seconds
+            // Functions
+            public virtual float GetTickSize() { return 0f; }
+            public virtual float GetTTLTickingTime() { return Duration; }
+            public virtual float GetTickLength() { return TimeBtwnTicks; }
+            public virtual float GetNumTicks() { return GetTTLTickingTime() / GetTickLength(); }
+            public virtual float GetDmgOverTickingTime() { return GetTickSize() * GetNumTicks(); }
+            public virtual float GetDmgOverTickingTime(float acts) { return GetTickSize() * (GetNumTicks() * acts); }
+            public override float GetDPS(float acts) {
+                float dmgonuse = GetTickSize();
+                float numticks = GetNumTicks()*acts;
+                float rot = GetRotation();
+                float result = GetDmgOverTickingTime(acts) / rot;
+                return result;
+            }
+        }
+        public class Rend : DoT {
+            // Constructors
+            /// <summary>
+            /// Wounds the target causing them to bleed for 380 damage plus an additional
+            /// (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your
+            /// target is above 75% health, Rend does 35% more damage.
+            /// </summary>
+            /// <TalentsAffecting>Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Rending [+2 damage ticks]</GlyphsAffecting>
+            public Rend(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Rend";
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
+                TimeBtwnTicks = 3f; // In Seconds
+                RageCost = 10f - (Talents.FocusedRage * 1f);
+                StanceOkArms = StanceOkDef = true;
+                DamageBase = 380f;
+                DamageBonus = 0.10f * Talents.ImprovedRend + 0.15f * Talents.Trauma;
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
+                if (!GetValided()) { return 0f; }
+                float RendGCDs = GetRotation() / GetTTLTickingTime();
+                return RendGCDs;
+            }
+            public override float GetTickSize() {
+                if (!GetValided()) { return 0f; }
+
+                float DmgBonusBase = ((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage + combatFactors.MainHand.MinDamage) / 2f) * (743f / 300000f);
+                float DmgBonusO75 = 0.25f * 1.35f * DmgBonusBase;
+                float DmgBonusU75 = 0.75f * 1.00f * DmgBonusBase;
+                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier + DamageBonus);
+
+                float TickSize = (DamageBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
+                return TickSize;
             }
         }
         public class DeepWounds : DoT {
             // Constructors
+            /// <summary>
+            /// Your critical strikes cause the opponent to bleed, dealing (16*Pts)% of your melee weapon's
+            /// average damage over 6 sec.
+            /// </summary>
+            /// <TalentsAffecting>Deep Wounds (Requires Talent) [(16*Pts)% damage dealt]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
             public DeepWounds(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "Deep Wounds";
-                Desc = @"Your critical strikes cause the opponent to bleed, dealing (16/32/48)% of your melee weapon's
-average damage over 6 sec.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Deep Wounds (Requires talent to use Ability) [(16/32/48)% damage dealt]";
-                GlphsAfctg = @"";
-                Cd = 6f; // In Seconds // 6 seconds to sim falloff
-                RageCost = -1f;
-                CastTime = 1f; // In Seconds // Simulating Tick time
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef = true;
+                Duration = 6f; // In Seconds
+                TimeBtwnTicks = 1f; // In Seconds
+                StanceOkFury = StanceOkArms = StanceOkDef  = true;
                 mhActivates = ohActivates = 0;
             }
             // Variables
@@ -1595,92 +1592,140 @@ average damage over 6 sec.";
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
                 if (!GetValided()) { return 0f; }
-
-                // Actual Calcs
-                return mhActivates + ohActivates;
-
-                // ORIGINAL LINE
-                //NONE
+                //SetAllAbilityActivates(0,0);
+                //return mhActivates + ohActivates;
+                float DWsacts = GetRotation() / GetTTLTickingTime();
+                return DWsacts;
             }
-            public override float GetDamage() {
-                // Invalidators
-                if (!GetValided() || Talents.DeepWounds == 0) { return 0f; }
+            public override float GetTickSize() {
+                if (!GetValided(Talents.DeepWounds)) { return 0f; }
 
                 // doing it this way because Deep Wounds triggering off of a MH crit and Deep Wounds triggering off of an OH crit do diff damage.
                 // GetDamage is doing the average damage of a deep wounds trigger
-                float damage = combatFactors.AvgMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates+ohActivates) +
-                    combatFactors.AvgOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates+ohActivates);
-                
-                return damage;
-            }
-            public override float GetDamageOnUse() {
-                // Invalidators
-                if (Talents.DeepWounds == 0) { return 0f; }
-                float Damage = GetDamage(); // Base Damage
-                //Damage *= combatFactors.DamageBonus; // DW is only affected by % effects in the sense that MHWeaponDmg is, which is already covered
-                //Damage *= combatFactors.DamageReduction; // Global Damage Penalties
+                float Damage = combatFactors.AvgMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates + ohActivates) +
+                               combatFactors.AvgOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates + ohActivates);
+
                 Damage *= (1f + StatS.BonusBleedDamageMultiplier);
-                Damage *= combatFactors.DamageBonus; // Avg_hWeaponDmg no longer has DamageBonus in, we were double-dipping
+                Damage *= combatFactors.DamageBonus;
                 if (Talents.TitansGrip == 1 && Char.OffHand != null && Char.OffHand.Slot == Item.ItemSlot.TwoHand) { Damage *= 0.9f; } // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
 
-                if (Damage < 0) { Damage = 0; } // Ensure that we are not doing negative Damage
-                return Damage;
-            }
-            public override float GetNumTicks() { return GetTTLTickingTime() / CastTime; }
-            //public override float GetAvgDamageOnUse() { return GetDamageOnUse() * GetActivates(); }
-            public override float GetDPS() {
-                //float dmgonuse = GetDamageOnUse();
-                //float numticks = GetNumTicks();
-                //float rot = GetRotation();
-                //float result = (dmgonuse / numticks)/* / rot*/;
-                float result = GetDamageOnUse() * GetActivates() / GetRotation();
-                
-                return result;
+                // Ensure that we are not doing negative Damage
+                return (float)Math.Max(0f,Damage);
             }
         }
-        // Passive Abilities
-        public class BattleShout : Ability {
+        #endregion
+        #region BuffEffect Abilities
+        public class BuffEffect : Ability {
             // Constructors
-            public BattleShout(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+            public BuffEffect(){}
+            // Variables
+            private SpecialEffect EFFECT;
+            private float DURATION; // In Seconds
+            // Get/Set
+            public SpecialEffect Effect { get { return EFFECT; } set { EFFECT = value; } }
+            public float Duration { get { return DURATION; } set { DURATION = value; } } // In Seconds
+            // Functions
+        }
+        public class Trauma : BuffEffect {
+            // Constructors
+            /// <summary>
+            /// Your melee critical strikes increase the effectiveness of Bleed Effects on the
+            /// target by (15*Pts)% for 15 sec.
+            /// </summary>
+            /// <TalentsAffecting>Trauma (Requires Talent)</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public Trauma(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
                 StatS = s;
                 combatFactors = cf;
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Name = "Battle Shout";
-                Desc = @"The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.";
+                Name = "Trauma";
                 ReqMeleeWeap = false;
-                ReqMeleeRange = false;
-                MaxRange = 20f; // In Yards 
-                TlntsAfctg = @"Booming Shout [Increases the area of effect and duration of your Battle Shout,
-Demoralizing Shout and Commanding Shout by (0.25/.050)%]\n
-Commanding Presence [Increases the melee attack power bonus of your Battle Shout and health bonus of your Commanding Shout by (0.05*Pts)%]";
-                GlphsAfctg = @"Glyph of Battle [Increases the duration of your Battle Shout ability by 1 min.]";
-                SetsAfctg = @"";
-                Cd = 2f*60f; // In Seconds // adding long cd to sim uptime
-                RageCost = 10f;
+                ReqMeleeRange = true;
+                MaxRange = 5f; // In Yards 
+                Cd = -1f; // In Seconds
+                Duration = 15f; // In Seconds
+                RageCost = -1f;
                 CastTime = -1f; // In Seconds
                 StanceOkFury = true;
                 StanceOkArms = true;
-                StanceOkDef  = true;
+                StanceOkDef = true;
+                Effect = new SpecialEffect(Trigger.MeleeCrit, StatS, Duration, 0f);
             }
             // Variables
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
+                if (!GetValided() || Talents.Trauma == 0) { return 0f; }
+                // Chance to activate on every GCD
+                return (GetRotation() / 1.5f) * combatFactors.MhCrit;
+            }
+        }
+        public class BerserkerRage : BuffEffect{
+            /// <summary>
+            /// Instant, 30 sec Cd, Self, (Any)
+            /// The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects
+            /// and generating extra tage when taking damage. Lasts 10 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        public class EnragedRegeneration : BuffEffect{
+            /// <summary>
+            /// Instant, 3 min Cd, 15 Rage, Self, (Any)
+            /// You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect,
+            /// consumes all Enrage effects and prevents any from affecting you for the full duration.
+            /// </summary>
+        }
+        public class Bloodrage : BuffEffect{
+            /// <summary>
+            /// Instant, 1 min cd, Self (Any)
+            /// Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        public class BattleShout : BuffEffect {
+            // Constructors
+            /// <summary>
+            /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.
+            /// </summary>
+            /// <TalentsAffecting>Booming Voice [+(25*Pts)% AoE and Duration],
+            /// Commanding Presence [+(5*Pts)% to the AP Bonus]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Battle [+1 min duration]</GlyphsAffecting>
+            public BattleShout(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Battle Shout";
+                MaxRange = 20f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
+                Duration = (2f+(Talents.GlyphOfBattle?1f:0f))*60f * (1f + Talents.BoomingVoice * 0.25f);
+                RageCost = 10f;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { AttackPower = (528f*(1f+Talents.CommandingPresence*0.05f)), },
+                    Duration, Duration);
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            public override float GetActivates() {
                 if (!GetValided()) { return 0f; }
-
-                float result = GetRotation() / ((Cd + (Talents.GlyphOfBattle?1f*60f:0f))*(1f+Talents.BoomingVoice*0.25f));
-
+                //Effect.GetAverageProcsPerSecond(...);
+                float result = GetRotation() / Duration;
                 return result;
             }
         }
-        public class ShatteringThrow : Ability {
+        public class ShatteringThrow : BuffEffect {
             // Constructors
+            /// <summary>
+            /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
+            /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
             public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1689,20 +1734,19 @@ Commanding Presence [Increases the melee attack power bonus of your Battle Shout
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Shattering Throw";
-                Desc = @"Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
-reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.";
                 ReqMeleeWeap = true;
                 ReqMeleeRange = false;
                 MaxRange = 30f; // In Yards 
-                TlntsAfctg = @"";
-                GlphsAfctg = @"";
-                SetsAfctg = @"";
-                Cd = 2f * 60f; // In Seconds // adding long cd to sim uptime
+                Cd = 2f * 60f; // In Seconds
+                Duration = 10f;
                 RageCost = 25f;
                 CastTime = 1.5f; // In Seconds
                 StanceOkFury = false;
                 StanceOkArms = true;
                 StanceOkDef = false;
+                Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { ArmorPenetration = 0.20f, },
+                    Duration, Cd);
             }
             // Variables
             // Get/Set
@@ -1716,8 +1760,14 @@ reducing the armor on the target by 20% for 10 sec or removing any invulnerabili
                 return result;
             }
         }
-        public class DeathWish : Ability {
+        public class DeathWish : BuffEffect {
             // Constructors
+            /// <summary>
+            /// When activated you become enraged, increasing your physical damage by 20% but increasing
+            /// all damage taken by 5%. Lasts 30 sec.
+            /// </summary>
+            /// <TalentsAffecting>Death Wish [Requires Talent], Intensify Rage [-(1/9*Pts)% Cooldown]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
             public DeathWish(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1725,37 +1775,38 @@ reducing the armor on the target by 20% for 10 sec or removing any invulnerabili
                 combatFactors = cf;
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Name = "Battle Shout";
-                Desc = @"When activated you become enraged, increasing your physical damage by 20% but increasing
-all damage taken by 5%. Lasts 30 sec.";
-                ReqMeleeWeap = false;
-                ReqMeleeRange = false;
+                Name = "Death Wish";
+                ReqTalent = true;
                 MaxRange = 20f; // In Yards 
-                TlntsAfctg = @"Death Wish [Requires Talent to use Ability.]\n
-Intensify Rage [Reduces the cooldown of your Bloodrage, Berserker Rage, Recklessness and Death Wish abilities by (100/9*Pts)%]";
-                GlphsAfctg = @"";
-                SetsAfctg = @"";
-                Cd = 3f * 60f; // In Seconds // adding long cd to sim uptime
+                Cd = 3f * 60f * (1f - 1f/9f * Talents.IntensifyRage); // In Seconds
+                Duration = 30f;
                 RageCost = 10f;
-                CastTime = -1f; // In Seconds
-                StanceOkFury = false;
                 StanceOkArms = true;
-                StanceOkDef = false;
+                Effect = new SpecialEffect(Trigger.Use,
+                        new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
+                        Duration, Cd);
             }
             // Variables
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
-                if (!GetValided() || Talents.DeathWish == 0) { return 0f; }
-
-                float result = GetRotation() / (Cd*(100/9*Talents.IntensifyRage));
-
+                if (!GetValided(Talents.DeathWish)) { return 0f; }
+                //Effect.GetAverageProcsPerSecond(...);
+                float result = GetRotation() / Cd;
                 return result;
             }
         }
-        public class Recklessness : Ability {
+        public class Recklessness : BuffEffect {
             // Constructors
+            /// <summary>
+            /// Your next 3 special ability attacks have an additional 100% to critically hit
+            /// but all damage taken is increased by 20%. Lasts 12 sec.
+            /// </summary>
+            /// <TalentsAffecting>Booming Voice [Increases the area of effect and duration of your Battle Shout,
+            /// Demoralizing Shout and Commanding Shout by (0.25/.050)%]\n
+            /// Commanding Presence [Increases the melee attack power bonus of your Battle Shout and health bonus
+            /// of your Commanding Shout by (0.05*Pts)%]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Battle [Increases the duration of your Battle Shout ability by 1 min.]</GlyphsAffecting>
             public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1764,35 +1815,85 @@ Intensify Rage [Reduces the cooldown of your Bloodrage, Berserker Rage, Reckless
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Recklessness";
-                Desc = @"Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.";
-                ReqMeleeWeap = false;
-                ReqMeleeRange = false;
                 MaxRange = 5f; // In Yards 
-                TlntsAfctg = @"Booming Shout [Increases the area of effect and duration of your Battle Shout,
-Demoralizing Shout and Commanding Shout by (0.25/.050)%]\n
-Commanding Presence [Increases the melee attack power bonus of your Battle Shout and health bonus of your Commanding Shout by (0.05*Pts)%]";
-                GlphsAfctg = @"Glyph of Battle [Increases the duration of your Battle Shout ability by 1 min.]";
-                SetsAfctg = @"";
-                Cd = 5f * 60f; // In Seconds // adding long cd to sim uptime
-                RageCost = -1f;
-                CastTime = -1f; // In Seconds
+                Cd = 5f * 60f * (1f - 1f/9f*Talents.IntensifyRage); // In Seconds
+                Duration = 12f; // In Seconds
                 StanceOkFury = true;
-                StanceOkArms = false;
-                StanceOkDef = false;
+                Effect = new SpecialEffect(Trigger.Use,
+                    new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, },
+                    Duration, Cd);
             }
             // Variables
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
                 if (!GetValided()) { return 0f; }
-
-                float result = GetRotation() / (Cd*(100/9*Talents.IntensifyRage));
-
+                //Effect.GetAverageProcsPerSecond(...);
+                float result = GetRotation() / Cd;
                 return result;
             }
         }
-        // Arms Rotation
+        #endregion
+        #region DeBuff Abilities
+        public class Hamstring : Ability{
+            /// <summary>
+            /// Instant, No cd, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
+            /// Maims the enemy, reducing movement speed by 50% for 15 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        #endregion
+        #region Anti-Debuff Abilities
+        public class EveryManForHimself : Ability{
+            /// <summary>
+            /// Instant, 2 Min Cooldown, 0 Rage, Self (Any)
+            /// Removes all movement impairing effects and all effects which cause loss of control of
+            /// your character. This effect shares a cooldown with other similar effects.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        #endregion
+        #region Movement Abilities
+        public class Charge : Ability{
+            /// <summary>
+            /// Instant, 20 sec cd, 0 Rage, 8-25 yds, (Battle)
+            /// Charge an enemy, generate 25 rage, and stun it for 1.50 sec. Cannot be used in combat.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        public class Intercept : Ability{
+            /// <summary>
+            /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Zerker)
+            /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        public class Intervene : Ability{
+            /// <summary>
+            /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Def)
+            /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        #endregion
+        #region Other Abilities
+        public class Retaliation : Ability{
+            /// <summary>
+            /// Instant, 5 Min Cd, No Rage, Melee Range, Melee Weapon, (Battle)
+            /// Instantly counterattack any enemy that strikes you in melee for 12 sec. Melee attacks
+            /// made from behind cannot be counterattacked. A maximum of 20 attacks will cause retaliation.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+        }
+        #endregion
+
+        #region Arms Rotation
         #region ArmsRotVariables
         public float _MS_PerHit  = 0f;public float _MS_DPS  = 0f;public float _MS_GCDs  = 0f;public float _MS_GCDsD  = 0f;
         public float _RD_PerHit  = 0f;public float _RD_DPS  = 0f;public float _RD_GCDs  = 0f;public float _RD_GCDsD  = 0f;
@@ -1805,15 +1906,19 @@ Commanding Presence [Increases the melee attack power bonus of your Battle Shout
         public float _Death_GCDs = 0f;public float _Death_GCDsD = 0f;
         public float _Reck_GCDs  = 0f;public float _Reck_GCDsD  = 0f;
         public float _DW_PerHit  = 0f;public float _DW_DPS      = 0f;
+        public float _WhiteDPSMH = 0f;public float _WhiteDPSOH = 0f;public float _WhiteDPS = 0f;public float _WhitePerHit = 0f;
+        public float _HS_PerHit  = 0f;public float _HS_DPS  = 0f;
         #endregion
         public float MakeRotationandDoDPS_Arms() {
             // Starting Numbers
             float DPS_TTL = 0f;
-            float rotation = (_talents.GlyphOfRending ? ROTATION_LENGTH_ARMS_GLYPH:ROTATION_LENGTH_ARMS_NOGLYPH);
+            float rotation = (_talents.GlyphOfRending ? ROTATION_LENGTH_ARMS_GLYPH : ROTATION_LENGTH_ARMS_NOGLYPH);
             float duration = _calcOpts.Duration;
             float NumGCDs = rotation / 1.5f;
             float GCDsused = 0f;
             float availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
+
+            if (_character.MainHand == null) { return 0f; }
 
             // White DPS
             /*DPS_TTL += _whiteStats.CalcMhWhiteDPS();
@@ -1875,7 +1980,7 @@ Commanding Presence [Increases the melee attack power bonus of your Battle Shout
             if (availGCDs <= 0f) { return DPS_TTL; }
 
             // Priority 1 : Mortal Strike on every CD
-            Ability MS = new Mortalstrike(_character, _stats, _combatFactors, _whiteStats);
+            Ability MS = new MortalStrike(_character, _stats, _combatFactors, _whiteStats);
             //float MS_GCDs = (float)System.Math.Floor(MS.GetActivates());
             float MS_GCDs = MS.GetActivates();
             if (MS_GCDs > availGCDs) { MS_GCDs = availGCDs; }
@@ -1924,20 +2029,30 @@ Commanding Presence [Increases the melee attack power bonus of your Battle Shout
 
             // Priority 5 : Slam for remainder of GCDs
             Ability SL = new Slam(_character, _stats, _combatFactors, _whiteStats);
-            float SL_GCDs = availGCDs;
+            float SL_GCDs = (SL.GetValided()?availGCDs:0f);
             if (SL_GCDs > availGCDs) { SL_GCDs = availGCDs; }
             _SL_GCDs = SL_GCDs; _SL_GCDsD = _SL_GCDs * duration / rotation;
             GCDsused += (float)System.Math.Min(NumGCDs, SL_GCDs);
             availGCDs = (float)System.Math.Max(0f, NumGCDs - GCDsused);
             _SL_DPS = SL.GetDPS(SL_GCDs);
             DPS_TTL += _SL_DPS;
-            if (availGCDs <= 0f) { return DPS_TTL; }
+            //if (availGCDs <= 0f) { return DPS_TTL; } // don't leave, we wanna do HS
 
             // Priority 6 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
+            Ability HS = new HeroicStrike(_character, _stats, _combatFactors, _whiteStats);
+            _whiteStats.HS_Freq = HS.GetActivates() * _combatFactors.MainHandSpeed / HS.GetRotation();
+            _WhiteDPSMH = _whiteStats.CalcMhWhiteDPS();
+            _WhiteDPS = _WhiteDPSMH;
+            _WhitePerHit = _whiteStats.MhAvgSwingDmg();
+            _whiteStats.HS_Freq = 0;
+            _HS_DPS = HS.GetDPS();
+            _HS_PerHit = HS.GetDamageOnUse();
+            //calculatedStats.HS = HS;
 
             // Return result
             return DPS_TTL;
         }
+        #endregion
     }
 }
 

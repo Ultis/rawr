@@ -157,7 +157,6 @@ namespace Rawr.DPSWarr
             dictValues.Add("Bloodsurge",        string.Format(format,BS.GetDPS(), BS.GetDamageOnUse(), BS.GetRageUsePerSecond() ,BS.GetActivates(),BS.GetDPS()/TotalDPS));
             dictValues.Add("Bloodthirst",       string.Format(format,BT.GetDPS(), BT.GetDamageOnUse(), BT.GetRageUsePerSecond() ,BT.GetActivates(),BT.GetDPS()/TotalDPS));
             dictValues.Add("Whirlwind",         string.Format(format,WW.GetDPS(), WW.GetDamageOnUse(), WW.GetRageUsePerSecond() ,WW.GetActivates(),WW.GetDPS()/TotalDPS));
-            dictValues.Add("Heroic Strike",     string.Format(format,HS.GetDPS(), HS.GetDamageOnUse(), HS.heroicStrikeRageCost(),HS.GetActivates(),HS.GetDPS()/TotalDPS));
             // DPS Arms
             format = "{0:0000} : {1:0000} : {2:00.00} : {3:000.00}*{4:00.0%} of DPS";
             dictValues.Add("Mortal Strike",     string.Format(format,SkillAttacks._MS_DPS ,MS.GetDamageOnUse() ,SkillAttacks._MS_GCDs ,SkillAttacks._MS_GCDsD ,SkillAttacks._MS_DPS /TotalDPS));
@@ -169,7 +168,8 @@ namespace Rawr.DPSWarr
             dictValues.Add("Sword Spec",        string.Format(format,SS.GetDPS()          ,SS.GetDamageOnUse() ,SS.GetActivates()     ,SS.GetActivates()      ,SS.GetDPS()          /TotalDPS));
             dictValues.Add("Sweeping Strikes",  string.Format(format,SW.GetDPS()          ,SW.GetDamageOnUse() ,SW.GetActivates()     ,SW.GetActivates()      ,SW.GetDPS()          /TotalDPS));
             // DPS General
-            dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",DW.GetDPS(), DW.GetDamageOnUse(),DW.GetDPS()/TotalDPS));
+            dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",SkillAttacks._DW_DPS, SkillAttacks._DW_PerHit,SkillAttacks._DW_DPS/TotalDPS));
+            dictValues.Add("Heroic Strike",     string.Format(format,HS.GetDPS()          ,HS.GetDamageOnUse() ,HS.heroicStrikeRageCost(),HS.GetActivates(),HS.GetDPS()/TotalDPS));
             dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}" + 
                                 Environment.NewLine + "Off Hand- {5:0.00}" + 
                                 Environment.NewLine + "{6:00.0%} of DPS",
@@ -188,6 +188,7 @@ namespace Rawr.DPSWarr
                 case "Haste Rating": return BasicStats.HasteRating;
                 case "Expertise Rating": return BasicStats.ExpertiseRating;
                 case "Hit Rating": return BasicStats.HitRating;
+                case "Enemy Avoidance %": return BasicStats.Miss + BasicStats.Dodge;
                 case "Crit Rating": return BasicStats.CritRating;
                 case "Agility": return BasicStats.Agility;
                 case "Attack Power": return BasicStats.AttackPower;

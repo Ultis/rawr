@@ -150,6 +150,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     "Haste Rating",
                     "Expertise Rating",
                     "Hit Rating",
+                    "Enemy Avoidance %",
 					"Crit Rating",
 					"Agility",
 					"Attack Power",
@@ -207,7 +208,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         Item.ItemType.OneHandMace,
                         Item.ItemType.OneHandSword,
                         Item.ItemType.OneHandAxe,
-                        Item.ItemType.Staff,
                         Item.ItemType.Polearm,
                         Item.ItemType.TwoHandMace,
                         Item.ItemType.TwoHandSword,
@@ -280,11 +280,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
             calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
             calculatedStats.RD = new Skills.Rend(character, stats, combatFactors, whiteAttacks);//calculatedStats.RendDPS = skillAttacks.Rend();
-            calculatedStats.MS = new Skills.Mortalstrike(character, stats, combatFactors, whiteAttacks);
+            calculatedStats.MS = new Skills.MortalStrike(character, stats, combatFactors, whiteAttacks);
             calculatedStats.OP = new Skills.OverPower(character, stats, combatFactors, whiteAttacks); //calculatedStats.OverpowerDPS = skillAttacks.Overpower();
             calculatedStats.SS = new Skills.Swordspec(character, stats, combatFactors, whiteAttacks); //calculatedStats.SwordSpecDPS = skillAttacks.SwordSpec();
             calculatedStats.SW = new Skills.SweepingStrikes(character, stats, combatFactors, whiteAttacks);
-            calculatedStats.BLS = new Skills.Bladestorm(character, stats, combatFactors, whiteAttacks); //calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
+            calculatedStats.BLS= new Skills.Bladestorm(character, stats, combatFactors, whiteAttacks); //calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
             calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
             calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
             calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);
@@ -292,8 +292,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Skills.HeroicStrike heroicstrike = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);
             Skills.BloodSurge bloodsurge = new Skills.BloodSurge(character, stats, combatFactors, whiteAttacks);
             float oldHSActivates = 0.0f, newHSActivates = heroicstrike.GetActivates();
-            while (calcOpts.FuryStance && Math.Abs(newHSActivates - oldHSActivates) > 0.01f)
-            {
+            while (calcOpts.FuryStance && Math.Abs(newHSActivates - oldHSActivates) > 0.01f) {
                 oldHSActivates = heroicstrike.GetActivates();
                 bloodsurge.hsActivates = oldHSActivates;
                 heroicstrike.bloodsurgeRPS = bloodsurge.GetRageUsePerSecond();
@@ -301,15 +300,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             
             whiteAttacks.HS_Freq = heroicstrike.GetActivates() * combatFactors.MainHandSpeed / heroicstrike.GetRotation();
-            calculatedStats.WhiteDPSMH = whiteAttacks.CalcMhWhiteDPS();
-            calculatedStats.WhiteDPSOH = (character.OffHand == null ? 0f : whiteAttacks.CalcOhWhiteDPS());
+            calculatedStats.WhiteDPSMH = (character.MainHand == null ? 0f : whiteAttacks.CalcMhWhiteDPS());
+            calculatedStats.WhiteDPSOH = (character.OffHand  == null ? 0f : whiteAttacks.CalcOhWhiteDPS());
             calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-            calculatedStats.WhiteDmg = whiteAttacks.MhAvgSwingDmg();
+            calculatedStats.WhiteDmg = (character.MainHand == null ? 0f : whiteAttacks.MhAvgSwingDmg());
             whiteAttacks.HS_Freq = 0;
             calculatedStats.BS = bloodsurge;
             calculatedStats.HS = heroicstrike;
             
-            Skills.DeepWounds deepWounds = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);//calculatedStats.DeepWoundsDPS = skillAttacks.Deepwounds();
+            Skills.DeepWounds deepWounds = new Skills.DeepWounds(character, stats, combatFactors, whiteAttacks);
             // RND and HS are not included because Rend won't crit, and HS replaces a white attack and thus is already covered
             float MHAbilityActivates = calculatedStats.SL.GetActivates() + calculatedStats.MS.GetActivates() +
                 calculatedStats.OP.GetActivates() + /*calculatedStats.SW.GetActivates() + calculatedStats.SS.GetActivates()*/ +
@@ -322,14 +321,17 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             deepWounds.SetAllAbilityActivates(MHAbilityActivates, OHAbilityActivates);
             calculatedStats.DW = deepWounds;
+            calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetTickSize();
+            calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS(deepWounds.GetActivates() / deepWounds.GetNumTicks());
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
-            calculatedStats.damageReduc = combatFactors.DamageReduction;
 
             calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec();
             calculatedStats.OtherRage = bloodsurge.OtherRage();
-            calculatedStats.FreeRage = bloodsurge.freeRage();
+            calculatedStats.FreeRage = bloodsurge.freeRage(calculatedStats.BT,calculatedStats.WW,calculatedStats.MS,
+                                                           calculatedStats.OP,calculatedStats.SD,calculatedStats.SL,
+                                                           calculatedStats.BLS,calculatedStats.SW,calculatedStats.RD);
 
             if(calculatedStats.MS.GetRotation()==Skills.ROTATION_LENGTH_FURY){
                 calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + calculatedStats.BT.GetDPS()
@@ -338,9 +340,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
                     + calculatedStats.SS.GetDPS() + calculatedStats.BLS.GetDPS();
             }else{
-                calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetDamageOnUse();
-                calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS();
-                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS + calculatedStats.SkillAttacks._DW_DPS + calculatedStats.HS.GetDPS();
+                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
+                    calculatedStats.SkillAttacks._DW_DPS + calculatedStats.SkillAttacks._HS_DPS/*+ calculatedStats.HS.GetDPS()*/;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
@@ -519,8 +520,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents talents = character.WarriorTalents;
 
-            //SetDefaults(character);
-
             Stats statsRace = GetRaceStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
@@ -539,7 +538,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          ? talents.OneHandedWeaponSpecialization * 0.02f: 0f)
                                          +*/ (character.MainHand != null &&
                                          (character.MainHand.Type == Item.ItemType.Polearm ||
-                                         character.MainHand.Type == Item.ItemType.Staff ||
                                          character.MainHand.Type == Item.ItemType.TwoHandAxe ||
                                          character.MainHand.Type == Item.ItemType.TwoHandMace ||
                                          character.MainHand.Type == Item.ItemType.TwoHandSword)
@@ -550,7 +548,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          character.OffHand.Type == Item.ItemType.TwoHandSword)
                                          ? 0.10f : 0f),
                 BonusStaminaMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f,
-                BonusStrengthMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f + talents.ImprovedBerserkerStance * 0.04f,
+                BonusStrengthMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f + (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 Expertise = /*talents.Vitality * 2.0f +*/ talents.StrengthOfArms * 2.0f,
                 //BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
@@ -624,22 +622,29 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
 
             float fightDuration = calcOpts.Duration;
+            float haste2PT8Bonus = 0f;
+            if (statsTotal.BonusWarrior2PT8Haste > 0f){
+                //approximate the number of Heroic Strike crits and slam crits that are done in the 10 sec proc of the 2-piece T8 haste buff
+                Skills.Ability sl = new Skills.Slam(character, statsTotal, combatFactors, whiteAttacks);
+                float hsSlamPerProc = sl.GetCritHsSlamPerSec() * 10f;
+                
+                //calculate the average uptime of the 2P T8 buff, and scale the haste bonus to match
+                float procChance = 0.4f;
+                haste2PT8Bonus = statsTotal.BonusWarrior2PT8Haste * (1 - (float)Math.Pow(1 - procChance, hsSlamPerProc));
+            }
+
+            statsTotal.HasteRating += haste2PT8Bonus;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
             float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
-            if (calcOpts.FuryStance)
-            {
+            if (calcOpts.FuryStance) {
                 Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
                 Skills.Ability ww = new Skills.WhirlWind(character, statsTotal, combatFactors, whiteAttacks);
                 mhHitsPerSecond = (bt.GetActivates() + ww.GetActivates()) / bt.GetRotation() * (1f - combatFactors.YellowMissChance);
                 ohHitsPerSecond = (ww.GetActivates()) / bt.GetRotation() * (1f - combatFactors.YellowMissChance);
-            }
-            else
-            {
-                mhHitsPerSecond = 1f / 1.5f;   
-            }
-            if (character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
-            if (character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
+            }else{mhHitsPerSecond = 1f / 1.5f;}
+            if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
+            if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
             
             float mhHitInterval = 1f / mhHitsPerSecond;
             float ohHitInterval = 1f / ohHitsPerSecond;
@@ -654,24 +659,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) // berserker enchant id
             {
                 bersStats = character.MainHandEnchant.Stats;
-                if (bersEffect == null)
-                {
+                if (bersEffect == null){
                     Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
-                    if (bersEffectEnum.MoveNext())
-                    {
+                    if (bersEffectEnum.MoveNext()){
                         bersEffect = bersEffectEnum.Current;
                     }
                 }
                 statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration);
             }
-            if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
-            {
+            if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
                 bersStats = character.OffHandEnchant.Stats;
-                if (bersEffect == null)
-                {
+                if (bersEffect == null){
                     Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
-                    if (bersEffectEnum.MoveNext())
-                    {
+                    if (bersEffectEnum.MoveNext()){
                         bersEffect = bersEffectEnum.Current;
                     }
                 }
@@ -708,20 +708,24 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float IntenseCDMod = 1f - (1f/9f)*talents.IntensifyRage;
             if (calcOpts.FuryStance) {
                 if (talents.DeathWish > 0) {
-                    SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
+                    Skills.BuffEffect Death = new Skills.DeathWish(character, statsTotal, combatFactors, whiteAttacks);
+                    statsProcs += Death.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
+                    /*SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
                         30f, 3f * 60f * IntenseCDMod);
-                    statsProcs += DeathWish.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
+                    statsProcs += DeathWish.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
                 }
                 /*SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
                     12f, 5f * 60f * IntenseCDMod);
                 statsProcs += Recklessness.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
             }else{
-                SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
+                Skills.BuffEffect Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors, whiteAttacks);
+                statsProcs += Shatt.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
+                /*SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },
                     10f, 5f * 60f);
-                statsProcs += ShatteringThrow.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
+                statsProcs += ShatteringThrow.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
             }
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
@@ -776,6 +780,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Health = stats.Health,
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
+                PhysicalHit = stats.PhysicalHit,
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
 				ArmorPenetration = stats.ArmorPenetration,
@@ -814,7 +819,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.BonusStrengthMultiplier +
                 stats.AttackPower +
                 stats.BonusAttackPowerMultiplier +
-                stats.CritRating + stats.HitRating +
+                stats.CritRating +
+                stats.HitRating +
+                stats.PhysicalHit +
                 stats.HasteRating +
                 stats.ExpertiseRating +
                 stats.ArmorPenetration +
@@ -829,10 +836,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalCrit +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.DreadnaughtBonusRageProc +
+                stats.BonusWarrior2PT8Haste +
+                stats.MortalstrikeBloodthirstCritIncrease +
                 stats.BonusSlamDamage +
                 stats.BloodlustProc +
-                stats.DarkmoonCardDeathProc +
-                stats.DreadnaughtBonusRageProc
+                stats.DarkmoonCardDeathProc
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
@@ -881,8 +889,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
         public override void SetDefaults(Character character) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents  talents = character.WarriorTalents;
-            
-            if (calcOpts == null) calcOpts = new CalculationOptionsDPSWarr();
+
+            if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
             calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
             bool doit = false;
             bool removeother = false;

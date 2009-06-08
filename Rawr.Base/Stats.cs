@@ -310,6 +310,8 @@ namespace Rawr {
         #region Warrior set bonuses
 		DevastateCritIncrease,
 		DreadnaughtBonusRageProc,
+        BonusWarrior2PT8Haste,
+        MortalstrikeBloodthirstCritIncrease,
         #endregion
         #region Rogue set bonuses
         BonusSnDDuration,
@@ -3427,6 +3429,26 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("Increased haste on Warrior 2-Piece T8 proc")]
+        public float BonusWarrior2PT8Haste
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% increased critical strike chance on Mortal Strike and Bloodthirst")]
+        public float MortalstrikeBloodthirstCritIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

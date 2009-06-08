@@ -2171,6 +2171,7 @@ namespace Rawr
                 SetThreshold = 4
             });
             #endregion
+            #region Warrior set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Destroyer Armor 2 Piece Bonus",
@@ -2184,7 +2185,7 @@ namespace Rawr
             {
                 //This can vary depending on how many mobs are being tanked and your
                 //avoidance, for now assume it procs once every 30 seconds.
-                //200 haste for 10 sec every 10 sec = 200 / 3 = 67 haste rating
+                //200 haste for 10 sec every 30 sec = 200 / 3 = 67 haste rating
                 Name = "Destroyer Armor 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
@@ -2239,6 +2240,24 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Siegebreaker Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior2PT8Haste = 150f },
+                SetName = "Siegebreaker Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Siegebreaker Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MortalstrikeBloodthirstCritIncrease = 0.1f },
+                SetName = "Siegebreaker Battlegear",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Siegebreaker Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
@@ -2246,6 +2265,8 @@ namespace Rawr
                 SetName = "Siegebreaker Plate",
                 SetThreshold = 2
             });
+            #endregion
+
             defaultBuffs.Add(new Buff()
             {
                 Name = "Primalstrike 3 Piece Bonus",
