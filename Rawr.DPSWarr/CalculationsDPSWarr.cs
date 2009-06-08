@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using System.Windows.Media;
 
 namespace Rawr.DPSWarr
 {
@@ -61,18 +61,34 @@ namespace Rawr.DPSWarr
         }
 
         #region Variables and Properties
-        public CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-        {
-            get
+
+        #if SILVERLIGHT
+            public ICalculationOptionsPanel _calculationOptionsPanel = null;
+            public override ICalculationOptionsPanel CalculationOptionsPanel
             {
-                if (_calculationOptionsPanel == null)
+                get
                 {
-                    _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
+                    if (_calculationOptionsPanel == null)
+                    {
+                        _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
+                    }
+                    return _calculationOptionsPanel;
                 }
-                return _calculationOptionsPanel;
             }
-        }
+        #else
+            public CalculationOptionsPanelBase _calculationOptionsPanel = null;
+            public override CalculationOptionsPanelBase CalculationOptionsPanel
+            {
+                get
+                {
+                    if (_calculationOptionsPanel == null)
+                    {
+                        _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
+                    }
+                    return _calculationOptionsPanel;
+                }
+            }
+        #endif
 
 		private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
@@ -179,9 +195,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
         {
             get
             {
+                
                 if (_subPointNameColors == null){
+#if SILVERLIGHT
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255,255,0,0));
+#else
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("DPS", Color.Red);
+#endif
                 }
                 return _subPointNameColors;
             }

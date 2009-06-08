@@ -327,6 +327,10 @@
       <Project>{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}</Project>
       <Name>Rawr.Cat</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.csproj">
+      <Project>{FB0E8A91-FE4B-425B-8773-792AB0232245}</Project>
+      <Name>Rawr.DPSWarr</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>

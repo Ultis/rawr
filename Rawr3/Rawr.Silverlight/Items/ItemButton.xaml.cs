@@ -55,7 +55,8 @@ namespace Rawr.Silverlight
                 }
                 else
                 {
-                    IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
+                    if (item.Item.IconPath != null) IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
+                    else IconImage.Source = null;
                     ItemTooltip.ItemInstance = item;
                 }
             }
