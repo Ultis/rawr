@@ -189,11 +189,11 @@ namespace Rawr.Hunter
                 float procchance = character.HunterTalents.CobraStrikes * 0.2f;
                 float twospecialtime = (float)specialAttackSpeed * 2f;
                 float exp = 0.0f;
-                if (options.ShotPriority1 == Shots.ArcaneShot || options.ShotPriority2 == Shots.ArcaneShot || options.ShotPriority3 == Shots.ArcaneShot || options.ShotPriority4 == Shots.ArcaneShot)
+                if (options.ArcaneInRot)
                 {
                     exp += 1.0f / 6.0f;
                 }
-                if (options.ShotPriority1 == Shots.SteadyShot || options.ShotPriority2 == Shots.SteadyShot || options.ShotPriority3 == Shots.SteadyShot || options.ShotPriority4 == Shots.SteadyShot)
+                if (options.SteadyInRot)
                 {
                     exp += 1.0f / 2.5f;
                 }
@@ -692,7 +692,7 @@ namespace Rawr.Hunter
                     i++;
 
                 //only procs if steady shot is being used
-                if ((options.ShotPriority1 == Shots.SteadyShot || options.ShotPriority2 == Shots.SteadyShot || options.ShotPriority3 == Shots.SteadyShot || options.ShotPriority4 == Shots.SteadyShot) && i >= 4)
+                if (options.SteadyInRot && i >= 4)
                     //15s duration of 600AP 45s cooldown = ~33.33%uptime = 200AP average for hunter = 44AP average for pet
                     return 44;
                 else

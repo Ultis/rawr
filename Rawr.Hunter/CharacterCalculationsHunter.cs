@@ -19,14 +19,13 @@ namespace Rawr.Hunter
 		private double _PetSpecialDPS;
 		private double _PetKillCommandDPS;
         private double _autoshotDPS;
-        private double _steadySpamDPS;
-        private double _arcane3xSteadyDPS;
-        private double _arcane2xSteadyDPS;
-        private double _serpASSteadyDPS;
-        private double _expSteadySerpDPS;
-        private double _chimASSteadyDPS;
+        private double _explosiveShotDPS;
+        private double _chimeraShotDPS;
+        private double _killshotDPS;
+        private double _silencingshotDPS;
+        private double _blackDPS;
+
         private double _customDPS;
-        private String _customRotation; 
 		
         
         #region HasteStats
@@ -77,7 +76,12 @@ namespace Rawr.Hunter
         #endregion
         
         public double damageReductionFromArmor  {get; set;}
-        
+
+        public double SilencingDPS
+        {
+            get { return _silencingshotDPS; }
+            set { _silencingshotDPS = value; }
+        }
         
         #region Steady Shot
         public double steadyCrit {get; set;}
@@ -119,8 +123,12 @@ namespace Rawr.Hunter
         
         
         #endregion
-        
-        
+
+        public double BlackDPS
+        {
+            get { return _blackDPS; }
+            set { _blackDPS = value; }
+        }
         
 		public float BaseAttackSpeed
 		{
@@ -140,52 +148,35 @@ namespace Rawr.Hunter
             set { _autoshotDPS = value; }
         }
 
-        public double SteadySpamDPS
+        public double ExplosiveShotDPS
         {
-            get { return _steadySpamDPS; }
-            set { _steadySpamDPS = value; }
+            get { return _explosiveShotDPS; }
+            set { _explosiveShotDPS = value; }
         }
 
-        public double Arcane3xSteadyDPS
+        public double ChimeraShotDPS
         {
-            get { return _arcane3xSteadyDPS; }
-            set { _arcane3xSteadyDPS = value; }
+            get { return _chimeraShotDPS; }
+            set { _chimeraShotDPS = value; }
         }
 
-        public double Arcane2xSteadyDPS
+        private double _aimedDPS;
+        public double AimedShotDPS
         {
-            get { return _arcane2xSteadyDPS; }
-            set { _arcane2xSteadyDPS = value; }
+            get { return _aimedDPS; }
+            set { _aimedDPS = value; }
         }
 
-        public double SerpASSteadyDPS
+        public double KillDPS
         {
-            get { return _serpASSteadyDPS; }
-            set { _serpASSteadyDPS = value; }
-        }
-
-        public double ExpSteadySerpDPS
-        {
-            get { return _expSteadySerpDPS; }
-            set { _expSteadySerpDPS = value; }
-        }
-
-        public double ChimASSteadyDPS
-        {
-            get { return _chimASSteadyDPS; }
-            set { _chimASSteadyDPS = value; }
+            get { return _killshotDPS; }
+            set { _killshotDPS = value; }
         }
 
         public double CustomDPS
         {
             get { return _customDPS; }
             set { _customDPS = value; }
-        }
-
-        public String CustomRotation
-        {
-            get { return _customRotation; }
-            set { _customRotation = value; }
         }
 
 		public override float OverallPoints
@@ -250,7 +241,6 @@ namespace Rawr.Hunter
 			set { _PetKillCommandDPS = value; }
 		}
 
-
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -272,7 +262,7 @@ namespace Rawr.Hunter
 			dictValues.Add("Mana Per Second", manaRegenTotal.ToString("F0")+"*includes:\n" +
 			              	manaRegenBase.ToString("F0")+" from base spirit regen\n" +
 			              	manaRegenGearBuffs.ToString("F0")+" from mp5 gear & buffs\n" +
-			              	manaRegenReplenishment.ToString("F0")+" from replenishment"  );
+			              	manaRegenReplenishment.ToString("F0")+" from replenishment\n");
 			dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
 			dictValues.Add("Health", BasicStats.Health.ToString("F0"));
 			dictValues.Add("Hit Percentage", hitOverall.ToString("P2") + "*includes: \n" +
@@ -299,7 +289,6 @@ namespace Rawr.Hunter
 			dictValues.Add("Pet Crit Percentage", PetStats.PhysicalCrit.ToString("P2"));
 			dictValues.Add("Pet Base DPS", PetBaseDPS.ToString("F2"));
 			dictValues.Add("Pet Special DPS", PetSpecialDPS.ToString("F2"));
-			dictValues.Add("Pet KC DPS", PetKillCommandDPS.ToString("F2"));
 			dictValues.Add("Ranged AP", RAPtotal.ToString("F0") + "*includes: \n"+
 			               	apFromBase.ToString("F0")+" from base \n"+
 							apFromAgil.ToString("F0")+" from Agility \n"+
@@ -320,69 +309,19 @@ namespace Rawr.Hunter
 			dictValues.Add("Overall DPS", OverallPoints.ToString("F2"));
 
             dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
-            dictValues.Add("Steady Spam", SteadySpamDPS.ToString("F2") + "*" +
-                           steadyCrit.ToString("P2") + "crit chance \n" +
-                            steadyHit.ToString("P2") + "hit chance \n" +
-                            steadyDamageNormal.ToString("F0") + "damage \n" +
-                            steadyDamageCrit.ToString("F0") + "crit damage \n" +
-                            steadyDamageTotal.ToString("F0") + "average damage \n" +
-                            steadyDamagePerMana.ToString("F0") + "damage per mana \n" +
-                            steadyDPS.ToString("F0") + "dps");
-            
-            
-            
             
             dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2"));
 			dictValues.Add("Steady Shot", steadyDPS.ToString("F2"));
 			dictValues.Add("Serpent Sting", SerpentDPS.ToString("F2"));
+            dictValues.Add("Silencing Shot", SilencingDPS.ToString("F2"));
 			dictValues.Add("Arcane Shot", arcaneDPS.ToString("F2"));
-			dictValues.Add("Explosive Shot", AutoshotDPS.ToString("F2"));
-			dictValues.Add("Chimaera Shot", AutoshotDPS.ToString("F2"));
+			dictValues.Add("Explosive Shot", ExplosiveShotDPS.ToString("F2"));
+			dictValues.Add("Chimera Shot", ChimeraShotDPS.ToString("F2"));
 			dictValues.Add("Aimed Shot", aimedDPCD.ToString("F2"));
 			dictValues.Add("Multi Shot", multiDPCD.ToString("F2"));
-			dictValues.Add("Black Arrow", AutoshotDPS.ToString("F2"));
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            dictValues.Add("AS 3xSteady", Arcane3xSteadyDPS.ToString("F2"));
-            dictValues.Add("AS 2xSteady", Arcane2xSteadyDPS.ToString("F2"));
-            dictValues.Add("Custom Rotation", CustomDPS.ToString("F2") + CustomRotation);
+            dictValues.Add("Black Arrow", AutoshotDPS.ToString("F2"));
+            dictValues.Add("Kill Shot", KillDPS.ToString("F2"));
 
-            String serpRota = @"*Serpent Sting
-Arcane Shot
-Steady Shot
-Steady Shot
-Steady Shot
-Arcane Shot
-Steady Shot
-Steady Shot
-Steady Shot";
-            dictValues.Add("SerpASSteady", SerpASSteadyDPS.ToString("F2") + serpRota);
-
-            String expRota = @"*Explosive Shot
-Serpent Sting
-Steady Shot
-Steady Shot
-Explosive Shot
-Steady Shot
-Steady Shot
-Steady Shot";
-            dictValues.Add("ExpSteadySerp", ExpSteadySerpDPS.ToString("F2") + expRota);
-
-            String chimRota = @"*Chimera Shot
-Arcane Shot
-Steady Shot
-Steady Shot
-Steady Shot
-Steady Shot";
-
-            dictValues.Add("ChimASSteady", ChimASSteadyDPS.ToString("F2") + chimRota);
 			return dictValues;
 		}
 
@@ -396,6 +335,8 @@ Steady Shot";
 					return BasicStats.CritRating;
 				case "Hit Rating":
 					return BasicStats.HitRating;
+                case "Haste Rating":
+                    return BasicStats.HasteRating;
 				case "Mana":
 					return BasicStats.Mana;
 			}
@@ -403,5 +344,3 @@ Steady Shot";
 		}
     }
 }
-
-

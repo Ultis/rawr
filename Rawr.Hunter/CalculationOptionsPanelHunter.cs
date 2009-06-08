@@ -21,16 +21,6 @@ namespace Rawr.Hunter
         public CalculationOptionsPanelHunter()
         {
             InitializeComponent();
-            
-            foreach (Enum e in Enum.GetValues(typeof(Shots)))
-            {
-                comboShotPrio1.Items.Add(e);
-                comboShotPrio2.Items.Add(e);
-                comboShotPrio3.Items.Add(e);
-                //comboShotPrio4.Items.Add(e);
-            }
-            comboShotPrio4.Items.Add(Shots.SteadyShot);
-            comboShotPrio4.SelectedIndex = 0;
         }
 
         #endregion
@@ -55,10 +45,6 @@ namespace Rawr.Hunter
 				}
 			}
             comboPetFamily.SelectedItem = options.PetFamily;
-            comboShotPrio1.SelectedItem = options.ShotPriority1;
-            comboShotPrio2.SelectedItem = options.ShotPriority2;
-            comboShotPrio3.SelectedItem = options.ShotPriority3;
-            comboShotPrio4.SelectedItem = options.ShotPriority4;
             numericUpDownLatency.Value = (decimal)(options.Latency * 1000.0);
             numCobraReflexes.Value = (options.CobraReflexes);
             numSpikedCollar.Value = (options.SpikedCollar);
@@ -67,7 +53,6 @@ namespace Rawr.Hunter
             numCallOfTheWild.Value = (options.CallOfTheWild);
             numSharkAttack.Value = (options.SharkAttack);
             numWildHunt.Value = (options.WildHunt);
-            checkBoxUseCustomShotRotation.Checked = options.UseCustomShotRotation;
             trackBarTargetArmor.Value = options.TargetArmor;
             lblTargetArmorValue.Text = options.TargetArmor.ToString();
 
@@ -110,6 +95,8 @@ namespace Rawr.Hunter
             options.duration = 360;
 
             PopulateAbilities();
+
+            cmbDefaults.SelectedIndex = 0;
 
             loadingOptions = false;
         }
@@ -406,44 +393,6 @@ namespace Rawr.Hunter
             }
         }
 
-        private void comboShotPrio1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions && comboShotPrio1.SelectedItem != null)
-            {
-                options.ShotPriority1 = (Shots)comboShotPrio1.SelectedItem;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void comboShotPrio2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions && comboShotPrio2.SelectedItem != null)
-            {
-                options.ShotPriority2 = (Shots)comboShotPrio2.SelectedItem;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void comboShotPrio3_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions && comboShotPrio3.SelectedItem != null)
-            {
-                options.ShotPriority3 = (Shots)comboShotPrio3.SelectedItem;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void comboShotPrio4_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*
-            if (!loadingOptions && comboShotPrio4.SelectedItem != null)
-            {
-                options.ShotPriority4 = (Shots)comboShotPrio4.SelectedItem;
-                Character.OnCalculationsInvalidated();
-            }
-            */
-        }
-
         private void numericUpDownLatency_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -511,7 +460,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void numericUpDown7_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -520,16 +468,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
-        private void checkBoxUseCustomShotRotation_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.UseCustomShotRotation = checkBoxUseCustomShotRotation.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void numericUpDown8_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -538,7 +476,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void numericUpDown9_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -547,7 +484,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void numericUpDown11_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -556,7 +492,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void numericUpDown10_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -565,7 +500,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void numOwlsFocus_ValueChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -583,7 +517,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void comboBoxPet2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -592,7 +525,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void comboBoxPet3_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
@@ -601,12 +533,169 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
         private void comboBoxPet4_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loadingOptions)
             {
                 options.PetPriority4 = (PetAttacks)comboBoxPet4.SelectedItem;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkAimed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.AimedInRot = chkAimed.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkArcane_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.ArcaneInRot = chkArcane.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkBlack_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.BlackInRot = chkBlack.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkChimera_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.ChimeraInRot = chkChimera.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkExplosive_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.ExplosiveInRot = chkExplosive.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkKill_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.KillInRot = chkKill.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkMulti_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.MultiInRot = chkMulti.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkSerpent_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.SerpentInRot = chkSerpent.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkSilence_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.SilenceInRot = chkSilence.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkSteady_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.SteadyInRot = chkSteady.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cmbDefaults_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                bool en = true;
+                if (cmbDefaults.SelectedIndex > 0)
+                    en = false;
+
+                chkAimed.Enabled = en;
+                chkAimed.Checked = false;
+                chkArcane.Enabled = en;
+                chkArcane.Checked = false;
+                chkBlack.Enabled = en;
+                chkBlack.Checked = false;
+                chkChimera.Enabled = en;
+                chkChimera.Checked = false;
+                chkExplosive.Enabled = en;
+                chkExplosive.Checked = false;
+                chkKill.Enabled = en;
+                chkKill.Checked = false;
+                chkMulti.Enabled = en;
+                chkMulti.Checked = false;
+                chkSerpent.Enabled = en;
+                chkSerpent.Checked = false;
+                chkSilence.Enabled = en;
+                chkSilence.Checked = false;
+                chkSteady.Enabled = en;
+                chkSteady.Checked = false;
+
+                switch (cmbDefaults.SelectedIndex)
+                {
+                    case 1:
+                        chkSteady.Checked = true;
+                        chkKill.Checked = true;
+                        chkArcane.Checked = true;
+                        chkAimed.Checked = true;
+                        chkSerpent.Checked = true;
+                        break;
+                    case 2:
+                        chkSerpent.Checked = true;
+                        chkKill.Checked = true;
+                        chkMulti.Checked = true;
+                        chkAimed.Checked = true;
+                        chkSteady.Checked = true;
+                        break;
+                    case 3:
+                        chkSerpent.Checked = true;
+                        chkBlack.Enabled = true;
+                        chkExplosive.Checked = true;
+                        chkSteady.Checked = true;
+                        break;
+                    case 4:
+                        chkKill.Checked = true;
+                        chkExplosive.Checked = true;
+                        chkBlack.Checked = true;
+                        chkAimed.Checked = true;
+                        chkSerpent.Checked = true;
+                        chkSteady.Checked = true;
+                        break;
+                    case 5:
+                        chkSerpent.Checked = true;
+                        chkChimera.Checked = true;
+                        chkAimed.Checked = true;
+                        chkArcane.Checked = true;
+                        chkSteady.Checked = true;
+                        break;
+                    case 6:
+                        chkSerpent.Checked = true;
+                        chkArcane.Checked = true;
+                        chkSteady.Checked = true;
+                        chkChimera.Checked = true;
+                        break;
+                }
                 Character.OnCalculationsInvalidated();
             }
         }

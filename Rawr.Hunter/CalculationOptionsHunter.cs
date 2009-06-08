@@ -10,7 +10,6 @@ namespace Rawr.Hunter
 		private int _TargetLevel = 83;
 		private int _TargetArmor = 13100; //Wrath boss armor
 		private Aspect _Aspect = Aspect.Hawk;
-		private ShotRotation _shotRotation = ShotRotation.OneToOne;
         private PetFamily _petFamily = PetFamily.Cat;
 
         private PetAttacks _petPriority1 = PetAttacks.Growl;
@@ -18,14 +17,20 @@ namespace Rawr.Hunter
         private PetAttacks _petPriority3 = PetAttacks.None;
         private PetAttacks _petPriority4 = PetAttacks.None;
 
-        private Shots _shotPriority1 = Shots.SteadyShot;
-        private Shots _shotPriority2 = Shots.None;
-        private Shots _shotPriority3 = Shots.None;
-        private Shots _shotPriority4 = Shots.None;
-
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
-		
+
+        //rotation stuff
+        private bool _aimedInRot = false;
+        private bool _arcaneInRot = false;
+        private bool _multiInRot = false;
+        private bool _serpentInRot = true;
+        private bool _silenceInRot = false;
+        private bool _steadyInRot = true;
+        private bool _killInRot = true;
+        private bool _explosiveInRot = false;
+        private bool _chimeraInRot = false;
+        private bool _blackInRot = false;
 		
 		// pet stuff
 		private int _cobraReflexes = 2;
@@ -40,8 +45,6 @@ namespace Rawr.Hunter
         private int _thunderstomp = 0;
         private int _wolverineBite = 0;
         private int _owlsFocus = 0;
-		
-        private bool _useCustomShotRotation = false;
 
         public int duration {get; set;}
         
@@ -50,60 +53,20 @@ namespace Rawr.Hunter
             get { return _petPriority1; }
             set { _petPriority1 = value; }
         }
-
         public PetAttacks PetPriority2
         {
             get { return _petPriority2; }
             set { _petPriority2 = value; }
         }
-
         public PetAttacks PetPriority3
         {
             get { return _petPriority3; }
             set { _petPriority3 = value; }
         }
-
         public PetAttacks PetPriority4
         {
             get { return _petPriority4; }
             set { _petPriority4 = value; }
-        }
-
-
-        public bool UseCustomShotRotation
-        {
-            get { return _useCustomShotRotation; }
-            set { _useCustomShotRotation = value; }
-        }
-
-		public ShotRotation ShotRotation
-		{
-			get { return _shotRotation; }
-			set { _shotRotation = value; }
-		}
-
-        public Shots ShotPriority1
-        {
-            get { return _shotPriority1; }
-            set { _shotPriority1 = value; }
-        }
-
-        public Shots ShotPriority2
-        {
-            get { return _shotPriority2; }
-            set { _shotPriority2 = value; }
-        }
-
-        public Shots ShotPriority3
-        {
-            get { return _shotPriority3; }
-            set { _shotPriority3 = value; }
-        }
-
-        public Shots ShotPriority4
-        {
-            get { return _shotPriority4; }
-            set { _shotPriority4 = value; }
         }
 
 		public Aspect Aspect
@@ -123,7 +86,6 @@ namespace Rawr.Hunter
 			get { return _TargetLevel; }
 			set { _TargetLevel = value; }
 		}
-
 		public int TargetArmor
 		{
 			get { return _TargetArmor; }
@@ -179,37 +141,82 @@ namespace Rawr.Hunter
 			get { return _wildHunt; }
 			set { _wildHunt = value;}
 		}
-
         public int Cornered
         {
             get { return _cornered; }
             set { _cornered = value; }
         }
-
         public int FeedingFrenzy
         {
             get { return _feedingFrency; }
             set { _feedingFrency = value; }
         }
-
         public int Thunderstomp
         {
             get { return _thunderstomp; }
             set { _thunderstomp = value; }
         }
-
         public int WolverineBite
         {
             get { return _wolverineBite; }
             set { _wolverineBite = value; }
         }
-
         public int OwlsFocus
         {
             get { return _owlsFocus; }
             set { _owlsFocus = value; }
         }
 
+        public bool AimedInRot
+        {
+            get { return _aimedInRot; }
+            set { _aimedInRot = value; }
+        }
+        public bool ArcaneInRot
+        {
+            get { return _arcaneInRot; }
+            set { _arcaneInRot = value; }
+        }
+        public bool MultiInRot
+        {
+            get { return _multiInRot; }
+            set { _multiInRot = value; }
+        }
+        public bool SerpentInRot
+        {
+            get { return _serpentInRot; }
+            set { _serpentInRot = value; }
+        }
+        public bool SilenceInRot
+        {
+            get { return _silenceInRot; }
+            set { _silenceInRot = value; }
+        }
+        public bool SteadyInRot
+        {
+            get { return _steadyInRot; }
+            set { _steadyInRot = value; }
+        }
+        public bool KillInRot
+        {
+            get { return _killInRot; }
+            set { _killInRot = value; }
+        }
+        public bool ExplosiveInRot
+        {
+            get { return _explosiveInRot; }
+            set { _explosiveInRot = value; }
+        }
+        public bool ChimeraInRot
+        {
+            get { return _chimeraInRot; }
+            set { _chimeraInRot = value; }
+        }
+        public bool BlackInRot
+        {
+            get { return _blackInRot; }
+            set { _blackInRot = value; }
+        }
 
 		#region ICalculationOptionBase Members
 
