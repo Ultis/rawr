@@ -238,12 +238,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
             CombatFactors combatFactors = new CombatFactors(character, stats);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character.WarriorTalents, stats, combatFactors, character);
             Skills skillAttacks = new Skills(character,character.WarriorTalents, stats, combatFactors, whiteAttacks);
+            Rotation Rot = new Rotation(character, character.WarriorTalents, stats, combatFactors, whiteAttacks);
             Stats statsRace = GetRaceStats(character);
 
             calculatedStats.Duration = calcOpts.Duration;
 
             calculatedStats.BasicStats = stats;
             calculatedStats.SkillAttacks = skillAttacks;
+            calculatedStats.Rot = Rot;
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.BaseHealth = statsRace.Health;
             // Attack Table
@@ -321,8 +323,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             deepWounds.SetAllAbilityActivates(MHAbilityActivates, OHAbilityActivates);
             calculatedStats.DW = deepWounds;
-            calculatedStats.SkillAttacks._DW_PerHit = deepWounds.GetTickSize();
-            calculatedStats.SkillAttacks._DW_DPS = deepWounds.GetDPS(deepWounds.GetActivates() / deepWounds.GetNumTicks());
+            calculatedStats.Rot._DW_PerHit = deepWounds.GetTickSize();
+            calculatedStats.Rot._DW_DPS = deepWounds.GetDPS(deepWounds.GetActivates() / deepWounds.GetNumTicks());
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
@@ -340,8 +342,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
                     + calculatedStats.SS.GetDPS() + calculatedStats.BLS.GetDPS();
             }else{
-                calculatedStats.TotalDPS = skillAttacks.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
-                    calculatedStats.SkillAttacks._DW_DPS + calculatedStats.SkillAttacks._HS_DPS/*+ calculatedStats.HS.GetDPS()*/;
+                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
+                    calculatedStats.Rot._DW_DPS + calculatedStats.Rot._HS_DPS/*+ calculatedStats.HS.GetDPS()*/;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
