@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.Hunter
 {
+#if SILVERLIGHT
+#else
 	[Serializable]
+#endif
 	public class CalculationOptionsHunter : ICalculationOptionBase
 	{
 		private int _TargetLevel = 83;

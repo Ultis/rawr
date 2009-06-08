@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+#if SILVERLIGHT
+#else
 using System.Drawing;
+#endif
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
@@ -12,7 +15,9 @@ namespace Rawr.Hunter
     /// This version based on Shandara's DPS Spreadsheet v88a
 	/// </summary>
 	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", Character.CharacterClass.Hunter)]
+
 	public class CalculationsHunter : CalculationsBase
+
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -77,7 +82,11 @@ namespace Rawr.Hunter
 	
 		#endregion	
 
+#if SILVERLIGHT
+        private ICalculationOptionsPanel calculationOptionsPanel = null;
+#else
         private CalculationOptionsPanelBase calculationOptionsPanel = null;
+#endif
         private string[] characterDisplayCalculationLabels = null;
         private string[] customChartNames = null;
         private List<Item.ItemType> relevantItemTypes = null;
@@ -182,17 +191,23 @@ namespace Rawr.Hunter
 			}
 		}
 #if SILVERLIGHT
-        public override ICalculationOptionBase CalculationOptionsPanel
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+        {
+            get
+            {
+                return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter());
+            }
+        }
 #else
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
+
         {
             get
             {
 				return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter());
             }
         }
-
+#endif
         public override string[] CharacterDisplayCalculationLabels
         {
             get { return characterDisplayCalculationLabels; }
@@ -361,7 +376,11 @@ namespace Rawr.Hunter
             get { return relevantItemTypes; }
         }
 
+#if SILVERLIGHT
+        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+#else
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+#endif
         {
             get { return subPointNameColors; }
         }
@@ -1271,7 +1290,7 @@ namespace Rawr.Hunter
             statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
             
-            statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsGearEnchantsBuffs.RangedCritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
+            statsTotal.CritRating = (float)Math.Floor((double)statsRace.CritRating + (double)statsGearEnchantsBuffs.CritRating + (double)statsGearEnchantsBuffs.RangedCritRating + (double)statsRace.LotPCritRating + (double)statsGearEnchantsBuffs.LotPCritRating);
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating + statsGearEnchantsBuffs.RangedHasteRating;
             // Haste trinket (Meteorite Whetstone)
            // statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
@@ -1279,7 +1298,7 @@ namespace Rawr.Hunter
             	
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
 			
-			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating + (decimal)statsGearEnchantsBuffs.RangedHitRating);
+			statsTotal.HitRating = (float)Math.Floor((double)statsRace.HitRating + (double)statsGearEnchantsBuffs.HitRating + (double)statsGearEnchantsBuffs.RangedHitRating);
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
