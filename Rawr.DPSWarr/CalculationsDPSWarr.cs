@@ -9,11 +9,9 @@ using System.Windows.Media;
 using System.Drawing;
 #endif
 
-namespace Rawr.DPSWarr
-{
+namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
-    public class CalculationsDPSWarr : CalculationsBase
-    {
+    public class CalculationsDPSWarr : CalculationsBase {
         private static SpecialEffect bersEffect = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
@@ -140,11 +138,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
                         "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that Your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
                         "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
-                        "DPS Breakdown (Arms):Sword Spec",
-                        "DPS Breakdown (Arms):Sweeping Strikes",
+                        "DPS Breakdown (Arms):Thunder Clap",
 
                         "DPS Breakdown (General):Deep Wounds",
-                        "DPS Breakdown (General):Heroic Strike",
+                        "DPS Breakdown (General):Heroic Strike/Cleave",
                         "DPS Breakdown (General):White DPS",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Rotation
@@ -268,7 +265,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsRace = GetRaceStats(character);
 
             calculatedStats.Duration = calcOpts.Duration;
-
             calculatedStats.BasicStats = stats;
             calculatedStats.SkillAttacks = skillAttacks;
             calculatedStats.Rot = Rot;
@@ -305,18 +301,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // DPS
 
             
-            //calculatedStats.HS = new Skills.HeroicStrike(character, stats, combatFactors, whiteAttacks);//calculatedStats.HeroicStrikeDPS = skillAttacks.HeroicStrike();
-            /*calculatedStats.SL = new Skills.Slam(character, stats, combatFactors, whiteAttacks);
-            calculatedStats.RD = new Skills.Rend(character, stats, combatFactors, whiteAttacks);//calculatedStats.RendDPS = skillAttacks.Rend();
-            calculatedStats.MS = new Skills.MortalStrike(character, stats, combatFactors, whiteAttacks);
-            calculatedStats.OP = new Skills.OverPower(character, stats, combatFactors, whiteAttacks); //calculatedStats.OverpowerDPS = skillAttacks.Overpower();
-            calculatedStats.SS = new Skills.Swordspec(character, stats, combatFactors, whiteAttacks); //calculatedStats.SwordSpecDPS = skillAttacks.SwordSpec();
-            calculatedStats.SW = new Skills.SweepingStrikes(character, stats, combatFactors, whiteAttacks);
-            calculatedStats.BLS= new Skills.Bladestorm(character, stats, combatFactors, whiteAttacks); //calculatedStats.BladestormDPS = skillAttacks.BladeStorm();
-            calculatedStats.SD = new Skills.Suddendeath(character, stats, combatFactors, whiteAttacks); //calculatedStats.SuddenDeathDPS = skillAttacks.SuddenDeath();
-            calculatedStats.BT = new Skills.BloodThirst(character, stats, combatFactors, whiteAttacks);
-            calculatedStats.WW = new Skills.WhirlWind(character, stats, combatFactors, whiteAttacks);*/
             Rot.Initialize(calculatedStats);
+            if (calcOpts.MultipleTargets) {
+                calculatedStats.Which = calculatedStats.HS;
+            } else {
+                calculatedStats.Which = calculatedStats.CL;
+            }
                         
             // Neutral
             // Defensive
@@ -327,14 +317,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.FreeRage = Rot.freeRage();
 
             if(calculatedStats.MS.GetRotation()==Skills.ROTATION_LENGTH_FURY){
-                calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH + calculatedStats.BT.GetDPS()
-                    + calculatedStats.WW.GetDPS() + calculatedStats.HS.GetDPS() + calculatedStats.BS.GetDPS()
+                calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH
+                    + calculatedStats.BT.GetDPS() + calculatedStats.WW.GetDPS() + calculatedStats.BS.GetDPS()
                     + calculatedStats.DW.GetDPS() + calculatedStats.MS.GetDPS() + calculatedStats.SD.GetDPS()
                     + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
-                    + calculatedStats.SS.GetDPS() + calculatedStats.BLS.GetDPS();
+                    + calculatedStats.HS.GetDPS() + calculatedStats.BLS.GetDPS();
             }else{
                 calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
-                    calculatedStats.Rot._DW_DPS + calculatedStats.Rot._HS_DPS/*+ calculatedStats.HS.GetDPS()*/;
+                    calculatedStats.Rot._DW_DPS + calculatedStats.Rot._OVD_DPS/*+ calculatedStats.HS.GetDPS()*/;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
@@ -651,8 +641,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats bersStats = null;
             
             // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
-            if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) // berserker enchant id
-            {
+            if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789){ // berserker enchant id
                 bersStats = character.MainHandEnchant.Stats;
                 if (bersEffect == null){
                     Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
@@ -705,10 +694,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 if (talents.DeathWish > 0) {
                     Skills.BuffEffect Death = new Skills.DeathWish(character, statsTotal, combatFactors, whiteAttacks);
                     statsProcs += Death.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
-                    /*SpecialEffect DeathWish = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
-                        30f, 3f * 60f * IntenseCDMod);
-                    statsProcs += DeathWish.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
                 }
                 /*SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
@@ -717,11 +702,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }else{
                 Skills.BuffEffect Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors, whiteAttacks);
                 statsProcs += Shatt.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
-                /*SpecialEffect ShatteringThrow = new SpecialEffect(Trigger.Use,
-                    new Stats() { ArmorPenetration = 0.20f, },
-                    10f, 5f * 60f);
-                statsProcs += ShatteringThrow.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
             }
+            Skills.BuffEffect Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors, whiteAttacks);
+            if (Sweep.GetValided()) { statsProcs += Sweep.GetAverageStats(); }
+            Skills.BuffEffect Blood = new Skills.Bloodrage(character, statsTotal, combatFactors, whiteAttacks);
+            if (Blood.GetValided()) { statsProcs += Blood.GetAverageStats(); }
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
@@ -936,6 +921,21 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma")); }
+            // == SUNDER ARMOR ==
+            // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
+            // But the other buffs don't stay up like Sunder
+            // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
+            doit = calcOpts.Mntn_Sunder && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
+            removeother = doit;
+            if (removeother) {
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Acid Spit"));
+                }
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Expose Armor"));
+                }
+            }
+            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }
             // == RAMPAGE ==
             // The benefits from both Rampage and Leader of the Pack are identical
             // So we should always apply Rampage if we have the talent

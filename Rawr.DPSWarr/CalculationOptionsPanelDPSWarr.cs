@@ -28,8 +28,16 @@ namespace Rawr.DPSWarr {
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
                 CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+                // Rotational Changes
                 RB_StanceFury.Checked = opts.FuryStance;
                 RB_StanceArms.Checked = !RB_StanceFury.Checked;
+                // Abilities to Maintain
+                CK_Thunder.Checked = opts.Mntn_Thunder;
+                CK_Sunder.Checked = opts.Mntn_Sunder;
+                CK_DemoShout.Checked = opts.Mntn_Demo;
+                CK_Hamstring.Checked = opts.Mntn_Hamstring;
+                CK_BattleShout.Checked = opts.Mntn_Battle;
+                //
                 Character.OnCalculationsInvalidated();
                 return; 
             }
@@ -39,10 +47,12 @@ namespace Rawr.DPSWarr {
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
                 CB_Duration.Value = (decimal)calcOpts.Duration;
                 RB_StanceArms.Checked    = !calcOpts.FuryStance;
-                CK_MultiTargs.Checked    = calcOpts.MultipleTargets;    CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
-                CK_MovingTargs.Checked   =  calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
-                CK_StunningTargs.Checked =  calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
-                CK_DisarmTargs.Checked   =  calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
+                // Rotational Changes
+                CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
+                CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
+                CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
+                CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
+                // Abilities to Maintain
                 if (Character != null) {
                     CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
@@ -123,6 +133,17 @@ namespace Rawr.DPSWarr {
             calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
             Character.OnCalculationsInvalidated();
         }
+        // Abilities to Maintain Changes
+        private void CK_Maints_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.Mntn_Thunder = CK_Thunder.Checked;
+            calcOpts.Mntn_Sunder = CK_Sunder.Checked;
+            calcOpts.Mntn_Demo = CK_DemoShout.Checked;
+            calcOpts.Mntn_Hamstring = CK_Hamstring.Checked;
+            calcOpts.Mntn_Battle = CK_BattleShout.Checked;
+
+            Character.OnCalculationsInvalidated();
+        }
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
@@ -130,10 +151,17 @@ namespace Rawr.DPSWarr {
         public int TargetArmor = 10643;
         public float Duration = 300;
         public bool FuryStance = true;
+        // Rotational Changes
         public bool MultipleTargets = false; public int MultipleTargetsPerc = 0;
         public bool MovingTargets   = false; public int MovingTargetsPerc   = 0;
         public bool StunningTargets = false; public int StunningTargetsPerc = 0;
         public bool DisarmingTargets= false; public int DisarmingTargetsPerc= 0;
+        // Abilities to Maintain
+        public bool Mntn_Thunder = false;
+        public bool Mntn_Sunder = false;
+        public bool Mntn_Battle = false;
+        public bool Mntn_Demo = false;
+        public bool Mntn_Hamstring = false;
         public WarriorTalents talents = null;
         public string GetXml() {
             var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));

@@ -64,19 +64,24 @@ namespace Rawr.DPSWarr
         public float WhiteDmg { get; set; }
         public float WhiteDPSMH { get; set; }
         public float WhiteDPSOH { get; set; }
-        public Skills.Ability DW { get; set; }
-        public Skills.Ability HS { get; set; }
-        public Skills.Ability SL { get; set; }
-        public Skills.DoT RD { get; set; }
-        public Skills.Ability MS { get; set; }
-        public Skills.Ability OP { get; set; }
-        public Skills.Ability SS { get; set; }
-        public Skills.Ability BS { get; set; }
-        public Skills.Ability SW { get; set; }
-        public Skills.Ability BLS { get; set; }
-        public Skills.Ability SD { get; set; }
-        public Skills.Ability BT { get; set; }
-        public Skills.Ability WW { get; set; }
+        //
+        public Skills.HeroicStrike HS { get; set; }
+        public Skills.Cleave CL { get; set; }
+        public Skills.OnAttack Which { get; set; }
+        //
+        public Skills.DeepWounds DW { get; set; }
+        public Skills.Slam SL { get; set; }
+        public Skills.Rend RD { get; set; }
+        public Skills.MortalStrike MS { get; set; }
+        public Skills.OverPower OP { get; set; }
+        public Skills.Swordspec SS { get; set; }
+        public Skills.BloodSurge BS { get; set; }
+        public Skills.SweepingStrikes SW { get; set; }
+        public Skills.Bladestorm BLS { get; set; }
+        public Skills.Suddendeath SD { get; set; }
+        public Skills.BloodThirst BT { get; set; }
+        public Skills.WhirlWind WW { get; set; }
+        public Skills.ThunderClap TH { get; set; }
         public float TotalDamagePerSecond { get; set; }
         // Neutral
         public float WhiteRage { get; set; }
@@ -166,11 +171,10 @@ namespace Rawr.DPSWarr
             dictValues.Add("Sudden Death",      string.Format(format,Rot._SD_DPS ,SD.GetDamageOnUse() ,Rot._SD_GCDs ,Rot._SD_GCDsD ,Rot._SD_DPS /TotalDPS));
             dictValues.Add("Slam",              string.Format(format,Rot._SL_DPS ,SL.GetDamageOnUse() ,Rot._SL_GCDs ,Rot._SL_GCDsD ,Rot._SL_DPS /TotalDPS));
             dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.GetDamageOnUse(),Rot._BLS_GCDs,Rot._BLS_GCDsD,Rot._BLS_DPS/TotalDPS));
-            dictValues.Add("Sword Spec",        string.Format(format,SS.GetDPS()          ,SS.GetDamageOnUse() ,SS.GetActivates()     ,SS.GetActivates()      ,SS.GetDPS()          /TotalDPS));
-            dictValues.Add("Sweeping Strikes",  string.Format(format,SW.GetDPS()          ,SW.GetDamageOnUse() ,SW.GetActivates()     ,SW.GetActivates()      ,SW.GetDPS()          /TotalDPS));
+            dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.GetDamageOnUse() ,Rot._Thunder_GCDs ,Rot._Thunder_GCDsD ,Rot._TH_DPS /TotalDPS));
             // DPS General
             dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
-            dictValues.Add("Heroic Strike",     string.Format(format,HS.GetDPS()          ,HS.GetDamageOnUse() ,Rot.heroicStrikeRageCost(),HS.GetActivates(),HS.GetDPS()/TotalDPS));
+            dictValues.Add("Heroic Strike/Cleave",string.Format(format,Rot._OVD_DPS, Which.GetDamageOnUse(), Which.FullRageCost, Which.GetActivates(), Rot._OVD_DPS / TotalDPS));
             dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}" + 
                                 Environment.NewLine + "Off Hand- {5:0.00}" + 
                                 Environment.NewLine + "{6:00.0%} of DPS",

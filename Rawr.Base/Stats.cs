@@ -266,7 +266,7 @@ namespace Rawr {
         CHCTDecrease,
         Earthliving,
         #endregion
-        #region Rawr.Healadin
+        #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
         FlashOfLightMultiplier,
         FlashOfLightCrit,
@@ -283,7 +283,7 @@ namespace Rawr {
         SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
         HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         #endregion
-        #region Rawr.Retribution
+        #region Added by Rawr.Retribution
         DivineStormMultiplier,
         CrusaderStrikeMultiplier,
         ExorcismMultiplier,
@@ -300,20 +300,24 @@ namespace Rawr {
         JudgementBlockValue,
         ShieldOfRighteousnessBlockValue,        
         #endregion
-        #region Warlock set bonuses
-        LifeTapBonusSpirit,
-        #endregion
         #region Added by Rawr.Moonkin
         StarfireProc,
         EclipseBonus,
         #endregion
-        #region Warrior set bonuses
+        #region Added by Rawr.DPSWarr
+        BonusTargets,
+        BonusRageGen,
+        #endregion
+        #region Set Bonuses: Warlock
+        LifeTapBonusSpirit,
+        #endregion
+        #region Set Bonuses: Warrior
 		DevastateCritIncrease,
 		DreadnaughtBonusRageProc,
         BonusWarrior2PT8Haste,
         MortalstrikeBloodthirstCritIncrease,
         #endregion
-        #region Rogue set bonuses
+        #region Set Bonuses: Rogue
         BonusSnDDuration,
         BonusSnDHaste,
         BonusCPGDamage,
@@ -750,6 +754,26 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.Spirit]; }
             set { _rawAdditiveData[(int)AdditiveStat.Spirit] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Spell Power")]
+        [CommonStat]
+        public float SpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Spell Penetration")]
+        public float SpellPenetration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPenetration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPenetration] = value; }
+        }
+
         #endregion
 
         #region Resistances
@@ -963,16 +987,6 @@ namespace Rawr {
         #endregion
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Spell Power")]
-        [CommonStat]
-        public float SpellPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Shadow Damage")]
         [CommonStat]
@@ -1020,15 +1034,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellNatureDamageRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellNatureDamageRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Spell Penetration")]
-        public float SpellPenetration
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPenetration]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPenetration] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1083,8 +1088,8 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% Physical Crit")]
         [Category("Combat Values")]
+        [DisplayName("% Physical Crit")]
         public float PhysicalCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.PhysicalCrit]; }
@@ -1099,16 +1104,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.CritRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        [DisplayName("Ranged Crit Rating")]
-        [CommonStat]
-        public float RangedCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedCritRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1129,16 +1124,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritBonusDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.CritBonusDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        [DisplayName("Ranged Hit Rating")]
-        [CommonStat]
-        public float RangedHitRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedHitRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1287,16 +1272,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        [DisplayName("Ranged Haste Rating")]
-        [CommonStat]
-        public float RangedHasteRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedHasteRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Old Equipment Procs")]
         public float HasteRatingOnPhysicalAttack
         {
@@ -1356,22 +1331,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float BloodlustProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BloodlustProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BloodlustProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float TerrorProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TerrorProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TerrorProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Combat Values")]
         [DisplayName("% Miss")]
@@ -1382,20 +1341,74 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Mage")]
-        public float AldorRegaliaInterruptProtection
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
         public float InterruptProtection
         {
             get { return _rawAdditiveData[(int)AdditiveStat.InterruptProtection]; }
             set { _rawAdditiveData[(int)AdditiveStat.InterruptProtection] = value; }
         }
+        [Percentage]
+        [DisplayName("% Base Mana / Hit")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRestoreFromBaseManaPerHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit] = value; }
+        }
+
+
+        [Percentage]
+        [DisplayName("% Max Mana / Sec")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRestoreFromMaxManaPerSecond
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond] = value; }
+        }
+
+        #region Hunter Bonuses
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        [DisplayName("Ranged Crit Rating")]
+        [CommonStat]
+        public float RangedCritRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedCritRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        [DisplayName("Ranged Hit Rating")]
+        [CommonStat]
+        public float RangedHitRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedHitRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        [DisplayName("Ranged Haste Rating")]
+        [CommonStat]
+        public float RangedHasteRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedHasteRating] = value; }
+        }
+        #endregion
+
+        #region Mage Bonuses
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Mage")]
+        public float AldorRegaliaInterruptProtection
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection] = value; }
+        }
+        #endregion
 
         #region Rogue bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1479,6 +1492,7 @@ namespace Rawr {
         }
         #endregion
 
+        #region Death Knight Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
         public float BonusObliterateDamage
@@ -1715,7 +1729,9 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit] = value; }
         }
+        #endregion
 
+        #region Warrior Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Warrior")]
         [DisplayName("Bonus Commanding Shout HP")]
@@ -1723,6 +1739,48 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP] = value; }
+        }
+        #endregion
+
+        #region Feral Bonuses
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        public float BloodlustProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BloodlustProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BloodlustProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        public float TerrorProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TerrorProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TerrorProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        public float MangleCatCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MangleCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MangleCostReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        public float RakeCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RakeCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RakeCostReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        public float ShredCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShredCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShredCostReduction] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1791,8 +1849,10 @@ namespace Rawr {
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance]; }
 			set { _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance] = value; }
-		}
-        
+        }
+        #endregion
+
+        #region Shaman Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Windfury")]
         [Category("Deprecated")]
@@ -1801,17 +1861,255 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.WindfuryAPBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.WindfuryAPBonus] = value; }
         }
+        #endregion
 
-        [Percentage]
-        [DisplayName("% Base Mana / Hit")]
-        [Category("Buffs / Debuffs")]
+        #region Misc
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestoreFromBaseManaPerHit
+        [Category("Misc")]
+        [DisplayName("Average Armor")]
+        public float AverageArmor
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.AverageArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Misc")]
+        public float Bloodlust
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Bloodlust]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Bloodlust] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Misc")]
+        public float SpellDamageFromIntellectPercentage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFromIntellectPercentage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromIntellectPercentage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Misc")]
+        public float SpellDamageFromSpiritPercentage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Misc")]
+        public float SpellPowerFromAttackPowerPercentage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage] = value; }
+        }
+        #endregion
+
+        #region Deprecated
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        public float ExposeWeakness
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExposeWeakness]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExposeWeakness] = value; }
+        }
+
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        public float DrumsOfWar
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DrumsOfWar]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DrumsOfWar] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        public float DrumsOfBattle
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        public float ShatteredSunMightProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunMightProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunMightProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("Deprecated")]
+        public float ShatteredSunRestoProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunRestoProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunRestoProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        public float CritChanceReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritChanceReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritChanceReduction] = value; }
+        }
+
+        [DisplayName("Shattered Sun Caster Neck proc")]
+        [Category("Deprecated")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ShatteredSunAcumenProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunAcumenProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunAcumenProc] = value; }
+        }
+        #endregion
+
+        #region Equipment Effects
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana Restore")]
+        [Category("Equipment Effects")]
+        public float ManaRestore
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestore]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestore] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        [DisplayName("PvP Trinket")]
+        public float PVPTrinket
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PVPTrinket]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PVPTrinket] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        public float LightningCapacitorProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        public float ThunderCapacitorProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc] = value; }
+        }
+        [DisplayName("Bonus Healing Received")]
+        [Category("Equipment Effects")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusHealingReceived
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived] = value; }
+        }
+
+        [DisplayName("Extract of Necromantic Power proc")]
+        [Category("Equipment Effects")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ExtractOfNecromanticPowerProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc] = value; }
+        }
+
+        [DisplayName("Darkmoon Card: Death proc")]
+        [Category("Equipment Effects")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float DarkmoonCardDeathProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DarkmoonCardDeathProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DarkmoonCardDeathProc] = value; }
+        }
+
+        [DisplayName("Timbal's Focusing Crystal proc")]
+        [Category("Equipment Effects")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TimbalsProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TimbalsProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TimbalsProc] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Shield from Heal Amount")]
+        [Percentage]
+        [Category("Equipment Effects")]
+        public float ShieldFromHealed
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.ShieldFromHealed]; }
+            set { _rawNoStackData[(int)NonStackingStat.ShieldFromHealed] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Highest Stat")]
+        [Category("Equipment Effects")]
+        public float HighestStat
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.HighestStat]; }
+            set { _rawNoStackData[(int)NonStackingStat.HighestStat] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healed")]
+        [Category("Equipment Effects")]
+        public float Healed
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Healed]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Healed] = value; }
+        }
+        
+        // Bandit's Insignia
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Arcane Damage")]
+        [Category("Equipment Effects")]
+        public float ArcaneDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ArcaneDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ArcaneDamage] = value; }
+        }
+
+        // Bandit's Insignia
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Shadow Damage")]
+        [Category("Equipment Effects")]
+        public float ShadowDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShadowDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShadowDamage] = value; }
+        }
+
+        // Hand Mounted Pyro Rocket
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Fire Damage")]
+        [Category("Equipment Effects")]
+        public float FireDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FireDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FireDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spells Mana Cost Reduction")]
+        [Category("Equipment Effects")]
+        public float SpellsManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Next Healing Spell Mana Cost Reduction")]
+        [Category("Equipment Effects")]
+        public float HealingOmenProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealingOmenProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealingOmenProc] = value; }
+        }
+        #endregion
+
+        #region Old Equipment Procs
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Old Equipment Procs")]
         public float ManaRestorePerCast
@@ -1839,116 +2137,6 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45] = value; }
         }
-
-        [Percentage]
-        [DisplayName("% Max Mana / Sec")]
-        [Category("Buffs / Debuffs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestoreFromMaxManaPerSecond
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float MangleCatCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MangleCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MangleCostReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float RakeCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RakeCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RakeCostReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float ShredCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShredCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShredCostReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float ExposeWeakness
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExposeWeakness]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExposeWeakness] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float Bloodlust
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Bloodlust]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Bloodlust] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float DrumsOfWar
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DrumsOfWar]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DrumsOfWar] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float DrumsOfBattle
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle] = value; }
-        }
-
-        [Percentage]
-        [DisplayName("% Arcane Blast Bonus")]
-        [Category("Mage")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ArcaneBlastBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus] = value; }
-        }
-
-        [DisplayName("Kirin Tor Garb 4 Piece Bonus")]
-        [Category("Mage")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float Mage4T8
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T8]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage4T8] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float SpellDamageFromIntellectPercentage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFromIntellectPercentage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromIntellectPercentage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float SpellDamageFromSpiritPercentage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float SpellPowerFromAttackPowerPercentage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (50% 5 sec/Crit)")]
         [Category("Old Equipment Procs")]
@@ -2080,26 +2268,6 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.Mp5OnCastFor20SecOnUse2Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.Mp5OnCastFor20SecOnUse2Min] = value; }
         }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Gem Effect")]
-        [Category("Mage")]
-        public float BonusManaGem
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusManaGem]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusManaGem] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Restore")]
-        [Category("Equipment Effects")]
-        public float ManaRestore
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestore]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestore] = value; }
-        }
-
-
         // 10% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Power (10 sec)")]
@@ -2161,24 +2329,498 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Effects")]
-        [DisplayName("PvP Trinket")]
-        public float PVPTrinket
+        [Category("Old Equipment Procs")]
+        public float LightweaveEmbroideryProc
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.PVPTrinket]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PVPTrinket] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.LightweaveEmbroideryProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightweaveEmbroideryProc] = value; }
         }
-
-        // Starfire idol
+        [DisplayName("Pendulum of Telluric Currents proc")]
+        [Category("Old Equipment Procs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Starfire damage bonus")]
-        [Category("Moonkin")]
-        public float StarfireDmg
+        public float PendulumOfTelluricCurrentsProc
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireDmg] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana every 5 min")]
+        [Category("Old Equipment Procs")]
+        public float ManaRestore5min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestore5min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestore5min] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Greatness Proc")]
+        [Category("Old Equipment Procs")]
+        public float GreatnessProc
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GreatnessProc]; }
+            set { _rawNoStackData[(int)NonStackingStat.GreatnessProc] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healed every 1 min")]
+        [Category("Old Equipment Procs")]
+        public float Heal1Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Heal1Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Heal1Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spirit for 20 sec. (2 min cd)")]
+        [Category("Old Equipment Procs")]
+        public float SpiritFor20SecOnUse2Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana restores over 12 sec. (2 min cd)")]
+        [Category("Old Equipment Procs")]
+        public float ManaregenOver12SecOnUse3Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse3Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse3Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana restores over 12 sec. (5 min cd)")]
+        [Category("Old Equipment Procs")]
+        public float ManaregenOver12SecOnUse5Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse5Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana cost of next spell reduce (within 15 sec.)")]
+        [Category("Old Equipment Procs")]
+        public float ManacostReduceWithin15OnHealingCast
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% chance on spellcast to allow 100% mana regen for 15 sec")]
+        [Category("Old Equipment Procs")]
+        public float FullManaRegenFor15SecOnSpellcast
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Extra heal over time from direct healing spells")]
+        [Category("Old Equipment Procs")]
+        public float BonusHoTOnDirectHeals
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals] = value; }
+        }
+        #endregion
+
+        #region Added by Rawr.DPSWarr
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName("Bonus Targets")]
+        public float BonusTargets
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusTargets]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusTargets] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName("Bonus Rage Generated")]
+        public float BonusRageGen
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRageGen]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRageGen] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Mage
+        [Percentage]
+        [DisplayName("% Arcane Blast Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ArcaneBlastBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus] = value; }
+        }
+
+        [DisplayName("Kirin Tor Garb 4 Piece Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Mage4T8
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T8]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mage4T8] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana Gem Effect")]
+        [Category("Mage")]
+        public float BonusManaGem
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusManaGem]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusManaGem] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Mage")]
+        public float EvocationExtension
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.EvocationExtension]; }
+            set { _rawAdditiveData[(int)AdditiveStat.EvocationExtension] = value; }
+        }
+        [DisplayName("Ice Armor")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageIceArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageIceArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageIceArmor] = value; }
+        }
+
+        [DisplayName("Mage Armor")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageMageArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageMageArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageMageArmor] = value; }
+        }
+
+        [DisplayName("Molten Armor")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageMoltenArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Feral
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        [DisplayName("LotP Crit")]
+        public float LotPCritRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LotPCritRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LotPCritRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        [DisplayName("Strength in Cat Form")]
+        public float CatFormStrength
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CatFormStrength]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CatFormStrength] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        [DisplayName("Time average Agility")]
+        public float AverageAgility
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AverageAgility]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AverageAgility] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Retribution
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Crusader Strike Damage")]
+        [Category("Retribution")]
+        public float CrusaderStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Consecration Spell Power")]
+        [Category("Retribution")]
+        public float ConsecrationSpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Divine Storm Damage")]
+        [Category("Retribution")]
+        public float DivineStormDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Divine Storm Damage")]
+        [Category("Retribution")]
+        public float DivineStormMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Crusader Strike Damage")]
+        [Category("Retribution")]
+        public float CrusaderStrikeMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Exorcism Damage")]
+        [Category("Retribution")]
+        public float ExorcismMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hammer of Wrath Damage")]
+        [Category("Retribution")]
+        public float HammerOfWrathMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Crusader Strike Crit")]
+        [Category("Retribution")]
+        public float CrusaderStrikeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Divine Storm Crit")]
+        [Category("Retribution")]
+        public float DivineStormCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("sec Judgement CD Reduction")]
+        [Category("Retribution")]
+        public float JudgementCDReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Healadin
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Flash of Light Spell Power")]
+        [Category("Healadin")]
+        public float FlashOfLightSpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("secs off Sacred Shield ICD")]
+        [Category("Healadin")]
+        public float SacredShieldICDReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% HoT on Holy Shock Crit")]
+        [Percentage]
+        [Category("Healadin")]
+        public float HolyShockHoTOnCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Flash of Light Healing")]
+        [Category("Healadin")]
+        public float FlashOfLightMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Flash of Light Crit")]
+        [Category("Healadin")]
+        public float FlashOfLightCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Holy Light Spell Power")]
+        [Category("Healadin")]
+        public float HolyLightSpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Holy Light Cost Reduction")]
+        [Category("Healadin")]
+        public float HolyLightPercentManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Holy Light Mana Cost Reduction")]
+        [Category("Healadin")]
+        public float HolyLightManaCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Holy Light Crit")]
+        [Category("Healadin")]
+        public float HolyLightCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Holy Shock Crit")]
+        [Category("Healadin")]
+        public float HolyShockCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyShockCrit] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Warlock
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warlock")]
+        public float WarlockFelArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warlock")]
+        public float WarlockDemonArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warlock")]
+        public float WarlockGrandSpellstone
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WarlockGrandSpellstone]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WarlockGrandSpellstone] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warlock")]
+        public float WarlockGrandFirestone
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WarlockGrandFirestone]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WarlockGrandFirestone] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Spirit after Life Tap")]
+        [Category("Warlock")]
+        public float LifeTapBonusSpirit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warlock")]
+        public float BonusWarlockSchoolDamageOnCast
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warlock")]
+        public float BonusWarlockDotExtension
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spirit while casting")]
+        [Category("Equipment Effects")]
+        public float ExtraSpiritWhileCasting
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Hunter
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        public float RangedAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedAttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly */
+        [DisplayName("% Extra Pet Crit Chance")]
+        [Category("Hunter")]
+        public float BonusPetCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage] /*Same as above*/
+        [DisplayName("% Extra Steady Shot Crit")]
+        [Category("Hunter")]
+        public float BonusSteadyShotCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Tree
         // Tree 2-piece T5
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Tree")]
@@ -2297,645 +2939,6 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.HealingTouchFinalHealBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.HealingTouchFinalHealBonus] = value; }
         }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Mage")]
-        public float EvocationExtension
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.EvocationExtension]; }
-            set { _rawAdditiveData[(int)AdditiveStat.EvocationExtension] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Effects")]
-        public float LightningCapacitorProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Old Equipment Procs")]
-        public float LightweaveEmbroideryProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LightweaveEmbroideryProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LightweaveEmbroideryProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Effects")]
-        public float ThunderCapacitorProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("LotP Crit")]
-        public float LotPCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LotPCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LotPCritRating] = value; }
-        }
-
-        [DisplayName("Ice Armor")]
-        [Category("Mage")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MageIceArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MageIceArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MageIceArmor] = value; }
-        }
-
-        [DisplayName("Mage Armor")]
-        [Category("Mage")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MageMageArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MageMageArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MageMageArmor] = value; }
-        }
-
-        [DisplayName("Molten Armor")]
-        [Category("Mage")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MageMoltenArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float WarlockFelArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float WarlockDemonArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float WarlockGrandSpellstone
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockGrandSpellstone]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockGrandSpellstone] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float WarlockGrandFirestone
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockGrandFirestone]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockGrandFirestone] = value; }
-        }
-
-        // Unseen Moon idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec on Moonfire)")]
-        [Category("Moonkin")]
-        public float UnseenMoonDamageBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.UnseenMoonDamageBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.UnseenMoonDamageBonus] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float ShatteredSunMightProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunMightProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunMightProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [Category("Deprecated")]
-        public float ShatteredSunRestoProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunRestoProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunRestoProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float CritChanceReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CritChanceReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CritChanceReduction] = value; }
-        }
-
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("Strength in Cat Form")]
-        public float CatFormStrength
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CatFormStrength]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CatFormStrength] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("Time average Agility")]
-        public float AverageAgility
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AverageAgility]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AverageAgility] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        [DisplayName("Average Armor")]
-        public float AverageArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AverageArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
-        }
-
-        [DisplayName("Bonus Healing Received")]
-        [Category("Equipment Effects")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BonusHealingReceived
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusHealingReceived] = value; }
-        }
-
-        [DisplayName("Shattered Sun Caster Neck proc")]
-        [Category("Deprecated")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ShatteredSunAcumenProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunAcumenProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunAcumenProc] = value; }
-        }
-
-        [DisplayName("Pendulum of Telluric Currents proc")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float PendulumOfTelluricCurrentsProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc] = value; }
-        }
-
-        [DisplayName("Extract of Necromantic Power proc")]
-        [Category("Equipment Effects")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ExtractOfNecromanticPowerProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc] = value; }
-        }
-
-        [DisplayName("Darkmoon Card: Death proc")]
-        [Category("Equipment Effects")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float DarkmoonCardDeathProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DarkmoonCardDeathProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DarkmoonCardDeathProc] = value; }
-        }
-
-        [DisplayName("Timbal's Focusing Crystal proc")]
-        [Category("Equipment Effects")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float TimbalsProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TimbalsProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TimbalsProc] = value; }
-        }
-
-        [DisplayName("Spell damage (8 sec, 25% chance on Starfire)")]
-        [Category("Moonkin")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float DruidAshtongueTrinket
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana every 5 min")]
-        [Category("Old Equipment Procs")]
-        public float ManaRestore5min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestore5min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestore5min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Greatness Proc")]
-        [Category("Old Equipment Procs")]
-        public float GreatnessProc
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.GreatnessProc]; }
-            set { _rawNoStackData[(int)NonStackingStat.GreatnessProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Shield from Heal Amount")]
-        [Percentage]
-        [Category("Equipment Effects")]
-        public float ShieldFromHealed
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.ShieldFromHealed]; }
-            set { _rawNoStackData[(int)NonStackingStat.ShieldFromHealed] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Highest Stat")]
-        [Category("Equipment Effects")]
-        public float HighestStat
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.HighestStat]; }
-            set { _rawNoStackData[(int)NonStackingStat.HighestStat] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healed every 1 min")]
-        [Category("Old Equipment Procs")]
-        public float Heal1Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Heal1Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Heal1Min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healed")]
-        [Category("Equipment Effects")]
-        public float Healed
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Healed]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Healed] = value; }
-        }
-        
-        // Bandit's Insignia
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Arcane Damage")]
-        [Category("Equipment Effects")]
-        public float ArcaneDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ArcaneDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ArcaneDamage] = value; }
-        }
-
-        // Bandit's Insignia
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Shadow Damage")]
-        [Category("Equipment Effects")]
-        public float ShadowDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShadowDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShadowDamage] = value; }
-        }
-
-        // Hand Mounted Pyro Rocket
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Fire Damage")]
-        [Category("Equipment Effects")]
-        public float FireDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FireDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FireDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Crusader Strike Damage")]
-        [Category("Retribution")]
-        public float CrusaderStrikeDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Consecration Spell Power")]
-        [Category("Retribution")]
-        public float ConsecrationSpellPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Divine Storm Damage")]
-        [Category("Retribution")]
-        public float DivineStormDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineStormDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Divine Storm Damage")]
-        [Category("Retribution")]
-        public float DivineStormMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Crusader Strike Damage")]
-        [Category("Retribution")]
-        public float CrusaderStrikeMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Exorcism Damage")]
-        [Category("Retribution")]
-        public float ExorcismMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Hammer of Wrath Damage")]
-        [Category("Retribution")]
-        public float HammerOfWrathMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Crusader Strike Crit")]
-        [Category("Retribution")]
-        public float CrusaderStrikeCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Divine Storm Crit")]
-        [Category("Retribution")]
-        public float DivineStormCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineStormCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("sec Judgement CD Reduction")]
-        [Category("Retribution")]
-        public float JudgementCDReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction] = value; }
-        }
-
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Flash of Light Spell Power")]
-        [Category("Healadin")]
-        public float FlashOfLightSpellPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("secs off Sacred Shield ICD")]
-        [Category("Healadin")]
-        public float SacredShieldICDReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% HoT on Holy Shock Crit")]
-        [Percentage]
-        [Category("Healadin")]
-        public float HolyShockHoTOnCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Flash of Light Healing")]
-        [Category("Healadin")]
-        public float FlashOfLightMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier] = value; }
-        }
-
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Flash of Light Crit")]
-        [Category("Healadin")]
-        public float FlashOfLightCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Holy Light Spell Power")]
-        [Category("Healadin")]
-        public float HolyLightSpellPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spells Mana Cost Reduction")]
-        [Category("Equipment Effects")]
-        public float SpellsManaReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Next Healing Spell Mana Cost Reduction")]
-        [Category("Equipment Effects")]
-        public float HealingOmenProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HealingOmenProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HealingOmenProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Holy Light Mana Cost Reduction")]
-        [Category("Healadin")]
-        public float HolyLightManaCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Holy Light Crit")]
-        [Category("Healadin")]
-        public float HolyLightCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Holy Shock Crit")]
-        [Category("Healadin")]
-        public float HolyShockCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyShockCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Holy Light Cost Reduction")]
-        [Category("Healadin")]
-        public float HolyLightPercentManaReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Bonus Spirit after Life Tap")]
-        [Category("Warlock")]
-        public float LifeTapBonusSpirit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float BonusWarlockSchoolDamageOnCast
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float BonusWarlockDotExtension
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        public float RangedAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedAttackPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly */
-        [DisplayName("% Extra Pet Crit Chance")]
-        [Category("Hunter")]
-        public float BonusPetCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage] /*Same as above*/
-        [DisplayName("% Extra Steady Shot Crit")]
-        [Category("Hunter")]
-        public float BonusSteadyShotCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spirit for 20 sec. (2 min cd)")]
-        [Category("Old Equipment Procs")]
-        public float SpiritFor20SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spirit while casting")]
-        [Category("Equipment Effects")]
-        public float ExtraSpiritWhileCasting
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana restores over 12 sec. (2 min cd)")]
-        [Category("Old Equipment Procs")]
-        public float ManaregenOver12SecOnUse3Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse3Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse3Min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana restores over 12 sec. (5 min cd)")]
-        [Category("Old Equipment Procs")]
-        public float ManaregenOver12SecOnUse5Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse5Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse5Min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana cost of next spell reduce (within 15 sec.)")]
-        [Category("Old Equipment Procs")]
-        public float ManacostReduceWithin15OnHealingCast
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% chance on spellcast to allow 100% mana regen for 15 sec")]
-        [Category("Old Equipment Procs")]
-        public float FullManaRegenFor15SecOnSpellcast
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Extra heal over time from direct healing spells")]
-        [Category("Old Equipment Procs")]
-        public float BonusHoTOnDirectHeals
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Lifebloom cost reduction")]
         [Category("Tree")]
@@ -2953,6 +2956,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT]; }
             set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Nourish spell power")]
         [Category("Tree")]
@@ -2961,8 +2965,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.NourishSpellpower]; }
             set { _rawAdditiveData[(int)AdditiveStat.NourishSpellpower] = value; }
         }
-
-		
+        #endregion
         #region Added by Rawr.Enhance
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3238,6 +3241,33 @@ namespace Rawr {
 
         #endregion
         #region Added by Rawr.Moonkin
+        // Starfire idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Starfire damage bonus")]
+        [Category("Moonkin")]
+        public float StarfireDmg
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.StarfireDmg]; }
+            set { _rawAdditiveData[(int)AdditiveStat.StarfireDmg] = value; }
+        }
+        // Unseen Moon idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Damage (10 sec on Moonfire)")]
+        [Category("Moonkin")]
+        public float UnseenMoonDamageBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.UnseenMoonDamageBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.UnseenMoonDamageBonus] = value; }
+        }
+
+        [DisplayName("Spell damage (8 sec, 25% chance on Starfire)")]
+        [Category("Moonkin")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float DruidAshtongueTrinket
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket] = value; }
+        }
 
         // Insect Swarm idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3413,94 +3443,6 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% Mangle (Bear) Threat")]
-        [Category("Feral")]
-        public float BonusMangleBearThreat
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Shield Slam Damage")]
-        [Category("Warrior")]
-        public float BonusShieldSlamDamage
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("Increased haste on Warrior 2-Piece T8 proc")]
-        public float BonusWarrior2PT8Haste
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Mortal Strike and Bloodthirst")]
-        public float MortalstrikeBloodthirstCritIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Devastate")]
-        public float DevastateCritIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Slam Damage")]
-        public float BonusSlamDamage
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Extra Rage Proc")]
-        public float DreadnaughtBonusRageProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc]; }
-			set { _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Mage")]
-        public float BonusMageNukeMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warlock")]
-        public float BonusWarlockNukeMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
         [DisplayName("% Chance to increase SB/Inc crit chance")]
         [Category("Old Equipment Procs")]
         public float CorruptionTriggersCrit
@@ -3509,35 +3451,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% damage bonus on Unstable Affliction and 10% on Immolate")]
-        [Category("Warlock")]
-        public float Warlock2T8
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T8]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T8] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% crit chance on Shadowbolt and Incinerate")]
-        [Category("Warlock")]
-        public float Warlock4T8
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warlock")]
-        public float BonusWarlockDotDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier] = value; }
-        }
-
+        #region Buffs/Debuffs
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Buffs / Debuffs")]
@@ -3637,6 +3551,56 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerMultiplier] = value; }
         }
+        #endregion
+
+        #region Added by Rawr.Mage
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Mage")]
+        public float BonusMageNukeMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Warlock
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warlock")]
+        public float BonusWarlockNukeMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% damage bonus on Unstable Affliction and 10% on Immolate")]
+        [Category("Warlock")]
+        public float Warlock2T8
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T8]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T8] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% crit chance on Shadowbolt and Incinerate")]
+        [Category("Warlock")]
+        public float Warlock4T8
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warlock")]
+        public float BonusWarlockDotDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier] = value; }
+        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -3647,7 +3611,7 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier] = value; }
         }
-
+        #endregion
         #region Added by Rawr.Hunter
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -3687,8 +3651,76 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Shield Slam Damage")]
+        [Category("Warrior")]
+        public float BonusShieldSlamDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("Increased haste on Warrior 2-Piece T8 proc")]
+        public float BonusWarrior2PT8Haste
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% increased critical strike chance on Mortal Strike and Bloodthirst")]
+        public float MortalstrikeBloodthirstCritIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% increased critical strike chance on Devastate")]
+        public float DevastateCritIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Slam Damage")]
+        public float BonusSlamDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Extra Rage Proc")]
+        public float DreadnaughtBonusRageProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc]; }
+			set { _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc] = value; }
+        }
         #endregion
         #region Added by Rawr.Feral
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Mangle (Bear) Threat")]
+        [Category("Feral")]
+        public float BonusMangleBearThreat
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat] = value; }
+        }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Feral")]

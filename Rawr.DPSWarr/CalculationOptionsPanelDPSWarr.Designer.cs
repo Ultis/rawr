@@ -35,6 +35,12 @@
             this.GB_Bosses = new System.Windows.Forms.GroupBox();
             this.LB_TargArmorDesc = new System.Windows.Forms.Label();
             this.GB_Rots = new System.Windows.Forms.GroupBox();
+            this.GB_Maintenance = new System.Windows.Forms.GroupBox();
+            this.CK_BattleShout = new System.Windows.Forms.CheckBox();
+            this.CK_Hamstring = new System.Windows.Forms.CheckBox();
+            this.CK_DemoShout = new System.Windows.Forms.CheckBox();
+            this.CK_Sunder = new System.Windows.Forms.CheckBox();
+            this.CK_Thunder = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.CB_DisarmingTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.CK_DisarmTargs = new System.Windows.Forms.CheckBox();
@@ -51,6 +57,7 @@
             this.TLP_Main.SuspendLayout();
             this.GB_Bosses.SuspendLayout();
             this.GB_Rots.SuspendLayout();
+            this.GB_Maintenance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_StunningTargsPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsPerc)).BeginInit();
@@ -203,25 +210,26 @@
             this.TLP_Main.SetColumnSpan(this.GB_Bosses, 2);
             this.GB_Bosses.Controls.Add(this.LB_TargArmorDesc);
             this.GB_Bosses.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GB_Bosses.Location = new System.Drawing.Point(3, 247);
+            this.GB_Bosses.Location = new System.Drawing.Point(3, 362);
             this.GB_Bosses.Name = "GB_Bosses";
-            this.GB_Bosses.Size = new System.Drawing.Size(255, 277);
+            this.GB_Bosses.Size = new System.Drawing.Size(255, 162);
             this.GB_Bosses.TabIndex = 12;
             this.GB_Bosses.TabStop = false;
             this.GB_Bosses.Text = "Bosses";
             // 
             // LB_TargArmorDesc
             // 
+            this.LB_TargArmorDesc.AutoSize = true;
             this.LB_TargArmorDesc.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LB_TargArmorDesc.Location = new System.Drawing.Point(3, 16);
             this.LB_TargArmorDesc.Name = "LB_TargArmorDesc";
-            this.LB_TargArmorDesc.Size = new System.Drawing.Size(249, 258);
+            this.LB_TargArmorDesc.Size = new System.Drawing.Size(0, 13);
             this.LB_TargArmorDesc.TabIndex = 0;
             // 
             // GB_Rots
             // 
-            this.GB_Rots.AutoSize = true;
             this.TLP_Main.SetColumnSpan(this.GB_Rots, 2);
+            this.GB_Rots.Controls.Add(this.GB_Maintenance);
             this.GB_Rots.Controls.Add(this.label2);
             this.GB_Rots.Controls.Add(this.CB_DisarmingTargsPerc);
             this.GB_Rots.Controls.Add(this.CK_DisarmTargs);
@@ -237,10 +245,79 @@
             this.GB_Rots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GB_Rots.Location = new System.Drawing.Point(3, 106);
             this.GB_Rots.Name = "GB_Rots";
-            this.GB_Rots.Size = new System.Drawing.Size(255, 135);
+            this.GB_Rots.Size = new System.Drawing.Size(255, 250);
             this.GB_Rots.TabIndex = 10;
             this.GB_Rots.TabStop = false;
             this.GB_Rots.Text = "Rotational Changes";
+            // 
+            // GB_Maintenance
+            // 
+            this.GB_Maintenance.Controls.Add(this.CK_BattleShout);
+            this.GB_Maintenance.Controls.Add(this.CK_Hamstring);
+            this.GB_Maintenance.Controls.Add(this.CK_DemoShout);
+            this.GB_Maintenance.Controls.Add(this.CK_Sunder);
+            this.GB_Maintenance.Controls.Add(this.CK_Thunder);
+            this.GB_Maintenance.Location = new System.Drawing.Point(6, 122);
+            this.GB_Maintenance.Name = "GB_Maintenance";
+            this.GB_Maintenance.Size = new System.Drawing.Size(243, 122);
+            this.GB_Maintenance.TabIndex = 14;
+            this.GB_Maintenance.TabStop = false;
+            this.GB_Maintenance.Text = "Abilities to Maintain";
+            // 
+            // CK_BattleShout
+            // 
+            this.CK_BattleShout.AutoSize = true;
+            this.CK_BattleShout.Location = new System.Drawing.Point(123, 42);
+            this.CK_BattleShout.Name = "CK_BattleShout";
+            this.CK_BattleShout.Size = new System.Drawing.Size(84, 17);
+            this.CK_BattleShout.TabIndex = 17;
+            this.CK_BattleShout.Text = "Battle Shout";
+            this.CK_BattleShout.UseVisualStyleBackColor = true;
+            this.CK_BattleShout.CheckedChanged += new System.EventHandler(this.CK_Maints_CheckedChanged);
+            // 
+            // CK_Hamstring
+            // 
+            this.CK_Hamstring.AutoSize = true;
+            this.CK_Hamstring.Location = new System.Drawing.Point(123, 19);
+            this.CK_Hamstring.Name = "CK_Hamstring";
+            this.CK_Hamstring.Size = new System.Drawing.Size(73, 17);
+            this.CK_Hamstring.TabIndex = 16;
+            this.CK_Hamstring.Text = "Hamstring";
+            this.CK_Hamstring.UseVisualStyleBackColor = true;
+            this.CK_Hamstring.CheckedChanged += new System.EventHandler(this.CK_Maints_CheckedChanged);
+            // 
+            // CK_DemoShout
+            // 
+            this.CK_DemoShout.AutoSize = true;
+            this.CK_DemoShout.Location = new System.Drawing.Point(6, 65);
+            this.CK_DemoShout.Name = "CK_DemoShout";
+            this.CK_DemoShout.Size = new System.Drawing.Size(117, 17);
+            this.CK_DemoShout.TabIndex = 15;
+            this.CK_DemoShout.Text = "Demoralizing Shout";
+            this.CK_DemoShout.UseVisualStyleBackColor = true;
+            this.CK_DemoShout.CheckedChanged += new System.EventHandler(this.CK_Maints_CheckedChanged);
+            // 
+            // CK_Sunder
+            // 
+            this.CK_Sunder.AutoSize = true;
+            this.CK_Sunder.Location = new System.Drawing.Point(6, 42);
+            this.CK_Sunder.Name = "CK_Sunder";
+            this.CK_Sunder.Size = new System.Drawing.Size(90, 17);
+            this.CK_Sunder.TabIndex = 14;
+            this.CK_Sunder.Text = "Sunder Armor";
+            this.CK_Sunder.UseVisualStyleBackColor = true;
+            this.CK_Sunder.CheckedChanged += new System.EventHandler(this.CK_Maints_CheckedChanged);
+            // 
+            // CK_Thunder
+            // 
+            this.CK_Thunder.AutoSize = true;
+            this.CK_Thunder.Location = new System.Drawing.Point(6, 19);
+            this.CK_Thunder.Name = "CK_Thunder";
+            this.CK_Thunder.Size = new System.Drawing.Size(86, 17);
+            this.CK_Thunder.TabIndex = 13;
+            this.CK_Thunder.Text = "Thunderclap";
+            this.CK_Thunder.UseVisualStyleBackColor = true;
+            this.CK_Thunder.CheckedChanged += new System.EventHandler(this.CK_Maints_CheckedChanged);
             // 
             // label2
             // 
@@ -374,8 +451,11 @@
             this.TLP_Main.ResumeLayout(false);
             this.TLP_Main.PerformLayout();
             this.GB_Bosses.ResumeLayout(false);
+            this.GB_Bosses.PerformLayout();
             this.GB_Rots.ResumeLayout(false);
             this.GB_Rots.PerformLayout();
+            this.GB_Maintenance.ResumeLayout(false);
+            this.GB_Maintenance.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_StunningTargsPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsPerc)).EndInit();
@@ -410,5 +490,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown CB_StunningTargsPerc;
         private System.Windows.Forms.CheckBox CK_StunningTargs;
+        private System.Windows.Forms.GroupBox GB_Maintenance;
+        private System.Windows.Forms.CheckBox CK_Thunder;
+        private System.Windows.Forms.CheckBox CK_BattleShout;
+        private System.Windows.Forms.CheckBox CK_Hamstring;
+        private System.Windows.Forms.CheckBox CK_DemoShout;
+        private System.Windows.Forms.CheckBox CK_Sunder;
     }
 }
