@@ -22,7 +22,12 @@ namespace Rawr.DPSWarr
         public bool MultipleTargets = false; public int MultipleTargetsPerc = 0;
         public bool MovingTargets = false; public int MovingTargetsPerc = 0;
         public bool StunningTargets = false; public int StunningTargetsPerc = 0;
-        public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 0;
+		public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 0;
+		public bool Mntn_Thunder = false;
+		public bool Mntn_Sunder = false;
+		public bool Mntn_Battle = false;
+		public bool Mntn_Demo = false;
+		public bool Mntn_Hamstring = false;
         public WarriorTalents talents = null;
         public string GetXml()
         {
