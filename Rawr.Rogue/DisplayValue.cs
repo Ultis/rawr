@@ -31,7 +31,7 @@ namespace Rawr.Rogue
         public static readonly DisplayValue Strength = new DisplayValue("Base Stats", "Strength");
         public static readonly DisplayValue Agility = new DisplayValue("Base Stats", "Agility");
         public static readonly DisplayValue AttackPower = new DisplayValue("Base Stats", "Attack Power");
-        public static readonly DisplayValue HasteRating = new DisplayValue("Base Stats", "Haste Rating");
+        public static readonly DisplayValue Haste = new DisplayValue("Base Stats", "Haste");
         public static readonly DisplayValue CritRating = new DisplayValue("Base Stats", "Crit Rating");
         public static readonly DisplayValue ArmorPenetration = new DisplayValue("Base Stats", "Armor Penetration");
         public static readonly DisplayValue MhWeaponDamage = new DisplayValue("Base Stats", "MH Weapon Damage");

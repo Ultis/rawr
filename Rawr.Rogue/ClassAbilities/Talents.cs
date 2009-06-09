@@ -100,7 +100,7 @@ namespace Rawr.Rogue.ClassAbilities
             }
         }
 
-        public static readonly Talents SwordSpecialization = new TalentBonusPulledFromList(() => _talents.SwordSpecialization, 0.01f, 0.02f, 0.03f, 0.04f, 0.5f);
+        public static readonly Talents SwordSpecialization = new TalentBonusPulledFromList(() => _talents.SwordSpecialization, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
         public static readonly Talents WeaponExpertise = new TalentBonusPulledFromList(() => _talents.WeaponExpertise, 5, 10);
         public static readonly Talents BladeTwisting = new TalentBonusPulledFromList(() => _talents.BladeTwisting, 0.05f, 0.1f);
         public static readonly Talents Vitality = new TalentBonusPulledFromList(() => _talents.Vitality, .8f, 1.6f, 2.5f);

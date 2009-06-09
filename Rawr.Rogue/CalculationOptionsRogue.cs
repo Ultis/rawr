@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using System.Windows.Forms;
 using Rawr.Rogue.ClassAbilities;
 using Rawr.Rogue.ComboPointGenerators;
 using Rawr.Rogue.Poisons;
@@ -13,21 +12,11 @@ namespace Rawr.Rogue
     {
         public string GetXml()
         {
-			try
-			{
-				var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
-				var xml = new StringBuilder();
-				var sw = new System.IO.StringWriter(xml);
-				s.Serialize(sw, this);
-				return xml.ToString();
-			}
-			catch (Exception ex)
-			{
-#if DEBUG
-				MessageBox.Show("DEBUG: Exception attempting to serialize CalculationOptionsRogue: " + ex.Message);
-#endif
-				return string.Empty;
-			}
+			var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
+			var xml = new StringBuilder();
+			var sw = new System.IO.StringWriter(xml);
+			s.Serialize(sw, this);
+			return xml.ToString();
         }
 
         public int TargetLevel;

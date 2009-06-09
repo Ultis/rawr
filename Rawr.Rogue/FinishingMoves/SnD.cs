@@ -11,6 +11,8 @@ namespace Rawr.Rogue.FinishingMoves
     {
         public const string NAME = "SnD";
 
+        private const float BASE_HASTE_BONUS = .4f;
+
         public override char Id { get { return 'S'; } }
 
         public override string Name { get { return NAME; } }
@@ -82,6 +84,11 @@ namespace Rawr.Rogue.FinishingMoves
         private static float GlyphOfSndBonus
         {
             get { return Glyphs.GlyphOfSliceandDice ? 3f : 0f; }
+        }
+
+        public static float CalcHasteBonus(CalculationOptionsRogue calcOpts, CycleTime cycleTime)
+        {
+            return BASE_HASTE_BONUS * UpTime(calcOpts, cycleTime);
         }
     }
 }

@@ -110,8 +110,15 @@ namespace Rawr.Rogue
             // CALCULATE OUTPUTS
             //------------------------------------------------------------------------------------
             var displayedValues = new CharacterCalculationsRogue(stats);
+            
             var whiteAttacks = new WhiteAttacks(combatFactors);
             var cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
+
+            //Now that we have the basics, reset for any SnD bonus
+            stats.PhysicalHaste += SnD.CalcHasteBonus(calcOpts, cycleTime);
+            whiteAttacks = new WhiteAttacks(combatFactors);
+            cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
+            var sndUpTime = SnD.UpTime(calcOpts, cycleTime);
             var cpgDps = calcOpts.CpGenerator.CalcCpgDps(calcOpts, combatFactors, stats, cycleTime);
 
             var totalFinisherDps = 0f;
@@ -125,7 +132,7 @@ namespace Rawr.Rogue
 
             var swordSpecDps = new SwordSpec().CalcDps(calcOpts, combatFactors, whiteAttacks, cycleTime);
             var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, displayedValues, cycleTime);
-            var sndUpTime = SnD.UpTime(calcOpts, cycleTime);
+            
 
             displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDps() + whiteAttacks.CalcOhWhiteDps() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
             displayedValues.OverallPoints = displayedValues.TotalDPS;
@@ -163,8 +170,8 @@ namespace Rawr.Rogue
             displayedValues.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
             displayedValues.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
             
-            displayedValues.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
-            displayedValues.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.BaseHaste <= 0 ? 0 : combatFactors.BaseHaste - 1) );
+            displayedValues.AddRoundedDisplayValue(DisplayValue.Haste, (combatFactors.Haste <= 0 ? 0 : combatFactors.Haste - 1)*100);
+            displayedValues.AddToolTip(DisplayValue.Haste, "Haste Rating: " + stats.HasteRating);
             
             displayedValues.AddRoundedDisplayValue(DisplayValue.SndUptime, sndUpTime*100f);
 
@@ -228,6 +235,11 @@ namespace Rawr.Rogue
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+
+            statsTotal.PhysicalHaste = (1f + (statsTotal.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
+            statsTotal.PhysicalHaste += Talents.BladeFlurry.Haste.Bonus;
+            statsTotal.PhysicalHaste += Talents.LightningReflexes.Haste.Bonus;
+
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration + Talents.SerratedBlades.ArmorPenetration.Bonus;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
@@ -238,11 +250,8 @@ namespace Rawr.Rogue
             statsTotal.PhysicalCrit += Talents.Malice.Bonus;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-
             statsTotal.Dodge += Talents.LightningReflexes.Dodge.Bonus + statsTotal.Agility*RogueConversions.AgilityToDodge;
-
             statsTotal.Parry += 5f+ Talents.Deflection.Bonus;  //base rogue parry is 5%
-
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
@@ -258,6 +267,16 @@ namespace Rawr.Rogue
             // T6 bonuses
             statsTotal.BonusCPGDamage = statsGearEnchantsBuffs.BonusCPGDamage;
             statsTotal.BonusSnDHaste = statsGearEnchantsBuffs.BonusSnDHaste;
+
+            //Berserking
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
+            {
+                statsTotal.AttackPower += 135f;  //taken straight from Elitist Jerks  
+            }
+            if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
+            {
+                statsTotal.AttackPower += 135f;  //taken straight from Elitist Jerks  
+            }
 
             //-----------------------------------------------------------------
             // FYI:  T7 and T8 are pulled from the base RAWR as true/false, 
@@ -368,6 +387,23 @@ namespace Rawr.Rogue
                            RogueT8TwoPieceBonus = stats.RogueT8TwoPieceBonus,
                            RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus
                        };
+        }
+
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+        	try
+			{
+				return IsEnchantWithSpecialProc(enchant) || HasRelevantStats(enchant.Stats);
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+        private static bool IsEnchantWithSpecialProc( Enchant enchant )
+        {
+            return enchant.Id == 3789;  //Berserking
         }
 
         public override bool HasRelevantStats(Stats stats)

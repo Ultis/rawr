@@ -51,12 +51,12 @@ namespace Rawr.Rogue
 
         private float MhSwingsPerSecond
         {
-			get { return (1f / _combatFactors.MainHand.Speed) * _combatFactors.BaseHaste; }
+			get { return (1f / _combatFactors.MainHand.Speed) * _combatFactors.Haste; }
         }
 
         private float OhSwingsPerSecond
         {
-			get { return (1f / _combatFactors.OffHand.Speed) * _combatFactors.BaseHaste; }
+            get { return (1f / _combatFactors.OffHand.Speed) * _combatFactors.Haste; }
         }
     }
 }

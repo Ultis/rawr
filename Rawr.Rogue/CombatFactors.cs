@@ -188,17 +188,11 @@ namespace Rawr.Rogue
             }
         }
 
-        public float BaseHaste
+        //Need to Add 30% SnD   formerly:  totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));  //TODO:  change from assuming SnD has a 100% uptime
+        public float Haste
         {
-            get
-            {
-                var totalHaste = 1f;
-                totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));  //TODO:  change from assuming SnD has a 100% uptime
-                totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-                totalHaste *= Talents.BladeFlurry.Haste.Multiplier;
-                totalHaste *= Talents.LightningReflexes.Haste.Multiplier;
-                return totalHaste;
-            }
+            get { return _stats.PhysicalHaste; }
+            set { _stats.PhysicalHaste = value; }
         }
 
         public float HitPercent
