@@ -926,7 +926,9 @@ namespace Rawr.Hunter
 	
 			//unmodified weapon damage, plus ammo, plus [RAP * 0.1 + 252]
 			double normalSteadyShotDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-			normalSteadyShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
+
+            //Leave out until character.Projectile no longer is null
+			//normalSteadyShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
 			normalSteadyShotDamage += 252 + RAP *0.1;
 			
 			
@@ -966,7 +968,8 @@ namespace Rawr.Hunter
 			#region May 2009 AutoShot
             //unmodified weapon damage, plus ammo, plus +damage from gear, plus [RAP / 14 * Weapon Speed]
 			double normalAutoShotDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-			normalAutoShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
+            //Leave out until character.Projectile no longer is null
+			//normalAutoShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
 			normalAutoShotDamage += statsBaseGear.WeaponDamage;
 			normalAutoShotDamage += RAP / 14 * character.Ranged.Item.Speed;
       
