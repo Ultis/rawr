@@ -200,7 +200,7 @@ namespace Rawr.Silverlight
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "character file (*.xml)|*.xml";
-            if ((bool)ofd.ShowDialog())
+            if (ofd.ShowDialog().GetValueOrDefault(false))
             {
                 using (StreamReader reader = ofd.File.OpenText())
                 {
@@ -209,9 +209,20 @@ namespace Rawr.Silverlight
             }
         }
 
+        private void ItemsAreLoaded(Character character)
+        {
+            Status.Close();
+            Character = character;
+        }
+
         private void SaveCharacter()
         {
-            new ErrorWindow() { Message = "Not yet implemented." }.Show();
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "character file (*.xml)|*.xml";
+            if (sfd.ShowDialog().GetValueOrDefault(false))
+            {
+                Character.Save(sfd.OpenFile());
+            }
         }
 
         private void LoadFromArmory()
@@ -267,9 +278,8 @@ namespace Rawr.Silverlight
                     if (newIndex == 1) NewCharacter();
                     else if (newIndex == 2) OpenCharacter();
                     else if (newIndex == 3) SaveCharacter();
-                    else if (newIndex == 4) SaveCharacter();
-                    else if (newIndex == 6) LoadFromArmory();
-                    //else if (newIndex == 7) LoadFromProfiler(0;
+                    else if (newIndex == 5) LoadFromArmory();
+                    //else if (newIndex == 6) LoadFromProfiler(0;
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
@@ -301,11 +311,18 @@ namespace Rawr.Silverlight
                     if (newIndex == 1) ShowItemEditor();
                     else if (newIndex == 2) ShowGemmingTemplates();
                     else if (newIndex == 3) ShowItemRefinement();
+                    else if (newIndex == 6) ShowOptimizer();
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
 
         }
+
+        private void ShowOptimizer()
+        {
+            new OptimizeWindow().Show();
+        }
+
         private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (HelpMenu != null)

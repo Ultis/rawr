@@ -54,7 +54,6 @@
 				<ComboBoxItem Content="New"/>
 				<ComboBoxItem Content="Open"/>
 				<ComboBoxItem Content="Save"/>
-                <ComboBoxItem Content="Save As"/>
                 <ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
 				<ComboBoxItem Content="Load from Armory"/>
                 <ComboBoxItem Content="Load from Character Profiler"/>

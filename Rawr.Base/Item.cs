@@ -1007,10 +1007,15 @@ namespace Rawr
 			{
 #if SILVERLIGHT
                 Armory.GetItem(id, ItemLoaded);
-                Item tempItem = new Item();
-                tempItem.Name = "[Downloading from Armory]";
-                tempItem.Id = id;
-                return tempItem;
+                if (cachedItem != null) return cachedItem;
+                else
+                {
+                    Item tempItem = new Item();
+                    tempItem.Name = "[Downloading from Armory]";
+                    tempItem.Id = id;
+                    ItemCache.AddItem(tempItem, false);
+                    return tempItem;
+                }
 #else
 				Item newItem = useWowhead ? Wowhead.GetItem(wowheadSite, id.ToString(), false) : Armory.GetItem(id);
                 if (newItem != null)
@@ -1038,10 +1043,9 @@ namespace Rawr
 		/// <summary>
 		/// Used by optimizer to cache dictionary search result
 		/// </summary>
-#if !SILVERLIGHT
         [XmlIgnore]
         internal Optimizer.ItemAvailabilityInformation AvailabilityInformation;
-#endif
+
 		#region IComparable<Item> Members
 
 		public int CompareTo(Item other)

@@ -77,6 +77,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Base\AvailableItemGenerator.cs">
+      <Link>AvailableItemGenerator.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
@@ -103,6 +106,15 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\ItemFilter.cs">
       <Link>ItemFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Optimizer.cs">
+      <Link>Optimizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\OptimizerBase.cs">
+      <Link>OptimizerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\OptimizerResults.cs">
+      <Link>OptimizerResults.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs">
       <Link>SavedTalentSpec.cs</Link>

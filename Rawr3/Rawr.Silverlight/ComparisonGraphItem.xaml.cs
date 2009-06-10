@@ -7,11 +7,86 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 namespace Rawr.Silverlight
 {
 	public partial class ComparisonGraphItem : UserControl
 	{
+
+        private ItemInstance itemInstance;
+        public ItemInstance ItemInstance
+        {
+            get { return itemInstance; }
+            set
+            {
+                itemInstance = value;
+                character_AvailableItemsChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private Item item;
+        public Item OtherItem
+        {
+            get { return item; }
+            set
+            {
+                item = value;
+                character_AvailableItemsChanged(this, EventArgs.Empty);
+            }
+        }
+
+
+        private Character character;
+        public Character Character
+        {
+            get { return character; }
+            set
+            {
+                if (character != null)
+                    character.AvailableItemsChanged -= new EventHandler(character_AvailableItemsChanged);
+                
+                character = value;
+
+                if (character != null)
+                    character.AvailableItemsChanged += new EventHandler(character_AvailableItemsChanged);
+                
+                character_AvailableItemsChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private void character_AvailableItemsChanged(object sender, EventArgs e)
+        {
+            if (Character != null && ((ItemInstance != null && ItemInstance.Id > 0) || (OtherItem != null && OtherItem.Id > 0)))
+            {
+                Character.ItemAvailability itemAvailability;
+                if (ItemInstance != null) itemAvailability = Character.GetItemAvailability(ItemInstance);
+                else itemAvailability = Character.GetItemAvailability(OtherItem);
+                switch (itemAvailability)
+                {
+                    case Character.ItemAvailability.RegemmingAllowed:
+                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond.png", UriKind.Relative));
+                        break;
+                    case Character.ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond3.png", UriKind.Relative));
+                        break;
+                    case Character.ItemAvailability.Available:
+                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond2.png", UriKind.Relative));
+                        break;
+                    case Character.ItemAvailability.AvailableWithEnchantRestrictions:
+                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond4.png", UriKind.Relative));
+                        break;
+                    case Character.ItemAvailability.NotAvailable:
+                        AvailableImage.Source = new BitmapImage(new Uri("../Images/DiamondOutline.png", UriKind.Relative));
+                        break;
+                }
+
+            }
+            else
+            {
+                AvailableImage.Source = null;
+            }
+        }
 
         public string Title
         {
@@ -83,7 +158,7 @@ namespace Rawr.Silverlight
                 if (maxTick == 0) PositiveStack.Visibility = Visibility.Collapsed;
                 else
                 {
-                    Grid.SetColumn(PositiveStack, minTick + 1);
+                    Grid.SetColumn(PositiveStack, minTick + 2);
                     Grid.SetColumnSpan(PositiveStack, maxTick);
                     PositiveStack.Visibility = Visibility.Visible;
                 }

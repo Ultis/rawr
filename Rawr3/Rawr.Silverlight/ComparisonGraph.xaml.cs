@@ -15,6 +15,18 @@ namespace Rawr.Silverlight
 	public partial class ComparisonGraph : UserControl
 	{
 
+        private Character character;
+        public Character Character
+        {
+            get { return character; }
+            set
+            {
+                character = value;
+                if (comparisonItems != null)
+                    foreach (ComparisonGraphItem cgi in comparisonItems) cgi.Character = character;
+            }
+        }
+
         private float minScale = 0;
         private float maxScale = 2;
 
@@ -109,6 +121,7 @@ namespace Rawr.Silverlight
                 if (i >= comparisonItems.Count)
                 {
                     item = new ComparisonGraphItem(LegendItems.Values);
+                    item.Character = Character;
                     comparisonItems.Add(item);
                     ItemStack.Children.Add(item);
                     item.NameGrid.MouseEnter += new MouseEventHandler(NameGrid_MouseEnter);
@@ -118,6 +131,8 @@ namespace Rawr.Silverlight
 
                 item.Title = c.Name;
                 item.Equipped = c.Equipped;
+                item.OtherItem = c.Item;
+                item.ItemInstance = c.ItemInstance;
                 item.MinScale = minScale;
                 item.MaxScale = maxScale;
 

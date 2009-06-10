@@ -47,9 +47,9 @@ namespace Rawr
             return v.position;
         }
 
-        public static IEnumerable<TOutput> ConvertAll<TInput, TOutput>(this IEnumerable<TInput> source, Converter<TInput, TOutput> converter)
+        public static List<TOutput> ConvertAll<TInput, TOutput>(this IEnumerable<TInput> source, Converter<TInput, TOutput> converter)
         {
-            return (from item in source select converter(item));
+            return new List<TOutput>((from item in source select converter(item)));
         }
 
 

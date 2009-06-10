@@ -2471,7 +2471,11 @@ namespace Rawr.Optimizer
             character.Class = parent.Character.Class;
             character.AssignAllTalentsFromCharacter(parent.Character, false);
             character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
+#if SILVERLIGHT
+            TalentsBase talents = ((TalentsBase)items[characterSlots + 3]).Clone();
+#else
             TalentsBase talents = (TalentsBase)((ICloneable)items[characterSlots + 3]).Clone();
+#endif
             items[characterSlots + 3] = talents;
             int[,] treeCount = new int[3, 11];
             for (int j = 0; j < talentItemCount; j++)

@@ -120,6 +120,9 @@
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\GemmingTemplateItem.xaml.cs">
+      <DependentUpon>GemmingTemplateItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GemmingTemplates.xaml.cs">
       <DependentUpon>GemmingTemplates.xaml</DependentUpon>
     </Compile>
@@ -131,6 +134,9 @@
     </Compile>
     <Compile Include="Dialogs\ItemBrowser.xaml.cs">
       <DependentUpon>ItemBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\OptimizeWindow.xaml.cs">
+      <DependentUpon>OptimizeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RelevantItemRefinement.xaml.cs">
       <DependentUpon>RelevantItemRefinement.xaml</DependentUpon>
@@ -222,6 +228,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\GemmingTemplateItem.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\GemmingTemplates.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -235,6 +245,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ItemBrowser.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\OptimizeWindow.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -416,6 +430,11 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Diamond.png" />
+    <Resource Include="Images\Diamond2.png" />
+    <Resource Include="Images\Diamond3.png" />
+    <Resource Include="Images\Diamond4.png" />
+    <Resource Include="Images\DiamondOutline.png" />
     <Resource Include="Images\temp.jpg" />
   </ItemGroup>
   <ItemGroup>

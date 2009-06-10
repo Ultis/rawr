@@ -173,8 +173,10 @@ namespace Rawr.Silverlight
 			comboBoxSort.Items.Clear();
 			comboBoxSort.Items.Add("Alphabetical");
 			comboBoxSort.Items.Add("Overall");
-			foreach (var kvp in Calculations.SubPointNameColors)
-				comboBoxSort.Items.Add(kvp.Key);
+            if (Calculations.Instance != null)
+            {
+                foreach (var kvp in Calculations.SubPointNameColors) comboBoxSort.Items.Add(kvp.Key);
+            }
 			comboBoxSort.SelectedIndex = 1;
 		}
 
@@ -204,7 +206,7 @@ namespace Rawr.Silverlight
 			BuildSorts();
 		}
 
-		void Calculations_ModelChanged(object sender, EventArgs e)
+		private void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			BuildSorts();
 		}

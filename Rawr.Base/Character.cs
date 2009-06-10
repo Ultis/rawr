@@ -161,9 +161,8 @@ namespace Rawr //O O . .
 		public int Level { get { return 80; } }
 
         public string CalculationToOptimize { get; set; }
-#if !SILVERLIGHT
+
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
-#endif
 
 		[XmlElement("WarriorTalents")]
 		public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } 
@@ -1800,7 +1799,7 @@ namespace Rawr //O O . .
 		}
     
 #if SILVERLIGHT
-        public void Save(TextWriter writer)
+        public void Save(Stream writer)
         {
             SerializeCalculationOptions();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
