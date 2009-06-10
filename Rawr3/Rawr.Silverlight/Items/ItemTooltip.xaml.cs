@@ -293,7 +293,7 @@ namespace Rawr.Silverlight
                     SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Gray);
                 else SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Black);
             }
-            if (actualItem.LocationInfo != null)
+            if (actualItem.Id > 0 && actualItem.Id < 100000)
             {
                 LocationLabel.Text = actualItem.LocationInfo.Description;
                 LocationLabel.Visibility = Visibility.Visible;

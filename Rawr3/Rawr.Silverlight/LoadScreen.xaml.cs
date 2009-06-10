@@ -19,8 +19,19 @@ namespace Rawr.Silverlight
 	{
         private event EventHandler LoadFinished;
 
-        private Dictionary<string, MethodInfo> Loaders;
-        private static Dictionary<string, MethodInfo> Savers;
+        private static Dictionary<string, Type> Classes;
+        private static List<string> WaitingFor;
+
+        static LoadScreen()
+        {
+            Classes = new Dictionary<string, Type>();
+            Classes["Talents.xml"] = typeof(SavedTalentSpec);
+            Classes["EnchantCache.xml"] = typeof(Enchant);
+            Classes["ItemCache.xml"] = typeof(ItemCache);
+            Classes["BuffCache.xml"] = typeof(Buff);
+            Classes["ItemSource.xml"] = typeof(LocationFactory);
+            Classes["ItemFilter.xml"] = typeof(ItemFilter);
+        }
 
         public LoadScreen()
         {
@@ -36,57 +47,43 @@ namespace Rawr.Silverlight
 
         public static void SaveFiles()
         {
-            Savers = new Dictionary<string, MethodInfo>();
-            Savers["Talents.xml"] = typeof(SavedTalentSpec).GetMethod("Save");
-            Savers["EnchantCache.xml"] = typeof(Enchant).GetMethod("Save");
-            Savers["ItemCache.xml"] = typeof(ItemCache).GetMethod("Save");
-            Savers["BuffCache.xml"] = typeof(Buff).GetMethod("Save");
-            Savers["ItemSource.xml"] = typeof(LocationFactory).GetMethod("Save");
-            Savers["ItemFilter.xml"] = typeof(ItemFilter).GetMethod("Save");
-
-            foreach (KeyValuePair<string, MethodInfo> kvp in Savers)
+            foreach (KeyValuePair<string, Type> kvp in Classes)
             {
-                StringWriter sw = new StringWriter();
-                kvp.Value.Invoke(null, new object[] { sw });
 
-                FileUtils f = new FileUtils(kvp.Key);
-                Stream writer = f.Writer;
-                StringReader reader = new StringReader(sw.ToString());
-
-                int READ_CHUNK = 1024 * 1024;
-                int WRITE_CHUNK = 1024 * 1024;
-                byte[] byteBuffer = new byte[READ_CHUNK];
-                char[] charBuffer = new char[READ_CHUNK];
-                while (true)
+                MethodInfo info = kvp.Value.GetMethod("Save");
+                if (info != null)
                 {
-                    int read = reader.Read(charBuffer, 0, READ_CHUNK);
-                    if (read <= 0) break;
-                    int to_write = read;
-                    while (to_write > 0)
-                    {
-                        for (int i = 0; i < to_write; i++) byteBuffer[i] = (byte)charBuffer[i];
-                        writer.Write(byteBuffer, 0, Math.Min(to_write, WRITE_CHUNK));
-                        to_write -= Math.Min(to_write, WRITE_CHUNK);
-                    }
-                }
-                writer.Close();
-                reader.Close();
+                    StringWriter sw = new StringWriter();
+                    info.Invoke(null, new object[] { sw });
 
-                DateTime written = DateTime.Now;
+                    FileUtils f = new FileUtils(kvp.Key);
+                    Stream writer = f.Writer;
+                    StringReader reader = new StringReader(sw.ToString());
+
+                    int READ_CHUNK = 1024 * 1024;
+                    int WRITE_CHUNK = 1024 * 1024;
+                    byte[] byteBuffer = new byte[READ_CHUNK];
+                    char[] charBuffer = new char[READ_CHUNK];
+                    while (true)
+                    {
+                        int read = reader.Read(charBuffer, 0, READ_CHUNK);
+                        if (read <= 0) break;
+                        int to_write = read;
+                        while (to_write > 0)
+                        {
+                            for (int i = 0; i < to_write; i++) byteBuffer[i] = (byte)charBuffer[i];
+                            writer.Write(byteBuffer, 0, Math.Min(to_write, WRITE_CHUNK));
+                            to_write -= Math.Min(to_write, WRITE_CHUNK);
+                        }
+                    }
+                    writer.Close();
+                    reader.Close();
+                }
             }
         }
 
         private void LoadFiles()
         {
-            Loaders = new Dictionary<string, MethodInfo>();
-            Loaders["Talents.xml"] = typeof(SavedTalentSpec).GetMethod("Load");
-            Loaders["EnchantCache.xml"] = typeof(Enchant).GetMethod("Load");
-            Loaders["ItemCache.xml"] = typeof(ItemCache).GetMethod("Load");
-            Loaders["BuffCache.xml"] = typeof(Buff).GetMethod("Load");
-            Loaders["ItemSource.xml"] = typeof(LocationFactory).GetMethod("Load");
-            Loaders["ItemFilter.xml"] = typeof(ItemFilter).GetMethod("Load");
-
-
             if (!FileUtils.HasQuota(20480))
             {
                 IncreaseQuota iq = new IncreaseQuota(20480);
@@ -110,10 +107,10 @@ namespace Rawr.Silverlight
                 Calculations.RegisterModel(typeof(Rawr.DPSWarr.CalculationsDPSWarr));
                 Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
 
-                string[] keys = new string[Loaders.Count];
-                Loaders.Keys.CopyTo(keys, 0);
+                WaitingFor = new List<string>(Classes.Keys);
+                string[] files = WaitingFor.ToArray();
 
-                foreach (string s in keys)
+                foreach (string s in files)
                 {
                     FileUtils f = new FileUtils(s);
                     f.DownloadIfNotExists(new EventHandler(fileLoaded));
@@ -132,14 +129,18 @@ namespace Rawr.Silverlight
         private void fileLoaded(object sender, EventArgs e)
         {
             FileUtils f = sender as FileUtils;
-            Loaders[f.Filename].Invoke(null, new object[] { new StreamReader(f.Reader, Encoding.UTF8) } );
-            Loaders.Remove(f.Filename);
+            MethodInfo info = Classes[f.Filename].GetMethod("Load");
+            if (info != null)
+            {
+                info.Invoke(null, new object[] { new StreamReader(f.Reader, Encoding.UTF8) });
+            }
+            WaitingFor.Remove(f.Filename);
             CheckLoadFinished();
         }
 
         public void CheckLoadFinished()
         {
-            if (Loaders.Count == 0)
+            if (WaitingFor.Count == 0)
             {
                 if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
             }

@@ -228,7 +228,6 @@ namespace Rawr.Silverlight
             {
                 Status.Show();
                 Armory.GetCharacter(ald.CharacterName, ald.Realm, ald.Region, armory_ResultReady);
-                StatusMessaging.UpdateStatus("Loading Character", "Queued");
             }
         }
 
@@ -236,10 +235,8 @@ namespace Rawr.Silverlight
         {
             if (newChar != null)
             {
-                StatusMessaging.UpdateStatus("Loading Character", "In Progress");
                 Character = newChar;
             }
-            StatusMessaging.UpdateStatusFinished("Loading Character");
             Status = null;
         }
 

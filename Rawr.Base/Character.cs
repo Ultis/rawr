@@ -1799,6 +1799,17 @@ namespace Rawr //O O . .
 			return clone;
 		}
     
+#if SILVERLIGHT
+        public void Save(TextWriter writer)
+        {
+            SerializeCalculationOptions();
+            _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Character));
+            serializer.Serialize(writer, this);
+            writer.Close();
+        }
+#else
         public void Save(string path)
         {
 			SerializeCalculationOptions();
@@ -1811,6 +1822,7 @@ namespace Rawr //O O . .
                 writer.Close();
             }
 		}
+#endif
 
 #if !SILVERLIGHT
         public static Character Load(string path)

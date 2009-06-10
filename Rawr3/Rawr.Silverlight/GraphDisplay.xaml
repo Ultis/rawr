@@ -40,7 +40,7 @@
 				<ComboBoxItem Content="Gems"/>
 				<ComboBoxItem Content="Buffs"/>
 				<ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
-				<ComboBoxItem Content="Talent Specs" IsEnabled="False"/>
+				<ComboBoxItem Content="Talent Specs"/>
 				<ComboBoxItem Content="Talents"/>
 				<ComboBoxItem Content="Glyphs"/>
 				<ComboBoxItem Content="Relative Stat Values"/>

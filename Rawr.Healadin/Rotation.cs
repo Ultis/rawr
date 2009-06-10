@@ -174,21 +174,23 @@ namespace Rawr.Healadin
             float remainingTime = FightLength * CalcOpts.Activity;
             remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
 
-
-            float hl_time = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
-            float fol_time = remainingTime - hl_time;
-            if (hl_time == 0)
+            if (remainingMana > 0)
             {
-                fol_time = Math.Min(remainingTime, remainingMana / fol.MPS());
+                float hl_time = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
+                float fol_time = remainingTime - hl_time;
+                if (hl_time == 0)
+                {
+                    fol_time = Math.Min(remainingTime, remainingMana / fol.MPS());
+                }
+
+                calc.HealedHL += hl.HPS() * hl_time;
+                calc.UsageHL += hl.MPS() * hl_time;
+                calc.RotationHL += hl_time;
+
+                calc.RotationFoL += fol_time;
+                calc.UsageFoL += fol.MPS() * fol_time;
+                calc.HealedFoL += fol.HPS() * fol_time;
             }
-
-            calc.HealedHL += hl.HPS() * hl_time;
-            calc.UsageHL += hl.MPS() * hl_time;
-            calc.RotationHL += hl_time;
-
-            calc.RotationFoL += fol_time;
-            calc.UsageFoL += fol.MPS() * fol_time;
-            calc.HealedFoL += fol.HPS() * fol_time;
 
             calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS;
 

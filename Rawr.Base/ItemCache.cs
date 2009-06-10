@@ -228,9 +228,13 @@ namespace Rawr
         {
             _items = new Dictionary<int, Item>();
             List<Item> listItems = new List<Item>();
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
-            listItems = (List<Item>)serializer.Deserialize(reader);
-            reader.Close();
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
+                listItems = (List<Item>)serializer.Deserialize(reader);
+                reader.Close();
+            }
+            catch { }
 
             if (listItems != null)
             {

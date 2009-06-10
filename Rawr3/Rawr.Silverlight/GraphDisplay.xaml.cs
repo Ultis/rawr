@@ -238,6 +238,41 @@ namespace Rawr.Silverlight
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
             }
+            else if (CurrentGraph == Graph.TalentSpecs)
+            {
+                List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
+                Character newChar = Character.Clone();
+
+                TalentsBase nothing = Character.CurrentTalents.Clone();
+                for (int i = 0; i < nothing.Data.Length; i++) nothing.Data[i] = 0;
+                for (int i = 0; i < nothing.GlyphData.Length; i++) nothing.GlyphData[i] = false;
+                newChar.CurrentTalents = nothing;
+
+                CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, true);
+                CharacterCalculationsBase newCalc;
+                ComparisonCalculationBase compare;
+
+                bool same, found = false;
+                foreach (SavedTalentSpec sts in SavedTalentSpec.SpecsFor(Character.Class))
+                {
+                    same = false;
+                    if (sts.Equals(Character.CurrentTalents)) same = true;
+                    newChar.CurrentTalents = sts.TalentSpec();
+                    newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, true);
+                    compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newCalc, sts.Name, same);
+                    compare.Item = null;
+                    talentCalculations.Add(compare);
+                    found = found || same;
+                }
+                if (!found)
+                {
+                    newCalc = Calculations.GetCharacterCalculations(Character, null, false, true, true);
+                    compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newCalc, "Custom", true);
+                    talentCalculations.Add(compare);
+                }
+                ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
+            }
             else if (CurrentGraph == Graph.Glyphs)
             {
                 List<ComparisonCalculationBase> glyphCalculations = new List<ComparisonCalculationBase>();
