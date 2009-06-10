@@ -232,14 +232,14 @@ namespace Rawr
         }
 
 #if SILVERLIGHT
-        public static void Save(StreamWriter writer)
+        public static void Save(TextWriter writer)
         {
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
             serializer.Serialize(writer, data);
             writer.Close();
         }
 
-        public static void Load(StreamReader reader)
+        public static void Load(TextReader reader)
         {
             try
             {

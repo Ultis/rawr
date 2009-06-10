@@ -27,7 +27,7 @@ namespace Rawr
         public SavedTalentSpec() : this("", null, 0, 0, 0) { ; }
 
         public static SavedTalentSpecList AllSpecs { get; private set; }
-        public static void Load(StreamReader reader)
+        public static void Load(TextReader reader)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Rawr
             }
         }
 
-        public static void Save(StreamWriter writer)
+        public static void Save(TextWriter writer)
         {
             XmlSerializer serilizer = new XmlSerializer(typeof(SavedTalentSpecList));
             serilizer.Serialize(writer, AllSpecs);

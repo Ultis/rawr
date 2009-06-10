@@ -99,7 +99,8 @@ namespace Rawr
 
             StatusMessaging.UpdateStatus("Get Talent Tree From Armory", "Downloading Talent Tree");
             StatusMessaging.UpdateStatusFinished("Get Character From Armory");
-            network = new NetworkUtils(TalentTree_Completed);
+            network.DocumentReady -= new EventHandler(CharacterSheet_Completed);
+            network.DocumentReady += new EventHandler(TalentTree_Completed);
             network.GetTalentTreeDocument(context.Name, context.Realm, context.Region);
         }
 

@@ -9,6 +9,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Reflection;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.IsolatedStorage;
+using System.Text;
 
 namespace Rawr.Silverlight
 {
@@ -43,8 +46,33 @@ namespace Rawr.Silverlight
 
             foreach (KeyValuePair<string, MethodInfo> kvp in Savers)
             {
+                StringWriter sw = new StringWriter();
+                kvp.Value.Invoke(null, new object[] { sw });
+
                 FileUtils f = new FileUtils(kvp.Key);
-                kvp.Value.Invoke(null, new object[] { f.Writer });
+                Stream writer = f.Writer;
+                StringReader reader = new StringReader(sw.ToString());
+
+                int READ_CHUNK = 1024 * 1024;
+                int WRITE_CHUNK = 1024 * 1024;
+                byte[] byteBuffer = new byte[READ_CHUNK];
+                char[] charBuffer = new char[READ_CHUNK];
+                while (true)
+                {
+                    int read = reader.Read(charBuffer, 0, READ_CHUNK);
+                    if (read <= 0) break;
+                    int to_write = read;
+                    while (to_write > 0)
+                    {
+                        for (int i = 0; i < to_write; i++) byteBuffer[i] = (byte)charBuffer[i];
+                        writer.Write(byteBuffer, 0, Math.Min(to_write, WRITE_CHUNK));
+                        to_write -= Math.Min(to_write, WRITE_CHUNK);
+                    }
+                }
+                writer.Close();
+                reader.Close();
+
+                DateTime written = DateTime.Now;
             }
         }
 
@@ -104,7 +132,7 @@ namespace Rawr.Silverlight
         private void fileLoaded(object sender, EventArgs e)
         {
             FileUtils f = sender as FileUtils;
-            Loaders[f.Filename].Invoke(null, new object[] { f.Reader } );
+            Loaders[f.Filename].Invoke(null, new object[] { new StreamReader(f.Reader, Encoding.UTF8) } );
             Loaders.Remove(f.Filename);
             CheckLoadFinished();
         }

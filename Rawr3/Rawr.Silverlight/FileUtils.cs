@@ -19,8 +19,8 @@ namespace Rawr.Silverlight
         public EventHandler StreamReady;
         public string Filename { get; private set; }
 
-        public StreamReader Reader { get { return new StreamReader(FileStream(false), Encoding.UTF8); } }
-        public StreamWriter Writer { get { return new StreamWriter(FileStream(true), Encoding.UTF8); } }
+        public IsolatedStorageFileStream Reader { get { return FileStream(false); } }
+        public IsolatedStorageFileStream Writer { get { return FileStream(true); } }
 
         public FileUtils(string filename)
         {

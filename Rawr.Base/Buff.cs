@@ -33,14 +33,14 @@ namespace Rawr
         }
 
 #if SILVERLIGHT
-        public static void Save(StreamWriter writer)
+        public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
             serializer.Serialize(writer, _allBuffs);
             writer.Close();
         }
 
-        public static void Load(StreamReader reader)
+        public static void Load(TextReader reader)
         {
             try
             {

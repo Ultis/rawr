@@ -46,8 +46,8 @@ namespace Rawr
 
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
 #if SILVERLIGHT
-        public static void Save(StreamWriter writer) { _instance.Save(writer); }
-        public static void Load(StreamReader reader) { _instance.Load(reader); }
+        public static void Save(TextWriter writer) { _instance.Save(writer); }
+        public static void Load(TextReader reader) { _instance.Load(reader); }
 #else
 		public static void Save() { _instance.Save(); }
 		public static void Load() { _instance.Load(); }
@@ -217,14 +217,14 @@ namespace Rawr
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
 #if SILVERLIGHT
-        public void Save(StreamWriter writer)
+        public void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
             serializer.Serialize(writer, new List<Item>(AllItems));
             writer.Close();
         }
 
-        public void Load(StreamReader reader)
+        public void Load(TextReader reader)
         {
             _items = new Dictionary<int, Item>();
             List<Item> listItems = new List<Item>();

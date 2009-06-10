@@ -826,14 +826,14 @@ namespace Rawr
             return item;
         }
 
-        public static void Save(StreamWriter writer)
+        public static void Save(TextWriter writer)
         {
             System.Xml.Serialization.XmlSerializer serializer = new XmlSerializer(typeof(ItemLocationDictionary));
             serializer.Serialize(writer, _allLocations);
             writer.Close();
         }
 
-        public static void Load(StreamReader reader)
+        public static void Load(TextReader reader)
         {
             ItemLocationDictionary sourceInfo = null;
             _allLocations.Clear();
