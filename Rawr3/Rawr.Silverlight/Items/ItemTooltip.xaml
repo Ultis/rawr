@@ -47,7 +47,8 @@
 				</StackPanel>
 				<TextBlock x:Name="SocketBonusLabel"/>
 				<TextBlock x:Name="EnchantLabel"/>
-			</StackPanel>
+                <TextBlock x:Name="LocationLabel"/>
+            </StackPanel>
 		</Grid>
 	</Popup>
 </UserControl>

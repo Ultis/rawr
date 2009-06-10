@@ -293,6 +293,12 @@ namespace Rawr.Silverlight
                     SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Gray);
                 else SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Black);
             }
+            if (actualItem.LocationInfo != null)
+            {
+                LocationLabel.Text = actualItem.LocationInfo.Description;
+                LocationLabel.Visibility = Visibility.Visible;
+            }
+            else LocationLabel.Visibility = Visibility.Collapsed;
         }
 
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }
