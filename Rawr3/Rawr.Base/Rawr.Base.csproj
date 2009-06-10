@@ -41,6 +41,30 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - WPF|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug - WPF\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release - WPF|AnyCPU' ">
+    <OutputPath>bin\Release - WPF\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
@@ -77,6 +101,9 @@
     <Compile Include="..\..\Rawr.Base\ItemCache.cs">
       <Link>ItemCache.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\ItemFilter.cs">
+      <Link>ItemFilter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs">
       <Link>SavedTalentSpec.cs</Link>
     </Compile>
@@ -106,13 +133,14 @@
     <Compile Include="Calculations.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="GemmingTemplate.cs" />
-    <Compile Include="ItemFilter.cs" />
+    <Compile Include="ItemLocation.cs" />
     <Compile Include="ListUtils.cs" />
     <Compile Include="NetworkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\CacheSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\NetworkSettings.cs" />
+    <Compile Include="XMLUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

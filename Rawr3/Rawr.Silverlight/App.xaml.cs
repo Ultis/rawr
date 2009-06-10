@@ -27,98 +27,27 @@ namespace Rawr.Silverlight
             InitializeComponent();
         }
 
-        private bool enchantFinished;
-        private bool buffFinished;
-        private bool itemcacheFinished;
-        private bool talentsFinished;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Grid g = new Grid();
-            g.Children.Add(new SplashScreen());
+            LoadScreen ls = new LoadScreen();
+            g.Children.Add(ls);
             RootVisual = g;
-
-            if (!FileUtils.HasQuota(20480))
-            {
-				IncreaseQuota iq = new IncreaseQuota(20480);
-                iq.Closed += new EventHandler(iq_Closed);
-                iq.Show();
-            }
-            else iq_Closed(this, EventArgs.Empty);
+            ls.StartLoading(new EventHandler(LoadFinished));
         }
 
-        private void iq_Closed(object sender, EventArgs e)
+        private void LoadFinished(object sender, EventArgs e)
         {
-            IncreaseQuota iq = sender as IncreaseQuota;
-            if (iq == null || iq.DialogResult.GetValueOrDefault(false))
-            {
-                Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
-                Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
-				Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
-				Calculations.RegisterModel(typeof(Rawr.Bear.CalculationsBear));
-				Calculations.RegisterModel(typeof(Rawr.Cat.CalculationsCat));
-				Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
-                Calculations.RegisterModel(typeof(Rawr.DPSWarr.CalculationsDPSWarr));
-				Calculations.LoadModel(typeof(Rawr.Healadin.CalculationsHealadin));
-
-                new FileUtils("BuffCache.xml", new EventHandler(BuffCache_Ready));
-                new FileUtils("EnchantCache.xml", new EventHandler(EnchantCache_Ready));
-                new FileUtils("ItemCache.xml", new EventHandler(ItemCache_Ready));
-                new FileUtils("Talents.xml", new EventHandler(Talents_Ready));
-            }
-            else
-            {
-                new ErrorWindow()
-                {
-                    Message = "Rawr will not work if you do not allow it to increase its available"
-                        + "storage size. Please referesh this page and accept to continue."
-                }.Show();
-            }
-        }
-
-        private void BuffCache_Ready(object sender, EventArgs e)
-        {
-            FileUtils f = sender as FileUtils;
-            buffFinished = true;
-            Buff.Load(f.Reader);
-            CheckLoadFinished();
-        }
-
-        private void EnchantCache_Ready(object sender, EventArgs e)
-        {
-            FileUtils f = sender as FileUtils;
-            enchantFinished = true;
-            Enchant.Load(f.Reader);
-            CheckLoadFinished();
-        }
-
-        private void ItemCache_Ready(object sender, EventArgs e)
-        {
-            FileUtils f = sender as FileUtils;
-            itemcacheFinished = true;
-            ItemCache.Load(f.Reader);
-            CheckLoadFinished();
-        }
-
-        private void Talents_Ready(object sender, EventArgs e)
-        {
-            FileUtils f = sender as FileUtils;
-            talentsFinished = true;
-            SavedTalentSpec.Load(f.Reader);
-            CheckLoadFinished();
-        }
-
-        public void CheckLoadFinished()
-        {
-            if (!itemcacheFinished || !enchantFinished || !buffFinished || !talentsFinished) return;
-
-            ((Grid)RootVisual).Children.RemoveAt(0);
-            ((Grid)RootVisual).Children.Add(new MainPage());
+            Grid g = RootVisual as Grid;
+            g.Children.RemoveAt(0);
+            g.Children.Add(new MainPage());
         }
 
         private void Application_Exit(object sender, EventArgs e)
         {
-
+            LoadScreen.SaveFiles();
         }
+
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             // If the app is running outside of the debugger then report the exception using

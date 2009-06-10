@@ -14,8 +14,8 @@ namespace Rawr
 
         public static BitmapImage ItemIcon(string name)
         {
-
-            return new BitmapImage(new Uri(string.Format("http://www.wowarmory.com/wow-icons/_images/64x64/{0}.jpg", name.ToLower())));
+            if (name == null) return null;
+            else return new BitmapImage(new Uri(string.Format("http://www.wowarmory.com/wow-icons/_images/64x64/{0}.jpg", name.ToLower())));
         }
 
         public static BitmapImage TreeBackground(Character.CharacterClass charClass, string talentTree)

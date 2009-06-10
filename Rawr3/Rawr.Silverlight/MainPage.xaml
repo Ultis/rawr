@@ -196,6 +196,6 @@
     		</controls:TabControl>
     	</controls:DockPanel>
     	<Button x:Name="OfflineInstallButton" HorizontalAlignment="Right" Content="Install Offline" Margin="0,4,8,4" Grid.Column="0" Click="InstallOffline" Grid.ColumnSpan="4"/>
-
+        
     </Grid>
 </UserControl>

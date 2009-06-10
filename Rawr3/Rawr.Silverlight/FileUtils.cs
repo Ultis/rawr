@@ -19,21 +19,31 @@ namespace Rawr.Silverlight
         public EventHandler StreamReady;
         public string Filename { get; private set; }
 
-        public StreamReader Reader { get { return new StreamReader(ISFileStream(), Encoding.UTF8); } }
-        public StreamWriter Write { get { return new StreamWriter(ISFileStream(), Encoding.UTF8); } }
+        public StreamReader Reader { get { return new StreamReader(FileStream(false), Encoding.UTF8); } }
+        public StreamWriter Writer { get { return new StreamWriter(FileStream(true), Encoding.UTF8); } }
 
-        public FileUtils(string filename, EventHandler callback)
+        public FileUtils(string filename)
+        {
+            Filename = filename;
+        }
+
+        public void DownloadIfNotExists(EventHandler callback)
         {
             StreamReady += callback;
-            Filename = filename;
-
+#if WPF
+            if (File.Exists(Filename))
+            {
+                if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
+            }
+#else
             if (IsolatedStorageFile.GetUserStoreForApplication().FileExists(Filename))
             {
                 if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
             }
+#endif
             else
             {
-                Uri url = new Uri(filename, UriKind.Relative);
+                Uri url = new Uri(Filename, UriKind.Relative);
                 WebClient client = new WebClient();
                 client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
                 client.DownloadStringAsync(url);
@@ -46,8 +56,12 @@ namespace Rawr.Silverlight
             {
                 using (StringReader sr = new StringReader(e.Result))
                 {
-                    IsolatedStorageFileStream isfs = ISFileStream();
+#if WPF
+                    StreamWriter sw = new StreamWriter(Filename);
+#else
+                    IsolatedStorageFileStream isfs = FileStream(true);
                     StreamWriter sw = new StreamWriter(isfs);
+#endif
                     sw.Write(sr.ReadToEnd());
                     sw.Close();
 
@@ -56,23 +70,37 @@ namespace Rawr.Silverlight
             if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
         }
 
-        private IsolatedStorageFileStream ISFileStream()
+#if WPF
+        private FileStream FileStream()
+        {
+            return new FileStream(Filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        }
+#else
+        private IsolatedStorageFileStream FileStream(bool write)
         {
             IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication();
-            if (isf.FileExists(Filename)) return new IsolatedStorageFileStream(Filename, FileMode.Open, isf);
-            else return new IsolatedStorageFileStream(Filename, FileMode.Create, IsolatedStorageFile.GetUserStoreForApplication());
+            if (write) return new IsolatedStorageFileStream(Filename, FileMode.Create, isf);
+            else return new IsolatedStorageFileStream(Filename, FileMode.OpenOrCreate, isf);
         }
+#endif
 
         public static bool HasQuota(int kilobytes)
         {
+#if WPF 
+            return true;
+#else
             using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
             {
                 return isf.Quota >= kilobytes * 1024;
             }
+#endif
         }
 
         public static bool EnsureQuota(int kilobytes)
         {
+#if WPF
+            return true;
+#else
             using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
             {
                 long newSpace = kilobytes * 1024; 
@@ -83,6 +111,7 @@ namespace Rawr.Silverlight
                 catch { }
             }
             return false;
+#endif
         }
     }
 }

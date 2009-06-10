@@ -33,10 +33,10 @@ namespace Rawr.Properties
             _default.ClassTalentURI = "http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js";
             _default.CharacterTalentURI = "Armory.aspx?character-talents.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-talents.xml?r={1}&cn={2}";
             _default.CharacterSheetURI = "Armory.aspx?character-sheet.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}";
-            _default.ItemToolTipSheetURI = "http://www.wowarmory.com/item-tooltip.xml?i={0}";
+            _default.ItemToolTipSheetURI = "Armory.aspx?item-tooltip.xml*i={0}";//"http://www.wowarmory.com/item-tooltip.xml?i={0}";
             _default.ItemUpgradeURI = "http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}";
             _default.TalentIconURI = "http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
-            _default.ItemInfoURI = "http://www.wowarmory.com/item-info.xml?i={0}";
+            _default.ItemInfoURI = "Armory.aspx?item-info.xml*i={0}";//"http://www.wowarmory.com/item-info.xml?i={0}";
             _default.DownloadItemInfo = false;
             _default.ProxyRequiresAuthentication = false;
             _default.UseDefaultAuthenticationForProxy = false;

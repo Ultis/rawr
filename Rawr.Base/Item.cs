@@ -73,7 +73,6 @@ namespace Rawr
         [XmlElement("LocalizedName")]
         public string _localizedName;
         
-#if !SILVERLIGHT
         public ItemLocation LocationInfo
 		{
 			get
@@ -81,7 +80,6 @@ namespace Rawr
 				return LocationFactory.Lookup(Id);
 			}
 		}
-#endif
 
         [XmlIgnore]
         public DateTime LastChange { get; set; }
@@ -1008,7 +1006,11 @@ namespace Rawr
 			else
 			{
 #if SILVERLIGHT
-                return new Item();
+                Armory.GetItem(id, ItemLoaded);
+                Item tempItem = new Item();
+                tempItem.Name = "[Downloading from Armory]";
+                tempItem.Id = id;
+                return tempItem;
 #else
 				Item newItem = useWowhead ? Wowhead.GetItem(wowheadSite, id.ToString(), false) : Armory.GetItem(id);
                 if (newItem != null)
@@ -1025,6 +1027,13 @@ namespace Rawr
 #endif
 			}
 		}
+
+#if SILVERLIGHT
+        private static void ItemLoaded(Item item)
+        {
+            ItemCache.AddItem(item, true);
+        }
+#endif
 
 		/// <summary>
 		/// Used by optimizer to cache dictionary search result

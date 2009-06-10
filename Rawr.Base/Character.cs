@@ -504,11 +504,20 @@ namespace Rawr //O O . .
         {
             _relevantItems.Clear();
             _relevantItemInstances.Clear();
+            for (int i = 0; i < _item.Length; i++)
+            {
+                if (_item[i] != null)
+                {
+                    _item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
+                }
+            }
         }
 
         public void InvalidateItemInstances(Character.CharacterSlot slot)
         {
             _relevantItemInstances.Remove(slot);
+            int i = (int)slot;
+            _item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
         }
 
         [XmlIgnore]

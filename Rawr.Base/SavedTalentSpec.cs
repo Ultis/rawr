@@ -98,7 +98,7 @@ namespace Rawr
         public bool Equals(TalentsBase talents)
         {
             if (talents == null || Spec == null) return false;
-            return talents.ToString().Equals(Spec);
+            return talents.ToString().Equals(Spec) && Class == talents.GetClass();
         }
     }
 }

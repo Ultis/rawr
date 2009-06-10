@@ -176,7 +176,7 @@ namespace Rawr.Silverlight
         private void Instance_ItemsChanged(object sender, EventArgs e)
         {
             Character.InvalidateItemInstances();
-            ComparisonGraph.UpdateGraph();
+            Character.OnCalculationsInvalidated();
         }
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)
@@ -227,19 +227,17 @@ namespace Rawr.Silverlight
             if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
                 Status.Show();
-                Armory armory = new Armory(armory_ResultReady);
-                armory.GetCharacter(ald.CharacterName, ald.Realm, ald.Region);
+                Armory.GetCharacter(ald.CharacterName, ald.Realm, ald.Region, armory_ResultReady);
                 StatusMessaging.UpdateStatus("Loading Character", "Queued");
             }
         }
 
-        private void armory_ResultReady(object sender, EventArgs e)
+        private void armory_ResultReady(Character newChar)
         {
-            Armory armory = sender as Armory;
-            if (armory != null && armory.CharacterResult != null)
+            if (newChar != null)
             {
                 StatusMessaging.UpdateStatus("Loading Character", "In Progress");
-                Character = armory.CharacterResult;
+                Character = newChar;
             }
             StatusMessaging.UpdateStatusFinished("Loading Character");
             Status = null;

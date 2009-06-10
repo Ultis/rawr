@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.IO;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+#if !SILVERLIGHT
+using System.Windows.Forms;
+#endif
 
 namespace Rawr
 {
-    
+#if SILVERLIGHT   
+    public class ItemFilterRegexList : List<ItemFilterRegex>
+#else
     public class ItemFilterRegexList : BindingList<ItemFilterRegex>
+#endif
     {
     }
 
@@ -71,7 +76,11 @@ namespace Rawr
                 if (_regex == null)
                 {
                     if (_pattern == null) _pattern = "";
+#if SILVERLIGHT
+                    _regex = new Regex(_pattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+#else
                     _regex = new Regex(_pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+#endif
                 }
                 return _regex;
             }
@@ -222,6 +231,28 @@ namespace Rawr
             return false;
         }
 
+#if SILVERLIGHT
+        public static void Save(StreamWriter writer)
+        {
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
+            serializer.Serialize(writer, data);
+            writer.Close();
+        }
+
+        public static void Load(StreamReader reader)
+        {
+            try
+            {
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
+                data = (ItemFilterData)serializer.Deserialize(reader);
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                data = new ItemFilterData();
+            }
+        } 
+#else
         public static void Save(string fileName)
         {
             using (StreamWriter writer = new StreamWriter(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName), false, Encoding.UTF8))
@@ -253,6 +284,7 @@ namespace Rawr
             {
                 data = new ItemFilterData();
             }
-        }    
+        } 
+#endif
     }
 }

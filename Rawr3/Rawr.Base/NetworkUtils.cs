@@ -18,7 +18,7 @@ namespace Rawr
     {
 
         public XDocument Result { get; private set; }
-        public EventHandler DocumentReady;
+        public event EventHandler DocumentReady;
 
         public NetworkUtils() { }
         public NetworkUtils(EventHandler handler) : this()
@@ -70,6 +70,16 @@ namespace Rawr
             _domains.Add(Character.CharacterRegion.KR, "kr");
             _domains.Add(Character.CharacterRegion.TW, "tw");
             _domains.Add(Character.CharacterRegion.CN, "cn");
+        }
+
+        internal void DownloadItemToolTipSheet(int id)
+        {
+            DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id), UriKind.Relative));
+        }
+
+        internal void DownloadItemInformation(int id)
+        {
+            DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.ItemInfoURI, id), UriKind.Relative));
         }
     }
 }
