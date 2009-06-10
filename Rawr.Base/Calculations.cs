@@ -1065,8 +1065,8 @@ namespace Rawr
 			try
 			{
                 bool b = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()));
-                b = (RelevantItemTypes.Contains(item.Type));
-                b = HasRelevantStats(item.Stats);
+                b &= (RelevantItemTypes.Contains(item.Type));
+                b &= HasRelevantStats(item.Stats);
                 return b;
             }
 			catch (Exception )
