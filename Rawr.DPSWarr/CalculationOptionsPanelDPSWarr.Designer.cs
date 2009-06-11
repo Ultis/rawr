@@ -35,16 +35,19 @@
             this.GB_Bosses = new System.Windows.Forms.GroupBox();
             this.LB_TargArmorDesc = new System.Windows.Forms.Label();
             this.GB_Rots = new System.Windows.Forms.GroupBox();
+            this.LB_Perc5 = new System.Windows.Forms.Label();
+            this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
+            this.CK_InBack = new System.Windows.Forms.CheckBox();
             this.GB_Maintenance = new System.Windows.Forms.GroupBox();
             this.CK_BattleShout = new System.Windows.Forms.CheckBox();
             this.CK_Hamstring = new System.Windows.Forms.CheckBox();
             this.CK_DemoShout = new System.Windows.Forms.CheckBox();
             this.CK_Sunder = new System.Windows.Forms.CheckBox();
             this.CK_Thunder = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.LB_Perc4 = new System.Windows.Forms.Label();
             this.CB_DisarmingTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.CK_DisarmTargs = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.LB_Perc3 = new System.Windows.Forms.Label();
             this.CB_StunningTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.CK_StunningTargs = new System.Windows.Forms.CheckBox();
             this.LB_Perc2 = new System.Windows.Forms.Label();
@@ -53,15 +56,26 @@
             this.CB_MultiTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.CK_MovingTargs = new System.Windows.Forms.CheckBox();
             this.CK_MultiTargs = new System.Windows.Forms.CheckBox();
+            this.PN_Lag = new System.Windows.Forms.Panel();
+            this.LB_Lag = new System.Windows.Forms.Label();
+            this.CB_Lag = new System.Windows.Forms.NumericUpDown();
+            this.PN_React = new System.Windows.Forms.Panel();
+            this.LB_React = new System.Windows.Forms.Label();
+            this.CB_React = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             this.TLP_Main.SuspendLayout();
             this.GB_Bosses.SuspendLayout();
             this.GB_Rots.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             this.GB_Maintenance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_StunningTargsPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).BeginInit();
+            this.PN_Lag.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
+            this.PN_React.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
             this.SuspendLayout();
             // 
             // CB_TargLvl
@@ -166,7 +180,9 @@
             this.TLP_Main.Controls.Add(this.LB_TargArmor, 0, 1);
             this.TLP_Main.Controls.Add(this.CB_TargArmor, 1, 1);
             this.TLP_Main.Controls.Add(this.CB_TargLvl, 1, 0);
-            this.TLP_Main.Controls.Add(this.GB_Rots, 0, 4);
+            this.TLP_Main.Controls.Add(this.GB_Rots, 0, 5);
+            this.TLP_Main.Controls.Add(this.PN_Lag, 0, 4);
+            this.TLP_Main.Controls.Add(this.PN_React, 1, 4);
             this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TLP_Main.Location = new System.Drawing.Point(0, 0);
             this.TLP_Main.Name = "TLP_Main";
@@ -210,9 +226,9 @@
             this.TLP_Main.SetColumnSpan(this.GB_Bosses, 2);
             this.GB_Bosses.Controls.Add(this.LB_TargArmorDesc);
             this.GB_Bosses.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GB_Bosses.Location = new System.Drawing.Point(3, 362);
+            this.GB_Bosses.Location = new System.Drawing.Point(3, 378);
             this.GB_Bosses.Name = "GB_Bosses";
-            this.GB_Bosses.Size = new System.Drawing.Size(255, 162);
+            this.GB_Bosses.Size = new System.Drawing.Size(255, 146);
             this.GB_Bosses.TabIndex = 12;
             this.GB_Bosses.TabStop = false;
             this.GB_Bosses.Text = "Bosses";
@@ -229,11 +245,14 @@
             // GB_Rots
             // 
             this.TLP_Main.SetColumnSpan(this.GB_Rots, 2);
+            this.GB_Rots.Controls.Add(this.LB_Perc5);
+            this.GB_Rots.Controls.Add(this.CB_InBackPerc);
+            this.GB_Rots.Controls.Add(this.CK_InBack);
             this.GB_Rots.Controls.Add(this.GB_Maintenance);
-            this.GB_Rots.Controls.Add(this.label2);
+            this.GB_Rots.Controls.Add(this.LB_Perc4);
             this.GB_Rots.Controls.Add(this.CB_DisarmingTargsPerc);
             this.GB_Rots.Controls.Add(this.CK_DisarmTargs);
-            this.GB_Rots.Controls.Add(this.label1);
+            this.GB_Rots.Controls.Add(this.LB_Perc3);
             this.GB_Rots.Controls.Add(this.CB_StunningTargsPerc);
             this.GB_Rots.Controls.Add(this.CK_StunningTargs);
             this.GB_Rots.Controls.Add(this.LB_Perc2);
@@ -243,12 +262,48 @@
             this.GB_Rots.Controls.Add(this.CK_MovingTargs);
             this.GB_Rots.Controls.Add(this.CK_MultiTargs);
             this.GB_Rots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GB_Rots.Location = new System.Drawing.Point(3, 106);
+            this.GB_Rots.Location = new System.Drawing.Point(3, 132);
             this.GB_Rots.Name = "GB_Rots";
-            this.GB_Rots.Size = new System.Drawing.Size(255, 250);
+            this.GB_Rots.Size = new System.Drawing.Size(255, 240);
             this.GB_Rots.TabIndex = 10;
             this.GB_Rots.TabStop = false;
             this.GB_Rots.Text = "Rotational Changes";
+            // 
+            // LB_Perc5
+            // 
+            this.LB_Perc5.AutoSize = true;
+            this.LB_Perc5.Location = new System.Drawing.Point(234, 124);
+            this.LB_Perc5.Name = "LB_Perc5";
+            this.LB_Perc5.Size = new System.Drawing.Size(15, 13);
+            this.LB_Perc5.TabIndex = 17;
+            this.LB_Perc5.Text = "%";
+            // 
+            // CB_InBackPerc
+            // 
+            this.CB_InBackPerc.Location = new System.Drawing.Point(129, 122);
+            this.CB_InBackPerc.Name = "CB_InBackPerc";
+            this.CB_InBackPerc.Size = new System.Drawing.Size(103, 20);
+            this.CB_InBackPerc.TabIndex = 16;
+            this.CB_InBackPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_InBackPerc.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.CB_InBackPerc.ValueChanged += new System.EventHandler(this.CB_InBack_ValueChanged);
+            // 
+            // CK_InBack
+            // 
+            this.CK_InBack.AutoSize = true;
+            this.CK_InBack.Checked = true;
+            this.CK_InBack.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CK_InBack.Location = new System.Drawing.Point(6, 123);
+            this.CK_InBack.Name = "CK_InBack";
+            this.CK_InBack.Size = new System.Drawing.Size(107, 17);
+            this.CK_InBack.TabIndex = 15;
+            this.CK_InBack.Text = "Standing in Back";
+            this.CK_InBack.UseVisualStyleBackColor = true;
+            this.CK_InBack.CheckedChanged += new System.EventHandler(this.CK_InBack_CheckedChanged);
             // 
             // GB_Maintenance
             // 
@@ -257,9 +312,9 @@
             this.GB_Maintenance.Controls.Add(this.CK_DemoShout);
             this.GB_Maintenance.Controls.Add(this.CK_Sunder);
             this.GB_Maintenance.Controls.Add(this.CK_Thunder);
-            this.GB_Maintenance.Location = new System.Drawing.Point(6, 122);
+            this.GB_Maintenance.Location = new System.Drawing.Point(6, 148);
             this.GB_Maintenance.Name = "GB_Maintenance";
-            this.GB_Maintenance.Size = new System.Drawing.Size(243, 122);
+            this.GB_Maintenance.Size = new System.Drawing.Size(243, 87);
             this.GB_Maintenance.TabIndex = 14;
             this.GB_Maintenance.TabStop = false;
             this.GB_Maintenance.Text = "Abilities to Maintain";
@@ -319,14 +374,14 @@
             this.CK_Thunder.UseVisualStyleBackColor = true;
             this.CK_Thunder.CheckedChanged += new System.EventHandler(this.CK_Maints_CheckedChanged);
             // 
-            // label2
+            // LB_Perc4
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(234, 98);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(15, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "%";
+            this.LB_Perc4.AutoSize = true;
+            this.LB_Perc4.Location = new System.Drawing.Point(234, 98);
+            this.LB_Perc4.Name = "LB_Perc4";
+            this.LB_Perc4.Size = new System.Drawing.Size(15, 13);
+            this.LB_Perc4.TabIndex = 12;
+            this.LB_Perc4.Text = "%";
             // 
             // CB_DisarmingTargsPerc
             // 
@@ -336,6 +391,11 @@
             this.CB_DisarmingTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_DisarmingTargsPerc.TabIndex = 11;
             this.CB_DisarmingTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_DisarmingTargsPerc.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.CB_DisarmingTargsPerc.ValueChanged += new System.EventHandler(this.CB_DisarmingTargs_ValueChanged);
             // 
             // CK_DisarmTargs
@@ -349,14 +409,14 @@
             this.CK_DisarmTargs.UseVisualStyleBackColor = true;
             this.CK_DisarmTargs.CheckedChanged += new System.EventHandler(this.CK_DisarmingTargs_CheckedChanged);
             // 
-            // label1
+            // LB_Perc3
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(234, 72);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "%";
+            this.LB_Perc3.AutoSize = true;
+            this.LB_Perc3.Location = new System.Drawing.Point(234, 72);
+            this.LB_Perc3.Name = "LB_Perc3";
+            this.LB_Perc3.Size = new System.Drawing.Size(15, 13);
+            this.LB_Perc3.TabIndex = 9;
+            this.LB_Perc3.Text = "%";
             // 
             // CB_StunningTargsPerc
             // 
@@ -366,6 +426,11 @@
             this.CB_StunningTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_StunningTargsPerc.TabIndex = 8;
             this.CB_StunningTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_StunningTargsPerc.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.CB_StunningTargsPerc.ValueChanged += new System.EventHandler(this.CB_StunningTargs_ValueChanged);
             // 
             // CK_StunningTargs
@@ -405,6 +470,11 @@
             this.CB_MoveTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_MoveTargsPerc.TabIndex = 4;
             this.CB_MoveTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_MoveTargsPerc.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.CB_MoveTargsPerc.ValueChanged += new System.EventHandler(this.CB_MovingTargs_ValueChanged);
             // 
             // CB_MultiTargsPerc
@@ -415,6 +485,11 @@
             this.CB_MultiTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_MultiTargsPerc.TabIndex = 3;
             this.CB_MultiTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_MultiTargsPerc.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.CB_MultiTargsPerc.ValueChanged += new System.EventHandler(this.CB_MultiTargs_ValueChanged);
             // 
             // CK_MovingTargs
@@ -439,6 +514,89 @@
             this.CK_MultiTargs.UseVisualStyleBackColor = true;
             this.CK_MultiTargs.CheckedChanged += new System.EventHandler(this.CK_MultiTargs_CheckedChanged);
             // 
+            // PN_Lag
+            // 
+            this.PN_Lag.AutoSize = true;
+            this.PN_Lag.Controls.Add(this.LB_Lag);
+            this.PN_Lag.Controls.Add(this.CB_Lag);
+            this.PN_Lag.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PN_Lag.Location = new System.Drawing.Point(0, 103);
+            this.PN_Lag.Margin = new System.Windows.Forms.Padding(0);
+            this.PN_Lag.Name = "PN_Lag";
+            this.PN_Lag.Size = new System.Drawing.Size(130, 26);
+            this.PN_Lag.TabIndex = 13;
+            // 
+            // LB_Lag
+            // 
+            this.LB_Lag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.LB_Lag.AutoSize = true;
+            this.LB_Lag.Location = new System.Drawing.Point(3, 5);
+            this.LB_Lag.Name = "LB_Lag";
+            this.LB_Lag.Size = new System.Drawing.Size(25, 13);
+            this.LB_Lag.TabIndex = 1;
+            this.LB_Lag.Text = "Lag";
+            // 
+            // CB_Lag
+            // 
+            this.CB_Lag.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_Lag.Location = new System.Drawing.Point(53, 3);
+            this.CB_Lag.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.CB_Lag.Name = "CB_Lag";
+            this.CB_Lag.Size = new System.Drawing.Size(75, 20);
+            this.CB_Lag.TabIndex = 0;
+            this.CB_Lag.ValueChanged += new System.EventHandler(this.CB_Latency_ValueChanged);
+            // 
+            // PN_React
+            // 
+            this.PN_React.AutoSize = true;
+            this.PN_React.Controls.Add(this.LB_React);
+            this.PN_React.Controls.Add(this.CB_React);
+            this.PN_React.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PN_React.Location = new System.Drawing.Point(130, 103);
+            this.PN_React.Margin = new System.Windows.Forms.Padding(0);
+            this.PN_React.Name = "PN_React";
+            this.PN_React.Size = new System.Drawing.Size(131, 26);
+            this.PN_React.TabIndex = 14;
+            // 
+            // LB_React
+            // 
+            this.LB_React.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.LB_React.AutoSize = true;
+            this.LB_React.Location = new System.Drawing.Point(3, 5);
+            this.LB_React.Name = "LB_React";
+            this.LB_React.Size = new System.Drawing.Size(36, 13);
+            this.LB_React.TabIndex = 1;
+            this.LB_React.Text = "React";
+            // 
+            // CB_React
+            // 
+            this.CB_React.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_React.Location = new System.Drawing.Point(53, 3);
+            this.CB_React.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.CB_React.Name = "CB_React";
+            this.CB_React.Size = new System.Drawing.Size(75, 20);
+            this.CB_React.TabIndex = 0;
+            this.CB_React.Value = new decimal(new int[] {
+            220,
+            0,
+            0,
+            0});
+            this.CB_React.ValueChanged += new System.EventHandler(this.CB_Latency_ValueChanged);
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,12 +612,19 @@
             this.GB_Bosses.PerformLayout();
             this.GB_Rots.ResumeLayout(false);
             this.GB_Rots.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             this.GB_Maintenance.ResumeLayout(false);
             this.GB_Maintenance.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_StunningTargsPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).EndInit();
+            this.PN_Lag.ResumeLayout(false);
+            this.PN_Lag.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).EndInit();
+            this.PN_React.ResumeLayout(false);
+            this.PN_React.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_React)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -484,10 +649,10 @@
         private System.Windows.Forms.NumericUpDown CB_MoveTargsPerc;
         private System.Windows.Forms.NumericUpDown CB_MultiTargsPerc;
         private System.Windows.Forms.Label LB_Perc2;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label LB_Perc4;
         private System.Windows.Forms.NumericUpDown CB_DisarmingTargsPerc;
         private System.Windows.Forms.CheckBox CK_DisarmTargs;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label LB_Perc3;
         private System.Windows.Forms.NumericUpDown CB_StunningTargsPerc;
         private System.Windows.Forms.CheckBox CK_StunningTargs;
         private System.Windows.Forms.GroupBox GB_Maintenance;
@@ -496,5 +661,14 @@
         private System.Windows.Forms.CheckBox CK_Hamstring;
         private System.Windows.Forms.CheckBox CK_DemoShout;
         private System.Windows.Forms.CheckBox CK_Sunder;
+        private System.Windows.Forms.Label LB_Perc5;
+        private System.Windows.Forms.NumericUpDown CB_InBackPerc;
+        private System.Windows.Forms.CheckBox CK_InBack;
+        private System.Windows.Forms.Panel PN_Lag;
+        private System.Windows.Forms.Panel PN_React;
+        private System.Windows.Forms.Label LB_Lag;
+        private System.Windows.Forms.NumericUpDown CB_Lag;
+        private System.Windows.Forms.Label LB_React;
+        private System.Windows.Forms.NumericUpDown CB_React;
     }
 }

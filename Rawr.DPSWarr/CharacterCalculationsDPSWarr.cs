@@ -2,40 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.DPSWarr
-{
-    public class CharacterCalculationsDPSWarr : CharacterCalculationsBase
-    {
+namespace Rawr.DPSWarr {
+    public class CharacterCalculationsDPSWarr : CharacterCalculationsBase {
         public Stats BasicStats { get; set; }
         public Skills SkillAttacks { get; set; }
+        public CombatFactors combatFactors { get; set; }
         public Rotation Rot { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
-        //public AbilityModelList Abilities { get; set; }
 
         private float _overallPoints = 0f;
-        public override float OverallPoints {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
-        }
-
+        public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
         private float[] _subPoints = new float[] { 0f };
-        public override float[] SubPoints {
-            get { return _subPoints; }
-            set { _subPoints = value; }
-        }
-        
-        public float TotalDPS {
-            get { return _subPoints[0];}
-            set { _subPoints[0] = value; }
-        }
-
+        public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
+        public float TotalDPS { get { return _subPoints[0];} set { _subPoints[0] = value; } }
         public float TotalDPS2 { get; set; }
-
         public int TargetLevel { get; set; }
-
         public float Duration { get; set; }
         public float BaseHealth { get; set; }
-        // Attack Table
+        #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
         public float HitPercent { get; set; }
@@ -48,7 +32,8 @@ namespace Rawr.DPSWarr
         public float CritPercent { get; set; }
         public float MhCrit { get; set; }
         public float OhCrit { get; set; }
-        // Offensive
+        #endregion
+        #region Offensive
         public float ArmorPenetrationMaceSpec { get; set; }
         public float ArmorPenetrationStance { get; set; }
         public float ArmorPenetrationRating { get; set; }
@@ -59,16 +44,18 @@ namespace Rawr.DPSWarr
         public float HastePercent { get; set; }
         public float WeaponSpeed { get; set; }
         public float TeethBonus { get; set; }
-        // DPS
+        #endregion
+        #region DPS
         public float WhiteDPS { get; set; }
         public float WhiteDmg { get; set; }
         public float WhiteDPSMH { get; set; }
         public float WhiteDPSOH { get; set; }
-        //
+        public float TotalDamagePerSecond { get; set; }
+        #endregion
+        #region Abilities
         public Skills.HeroicStrike HS { get; set; }
         public Skills.Cleave CL { get; set; }
         public Skills.OnAttack Which { get; set; }
-        //
         public Skills.DeepWounds DW { get; set; }
         public Skills.Slam SL { get; set; }
         public Skills.Rend RD { get; set; }
@@ -82,14 +69,15 @@ namespace Rawr.DPSWarr
         public Skills.BloodThirst BT { get; set; }
         public Skills.WhirlWind WW { get; set; }
         public Skills.ThunderClap TH { get; set; }
-        public float TotalDamagePerSecond { get; set; }
-        // Neutral
+        #endregion
+        #region Neutral
         public float WhiteRage { get; set; }
         public float OtherRage { get; set; }
         public float FreeRage { get; set; }
         public float Stamina { get; set; }
         public float Health { get; set; }
-        // Defensive
+        #endregion
+        #region Defensive
         public float Armor { get; set; }
         public float CritReduction { get; set; }
         public float ArmorReduction { get; set; }
@@ -100,16 +88,11 @@ namespace Rawr.DPSWarr
         public float DodgedAttacks { get; set; }
         public float ParriedAttacks { get; set; }
         public float BlockedAttacks { get; set; }
-        // PvP
+        #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            WarriorTalents talents = new WarriorTalents();
-            Character character = new Character();
-            CombatFactors combatFactors = new CombatFactors(character, BasicStats);
             string format = "";
-            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, BasicStats, combatFactors, character);
-            if (SkillAttacks == null){SkillAttacks = new Skills(character,talents, BasicStats, combatFactors, whiteAttacks);}
 
             // Base Stats
             dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}",BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
@@ -179,7 +162,7 @@ namespace Rawr.DPSWarr
                                 Environment.NewLine + "Off Hand- {5:0.00}" + 
                                 Environment.NewLine + "{6:00.0%} of DPS",
                                 WhiteDPS,WhiteDmg,WhiteRage,0f,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
-            dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}", TotalDPS,TotalDPS*BT.GetRotation(),TotalDPS*Duration));
+            dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}*"+Rot.GCDUsage, TotalDPS,TotalDPS*BT.GetRotation(),TotalDPS*Duration));
             // Rage
             dictValues.Add("Generated White DPS Rage",  string.Format("{0:00.000}",WhiteRage));
             dictValues.Add("Generated Other Rage",      string.Format("{0:00.000}",OtherRage));
@@ -190,15 +173,38 @@ namespace Rawr.DPSWarr
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
                 case "Health": return BasicStats.Health;
-                case "Haste Rating": return BasicStats.HasteRating;
-                case "Expertise Rating": return BasicStats.ExpertiseRating;
-                case "Hit Rating": return BasicStats.HitRating;
-                case "Enemy Avoidance %": return BasicStats.Miss + BasicStats.Dodge;
-                case "Crit Rating": return BasicStats.CritRating;
-                case "Agility": return BasicStats.Agility;
+                case "Resilience": return BasicStats.Resilience;
+                case "Armor": return BasicStats.Armor + BasicStats.BonusArmor;
+
+                case "Strength": return BasicStats.Strength;
                 case "Attack Power": return BasicStats.AttackPower;
-                case "Armor Penetration": return BasicStats.ArmorPenetration;
+
+                case "Agility": return BasicStats.Agility;
+                case "Crit Rating": return BasicStats.CritRating;
+                case "Crit %": return combatFactors.MhCrit;
+
+                case "Haste Rating": return BasicStats.HasteRating;
+                case "Haste %": return combatFactors.TotalHaste;
+
                 case "Armor Penetration Rating": return BasicStats.ArmorPenetrationRating;
+                case "Armor Penetration %": return BasicStats.ArmorPenetration;
+
+                case "Hit Rating": return BasicStats.HitRating;
+                case "Hit %": return combatFactors.HitPerc;
+                case "White Miss %": return combatFactors.WhiteMissChance;
+                case "Yellow Miss %": return combatFactors.YellowMissChance;
+
+                case "Expertise Rating": return BasicStats.ExpertiseRating;
+                case "Expertise": return BasicStats.Expertise;
+                case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, Character.CharacterClass.Warrior);
+                case "Dodge %": return combatFactors.MhDodgeChance;
+                case "Parry %": return combatFactors.MhParryChance;
+
+                case "Chance to be Avoided %": return combatFactors.YellowMissChance
+                    + StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, Character.CharacterClass.Warrior);
+
+                //case "Threat Reduction": return ThreatReduction;
+                //case "Threat Per Second": return ThreatPerSecond;*/
             }
             return 0.0f;
         }

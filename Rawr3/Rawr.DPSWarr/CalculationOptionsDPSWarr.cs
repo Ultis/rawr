@@ -10,24 +10,30 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Text;
 
-namespace Rawr.DPSWarr
-{
-
-    public class CalculationOptionsDPSWarr : ICalculationOptionBase
-    {
+namespace Rawr.DPSWarr {
+    public class CalculationOptionsDPSWarr : ICalculationOptionBase {
         public int TargetLevel = 83;
         public int TargetArmor = 10643;
-        public float Duration = 300;
+        public float Duration = 300f;
         public bool FuryStance = true;
-        public bool MultipleTargets = false; public int MultipleTargetsPerc = 0;
-        public bool MovingTargets = false; public int MovingTargetsPerc = 0;
-        public bool StunningTargets = false; public int StunningTargetsPerc = 0;
-		public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 0;
-		public bool Mntn_Thunder = false;
+        // Rotational Changes
+        public bool MultipleTargets = false; public int MultipleTargetsPerc = 100;
+        public bool MovingTargets = false; public int MovingTargetsPerc = 100;
+        public bool StunningTargets = false; public int StunningTargetsPerc = 100;
+		public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
+        public bool InBack = true; public int InBackPerc = 100;
+        // Abilities to Maintain
+        public bool Mntn_Thunder = false;
 		public bool Mntn_Sunder = false;
 		public bool Mntn_Battle = false;
 		public bool Mntn_Demo = false;
 		public bool Mntn_Hamstring = false;
+        // Latency
+        public float Lag = 179f;
+        public float React = 220f;
+        public float GetReact() { return (float)Math.Max(0f, React - 250f); }
+        public float GetLatency() { return (Lag + GetReact()) / 1000f; }
+        //
         public WarriorTalents talents = null;
         public string GetXml()
         {

@@ -7,31 +7,11 @@ namespace Rawr.Moonkin
     class CharacterCalculationsMoonkin : CharacterCalculationsBase
     {
         private float overallPoints = 0f;
-        public override float OverallPoints
-        {
-            get
-            {
-                return overallPoints;
-            }
-            set
-            {
-                overallPoints = value;
-            }
-        }
+        public override float OverallPoints { get { return overallPoints; } set { overallPoints = value; } }
 
         private float[] subPoints = new float[] { 0f, 0f };
 
-        public override float[] SubPoints
-        {
-            get
-            {
-                return subPoints;
-            }
-            set
-            {
-                subPoints = value;
-            }
-        }
+        public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
 
         public float SpellHit { get; set; }
         public float SpellCrit { get; set; }
@@ -45,36 +25,13 @@ namespace Rawr.Moonkin
         public bool Scryer { get; set; }
         public SpellRotation SelectedRotation { get; set; }
         public SpellRotation BurstDPSRotation { get; set; }
-        public string RotationName
-        {
-            get
-            {
-                return SelectedRotation.Name;
-            }
-        }
-        public string DpsRotationName
-        {
-            get
-            {
-                return BurstDPSRotation.Name;
-            }
-        }
+        public string RotationName { get { return SelectedRotation.Name; } }
+        public string DpsRotationName { get { return BurstDPSRotation.Name; } }
         public Dictionary<string, RotationData> Rotations { get; set; }
         private Stats baseStats;
-        public Stats BasicStats
-        {
-            get
-            {
-                return baseStats;
-            }
-            set
-            {
-                baseStats = value;
-            }
-        }
+        public Stats BasicStats { get { return baseStats; } set { baseStats = value; } }
 
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-        {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> retVal = new Dictionary<string, string>();
             retVal.Add("Health", baseStats.Health.ToString());
             retVal.Add("Mana", baseStats.Mana.ToString());

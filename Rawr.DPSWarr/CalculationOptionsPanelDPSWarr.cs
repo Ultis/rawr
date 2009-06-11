@@ -37,6 +37,9 @@ namespace Rawr.DPSWarr {
                 CK_DemoShout.Checked = opts.Mntn_Demo;
                 CK_Hamstring.Checked = opts.Mntn_Hamstring;
                 CK_BattleShout.Checked = opts.Mntn_Battle;
+                // Latency
+                CB_Lag.Value = (int)opts.Lag;
+                CB_React.Value = (int)opts.React;
                 //
                 Character.OnCalculationsInvalidated();
                 return; 
@@ -52,7 +55,12 @@ namespace Rawr.DPSWarr {
                 CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
                 CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
+                CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 // Abilities to Maintain
+                // Latency
+                CB_Lag.Value   = (int)calcOpts.Lag;
+                CB_React.Value = (int)calcOpts.React;
+                //
                 if (Character != null) {
                     CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
@@ -62,6 +70,7 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
+        //
         private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
             int targetArmor = int.Parse(CB_TargArmor.Text);
             LB_TargArmorDesc.Text = armorBosses[targetArmor];
@@ -89,6 +98,7 @@ namespace Rawr.DPSWarr {
             calcOpts.Duration = (float)CB_Duration.Value;
             Character.OnCalculationsInvalidated();
         }
+        // Rotational Changes
         private void CK_MultiTargs_CheckedChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.MultipleTargets = CK_MultiTargs.Checked;
@@ -133,6 +143,17 @@ namespace Rawr.DPSWarr {
             calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
             Character.OnCalculationsInvalidated();
         }
+        private void CK_InBack_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.InBack = CK_InBack.Checked;
+            CB_InBackPerc.Enabled = calcOpts.InBack;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_InBack_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
+            Character.OnCalculationsInvalidated();
+        }
         // Abilities to Maintain Changes
         private void CK_Maints_CheckedChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -144,24 +165,38 @@ namespace Rawr.DPSWarr {
 
             Character.OnCalculationsInvalidated();
         }
+        // Latency
+        private void CB_Latency_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.Lag   = (int)CB_Lag.Value;
+            calcOpts.React = (int)CB_React.Value;
+            Character.OnCalculationsInvalidated();
+        }
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
         public int TargetLevel = 83;
         public int TargetArmor = 10643;
-        public float Duration = 300;
+        public float Duration = 300f;
         public bool FuryStance = true;
         // Rotational Changes
-        public bool MultipleTargets = false; public int MultipleTargetsPerc = 0;
-        public bool MovingTargets   = false; public int MovingTargetsPerc   = 0;
-        public bool StunningTargets = false; public int StunningTargetsPerc = 0;
-        public bool DisarmingTargets= false; public int DisarmingTargetsPerc= 0;
+        public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
+        public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
+        public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
+        public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
+        public bool InBack           = true ; public int InBackPerc           = 100;
         // Abilities to Maintain
         public bool Mntn_Thunder = false;
         public bool Mntn_Sunder = false;
         public bool Mntn_Battle = false;
         public bool Mntn_Demo = false;
         public bool Mntn_Hamstring = false;
+        // Latency
+        public float Lag = 179f;
+        public float React = 220f;
+        public float GetReact() { return (float)Math.Max(0f, React - 250f); }
+        public float GetLatency() { return (Lag + GetReact()) / 1000f; }
+        //
         public WarriorTalents talents = null;
         public string GetXml() {
             var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));

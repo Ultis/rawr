@@ -79,12 +79,9 @@ namespace Rawr.DPSWarr {
             }
         #else
             public CalculationOptionsPanelBase _calculationOptionsPanel = null;
-            public override CalculationOptionsPanelBase CalculationOptionsPanel
-            {
-                get
-                {
-                    if (_calculationOptionsPanel == null)
-                    {
+            public override CalculationOptionsPanelBase CalculationOptionsPanel {
+                get {
+                    if (_calculationOptionsPanel == null) {
                         _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
                     }
                     return _calculationOptionsPanel;
@@ -157,22 +154,34 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
 
         private string[] _optimizableCalculationLabels = null;
-        public override string[] OptimizableCalculationLabels
-        {
-            get
-            {
+        public override string[] OptimizableCalculationLabels {
+            get {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
                     "Health",
-                    "Haste Rating",
-                    "Expertise Rating",
-                    "Hit Rating",
-                    "Enemy Avoidance %",
+                    "Resilience",
+                    "Armor",
+                    "Strength",
+                    "Attack Power",
+                    "Agility",
 					"Crit Rating",
-					"Agility",
-					"Attack Power",
-					"Armor Penetration",
+                    "Crit %",
+                    "Haste Rating",
+                    "Haste %",
 					"Armor Penetration Rating",
+					"Armor Penetration %",
+                    "Hit Rating",
+                    "Hit %",
+                    "White Miss %",
+                    "Yellow Miss %",
+                    "Expertise Rating",
+                    "Expertise",
+                    "Dodge/Parry Reduction %",
+                    "Dodge %",
+                    "Parry %",
+                    "Chance to be Avoided %",
+                    //"Threat Reduction",
+                    //"Threat Per Second",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -267,6 +276,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.Duration = calcOpts.Duration;
             calculatedStats.BasicStats = stats;
             calculatedStats.SkillAttacks = skillAttacks;
+            calculatedStats.combatFactors = combatFactors;
             calculatedStats.Rot = Rot;
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.BaseHealth = statsRace.Health;
@@ -299,15 +309,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.HasteRating = stats.HasteRating;
             calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating,Character.CharacterClass.Warrior);
             // DPS
-
             
             Rot.Initialize(calculatedStats);
-            if (calcOpts.MultipleTargets) {
-                calculatedStats.Which = calculatedStats.HS;
-            } else {
-                calculatedStats.Which = calculatedStats.CL;
-            }
-                        
+            if (calcOpts.MultipleTargets) {calculatedStats.Which = calculatedStats.HS;}else{calculatedStats.Which = calculatedStats.CL;}
+            
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;

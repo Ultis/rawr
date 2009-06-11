@@ -329,16 +329,11 @@ namespace Rawr.Hunter
 		{
 			switch (calculation)
 			{
-				case "Health":
-					return BasicStats.Health;
-				case "Crit Rating":
-					return BasicStats.CritRating;
-				case "Hit Rating":
-					return BasicStats.HitRating;
-                case "Haste Rating":
-                    return BasicStats.HasteRating;
-				case "Mana":
-					return BasicStats.Mana;
+				case "Health": return BasicStats.Health;
+                case "Crit Rating": return BasicStats.CritRating;
+				case "Hit Rating": return BasicStats.HitRating;
+                case "Haste Rating": return BasicStats.HasteRating;
+				case "Mana": return BasicStats.Mana;
 			}
 			return 0;
 		}

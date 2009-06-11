@@ -2,29 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Retribution
-{
-    public class CharacterCalculationsRetribution : CharacterCalculationsBase
-    {
+namespace Rawr.Retribution {
+    public class CharacterCalculationsRetribution : CharacterCalculationsBase {
         private float _overallPoints = 0f;
-        public override float OverallPoints
-        {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
-        }
-
+        public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
         private float[] _subPoints = new float[] { 0f };
-        public override float[] SubPoints
-        {
-            get { return _subPoints; }
-            set { _subPoints = value; }
-        }
-
-        public float DPSPoints
-        {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
-        }
+        public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
+        public float DPSPoints { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
 
         public RotationSolution Rotation { get; set; }
 
@@ -55,8 +39,7 @@ namespace Rawr.Retribution
         public float AttackSpeed { get; set; }
         public Stats BasicStats { get; set; }
 
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-        {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues["Status"] = string.Format("{0} dps", DPSPoints.ToString("N0"));
             dictValues["Health"] = BasicStats.Health.ToString("N0");
@@ -92,10 +75,8 @@ namespace Rawr.Retribution
             return dictValues;
         }
 
-        public override float GetOptimizableCalculationValue(string calculation)
-        {
-            switch (calculation)
-            {
+        public override float GetOptimizableCalculationValue(string calculation) {
+            switch (calculation) {
                 case "Health": return BasicStats.Health;
                 case "Melee Avoid %": return (WhiteSkill.Combats.GetMeleeAvoid() * 100f);
             }

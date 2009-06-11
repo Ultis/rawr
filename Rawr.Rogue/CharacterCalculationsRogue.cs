@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rawr.Rogue
-{
-    public class CharacterCalculationsRogue : CharacterCalculationsBase
-    {
+namespace Rawr.Rogue {
+    public class CharacterCalculationsRogue : CharacterCalculationsBase {
         public CharacterCalculationsRogue() : this(new Stats()){}
-        public CharacterCalculationsRogue(Stats stats)
-        {
+        public CharacterCalculationsRogue(Stats stats) {
             BasicStats = stats;
             AddDisplayValue(DisplayValue.Health, stats.Health.ToString());
             AddDisplayValue(DisplayValue.Stamina, stats.Stamina.ToString());
@@ -19,21 +16,11 @@ namespace Rawr.Rogue
 
         public Stats BasicStats { get; private set; }
 
-        public override float OverallPoints
-        {
-            get { return TotalDPS; }
-            set { }
-        }
-        public override float[] SubPoints
-        {
-            get { return new[] { TotalDPS }; }
-            set { }
-        }
+        public override float OverallPoints { get { return TotalDPS; } set { } }
+        public override float[] SubPoints { get { return new[] { TotalDPS }; } set { } }
         
-        public float TotalDPS
-        {
-            get 
-            {
+        public float TotalDPS {
+            get {
                 float value;
                 float.TryParse(_dictValues[DisplayValue.TotalDps].Stat, out value);
                 return value;
@@ -59,59 +46,39 @@ namespace Rawr.Rogue
         //---------------------------------------------------------------------
         private readonly Dictionary<DisplayValue, StatAndToolTip> _dictValues = new Dictionary<DisplayValue, StatAndToolTip>();
 
-        public void AddDisplayValue(DisplayValue key, string value)
-        {
-            if(!_dictValues.ContainsKey(key))
-            {
+        public void AddDisplayValue(DisplayValue key, string value) {
+            if(!_dictValues.ContainsKey(key)) {
                 _dictValues.Add(key, new StatAndToolTip());
             }
-            
             _dictValues[key].Stat = value;
         }
 
-        public void AddRoundedDisplayValue(DisplayValue key, float value)
-        {
-            AddDisplayValue(key, Round(value));
-        }
+        public void AddRoundedDisplayValue(DisplayValue key, float value) { AddDisplayValue(key, Round(value)); }
 
-        public void AddPercentageToolTip(DisplayValue key, string prefix, float value)
-        {
-            AddToolTip(key, prefix + Round(value*100));    
-        }
+        public void AddPercentageToolTip(DisplayValue key, string prefix, float value) { AddToolTip(key, prefix + Round(value*100)); }
 
-        public void AddRoundedToolTip(DisplayValue key, string text, float value)
-        {
-            AddToolTip(key, string.Format(text, Round(value)));    
-        }
+        public void AddRoundedToolTip(DisplayValue key, string text, float value) { AddToolTip(key, string.Format(text, Round(value))); }
 
-        public void AddToolTip(DisplayValue key, params string[] toolTips)
-        {
-            if (!_dictValues.ContainsKey(key))
-            {
+        public void AddToolTip(DisplayValue key, params string[] toolTips) {
+            if (!_dictValues.ContainsKey(key)) {
                 _dictValues.Add(key, new StatAndToolTip());
             }
             
             _dictValues[key].ToolTips.AddRange(toolTips);
         }
 
-        private static string Round(float value)
-        {
-            return Math.Round(value, 2).ToString();
-        }
+        private static string Round(float value) { return Math.Round(value, 2).ToString(); }
         
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-        {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             var returnValue = new Dictionary<string, string>();
-            foreach(var kvp in _dictValues)
-            {
+            foreach(var kvp in _dictValues) {
                 var toolTip = kvp.Value.ToolTips.Count == 0 ? "" : "*" + string.Join("\r\n", kvp.Value.ToolTips.ToArray());
                 returnValue.Add(kvp.Key.Name, kvp.Value.Stat + toolTip);
             }
             return returnValue;
         }
 
-        public override float GetOptimizableCalculationValue(string calculation)
-        {
+        public override float GetOptimizableCalculationValue(string calculation) {
             /* "Health",
              * "Haste Rating",
              * "Expertise Rating",
@@ -119,8 +86,7 @@ namespace Rawr.Rogue
              * "Agility",
              * "Attack Power"
              */
-            switch (calculation)
-            {
+            switch (calculation) {
                 case "Health": return BasicStats.Health;
                 case "Haste Rating": return BasicStats.HasteRating;
                 case "Expertise Rating": return BasicStats.ExpertiseRating;
@@ -132,8 +98,7 @@ namespace Rawr.Rogue
             return 0f;
         }
 
-        private class StatAndToolTip
-        {
+        private class StatAndToolTip {
             public string Stat = "";
             public readonly List<string> ToolTips = new List<string>();
         }

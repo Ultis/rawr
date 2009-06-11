@@ -305,10 +305,7 @@ namespace Rawr
         /// </summary>
         /// <param name="Rating">Parry Rating</param>
         /// <returns>A Percentage (0.05 = 5% extra Parry)</returns>
-        public static float GetParryFromRating(float Rating)
-        {
-            return Rating / RATING_PER_PARRY;
-        }
+        public static float GetParryFromRating(float Rating) { return Rating / RATING_PER_PARRY; }
 
         public static float GetCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
         public static float GetCritFromRating(float Rating) { return GetPhysicalCritFromRating(Rating); }
@@ -318,10 +315,7 @@ namespace Rawr
         /// </summary>
         /// <param name="Rating">Crit Rating</param>
         /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
-        public static float GetPhysicalCritFromRating(float Rating)
-        {
-            return Rating / RATING_PER_PHYSICALCRIT;
-        }
+        public static float GetPhysicalCritFromRating(float Rating) { return Rating / RATING_PER_PHYSICALCRIT; }
 
         // Returns a Percentage
         public static float GetHasteFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHasteFromRating(Rating, Class); }
@@ -331,8 +325,7 @@ namespace Rawr
         /// <param name="Rating">Haste Rating</param>
         /// <param name="Class">Character.CharacterClass</param>
         /// <returns>A Percentage (0.05 = 5% extra Haste)</returns>
-        public static float GetPhysicalHasteFromRating(float Rating, Character.CharacterClass Class)
-        {
+        public static float GetPhysicalHasteFromRating(float Rating, Character.CharacterClass Class) {
             if (Class == Character.CharacterClass.DeathKnight
                 || Class == Character.CharacterClass.Druid
                 || Class == Character.CharacterClass.Paladin

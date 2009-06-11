@@ -1223,42 +1223,24 @@ namespace Rawr.Mage
         {
             switch (calculation)
             {
-                case "Health":
-                    return BaseStats.Health;
-                case "Nature Resistance":
-                    return BaseStats.NatureResistance;
-                case "Fire Resistance":
-                    return BaseStats.FireResistance;
-                case "Frost Resistance":
-                    return BaseStats.FrostResistance;
-                case "Shadow Resistance":
-                    return BaseStats.ShadowResistance;
-                case "Arcane Resistance":
-                    return BaseStats.ArcaneResistance;
-                case "Chance to Live":
-                    return 100 * (1 - ChanceToDie);
-                case "Hit Rating":
-                    return BaseStats.HitRating;
-                case "Haste Rating":
-                    return BaseStats.HasteRating;
-                case "PVP Trinket":
-                    return BaseStats.PVPTrinket;
-                case "Movement Speed":
-                    return BaseStats.MovementSpeed;
-                case "Minimum Range":
-                    return MinimumRange;
-                case "Threat Reduction":
-                    return ThreatReduction;
-                case "Arcane Nondps Talents":
-                    return ArcaneNondpsTalents;
-                case "Fire Nondps Talents":
-                    return FireNondpsTalents;
-                case "Frost Nondps Talents":
-                    return FrostNondpsTalents;
-                case "Partially Modeled Talents":
-                    return PartiallyModeledTalents;
-                case "Talent Score":
-                    return TalentScore;
+                case "Health": return BaseStats.Health;
+                case "Nature Resistance": return BaseStats.NatureResistance;
+                case "Fire Resistance": return BaseStats.FireResistance;
+                case "Frost Resistance": return BaseStats.FrostResistance;
+                case "Shadow Resistance": return BaseStats.ShadowResistance;
+                case "Arcane Resistance": return BaseStats.ArcaneResistance;
+                case "Chance to Live": return 100 * (1 - ChanceToDie);
+                case "Hit Rating": return BaseStats.HitRating;
+                case "Haste Rating": return BaseStats.HasteRating;
+                case "PVP Trinket": return BaseStats.PVPTrinket;
+                case "Movement Speed": return BaseStats.MovementSpeed;
+                case "Minimum Range": return MinimumRange;
+                case "Threat Reduction": return ThreatReduction;
+                case "Arcane Nondps Talents": return ArcaneNondpsTalents;
+                case "Fire Nondps Talents": return FireNondpsTalents;
+                case "Frost Nondps Talents": return FrostNondpsTalents;
+                case "Partially Modeled Talents": return PartiallyModeledTalents;
+                case "Talent Score": return TalentScore;
             }
             return 0;
         }

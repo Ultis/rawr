@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr {
                 _stats = stats;
                 _combatFactors = combatFactors;
                 _character = character;
-                //HS_Freq = 0.0f;
+                OVD_FREQ = 0.0f;
             }
             // Variables
             private readonly WarriorTalents _talents;
@@ -50,15 +50,12 @@ namespace Rawr.DPSWarr {
                 }
                 float mhWhiteDPS = MhAvgSwingDmg();
                 mhWhiteDPS /= wepSpeed;
-                //mhWhiteDPS *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg - (1 - _combatFactors.ProbMhWhiteHit) - (_combatFactors.GlanceChance/* - (0.24f * 0.35f)*/)); // ebs: WTF?!?
-                //mhWhiteDPS *= _combatFactors.DamageReduction;
                 mhWhiteDPS *= (1f - Ovd_Freq);
                 return mhWhiteDPS;
             }
             public float CalcOhWhiteDPS() {
                 float ohWhiteDPS = OhAvgSwingDmg();
                 ohWhiteDPS /= _combatFactors.OffHandSpeed;
-                //ohWhiteDPS *= _combatFactors.DamageReduction;
                 if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 &&
                     (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
                     return ohWhiteDPS;
@@ -118,15 +115,16 @@ namespace Rawr.DPSWarr {
             }
             // Rage generated per second
             public float whiteRageGenPerSec() {
-
+                bool useOH = _character.OffHand != null;
                 float MHRage = (_character.MainHand != null && _character.MainHand.MaxDamage > 0 ? GetSwingRage(_character.MainHand.Item,true) : 0f);
-                float OHRage = (_character.OffHand  != null && _character.OffHand.MaxDamage  > 0 ? GetSwingRage(_character.OffHand.Item,false) : 0f);
+                float OHRage = 0f;
+                OHRage = (useOH && _character.OffHand != null && _character.OffHand.MaxDamage > 0 ? GetSwingRage(_character.OffHand.Item, false) : 0f);
 
                 // Rage per Second
                 MHRage /= _combatFactors.MainHandSpeed;
-                OHRage /= _combatFactors.OffHandSpeed;
+                if (useOH) { OHRage /= _combatFactors.OffHandSpeed; }
 
-                float rage = MHRage + OHRage;
+                float rage = MHRage + (useOH ? OHRage : 0f);
                 
                 return rage;
             }
@@ -261,13 +259,14 @@ namespace Rawr.DPSWarr {
                 return acts * RageCost / GetRotation();
             }
             public virtual float GetRotation() {
+                float latencyMOD = 1f + CalcOpts.GetLatency();
                 if (CalcOpts.FuryStance) {
-                    return ROTATION_LENGTH_FURY;
+                    return ROTATION_LENGTH_FURY * latencyMOD;
                 }else{
                     if (Talents.GlyphOfRending) {
-                        return ROTATION_LENGTH_ARMS_GLYPH;
+                        return ROTATION_LENGTH_ARMS_GLYPH * latencyMOD;
                     } else {
-                        return ROTATION_LENGTH_ARMS_NOGLYPH;
+                        return ROTATION_LENGTH_ARMS_NOGLYPH * latencyMOD;
                     }
                 }
             }
@@ -576,7 +575,8 @@ namespace Rawr.DPSWarr {
             // Functions
             public override float GetActivates() {
                 if (!GetValided()) { return 0f; }
-                return (float)Math.Max(0f,GetRotation() / (Cd - (Talents.ImprovedMortalStrike / 3.0f)));
+                float latencyMOD = 1f + CalcOpts.GetLatency();
+                return (float)Math.Max(0f, GetRotation() / ((Cd - (Talents.ImprovedMortalStrike / 3.0f)) * latencyMOD));
             }
         }
         public class Suddendeath : Ability {
@@ -618,12 +618,12 @@ namespace Rawr.DPSWarr {
                 // ACTUAL CALCS
                 float talent = 3f * Talents.SuddenDeath / 100f;
                 float hitspersec = (Override ? 1f : LandedAtksPerSec);
-                float latency = (1.5f);
+                float latency = 1.5f * CalcOpts.GetLatency();
                 //float mod = 100f;
                 float SD_GCDS = talent * hitspersec * latency /* * mod*/;
                 // END ACTUAL CALCS */
-                /*
-                float fightDuration = CalcOpts.Duration;
+
+                /*float fightDuration = CalcOpts.Duration;
                 float hasteBonus = StatConversion.GetPhysicalHasteFromRating(combatFactors.TotalHaste, Character.CharacterClass.Warrior);
                 hasteBonus = (1f + hasteBonus) * (1f + combatFactors.TotalHaste) * (1f + StatS.Bloodlust * 40f / fightDuration) - 1f;
                 float meleeHitsPerSecond = 1f / 1.5f;
@@ -703,7 +703,8 @@ namespace Rawr.DPSWarr {
                     cd = 6f / (1f / 3f * Talents.TasteForBlood);
                 }
 
-                result = GetRotation() / cd;
+                float latencyMOD = 1f + CalcOpts.GetLatency();
+                result = GetRotation() / (cd * latencyMOD);
                 // END ACTUAL CALCS
 
                 return result;
@@ -1050,7 +1051,7 @@ namespace Rawr.DPSWarr {
         #region OnAttack Abilities
         public class OnAttack : Ability {
             // Constructors
-            public OnAttack() {}
+            public OnAttack() { OverridesPerSec = 0f; }
             // Variables
             private float OVERRIDESPERSEC;
             // Get/Set
@@ -1226,8 +1227,12 @@ namespace Rawr.DPSWarr {
             // Variables
             private float mhActivates, ohActivates;
             public void SetAllAbilityActivates(float mh, float oh) { 
-                mhActivates = mh * combatFactors.MhYellowCrit + GetRotation() / combatFactors.MainHandSpeed * combatFactors.MhCrit; 
-                ohActivates = oh * combatFactors.OhYellowCrit + GetRotation() / combatFactors.OffHandSpeed * combatFactors.OhCrit; 
+                mhActivates = mh * combatFactors.MhYellowCrit + GetRotation() / combatFactors.MainHandSpeed * combatFactors.MhCrit;
+                if (Char.OffHand == null) {
+                    ohActivates = 0f;
+                }else{
+                    ohActivates = oh * combatFactors.OhYellowCrit + GetRotation() / combatFactors.OffHandSpeed * combatFactors.OhCrit; 
+                }
             }
             // Get/Set
             // Functions
@@ -1516,10 +1521,7 @@ namespace Rawr.DPSWarr {
                     new Stats() { ArmorPenetration = 0.04f, },
                     Duration, Cd, 1f, 5);
             }
-            public override float GetActivates()
-            {
-                return base.GetActivates() * Cd / Duration;
-            }
+            public override float GetActivates() { return base.GetActivates() * Cd / Duration; }
         }
         public class ShatteringThrow : BuffEffect {
             // Constructors
@@ -1646,4 +1648,3 @@ namespace Rawr.DPSWarr {
         #endregion
     }
 }
-

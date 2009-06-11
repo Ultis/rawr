@@ -199,44 +199,25 @@ namespace Rawr.HolyPriest
 		{
 			switch (calculation)
 			{
-                case "Health":
-                    return basicStats.Health;
-                case "Resilience":
-                    return basicStats.Resilience;
-                case "Mana":
-                    return basicStats.Mana;
-                case "InFSR Regen":
-                    return basicStats.Mp5 + RegenInFSR;
-                case "OutFSR Regen":
-                    return basicStats.Mp5 + RegenOutFSR;
-                case "Haste Rating":
-                    return basicStats.HasteRating;
-                case "Haste %":
-                    return basicStats.SpellHaste * 100f;
-                case "Crit Rating":
-                    return basicStats.CritRating;
-                case "Healing Crit %":
-                    return (basicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f;
-                case "PW:Shield":
-                    return new PowerWordShield(basicStats, character).AvgHeal;
-                case "GHeal Avg":
-                    return new Heal(basicStats, character).AvgHeal;
-                case "FHeal Avg":
-                    return new FlashHeal(basicStats, character).AvgHeal;
-                case "CoH Avg":
-                    return new CircleOfHealing(basicStats, character).AvgHeal;
-                case "Armor":
-                    return basicStats.Armor + basicStats.BonusArmor;
-			    case "Arcane Resistance":
-                    return basicStats.ArcaneResistance + basicStats.ArcaneResistanceBuff;
-                case "Fire Resistance":
-                    return basicStats.FireResistance + basicStats.FireResistanceBuff;
-                case "Frost Resistance":
-                    return basicStats.FrostResistance + basicStats.FrostResistance;
-                case "Nature Resistance":
-                    return basicStats.NatureResistance + basicStats.NatureResistanceBuff;
-                case "Shadow Resistance":
-                    return basicStats.ShadowResistance + basicStats.ShadowResistanceBuff;
+                case "Health": return basicStats.Health;
+                case "Resilience": return basicStats.Resilience;
+                case "Mana": return basicStats.Mana;
+                case "InFSR Regen": return basicStats.Mp5 + RegenInFSR;
+                case "OutFSR Regen": return basicStats.Mp5 + RegenOutFSR;
+                case "Haste Rating": return basicStats.HasteRating;
+                case "Haste %": return basicStats.SpellHaste * 100f;
+                case "Crit Rating": return basicStats.CritRating;
+                case "Healing Crit %": return (basicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f;
+                case "PW:Shield": return new PowerWordShield(basicStats, character).AvgHeal;
+                case "GHeal Avg": return new Heal(basicStats, character).AvgHeal;
+                case "FHeal Avg": return new FlashHeal(basicStats, character).AvgHeal;
+                case "CoH Avg": return new CircleOfHealing(basicStats, character).AvgHeal;
+                case "Armor": return basicStats.Armor + basicStats.BonusArmor;
+			    case "Arcane Resistance": return basicStats.ArcaneResistance + basicStats.ArcaneResistanceBuff;
+                case "Fire Resistance": return basicStats.FireResistance + basicStats.FireResistanceBuff;
+                case "Frost Resistance": return basicStats.FrostResistance + basicStats.FrostResistance;
+                case "Nature Resistance": return basicStats.NatureResistance + basicStats.NatureResistanceBuff;
+                case "Shadow Resistance": return basicStats.ShadowResistance + basicStats.ShadowResistanceBuff;
             }
 			return 0f;
 		}
