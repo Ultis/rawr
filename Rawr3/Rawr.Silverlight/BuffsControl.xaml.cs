@@ -21,16 +21,17 @@ namespace Rawr.Silverlight
             set
             {
                 character = value;
+                _loadingBuffsFromCharacter = true;
                 BuildControls();
                 LoadBuffsFromCharacter();
                 UpdateEnabledStates();
+                _loadingBuffsFromCharacter = false;
             }
         }
 
         private bool _loadingBuffsFromCharacter;
         private void LoadBuffsFromCharacter()
         {
-            _loadingBuffsFromCharacter = true;
             if (CheckBoxes == null || Character == null || Character.ActiveBuffs == null) return;
             foreach (KeyValuePair<Buff, CheckBox> kvp in CheckBoxes)
             {
@@ -45,7 +46,6 @@ namespace Rawr.Silverlight
                 }
             }
             foreach (CheckBox cb in toCheck) cb.IsChecked = true;
-            _loadingBuffsFromCharacter = false;
         }
 
         private void UpdateCharacterBuffs()

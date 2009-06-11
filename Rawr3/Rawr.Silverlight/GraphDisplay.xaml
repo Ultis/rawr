@@ -98,6 +98,7 @@
 				<ComboBoxItem Content="Current"/>
 			</ComboBox>
 			<ComboBox x:Name="CustomCombo" Margin="4,0,4,0" Width="150" VerticalAlignment="Stretch" SelectionChanged="CustomChanged" Visibility="Collapsed"/>
+			<local:ItemFilterPopup Width="50" Margin="4,0,4,0"/>
 		</StackPanel>
 	</Grid>
 </UserControl>

@@ -104,9 +104,6 @@
     <Compile Include="..\..\Rawr.Base\ItemCache.cs">
       <Link>ItemCache.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\ItemFilter.cs">
-      <Link>ItemFilter.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Base\Optimizer.cs">
       <Link>Optimizer.cs</Link>
     </Compile>
@@ -145,6 +142,7 @@
     <Compile Include="Calculations.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="GemmingTemplate.cs" />
+    <Compile Include="ItemFilter.cs" />
     <Compile Include="ItemLocation.cs" />
     <Compile Include="ListUtils.cs" />
     <Compile Include="NetworkUtils.cs" />

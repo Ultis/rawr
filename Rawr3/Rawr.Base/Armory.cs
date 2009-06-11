@@ -923,10 +923,10 @@ namespace Rawr
                     {
                         ItemsToLoad++;
                         TotalItemsToLoad++;
+                        StatusMessaging.UpdateStatus("Get Items from Armory",
+                            string.Format("{0} of {1} Loaded", TotalItemsToLoad - ItemsToLoad, TotalItemsToLoad));
                         new ItemRequest(id, ItemLoaded);
                     }
-                    StatusMessaging.UpdateStatus("Get Items from Armory",
-                        string.Format("{0} of {1} Loaded", TotalItemsToLoad - ItemsToLoad, TotalItemsToLoad));
                 }
             }
         }

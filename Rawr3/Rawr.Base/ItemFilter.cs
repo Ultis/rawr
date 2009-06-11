@@ -1,0 +1,435 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Text;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
+using System.Collections.ObjectModel;
+using System.Windows;
+
+namespace Rawr
+{
+
+    public class ItemFilterRegexList : ObservableCollection<ItemFilterRegex> 
+    {
+
+        public ItemFilterRegex parent;
+        public ItemFilterRegex Parent {
+            get { return parent; }
+            set
+            {
+                parent = value;
+                other.Parent = parent;
+            }
+        }
+        private ItemFilterOther other;
+
+        [XmlIgnore]
+        public ObservableCollection<ItemFilter> FilterList { get; private set; }
+
+        public ItemFilterRegexList() : this(null) { }
+        public ItemFilterRegexList(ItemFilterRegex parent) : base()
+        {
+            other = new ItemFilterOther(parent);
+            other.PropertyChanged += new PropertyChangedEventHandler(filter_PropertyChanged);
+
+            Parent = parent;
+
+            FilterList = new ObservableCollection<ItemFilter>();
+            CollectionChanged += new NotifyCollectionChangedEventHandler(RegexList_CollectionChanged);
+        }
+
+        public void UpdateStates()
+        {
+            if (parent == null) return;
+            bool? enabled = parent.Enabled;
+            foreach (ItemFilter filter in FilterList)
+            {
+                filter.UpdateEnabled(enabled.GetValueOrDefault(false));
+            }
+        }
+
+        public bool? State()
+        {
+            bool allEnabled = true;
+            bool someEnabled = false;
+            foreach (ItemFilter filter in FilterList)
+            {
+                allEnabled = filter.Enabled.GetValueOrDefault(false) && allEnabled;
+                someEnabled = filter.Enabled.GetValueOrDefault(true) || someEnabled;
+            }
+            if (allEnabled) return true;
+            else if (someEnabled) return null;
+            else return false;
+        }
+
+        private void filter_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Enabled" && parent != null)
+            {
+                parent.UpdateEnabled(null);
+            }
+        }
+
+        private void RegexList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+                foreach (ItemFilterRegex filter in e.OldItems)
+                {
+                    filter.PropertyChanged -= new PropertyChangedEventHandler(filter_PropertyChanged);
+                    FilterList.Remove(filter);
+                }
+
+            if (e.NewItems != null)
+                foreach (ItemFilterRegex filter in e.NewItems)
+                {
+                    filter.PropertyChanged += new PropertyChangedEventHandler(filter_PropertyChanged);
+                    FilterList.Add(filter);
+                }
+
+            FilterList.Remove(other);
+            if (Count > 0) FilterList.Add(other);
+        }
+
+    }
+
+    public class ItemFilterOther : ItemFilter
+    {
+
+        public ItemFilterOther(ItemFilterRegex parent)
+            : base()
+        {
+            this.Parent = parent;
+            Name = "Other";
+        }
+
+        public ItemFilterRegex Parent { get; set; }
+
+        public override bool? Enabled
+        {
+            get
+            {
+                if (Parent == null) return ItemFilter.OtherEnabled;
+                else return Parent.OtherRegexEnabled;
+            }
+            set
+            {
+                if (Parent == null)
+                {
+                    ItemFilter.OtherEnabled = value.GetValueOrDefault(false);
+                    Parent.UpdateEnabled(null);
+                }
+                else Parent.OtherRegexEnabled = value.GetValueOrDefault(false);
+                OnEnabledChanged(true);
+            }
+        }
+
+        public override void UpdateEnabled(bool? setValue)
+        {
+            if (Parent == null) ItemFilter.OtherEnabled = setValue.GetValueOrDefault(false);
+            else Parent.OtherRegexEnabled = setValue.GetValueOrDefault(false);
+            OnEnabledChanged(false);
+        }
+    }
+
+
+    public class ItemFilterRegex : ItemFilter
+    {
+        public ItemFilterRegex()
+        {
+            Name = "New Filter";
+            RegexList = new ItemFilterRegexList(this);
+            Enabled = true;
+            MinItemLevel = 0;
+            MaxItemLevel = 1000;
+            MinItemQuality = Item.ItemQuality.Temp;
+            MaxItemQuality = Item.ItemQuality.Heirloom;
+            AdditiveFilter = true;
+            AppliesToItems = true;
+            AppliesToGems = true;
+        }
+
+        [XmlIgnore]
+        private string _pattern;
+
+        public string Pattern
+        {
+            get
+            {
+                return _pattern;
+            }
+            set
+            {
+                _pattern = value;
+                _regex = null;
+            }
+        }
+
+        public int MinItemLevel { get; set; }
+        public int MaxItemLevel { get; set; }
+        public Item.ItemQuality MinItemQuality { get; set; }
+        public Item.ItemQuality MaxItemQuality { get; set; }
+        public bool AdditiveFilter { get; set; }
+        public bool AppliesToItems { get; set; }
+        public bool AppliesToGems { get; set; }
+
+        private bool? enabled;
+        public override bool? Enabled
+        {
+            get { return enabled; }
+            set
+            {
+                enabled = value.GetValueOrDefault(false);
+                RegexList.UpdateStates();
+                OnEnabledChanged(true);
+            }
+        }
+
+        public override void UpdateEnabled(bool? setValue)
+        {
+            if (setValue.HasValue)
+            {
+                enabled = setValue.GetValueOrDefault(false);
+            }
+            else
+            {
+                enabled = RegexList.State();
+            }
+            OnEnabledChanged(false);
+        }
+
+        [XmlIgnore]
+        public override ObservableCollection<ItemFilter> Filters { get { return RegexList.FilterList; } }
+
+        private ItemFilterRegexList regexList;
+        public ItemFilterRegexList RegexList
+        {
+            get { return regexList; }
+            set
+            {
+                regexList = value;
+                regexList.Parent = this;
+            }
+        }
+
+        public bool OtherRegexEnabled;
+
+        [XmlIgnore]
+        private Regex _regex;
+
+        [XmlIgnore]
+        public Regex Regex
+        {
+            get
+            {
+                if (_regex == null)
+                {
+                    if (_pattern == null) _pattern = "";
+                    _regex = new Regex(_pattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                }
+                return _regex;
+            }
+        }
+
+        public bool IsMatch(Item item)
+        {
+            if (string.IsNullOrEmpty(_pattern) || (!string.IsNullOrEmpty(item.LocationInfo.Description) && Regex.IsMatch(item.LocationInfo.Description)) || (!string.IsNullOrEmpty(item.LocationInfo.Note) && Regex.IsMatch(item.LocationInfo.Note)))
+            {
+                if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
+                {
+                    if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool AppliesTo(Item item)
+        {
+            return (item.IsGem && AppliesToGems) || (!item.IsGem && AppliesToItems);
+        }
+
+        public bool IsEnabled(Item item)
+        {
+            if (!Enabled.GetValueOrDefault(true)) return false;
+            if (RegexList.Count == 0) return true;
+            bool enabledMatch = false;
+            bool anyMatch = false;
+            foreach (ItemFilterRegex regex in RegexList)
+            {
+                if (regex.AppliesTo(item) && regex.IsMatch(item))
+                {
+                    anyMatch = true;
+                    if (regex.IsEnabled(item))
+                    {
+                        enabledMatch = true;
+                        break;
+                    }
+                }
+            }
+            if (anyMatch)
+            {
+                return enabledMatch;
+            }
+            else
+            {
+                return OtherRegexEnabled;
+            }
+        }
+
+    }
+
+
+    public class ItemTypeList : List<Item.ItemType>
+    {
+        public ItemTypeList() : base() { }
+        public ItemTypeList(IEnumerable<Item.ItemType> collection) : base(collection) { }
+    }
+
+
+    public class ItemFilterData
+    {
+        public SerializableDictionary<string, ItemTypeList> RelevantItemTypes = new SerializableDictionary<string, ItemTypeList>();
+        public ItemFilterRegexList RegexList = new ItemFilterRegexList();
+        public bool OtherRegexEnabled = true;
+    }
+
+    public abstract class ItemFilter : INotifyPropertyChanged
+    {
+        #region Static
+        static ItemFilterData data = new ItemFilterData();
+
+        /// <summary>
+        /// Returns a list that can be used to set relevant item types list. Call ItemCache.OnItemsChanged()
+        /// when you finish making changes to the list.
+        /// </summary>
+        public static List<Item.ItemType> GetRelevantItemTypesList(CalculationsBase model)
+        {
+            ItemTypeList list;
+            if (!data.RelevantItemTypes.TryGetValue(model.Name, out list))
+            {
+                list = new ItemTypeList(model.RelevantItemTypes);
+                data.RelevantItemTypes[model.Name] = list;
+            }
+            return list;
+        }
+
+        public static ItemFilterRegexList FilterList
+        {
+            get
+            {
+                return data.RegexList;
+            }
+        }
+
+        public static bool OtherEnabled
+        {
+            get
+            {
+                return data.OtherRegexEnabled;
+            }
+            set
+            {
+                data.OtherRegexEnabled = value;
+            }
+        }
+
+        public static bool IsItemRelevant(CalculationsBase model, Item item)
+        {
+            if (GetRelevantItemTypesList(model).Contains(item.Type))
+            {
+                bool added = false;
+                bool anyMatch = false;
+                bool enabledMatch = false;
+                foreach (ItemFilterRegex regex in data.RegexList)
+                {
+                    if (regex.AdditiveFilter && regex.AppliesTo(item) && regex.IsMatch(item))
+                    {
+                        anyMatch = true;
+                        if (regex.IsEnabled(item))
+                        {
+                            enabledMatch = true;
+                            break;
+                        }
+                    }
+                }
+                if (anyMatch)
+                {
+                    added = enabledMatch;
+                }
+                else
+                {
+                    added = OtherEnabled;
+                }
+                if (added)
+                {
+                    foreach (ItemFilterRegex regex in data.RegexList)
+                    {
+                        if (!regex.AdditiveFilter && regex.Enabled.GetValueOrDefault(true) && regex.AppliesTo(item) && regex.IsMatch(item) && regex.IsEnabled(item))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void Save(TextWriter writer)
+        {
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
+            serializer.Serialize(writer, data);
+            writer.Close();
+        }
+
+        public static void Load(TextReader reader)
+        {
+            try
+            {
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
+                data = (ItemFilterData)serializer.Deserialize(reader);
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                data = new ItemFilterData();
+            }
+        }
+        #endregion
+
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        [XmlIgnore]
+        public virtual ObservableCollection<ItemFilter> Filters { get { return null; } }
+
+        public abstract bool? Enabled { get; set; }
+        public abstract void UpdateEnabled(bool? value);
+
+        public void OnEnabledChanged(bool orginator)
+        {
+            OnPropertyChanged("Enabled");
+            if (orginator) ItemCache.OnItemsChanged();
+        }
+
+        #region INotifyPropertyChanged Members
+        protected void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
+
+    }
+}
