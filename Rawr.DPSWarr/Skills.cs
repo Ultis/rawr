@@ -618,7 +618,7 @@ namespace Rawr.DPSWarr {
                 // ACTUAL CALCS
                 float talent = 3f * Talents.SuddenDeath / 100f;
                 float hitspersec = (Override ? 1f : LandedAtksPerSec);
-                float latency = 1.5f * CalcOpts.GetLatency();
+                float latency = 1.5f * (1f + CalcOpts.GetLatency());
                 //float mod = 100f;
                 float SD_GCDS = talent * hitspersec * latency /* * mod*/;
                 // END ACTUAL CALCS */

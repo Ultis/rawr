@@ -85,7 +85,7 @@ namespace Rawr.DPSWarr {
                 return (float)Math.Max(0f,
                     0.08f
                     - _stats.PhysicalHit / 100f
-                    + HitPerc
+                    - HitPerc
                 );
             }
         }
