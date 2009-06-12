@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-using System.Windows.Forms;
 using Rawr.Enhance;
+using Windows.Forms;
 
 namespace Rawr
 {
@@ -123,6 +123,18 @@ namespace Rawr
         #endregion 
 
         #region Overrides
+#if SILVERLIGHT
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+        {
+            get
+            {
+                if (_calculationOptionsPanel == null)
+                    _calculationOptionsPanel = new CalculationOptionsPanelEnhance();
+                return _calculationOptionsPanel;
+            }
+        }
+#else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {
@@ -133,7 +145,24 @@ namespace Rawr
                 return _calculationOptionsPanel;
             }
         }
+#endif
 
+#if SILVERLIGHT
+        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
+        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+		{
+			get
+			{
+				if (_subPointNameColors == null)
+				{
+                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(160, 0, 224));
+                    _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(64, 128, 32));
+                }
+				return _subPointNameColors;
+			}
+		}
+#else
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
@@ -141,15 +170,15 @@ namespace Rawr
 			{
 				if (_subPointNameColors == null)
 				{
-					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
-					_subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
-				}
+					    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+					    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
+					    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
+                }
 				return _subPointNameColors;
 			}
 		}
-
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Shaman; } }
+#endif
+        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Shaman; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationEnhance(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsEnhance(); }
 

@@ -21,9 +21,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue", "Rawr.Rogue\Ra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr", "Rawr.DPSWarr\Rawr.DPSWarr.csproj", "{FB0E8A91-FE4B-425B-8773-792AB0232245}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance", "Rawr.Enhance\Rawr.Enhance.csproj", "{3D73B646-5271-4E55-9089-CCBD3E26EECD}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -57,6 +59,9 @@ Global
 		SccProjectUniqueName10 = Rawr.DPSWarr\\Rawr.DPSWarr.csproj
 		SccProjectName10 = Rawr.DPSWarr
 		SccLocalPath10 = Rawr.DPSWarr
+		SccProjectUniqueName11 = Rawr.Enhance\\Rawr.Enhance.csproj
+		SccProjectName11 = Rawr.Enhance
+		SccLocalPath11 = Rawr.Enhance
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +108,10 @@ Global
 		{FB0E8A91-FE4B-425B-8773-792AB0232245}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB0E8A91-FE4B-425B-8773-792AB0232245}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB0E8A91-FE4B-425B-8773-792AB0232245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

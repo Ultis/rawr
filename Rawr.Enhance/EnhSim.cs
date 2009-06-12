@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-using System.Windows.Forms;
 using System.Globalization;
+using Windows.Forms;
 
 namespace Rawr.Enhance
 {
