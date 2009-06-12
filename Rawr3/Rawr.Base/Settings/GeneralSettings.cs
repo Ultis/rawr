@@ -28,7 +28,7 @@ namespace Rawr.Properties
         }
 
         private static GeneralSettings _default;
-        public static GeneralSettings Default { get { return _default; } }
+        public static GeneralSettings Default { get { return _default; } set { _default = value; } }
 
         public int CountGemmingsShown { get; set; }
         public bool UseMultithreading { get; set; }

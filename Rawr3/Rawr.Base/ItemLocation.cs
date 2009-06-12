@@ -84,6 +84,11 @@ namespace Rawr
         {
             return new ItemLocation("");
         }
+
+        public override string ToString()
+        {
+            return Description;
+        }
     }
 
     

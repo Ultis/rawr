@@ -9,7 +9,7 @@
 	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 	x:Class="Rawr.Silverlight.GemmingTemplates"
 	Title="Edit Gemming Templates"
-	Height="350" Width="360">
+	Height="450" Width="400">
 	<Grid x:Name="LayoutRoot" Background="White">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
@@ -23,7 +23,7 @@
 		CanUserResizeColumns="False" CanUserSortColumns="False" RowDetailsVisibilityMode="Collapsed" GridLinesVisibility="Horizontal">
 			<data:DataGrid.Columns>
 				<data:DataGridCheckBoxColumn Width="40" Binding="{Binding Path=Enabled}" />
-				<data:DataGridTemplateColumn Width="50" Header="Red">
+				<data:DataGridTemplateColumn Width="60" Header="Red">
  					<data:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
 							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
@@ -33,7 +33,7 @@
 						</DataTemplate>
 					</data:DataGridTemplateColumn.CellTemplate>
 				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="50" Header="Yellow">
+				<data:DataGridTemplateColumn Width="60" Header="Yellow">
  					<data:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
 							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
@@ -43,7 +43,7 @@
 						</DataTemplate>
 					</data:DataGridTemplateColumn.CellTemplate>
 				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="50" Header="Blue">
+				<data:DataGridTemplateColumn Width="60" Header="Blue">
  					<data:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
 							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
@@ -53,7 +53,7 @@
 						</DataTemplate>
 					</data:DataGridTemplateColumn.CellTemplate>
 				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="50" Header="Prismatic">
+				<data:DataGridTemplateColumn Width="60" Header="Prismatic">
  					<data:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
 							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
@@ -63,7 +63,7 @@
 						</DataTemplate>
 					</data:DataGridTemplateColumn.CellTemplate>
 				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="50" Header="Meta">
+				<data:DataGridTemplateColumn Width="60" Header="Meta">
  					<data:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
 							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">

@@ -117,11 +117,9 @@
     </Compile>
     <Compile Include="Converters\GemConverter.cs" />
     <Compile Include="Converters\IconPathConverter.cs" />
+    <Compile Include="Converters\ItemQualityConverter.cs" />
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GemmingTemplateItem.xaml.cs">
-      <DependentUpon>GemmingTemplateItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GemmingTemplates.xaml.cs">
       <DependentUpon>GemmingTemplates.xaml</DependentUpon>
@@ -129,10 +127,10 @@
     <Compile Include="Dialogs\IncreaseQuota.xaml.cs">
       <DependentUpon>IncreaseQuota.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ItemEditor.xaml.cs">
+    <Compile Include="Items\ItemEditor.xaml.cs">
       <DependentUpon>ItemEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ItemBrowser.xaml.cs">
+    <Compile Include="Items\ItemBrowser.xaml.cs">
       <DependentUpon>ItemBrowser.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\OptimizeWindow.xaml.cs">
@@ -234,10 +232,6 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\GemmingTemplateItem.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\GemmingTemplates.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -246,11 +240,11 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\ItemEditor.xaml">
+    <Page Include="Items\ItemEditor.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\ItemBrowser.xaml">
+    <Page Include="Items\ItemBrowser.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

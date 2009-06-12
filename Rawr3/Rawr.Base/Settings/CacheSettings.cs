@@ -22,7 +22,7 @@ namespace Rawr.Properties
         }
 
         private static CacheSettings _default;
-        public static CacheSettings Default { get { return _default; } }
+        public static CacheSettings Default { get { return _default; } set { _default = value; } }
 
         public string RelativeItemImageCache { get; set; }
         public string RelativeTalentImageCache { get; set; }

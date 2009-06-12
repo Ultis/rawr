@@ -52,6 +52,7 @@ namespace Rawr.Properties
         public static NetworkSettings Default
         {
             get { return _default; }
+            set { _default = value; }
         }
 
         public string ProxyServer { get; set; }
