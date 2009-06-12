@@ -344,6 +344,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 Targets += StatS.BonusTargets;
                 Cd = 4f; // In Seconds
+                Duration = 8f;
                 RageCost = 20f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
                 DamageBase = StatS.AttackPower * 50f / 100f;
@@ -351,7 +352,9 @@ namespace Rawr.DPSWarr {
                 CritPercBonus = StatS.MortalstrikeBloodthirstCritIncrease;
             }
             // Variables
+            private float DURATION;
             // Get/Set
+            public float Duration { get { return DURATION; } set { DURATION = value; } }
             // Functions
             public override float GetActivates() {
                 if (!GetValided()) { return 0f; }
@@ -377,8 +380,8 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = 8f; // In Yards
-                Cd = 10f; // In Seconds
-                Targets += StatS.BonusTargets;
+                Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
+                Targets *= (1f + StatS.BonusTargets);
                 Targets *= (CalcOpts.MultipleTargets?4f:1f);
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
@@ -389,7 +392,7 @@ namespace Rawr.DPSWarr {
             // Functions
             public override float GetActivates() {
                 if (!GetValided()) { return 0f; }
-                //return GetRotation() / (Cd - (Talents.GlyphOfWhirlwind ? 2f : 0f));
+                //return GetRotation() / Cd;
                 return 1f;
             }
             // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
@@ -674,12 +677,10 @@ namespace Rawr.DPSWarr {
             // Get/Set
             // Functions
             public override float GetActivates() {
-                // Invalidators
                 if (!GetValided()) { return 0f; }
 
-                // ACTUAL CALCS
-                //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                float GCDPerc = (Talents.TasteForBlood == 0 ? 0f : (1.5f - 0.5f * Talents.UnrelentingAssault / 1000f) / ((Talents.TasteForBlood > 1f) ? 6f : 9f));
+                float latencyMOD = 1f + CalcOpts.GetLatency();
+                //float GCDPerc = (Talents.TasteForBlood == 0 ? 0f : (1.5f - 0.5f * Talents.ImprovedSlam / 1000f) / ((Talents.TasteForBlood > 1f) ? 6f : 9f));
 
                 float cd = 1f, result = 0;
                 
@@ -701,9 +702,7 @@ namespace Rawr.DPSWarr {
                     cd = 6f / (1f / 3f * Talents.TasteForBlood);
                 }
 
-                float latencyMOD = 1f + CalcOpts.GetLatency();
                 result = GetRotation() / (cd * latencyMOD);
-                // END ACTUAL CALCS
 
                 return result;
             }
@@ -716,36 +715,31 @@ namespace Rawr.DPSWarr {
             /// perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped
             /// unless killed.
             /// </summary>
-            /// <TalentsAffecting>Bladestorm [Requires talent to use Ability]</TalentsAffecting>
-            /// <GlyphsAffecting>Glyph of Bladestorm [Cooldown Reduced by 15 sec]</GlyphsAffecting>
+            /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
             public Bladestorm(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
-                Whirlwind = new WhirlWind(c, s, cf, wa);
+                WW = new WhirlWind(c, s, cf, wa);
                 Name = "Bladestorm";
                 ReqTalent = true;
                 Talent2ChksValue = Talents.Bladestorm;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
+                MaxRange = WW.MaxRange; // In Yards 
                 Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef = true;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
             }
             // Variables
-            private Ability WW;
+            private WhirlWind WHIRLWIND;
             // Get/Set
-            public Ability Whirlwind { get { return WW; } set { WW = value; } }
+            public WhirlWind WW { get { return WHIRLWIND; } set { WHIRLWIND = value; } }
             // Functions
             public override float GetDamage() {
                 if (!GetValided()) { return 0f; }
-
-                // Base Damage
-                float Damage = Whirlwind.GetDamage(true);
-
+                float Damage = WW.GetDamage(true);
                 return (float)Math.Max(0f, Damage * 6f); // it WW's 6 times
             }
         }
@@ -843,7 +837,10 @@ namespace Rawr.DPSWarr {
             /// Improved Thunder Clap [-(1/2/4) rage cost, +(10*Pts)% Damage, +(ROUNDUP(10-10/3*Pts))% Slowing Effect]
             /// Incite [+(5*Pts)% Critical Strike chance]
             /// </TalentsAffecting>
-            /// <GlyphsAffecting>Glyph of Thunder Clap [+2 yards to radius]</GlyphsAffecting>
+            /// <GlyphsAffecting>
+            /// Glyph of Thunder Clap [+2 yds MaxRange]
+            /// Glyph of Resonating Power [-5 RageCost]
+            /// </GlyphsAffecting>
             public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -865,7 +862,7 @@ namespace Rawr.DPSWarr {
                     case 3: { cost = 4f; break; }
                     default:{ cost = 0f; break; }
                 }
-                RageCost = 20f - cost - (Talents.FocusedRage * 1f);
+                RageCost = 20f - cost - (Talents.GlyphOfResonatingPower?5f:0f) - (Talents.FocusedRage*1f);
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = 300f + StatS.AttackPower * 0.12f;
                 DamageBonus = Talents.ImprovedThunderClap * 0.10f;
@@ -875,10 +872,7 @@ namespace Rawr.DPSWarr {
             // Get/Set
             public float Duration { get; set; }
             // Functions
-            public override float GetActivates()
-            {
-                return base.GetActivates() * Cd / Duration;
-            }
+            public override float GetActivates() { return base.GetActivates() * Cd / Duration; }
         }
         public class Execute : Ability {
             // Constructors
@@ -965,9 +959,12 @@ namespace Rawr.DPSWarr {
             /// Slam the target with your shield, causing 990 to 1040 damage, modified by you shield block
             /// value, and dispels 1 magic effect on the target. Also causes a high amount of threat.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
+            /// <TalentsAffecting>
+            /// Focused Rage [-(Talents.FocusedRage * 1f) RageCost],
+            /// Gag Order [+(5*Pts)% Damage],
+            /// OneHandedWeaponSpecialization [+(2*Pts)% Damage]
+            /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
         }
         public class Revenge : Ability {
             /// <summary>
@@ -977,16 +974,16 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
+            ///  -(Talents.FocusedRage * 1f) RageCost
+            ///  +(10*Pts)% Damage
         }
         public class ConcussionBlow : Ability {
             /// <summary>
             /// Instant, 30 sec cd, 12 Rage, Melee Range, Melee Weapon (Any)
             /// Stuns the opponent for 5 sec and deals 2419 damage (based upon attack power).
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
+            /// <TalentsAffecting>Concussion Blow [Requires Talent], Focused Rage [-(Talents.FocusedRage * 1f ) Ragecost]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
         }
         public class Devastate : Ability {
             /// <summary>
@@ -995,9 +992,13 @@ namespace Rawr.DPSWarr {
             /// damage plus 101 for each application of Sunder Armor on the target. The Sunder Armor effect
             /// can stack up to 5 times.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
+            /// <TalentsAffecting>
+            /// Devastate [Requires Talent]
+            /// Focused Rage [-(Talents.FocusedRage * 1f) RageCost]
+            /// Puncture [-(Talents.Puncture * 1f) RageCost]
+            /// Sword and Board [+(5*Pts)% Crit Chance]
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Devastate [+1 stack of Sunder Armor]</GlyphsAffecting>
         }
         public class Shockwave : Ability {
             /// <summary>
@@ -1005,9 +1006,8 @@ namespace Rawr.DPSWarr {
             /// Sends a wave of force in front of the warrior, causing 2419 damage (based upon attack power)
             /// and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
+            /// <TalentsAffecting>Shockwave [Requires Talent], Focused Rage [-(Talents.FocusedRage*1f) RageCost]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Shockwave [-3 sec Cd]</GlyphsAffecting>
         }
         public class MockingBlow : Ability {
             /// <summary>
@@ -1015,9 +1015,13 @@ namespace Rawr.DPSWarr {
             /// A mocking attack that causes weapon damage, a moderate amount of threat and forces the
             /// target to focus attacks on you for 6 sec.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
+            /// <TalentsAffecting>
+            /// Focused Rage [-(Talents.FocusedRage*1f) RageCost]
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting>
+            /// Glyph of Barbaric Insults [+100% Threat]
+            /// Glyph of Mocking Blow [+25% Damage]
+            /// </GlyphsAffecting>
         }
         // PvP Abilities
         public class Pummel : Ability {
@@ -1038,8 +1042,10 @@ namespace Rawr.DPSWarr {
             /// kill an enemy that yields experience or honor. Damage is based on your attack power.
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
-            ///  - (Talents.FocusedRage * 1f)
+            /// <GlyphsAffecting>
+            /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP]
+            /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
+            /// </GlyphsAffecting>
         }
         public class HeroicThrow : Ability {
             /// <summary>
@@ -1084,7 +1090,7 @@ namespace Rawr.DPSWarr {
             /// threat. Causes 173.25 additional damage against Dazed targets.
             /// </summary>
             /// <TalentsAffecting>Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</TalentsAffecting>
-            /// <GlyphsAffecting>Glyph of Heroic Strike [You gain 10 rage when you critically strike with your Heroic Strike ability.]</GlyphsAffecting>
+            /// <GlyphsAffecting>Glyph of Heroic Strike [+10 rage on crits]</GlyphsAffecting>
             public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -1126,7 +1132,8 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 RageCost = 20f - (Talents.FocusedRage * 1f);
-                Targets += StatS.BonusTargets + (Talents.GlyphOfCleaving?1f:0f);
+                Targets += (Talents.GlyphOfCleaving?1f:0f);
+                Targets *= StatS.BonusTargets;
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
@@ -1342,6 +1349,16 @@ namespace Rawr.DPSWarr {
             /// You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect,
             /// consumes all Enrage effects and prevents any from affecting you for the full duration.
             /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Enraged Regeneration [+10% to effect]</GlyphsAffecting>
+        }
+        public class LastStand : BuffEffect {
+            /// <summary>
+            /// Instant, 5 min Cd, Self, (Def)
+            /// 
+            /// </summary>
+            /// <TalentsAffecting>Last Stand [Requires Talent]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Last Stand [-1 min Cd]</GlyphsAffecting>
         }
         public class Bloodrage : BuffEffect {
             /// <summary>
@@ -1368,8 +1385,10 @@ namespace Rawr.DPSWarr {
             /// <summary>
             /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.
             /// </summary>
-            /// <TalentsAffecting>Booming Voice [+(25*Pts)% AoE and Duration],
-            /// Commanding Presence [+(5*Pts)% to the AP Bonus]</TalentsAffecting>
+            /// <TalentsAffecting>
+            /// Booming Voice [+(25*Pts)% AoE and Duration],
+            /// Commanding Presence [+(5*Pts)% to the AP Bonus]
+            /// </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Battle [+1 min duration]</GlyphsAffecting>
             public BattleShout(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
@@ -1432,11 +1451,8 @@ namespace Rawr.DPSWarr {
             /// Your next 3 special ability attacks have an additional 100% to critically hit
             /// but all damage taken is increased by 20%. Lasts 12 sec.
             /// </summary>
-            /// <TalentsAffecting>Booming Voice [Increases the area of effect and duration of your Battle Shout,
-            /// Demoralizing Shout and Commanding Shout by (0.25/.050)%]\n
-            /// Commanding Presence [Increases the melee attack power bonus of your Battle Shout and health bonus
-            /// of your Commanding Shout by (0.05*Pts)%]</TalentsAffecting>
-            /// <GlyphsAffecting>Glyph of Battle [Increases the duration of your Battle Shout ability by 1 min.]</GlyphsAffecting>
+            /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
             public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c;
                 Talents = c.WarriorTalents;
@@ -1445,8 +1461,8 @@ namespace Rawr.DPSWarr {
                 Whiteattacks = wa;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Name = "Recklessness";
-                MaxRange = 5f; // In Yards 
-                Cd = 5f * 60f * (1f - 1f/9f*Talents.IntensifyRage); // In Seconds
+                MaxRange = 5f; // In Yards
+                Cd = (5f * 60f - Talents.ImprovedDisciplines * 30f) * (1f - 1f/9f*Talents.IntensifyRage); // In Seconds
                 Duration = 12f; // In Seconds
                 StanceOkFury = true;
                 Effect = new SpecialEffect(Trigger.Use,
@@ -1467,7 +1483,7 @@ namespace Rawr.DPSWarr {
             /// Your next 5 melee attacks strike an additional nearby opponent.
             /// </summary>
             /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
-            /// <GlyphsAffecting>Glyph of Sweeping Strikes [-30 Rage cost]</GlyphsAffecting>
+            /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
             public SweepingStrikes(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -1480,7 +1496,7 @@ namespace Rawr.DPSWarr {
                 Cd = 30f; // In Seconds
                 Duration = 4f; // Using 4 seconds to sim consume time
                 RageCost = 30f - (Talents.FocusedRage * 1f);
-                RageCost -= (Talents.GlyphOfSweepingStrikes ? RageCost : 0f);
+                RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
                 CastTime = -1f; // In Seconds
                 StanceOkFury = StanceOkArms = true;
                 Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f * CalcOpts.MultipleTargetsPerc / 100f, }, Duration, Cd);
@@ -1519,7 +1535,7 @@ namespace Rawr.DPSWarr {
                 Duration = 30f; // In Seconds
                 Cd = 1.5f;
                 RageCost = 15f - (Talents.FocusedRage * 1f) - (Talents.Puncture * 1f);
-                Targets = 1f + (Talents.GlyphOfSunderArmor ? 1f : 0f) + StatS.BonusTargets;
+                Targets = 1f + (Talents.GlyphOfSunderArmor ? 1f : 0f);
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.04f, },
@@ -1599,7 +1615,7 @@ namespace Rawr.DPSWarr {
             /// Maims the enemy, reducing movement speed by 50% for 15 sec.
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
+            /// <GlyphsAffecting>Glyph of Hamstring [Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
         }
         #endregion
         #region Anti-Debuff Abilities
@@ -1619,15 +1635,24 @@ namespace Rawr.DPSWarr {
             /// Instant, 20 sec cd, 0 Rage, 8-25 yds, (Battle)
             /// Charge an enemy, generate 25 rage, and stun it for 1.50 sec. Cannot be used in combat.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
+            /// <TalentsAffecting>
+            /// Warbringer [Usable in combat and any stance]
+            /// Juggernaut [Usable in combat]
+            /// Improved Charge [+(5*Pts) RageGen].
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting>
+            /// Glyph of Rapid Charge [-20% Cd]
+            /// Glyph of Charge [+5 yds MaxRange]
+            /// </GlyphsAffecting>
         }
         public class Intercept : Ability {
             /// <summary>
             /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Zerker)
             /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
+            /// <TalentsAffecting>
+            /// Warbringer [Usable in any stance]
+            /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
         }
         public class Intervene : Ability {
@@ -1635,8 +1660,12 @@ namespace Rawr.DPSWarr {
             /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Def)
             /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
+            /// <TalentsAffecting>
+            /// Warbringer [Usable in any stance]
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting>
+            /// Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]
+            /// </GlyphsAffecting>
         }
         #endregion
         #region Other Abilities
@@ -1646,7 +1675,7 @@ namespace Rawr.DPSWarr {
             /// Instantly counterattack any enemy that strikes you in melee for 12 sec. Melee attacks
             /// made from behind cannot be counterattacked. A maximum of 20 attacks will cause retaliation.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
+            /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
         }
         #endregion

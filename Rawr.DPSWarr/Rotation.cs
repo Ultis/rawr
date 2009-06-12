@@ -106,7 +106,7 @@ namespace Rawr.DPSWarr {
             BS.Whirlwind = WW;
             BS.Bloodthirst = BT;
             
-            BLS.Whirlwind = WW;
+            //BLS.Whirlwind = WW;
 
             SS.Slam = SL;
             SS.Overpower = OP;
@@ -211,9 +211,10 @@ namespace Rawr.DPSWarr {
             float BladestormRage = BLS.GetRageUsePerSecond();
             float SweepingRage = SW.GetRageUsePerSecond();
             float RendRage = RD.GetRageUsePerSecond();
+            float ThunderRage = TH.GetRageUsePerSecond();
             // Total
             float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage +
-                BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
+                BloodSurgeRage + SweepingRage + BladestormRage + RendRage + ThunderRage;
             return rage;
         }
         public virtual float neededRage() {
@@ -227,9 +228,10 @@ namespace Rawr.DPSWarr {
             float BladestormRage = BLS.GetRageUsePerSecond();
             float SweepingRage = SW.GetRageUsePerSecond();
             float RendRage = RD.GetRageUsePerSecond();
+            float ThunderRage = TH.GetRageUsePerSecond();
             // Total
             float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage
-                + BloodSurgeRage + SweepingRage + BladestormRage + RendRage;
+                + BloodSurgeRage + SweepingRage + BladestormRage + RendRage + ThunderRage;
             return rage;
         }
         public virtual float freeRage() {
@@ -263,10 +265,7 @@ namespace Rawr.DPSWarr {
 
         #endregion
 
-        public float Latency()
-        {
-            return 0f;
-        }
+        public float Latency() { return 0f; }
 
         #region ArmsRotVariables
         public float _MS_DPS      = 0f; public float _MS_GCDs      = 0f; public float _MS_GCDsD      = 0f;

@@ -535,9 +535,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          character.OffHand.Type == Item.ItemType.TwoHandMace ||
                                          character.OffHand.Type == Item.ItemType.TwoHandSword)
                                          ? 0.10f : 0f)),
-                BonusStaminaMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f,
-                BonusStrengthMultiplier = /*talents.Vitality * 0.02f +*/ talents.StrengthOfArms * 0.02f + (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
-                Expertise = /*talents.Vitality * 2.0f +*/ talents.StrengthOfArms * 2.0f,
+                BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f + (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
+                Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
+                BonusArmorMultiplier = talents.Toughness * 0.02f,
                 //BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 //BaseArmorMultiplier = talents.Toughness * 0.02f,
@@ -553,58 +554,27 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
             float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
-            //float strModifier = (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier);
-            //float racialStr = /*(float)Math.Floor*/(statsRace.Strength * strModifier);
-            //float gearStr = /*(float)Math.Floor*/(statsGearEnchantsBuffs.Strength * strModifier);
-            //statsTotal.Strength = racialStr + gearStr;
 
             statsTotal.BonusStaminaMultiplier = ((1f + statsRace.BonusStaminaMultiplier) * (1f + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1f;
             statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
 
-            //statsTotal.BonusAttackPowerMultiplier = ((1f + statsRace.BonusAttackPowerMultiplier) * (1f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1f;
-            //statsTotal.BonusStrengthMultiplier = ((1f + statsRace.BonusStrengthMultiplier) * (1f + statsGearEnchantsBuffs.BonusStrengthMultiplier) * (1f + 0.02f * character.WarriorTalents.StrengthOfArms) * (1 + character.WarriorTalents.ImprovedBerserkerStance * ((calcOpts.FuryStance) ? 0.04f: 0.00f))) - 1;
-
             statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
             statsTotal.Health   = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
 
+            statsTotal.Armor *= (1f + statsTotal.BonusArmorMultiplier);
             statsTotal.Armor += statsTotal.Agility * 2f;
 
             statsTotal.AttackPower = (statsTotal.Strength * 2f + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
             statsTotal.AttackPower += (statsTotal.Armor / 180f) * talents.ArmoredToTheTeeth;
             statsTotal.AttackPower += statsTotal.AttackPower * statsTotal.BonusAttackPowerMultiplier;
 
-            //statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
-
-            //statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
-
-            //statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
-            //statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
-            //statsTotal.PhysicalHaste += statsTalents.PhysicalHaste;
-
-            // Removing this line, and instead adding it to CombatFactors as a buff, since statsTotal.ArmorPenetration includes arp from debuffs and not buffs, and they need to be separate
-            //statsTotal.ArmorPenetration += ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
-
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
             // handle boss level difference
             statsTotal.PhysicalCrit -= (0.006f * (calcOpts.TargetLevel - 80f) + (calcOpts.TargetLevel == 83f ? 0.03f : 0f));
 
-            //statsTotal.BonusCritMultiplier += statsGearEnchantsBuffs.BonusCritMultiplier;
-            
-            //statsTotal.BonusDamageMultiplier += statsGearEnchantsBuffs.BonusDamageMultiplier;
-            //statsTotal.BonusPhysicalDamageMultiplier += statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
-
-            //statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
-
-            //statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
-            //statsTotal.BonusSlamDamage += statsGearEnchantsBuffs.BonusSlamDamage;
-            //statsTotal.BonusSlamDamage += statsBuffs.DreadnaughtBonusRageProc;
-            //statsTotal.DreadnaughtBonusRageProc = statsGearEnchantsBuffs.DreadnaughtBonusRageProc;
-
-
-
-            // TODO: This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
+            // This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
             // such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
@@ -667,7 +637,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors.OffHand.Speed, fightDuration);
                 
             }
-            /*Console.WriteLine("Test");*/
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
                 {
@@ -721,10 +690,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
             statsProcs.Armor += 2f * statsProcs.Agility;
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            //statsProcs.PhysicalHaste = StatConversion.GetHasteFromRating(statsProcs.HasteRating, character.Class);
             statsTotal += statsProcs;
-
-
 
             return statsTotal;
         }

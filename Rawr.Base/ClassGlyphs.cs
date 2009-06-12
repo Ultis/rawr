@@ -280,7 +280,7 @@ namespace Rawr
         /// <summary>Increases the change for your Taunt ability to succeed by 8%.</summary>
         [GlyphData(23, "Glyph of Taunt", true, @"Increases the change for your Taunt ability to succeed by 8%.")]
         public bool GlyphOfTaunt { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
-        /// <summary>Your Victory Ruch ability has a 30% increased critical strike chance against targets above 70% health.</summary>
+        /// <summary>Your Victory Rush ability has a 30% increased critical strike chance against targets above 70% health.</summary>
         [GlyphData(24, "Glyph of Victory Rush", true, @"Your Victory Rush ability has a 30% increased critical strike chance against targets above 70% health.")]
         public bool GlyphOfVictoryRush { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
         /// <summary>Your Vigilance ability transfers an additional 5% of your target's threat to you.</summary>
