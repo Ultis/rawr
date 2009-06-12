@@ -14,6 +14,7 @@
 				IsThreeState="True"
 				IsChecked="{Binding Enabled, Mode=TwoWay}"
 				Content="{Binding Name}"
+                LostFocus="FocusLost"
 				/>
 		</common:HierarchicalDataTemplate>
 	</UserControl.Resources>
@@ -23,11 +24,11 @@
 		<Popup x:Name="FilterPopup" VerticalAlignment="Bottom" HorizontalAlignment="Left" VerticalOffset="2">
 			<Grid MaxWidth="250" MaxHeight="300" Background="#FFFFFFFF">
 				<controls:TreeView x:Name="FilterTree"
-					Grid.Column="0"      
+					Grid.Column="0" LostFocus="FocusLost"
 					ItemTemplate="{StaticResource FilterTemplate}">
 				</controls:TreeView>
 			</Grid>
 		</Popup>
-		<ToggleButton Content="Filter" Checked="ShowPopup" Unchecked="HidePopup" />
+		<ToggleButton x:Name="Toggle" Content="Filter" Checked="ShowPopup" Unchecked="HidePopup" LostFocus="FocusLost" />
 	</Grid>
 </UserControl>

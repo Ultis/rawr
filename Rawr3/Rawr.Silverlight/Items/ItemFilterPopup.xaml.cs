@@ -18,15 +18,26 @@ namespace Rawr.Silverlight
 			InitializeComponent();
 		}
 
-		private void HidePopup(object sender, System.Windows.RoutedEventArgs e)
+		private void HidePopup(object sender, RoutedEventArgs e)
 		{
             FilterPopup.IsOpen = false;
 		}
 
-		private void ShowPopup(object sender, System.Windows.RoutedEventArgs e)
+		private void ShowPopup(object sender, RoutedEventArgs e)
 		{
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
             FilterPopup.IsOpen = true;
 		}
+
+        private void FocusLost(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement focus = (FocusManager.GetFocusedElement() as FrameworkElement);
+            DependencyObject parent = VisualTreeHelper.GetParent(focus);
+            while (parent != null && parent != FilterTree) parent = VisualTreeHelper.GetParent(parent);
+            if (parent == null)
+            {
+                Toggle.IsChecked = false;
+            }
+        }
 	}
 }
