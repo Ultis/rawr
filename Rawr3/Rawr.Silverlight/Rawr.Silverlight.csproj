@@ -152,6 +152,9 @@
     </Compile>
     <Compile Include="FileUtils.cs" />
     <Compile Include="GroupBox\Groupbox.cs" />
+    <Compile Include="Items\EditItemFilter.xaml.cs">
+      <DependentUpon>EditItemFilter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Items\ItemFilterPopup.xaml.cs">
       <DependentUpon>ItemFilterPopup.xaml</DependentUpon>
     </Compile>
@@ -268,6 +271,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\Status.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\EditItemFilter.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

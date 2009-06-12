@@ -311,11 +311,17 @@ namespace Rawr.Silverlight
                     if (newIndex == 1) ShowItemEditor();
                     else if (newIndex == 2) ShowGemmingTemplates();
                     else if (newIndex == 3) ShowItemRefinement();
+                    else if (newIndex == 4) ShowItemFilters();
                     else if (newIndex == 6) ShowOptimizer();
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
 
+        }
+
+        private void ShowItemFilters()
+        {
+            new EditItemFilter().Show();
         }
 
         private void ShowOptimizer()

@@ -8,6 +8,6 @@
 		<ResourceDictionary>
 			<local:IconPathConverter x:Key="IconPathConverter"/>
 			<local:GemColorConverter x:Key="GemColorConverter"/>
-		</ResourceDictionary>
+        </ResourceDictionary>
     </Application.Resources>		 
 </Application>

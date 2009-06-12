@@ -23,6 +23,7 @@ namespace Rawr
             {
                 parent = value;
                 other.Parent = parent;
+                foreach (ItemFilterRegex filter in this) filter.Parent = parent;
             }
         }
         private ItemFilterOther other;
@@ -79,6 +80,7 @@ namespace Rawr
             if (e.OldItems != null)
                 foreach (ItemFilterRegex filter in e.OldItems)
                 {
+                    filter.Parent = null;
                     filter.PropertyChanged -= new PropertyChangedEventHandler(filter_PropertyChanged);
                     FilterList.Remove(filter);
                 }
@@ -86,6 +88,7 @@ namespace Rawr
             if (e.NewItems != null)
                 foreach (ItemFilterRegex filter in e.NewItems)
                 {
+                    filter.Parent = Parent;
                     filter.PropertyChanged += new PropertyChangedEventHandler(filter_PropertyChanged);
                     FilterList.Add(filter);
                 }
@@ -168,10 +171,26 @@ namespace Rawr
             }
         }
 
+        [XmlIgnore]
+        public ItemFilterRegex Parent { get; internal set; }
+
         public int MinItemLevel { get; set; }
         public int MaxItemLevel { get; set; }
+
         public Item.ItemQuality MinItemQuality { get; set; }
+        public int MinItemQualityIndex
+        {
+            get { return (int)MinItemQuality + 1; }
+            set { MinItemQuality = (Item.ItemQuality)(value - 1); }
+        }
+
         public Item.ItemQuality MaxItemQuality { get; set; }
+        public int MaxItemQualityIndex
+        {
+            get { return (int)(MaxItemQuality + 1); }
+            set { MaxItemQuality = (Item.ItemQuality)(value - 1); }
+        }
+
         public bool AdditiveFilter { get; set; }
         public bool AppliesToItems { get; set; }
         public bool AppliesToGems { get; set; }
@@ -388,18 +407,22 @@ namespace Rawr
             writer.Close();
         }
 
+        private static bool isLoading;
         public static void Load(TextReader reader)
         {
+            isLoading = true;
             try
             {
                 System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
                 data = (ItemFilterData)serializer.Deserialize(reader);
                 reader.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 data = new ItemFilterData();
             }
+            isLoading = false;
+            ItemCache.OnItemsChanged();
         }
         #endregion
 
@@ -407,7 +430,7 @@ namespace Rawr
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set { name = value; OnPropertyChanged("Name"); }
         }
 
         [XmlIgnore]
@@ -419,7 +442,7 @@ namespace Rawr
         public void OnEnabledChanged(bool orginator)
         {
             OnPropertyChanged("Enabled");
-            if (orginator) ItemCache.OnItemsChanged();
+            if (orginator && !isLoading) ItemCache.OnItemsChanged();
         }
 
         #region INotifyPropertyChanged Members
