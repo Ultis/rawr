@@ -51,17 +51,15 @@ namespace Rawr.DPSWarr {
                 float mhWhiteDPS = MhAvgSwingDmg();
                 mhWhiteDPS /= wepSpeed;
                 mhWhiteDPS *= (1f - Ovd_Freq);
-                return mhWhiteDPS;
+                return (float)Math.Max(0f,mhWhiteDPS);
             }
             public float CalcOhWhiteDPS() {
                 float ohWhiteDPS = OhAvgSwingDmg();
                 ohWhiteDPS /= _combatFactors.OffHandSpeed;
                 if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 &&
                     (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1)) {
-                    return ohWhiteDPS;
-                } else {
-                    return 0f;
-                }
+                    return (float)Math.Max(0f,ohWhiteDPS);
+                }else{return 0f;}
             }
             public float MhAvgSwingDmg() {
                 float mhWhiteSwing = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;
@@ -75,7 +73,7 @@ namespace Rawr.DPSWarr {
             }
             public float OhAvgSwingDmg() {
                 float ohWhiteSwing = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;
-                ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
+                ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1f + _combatFactors.BonusWhiteCritDmg);
                 ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
                 
                 ohWhiteSwing *= _combatFactors.DamageBonus;
@@ -939,15 +937,20 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 Targets += StatS.BonusTargets;
                 RageCost = 15f - (Talents.FocusedRage * 1f);
-                CastTime = 1.5f - (Talents.ImprovedSlam * 0.5f); // In Seconds
+                float latencyMOD = 1f + CalcOpts.GetLatency();
+                CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)) /** latencyMOD*/; // In Seconds
                 StanceOkArms = StanceOkDef = true;
-                DamageBase = combatFactors.AvgMhWeaponDmg + 250;
+                DamageBase = combatFactors.AvgMhWeaponDmg + 250f;
                 DamageBonus = (Talents.UnendingFury * 0.02f) + (StatS.BonusSlamDamage);
             }
             // Variables
             // Get/Set
             // Functions
-            public override float GetActivates() {if (!GetValided()) { return 0f; }return 0f;}
+            public virtual float GetActivates(float RemActs) {
+                if (!GetValided()) { return 0f; }
+                return 0f;
+                //return RemActs / CastTime;
+            }
             public override float GetDamage() { return GetDamage(false); }
             public override float GetDamage(bool Override) {
                 if (!Override && !GetValided()) { return 0f; }

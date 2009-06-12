@@ -200,8 +200,7 @@ namespace Rawr.DPSWarr {
                 case "Dodge %": return combatFactors.MhDodgeChance;
                 case "Parry %": return combatFactors.MhParryChance;
 
-                case "Chance to be Avoided %": return combatFactors.YellowMissChance
-                    + StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, Character.CharacterClass.Warrior);
+                case "Chance to be Avoided %": return combatFactors.YellowMissChance + combatFactors.MhDodgeChance;
 
                 //case "Threat Reduction": return ThreatReduction;
                 //case "Threat Per Second": return ThreatPerSecond;*/

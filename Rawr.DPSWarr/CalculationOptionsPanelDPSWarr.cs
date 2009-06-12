@@ -57,6 +57,11 @@ namespace Rawr.DPSWarr {
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
                 CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 // Abilities to Maintain
+                CK_Thunder.Checked = calcOpts.Mntn_Thunder;
+                CK_Sunder.Checked = calcOpts.Mntn_Sunder;
+                CK_DemoShout.Checked = calcOpts.Mntn_Demo;
+                CK_Hamstring.Checked = calcOpts.Mntn_Hamstring;
+                CK_BattleShout.Checked = calcOpts.Mntn_Battle;
                 // Latency
                 CB_Lag.Value   = (int)calcOpts.Lag;
                 CB_React.Value = (int)calcOpts.React;
