@@ -607,7 +607,9 @@ namespace Rawr //O O . .
                                 }
                                 else
                                 {
-                                    if (check && int.Parse(ids[4]) == GetEnchantBySlot(slot).Id)
+                                    Enchant currentEnchant = GetEnchantBySlot(slot);
+                                    int currentId = currentEnchant != null ? currentEnchant.Id : 0;
+                                    if (check && int.Parse(ids[4]) == currentId)
                                     {
                                         continue;
                                     }
