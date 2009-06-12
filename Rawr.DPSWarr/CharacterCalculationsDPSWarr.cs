@@ -143,26 +143,27 @@ namespace Rawr.DPSWarr {
             // DPS Fury
             format = "{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*{4:00.0%} of DPS";
             dictValues.Add("Description",       string.Format("DPS  : PerHit : RPS : #ActsD"));
-            dictValues.Add("Bloodsurge",        string.Format(format,BS.GetDPS(), BS.GetDamageOnUse(), BS.GetRageUsePerSecond() ,BS.GetActivates(),BS.GetDPS()/TotalDPS));
-            dictValues.Add("Bloodthirst",       string.Format(format,BT.GetDPS(), BT.GetDamageOnUse(), BT.GetRageUsePerSecond() ,BT.GetActivates(),BT.GetDPS()/TotalDPS));
-            dictValues.Add("Whirlwind",         string.Format(format,WW.GetDPS(), WW.GetDamageOnUse(), WW.GetRageUsePerSecond() ,WW.GetActivates(),WW.GetDPS()/TotalDPS));
+            dictValues.Add("Bloodsurge",        string.Format(format,BS.DPS, BS.DamageOnUse, BS.RageUsePerSecond ,BS.Activates,BS.DPS/TotalDPS));
+            dictValues.Add("Bloodthirst",       string.Format(format,BT.DPS, BT.DamageOnUse, BT.RageUsePerSecond ,BT.Activates,BT.DPS/TotalDPS));
+            dictValues.Add("Whirlwind",         string.Format(format,WW.DPS, WW.DamageOnUse, WW.RageUsePerSecond ,WW.Activates,WW.DPS/TotalDPS));
             // DPS Arms
             format = "{0:0000} : {1:0000} : {2:00.00} : {3:000.00}*{4:00.0%} of DPS";
-            dictValues.Add("Mortal Strike",     string.Format(format,Rot._MS_DPS ,MS.GetDamageOnUse() ,Rot._MS_GCDs ,Rot._MS_GCDsD ,Rot._MS_DPS /TotalDPS));
-            dictValues.Add("Rend",              string.Format(format,Rot._RD_DPS ,RD.GetTickSize()    ,Rot._RD_GCDs ,Rot._RD_GCDsD ,Rot._RD_DPS /TotalDPS));
-            dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.GetDamageOnUse() ,Rot._OP_GCDs ,Rot._OP_GCDsD ,Rot._OP_DPS /TotalDPS));
-            dictValues.Add("Sudden Death",      string.Format(format,Rot._SD_DPS ,SD.GetDamageOnUse() ,Rot._SD_GCDs ,Rot._SD_GCDsD ,Rot._SD_DPS /TotalDPS));
-            dictValues.Add("Slam",              string.Format(format,Rot._SL_DPS ,SL.GetDamageOnUse() ,Rot._SL_GCDs ,Rot._SL_GCDsD ,Rot._SL_DPS /TotalDPS));
-            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.GetDamageOnUse(),Rot._BLS_GCDs,Rot._BLS_GCDsD,Rot._BLS_DPS/TotalDPS));
-            dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.GetDamageOnUse() ,Rot._Thunder_GCDs ,Rot._Thunder_GCDsD ,Rot._TH_DPS /TotalDPS));
+            dictValues.Add("Mortal Strike",     string.Format(format,Rot._MS_DPS ,MS.DamageOnUse ,Rot._MS_GCDs ,Rot._MS_GCDsD ,Rot._MS_DPS /TotalDPS));
+            dictValues.Add("Rend",              string.Format(format,Rot._RD_DPS ,RD.TickSize    ,Rot._RD_GCDs ,Rot._RD_GCDsD ,Rot._RD_DPS /TotalDPS));
+            dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.DamageOnUse ,Rot._OP_GCDs ,Rot._OP_GCDsD ,Rot._OP_DPS /TotalDPS));
+            dictValues.Add("Sudden Death",      string.Format(format,Rot._SD_DPS ,SD.DamageOnUse ,Rot._SD_GCDs ,Rot._SD_GCDsD ,Rot._SD_DPS /TotalDPS));
+            dictValues.Add("Slam",              string.Format(format,Rot._SL_DPS ,SL.DamageOnUse ,Rot._SL_GCDs ,Rot._SL_GCDsD ,Rot._SL_DPS /TotalDPS));
+            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse,Rot._BLS_GCDs,Rot._BLS_GCDsD,Rot._BLS_DPS/TotalDPS));
+            dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs ,Rot._Thunder_GCDsD ,Rot._TH_DPS /TotalDPS));
             // DPS General
             dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
-            dictValues.Add("Heroic Strike/Cleave",string.Format(format,Rot._OVD_DPS, Which.GetDamageOnUse(), Which.FullRageCost, Which.GetActivates(), Rot._OVD_DPS / TotalDPS));
+            dictValues.Add("Heroic Strike",     string.Format(format,HS.DPS, HS.DamageOnUse, HS.FullRageCost, HS.Activates, HS.DPS / TotalDPS));
+            dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.FullRageCost, CL.Activates, CL.DPS / TotalDPS));
             dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}" + 
                                 Environment.NewLine + "Off Hand- {5:0.00}" + 
                                 Environment.NewLine + "{6:00.0%} of DPS",
                                 WhiteDPS,WhiteDmg,WhiteRage,0f,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
-            dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}*"+Rot.GCDUsage, TotalDPS,TotalDPS*BT.GetRotation(),TotalDPS*Duration));
+            dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}*"+Rot.GCDUsage, TotalDPS,TotalDPS*BT.RotationLength,TotalDPS*Duration));
             // Rage
             dictValues.Add("Generated White DPS Rage",  string.Format("{0:00.000}",WhiteRage));
             dictValues.Add("Generated Other Rage",      string.Format("{0:00.000}",OtherRage));

@@ -138,7 +138,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Thunder Clap",
 
                         "DPS Breakdown (General):Deep Wounds",
-                        "DPS Breakdown (General):Heroic Strike/Cleave",
+                        "DPS Breakdown (General):Heroic Strike",
+                        "DPS Breakdown (General):Cleave",
                         "DPS Breakdown (General):White DPS",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Rotation
@@ -317,19 +318,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
 
-            calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec();
+            calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
             calculatedStats.OtherRage = Rot.OtherRage();
             calculatedStats.FreeRage = Rot.freeRage();
 
-            if(calculatedStats.MS.GetRotation()==Skills.ROTATION_LENGTH_FURY){
+            if(calcOpts.FuryStance){
                 calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH
-                    + calculatedStats.BT.GetDPS() + calculatedStats.WW.GetDPS() + calculatedStats.BS.GetDPS()
-                    + calculatedStats.DW.GetDPS() + calculatedStats.MS.GetDPS() + calculatedStats.SD.GetDPS()
-                    + calculatedStats.SL.GetDPS() + calculatedStats.OP.GetDPS() + calculatedStats.RD.GetDPS()
-                    + calculatedStats.HS.GetDPS() + calculatedStats.BLS.GetDPS();
+                    + calculatedStats.BT.DPS + calculatedStats.WW.DPS + calculatedStats.BS.DPS
+                    + calculatedStats.DW.DPS + calculatedStats.MS.DPS + calculatedStats.SD.DPS
+                    + calculatedStats.SL.DPS + calculatedStats.OP.DPS + calculatedStats.RD.DPS
+                    + calculatedStats.HS.DPS + calculatedStats.BLS.DPS;
             }else{
                 calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
-                    calculatedStats.Rot._DW_DPS + calculatedStats.Rot._OVD_DPS/*+ calculatedStats.HS.GetDPS()*/;
+                    calculatedStats.Rot._DW_DPS + calculatedStats.Rot._OVD_DPS/*+ calculatedStats.HS.DPS*/;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
@@ -600,8 +601,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (calcOpts.FuryStance) {
                 Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
                 Skills.Ability ww = new Skills.WhirlWind(character, statsTotal, combatFactors, whiteAttacks);
-                mhHitsPerSecond = (bt.GetActivates() + ww.GetActivates()) / bt.GetRotation() * (1f - combatFactors.YellowMissChance);
-                ohHitsPerSecond = (ww.GetActivates()) / bt.GetRotation() * (1f - combatFactors.YellowMissChance);
+                mhHitsPerSecond = (bt.Activates + ww.Activates) / bt.RotationLength * (1f - combatFactors.YellowMissChance);
+                ohHitsPerSecond = (ww.Activates) / bt.RotationLength * (1f - combatFactors.YellowMissChance);
             }else{mhHitsPerSecond = 1f / 1.5f;}
             if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
             if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus) * (1f - combatFactors.WhiteMissChance); }
@@ -678,9 +679,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 statsProcs += Shatt.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
             }
             Skills.BuffEffect Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors, whiteAttacks);
-            if (Sweep.GetValided()) { statsProcs += Sweep.GetAverageStats(); }
+            if (Sweep.GetValided()) { statsProcs += Sweep.AverageStats; }
             Skills.BuffEffect Blood = new Skills.Bloodrage(character, statsTotal, combatFactors, whiteAttacks);
-            if (Blood.GetValided()) { statsProcs += Blood.GetAverageStats(); }
+            if (Blood.GetValided()) { statsProcs += Blood.AverageStats; }
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
