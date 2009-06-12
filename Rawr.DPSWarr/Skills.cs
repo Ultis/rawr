@@ -946,6 +946,7 @@ namespace Rawr.DPSWarr {
             // Variables
             // Get/Set
             // Functions
+            public override float GetActivates() {if (!GetValided()) { return 0f; }return 0f;}
             public virtual float GetActivates(float RemActs) {
                 if (!GetValided()) { return 0f; }
                 return 0f;
