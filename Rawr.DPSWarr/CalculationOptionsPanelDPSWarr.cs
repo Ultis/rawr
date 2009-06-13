@@ -9,7 +9,7 @@ namespace Rawr.DPSWarr {
         public CalculationOptionsPanelDPSWarr() {
             InitializeComponent();
 
-            armorBosses.Add(10643, "Default Boss Armor");
+            armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, "Default Boss Armor");
             armorBosses.Add(10900, "Patchwerk");
             armorBosses.Add(12000, "Grobbulus");
             armorBosses.Add(13083, "-");
@@ -181,7 +181,7 @@ namespace Rawr.DPSWarr {
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
         public int TargetLevel = 83;
-        public int TargetArmor = 10643;
+        public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
         public float Duration = 300f;
         public bool FuryStance = true;
         // Rotational Changes

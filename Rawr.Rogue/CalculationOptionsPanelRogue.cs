@@ -17,7 +17,7 @@ namespace Rawr.Rogue
         {
             InitializeComponent();
 
-            _armorBosses.Add(13083, "All Level 83 Bosses");
+            _armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, "All Level 83 Bosses");
             _armorBosses.Add(10338, "Generic 82 Elite");
 
             comboBoxArmorBosses.DisplayMember = "Key";

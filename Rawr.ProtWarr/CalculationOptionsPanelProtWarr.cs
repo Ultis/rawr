@@ -28,7 +28,7 @@ namespace Rawr.ProtWarr
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
 			armorBosses.Add(8800, ": Void Reaver");
-            armorBosses.Add(10643, ": Ulduar Bosses");
+            armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, ": Ulduar Bosses");
 		}
 
 		protected override void LoadCalculationOptions()
@@ -215,7 +215,7 @@ namespace Rawr.ProtWarr
 		}
 
 		public int TargetLevel = 83;
-        public int TargetArmor = 10643;
+        public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
 		public int BossAttackValue = 60000;
         public float BossAttackSpeed = 2.0f;
         public bool UseParryHaste = false;

@@ -112,7 +112,7 @@ namespace Rawr.ProtWarr
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 45);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Target Armor:  (Default: 10643)";
+            this.label2.Text = "Target Armor:  (Default: " + StatConversion.NPC_BOSS_ARMOR.ToString() + ")";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // trackBarTargetArmor

@@ -127,7 +127,7 @@ namespace Rawr.ProtPaladin
 			this.trackBarTargetArmor.Size = new System.Drawing.Size(181, 42);
 			this.trackBarTargetArmor.TabIndex = 2;
 			this.trackBarTargetArmor.TickFrequency = 1000;
-			this.trackBarTargetArmor.Value = 10643;
+			this.trackBarTargetArmor.Value = (int)StatConversion.NPC_BOSS_ARMOR;
 			this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// labelTargetArmorDescription
@@ -138,7 +138,7 @@ namespace Rawr.ProtPaladin
 			this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
 			this.labelTargetArmorDescription.Size = new System.Drawing.Size(172, 34);
 			this.labelTargetArmorDescription.TabIndex = 0;
-			this.labelTargetArmorDescription.Text = "10643: Tier 8 Bosses";
+			this.labelTargetArmorDescription.Text = StatConversion.NPC_BOSS_ARMOR.ToString() + ": Tier 8 Bosses";
 			// 
 			// groupBoxPaladinSkills
 			// 

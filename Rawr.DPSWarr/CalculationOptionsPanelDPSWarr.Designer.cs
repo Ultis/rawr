@@ -120,7 +120,7 @@
             this.CB_TargArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TargArmor.FormattingEnabled = true;
             this.CB_TargArmor.Items.AddRange(new object[] {
-            "10643",
+            StatConversion.NPC_BOSS_ARMOR.ToString(),
             "10900",
             "12000",
             "13083"});
