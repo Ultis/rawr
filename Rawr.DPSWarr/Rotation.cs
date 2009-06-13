@@ -321,7 +321,7 @@ namespace Rawr.DPSWarr {
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             availRage += Blood.GetRageUsePerSecond(Blood_GCDs) + Blood.AverageStats.BonusRageGen; // used per sec reverses the rage cost in this instance
 
-            Skills.BerserkerRage ZRage = new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks);
+            /*Skills.BerserkerRage ZRage = new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks);
             if (ZRage.RageCost > 0) {
                 float ZRage_GCDs = (float)Math.Min(availGCDs, ZRage.Activates);
                 _ZRage_GCDs = ZRage_GCDs; _ZRage_GCDsD = _ZRage_GCDs * duration / rotation;
@@ -329,7 +329,7 @@ namespace Rawr.DPSWarr {
                 GCDUsage += ZRage.Name + ": " + ZRage_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 availRage += ZRage.GetRageUsePerSecond(ZRage_GCDs); // used per sec reverses the rage cost in this instance
-            }
+            }*/
 
             // Periodic GCD eaters (DPS for these handled elsewhere)
             if (CalcOpts.Mntn_Battle) {
@@ -451,7 +451,7 @@ namespace Rawr.DPSWarr {
             availRage -= SD.GetRageUsePerSecond(SD_GCDs);
 
             // Priority 5 : Slam for remainder of GCDs
-            float SL_GCDs = SL.GetValided() ? availGCDs * latencyMOD : 0f;
+            float SL_GCDs = SL.GetValided() ? availGCDs /* * latencyMOD*/ : 0f;
             _SL_GCDs = SL_GCDs; _SL_GCDsD = _SL_GCDs * duration / rotation;
             GCDsused += (float)Math.Min(NumGCDs, SL_GCDs);
             GCDUsage += SL.Name + ": " + SL_GCDs.ToString() + "\n";

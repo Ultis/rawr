@@ -512,9 +512,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsRace = GetRaceStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
+            Stats statsOptionsPanel = new Stats() {
+                BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
+                PhysicalCrit = (calcOpts.FuryStance ? 0.03f : 0f)
+                            // handle boss level difference
+                            - 0.006f * (calcOpts.TargetLevel - 80f)
+                            - (calcOpts.TargetLevel == 83f ? 0.03f : 0f),
+            };
             Stats statsTalents = new Stats() {
                 //Parry = talents.Deflection * 1.0f,
-                PhysicalCrit = talents.Cruelty * 0.01f + (calcOpts.FuryStance ? 0.03f : 0f),
+                PhysicalCrit = talents.Cruelty * 0.01f,
                 //Dodge = talents.Anticipation * 1.0f,
                 //Block = talents.ShieldSpecialization * 1.0f,
                 //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
@@ -526,57 +533,58 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          character.MainHand.Type == Item.ItemType.FistWeapon)
                                          ? talents.OneHandedWeaponSpecialization * 0.02f: 0f)
                                          +*/ (character.MainHand != null &&
-                                         (character.MainHand.Type == Item.ItemType.Polearm ||
-                                         character.MainHand.Type == Item.ItemType.TwoHandAxe ||
+                                        (character.MainHand.Type == Item.ItemType.Polearm     ||
+                                         character.MainHand.Type == Item.ItemType.TwoHandAxe  ||
                                          character.MainHand.Type == Item.ItemType.TwoHandMace ||
                                          character.MainHand.Type == Item.ItemType.TwoHandSword)
-                                         ? talents.TwoHandedWeaponSpecialization * 0.02f : 0f) *
-                                         (1f - (talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
-                                        (character.OffHand.Type == Item.ItemType.TwoHandAxe  ||
-                                         character.OffHand.Type == Item.ItemType.TwoHandMace ||
-                                         character.OffHand.Type == Item.ItemType.TwoHandSword)
-                                         ? 0.10f : 0f)),
+                                         ? talents.TwoHandedWeaponSpecialization * 0.02f : 0f)
+                                         +
+                                         ((talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
+                                        (character.OffHand.Type  == Item.ItemType.TwoHandAxe  ||
+                                         character.OffHand.Type  == Item.ItemType.TwoHandMace ||
+                                         character.OffHand.Type  == Item.ItemType.TwoHandSword)
+                                         ? -0.10f : 0f)),
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f + (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
+                BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                 BonusArmorMultiplier = talents.Toughness * 0.02f,
-                //BonusShieldSlamDamage = talents.GagOrder * 0.05f,
-                //DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
-                //BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
                 // Removing this line, and instead adding it to CombatFactors as a buff, since statsTotal.ArmorPenetration includes arp from debuffs and not buffs, and they need to be separate
                 //ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
                 PhysicalHit = talents.Precision * 1.0f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
 
+            // Stamina
+            statsTotal.Stamina = (float)(int)statsTotal.Stamina;
+            statsTotal.Stamina *= 1f + statsTotal.BonusStaminaMultiplier;
+            statsTotal.Stamina = (float)(int)statsTotal.Stamina;
+            statsTotal.Health += (float)(int)(statsTotal.Stamina * 10f);
+
+            // Strength
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
-            float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
-
-            statsTotal.BonusStaminaMultiplier = ((1f + statsRace.BonusStaminaMultiplier) * (1f + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1f;
-            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-
             statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Stamina  = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier )) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier ));
-            statsTotal.Health   = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
+            //statsTotal.Strength = (float)(int)statsTotal.Strength;
+            //statsTotal.Strength *= 1f + statsTotal.BonusStrengthMultiplier;
+            //statsTotal.Strength = (float)(int)statsTotal.Strength;
 
+            // Agility
+
+            // Armor
             statsTotal.Armor *= (1f + statsTotal.BonusArmorMultiplier);
             statsTotal.Armor += statsTotal.Agility * 2f;
 
+            // Attack Power
             statsTotal.AttackPower = (statsTotal.Strength * 2f + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
             statsTotal.AttackPower += (statsTotal.Armor / 180f) * talents.ArmoredToTheTeeth;
             statsTotal.AttackPower += statsTotal.AttackPower * statsTotal.BonusAttackPowerMultiplier;
 
+            // Crit
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
-            // handle boss level difference
-            statsTotal.PhysicalCrit -= (0.006f * (calcOpts.TargetLevel - 80f) + (calcOpts.TargetLevel == 83f ? 0.03f : 0f));
 
-            // This is new and stolen from the Cat model per Astrylian and is supposed to handle all procs
-            // such as Berserking, Mirror of Truth, Grim Toll, etc.
+            // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
             Rotation Rot = new Rotation(character, talents, statsTotal, combatFactors, whiteAttacks);
@@ -591,7 +599,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 
                 //calculate the average uptime of the 2P T8 buff, and scale the haste bonus to match
                 float procChance = 0.4f;
-                haste2PT8Bonus = statsTotal.BonusWarrior2PT8Haste * (1 - (float)Math.Pow(1 - procChance, hsSlamPerProc));
+                haste2PT8Bonus = statsTotal.BonusWarrior2PT8Haste * (1f - (float)Math.Pow(1f - procChance, hsSlamPerProc));
             }
 
             statsTotal.HasteRating += haste2PT8Bonus;

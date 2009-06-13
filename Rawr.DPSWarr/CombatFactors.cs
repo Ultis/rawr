@@ -27,9 +27,10 @@ namespace Rawr.DPSWarr {
         #region Major Damage Factors
         public float DamageBonus {
             get {
-                return (1f + _stats.BonusPhysicalDamageMultiplier)
-                      *(1f + _stats.BonusDamageMultiplier)
-                      *(1f + 0.02f*_talents.WreckingCrew);
+                float bonus  = 1f + _stats.BonusDamageMultiplier;
+                      bonus *= 1f + _stats.BonusPhysicalDamageMultiplier;
+                      bonus *= 1f + _talents.WreckingCrew * 0.02f;
+                return bonus;
             }
         }
         public float DamageReduction {
@@ -78,7 +79,18 @@ namespace Rawr.DPSWarr {
         }
         public float BonusYellowCritDmg { get { return BonusWhiteCritDmg * (1f + _talents.Impale * 0.1f); } }
         #endregion
-        #region Miss Chance
+        #region Attack Table
+        // White
+        public float GlanceChance { get { return 0.25f; } }
+        public float ProbWhiteHit(Item i) { float exp = CalcExpertise(i); return 1f - WhiteMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp) - GlanceChance; }
+        public float ProbMhWhiteHit { get { return 1f - WhiteMissChance - MhCrit - MhDodgeChance - MhParryChance - GlanceChance; } }
+        public float ProbOhWhiteHit { get { return 1f - WhiteMissChance - OhCrit - OhDodgeChance - MhParryChance - GlanceChance; } }
+        // Yellow (Doesn't Glance and has different MissChance)
+        public float ProbYellowHit(Item i) { float exp = CalcExpertise(i); return 1f - YellowMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
+        public float ProbMhYellowHit { get { return 1f - YellowMissChance - MhCrit - MhDodgeChance - MhParryChance; } }
+        public float ProbOhYellowHit { get { return 1f - YellowMissChance - OhCrit - OhDodgeChance - MhParryChance; } }
+        #endregion
+        #region Miss
         public float HitPerc { get { return StatConversion.GetHitFromRating(_stats.HitRating, Character.CharacterClass.Warrior); } }
         public float MissPerc {
             get {
@@ -100,12 +112,6 @@ namespace Rawr.DPSWarr {
             }
         }
         public float YellowMissChance { get { return (float)Math.Max(0f, MissPerc); } }
-        #endregion
-        #region Attack Table
-        public float ProbWhiteHit(Item i) { return 1f - WhiteMissChance - CalcCrit(i) - CalcDodgeChance(CalcExpertise(i)) - GlanceChance; }
-        public float ProbMhWhiteHit { get { return 1f - WhiteMissChance - MhCrit - MhDodgeChance - GlanceChance; } }
-        public float ProbOhWhiteHit { get { return 1f - WhiteMissChance - OhCrit - OhDodgeChance - GlanceChance; } }
-        public float GlanceChance   { get { return 0.25f; } }
         #endregion
         #region Crit
         public float CalcCrit(Item weapon) {
@@ -131,7 +137,7 @@ namespace Rawr.DPSWarr {
         public float MhDodgeChance  { get { return CalcDodgeChance(MhExpertise); } }
         public float OhDodgeChance  { get { return CalcDodgeChance(OhExpertise); } }
         public float CalcDodgeChance(float Expertise) {
-            float DodgeChance = 0.065f - StatConversion.GetDodgeParryReducFromExpertise(Expertise, Character.CharacterClass.Warrior);
+            float DodgeChance = 0.065f - GetDPRfromExp(Expertise);
             DodgeChance -= _talents.WeaponMastery / 100f;
             return (float)Math.Max(0f,DodgeChance);
         }
@@ -140,11 +146,14 @@ namespace Rawr.DPSWarr {
         public float MhParryChance  { get { return CalcParryChance(MhExpertise); } }
         public float OhParryChance  { get { return CalcParryChance(OhExpertise); } }
         public float CalcParryChance(float Expertise) {
-            float ParryChance = 0.12f - StatConversion.GetDodgeParryReducFromExpertise(Expertise,Character.CharacterClass.Warrior);
-            return (float)Math.Max(0f, _calcOpts.InBack ? 0f : ParryChance);
+            float reduc = GetDPRfromExp(Expertise);
+            float cap = 0.065f;
+            float ParryChance = 0.12f - (float)Math.Min(cap, reduc);
+            return (float)Math.Max(0f, _calcOpts.InBack ? ParryChance * (1f - _calcOpts.InBackPerc/100f) : ParryChance);
         }
         #endregion
         #region Expertise
+        public float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, Character.CharacterClass.Warrior);}
         public static float GetRacialExpertiseFromWeapon(Character.CharacterRace r, Item weapon) {
             if(weapon != null){
                 if      (r == Character.CharacterRace.Human) {

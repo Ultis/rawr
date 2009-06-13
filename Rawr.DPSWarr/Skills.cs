@@ -181,6 +181,7 @@ namespace Rawr.DPSWarr {
                 Name = "Invalid";
                 ReqTalent = false;
                 CanBeDodged = true;
+                CanBeParried = true;
                 Talent2ChksValue = 0;
                 ReqMeleeWeap = false;
                 ReqMeleeRange = false;
@@ -203,6 +204,7 @@ namespace Rawr.DPSWarr {
             private float DAMAGEBONUS;
             private float CRITPERCBONUS;
             private bool CANBEDODGED;
+            private bool CANBEPARRIED;
             private bool REQTALENT;
             private int TALENT2CHKSVALUE;
             private bool REQMELEEWEAP;
@@ -235,6 +237,7 @@ namespace Rawr.DPSWarr {
             public bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
             public float Targets { get { return TARGETS; } set { TARGETS = value; } }
             public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
+            public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
             public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards 
             public float Cd { get { return CD; } set { CD = value; } } // In Seconds
             public float RageCost { get { return RAGECOST; } set { RAGECOST = value; } }
@@ -384,8 +387,10 @@ namespace Rawr.DPSWarr {
                 // Following keeps the crit perc between 0f and 1f (0%-100%)
                 Crit = (float)Math.Max(0f,(float)Math.Min(1f,combatFactors.MhYellowCrit + CritPercBonus));
 
-                Damage *= (1f - combatFactors.YellowMissChance - (CanBeDodged?combatFactors.MhDodgeChance:0f)
-                    + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
+                Damage *= (1f - combatFactors.YellowMissChance
+                              - (CanBeDodged  ? combatFactors.MhDodgeChance : 0f)
+                              - (CanBeParried ? combatFactors.MhParryChance : 0f)
+                        + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
 
                 return (float)Math.Max(0f,Damage);
             }
@@ -515,12 +520,12 @@ namespace Rawr.DPSWarr {
                     float DamageMH = GetDamage(false,false); // Base Damage
                     DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
                     DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
-                    DamageMH *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                    DamageMH *= (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance - combatFactors.MhParryChance
                         + combatFactors.MhYellowCrit * combatFactors.BonusYellowCritDmg); // Attack Table
                     float DamageOH = GetDamage(false, true);
                     DamageOH *= combatFactors.DamageBonus;
                     DamageOH *= combatFactors.DamageReduction;
-                    DamageOH *= (1 - combatFactors.YellowMissChance - combatFactors.OhDodgeChance
+                    DamageOH *= (1f - combatFactors.YellowMissChance - combatFactors.OhDodgeChance - combatFactors.OhParryChance
                         + combatFactors.OhYellowCrit * combatFactors.BonusYellowCritDmg);
 
                     float Damage = DamageMH + DamageOH;
@@ -752,14 +757,10 @@ namespace Rawr.DPSWarr {
                 return procs * 1.5f;//*/
                 return SD_GCDS;
             }
-            public override float Damage
-            {
-                get
-                {
+            public override float Damage {
+                get {
                     if (!GetValided()) { return 0f; }
-
                     float Damage = Execute.DamageOverride;
-
                     return (float)Math.Max(0f, Damage);
                 }
             }
@@ -782,6 +783,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 CanBeDodged = false;
+                CanBeParried = false;
                 Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
                 RageCost = 5f - (Talents.FocusedRage * 1f);
                 Targets += StatS.BonusTargets;
@@ -886,22 +888,13 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Sword Specialization (Requires Talent)</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
             public Swordspec(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;
-                Talents = c.WarriorTalents;
-                StatS = s;
-                combatFactors = cf;
-                Whiteattacks = wa;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 Name = "Sword Specialization";
-                ReqMeleeWeap = true;
-                ReqMeleeRange = true;
-                MaxRange = 5f; // In Yards 
+                ReqTalent = true;
+                Talent2ChksValue = Talents.SwordSpecialization;
                 Cd = 6f; // In Seconds
-                RageCost = -1f;
-                CastTime = -1f; // In Seconds
-                StanceOkFury = true;
-                StanceOkArms = true;
-                StanceOkDef = true;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
             }
             // Variables
             private Ability SL, MS, OP, SD;
@@ -915,14 +908,8 @@ namespace Rawr.DPSWarr {
             {
                 get
                 {
-                    // Invalidators
-                    if (!GetValided() || Talents.SwordSpecialization == 0) { return 0f; }
+                    if (!GetValided()) { return 0f; }
 
-                    //Ability SL = new Slam(Char, StatS, combatFactors, Whiteattacks);
-                    //Ability MS = new MortalStrike(Char, StatS, combatFactors, Whiteattacks);
-                    //Ability OP = new OverPower(Char, StatS, combatFactors, Whiteattacks);
-                    //Ability SD = new Suddendeath(Char, StatS, combatFactors, Whiteattacks);
-                    // Actual Calcs
                     if (combatFactors.MainHand.Type != Item.ItemType.TwoHandSword) { return 0.0f; }
                     float wepSpeed = combatFactors.MainHandSpeed;
                     if (combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && Talents.TitansGrip != 1)
@@ -939,19 +926,9 @@ namespace Rawr.DPSWarr {
             {
                 get
                 {
-                    // Invalidators
-                    if (!GetValided() || Talents.SwordSpecialization == 0) { return 0f; }
-
-                    // Base Damage
+                    if (!GetValided()) { return 0f; }
                     float Damage = combatFactors.AvgMhWeaponDmg;
-
-                    // Talents/Glyphs Affecting
-
-                    // Ensure that we are not doing negative Damage
-                    if (Damage < 0) { Damage = 0; }
-
-                    return Damage;
-
+                    return (float)Math.Max(0f,Damage);
                     // ORIGINAL LINES
                     //float damage = SwordSpecHits() * _combatFactors.AvgMhWeaponDmg;
                     //damage *= (1 + _combatFactors.MhCrit * _combatFactors.BonusWhiteCritDmg);
@@ -965,14 +942,13 @@ namespace Rawr.DPSWarr {
                     float _Damage = Damage; // Base Damage
                     _Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                     _Damage *= combatFactors.DamageReduction; // Global Damage Penalties
-                    _Damage *= (1 - combatFactors.YellowMissChance - combatFactors.MhDodgeChance
+                    _Damage *= (1f - combatFactors.YellowMissChance - combatFactors.MhDodgeChance - combatFactors.MhParryChance
                         + combatFactors.MhYellowCrit * combatFactors.BonusYellowCritDmg); // Attack Table
 
-                    if (_Damage < 0) { _Damage = 0; } // Ensure that we are not doing negative Damage
-                    return _Damage;
+                return (float)Math.Max(0f, _Damage);
                 }
             }
-        }
+            }
         public class ThunderClap : Ability {
             // Constructors
             /// <summary>
@@ -1001,7 +977,7 @@ namespace Rawr.DPSWarr {
                 Targets = (CalcOpts.MultipleTargets ? 4f : 1f) + StatS.BonusTargets;
                 MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
                 Cd = 6f; // In Seconds
-                Duration = 30f;
+                Duration = 30f; // In Seconds
                 float cost = 0f;
                 switch (Talents.ImprovedThunderClap) {
                     case 1: { cost = 1f; break; }

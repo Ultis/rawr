@@ -19,6 +19,7 @@ namespace Rawr {
         ArmorPenetrationRating,
         AshtongueTrinketProc,
         AttackPower,
+        BonusAttackPower,
         AttackPowerDemons,
         AverageAgility,
         AverageArmor,
@@ -681,6 +682,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AttackPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.AttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        public float BonusAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusAttackPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
