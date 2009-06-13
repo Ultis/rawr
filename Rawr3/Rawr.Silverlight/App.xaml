@@ -9,6 +9,7 @@
 			<local:IconPathConverter x:Key="IconPathConverter"/>
 			<local:GemColorConverter x:Key="GemColorConverter"/>
             <local:ItemQualityConverter x:Key="ItemQualityConverter"/>
+            <local:PercentConverter x:Key="PercentConverter"/>
         </ResourceDictionary>
     </Application.Resources>		 
 </Application>

@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.Healadin
 {
-    public class CalculationOptionsHealadin : ICalculationOptionBase
+    public class CalculationOptionsHealadin : ICalculationOptionBase, INotifyPropertyChanged
     {
         public string GetXml()
         {
@@ -20,44 +20,135 @@ namespace Rawr.Healadin
 
         public CalculationOptionsHealadin()
         {
-            Length = 7;
-            ManaAmt = 4300;
-            Activity = .85f;
-            Replenishment = .9f;
-            DivinePlea = 2f;
-            BoLUp = 1f;
-            BoLEff = .2f;
-            HolyShock = .15f;
-            BurstScale = .4f;
-            GHL_Targets = 1f;
-            InfusionOfLight = true;
-            IoLHolyLight = .9f;
-            JotP = true;
-            LoHSelf = false;
-            SSUptime = 1f;
+            length = 7;
+            manaAmt = 4300;
+            activity = .85f;
+            replenishment = .9f;
+            divinePlea = 2f;
+            boLUp = 1f;
+            boLEff = .2f;
+            holyShock = .15f;
+            burstScale = .4f;
+            gHL_Targets = 1f;
+            infusionOfLight = true;
+            ioLHolyLight = .9f;
+            jotP = true;
+            loHSelf = false;
+            sSUptime = 1f;
         }
 
-        public float Length { get; set; }
+        private float length;
+        public float Length
+        {
+            get { return length; }
+            set { length = value; OnPropertyChanged("Length"); }
+        }
 
-        [Display(Name="Mana Potion Amount")]
-        public float ManaAmt { get; set; }
+        private float manaAmt;
+        public float ManaAmt
+        {
+            get { return manaAmt; }
+            set { manaAmt = value; OnPropertyChanged("ManaAmt"); }
+        }
 
-        public float Activity { get; set; }
-        public float Replenishment { get; set; }
-        public float DivinePlea { get; set; }
-        public float BoLUp { get; set; }
-        public float BoLEff { get; set; }
-        public float HolyShock { get; set; }
-        public float BurstScale { get; set; }
-        public float GHL_Targets { get; set; }
+        private float activity;
+        public float Activity 
+        {
+            get { return activity; }
+            set { activity = value; OnPropertyChanged("Activity"); }
+        }
 
-        public bool InfusionOfLight { get; set; }
-        public float IoLHolyLight { get; set; }
+        private float replenishment;
+        public float Replenishment
+        {
+            get { return replenishment; }
+            set { replenishment = value; OnPropertyChanged("Replenishment"); }
+        }
 
-        public bool JotP { get; set; }
-        public bool LoHSelf { get; set; }
+        private float divinePlea;
+        public float DivinePlea
+        {
+            get { return divinePlea; }
+            set { divinePlea = value; OnPropertyChanged("DivinePlea"); }
+        }
 
-        public float SSUptime { get; set; }
+        private float boLUp;
+        public float BoLUp
+        {
+            get { return boLUp; }
+            set { boLUp = value; OnPropertyChanged("BoLUp"); }
+        }
 
+        private float boLEff;
+        public float BoLEff
+        {
+            get { return boLEff; }
+            set { boLEff = value; OnPropertyChanged("BoLEff"); }
+        }
+
+        private float holyShock;
+        public float HolyShock
+        {
+            get { return holyShock; }
+            set { holyShock = value; OnPropertyChanged("HolyShock"); }
+        }
+
+        private float burstScale;
+        public float BurstScale
+        {
+            get { return burstScale; }
+            set { burstScale = value; OnPropertyChanged("BurstScale"); }
+        }
+
+        private float gHL_Targets;
+        public float GHL_Targets
+        {
+            get { return gHL_Targets; }
+            set { gHL_Targets = value; OnPropertyChanged("GHL_Targets"); }
+        }
+
+        private bool infusionOfLight;
+        public bool InfusionOfLight
+        {
+            get { return infusionOfLight; }
+            set { infusionOfLight = value; OnPropertyChanged("InfusionOfLight"); }
+        }
+
+        private float ioLHolyLight;
+        public float IoLHolyLight
+        {
+            get { return ioLHolyLight; }
+            set { ioLHolyLight = value; OnPropertyChanged("IoLHolyLight"); }
+        }
+
+        private bool jotP;
+        public bool JotP
+        {
+            get { return jotP; }
+            set { jotP = value; OnPropertyChanged("JotP"); }
+        }
+
+        private bool loHSelf;
+        public bool LoHSelf
+        {
+            get { return loHSelf; }
+            set { loHSelf = value; OnPropertyChanged("LoHSelf"); }
+        }
+
+        private float sSUptime;
+        public float SSUptime
+        {
+            get { return sSUptime; }
+            set { sSUptime = value; OnPropertyChanged("SSUptime"); }
+        }
+
+        #region INotifyPropertyChanged Members
+        private void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }

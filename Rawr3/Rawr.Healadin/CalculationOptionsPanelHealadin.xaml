@@ -1,9 +1,55 @@
 ﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-    xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin" 
-    mc:Ignorable="d">
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Healadin" xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+	x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin" 
+    d:DesignHeight="513" d:DesignWidth="340">
+	<UserControl.DataContext>
+		<local:CalculationOptionsHealadin/>
+	</UserControl.DataContext>
     <Grid x:Name="LayoutRoot">
-        <Button Content="Test" Margin="4"/>
-    </Grid>
+
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition Width="*"/>
+    		<ColumnDefinition Width="*"/>
+    	</Grid.ColumnDefinitions>
+    	<Grid.RowDefinitions>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="*"/>
+    	</Grid.RowDefinitions>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Text="Fight Length:"/>
+    	<StackPanel Grid.Column="1" Orientation="Horizontal">
+    		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Mode=TwoWay, Path=Length}" Maximum="30" Minimum="1" DecimalPlaces="1" Increment="0.5"/>
+    		<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="mins"/>
+    	</StackPanel>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Activity:" d:LayoutOverrides="Height"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="2" Text="Replenishment:" d:LayoutOverrides="Width, Height"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="3" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="4" Text="TextBlock" d:LayoutOverrides="Width"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="5" Text="TextBlock" d:LayoutOverrides="Height"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="6" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="7" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="8" Text="TextBlock" d:LayoutOverrides="Width"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="9" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
+    	<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="1">
+    		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=Activity}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
+    		<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
+    	</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="2">
+    		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=Replenishment}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
+    		<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
+    	</StackPanel>
+
+	</Grid>
 </UserControl>

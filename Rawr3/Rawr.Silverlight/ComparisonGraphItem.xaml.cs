@@ -59,6 +59,7 @@ namespace Rawr.Silverlight
         {
             if (Character != null && ((ItemInstance != null && ItemInstance.Id > 0) || (OtherItem != null && OtherItem.Id > 0)))
             {
+                AvailableImage.Visibility = Visibility.Visible;
                 Character.ItemAvailability itemAvailability;
                 if (ItemInstance != null) itemAvailability = Character.GetItemAvailability(ItemInstance);
                 else itemAvailability = Character.GetItemAvailability(OtherItem);
@@ -84,7 +85,7 @@ namespace Rawr.Silverlight
             }
             else
             {
-                AvailableImage.Source = null;
+                AvailableImage.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -158,7 +159,7 @@ namespace Rawr.Silverlight
                 if (maxTick == 0) PositiveStack.Visibility = Visibility.Collapsed;
                 else
                 {
-                    Grid.SetColumn(PositiveStack, minTick + 2);
+                    Grid.SetColumn(PositiveStack, minTick + 1);
                     Grid.SetColumnSpan(PositiveStack, maxTick);
                     PositiveStack.Visibility = Visibility.Visible;
                 }
@@ -177,6 +178,14 @@ namespace Rawr.Silverlight
                 }
                 PositiveStack.Children.Add(TotalLabel);
             }
+		}
+
+		private void AvailableClicked(object sender, MouseButtonEventArgs e)
+		{
+            if (ItemInstance != null && ItemInstance.Id != 0)
+                Character.ToggleItemAvailability(ItemInstance, (Keyboard.Modifiers & ModifierKeys.Shift) == 0);
+            else if (OtherItem != null && OtherItem.Id != 0)
+                Character.ToggleItemAvailability(OtherItem, (Keyboard.Modifiers & ModifierKeys.Shift) == 0);
 		}
 	}
 }

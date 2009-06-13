@@ -1401,15 +1401,6 @@ namespace Rawr
         }
 
         System.Windows.Controls.UserControl PanelControl { get; }
-
-		/// <summary>
-		/// Sets default values for each CalculationOption used by the model, if they don't already exist, 
-		/// and then populates the controls with the current values in Character.CalculationOptions. You
-		/// don't need to call Character.OnItemsChanged() at the end of this method, only after changing the
-		/// value of any CalculationOptions from other methods (such as value changing event handlers on
-		/// the controls).
-		/// </summary>
-        void LoadCalculationOptions();
 	}
 
 }

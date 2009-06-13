@@ -7,8 +7,7 @@
 	x:Class="Rawr.Silverlight.ComparisonGraphItem" SizeChanged="ChangedSize" d:DesignHeight="40" d:DesignWidth="360">
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="15"/>
-			<ColumnDefinition Width="135"/>
+			<ColumnDefinition Width="150"/>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="*"/>
@@ -18,13 +17,18 @@
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		<Image x:Name="AvailableImage" Source="Images/DiamondOutline.png" Stretch="None" Margin="2,2,2,2"/>
-		<Grid x:Name="NameGrid" Grid.Column="1" Margin="2,2,6,2">
-			<Rectangle x:Name="EquippedRect" Fill="#402AFF00" Visibility="Collapsed" />
-			<TextBlock x:Name="TextLabel" TextWrapping="Wrap" MaxHeight="30" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,6,0" Text="test"/>
+
+		<Grid x:Name="NameGrid" Grid.Column="0" Margin="2,2,6,2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Image x:Name="AvailableImage" Source="Images/DiamondOutline.png" Stretch="None" Margin="2,2,2,2" MouseLeftButtonDown="AvailableClicked"/>
+			<Rectangle x:Name="EquippedRect" Grid.Column="1" Fill="#402AFF00" Visibility="Collapsed" />
+			<TextBlock x:Name="TextLabel" Grid.Column="1" TextWrapping="Wrap" MaxHeight="30" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,6,0" Text="test"/>
 		</Grid>
-		<StackPanel x:Name="NegativeStack" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right"/>
-		<StackPanel x:Name="PositiveStack" Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Left">
+		<StackPanel x:Name="NegativeStack" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right"/>
+		<StackPanel x:Name="PositiveStack" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
 			<TextBlock x:Name="TotalLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Text="0" Margin="4,0,4,0"/>
 		</StackPanel>
 	</Grid>

@@ -62,6 +62,14 @@
       <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.DataForm.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Controls.dll">
+      <HintPath>c:\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit.dll">
+      <HintPath>C:\Program Files\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />

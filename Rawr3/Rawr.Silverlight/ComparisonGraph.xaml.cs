@@ -160,7 +160,7 @@ namespace Rawr.Silverlight
             {
                 if (ii != null) ItemTooltip.ItemInstance = ii;
                 else ItemTooltip.Item = i;
-                ItemTooltip.Show((Grid)sender, 128, 2);
+                ItemTooltip.Show((Grid)sender, 143, 2);
             }
         }
 

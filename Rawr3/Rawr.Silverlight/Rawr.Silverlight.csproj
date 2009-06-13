@@ -118,6 +118,7 @@
     <Compile Include="Converters\GemConverter.cs" />
     <Compile Include="Converters\IconPathConverter.cs" />
     <Compile Include="Converters\ItemQualityConverter.cs" />
+    <Compile Include="Converters\PercentConverter.cs" />
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>

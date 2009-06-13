@@ -7,8 +7,11 @@
 	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	x:Class="Rawr.Silverlight.ItemTooltip">
 	<Popup x:Name="ItemPopup">
-		<Grid MaxWidth="350">
+		<Grid x:Name="ItemGrid" MaxWidth="350">
 			<Rectangle RadiusX="3" RadiusY="3">
+				<Rectangle.Effect>
+					<DropShadowEffect ShadowDepth="4" Opacity="0.35" BlurRadius="10"/>
+				</Rectangle.Effect>
 				<Rectangle.Stroke>
 					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 						<GradientStop Color="#FFA3AEB9"/>
@@ -46,7 +49,7 @@
 					<StackPanel x:Name="GemStat3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,4,0" MaxWidth="85"/>
 				</StackPanel>
 				<TextBlock x:Name="SocketBonusLabel"/>
-				<TextBlock x:Name="EnchantLabel"/>
+				<TextBlock x:Name="EnchantLabel" Foreground="#FF3A7414" Visibility="Collapsed"/>
                 <TextBlock x:Name="LocationLabel"/>
             </StackPanel>
 		</Grid>

@@ -223,8 +223,8 @@ namespace Rawr.Silverlight
             {
                 if (ItemInstance.EnchantId > 0 && ItemInstance.Enchant != null)
                 {
-                    EnchantLabel.Text = ItemInstance.Enchant.Name + ": "
-                        + Calculations.GetRelevantStats(ItemInstance.Enchant.Stats).ToString();
+                    EnchantLabel.Text = /*ItemInstance.Enchant.Name + ": "
+                        + */Calculations.GetRelevantStats(ItemInstance.Enchant.Stats).ToString();
                     EnchantLabel.Visibility = Visibility.Visible;
                 }
                 if (ItemInstance.Gem1 != null)
@@ -309,6 +309,17 @@ namespace Rawr.Silverlight
             ItemPopup.VerticalOffset = offset.Y;
             ItemPopup.HorizontalOffset = offset.X;
             ItemPopup.IsOpen = true;
+
+            ItemGrid.Measure(Application.Current.RootVisual.DesiredSize);
+
+            GeneralTransform transform = relativeTo.TransformToVisual(Application.Current.RootVisual);
+            double distBetweenBottomOfPopupAndBottomOfWindow =
+                Application.Current.RootVisual.DesiredSize.Height - offsetY -
+                transform.Transform(new Point(0, ItemGrid.DesiredSize.Height)).Y;
+            if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+            {
+                ItemPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
+            }
         }
 
         public void Hide()

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.Healadin
 {
@@ -32,18 +33,24 @@ namespace Rawr.Healadin
             }
             set
             {
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsHealadin)
+                    ((CalculationOptionsHealadin)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+
                 character = value;
-                LoadCalculationOptions();
+                if (character.CalculationOptions == null)
+                    character.CalculationOptions = new CalculationOptionsHealadin();
+
+                CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
+                DataContext = calcOpts;
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
             }
         }
 
-        private bool _loadingCalculationOptions;
-        public void LoadCalculationOptions()
+        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsHealadin();
-
-            _loadingCalculationOptions = false;
+            Character.OnCalculationsInvalidated();
         }
         #endregion
     }
