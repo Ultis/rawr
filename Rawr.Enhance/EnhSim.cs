@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
-using Windows.Forms;
+using System.Windows.Forms;
 
 namespace Rawr.Enhance
 {
