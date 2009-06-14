@@ -808,7 +808,8 @@ the Threat Scale defined on the Options tab.",
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
                 DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
-				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0f : 0.3f * talents.Mangle),
+				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ||
+					character.ActiveBuffsContains("Trauma") ? 0f : 0.3f * talents.Mangle),
 				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.11f * talents.SurvivalOfTheFittest) - 1f,
 			};
 			
@@ -824,10 +825,8 @@ the Threat Scale defined on the Options tab.",
 				statsWeapon.AttackPower += fap;
 			}
 
-			statsTotal.Stamina *= (1f + statsTotal.BonusStaminaMultiplier);
-			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
-			statsTotal.Strength *= (1f + statsTotal.BonusStrengthMultiplier);
-			//statsTotal.Agility += statsTotal.HighestStat;
+			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+			statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
@@ -871,31 +870,44 @@ the Threat Scale defined on the Options tab.",
 				statsTotal.Armor += terrorAgi * 2;
 			}
 
+			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
 				switch (effect.Trigger)
 				{
 					case Trigger.Use:
-						statsTotal += effect.GetAverageStats(0f, 1f, 2.5f);
+						statsProcs += effect.GetAverageStats(0f, 1f, 2.5f);
 						break;
 					case Trigger.MeleeHit:
 					case Trigger.PhysicalHit:
-						statsTotal += effect.GetAverageStats(meleeHitInterval, 1f, 2.5f);
+						statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 2.5f);
 						break;
 					case Trigger.MeleeCrit:
 					case Trigger.PhysicalCrit:
-						statsTotal += effect.GetAverageStats(meleeHitInterval, chanceCrit, 2.5f);
+						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 2.5f);
 						break;
 					case Trigger.DoTTick:
-						statsTotal += effect.GetAverageStats(3f, 1f, 2.5f);
+						statsProcs += effect.GetAverageStats(3f, 1f, 2.5f);
 						break;
 					case Trigger.DamageDone:
-						statsTotal += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 2.5f);
+						statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 2.5f);
 						break;
 				}
 			}
 
-			statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
+			statsProcs.Agility += statsProcs.HighestStat;
+			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
+			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+			statsProcs.AttackPower += statsProcs.Strength * 2f;
+			statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
+			statsProcs.Armor += 2f * statsProcs.Agility;
+			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
+			statsTotal += statsProcs;
+
+			//statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
+			//statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusArmorMultiplier));
 			return statsTotal;
 		}
 

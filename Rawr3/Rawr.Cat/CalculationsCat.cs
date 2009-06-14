@@ -565,6 +565,7 @@ namespace Rawr.Cat
 				tempArPenRatingUptime += tempArPenRatingUptimes[i] * (tempArPenRatings[i] / totalTempArPenRating);
 			}
 
+			statsProcs.Agility += statsProcs.HighestStat;
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
@@ -575,7 +576,6 @@ namespace Rawr.Cat
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal += statsProcs;
 
-			statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
 			return statsTotal;
 		}
 
