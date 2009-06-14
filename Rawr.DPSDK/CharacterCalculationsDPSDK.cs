@@ -380,5 +380,36 @@ namespace Rawr.DPSDK
 
             return dictValues;
         }
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Health":
+                    return BasicStats.Health;
+                case "Nature Resistance":
+                    return BasicStats.NatureResistance;
+                case "Fire Resistance":
+                    return BasicStats.FireResistance;
+                case "Frost Resistance":
+                    return BasicStats.FrostResistance;
+                case "Shadow Resistance":
+                    return BasicStats.ShadowResistance;
+                case "Arcane Resistance":
+                    return BasicStats.ArcaneResistance;
+                case "Crit Rating":
+                    return BasicStats.CritRating;
+                case "Expertise Rating":
+                    return BasicStats.ExpertiseRating;
+                case "Hit Rating":
+                    return BasicStats.HitRating;
+                case "Haste Rating":
+                    return BasicStats.HasteRating;
+                case "Target Miss %":
+                    return MissedAttacks;
+                case "Target Dodge %":
+                    return DodgedAttacks;
+            }
+            return 0;
+        }
     }
 }

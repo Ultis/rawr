@@ -1581,5 +1581,30 @@ namespace Rawr.DPSDK
                 calcOpts.talents = character.DeathKnightTalents;
             }
         }
+
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+                        "Health",
+                        "Nature Resistance",
+                        "Fire Resistance",
+                        "Frost Resistance",
+                        "Shadow Resistance",
+                        "Arcane Resistance",
+                        "Crit Rating",
+                        "Expertise Rating",
+                        "Hit Rating",
+                        "Haste Rating",
+                        "Target Miss %",
+                        "Target Dodge %"
+                    };
+
+                return _optimizableCalculationLabels;
+            }
+        }
     }
 }
