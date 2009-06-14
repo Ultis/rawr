@@ -26,7 +26,7 @@ namespace Rawr
 			CalculationOptionsCat calcOpts = Character.CalculationOptions as CalculationOptionsCat;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			numericUpDownTargetArmor.Value = calcOpts.TargetArmor;
-			checkBoxFerociousBite.Checked = calcOpts.CustomUseFerociousBite;
+			comboBoxFerociousBite.SelectedItem = calcOpts.CustomCPFerociousBite.ToString();
 			checkBoxRip.Checked = calcOpts.CustomUseRip;
 			checkBoxRake.Checked = calcOpts.CustomUseRake;
 			checkBoxShred.Checked = calcOpts.CustomUseShred;
@@ -44,7 +44,7 @@ namespace Rawr
 				CalculationOptionsCat calcOpts = Character.CalculationOptions as CalculationOptionsCat;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
-				calcOpts.CustomUseFerociousBite = checkBoxFerociousBite.Checked;
+				calcOpts.CustomCPFerociousBite = int.Parse(comboBoxFerociousBite.SelectedItem.ToString());
 				calcOpts.CustomUseRip = checkBoxRip.Checked;
 				calcOpts.CustomUseRake = checkBoxRake.Checked;
 				calcOpts.CustomUseShred = checkBoxShred.Checked;
@@ -75,7 +75,7 @@ namespace Rawr
 		public bool CustomUseShred = false;
 		public bool CustomUseRip = false;
 		public bool CustomUseRake = false;
-		public bool CustomUseFerociousBite = false;
+		public int CustomCPFerociousBite = 0;
 		public int CustomCPSavageRoar = 2;
 		public int Duration = 300;
 	}

@@ -325,14 +325,14 @@ namespace Rawr.Cat
 
 			//StringBuilder rotations = new StringBuilder();
 			for (int roarCP = 1; roarCP < 6; roarCP++)
-				for (int useRake = 0; useRake < 2; useRake++)
-					for (int useShred = 0; useShred < 2; useShred++)
-						for (int useRip = 0; useRip < 2; useRip++)
-							for (int useFerociousBite = 0; useFerociousBite < 2; useFerociousBite++)
+				for (int biteCP = 0; biteCP < 6; biteCP++)
+					for (int useRake = 0; useRake < 2; useRake++)
+						for (int useShred = 0; useShred < 2; useShred++)
+							for (int useRip = 0; useRip < 2; useRip++)
 							{
 								CatRotationCalculator.CatRotationCalculation rotationCalculation =
 									rotationCalculator.GetRotationCalculations(
-									useRake == 1, useShred == 1, useRip == 1, useFerociousBite == 1, roarCP);
+									useRake == 1, useShred == 1, useRip == 1, biteCP, roarCP);
 								//rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
 								if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
 									rotationCalculationDPS = rotationCalculation;
@@ -343,7 +343,7 @@ namespace Rawr.Cat
 
 			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
 			calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
-				calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar);
+				calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomCPFerociousBite, calcOpts.CustomCPSavageRoar);
 			//calculatedStats.Rotations = rotations.ToString();
 			#endregion
 
@@ -427,7 +427,7 @@ namespace Rawr.Cat
 				BonusMangleDamageMultiplier = 0.1f * talents.SavageFury,
 				BonusRakeDamageMultiplier = 0.1f * talents.SavageFury,
 				BonusShredDamageMultiplier = 0.04f * talents.RendAndTear,
-				BonusFerociousBiteCrit = 0.1f * talents.RendAndTear,
+				BonusFerociousBiteCrit = 0.05f * talents.RendAndTear,
 				BonusEnergyOnTigersFury = 20f * talents.KingOfTheJungle,
 				MangleCatCostReduction = 1f * talents.Ferocity + 2f * talents.ImprovedMangle,
 				RakeCostReduction = 1f * talents.Ferocity,
@@ -452,7 +452,7 @@ namespace Rawr.Cat
 			statsWeapon.AttackPower += statsWeapon.Strength * 2f;
 			if (character.MainHand != null)
 			{
-				float fap = (character.MainHand.Item.DPS - 54.8f) * 14f; //TODO Find a more accurate number for this?
+				float fap = Math.Max(0f, (character.MainHand.Item.DPS - 54.8f) * 14f); //TODO Find a more accurate number for this?
 				statsTotal.AttackPower += fap;
 				statsWeapon.AttackPower += fap;
 			}
@@ -1029,7 +1029,7 @@ namespace Rawr.Cat
 			dictValues.Add("Attack Speed", AttackSpeed.ToString() + "s");
 			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
 
-			string attackFormat = "{0}%*Damage Per Hit: {1}, Damage Per Swing: {2}";
+			string attackFormat = "{0}%*Damage Per Hit: {1}, Damage Per Swing: {2}\r\n{0}% of Total Damage, {3} Damage Done";
 			dictValues.Add("Melee Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MeleeDamageTotal / HighestDPSRotation.DamageTotal, MeleeDamagePerHit, MeleeDamagePerSwing, HighestDPSRotation.MeleeDamageTotal));
 			dictValues.Add("Mangle Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MangleDamageTotal / HighestDPSRotation.DamageTotal, MangleDamagePerHit, MangleDamagePerSwing, HighestDPSRotation.MangleDamageTotal));
 			dictValues.Add("Shred Damage", string.Format(attackFormat, 100f * HighestDPSRotation.ShredDamageTotal / HighestDPSRotation.DamageTotal, ShredDamagePerHit, ShredDamagePerSwing, HighestDPSRotation.ShredDamageTotal));
@@ -1045,7 +1045,7 @@ namespace Rawr.Cat
 					HighestDPSRotation.Name.Contains("Rake") ? "Keep Rake up.\r\n" : "",
 					HighestDPSRotation.Name.Contains("Rip") ? "Keep 5cp Rip up.\r\n" : "",
 					HighestDPSRotation.Name.Contains("Mangle") ? "Keep Mangle up.\r\n" : "",
-					HighestDPSRotation.Name.Contains("Bite") ? "Use Ferocious Bite to use up extra combo points.\r\n" : "",
+					HighestDPSRotation.Name.Contains("Bite") ? string.Format("Use {0}cp Ferocious Bites to spend extra combo points.\r\n", HighestDPSRotation.BiteCP) : "",
 					HighestDPSRotation.Name.Contains("Shred") ? "Shred" : "Mangle");
 			}
 			catch (Exception ex)

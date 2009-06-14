@@ -31,18 +31,18 @@ namespace Rawr.Cat
 			CustomUseShred = false;
 			CustomUseRip = false;
 			CustomUseRake = false;
-			CustomUseFerociousBite = false;
+			CustomCPFerociousBite = 0;
 			CustomCPSavageRoar = 2;
 			Duration = 300;
 		}
 
-		public int TargetLevel { get; set; }
-		public int TargetArmor { get; set; }
-		public bool CustomUseShred { get; set; }
-		public bool CustomUseRip { get; set; }
-		public bool CustomUseRake { get; set; }
-		public bool CustomUseFerociousBite { get; set; }
-		public int CustomCPSavageRoar { get; set; }
-		public int Duration { get; set; }
+		public int TargetLevel = 83;
+		public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+		public bool CustomUseShred = false;
+		public bool CustomUseRip = false;
+		public bool CustomUseRake = false;
+		public int CustomCPFerociousBite = 0;
+		public int CustomCPSavageRoar = 2;
+		public int Duration = 300;
 	}
 }

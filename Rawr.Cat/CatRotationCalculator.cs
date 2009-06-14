@@ -103,7 +103,7 @@ namespace Rawr.Cat
 			//ToString();
 		}
 
-		public CatRotationCalculation GetRotationCalculations(bool useRake, bool useShred, bool useRip, bool useFerociousBite, int roarCP)
+		public CatRotationCalculation GetRotationCalculations(bool useRake, bool useShred, bool useRip, int biteCP, int roarCP)
 		{
 			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			if (BerserkDuration > 0)
@@ -184,79 +184,77 @@ namespace Rawr.Cat
 			float averageFinisherCP = 5f + _chanceExtraCP[4];
 			float ripCount = 0f;
 			float biteCount = 0f;
-			if (useRip && !useFerociousBite)
+			if (useRip)// && ferociousBiteCP == 0)
 			{
 				#region Rip
-				float ripCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
-				ripCount += ripCyclesFromAvailableCP;
-				totalCPAvailable = 0;
-				totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
+				float ripCountMax = Duration / ripDuration;
+				float ripsFromAvailableCP = Math.Min(ripCountMax, totalCPAvailable / averageFinisherCP);
+				ripCount += ripsFromAvailableCP;
+				totalCPAvailable -= averageFinisherCP * ripsFromAvailableCP;
+				totalEnergyAvailable -= RipEnergy * ripsFromAvailableCP;
 
 				float ripCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RipEnergy;
-				float ripCycleCountMax = Duration / ripDuration;
-				float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
-				
-				ripCount += ripCycleCount;
-				cpgCount += (averageFinisherCP / CPPerCPG) * ripCycleCount;
-				totalEnergyAvailable -= ripCycleEnergy * ripCycleCount;
+				float ripsFromNewCP = Math.Min(ripCountMax - ripsFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
+
+				ripCount += ripsFromNewCP;
+				cpgCount += (averageFinisherCP / CPPerCPG) * ripsFromNewCP;
+				totalEnergyAvailable -= ripCycleEnergy * ripsFromNewCP;
 				#endregion
 			}
-			else if (!useRip && useFerociousBite)
+			//else if (!useRip && ferociousBiteCP > 0)
+			if (biteCP > 0)
 			{
 				#region Ferocious Bite
-				float biteCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
-				biteCount += biteCyclesFromAvailableCP;
+				float averageBiteCP = ((float)biteCP + 1f) * _chanceExtraCP[biteCP - 1]
+				+ ((float)biteCP) * (1f - _chanceExtraCP[biteCP - 1]);
+				float biteDamageMultiplier = Math.Min(1f, (BiteBaseDamage + BiteCPDamage * averageBiteCP) / (BiteBaseDamage + BiteCPDamage * 5f));
+				float bitesFromAvailableCP = totalCPAvailable / averageBiteCP;
+				biteCount += bitesFromAvailableCP * biteDamageMultiplier;
 				totalCPAvailable = 0;
-				totalEnergyAvailable -= BiteEnergy * biteCyclesFromAvailableCP;
+				totalEnergyAvailable -= BiteEnergy * bitesFromAvailableCP;
 
-				float biteCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + BiteEnergy;
-				float biteCycleCount = totalEnergyAvailable / biteCycleEnergy;
+				float biteCycleEnergy = (averageBiteCP / CPPerCPG) * cpgEnergy + BiteEnergy;
+				float bitesFromNewCP = totalEnergyAvailable / biteCycleEnergy;
 
-				biteCount += biteCycleCount;
-				cpgCount += biteCycleCount * (averageFinisherCP / CPPerCPG);
+				biteCount += bitesFromNewCP * biteDamageMultiplier;
+				cpgCount += bitesFromNewCP * (averageBiteCP / CPPerCPG);
 				totalEnergyAvailable = 0f;
 				#endregion
 			}
-			else if (useRip && useFerociousBite)
-			{
-				#region Rip & Ferocious Bite
-				float ripCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
-				ripCount += ripCyclesFromAvailableCP;
-				totalCPAvailable = 0;
-				totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
+			//else if (useRip && ferociousBiteCP > 0)
+			//{
+			//    #region Rip & Ferocious Bite
+			//    float ripCyclesFromAvailableCP = totalCPAvailable / averageFinisherCP;
+			//    ripCount += ripCyclesFromAvailableCP;
+			//    totalCPAvailable = 0;
+			//    totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
 
-				float ripCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RipEnergy;
-				float ripCycleCountMax = Duration / ripDuration;
-				float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
+			//    float ripCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RipEnergy;
+			//    float ripCycleCountMax = Duration / ripDuration;
+			//    float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
 
-				ripCount += ripCycleCount;
-				cpgCount += ripCycleCount * (averageFinisherCP / CPPerCPG);
-				totalEnergyAvailable -= ripCycleEnergy * ripCycleCount;
+			//    ripCount += ripCycleCount;
+			//    cpgCount += ripCycleCount * (averageFinisherCP / CPPerCPG);
+			//    totalEnergyAvailable -= ripCycleEnergy * ripCycleCount;
 
-				if (ripCycleCount > 0 && totalEnergyAvailable / ripCycleCount > BiteEnergy)
-				{
-					float energyAvailablePerRipCycle = totalEnergyAvailable / ripCycleCount;
-					float biteCycleCP = Math.Min(5f, CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy));
-					float biteDamageMultiplier = Math.Min(1f, (BiteBaseDamage + BiteCPDamage * biteCycleCP) / (BiteBaseDamage + BiteCPDamage * 5f));
+			//    int bitesPerCycle = 0;
+			//    while (bitesPerCycle < ferociousBiteCP)
+			//    {
+			//        bitesPerCycle++;
+			//        if (ripCount > 0 && totalEnergyAvailable / ripCount > BiteEnergy)
+			//        {
+			//            float energyAvailablePerRipCycle = totalEnergyAvailable / ripCount;
+			//            float biteCycleCP = Math.Min(averageFinisherCP, CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy));
+			//            float biteCycleCPCapped = Math.Min(5, biteCycleCP);
+			//            float biteDamageMultiplier = Math.Min(1f, (BiteBaseDamage + BiteCPDamage * biteCycleCPCapped) / (BiteBaseDamage + BiteCPDamage * 5f));
 
-					biteCount += ripCycleCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
-					cpgCount += ripCycleCount * (biteCycleCP / CPPerCPG);
-					totalEnergyAvailable = totalEnergyAvailable -= ripCycleCount * (BiteEnergy + (biteCycleCP / CPPerCPG) * cpgEnergy);
-				}
-
-				//Check again, in case there's still enough energy/CP for *another* bite.
-				if (ripCycleCount > 0 && totalEnergyAvailable / ripCycleCount > BiteEnergy)
-				{
-					float energyAvailablePerRipCycle = totalEnergyAvailable / ripCycleCount;
-					float biteCycleCP = Math.Min(5f, CPPerCPG * ((energyAvailablePerRipCycle - BiteEnergy) / cpgEnergy));
-					float biteDamageMultiplier = Math.Min(1f, (BiteBaseDamage + BiteCPDamage * biteCycleCP) / (BiteBaseDamage + BiteCPDamage * 5f));
-
-					biteCount += ripCycleCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
-					cpgCount += ripCycleCount * (biteCycleCP / CPPerCPG);
-					totalEnergyAvailable = totalEnergyAvailable -= ripCycleCount * (BiteEnergy + (biteCycleCP / CPPerCPG) * cpgEnergy);
-				}
-				#endregion
-			}
+			//            biteCount += ripCount * biteDamageMultiplier; //ie, count it as however many full damage bites it's equivalent to. 
+			//            cpgCount += ripCount * (biteCycleCPCapped / CPPerCPG);
+			//            totalEnergyAvailable -= ripCount * (BiteEnergy + (biteCycleCP / CPPerCPG) * cpgEnergy);
+			//        }
+			//    }
+			//    #endregion
+			//}
 			#endregion
 
 			#region Extra Energy turned into Combo Point Generators
@@ -286,7 +284,7 @@ namespace Rawr.Cat
 			if (useRake) rotationName.Append("Rake+");
 			if (useShred) rotationName.Append("Shred+");
 			if (useRip) rotationName.Append("Rip+");
-			if (useFerociousBite) rotationName.Append("Bite+");
+			if (biteCP>0) rotationName.AppendFormat("Bite{0}+", biteCP);
 			rotationName.Append("Roar" + roarCP.ToString());
 
 			return new CatRotationCalculation()
@@ -303,6 +301,7 @@ namespace Rawr.Cat
 				DamageTotal = damageTotal,
 
 				RoarCP = roarCP,
+				BiteCP = biteCP,
 			};
 
 			//List<string> rotationName = new List<string>();
@@ -365,6 +364,7 @@ namespace Rawr.Cat
 			public float BiteDamageTotal { get; set; }
 			public float DamageTotal { get; set; }
 			public int RoarCP { get; set; }
+			public int BiteCP { get; set; }
 		}
 	}
 }

@@ -34,8 +34,9 @@
 			this.checkBoxShred = new System.Windows.Forms.CheckBox();
 			this.checkBoxRip = new System.Windows.Forms.CheckBox();
 			this.checkBoxRake = new System.Windows.Forms.CheckBox();
-			this.checkBoxFerociousBite = new System.Windows.Forms.CheckBox();
+			this.comboBoxFerociousBite = new System.Windows.Forms.ComboBox();
 			this.comboBoxSavageRoar = new System.Windows.Forms.ComboBox();
+			this.label5 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.numericUpDownTargetArmor = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
@@ -79,8 +80,9 @@
 			this.groupBox1.Controls.Add(this.checkBoxShred);
 			this.groupBox1.Controls.Add(this.checkBoxRip);
 			this.groupBox1.Controls.Add(this.checkBoxRake);
-			this.groupBox1.Controls.Add(this.checkBoxFerociousBite);
+			this.groupBox1.Controls.Add(this.comboBoxFerociousBite);
 			this.groupBox1.Controls.Add(this.comboBoxSavageRoar);
+			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Location = new System.Drawing.Point(3, 82);
 			this.groupBox1.Name = "groupBox1";
@@ -92,7 +94,7 @@
 			// checkBoxShred
 			// 
 			this.checkBoxShred.AutoSize = true;
-			this.checkBoxShred.Location = new System.Drawing.Point(52, 19);
+			this.checkBoxShred.Location = new System.Drawing.Point(6, 48);
 			this.checkBoxShred.Name = "checkBoxShred";
 			this.checkBoxShred.Size = new System.Drawing.Size(54, 17);
 			this.checkBoxShred.TabIndex = 1;
@@ -103,7 +105,7 @@
 			// checkBoxRip
 			// 
 			this.checkBoxRip.AutoSize = true;
-			this.checkBoxRip.Location = new System.Drawing.Point(6, 19);
+			this.checkBoxRip.Location = new System.Drawing.Point(6, 21);
 			this.checkBoxRip.Name = "checkBoxRip";
 			this.checkBoxRip.Size = new System.Drawing.Size(42, 17);
 			this.checkBoxRip.TabIndex = 1;
@@ -114,7 +116,7 @@
 			// checkBoxRake
 			// 
 			this.checkBoxRake.AutoSize = true;
-			this.checkBoxRake.Location = new System.Drawing.Point(207, 19);
+			this.checkBoxRake.Location = new System.Drawing.Point(52, 21);
 			this.checkBoxRake.Name = "checkBoxRake";
 			this.checkBoxRake.Size = new System.Drawing.Size(52, 17);
 			this.checkBoxRake.TabIndex = 1;
@@ -122,16 +124,24 @@
 			this.checkBoxRake.UseVisualStyleBackColor = true;
 			this.checkBoxRake.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
-			// checkBoxFerociousBite
+			// comboBoxFerociousBite
 			// 
-			this.checkBoxFerociousBite.AutoSize = true;
-			this.checkBoxFerociousBite.Location = new System.Drawing.Point(110, 19);
-			this.checkBoxFerociousBite.Name = "checkBoxFerociousBite";
-			this.checkBoxFerociousBite.Size = new System.Drawing.Size(93, 17);
-			this.checkBoxFerociousBite.TabIndex = 1;
-			this.checkBoxFerociousBite.Text = "Ferocious Bite";
-			this.checkBoxFerociousBite.UseVisualStyleBackColor = true;
-			this.checkBoxFerociousBite.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			this.comboBoxFerociousBite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxFerociousBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxFerociousBite.FormattingEnabled = true;
+			this.comboBoxFerociousBite.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+			this.comboBoxFerociousBite.Location = new System.Drawing.Point(207, 46);
+			this.comboBoxFerociousBite.Name = "comboBoxFerociousBite";
+			this.comboBoxFerociousBite.Size = new System.Drawing.Size(52, 21);
+			this.comboBoxFerociousBite.TabIndex = 1;
+			this.comboBoxFerociousBite.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// comboBoxSavageRoar
 			// 
@@ -145,20 +155,29 @@
             "3",
             "4",
             "5"});
-			this.comboBoxSavageRoar.Location = new System.Drawing.Point(156, 42);
+			this.comboBoxSavageRoar.Location = new System.Drawing.Point(207, 19);
 			this.comboBoxSavageRoar.Name = "comboBoxSavageRoar";
-			this.comboBoxSavageRoar.Size = new System.Drawing.Size(103, 21);
+			this.comboBoxSavageRoar.Size = new System.Drawing.Size(52, 21);
 			this.comboBoxSavageRoar.TabIndex = 1;
 			this.comboBoxSavageRoar.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(107, 49);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(94, 13);
+			this.label5.TabIndex = 0;
+			this.label5.Text = "Ferocious Bite CP:";
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 45);
+			this.label2.Location = new System.Drawing.Point(111, 22);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(144, 13);
+			this.label2.Size = new System.Drawing.Size(90, 13);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Savage Roar Combo Points: ";
+			this.label2.Text = "Savage Roar CP:";
 			// 
 			// numericUpDownTargetArmor
 			// 
@@ -255,7 +274,6 @@
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox checkBoxShred;
 		private System.Windows.Forms.CheckBox checkBoxRip;
-		private System.Windows.Forms.CheckBox checkBoxFerociousBite;
 		private System.Windows.Forms.ComboBox comboBoxSavageRoar;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.NumericUpDown numericUpDownTargetArmor;
@@ -263,5 +281,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.NumericUpDown numericUpDownDuration;
 		private System.Windows.Forms.CheckBox checkBoxRake;
+		private System.Windows.Forms.ComboBox comboBoxFerociousBite;
+		private System.Windows.Forms.Label label5;
 	}
 }
