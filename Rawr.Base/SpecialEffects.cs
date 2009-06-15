@@ -1246,6 +1246,54 @@ namespace Rawr
                     }
                 }
             }
+            else if (line.StartsWith("Increases speed by "))
+            {
+                // Figurine - Ruby Hare : "Increases speed by 30% for 6 sec. (3 Min Cooldown)"
+                Regex r = new Regex("Increases speed by (?<speed>\\d*)% for (?<dur>\\d*) sec\\."); // \\((?<cd>\\d*) Min Cooldown\\)");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    int speed = int.Parse(m.Groups["speed"].Value);
+                    int dur = int.Parse(m.Groups["dur"].Value);
+                    // Test again with the cd... Available only on wowhead.
+                    float cd;
+                    Regex rCD = new Regex("Increases speed by (?<speed>\\d*)% for (?<dur>\\d*) sec\\. \\((?<cd>\\d*) Min Cooldown\\)");
+                    Match mCD = rCD.Match(line);
+                    if (mCD.Success)
+                    {
+                        cd = int.Parse(mCD.Groups["cd"].Value) * 60.0f;
+                    }
+                    else
+                    {
+                        cd = 3.0f * 60.0f;
+                    }
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = speed }, dur, cd));
+                }
+            }
+            else if (line.StartsWith("Increases maximum health by "))
+            {
+                // Increases maximum health by 3385 for 15 sec. Shares cooldown with other Battlemaster's trinkets. (3 Min Cooldown)
+                Regex r = new Regex("Increases maximum health by (?<health>\\d*) for (?<dur>\\d*) sec\\. Shares cooldown with other Battlemaster\\'s trinkets\\."); // \\((?<cd>\\d*) Min Cooldown\\)");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    int health = int.Parse(m.Groups["health"].Value);
+                    int dur = int.Parse(m.Groups["dur"].Value);
+                    // Test again with the cd... Available only on wowhead.
+                    float cd;
+                    Regex rCD = new Regex("Increases maximum health by (?<health>\\d*) for (?<dur>\\d*) sec\\. Shares cooldown with other Battlemaster\\'s trinkets\\. \\((?<cd>\\d*) Min Cooldown\\)");
+                    Match mCD = rCD.Match(line);
+                    if (mCD.Success)
+                    {
+                        cd = int.Parse(mCD.Groups["cd"].Value) * 60.0f;
+                    }
+                    else
+                    {
+                        cd = 3.0f * 60.0f;
+                    }
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, dur, cd));
+                }
+            }
             else if (Regex.IsMatch(line, "When the shield is removed by any means, you regain (\\d{4}) mana."))
             {
                 string[] inputs = Regex.Split(line, "When the shield is removed by any means, you regain (\\d{4}) mana.");

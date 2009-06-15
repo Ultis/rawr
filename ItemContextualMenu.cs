@@ -307,6 +307,7 @@ namespace Rawr
 		void _menuItemRefreshWowhead_Click(object sender, EventArgs e)
 		{
 			//ItemCache.DeleteItem(_item);
+			/* We don't have to use ptr for the moment... so we can use the generic method... and the locale informations is download.
 			Item newItem = Wowhead.GetItem(FormMain.Instance.usePTRDataToolStripMenuItem.Checked ? "ptr" : "www", _item.Id.ToString(), false);
 			if (newItem == null)
 			{
@@ -316,7 +317,8 @@ namespace Rawr
 			else
 			{
 				ItemCache.AddItem(newItem, true);
-			}
+			}*/
+                        Item newItem = Item.LoadFromId(_item.Id, true, true, true);
 			ItemCache.OnItemsChanged();
 		}
 

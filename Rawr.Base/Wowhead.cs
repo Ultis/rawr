@@ -171,17 +171,38 @@ namespace Rawr
 
         static Wowhead()
         {
-            _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor";
-            _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor";
-            _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor";
-            _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor";
-            _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor";
-            _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
+            switch (Rawr.Properties.GeneralSettings.Default.Locale)
+            {
+                case "fr":
+                    _pvpTokenMap["20560"] = "Marque d'honneur de la vallée d'Alterac";
+                    _pvpTokenMap["20559"] = "Marque d'honneur du bassin d'Arathi";
+                    _pvpTokenMap["20558"] = "Marque d'honneur du goulet des Chanteguerres";
+                    _pvpTokenMap["29024"] = "Marque d'honneur de l'Oeil du cyclone";
+                    _pvpTokenMap["37836"] = "Pièce de la KapitalRisk";
+                    _pvpTokenMap["42425"] = "Marque d'honneur du rivage des Anciens";
+                    _pvpTokenMap["43589"] = "Marque d'honneur de Joug-d'hiver";
 
-            _vendorTokenMap["44990"] = "Champion's Seal";
-            _vendorTokenMap["40752"] = "Emblem of Heroism";
-            _vendorTokenMap["40753"] = "Emblem of Valor";
-            _vendorTokenMap["45624"] = "Emblem of Conquest";
+                    _vendorTokenMap["44990"] = "Sceau de champion";
+                    _vendorTokenMap["40752"] = "Emblème d'héroïsme";
+                    _vendorTokenMap["40753"] = "Emblème de vaillance";
+                    _vendorTokenMap["45624"] = "Emblème de conquête";
+                    break;
+
+                default:
+                    _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor";
+                    _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor";
+                    _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor";
+                    _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor";
+                    _pvpTokenMap["37836"] = "Venture Coin";
+                    _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor";
+                    _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
+
+                    _vendorTokenMap["44990"] = "Champion's Seal";
+                    _vendorTokenMap["40752"] = "Emblem of Heroism";
+                    _vendorTokenMap["40753"] = "Emblem of Valor";
+                    _vendorTokenMap["45624"] = "Emblem of Conquest";
+                    break;
+            }
         }
 
         public static Item GetItem(int id) { return GetItem("www", id.ToString(), true); }
@@ -974,11 +995,6 @@ namespace Rawr
 					if (locationContinent is StaticDrop) (locationContinent as StaticDrop).Area = continentname;
 					else if (locationContinent is ContainerItem) (locationContinent as ContainerItem).Area = continentname;
 					else if (locationContinent is QuestItem) (locationContinent as QuestItem).Area = continentname;
-					//else if (locationContinent is CraftedItem)
-					//{
-					//    if (value == "11")
-					//        (locationContinent as CraftedItem).Skill = "Jewelcrafting";
-					//}
 					break;
 
 				case "c2": //Don't care about continent
@@ -991,10 +1007,34 @@ namespace Rawr
                     else if (locationDifficulty is WorldDrop) (locationDifficulty as WorldDrop).Heroic = (value == "2");
                     break;
 
-				case "s":   // Source (755 = Jewelcrafting apparently?)
+				case "s":
 					if (item.LocationInfo is CraftedItem)
 					{
 						string profession = "";
+                        switch (Rawr.Properties.GeneralSettings.Default.Locale)
+                        {
+                            case "fr":
+                                switch (value)
+                                {
+                                    case "171": profession = "Alchimie"; break;
+                                    case "164": profession = "Forge"; break;
+                                    case "333": profession = "Enchantement"; break;
+                                    case "202": profession = "Ingénierie"; break;
+                                    case "182": profession = "Herboristerie"; break;
+                                    case "773": profession = "Calligraphie"; break;
+                                    case "755": profession = "Joaillerie"; break;
+                                    case "165": profession = "Travail du cuir"; break;
+                                    case "186": profession = "Minage"; break;
+                                    case "393": profession = "Dépeçage"; break;
+                                    case "197": profession = "Couture"; break;
+
+                                    default:
+                                        "".ToString();
+                                        break;
+                                }
+                                break;
+
+                            default:
 						switch (value)
 						{
 							case "171": profession = "Alchemy"; break;
@@ -1013,6 +1053,8 @@ namespace Rawr
 								"".ToString();
 								break;
 						}
+                                break;
+                        }
 						if (!string.IsNullOrEmpty(profession)) (item.LocationInfo as CraftedItem).Skill = profession;
 					}
 					"".ToString();
@@ -1040,6 +1082,57 @@ namespace Rawr
 
 		private static string GetZoneName(string zoneId)
 		{
+            switch (Rawr.Properties.GeneralSettings.Default.Locale)
+            {
+                case "fr":
+                    switch (zoneId)
+                    {
+                        case "65": return "Désolation des dragons";
+                        case "66": return "Zul'Drak";
+                        case "67": return "Les pics Foudroyés";
+                        case "206": return "Donjon d'Utgarde";
+                        case "210": return "La Couronne de glace";
+                        case "394": return "Les Grisonnes";
+                        case "495": return "Fjord Hurlant";
+                        case "1196": return "Cime d'Utgarde";
+                        case "2817": return "Forêt du Chant de cristal";
+                        case "2917": return "Hall of Legends"; // Can't find the translation.
+                        case "2918": return "Champion's Hall"; // Can't find the translation.
+                        case "3456": return "Naxxramas";
+                        case "3477": return "Azjol-Nérub";
+                        case "3537": return "Toundra Boréenne";
+                        case "3711": return "Bassin de Sholazar";
+                        case "4100": return "L'Épuration de Stratholme";
+                        case "4120": return "Le Nexus";
+                        case "4196": return "Donjon de Drak'Tharon";
+                        case "4197": return "Joug-d'hiver";
+                        case "4228": return "L'Oculus";
+                        case "4264": return "Les salles de Pierre";
+                        case "4272": return "Les salles de Foudre";
+                        case "4298": return "l'enclave Écarlate";
+                        case "4375": return "Gundrak";
+                        case "4395": return "Dalaran";
+                        case "4415": return "Le fort Pourpre";
+                        case "4493": return "Le sanctum Obsidien";
+                        case "4494": return "Ahn'kahet";
+                        case "4500": return "L'Œil de l'éternité";
+                        case "4603": return "Caveau d'Archavon";
+                        case "3520": return "Vallée d'Ombrelune";
+                        case "4075": return "Plateau du Puits de soleil";
+                        case "3959": return "Temple noir";
+                        case "3606": return "Sommet d'Hyjal";
+                        case "3607": return "Caverne du sanctuaire du Serpent";
+                        case "3618": return "Repaire de Gruul";
+                        case "3836": return "Le repaire de Magtheridon";
+                        case "2562": return "Karazhan";
+                        case "3842": return "L'Oeil";
+                        case "3805": return "Zul'Aman";
+                        case "4273": return "Ulduar";
+                        default: return "Inconnue - " + zoneId;
+                    }
+                    break;
+
+                default:
 			switch (zoneId)
 			{
 				case "65": return "Dragonblight";
@@ -1085,6 +1178,8 @@ namespace Rawr
                 case "4273": return "Ulduar";
 				default: return "Unknown - " + zoneId;
 			}
+                    break;
+            }
 		}
         /* Unused
         private static Stats GetAdditionalItemEffect(int itemid)

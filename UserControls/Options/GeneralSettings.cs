@@ -69,7 +69,7 @@ namespace Rawr.UserControls.Options
                     break;
                 case "fr":
                     title = "Mise à jour du Profil";
-                    message = "Vous devez utiliser 'Update Item Cache from Wowhead' pour recharger articles locale pour le Français.";
+                    message = "Vous devez utiliser 'Update Item Cache from Wowhead' pour mettre à jour le nom des objets en français.";
                     break;
                 case "es":
                     title = "Actualiza tu Perfil";

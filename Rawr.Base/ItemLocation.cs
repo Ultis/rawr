@@ -197,6 +197,16 @@ namespace Rawr
 					string tokenId = subNode.Attributes["id"].Value;
 					int count = int.Parse(subNode.Attributes["count"].Value);
 
+					// Save the informations of the vendor.
+					string _vendorName = "Unknown";
+					string _vendorArea = "*";
+					XmlNodeList listVendor = doc.SelectNodes("/page/itemInfo/item/vendors/creature");
+					if (listVendor.Count > 0)
+					{
+						_vendorName = listVendor[0].Attributes["name"].Value.Replace("quot;", "'");
+						_vendorArea = listVendor[0].Attributes["area"].Value;
+					}
+
 					string Boss = null;
 					string Area = null;
 
@@ -221,8 +231,8 @@ namespace Rawr
 						}
 						else
 						{
-							Boss = "Unknown";
-							Area = "*";
+							Boss = _vendorName;
+							Area = _vendorArea;
 						}
 
 						_idToBossMap[tokenId] = Boss;
@@ -614,11 +624,25 @@ namespace Rawr
 
                 if (Bind != BindsOn.None)
                 {
+                    if (Level != 0)
+                    {
                     basic.AppendFormat("{0} crafted {1}({2}) ", Bind.ToString(), Skill, Level);
                 }
                 else
                 {
+                        basic.AppendFormat("{0} crafted {1} ", Bind.ToString(), Skill);
+                    }
+                }
+                else
+                {
+                    if (Level != 0)
+                    {
                     basic.AppendFormat("Crafted {1}({2})", Bind.ToString(), Skill, Level);
+                }
+                    else
+                    {
+                        basic.AppendFormat("Crafted {1}", Bind.ToString(), Skill);
+                    }
                 }
                 if (BopMats.Count > 0)
                 {

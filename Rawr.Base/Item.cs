@@ -997,7 +997,7 @@ namespace Rawr
 
 
 		public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
-        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, "en"); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, Rawr.Properties.GeneralSettings.Default.Locale); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, locale, "www"); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale, string wowheadSite)
 		{
@@ -1043,9 +1043,10 @@ namespace Rawr
 		/// <summary>
 		/// Used by optimizer to cache dictionary search result
 		/// </summary>
+#if !SILVERLIGHT
         [XmlIgnore]
         internal Optimizer.ItemAvailabilityInformation AvailabilityInformation;
-
+#endif
 		#region IComparable<Item> Members
 
 		public int CompareTo(Item other)
