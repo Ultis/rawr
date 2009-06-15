@@ -1026,6 +1026,8 @@ namespace Rawr.Moonkin
                     }
                     if (proc.CalculateMP5 != null)
                     {
+                        if (rot.Duration == 0.0f)
+                            rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                         manaGained += proc.CalculateMP5(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / 5.0f * calcs.FightLength * 60.0f;
                     }
                 }
