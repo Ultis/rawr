@@ -757,7 +757,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float Spirit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Spirit]; }
