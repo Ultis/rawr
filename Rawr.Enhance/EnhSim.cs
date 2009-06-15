@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
-using System.Windows.Forms;
 
 namespace Rawr.Enhance
 {
@@ -23,6 +22,8 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.EnhSimStats;
+            if(isMasterOfAnatomy(character))
+                stats.CritRating += 32;
             CombatStats cs = new CombatStats(character, stats);
             
             getSpecialsNames(character, stats);
@@ -171,10 +172,10 @@ namespace Rawr.Enhance
         {
 			try
 			{
-				Clipboard.SetText(_configText);
+                System.Windows.Forms.Clipboard.SetText(_configText);
 			}
 			catch { }
-            MessageBox.Show("EnhSim config data copied to clipboard\n" + 
+            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\n" + 
                 "Use the 'Copy from Clipboard' option in EnhSimGUI v1.7.0 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
@@ -186,250 +187,222 @@ namespace Rawr.Enhance
             sb.AppendLine("# Buffs #");
             sb.AppendLine("#########");
             sb.AppendLine();
+            List<Buff> buffs = character.ActiveBuffs;
 
-            // need to reference tickboxes on buffs form and see what is ticked for buffs.
-            TabControl tabs = Calculations.CalculationOptionsPanel.Parent.Parent as TabControl;
-            Control buffControl = tabs.TabPages[2].Controls[0];
-            Type buffControlType = buffControl.GetType();
-
-            if (buffControlType.FullName == "Rawr.BuffSelector")
-            {
-                PropertyInfo checkBoxesInfo = buffControlType.GetProperty("BuffCheckBoxes");
-                Dictionary<Buff, CheckBox> checkBoxes = checkBoxesInfo.GetValue(buffControl, null) as Dictionary<Buff, CheckBox>;
-                if (isBuffChecked(checkBoxes, "Acid Spit") || isBuffChecked(checkBoxes, "Expose Armor") || isBuffChecked(checkBoxes, "Sunder Armor"))
-                    sb.AppendLine("armor_debuff_major              20.0/20.0");
-                else
-                    sb.AppendLine("armor_debuff_major              0.0/20.0");
-                if (isBuffChecked(checkBoxes, "Curse of Recklessness") || isBuffChecked(checkBoxes, "Faerie Fire") || isBuffChecked(checkBoxes, "Sting"))
-                    sb.AppendLine("armor_debuff_minor              5.0/5.0");
-                else
-                    sb.AppendLine("armor_debuff_minor              0.0/5.0");
-                if (isBuffChecked(checkBoxes, "Blood Frenzy") || isBuffChecked(checkBoxes, "Savage Combat"))
-                    sb.AppendLine("physical_vulnerability_debuff   4.0/4.0");
-                else
-                    sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
-                if (isBuffChecked(checkBoxes, "Windfury Totem"))
-                    if (isBuffChecked(checkBoxes, "Improved Windfury Totem"))
-                        sb.AppendLine("melee_haste_buff                20.0/20.0");
-                    else
-                        sb.AppendLine("melee_haste_buff                16.0/20.0");
-                else if (isBuffChecked(checkBoxes, "Improved Icy Talons"))
+            if (isBuffChecked(buffs, "Acid Spit") || isBuffChecked(buffs, "Expose Armor") || isBuffChecked(buffs, "Sunder Armor"))
+                sb.AppendLine("armor_debuff_major              20.0/20.0");
+            else
+                sb.AppendLine("armor_debuff_major              0.0/20.0");
+            if (isBuffChecked(buffs, "Curse of Recklessness") || isBuffChecked(buffs, "Faerie Fire") || isBuffChecked(buffs, "Sting"))
+                sb.AppendLine("armor_debuff_minor              5.0/5.0");
+            else
+                sb.AppendLine("armor_debuff_minor              0.0/5.0");
+            if (isBuffChecked(buffs, "Blood Frenzy") || isBuffChecked(buffs, "Savage Combat"))
+                sb.AppendLine("physical_vulnerability_debuff   4.0/4.0");
+            else
+                sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
+            if (isBuffChecked(buffs, "Windfury Totem"))
+                if (isBuffChecked(buffs, "Improved Windfury Totem"))
                     sb.AppendLine("melee_haste_buff                20.0/20.0");
                 else
-                    sb.AppendLine("melee_haste_buff                0.0/20.0");
-                if (isBuffChecked(checkBoxes, "Leader of the Pack") || isBuffChecked(checkBoxes, "Rampage"))
-                    sb.AppendLine("melee_crit_chance_buff          5.0/5.0");
+                    sb.AppendLine("melee_haste_buff                16.0/20.0");
+            else if (isBuffChecked(buffs, "Improved Icy Talons"))
+                sb.AppendLine("melee_haste_buff                20.0/20.0");
+            else
+                sb.AppendLine("melee_haste_buff                0.0/20.0");
+            if (isBuffChecked(buffs, "Leader of the Pack") || isBuffChecked(buffs, "Rampage"))
+                sb.AppendLine("melee_crit_chance_buff          5.0/5.0");
+            else
+                sb.AppendLine("melee_crit_chance_buff          0.0/5.0");
+            if (isBuffChecked(buffs, "Battle Shout"))
+            {
+                if (isBuffChecked(buffs, "Commanding Presence (Attack Power)"))
+                    sb.AppendLine("attack_power_buff_flat          685/688");
                 else
-                    sb.AppendLine("melee_crit_chance_buff          0.0/5.0");
-                if (isBuffChecked(checkBoxes, "Battle Shout"))
-                {
-                    if (isBuffChecked(checkBoxes, "Commanding Presence (Attack Power)"))
-                        sb.AppendLine("attack_power_buff_flat          685/688");
-                    else
-                        sb.AppendLine("attack_power_buff_flat          548/688");
-                }
-                else if (isBuffChecked(checkBoxes, "Blessing of Might"))
-                {
-                    if (isBuffChecked(checkBoxes, "Improved Blessing of Might"))
-                        sb.AppendLine("attack_power_buff_flat          687/688");
-                    else
-                        sb.AppendLine("attack_power_buff_flat          550/688");
-                }
+                    sb.AppendLine("attack_power_buff_flat          548/688");
+            }
+            else if (isBuffChecked(buffs, "Blessing of Might"))
+            {
+                if (isBuffChecked(buffs, "Improved Blessing of Might"))
+                    sb.AppendLine("attack_power_buff_flat          687/688");
                 else
-                    sb.AppendLine("attack_power_buff_flat          0/688");
-                if (isBuffChecked(checkBoxes, "Trueshot Aura") || isBuffChecked(checkBoxes, "Unleashed Rage") || isBuffChecked(checkBoxes, "Abomination's Might"))
-                    sb.AppendLine("attack_power_buff_multiplier    99.7/99.7");
-                else
-                    sb.AppendLine("attack_power_buff_multiplier    0.0/99.7");
-                if (isBuffChecked(checkBoxes, "Wrath of Air Totem"))
-                    sb.AppendLine("spell_haste_buff                5.0/5.0");
-                else
-                    sb.AppendLine("spell_haste_buff                0.0/5.0");
-                if (isBuffChecked(checkBoxes, "Elemental Oath") || isBuffChecked(checkBoxes, "Moonkin Form"))
-                    sb.AppendLine("spell_crit_chance_buff          5.0/5.0");
-                else
-                    sb.AppendLine("spell_crit_chance_buff          0.0/5.0");
-                if (isBuffChecked(checkBoxes, "Improved Scorch") || isBuffChecked(checkBoxes, "Winter's Chill") || isBuffChecked(checkBoxes, "Improved Shadow Bolt"))
-                    sb.AppendLine("spell_crit_chance_debuff        5.0/5.0");
-                else
-                    sb.AppendLine("spell_crit_chance_debuff        0.0/5.0");
-                if (isBuffChecked(checkBoxes, "Ebon Plaguebringer") || isBuffChecked(checkBoxes, "Earth and Moon") || isBuffChecked(checkBoxes, "Curse of the Elements"))
-                    sb.AppendLine("spell_damage_debuff             13.0/13.0");
-                else
-                    sb.AppendLine("spell_damage_debuff             0.0/13.0");
-                if (isBuffChecked(checkBoxes, "Flametongue Totem"))
-                {
-                    if (isBuffChecked(checkBoxes, "Enhancing Totems (Spell Power)"))
-                        sb.AppendLine("spellpower_buff                 165/280");
-                    else
-                        sb.AppendLine("spellpower_buff                 144/280");
-                }
-                else if (isBuffChecked(checkBoxes, "Totem of Wrath (Spell Power)"))
-                    sb.AppendLine("spellpower_buff                 280/280");
-                else
-                    sb.AppendLine("spellpower_buff                 0/280");
-                if (isBuffChecked(checkBoxes, "Improved Faerie Fire") || isBuffChecked(checkBoxes, "Misery"))
-                    sb.AppendLine("spell_hit_chance_debuff         3.0/3.0");
-                else
-                    sb.AppendLine("spell_hit_chance_debuff         0.0/3.0");
-                if (isBuffChecked(checkBoxes, "Improved Moonkin Form") || isBuffChecked(checkBoxes, "Swift Retribution"))
-                    sb.AppendLine("haste_buff                      3.0/3.0");
-                else
-                    sb.AppendLine("haste_buff                      0.0/3.0");
-                if (isBuffChecked(checkBoxes, "Ferocious Inspiration") || isBuffChecked(checkBoxes, "Sanctified Retribution"))
-                    sb.AppendLine("percentage_damage_increase      3.0/3.0");
-                else
-                    sb.AppendLine("percentage_damage_increase      0.0/3.0");
-                if (isBuffChecked(checkBoxes, "Heart of the Crusader") || isBuffChecked(checkBoxes, "Totem of Wrath") || isBuffChecked(checkBoxes, "Master Poisoner"))
-                    sb.AppendLine("crit_chance_debuff              3.0/3.0");
-                else
-                    sb.AppendLine("crit_chance_debuff              0.0/3.0");
-                if (isBuffChecked(checkBoxes, "Blessing of Kings"))
-                    sb.AppendLine("stat_multiplier                 10.0/10.0");
-                else
-                    sb.AppendLine("stat_multiplier                 0.0/10.0");
-                if (isBuffChecked(checkBoxes, "Mark of the Wild"))
-                    if (isBuffChecked(checkBoxes, "Improved Mark of the Wild"))
-                        sb.AppendLine("stat_add_buff                   51/52");
-                    else
-                        sb.AppendLine("stat_add_buff                   37/52");
-                else
-                    sb.AppendLine("stat_add_buff                   0/52");
-                if (isBuffChecked(checkBoxes, "Strength of Earth Totem") || isBuffChecked(checkBoxes, "Horn of Winter"))
-                    if (isBuffChecked(checkBoxes, "Enhancing Totems (Agility/Strength)"))
-                        sb.AppendLine("agi_and_strength_buff           178/178");
-                    else
-                        sb.AppendLine("agi_and_strength_buff           155/178");
-                else
-                    sb.AppendLine("agi_and_strength_buff           0/178");
-                if (isBuffChecked(checkBoxes, "Fel Intelligence (Intellect)"))
-                    if (isBuffChecked(checkBoxes, "Improved Felhunter"))
-                        sb.AppendLine("intellect_buff                  52/60");
-                    else
-                        sb.AppendLine("intellect_buff                  48/60");
-                else if (isBuffChecked(checkBoxes, "Arcane Intellect"))
-                    sb.AppendLine("intellect_buff                  60/60");
-                else
-                    sb.AppendLine("intellect_buff                  0/60");
-                if (isBuffChecked(checkBoxes, "Bloodlust"))
-                    sb.AppendLine("bloodlust_casters               1");
-                else
-                    sb.AppendLine("bloodlust_casters               0");
-                sb.AppendLine("flask_elixir                    " + addFlask(checkBoxes));
-                sb.AppendLine("guardian_elixir                 " + addGuardianElixir(checkBoxes));
-                sb.AppendLine("potion                          " + addPotion(checkBoxes));
-                sb.AppendLine("food                            " + addFood(checkBoxes));
+                    sb.AppendLine("attack_power_buff_flat          550/688");
             }
             else
+                sb.AppendLine("attack_power_buff_flat          0/688");
+            if (isBuffChecked(buffs, "Trueshot Aura") || isBuffChecked(buffs, "Unleashed Rage") || isBuffChecked(buffs, "Abomination's Might"))
+                sb.AppendLine("attack_power_buff_multiplier    99.7/99.7");
+            else
+                sb.AppendLine("attack_power_buff_multiplier    0.0/99.7");
+            if (isBuffChecked(buffs, "Wrath of Air Totem"))
+                sb.AppendLine("spell_haste_buff                5.0/5.0");
+            else
+                sb.AppendLine("spell_haste_buff                0.0/5.0");
+            if (isBuffChecked(buffs, "Elemental Oath") || isBuffChecked(buffs, "Moonkin Form"))
+                sb.AppendLine("spell_crit_chance_buff          5.0/5.0");
+            else
+                sb.AppendLine("spell_crit_chance_buff          0.0/5.0");
+            if (isBuffChecked(buffs, "Improved Scorch") || isBuffChecked(buffs, "Winter's Chill") || isBuffChecked(buffs, "Improved Shadow Bolt"))
+                sb.AppendLine("spell_crit_chance_debuff        5.0/5.0");
+            else
+                sb.AppendLine("spell_crit_chance_debuff        0.0/5.0");
+            if (isBuffChecked(buffs, "Ebon Plaguebringer") || isBuffChecked(buffs, "Earth and Moon") || isBuffChecked(buffs, "Curse of the Elements"))
+                sb.AppendLine("spell_damage_debuff             13.0/13.0");
+            else
+                sb.AppendLine("spell_damage_debuff             0.0/13.0");
+            if (isBuffChecked(buffs, "Flametongue Totem"))
             {
-                sb.AppendLine("armor_debuff_major              0.0/20.0");//acid spit, expose armor, sunder armor
-                sb.AppendLine("armor_debuff_minor              0.0/5.0"); //faerie fire, sting, curse of recklessness
-                sb.AppendLine("physical_vulnerability_debuff   0.0/4.0"); //%, bloody frenzy, savage combat
-                sb.AppendLine("melee_haste_buff                0.0/20.0");//%, improved icy talons, windfury totem
-                sb.AppendLine("melee_crit_chance_buff	  	   0.0/5.0"); //%, leader of the pack, rampage
-                sb.AppendLine("attack_power_buff_flat		   0/688");   //battle shout, blessing of might
-                sb.AppendLine("attack_power_buff_multiplier	   0.0/99.7");//BUFF UPTIME %, DISABLES UR, abominations might, trueshot aura, (unleashed rage)
-                sb.AppendLine("spell_haste_buff                0.0/5.0"); //%, wrath of air totem
-                sb.AppendLine("spell_crit_chance_buff          0.0/5.0"); //%, moonkin aura, elemental oath
-                sb.AppendLine("spell_crit_chance_debuff        0.0/5.0"); //%, improved scorch, winter's chill
-                sb.AppendLine("spell_damage_debuff             0.0/13.0");//%, ebon plaugebearer, earth and moon, curse of elements
-                sb.AppendLine("spellpower_buff                 0/280");   //flametongue totem, totem of wrath
-                sb.AppendLine("spell_hit_chance_debuff         0.0/3.0"); //%, improved faerie fire, misery
-                sb.AppendLine("haste_buff                      0.0/3.0"); //%, improved moonkin aura, swift retribution
-                sb.AppendLine("percentage_damage_increase      0.0/3.0"); //%, ferocious inspiration, sanctified retribution
-                sb.AppendLine("crit_chance_debuff              0.0/3.0"); //%, heart of the crusader, totem of wrath, master poisoner
-                sb.AppendLine("stat_multiplier                 0.0/10.0");//%, blessing of kings
-                sb.AppendLine("stat_add_buff                   0/52");    //mark of the wild
-                sb.AppendLine("agi_and_strength_buff           0/178");   //strength of earth, horn of winter
-                sb.AppendLine("intellect_buff                  0/60");    //arcane intellect, fel intelligence
+                if (isBuffChecked(buffs, "Enhancing Totems (Spell Power)"))
+                    sb.AppendLine("spellpower_buff                 165/280");
+                else
+                    sb.AppendLine("spellpower_buff                 144/280");
             }
+            else if (isBuffChecked(buffs, "Totem of Wrath (Spell Power)"))
+                sb.AppendLine("spellpower_buff                 280/280");
+            else
+                sb.AppendLine("spellpower_buff                 0/280");
+            if (isBuffChecked(buffs, "Improved Faerie Fire") || isBuffChecked(buffs, "Misery"))
+                sb.AppendLine("spell_hit_chance_debuff         3.0/3.0");
+            else
+                sb.AppendLine("spell_hit_chance_debuff         0.0/3.0");
+            if (isBuffChecked(buffs, "Improved Moonkin Form") || isBuffChecked(buffs, "Swift Retribution"))
+                sb.AppendLine("haste_buff                      3.0/3.0");
+            else
+                sb.AppendLine("haste_buff                      0.0/3.0");
+            if (isBuffChecked(buffs, "Ferocious Inspiration") || isBuffChecked(buffs, "Sanctified Retribution"))
+                sb.AppendLine("percentage_damage_increase      3.0/3.0");
+            else
+                sb.AppendLine("percentage_damage_increase      0.0/3.0");
+            if (isBuffChecked(buffs, "Heart of the Crusader") || isBuffChecked(buffs, "Totem of Wrath") || isBuffChecked(buffs, "Master Poisoner"))
+                sb.AppendLine("crit_chance_debuff              3.0/3.0");
+            else
+                sb.AppendLine("crit_chance_debuff              0.0/3.0");
+            if (isBuffChecked(buffs, "Blessing of Kings"))
+                sb.AppendLine("stat_multiplier                 10.0/10.0");
+            else
+                sb.AppendLine("stat_multiplier                 0.0/10.0");
+            if (isBuffChecked(buffs, "Mark of the Wild"))
+                if (isBuffChecked(buffs, "Improved Mark of the Wild"))
+                    sb.AppendLine("stat_add_buff                   51/52");
+                else
+                    sb.AppendLine("stat_add_buff                   37/52");
+            else
+                sb.AppendLine("stat_add_buff                   0/52");
+            if (isBuffChecked(buffs, "Strength of Earth Totem") || isBuffChecked(buffs, "Horn of Winter"))
+                if (isBuffChecked(buffs, "Enhancing Totems (Agility/Strength)"))
+                    sb.AppendLine("agi_and_strength_buff           178/178");
+                else
+                    sb.AppendLine("agi_and_strength_buff           155/178");
+            else
+                sb.AppendLine("agi_and_strength_buff           0/178");
+            if (isBuffChecked(buffs, "Fel Intelligence (Intellect)"))
+                if (isBuffChecked(buffs, "Improved Felhunter"))
+                    sb.AppendLine("intellect_buff                  52/60");
+                else
+                    sb.AppendLine("intellect_buff                  48/60");
+            else if (isBuffChecked(buffs, "Arcane Intellect"))
+                sb.AppendLine("intellect_buff                  60/60");
+            else
+                sb.AppendLine("intellect_buff                  0/60");
+            if (isBuffChecked(buffs, "Bloodlust"))
+                sb.AppendLine("bloodlust_casters               1");
+            else
+                sb.AppendLine("bloodlust_casters               0");
+            sb.AppendLine("flask_elixir                    " + addFlask(buffs));
+            sb.AppendLine("guardian_elixir                 " + addGuardianElixir(buffs));
+            sb.AppendLine("potion                          " + addPotion(buffs));
+            sb.AppendLine("food                            " + addFood(buffs));
         }
 
-        private bool isBuffChecked(Dictionary<Buff, CheckBox> checkBoxes, string buffName)
+        private bool isMasterOfAnatomy(Character character)
         {
-            foreach (CheckBox checkbox in checkBoxes.Values)
+            return isBuffChecked(character.ActiveBuffs, "Master of Anatomy");
+        }
+
+        private bool isBuffChecked(List<Buff> buffs, string buffName)
+        {
+            foreach (Buff buff in buffs)
             {
-                Buff buff = checkbox.Tag as Buff;
                 if (buff.Name.Equals(buffName))
-                    return checkbox.Checked;
+                    return true;
             }
             return false;
         }
 
-        private string addFlask(Dictionary<Buff, CheckBox> checkBoxes)
+        private string addFlask(List<Buff> buffs)
         {
-            if(isBuffChecked(checkBoxes, "Flask of Endless Rage"))
+            if (isBuffChecked(buffs, "Flask of Endless Rage"))
                 return "flask_of_endless_rage";
-            if (isBuffChecked(checkBoxes, "Flask of the Frost Wyrm"))
+            if (isBuffChecked(buffs, "Flask of the Frost Wyrm"))
                 return "flask_of_the_frost_wyrm";
-            if (isBuffChecked(checkBoxes, "Elixir of Demonslaying"))
+            if (isBuffChecked(buffs, "Elixir of Demonslaying"))
                 return "elixir_of_demonslaying";
-            if (isBuffChecked(checkBoxes, "Elixir of Major Agility"))
+            if (isBuffChecked(buffs, "Elixir of Major Agility"))
                 return "elixir_of_major_agility";
-            if (isBuffChecked(checkBoxes, "Elixir of Mighty Agility"))
+            if (isBuffChecked(buffs, "Elixir of Mighty Agility"))
                 return "elixir_of_mighty_agility";
-            if (isBuffChecked(checkBoxes, "Elixir of Mighty Strength"))
+            if (isBuffChecked(buffs, "Elixir of Mighty Strength"))
                 return "elixir_of_mighty_strength";
-            if (isBuffChecked(checkBoxes, "Elixir of Accuracy"))
+            if (isBuffChecked(buffs, "Elixir of Accuracy"))
                 return "elixir_of_accuracy";
-            if (isBuffChecked(checkBoxes, "Elixir of Armor Piercing"))
+            if (isBuffChecked(buffs, "Elixir of Armor Piercing"))
                 return "elixir_of_armor_piercing";
-            if (isBuffChecked(checkBoxes, "Elixir of Deadly Strikes"))
+            if (isBuffChecked(buffs, "Elixir of Deadly Strikes"))
                 return "elixir_of_deadly_strikes";
-            if (isBuffChecked(checkBoxes, "Elixir of Expertise"))
+            if (isBuffChecked(buffs, "Elixir of Expertise"))
                 return "elixir_of_expertise";
-            if (isBuffChecked(checkBoxes, "Elixir of Lightning Speed"))
+            if (isBuffChecked(buffs, "Elixir of Lightning Speed"))
                 return "elixir_of_lightning_speed";
-            if (isBuffChecked(checkBoxes, "Guru's Elixir"))
+            if (isBuffChecked(buffs, "Guru's Elixir"))
                 return "gurus_elixir";
-            if (isBuffChecked(checkBoxes, "Spellpower Elixir"))
+            if (isBuffChecked(buffs, "Spellpower Elixir"))
                 return "spellpower_elixir";
-            if (isBuffChecked(checkBoxes, "Wrath Elixir"))
+            if (isBuffChecked(buffs, "Wrath Elixir"))
                 return "wrath_elixir";
             return "-";
         }
 
-        private string addGuardianElixir(Dictionary<Buff, CheckBox> checkBoxes)
+        private string addGuardianElixir(List<Buff> buffs)
         {
-            if (isBuffChecked(checkBoxes, "Elixir of Draenic Wisdom"))
+            if (isBuffChecked(buffs, "Elixir of Draenic Wisdom"))
                 return "elixir_of_draenic_wisdom";
-            if (isBuffChecked(checkBoxes, "Elixir of Mighty Thoughts"))
+            if (isBuffChecked(buffs, "Elixir of Mighty Thoughts"))
                 return "elixir_of_mighty_thoughts";
             return "-";
         }
 
-        private string addPotion(Dictionary<Buff, CheckBox> checkBoxes)
+        private string addPotion(List<Buff> buffs)
         {
-            if (isBuffChecked(checkBoxes, "Potion of Speed"))
+            if (isBuffChecked(buffs, "Potion of Speed"))
                 return "potion_of_speed";
-            if (isBuffChecked(checkBoxes, "Potion of Wild Magic"))
+            if (isBuffChecked(buffs, "Potion of Wild Magic"))
                 return "potion_of_wild_magic";
-            if (isBuffChecked(checkBoxes, "Heroic Potion"))
+            if (isBuffChecked(buffs, "Heroic Potion"))
                 return "heroic_potion";
-            if (isBuffChecked(checkBoxes, "Insane Strength Potion"))
+            if (isBuffChecked(buffs, "Insane Strength Potion"))
                 return "insane_strength_potion";
             return "-";
         }
 
-        private string addFood(Dictionary<Buff, CheckBox> checkBoxes)
+        private string addFood(List<Buff> buffs)
         {
-            if (isBuffChecked(checkBoxes, "Agility Food"))
+            if (isBuffChecked(buffs, "Agility Food"))
                 return "blackened_dragonfin";
-            if (isBuffChecked(checkBoxes, "Armor Pen Food"))
+            if (isBuffChecked(buffs, "Armor Pen Food"))
                 return "hearty_rhino";
-            if (isBuffChecked(checkBoxes, "Expertise Food"))
+            if (isBuffChecked(buffs, "Expertise Food"))
                 return "rhinolicious_wormsteak";
-            if (isBuffChecked(checkBoxes, "Hit Food"))
+            if (isBuffChecked(buffs, "Hit Food"))
                 return "snapper_extreme";
-            if (isBuffChecked(checkBoxes, "Spell Power Food"))
+            if (isBuffChecked(buffs, "Spell Power Food"))
                 return "firecracker_salmon";
-            if (isBuffChecked(checkBoxes, "Haste Food"))
+            if (isBuffChecked(buffs, "Haste Food"))
                 return "imperial_manta_steak";
-            if (isBuffChecked(checkBoxes, "Attack Power Food"))
+            if (isBuffChecked(buffs, "Attack Power Food"))
                 return "poached_northern_sculpin";
-            if (isBuffChecked(checkBoxes, "Crit Food"))
+            if (isBuffChecked(buffs, "Crit Food"))
                 return "spiced_wyrm_burger";
-            if (isBuffChecked(checkBoxes, "Fish Feast"))
+            if (isBuffChecked(buffs, "Fish Feast"))
                 return "fish_feast";
             return "-";
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Rawr.Enhance;
-using System.Windows.Forms;
 
 namespace Rawr
 {
@@ -450,9 +449,9 @@ namespace Rawr
             {
                 float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
-                float soeBuff = IsBuffChecked("Strength of Earth Totem") ? 155f : 0f;
-                float enhTotems = IsBuffChecked("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
-                float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 and assume SoE totem giving 178 str buff
+                float soeBuff = IsBuffChecked(character.ActiveBuffs, "Strength of Earth Totem") ? 155f : 0f;
+                float enhTotems = IsBuffChecked(character.ActiveBuffs, "Enhancing Totems (Agility/Strength)") ? 23f : 0f;
+                float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
                 float dogsMissrate = Math.Max(0f, 0.08f - hitBonus) + 0.065f;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
@@ -592,23 +591,11 @@ namespace Rawr
         #endregion
 
         #region Buff Functions
-        private bool IsBuffChecked(string buffName)
+        private bool IsBuffChecked(List<Buff> buffs, string buffName)
         {
-            TabControl tabs = Calculations.CalculationOptionsPanel.Parent.Parent as TabControl;
-            Control buffControl = tabs.TabPages[2].Controls[0];
-            Type buffControlType = buffControl.GetType();
-
-            if (buffControlType.FullName == "Rawr.BuffSelector")
-            {
-                PropertyInfo checkBoxesInfo = buffControlType.GetProperty("BuffCheckBoxes");
-                Dictionary<Buff, CheckBox> checkBoxes = checkBoxesInfo.GetValue(buffControl, null) as Dictionary<Buff, CheckBox>;
-                foreach (CheckBox checkbox in checkBoxes.Values)
-                {
-                    Buff buff = checkbox.Tag as Buff;
-                    if (buff.Name.Equals(buffName))
-                        return checkbox.Checked;
-                }
-            }
+            foreach (Buff buff in buffs)
+                if (buff.Name.Equals(buffName))
+                    return true;
             return false;
         }
 
