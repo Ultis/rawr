@@ -18,8 +18,8 @@
 
 		<Button x:Name="DoneButton" Content="Done" Click="DoneButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="3" Margin="0,4,4,4" d:LayoutOverrides="Height, VerticalMargin" />
 		<data:DataGrid x:Name="ItemGrid" HorizontalAlignment="Stretch" Grid.Row="2" Margin="4,4,4,4"
-		CanUserResizeColumns="True" CanUserSortColumns="True" CanUserReorderColumns="True" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
-		SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" Height="280">
+		CanUserResizeColumns="True" CanUserSortColumns="False" CanUserReorderColumns="True" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
+		SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" Height="280" IsReadOnly="True">
             <data:DataGrid.RowDetailsTemplate>
 		        <DataTemplate>
 		            <basics:DockPanel Background="White" LastChildFill="True">

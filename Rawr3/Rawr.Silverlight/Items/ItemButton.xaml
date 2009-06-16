@@ -15,6 +15,5 @@
 		<Popup x:Name="ListPopup" HorizontalOffset="72">
 			<local:ItemListControl x:Name="ComparisonItemList"/>
 		</Popup>
-		<local:ItemTooltip x:Name="ItemTooltip"/>
 	</Grid>
 </UserControl>

@@ -22,7 +22,5 @@
 		<Popup x:Name="EnchantPopup" HorizontalOffset="72" VerticalOffset="66">
 			<local:ItemListControl x:Name="ComparisonEnchantList"/>
 		</Popup>
-		<local:ItemTooltip x:Name="ItemTooltip"/>
-		<local:ItemTooltip x:Name="EnchantTooltip"/>
 	</Grid>
 </UserControl>

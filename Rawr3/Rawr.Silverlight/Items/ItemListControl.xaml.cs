@@ -183,7 +183,7 @@ namespace Rawr.Silverlight
         private void item_MouseLeave(object sender, MouseEventArgs e)
         {
 			FrameworkElement fe = sender as FrameworkElement;
-			ItemTooltip.Hide();
+			MainPage.Tooltip.Hide();
         }
 
         private void item_MouseEnter(object sender, MouseEventArgs e)
@@ -191,10 +191,10 @@ namespace Rawr.Silverlight
 			FrameworkElement fe = sender as FrameworkElement;
 			ItemListItem listItem = fe.DataContext as ItemListItem;
 
-			if (listItem.ItemInstance != null) ItemTooltip.ItemInstance = listItem.ItemInstance;
-			else ItemTooltip.Item = listItem.Item;
+            if (listItem.ItemInstance != null) MainPage.Tooltip.ItemInstance = listItem.ItemInstance;
+            else MainPage.Tooltip.Item = listItem.Item;
 
-			ItemTooltip.Show(fe, 367, 0);
+            MainPage.Tooltip.Show(fe, 367, 0);
         }
 
 		public ItemListControl()

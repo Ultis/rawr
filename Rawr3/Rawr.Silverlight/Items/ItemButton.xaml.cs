@@ -51,13 +51,10 @@ namespace Rawr.Silverlight
                 if (item == null)
                 {
                     IconImage.Source = null;
-                    ItemTooltip.ItemInstance = null;
                 }
                 else
                 {
-                    if (item.Item.IconPath != null) IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
-                    else IconImage.Source = null;
-                    ItemTooltip.ItemInstance = item;
+                    IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
                 }
             }
         }
@@ -82,7 +79,7 @@ namespace Rawr.Silverlight
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
-			ItemTooltip.Hide();
+            MainPage.Tooltip.Hide();
 			EnsurePopupsVisible();
             ComparisonItemList.IsShown = true;
             ListPopup.IsOpen = true;
@@ -91,12 +88,16 @@ namespace Rawr.Silverlight
 
         private void MainButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (!ListPopup.IsOpen) ItemTooltip.Show(MainButton, 72, 0);
+            if (!ListPopup.IsOpen)
+            {
+                MainPage.Tooltip.ItemInstance = item;
+                MainPage.Tooltip.Show(MainButton, 72, 0);
+            }
         }
 
         private void MainButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            ItemTooltip.Hide();
+            MainPage.Tooltip.Hide();
         }
 
 	}

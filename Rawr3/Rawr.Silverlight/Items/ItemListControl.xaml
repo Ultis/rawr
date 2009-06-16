@@ -83,7 +83,6 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-			<local:ItemTooltip x:Name="ItemTooltip"/>
 		</Grid>
 	</Border>
 </UserControl>

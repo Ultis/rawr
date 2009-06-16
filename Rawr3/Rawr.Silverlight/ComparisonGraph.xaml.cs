@@ -149,7 +149,7 @@ namespace Rawr.Silverlight
 
         private void NameGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            ItemTooltip.Hide();
+            MainPage.Tooltip.Hide();
         }
 
         private void NameGrid_MouseEnter(object sender, MouseEventArgs e)
@@ -158,9 +158,9 @@ namespace Rawr.Silverlight
             Item i = ((Grid)sender).Tag as Item;
             if (ii != null || i != null)
             {
-                if (ii != null) ItemTooltip.ItemInstance = ii;
-                else ItemTooltip.Item = i;
-                ItemTooltip.Show((Grid)sender, 143, 2);
+                if (ii != null) MainPage.Tooltip.ItemInstance = ii;
+                else MainPage.Tooltip.Item = i;
+                MainPage.Tooltip.Show((Grid)sender, 143, 2);
             }
         }
 

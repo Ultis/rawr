@@ -45,6 +45,8 @@ namespace Rawr.Silverlight
             }
         }
 
+        private ItemInstance gear;
+        private Item enchant;
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
             if (character != null)
@@ -54,20 +56,20 @@ namespace Rawr.Silverlight
                 {
                     IconImage.Source = null;
                     EnchantButton.Content = "";
-                    ItemTooltip.ItemInstance = null;
-                    EnchantTooltip.ItemInstance = null;
+                    gear = null;
+                    gear = null;
                 }
                 else
                 {
                     IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
                     EnchantButton.Content = item.Enchant.ShortName;
-                    ItemTooltip.ItemInstance = item;
+                    gear = item;
 
                     Item eItem = new Item();
                     eItem.Name = item.Enchant.Name;
                     eItem.Quality = Item.ItemQuality.Temp;
                     eItem.Stats = item.Enchant.Stats;
-                    EnchantTooltip.Item = eItem;
+                    enchant = eItem;
                 }
             }
         }
@@ -100,7 +102,7 @@ namespace Rawr.Silverlight
 
         private void MainButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
         {
-			ItemTooltip.Hide();
+            MainPage.Tooltip.Hide();
 			EnsurePopupsVisible();
             ComparisonItemList.IsShown = true;
             ListPopup.IsOpen = true;
@@ -109,17 +111,21 @@ namespace Rawr.Silverlight
 
         private void MainButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (!ListPopup.IsOpen) ItemTooltip.Show(MainButton, 72, 0);
+            if (!ListPopup.IsOpen)
+            {
+                MainPage.Tooltip.ItemInstance = gear;
+                MainPage.Tooltip.Show(MainButton, 72, 0);
+            }
         }
 
         private void MainButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            ItemTooltip.Hide();
+            MainPage.Tooltip.Hide();
         }
 
         private void EnchantButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
         {
-			EnchantTooltip.Hide();
+            MainPage.Tooltip.Hide();
 			EnsurePopupsVisible();
 			ComparisonEnchantList.IsShown = true;
 			EnchantPopup.IsOpen = true;
@@ -128,12 +134,16 @@ namespace Rawr.Silverlight
 
 		private void EnchantButton_MouseEnter(object sender, MouseEventArgs e)
 		{
-			if (!EnchantPopup.IsOpen) EnchantTooltip.Show(EnchantButton, 72, 0);
+            if (!EnchantPopup.IsOpen)
+            {
+                MainPage.Tooltip.Item = enchant;
+                MainPage.Tooltip.Show(EnchantButton, 72, 0);
+            }
 		}
 
 		private void EnchantButton_MouseLeave(object sender, MouseEventArgs e)
 		{
-			EnchantTooltip.Hide();
+            MainPage.Tooltip.Hide();
 		}
 
 	}

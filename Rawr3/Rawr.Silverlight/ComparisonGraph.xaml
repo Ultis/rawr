@@ -47,7 +47,5 @@
 		<TextBlock x:Name="AxisLabel9" Width="50" Grid.Column="8" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Center" Foreground="#BF000000" Margin="0,4,-25,0" Text="25" Grid.Row="1"/>
 		<StackPanel x:Name="ItemStack" HorizontalAlignment="Stretch" Margin="0,28,0,4" Grid.ColumnSpan="9" Grid.Row="1"/>
 		<StackPanel x:Name="LegendStack" Height="20" Margin="4,4,0,0" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="10"/>
-		
-		<local:ItemTooltip x:Name="ItemTooltip"/>
 	</Grid>
 </UserControl>

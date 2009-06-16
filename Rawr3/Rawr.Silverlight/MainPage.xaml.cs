@@ -18,6 +18,8 @@ namespace Rawr.Silverlight
     public partial class MainPage : UserControl
     {
 
+        public static ItemTooltip Tooltip { get; private set; }
+
         private Status status;
         public Status Status
         {
@@ -106,6 +108,8 @@ namespace Rawr.Silverlight
         {
             InitializeComponent();
 			if (Application.Current.RunningOffline) OfflineInstallButton.Visibility = Visibility.Collapsed;
+
+            Tooltip = ItemTooltip;
 
             HeadButton.Slot = Character.CharacterSlot.Head;
             NeckButton.Slot = Character.CharacterSlot.Neck;

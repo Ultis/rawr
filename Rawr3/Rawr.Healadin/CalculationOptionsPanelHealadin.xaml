@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Healadin" xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Healadin"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 	x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin" 
     d:DesignHeight="513" d:DesignWidth="340">
 	<UserControl.DataContext>
@@ -26,22 +27,23 @@
     		<RowDefinition Height="Auto"/>
     		<RowDefinition Height="Auto"/>
     		<RowDefinition Height="Auto"/>
-    		<RowDefinition Height="*"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="0.731*"/>
     	</Grid.RowDefinitions>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Text="Fight Length:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Text="Fight Length:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Activity:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="2" Text="Replenishment:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="3" Text="Divine Plea CD:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="4" Text="Burst Scale:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="6" Text="Glyph of Holy Light:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="7" Text="Sacred Shield Uptime:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="8" Text="BoL Uptime:"/>
+    	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="9" Text="BoL Effectiveness:"/>
     	<StackPanel Grid.Column="1" Orientation="Horizontal">
     		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Mode=TwoWay, Path=Length}" Maximum="30" Minimum="1" DecimalPlaces="1" Increment="0.5"/>
     		<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="mins"/>
     	</StackPanel>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Activity:" d:LayoutOverrides="Height"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="2" Text="Replenishment:" d:LayoutOverrides="Width, Height"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="3" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="4" Text="TextBlock" d:LayoutOverrides="Width"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="5" Text="TextBlock" d:LayoutOverrides="Height"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="6" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="7" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="8" Text="TextBlock" d:LayoutOverrides="Width"/>
-    	<TextBlock HorizontalAlignment="Right" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="9" Text="TextBlock" d:LayoutOverrides="Width, Height"/>
     	<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="1">
     		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=Activity}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
     		<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
@@ -50,6 +52,37 @@
     		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=Replenishment}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
     		<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
     	</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="3">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Mode=TwoWay, Path=DivinePlea}" Maximum="30" Minimum="1" DecimalPlaces="1" Increment="0.5"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="mins"/>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="4">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=BurstScale}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
+		</StackPanel>
+		<CheckBox HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Content="Infusion of Light:" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=InfusionOfLight}"/>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="5">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=IoLHolyLight}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5" IsEnabled="{Binding Mode=OneWay, Path=InfusionOfLight}"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="% HL"/>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="6">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Mode=TwoWay, Path=GHL_Targets}" Maximum="5" Minimum="0" DecimalPlaces="1" Increment="0.1"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="targets"/>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="7">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=SSUptime}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="8">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=BoLUp}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="9">
+			<inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=BoLEff}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"/>
+			<TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
+		</StackPanel>
+		<CheckBox Margin="4,2,4,2" Content="Maintain JotP" Grid.Column="1" Grid.Row="10" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding Mode=TwoWay, Path=JotP}"/>
+		<CheckBox Margin="4,2,4,2" VerticalAlignment="Center" Content="Lay on Hands Self" Grid.Column="1" Grid.Row="11" HorizontalAlignment="Left" IsChecked="{Binding Mode=TwoWay, Path=LoHSelf}"/>
 
 	</Grid>
 </UserControl>
