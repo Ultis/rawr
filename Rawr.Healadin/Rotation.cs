@@ -105,7 +105,7 @@ namespace Rawr.Healadin
                 + calc.RotationHS / calc.HS.CastTime() * calc.HS.ChanceToCrit()) / calc.FightLength;
         }
 
-        public float CalculateHealing(CharacterCalculationsHealadin calc)
+        public float CalculateFightHealing(CharacterCalculationsHealadin calc)
         {
             #region Copying Stuff to Calc
             calc.FightLength = FightLength;
@@ -211,11 +211,14 @@ namespace Rawr.Healadin
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
 
             calc.FightPoints = calc.AvgHPS * (1f - CalcOpts.BurstScale);
-            calc.BurstPoints = hl.HPS() * CalcOpts.BurstScale;
 
             return calc.FightPoints + calc.BurstPoints;
         }
 
+        public float CalculateBurstHealing(CharacterCalculationsHealadin calc)
+        {
+            return hl.HPS() * CalcOpts.BurstScale;
+        }
 
     }
 }

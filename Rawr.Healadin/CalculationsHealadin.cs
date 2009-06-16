@@ -286,11 +286,18 @@ namespace Rawr.Healadin
 
             for (int i = 0; i < 5; i++)
             {
+                float oldBurst = 0;
+                if (i > 0) oldBurst = calc.BurstPoints;
+
                 stats = GetCharacterStats(character, additionalItem, true, calc);
                 calc = new CharacterCalculationsHealadin();
 
                 Rotation rot = new Rotation(character, stats);
-                calc.OverallPoints = rot.CalculateHealing(calc);
+
+                if (i > 0) calc.BurstPoints = oldBurst;
+                else calc.BurstPoints = rot.CalculateBurstHealing(calc);
+                calc.FightPoints = rot.CalculateFightHealing(calc);
+                calc.OverallPoints = calc.BurstPoints + calc.FightPoints;
             }
             calc.BasicStats = GetCharacterStats(character, additionalItem, false, null);
 
