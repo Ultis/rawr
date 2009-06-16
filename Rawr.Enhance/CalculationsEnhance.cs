@@ -217,17 +217,18 @@ namespace Rawr
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
-            float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
             float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
+            float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
+            float windfuryDamageBonus = 1f;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
-                    windfuryWeaponBonus += windfuryWeaponBonus * .13f;
+                    windfuryDamageBonus = 1.13f;
                     break;
                 case 2:
-                    windfuryWeaponBonus += windfuryWeaponBonus * .27f;
+                    windfuryDamageBonus = 1.27f;
                     break;
                 case 3:
-                    windfuryWeaponBonus += windfuryWeaponBonus * .4f;
+                    windfuryDamageBonus = 1.4f;
                     break;
             }
             float weaponMastery = 1f;
@@ -332,16 +333,18 @@ namespace Rawr
             }
 
             float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
-                              
-            //2: Stormstrike DPS
-            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed + bonusSSDamage;
+
+            // Generic MH & OH damage values used for SS, LL & WF
+            float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
             float damageOHSwing = 0f;
             if (character.ShamanTalents.DualWield == 1)
-                damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed + bonusSSDamage;
+                damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
+
+            //2: Stormstrike DPS
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1)
             {
-                float swingDPS = damageMHSwing * cs.HitsPerSMHSS + damageOHSwing * cs.HitsPerSOHSS;
+                float swingDPS = (damageMHSwing + bonusSSDamage) * cs.HitsPerSMHSS + (damageOHSwing + bonusSSDamage) * cs.HitsPerSOHSS;
                 float SSnormal = swingDPS * cs.YellowHitModifier;
                 float SScrit = swingDPS * cs.YellowCritModifier * cs.CritMultiplierMelee;
                 dpsSS = (SSnormal + SScrit) * cs.DamageReduction * weaponMastery * bonusNatureDamage * bonusLLSSDamage * bossNatureResistance;
@@ -349,8 +352,6 @@ namespace Rawr
 
             //3: Lavalash DPS
             float dpsLL = 0f;
-            damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
-            damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
             {
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
@@ -397,7 +398,7 @@ namespace Rawr
                 float WFdps = damageWFHit * cs.HitsPerSWF;
                 float WFnormal = WFdps * cs.YellowHitModifier;
                 float WFcrit = WFdps * cs.YellowCritModifier * cs.CritMultiplierMelee;
-                dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.DamageReduction * bonusPhysicalDamage;
+                dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.DamageReduction * bonusPhysicalDamage * windfuryDamageBonus;
             }
 
             //7: Lightning Shield DPS
