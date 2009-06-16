@@ -673,6 +673,7 @@ namespace Rawr
             {
                 Item selectedItem = SelectedItem.Tag as Item;
                 selectedItem.InvalidateCachedData();
+                Character.OnCalculationsInvalidated();
             }
         }
 
