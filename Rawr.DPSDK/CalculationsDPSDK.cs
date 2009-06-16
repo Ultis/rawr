@@ -312,7 +312,7 @@ namespace Rawr.DPSDK
 
             //shared variables
             DeathKnightTalents talents = calcOpts.talents;
-            bool DW = character.MainHand != null && character.OffHand != null;
+            bool DW = combatTable.DW;
             float missedSpecial = 0f;
 
             float dpsWhiteBeforeArmor = 0f;
@@ -483,6 +483,7 @@ namespace Rawr.DPSDK
                 #endregion
 
                 #region Off Hand
+                if (DW || (character.MainHand == null && character.OffHand != null))
                 {
                     float dpsOHglancing = (0.24f * combatTable.OH.DPS) * 0.75f;
                     float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + combatTable.physCrits)) + dpsOHglancing;
@@ -506,7 +507,7 @@ namespace Rawr.DPSDK
             {
                 float dpsMHBCB = 0f;
                 float dpsOHBCB = 0f;
-                if (combatTable.OH.damage != 0)
+                if ((combatTable.OH.damage != 0) && (DW || combatTable.MH.damage == 0))
                 {
                     float OHBCBDmg = combatTable.OH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
                     dpsOHBCB = OHBCBDmg / combatTable.OH.hastedSpeed;

@@ -13,6 +13,7 @@ namespace Rawr.DPSDK
         public CalculationOptionsDPSDK calcOpts;
 
         public Weapon MH, OH;
+        public bool DW;
 
         public float combinedSwingTime;
 
@@ -82,12 +83,12 @@ namespace Rawr.DPSDK
 
                 if (character.OffHand != null)
                 {
-                    if (character.MainHand != null)
+                    if (DW)
                     {
                         chanceDodged += OH.chanceDodged;
                         chanceDodged /= 2;
                     }
-                    else
+                    else if (character.MainHand == null )
                     {
                         chanceDodged = OH.chanceDodged;
                     }
@@ -96,8 +97,8 @@ namespace Rawr.DPSDK
                 calcs.DodgedAttacks = chanceDodged;
 
                 float chanceMiss = 0f;
-                if (character.OffHand == null) chanceMiss = .08f;
-                else chanceMiss = .27f;
+                if (DW || (character.MainHand == null && character.OffHand != null)) chanceMiss = .27f;
+                else chanceMiss = .08f;
                 chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;
@@ -198,25 +199,15 @@ namespace Rawr.DPSDK
             MH = new Weapon(null, stats, calcOpts, 0f);
             OH = new Weapon(null, null, null, 0f);
 
+            DW = character.MainHand != null && character.OffHand != null &&
+                character.MainHand.Slot != Item.ItemSlot.TwoHand;
+
             if (character.MainHand != null)
             {
                 MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
                 calcs.MHAttackSpeed = MH.hastedSpeed;
                 calcs.MHWeaponDamage = MH.damage;
                 calcs.MHExpertise = MH.effectiveExpertise;
-                if (character.MainHand.Item.Type == Item.ItemType.TwoHandAxe
-                    || character.MainHand.Item.Type == Item.ItemType.TwoHandMace
-                    || character.MainHand.Item.Type == Item.ItemType.TwoHandSword
-                    || character.MainHand.Item.Type == Item.ItemType.Polearm)
-                {
-                    normalizationFactor = 3.3f;
-                    MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
-                    combinedSwingTime = MH.hastedSpeed;
-                    calcs.OHAttackSpeed = 0f;
-                    calcs.OHWeaponDamage = 0f;
-                    calcs.OHExpertise = 0f;
-                }
-                else normalizationFactor = 2.4f;
             }
 
             if (character.OffHand != null)
@@ -226,16 +217,40 @@ namespace Rawr.DPSDK
                 float OHMult = .05f * (float)talents.NervesOfColdSteel;
                 OH.damage *= .5f + OHMult;
 
-                //need this for weapon swing procs
-                //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
-                //combinedSwingTime = 1f / combinedSwingTime;
-                combinedSwingTime = (MH.hastedSpeed + OH.hastedSpeed) / 4;
                 calcs.OHAttackSpeed = OH.hastedSpeed;
                 calcs.OHWeaponDamage = OH.damage;
                 calcs.OHExpertise = OH.effectiveExpertise;
             }
 
-            if (character.MainHand == null && character.OffHand == null)
+            // MH-only
+            if ((character.MainHand != null) && (! DW))
+            {
+                if (character.MainHand.Item.Type == Item.ItemType.TwoHandAxe
+                    || character.MainHand.Item.Type == Item.ItemType.TwoHandMace
+                    || character.MainHand.Item.Type == Item.ItemType.TwoHandSword
+                    || character.MainHand.Item.Type == Item.ItemType.Polearm)
+                {
+                    normalizationFactor = 3.3f;
+                    MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
+                }
+                else normalizationFactor = 2.4f;
+
+                combinedSwingTime = MH.hastedSpeed;
+                calcs.OHAttackSpeed = 0f;
+                calcs.OHWeaponDamage = 0f;
+                calcs.OHExpertise = 0f;
+            }
+            // DW or no MH
+            else if (character.OffHand != null)
+            {
+                //need this for weapon swing procs
+                //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
+                //combinedSwingTime = 1f / combinedSwingTime;
+                combinedSwingTime = (MH.hastedSpeed + OH.hastedSpeed) / 4;
+                normalizationFactor = 2.4f;
+            } 
+            // Unarmed
+            else if (character.MainHand == null && character.OffHand == null)
             {
                 combinedSwingTime = 2f;
                 normalizationFactor = 2.4f;
