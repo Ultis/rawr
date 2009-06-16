@@ -364,7 +364,7 @@ the Threat Scale defined on the Options tab.",
 			float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 
-			float hitBonus = StatConversion.GetPhysicalHitFromRating(stats.HitRating);//stats.HitRating / 32.78998947f / 100f;
+			float hitBonus = StatConversion.GetPhysicalHitFromRating(stats.HitRating) + stats.PhysicalHit;//stats.HitRating / 32.78998947f / 100f;
 			float expertiseBonus = (StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) + stats.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
 			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
@@ -852,7 +852,7 @@ the Threat Scale defined on the Options tab.",
 			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
 			float meleeHitInterval = 1f / (1f / attackSpeed + 1f / 1.5f);
 
-			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);//stats.HitRating / 32.78998947f / 100f;
+			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;//stats.HitRating / 32.78998947f / 100f;
 			float expertiseBonus = (StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating) + statsTotal.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
 			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
@@ -914,6 +914,7 @@ the Threat Scale defined on the Options tab.",
 			return statsTotal;
 		}
 
+		/// <summary>
 		/// <summary>
 		/// Gets data for a custom chart that Rawr.Bear provides
 		/// </summary>
