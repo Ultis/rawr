@@ -490,7 +490,7 @@ namespace Rawr
             calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
 		    calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
-            calculatedStats.ArmorMitigation = cs.DamageReduction * 100f;
+            calculatedStats.ArmorMitigation = (1f - cs.DamageReduction) * 100f;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
             calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;
