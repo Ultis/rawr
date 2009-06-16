@@ -1043,10 +1043,9 @@ namespace Rawr
 		/// <summary>
 		/// Used by optimizer to cache dictionary search result
 		/// </summary>
-#if !SILVERLIGHT
         [XmlIgnore]
         internal Optimizer.ItemAvailabilityInformation AvailabilityInformation;
-#endif
+
 		#region IComparable<Item> Members
 
 		public int CompareTo(Item other)
