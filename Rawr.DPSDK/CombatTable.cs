@@ -243,9 +243,9 @@ namespace Rawr.DPSDK
             // DW or no MH
             else if (character.OffHand != null)
             {
-                //need this for weapon swing procs
-                //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
-                //combinedSwingTime = 1f / combinedSwingTime;
+                // need this for weapon swing procs
+                // combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
+                // combinedSwingTime = 1f / combinedSwingTime;
                 combinedSwingTime = (MH.hastedSpeed + OH.hastedSpeed) / 4;
                 normalizationFactor = 2.4f;
             } 
