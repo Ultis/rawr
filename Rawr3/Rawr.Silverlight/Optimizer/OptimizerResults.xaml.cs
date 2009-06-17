@@ -27,8 +27,9 @@ namespace Rawr.Silverlight
             int rows = 0;
             foreach (Character.CharacterSlot slot in EnumHelper.GetValues<Character.CharacterSlot>())
             {
-                //if (!oldCharacter[slot].Equals(newCharacter[slot]))
-                if (oldCharacter[slot] != null || newCharacter[slot] != null) {
+                if ((oldCharacter[slot] == null && newCharacter[slot] != null) ||
+                    (oldCharacter[slot] != null  && !oldCharacter[slot].Equals(newCharacter[slot])))
+                {
                     ItemGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
                     if (oldCharacter[slot] != null)

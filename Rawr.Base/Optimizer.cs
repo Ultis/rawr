@@ -668,15 +668,71 @@ namespace Rawr.Optimizer
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
         private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
 
+#if SILVERLIGHT
+        private class OptimizeCharacterState
+        {
+            public Character Character { get; set; }
+            public string CalculationToOptimize { get; set; }
+            public OptimizationRequirement[] Requirements { get; set; }
+            public int Thoroughness { get; set; }
+            public bool InjectCharacter { get; set; }
+        }
+#endif
+
         public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
+#if SILVERLIGHT
+            OptimizeCharacterState state = new OptimizeCharacterState()
+            {
+                Character = character,
+                CalculationToOptimize = calculationToOptimize,
+                Requirements = requirements,
+                Thoroughness = thoroughness,
+                InjectCharacter = injectCharacter
+            };
+            ThreadPool.QueueUserWorkItem(new WaitCallback(OptimizeCharacterThreadStart), state);
+#else
             optimizeCharacterThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, injectCharacter, null, null);
+#endif
         }
 
+#if SILVERLIGHT 
+        private void OptimizeCharacterThreadStart(object o)
+        {
+            OptimizeCharacterState state = o as OptimizeCharacterState;
+            Exception error = null;
+            Character optimizedCharacter = null;
+            float optimizedCharacterValue = 0.0f;
+            float currentCharacterValue = 0.0f;
+            bool injected = false;
+            try
+            {
+                optimizedCharacter = PrivateOptimizeCharacter(state.Character, state.CalculationToOptimize,
+                    state.Requirements, state.Thoroughness, state.InjectCharacter, out injected, out error);
+                if (optimizedCharacter != null)
+                {
+                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false));
+                }
+                else
+                {
+                    if (error == null) error = new NullReferenceException();
+                }
+                currentCharacterValue = GetOptimizationValue(state.Character,
+                    model.GetCharacterCalculations(state.Character, null, false, optimizeTalents, false));
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+            asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate,
+                new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue,
+                    state.Character, currentCharacterValue, injected, error, cancellationPending));
+        }
+#endif
         private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
         {
             Exception error = null;
@@ -703,6 +759,7 @@ namespace Rawr.Optimizer
             }
             asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, character, currentCharacterValue, injected, error, cancellationPending));
         }
+
 
         public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
         {

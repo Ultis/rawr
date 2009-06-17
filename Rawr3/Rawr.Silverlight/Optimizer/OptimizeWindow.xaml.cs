@@ -302,11 +302,7 @@ namespace Rawr.Silverlight
             DoneButton.Visibility = Visibility.Collapsed;
 
             ControlsEnabled(false);
-
-            new OptimizerResults(character, character).Show();
-
-            ControlsEnabled(true);
-            //optimizer.OptimizeCharacterAsync(character, calculationToOptimize, requirements, thoroughness, false);
+            optimizer.OptimizeCharacterAsync(character, calculationToOptimize, requirements, thoroughness, false);
         }
 
         private void optimizer_OptimizeCharacterCompleted(object sender, OptimizeCharacterCompletedEventArgs e)
