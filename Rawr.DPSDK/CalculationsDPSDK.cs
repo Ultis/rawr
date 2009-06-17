@@ -1179,7 +1179,7 @@ namespace Rawr.DPSDK
             {
                 if (talents.DancingRuneWeapon > 0)
                 {
-                    float DRWUptime = (15f + (1.5f * talents.RunicPowerMastery) + (talents.GlyphofDancingRuneWeapon ? 5f : 0)) / 90f;
+                    float DRWUptime = (5f + (1.5f * talents.RunicPowerMastery) + (talents.GlyphofDancingRuneWeapon ? 5f : 0)) / 90f;
                     dpsDancingRuneWeapon = (calcs.DPSPoints - calcs.GhoulDPS - calcs.BloodwormsDPS) * DRWUptime;
                     dpsDancingRuneWeapon *= 0.5f; // "doing the same attacks as the Death Knight but for 50% reduced damage."
                     calcs.DPSPoints += dpsDancingRuneWeapon;

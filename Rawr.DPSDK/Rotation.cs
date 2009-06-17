@@ -97,7 +97,10 @@ namespace Rawr.DPSDK
 
         public float manageRPDumping(DeathKnightTalents talents, float RP)
         {
-            
+            if (talents.DancingRuneWeapon > 0f)
+            {
+                RP = RP - curRotationDuration * ((100f + 15f * talents.RunicPowerMastery) / 90f);
+            }
             if (talents.FrostStrike > 0f)
             {
                 FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
