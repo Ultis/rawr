@@ -1287,6 +1287,10 @@ namespace Rawr.DPSDK
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
                 BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
             };
+            if (talents.UnbreakableArmor > 0)
+            {
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){BonusStrengthMultiplier = 0.25f}, 20f, 120f));
+            }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
 
