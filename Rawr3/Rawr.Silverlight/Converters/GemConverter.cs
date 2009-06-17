@@ -14,16 +14,76 @@ using System.Globalization;
 namespace Rawr.Silverlight
 {
 
+    public class GemNameConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            ItemInstance instance = value as ItemInstance;
+            if (instance != null)
+            {
+                if (parameter.ToString() == "1")
+                    return instance.Gem1Id > 0 ? instance.Gem1.Name : "";
+                if (parameter.ToString() == "2")
+                    return instance.Gem2Id > 0 ? instance.Gem2.Name : "";
+                if (parameter.ToString() == "3")
+                    return instance.Gem3Id > 0 ? instance.Gem3.Name : "";
+            }
+
+            return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
+
     public class GemColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Item item = value as Item;
-            Item.ItemSlot gemType;
-            if (parameter.ToString() == "1") gemType = item.SocketColor1;
-            else if (parameter.ToString() == "2") gemType = item.SocketColor2;
-            else if (parameter.ToString() == "3") gemType = item.SocketColor3;
-            else gemType = Item.ItemSlot.None;
+            Item.ItemSlot gemType = Item.ItemSlot.None;
+
+            if (value is Item)
+            {
+                Item item = value as Item;
+                if (parameter.ToString() == "1") gemType = item.SocketColor1;
+                else if (parameter.ToString() == "2") gemType = item.SocketColor2;
+                else if (parameter.ToString() == "3") gemType = item.SocketColor3;
+            }
+            else if (value is ItemInstance)
+            {
+                ItemInstance instance = value as ItemInstance;
+                Item item = instance.Item;
+                if (parameter.ToString() == "1")
+                {
+                    if (instance.Gem1Id > 0)
+                    {
+                        if (item.SocketColor1 == Item.ItemSlot.None) gemType = Item.ItemSlot.Prismatic;
+                        else gemType = item.SocketColor1;
+                    }
+                }
+                else if (parameter.ToString() == "2")
+                {
+                    if (instance.Gem2Id > 0)
+                    {
+                        if (item.SocketColor2 == Item.ItemSlot.None) gemType = Item.ItemSlot.Prismatic;
+                        else gemType = item.SocketColor2;
+                    }
+                }
+                else if (parameter.ToString() == "3")
+                {
+                    if (instance.Gem3Id > 0)
+                    {
+                        if (item.SocketColor3 == Item.ItemSlot.None) gemType = Item.ItemSlot.Prismatic;
+                        else gemType = item.SocketColor3;
+                    }
+                }
+            }
             
             switch (gemType)
             {

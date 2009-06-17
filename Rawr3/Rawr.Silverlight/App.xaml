@@ -10,6 +10,10 @@
 			<local:GemColorConverter x:Key="GemColorConverter"/>
             <local:ItemQualityConverter x:Key="ItemQualityConverter"/>
             <local:PercentConverter x:Key="PercentConverter"/>
+            <local:GemVisibilityConverter x:Key="GemVisibilityConverter"/>
+            <local:GemNameConverter x:Key="GemNameConverter"/>
+            <local:EnchantNameConverter x:Key="EnchantNameConverter"/>
+            <local:EnchantVisbilityConverter x:Key="EnchantVisbilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>		 
 </Application>

@@ -13,7 +13,8 @@ namespace Rawr.Silverlight
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Icons.ItemIcon(((Item)value).IconPath);
+            if (value == null || !(value is Item) || ((Item)value).Id <= 0) return null;
+            else return Icons.ItemIcon(((Item)value).IconPath);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

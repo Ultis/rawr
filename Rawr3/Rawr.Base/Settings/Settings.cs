@@ -10,6 +10,7 @@ namespace Rawr
         public CacheSettings Cache { get; set; }
         public GeneralSettings General { get; set; }
         public NetworkSettings Network { get; set; }
+        public OptimizerSettings Optimzer { get; set; }
 
         public static void Save(TextWriter writer)
         {
@@ -17,7 +18,8 @@ namespace Rawr
             {
                 Cache = CacheSettings.Default,
                 General = GeneralSettings.Default,
-                Network = NetworkSettings.Default
+                Network = NetworkSettings.Default,
+                Optimzer = OptimizerSettings.Default
             };
             XmlSerializer serializer = new XmlSerializer(typeof(Settings));
             serializer.Serialize(writer, current);
@@ -32,9 +34,10 @@ namespace Rawr
                 Settings loaded = (Settings)serializer.Deserialize(reader);
                 reader.Close();
 
-                CacheSettings.Default = loaded.Cache;
-                GeneralSettings.Default = loaded.General;
-                NetworkSettings.Default = loaded.Network;
+                if (loaded.Cache != null) CacheSettings.Default = loaded.Cache;
+                if (loaded.General != null) GeneralSettings.Default = loaded.General;
+                if (loaded.Network != null) NetworkSettings.Default = loaded.Network;
+                if (loaded.Optimzer != null) OptimizerSettings.Default = loaded.Optimzer;
             }
             catch { }
         }

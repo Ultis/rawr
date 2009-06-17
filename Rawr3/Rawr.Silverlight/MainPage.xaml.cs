@@ -330,7 +330,7 @@ namespace Rawr.Silverlight
 
         private void ShowOptimizer()
         {
-            new OptimizeWindow().Show();
+            new OptimizeWindow(Character).Show();
         }
 
         private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)

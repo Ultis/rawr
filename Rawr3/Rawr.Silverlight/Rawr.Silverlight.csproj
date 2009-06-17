@@ -115,9 +115,10 @@
     <Compile Include="ComparisonGraphItem.xaml.cs">
       <DependentUpon>ComparisonGraphItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\EnchantConverter.cs" />
     <Compile Include="Converters\GemConverter.cs" />
     <Compile Include="Converters\IconPathConverter.cs" />
-    <Compile Include="Converters\ItemQualityConverter.cs" />
+    <Compile Include="Converters\ItemConverters.cs" />
     <Compile Include="Converters\PercentConverter.cs" />
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
@@ -134,7 +135,13 @@
     <Compile Include="Items\ItemBrowser.xaml.cs">
       <DependentUpon>ItemBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\OptimizeWindow.xaml.cs">
+    <Compile Include="Optimizer\ItemDisplay.xaml.cs">
+      <DependentUpon>ItemDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Optimizer\OptimizerResults.xaml.cs">
+      <DependentUpon>OptimizerResults.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Optimizer\OptimizeWindow.xaml.cs">
       <DependentUpon>OptimizeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RelevantItemRefinement.xaml.cs">
@@ -249,7 +256,15 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\OptimizeWindow.xaml">
+    <Page Include="Optimizer\ItemDisplay.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Optimizer\OptimizerResults.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Optimizer\OptimizeWindow.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
