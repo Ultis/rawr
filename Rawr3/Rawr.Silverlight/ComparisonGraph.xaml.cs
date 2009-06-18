@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using Rawr.Optimizer;
 
 namespace Rawr.Silverlight
 {
@@ -191,8 +192,7 @@ namespace Rawr.Silverlight
                 item.MinScale = minScale;
                 item.MaxScale = maxScale;
 
-                if (c.ItemInstance != null) item.NameGrid.Tag = c.ItemInstance;
-                else item.NameGrid.Tag = c.Item;
+                item.NameGrid.Tag = c;
 
                 if (Mode == DisplayMode.Overall) { item[0] = c.OverallPoints; }
                 else { for (int j = 0; j < c.SubPoints.Length; j++) item[j] = c.SubPoints[j]; }
@@ -210,12 +210,16 @@ namespace Rawr.Silverlight
 
         private void NameGrid_MouseEnter(object sender, MouseEventArgs e)
         {
-            ItemInstance ii = ((Grid)sender).Tag as ItemInstance;
-            Item i = ((Grid)sender).Tag as Item;
-            if (ii != null || i != null)
+            ComparisonCalculationBase calc = ((Grid)sender).Tag as ComparisonCalculationBase;
+            if (calc.ItemInstance != null || calc.Item != null)
             {
-                if (ii != null) MainPage.Tooltip.ItemInstance = ii;
-                else MainPage.Tooltip.Item = i;
+                if (calc.ItemInstance != null) MainPage.Tooltip.ItemInstance = calc.ItemInstance;
+                else MainPage.Tooltip.Item = calc.Item;
+                if (calc is ComparisonCalculationUpgrades)
+                {
+                    ComparisonCalculationUpgrades upgrades = calc as ComparisonCalculationUpgrades;
+                    MainPage.Tooltip.CharacterItems = upgrades.CharacterItems;
+                }
                 MainPage.Tooltip.Show((Grid)sender, 143, 2);
             }
         }

@@ -25,11 +25,31 @@ namespace Rawr.Silverlight
             BestCharacter = newCharacter;
 
             int rows = 0;
-            foreach (Character.CharacterSlot slot in EnumHelper.GetValues<Character.CharacterSlot>())
+            for (int i = 0; i < Character.OptimizableSlotCount; i++)
             {
+                Character.CharacterSlot slot = (Character.CharacterSlot)i;
                 if ((oldCharacter[slot] == null && newCharacter[slot] != null) ||
                     (oldCharacter[slot] != null  && !oldCharacter[slot].Equals(newCharacter[slot])))
                 {
+                    //Testing if the ring/trinket items were just swapped and not actually different
+                    if (slot == Character.CharacterSlot.Finger1 || slot == Character.CharacterSlot.Finger2)
+                    {
+                        ItemInstance old1 = oldCharacter[Character.CharacterSlot.Finger1];
+                        ItemInstance old2 = oldCharacter[Character.CharacterSlot.Finger2];
+                        ItemInstance new1 = newCharacter[Character.CharacterSlot.Finger1];
+                        ItemInstance new2 = newCharacter[Character.CharacterSlot.Finger2];
+                        if (((old1 == null && new2 == null) || (old1 != null && old1.Equals(new2)))
+                            && ((old2 == null && new1 == null) || (old2 != null && old2.Equals(new1)))) continue;
+                    }
+                    else if (slot == Character.CharacterSlot.Trinket1 || slot == Character.CharacterSlot.Trinket2)
+                    {
+                        ItemInstance old1 = oldCharacter[Character.CharacterSlot.Trinket1];
+                        ItemInstance old2 = oldCharacter[Character.CharacterSlot.Trinket2];
+                        ItemInstance new1 = newCharacter[Character.CharacterSlot.Trinket1];
+                        ItemInstance new2 = newCharacter[Character.CharacterSlot.Trinket2];
+                        if (((old1 == null && new2 == null) || (old1 != null && old1.Equals(new2)))
+                            && ((old2 == null && new1 == null) || (old2 != null && old2.Equals(new1)))) continue;
+                    }
                     ItemGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
                     if (oldCharacter[slot] != null)
@@ -51,6 +71,7 @@ namespace Rawr.Silverlight
                     }
 
                     rows++;
+
                 }
             }
 

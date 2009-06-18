@@ -12,8 +12,8 @@
 	<basics:ChildWindow.Resources>
 		<Style x:Key="ItemDisplayStyle" TargetType="local:ItemDisplay">
 			<Setter Property="Margin" Value="2,2,2,2"/>
-			<Setter Property="HorizontalAlignment" Value="Left"/>
-			<Setter Property="VerticalAlignment" Value="Top"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="VerticalAlignment" Value="Stretch"/>
 		</Style>
 	</basics:ChildWindow.Resources>
 	<Grid x:Name="LayoutRoot" Background="White">
@@ -53,7 +53,7 @@
 				</Grid>
 			</basics:TabItem>
 		</basics:TabControl>
-		<TextBlock x:Name="CurrentScoreLabel" HorizontalAlignment="Center" Margin="4,4,2,2" VerticalAlignment="Center" FontSize="12" Text="Current: 99999"/>
-		<TextBlock x:Name="OptimizedScoreLabel" HorizontalAlignment="Center" Margin="2,4,4,2" VerticalAlignment="Center" Grid.Column="1" FontSize="12" Text="Optimized: 99999" d:LayoutOverrides="Width"/>
+		<TextBlock x:Name="CurrentScoreLabel" HorizontalAlignment="Center" Margin="4,4,2,2" VerticalAlignment="Center" FontSize="12" Text="Current: 99999" FontWeight="Bold"/>
+		<TextBlock x:Name="OptimizedScoreLabel" HorizontalAlignment="Center" Margin="2,4,4,2" VerticalAlignment="Center" Grid.Column="1" FontSize="12" Text="Optimized: 99999" d:LayoutOverrides="Width" FontWeight="Bold"/>
 	</Grid>
 </basics:ChildWindow>

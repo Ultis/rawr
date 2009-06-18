@@ -6,7 +6,14 @@
 	mc:Ignorable="d"
 	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	x:Class="Rawr.Silverlight.ItemTooltip">
-	<Popup x:Name="ItemPopup">
+    <UserControl.Resources>
+        <Style x:Key="SmallIconStyle" TargetType="Image">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Margin" Value="1,1,1,1"/>
+        </Style>
+    </UserControl.Resources>
+    <Popup x:Name="ItemPopup">
 		<Grid x:Name="ItemGrid" MaxWidth="350">
 			<Rectangle RadiusX="3" RadiusY="3">
 				<Rectangle.Effect>
@@ -51,6 +58,15 @@
 				<TextBlock x:Name="SocketBonusLabel"/>
 				<TextBlock x:Name="EnchantLabel" Foreground="#FF3A7414" Visibility="Collapsed"/>
                 <TextBlock x:Name="LocationLabel"/>
+                <Grid x:Name="ItemsGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
             </StackPanel>
 		</Grid>
 	</Popup>

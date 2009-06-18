@@ -21,6 +21,7 @@ namespace Rawr.Silverlight
             {
                 itemInstance = value;
                 item = null;
+                characterItems = null;
                 UpdateTooltip();
             }
         }
@@ -33,6 +34,18 @@ namespace Rawr.Silverlight
             {
                 itemInstance = null;
                 item = value;
+                characterItems = null;
+                UpdateTooltip();
+            }
+        }
+
+        private ItemInstance[] characterItems;
+        public ItemInstance[] CharacterItems
+        {
+            get { return characterItems; }
+            set
+            {
+                characterItems = value;
                 UpdateTooltip();
             }
         }
@@ -299,6 +312,67 @@ namespace Rawr.Silverlight
                 LocationLabel.Visibility = Visibility.Visible;
             }
             else LocationLabel.Visibility = Visibility.Collapsed;
+
+            ItemsGrid.Children.Clear();
+            ItemsGrid.RowDefinitions.Clear();
+            if (CharacterItems == null || CharacterItems.Length == 0) ItemsGrid.Visibility = Visibility.Collapsed;
+            else
+            {
+                ItemsGrid.Visibility = Visibility.Visible;
+                int row = 0;
+                foreach (ItemInstance characterItem in CharacterItems)
+                {
+                    ItemsGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+
+                    if (characterItem == null) continue;
+                    Image iconImage = new Image();
+                    iconImage.Style = Resources["SmallIconStyle"] as Style;
+                    iconImage.Source = Icons.ItemIcon(characterItem.Item.IconPath);
+                    Grid.SetColumn(iconImage, 0);
+                    Grid.SetRow(iconImage, row);
+                    ItemsGrid.Children.Add(iconImage);
+
+                    if (characterItem.Gem1Id > 0)
+                    {
+                        Image gem1Image = new Image();
+                        gem1Image.Style = Resources["SmallIconStyle"] as Style;
+                        gem1Image.Source = Icons.ItemIcon(characterItem.Gem1.IconPath);
+                        Grid.SetColumn(gem1Image, 1);
+                        Grid.SetRow(gem1Image, row);
+                        ItemsGrid.Children.Add(gem1Image);
+                    }
+
+                    if (characterItem.Gem2Id > 0)
+                    {
+                        Image gem2Image = new Image();
+                        gem2Image.Style = Resources["SmallIconStyle"] as Style;
+                        gem2Image.Source = Icons.ItemIcon(characterItem.Gem2.IconPath);
+                        Grid.SetColumn(gem2Image, 2);
+                        Grid.SetRow(gem2Image, row);
+                        ItemsGrid.Children.Add(gem2Image);
+                    }
+
+                    if (characterItem.Gem3Id > 0)
+                    {
+                        Image gem3Image = new Image();
+                        gem3Image.Style = Resources["SmallIconStyle"] as Style;
+                        gem3Image.Source = Icons.ItemIcon(characterItem.Gem3.IconPath);
+                        Grid.SetColumn(gem3Image, 3);
+                        Grid.SetRow(gem3Image, row);
+                        ItemsGrid.Children.Add(gem3Image);
+                    }
+
+                    TextBlock nameText = new TextBlock();
+                    if (characterItem.EnchantId > 0) nameText.Text = string.Format("{0} ({1})", characterItem.Item.Name, characterItem.Enchant.Name);
+                    else nameText.Text = string.Format("{0}", characterItem.Item.Name);
+                    nameText.Foreground = new SolidColorBrush(ColorForQuality(characterItem.Item.Quality));
+                    Grid.SetColumn(nameText, 4);
+                    Grid.SetRow(nameText, row);
+                    ItemsGrid.Children.Add(nameText);
+
+                    row++;
+                }
+            }
         }
 
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }

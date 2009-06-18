@@ -121,7 +121,7 @@ namespace Rawr.Silverlight
                 new ErrorWindow()
                 {
                     Message = "Rawr will not work if you do not allow it to increase its available"
-                        + "storage size. Please referesh this page and accept to continue."
+                        + " storage size. Please referesh this page and accept to continue."
                 }.Show();
             }
         }
