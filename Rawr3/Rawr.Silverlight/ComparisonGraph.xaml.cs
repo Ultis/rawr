@@ -27,6 +27,35 @@ namespace Rawr.Silverlight
             }
         }
 
+        private ComparisonSort sort;
+        public ComparisonSort Sort
+        {
+            get { return sort; }
+            set
+            {
+                sort = value;
+                RefreshCalcs();
+            }
+        }
+
+        private DisplayMode mode;
+        public DisplayMode Mode
+        {
+            get { return mode; }
+            set
+            {
+                mode = value;
+                if (mode == DisplayMode.Overall)
+                {
+                    Dictionary<string, Color> overallLegend = new Dictionary<string, Color>();
+                    overallLegend["Overall"] = Colors.Purple;
+                    LegendItems = overallLegend;
+                }
+            }
+        }
+
+        private ComparisonCalculationBase[] currentCalcs;
+
         private float minScale = 0;
         private float maxScale = 2;
 
@@ -58,7 +87,10 @@ namespace Rawr.Silverlight
 		{
 			// Required to initialize variables
 			InitializeComponent();
-            
+
+            mode = DisplayMode.Subpoints;
+            sort = ComparisonSort.Overall;
+
             AxisLabels = new TextBlock[9];
             AxisLabels[0] = AxisLabel1; AxisLabels[1] = AxisLabel2; AxisLabels[2] = AxisLabel3;
             AxisLabels[3] = AxisLabel4; AxisLabels[4] = AxisLabel5; AxisLabels[5] = AxisLabel6;
@@ -73,8 +105,15 @@ namespace Rawr.Silverlight
 
         private List<ComparisonGraphItem> comparisonItems;
 
+        public void RefreshCalcs()
+        {
+            DisplayCalcs(currentCalcs);
+        }
+
         public void DisplayCalcs(ComparisonCalculationBase[] calcs)
         {
+            if (calcs == null) return;
+            currentCalcs = calcs;
             if (comparisonItems == null) comparisonItems = new List<ComparisonGraphItem>();
             int i = 0;
 
@@ -83,10 +122,18 @@ namespace Rawr.Silverlight
             {
                 if (c == null) continue;
                 float min = 0f, max = 0f;
-                foreach (float f in c.SubPoints)
+                if (Mode == DisplayMode.Overall)
                 {
-                    if (f < 0) min += f;
-                    else max += f;
+                    if (c.OverallPoints < 0) min += c.OverallPoints;
+                    else max += c.OverallPoints;
+                }
+                else
+                {
+                    foreach (float f in c.SubPoints)
+                    {
+                        if (f < 0) min += f;
+                        else max += f;
+                    }
                 }
                 if (min < minScale) minScale = min;
                 if (max > maxScale) maxScale = max;
@@ -114,7 +161,15 @@ namespace Rawr.Silverlight
             }
 
             ChangedSize(this, null);
-            foreach (ComparisonCalculationBase c in calcs.OrderByDescending(calc => calc == null ? 0 : calc.OverallPoints))
+            IOrderedEnumerable<ComparisonCalculationBase> orderedCalcs;
+            if (Sort == ComparisonSort.Alphabetical) 
+                orderedCalcs = calcs.OrderBy(calc => calc == null ? "" : calc.Name);
+            else if (Sort == ComparisonSort.Overall)
+                orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.OverallPoints);
+            else
+                orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)Sort]);
+
+            foreach (ComparisonCalculationBase c in orderedCalcs)
             {
                 if (c == null) continue;
                 ComparisonGraphItem item;
@@ -139,7 +194,8 @@ namespace Rawr.Silverlight
                 if (c.ItemInstance != null) item.NameGrid.Tag = c.ItemInstance;
                 else item.NameGrid.Tag = c.Item;
 
-                for (int j = 0; j < c.SubPoints.Length; j++) item[j] = c.SubPoints[j];
+                if (Mode == DisplayMode.Overall) { item[0] = c.OverallPoints; }
+                else { for (int j = 0; j < c.SubPoints.Length; j++) item[j] = c.SubPoints[j]; }
                 
                 item.Visibility = Visibility.Visible;
                 i++;
@@ -166,8 +222,8 @@ namespace Rawr.Silverlight
 
         private void ChangedSize(object sender, System.Windows.SizeChangedEventArgs e)
         {
-			if (ItemStack.ActualWidth > 100)
-			{
+            if (ItemStack.ActualWidth > 100)
+            {
                 int negTicks = (int)(-minScale / (maxScale - minScale) * 8);
                 int posTicks = (int)(maxScale / (maxScale - minScale) * 8);
 
@@ -181,7 +237,7 @@ namespace Rawr.Silverlight
                     }
                     else if (Math.Abs(negTicks - j) % 2 == 1)
                     {
-                        AxisLabels[j].Foreground = new SolidColorBrush(Color.FromArgb(150,0,0,0));
+                        AxisLabels[j].Foreground = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
                         AxisLines[j].Fill = new SolidColorBrush(Color.FromArgb(25, 0, 0, 0));
                     }
                     else
@@ -191,14 +247,21 @@ namespace Rawr.Silverlight
                     }
                     AxisLabels[j].Text = Math.Round(i, 2).ToString();
                 }
-			}
+            }
         }
 
-		public enum ComparisonSort
-		{
-			//SubPoints will be their index, such as 0 or 1
-			Overall = -1,
-			Alphabetical = -2
-		}
+        public enum DisplayMode
+        {
+            Subpoints,
+            Overall
+        }
+
+    }
+
+    public enum ComparisonSort
+    {
+        //SubPoints will be their index, such as 0 or 1
+        Overall = -1,
+        Alphabetical = -2
     }
 }

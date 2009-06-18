@@ -766,14 +766,56 @@ namespace Rawr.Optimizer
             ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, null);
         }
 
+#if SILVERLIGHT
+        private class ComputeUpgradesState
+        {
+            public Character Character { get; set; }
+            public string CalculationToOptimize { get; set; }
+            public OptimizationRequirement[] Requirements { get; set; }
+            public int Thoroughness { get; set; }
+            public Item SingleItemUpgrades { get; set; }
+        }
+#endif
+
         public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
+#if SILVERLIGHT
+            ComputeUpgradesState state = new ComputeUpgradesState()
+            {
+                Character = character,
+                CalculationToOptimize = calculationToOptimize,
+                Requirements = requirements,
+                Thoroughness = thoroughness,
+                SingleItemUpgrades = singleItemUpgrades
+            };
+            ThreadPool.QueueUserWorkItem(new WaitCallback(ComputeUpgradesThreadStart), state);
+#else
             computeUpgradesThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, null, null);
+#endif
         }
+
+#if SILVERLIGHT
+        private void ComputeUpgradesThreadStart(object o)
+        {
+            ComputeUpgradesState state = o as ComputeUpgradesState;
+            Exception error = null;
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            try
+            {
+                upgrades = PrivateComputeUpgrades(state.Character, state.CalculationToOptimize,
+                    state.Requirements, state.Thoroughness, state.SingleItemUpgrades, out error);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+            asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
+        }
+#endif
 
         private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
@@ -790,14 +832,57 @@ namespace Rawr.Optimizer
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
 
+#if SILVERLIGHT
+        private class EvaluateUpgradesState
+        {
+            public Character Character { get; set; }
+            public string CalculationToOptimize { get; set; }
+            public OptimizationRequirement[] Requirements { get; set; }
+            public int Thoroughness { get; set; }
+            public ItemInstance Upgrade { get; set; }
+        }
+#endif
+
         public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
+#if SILVERLIGHT
+            EvaluateUpgradesState state = new EvaluateUpgradesState()
+            {
+                Character = character,
+                CalculationToOptimize = calculationToOptimize,
+                Requirements = requirements,
+                Thoroughness = thoroughness,
+                Upgrade = upgrade
+            };
+            ThreadPool.QueueUserWorkItem(new WaitCallback(EvaluateUpgradeThreadStart), state);
+#else
             evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, null, null);
+#endif
         }
+
+#if SILVERLIGHT
+        private void EvaluateUpgradeThreadStart(object o)
+        {
+            EvaluateUpgradesState state = o as EvaluateUpgradesState;
+            Exception error = null;
+            ComparisonCalculationUpgrades comparisonUpgrade = null;
+            float upgradeValue = 0f;
+            try
+            {
+                upgradeValue = PrivateEvaluateUpgrade(state.Character, state.CalculationToOptimize,
+                    state.Requirements, state.Thoroughness, state.Upgrade, out error, out comparisonUpgrade);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+            asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, comparisonUpgrade, error, cancellationPending));
+        }
+#endif
 
         private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
         {

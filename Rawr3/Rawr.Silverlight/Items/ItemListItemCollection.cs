@@ -38,12 +38,12 @@ namespace Rawr.Silverlight
 		}
 
 		public static readonly DependencyProperty SortProperty =
-			DependencyProperty.Register("Sort", typeof(ComparisonGraph.ComparisonSort), 
-			typeof(ItemListItemCollection), new PropertyMetadata(ComparisonGraph.ComparisonSort.Overall, 
+			DependencyProperty.Register("Sort", typeof(ComparisonSort), 
+			typeof(ItemListItemCollection), new PropertyMetadata(ComparisonSort.Overall, 
 				new PropertyChangedCallback(SortProperty_Changed)));
-		public ComparisonGraph.ComparisonSort Sort
+		public ComparisonSort Sort
 		{
-			get { return (ComparisonGraph.ComparisonSort)GetValue(SortProperty); }
+			get { return (ComparisonSort)GetValue(SortProperty); }
 			set { SetValue(SortProperty, value); }
 		}
 
@@ -84,9 +84,9 @@ namespace Rawr.Silverlight
 
 		private IOrderedEnumerable<ItemListItem> ApplySort(IEnumerable<ItemListItem> filteredList)
 		{
-			if (Sort == ComparisonGraph.ComparisonSort.Overall)
+			if (Sort == ComparisonSort.Overall)
 				return filteredList.OrderByDescending(itemListItem => itemListItem.OverallRating);
-			else if (Sort == ComparisonGraph.ComparisonSort.Alphabetical)
+			else if (Sort == ComparisonSort.Alphabetical)
 				return filteredList.OrderBy<ItemListItem, string>(itemListItem => itemListItem.Name);
 			else
 				return filteredList.OrderByDescending(itemListItem => 

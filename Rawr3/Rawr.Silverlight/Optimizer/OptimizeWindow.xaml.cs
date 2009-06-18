@@ -20,6 +20,14 @@ namespace Rawr.Silverlight
 
         private Character character;
         private ItemInstanceOptimizer optimizer;
+        private Item itemToEvaluate;
+
+        public void EvaluateUpgrades(Item itemToEvaluate)
+        {
+            this.itemToEvaluate = itemToEvaluate;
+            UpgradesButton_Click(null, null);
+            this.itemToEvaluate = null;
+        }
 
         public OptimizeWindow(Character c)
         {
@@ -31,7 +39,7 @@ namespace Rawr.Silverlight
             optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(optimizer_OptimizeCharacterProgressChanged);
             optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(optimizer_OptimizeCharacterCompleted);
             optimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(optimizer_ComputeUpgradesProgressChanged);
-            //optimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(optimizer_ComputeUpgradesCompleted);
+            optimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(optimizer_ComputeUpgradesCompleted);
 
             List<string> calcsToOptimizeStrings = new List<string>();
             calcsToOptimizeStrings.Add("Overall Rating");
@@ -195,6 +203,7 @@ namespace Rawr.Silverlight
                 CalculationToOptimizeCombo.IsEnabled = AddRequirementButton.IsEnabled = enabled;
             MaxScoreLabel.Text = string.Empty;
             AltProgress.Value = MainProgress.Value = 0;
+            Title = "Optimizer";
             if (enabled)
             {
                 DoneButton.Visibility = Visibility.Visible;
@@ -247,7 +256,7 @@ namespace Rawr.Silverlight
             AltProgress.Value = e.ProgressPercentage;
             MainProgress.Value = Math.Max(e.ProgressPercentage, MainProgress.Value);
 
-            Title = string.Format("{0}% Complete - Optimizer", MainProgress.Value);
+            Title = string.Format("Optimizer - {0}% Complete", MainProgress.Value);
         }
 
         private void optimizer_ComputeUpgradesProgressChanged(object sender, ComputeUpgradesProgressChangedEventArgs e)
@@ -256,7 +265,7 @@ namespace Rawr.Silverlight
             AltProgress.Value = e.ItemProgressPercentage;
             MainProgress.Value = e.ProgressPercentage;
 
-            Title = string.Format("{0}% Complete - Rawr Optimizer", MainProgress.Value);
+            Title = string.Format("Optimizer - {0}% Complete", MainProgress.Value);
         }
 
         private void WindowClosed(object sender, EventArgs e)
@@ -354,7 +363,51 @@ namespace Rawr.Silverlight
 
         private void UpgradesButton_Click(object sender, RoutedEventArgs e)
         {
-        	// TODO: Add event handler implementation here.
+            bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
+            bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
+            int thoroughness = (int)Math.Ceiling((float)ThoroughnessSlider.Value / 10f);
+            string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo);
+            OptimizationRequirement[] requirements = GetOptimizationRequirements().ToArray();
+
+            if ((overrideReenchant || overrideRegem || thoroughness > 100) && OptimizerSettings.Default.WarningsEnabled)
+            {
+                if (MessageBox.Show("The upgrade evaluations perform an optimization for each relevant item. With your settings this might take a long time. Consider using lower thoroughness and no overriding of regem and reenchant options." + Environment.NewLine + Environment.NewLine + "Do you want to continue with upgrade evaluations?", "Optimizer Warning", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            optimizer.OptimizationMethod = OptimizerSettings.Default.OptimizationMethod;
+            optimizer.GreedyOptimizationMethod = OptimizerSettings.Default.GreedyOptimizationMethod;
+
+            optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant,
+                OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
+                FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
+                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs());
+            if (OptimizerSettings.Default.WarningsEnabled)
+            {
+                string prompt = optimizer.GetWarningPromptIfNeeded();
+                if (prompt != null)
+                {
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
+                }
+            }
+
+            ControlsEnabled(false);
+
+            optimizer.ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, itemToEvaluate);
+        }
+
+        private void optimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)
+        {
+            if (e.Cancelled) ControlsEnabled(true);
+            else
+            {
+                AltProgress.Value = MainProgress.Value = 100;
+                UpgradesComparison upgrades = new UpgradesComparison(e.Upgrades, null);
+                Close();
+                upgrades.Show();
+            }
         }
 
     }

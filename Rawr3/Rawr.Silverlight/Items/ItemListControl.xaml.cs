@@ -266,7 +266,7 @@ namespace Rawr.Silverlight
 		private void comboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (comboBoxSort.SelectedIndex >= 0)
-				Items.Sort = (ComparisonGraph.ComparisonSort)(comboBoxSort.SelectedIndex - 2);
+				Items.Sort = (ComparisonSort)(comboBoxSort.SelectedIndex - 2);
 		}
 	}
 }

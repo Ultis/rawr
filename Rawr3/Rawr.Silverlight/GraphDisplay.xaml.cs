@@ -327,6 +327,17 @@ namespace Rawr.Silverlight
             }
         }
 
+        private void SetCustomSubpoints(IEnumerable<string> subpoints)
+        {
+
+        }
+
+        private void SortChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SortCombo != null)
+                ComparisonGraph.Sort = (ComparisonSort)(SortCombo.SelectedIndex - 2);
+        }
+
         private void GraphChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             CurrentGraph = (Graph)GraphCombo.SelectedIndex;

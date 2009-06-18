@@ -47,7 +47,7 @@
 				<ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
 				<ComboBoxItem Content="Custom"/>
 			</ComboBox>
-			<ComboBox x:Name="GearCombo" Margin="4,0,4,0" Width="80" VerticalAlignment="Stretch" SelectionChanged="GearChanged" Visibility="Collapsed">
+			<ComboBox x:Name="GearCombo" Margin="4,0,4,0" Width="90" VerticalAlignment="Stretch" SelectionChanged="GearChanged" Visibility="Collapsed">
 				<ComboBoxItem Visibility="Collapsed"/>		
 				<ComboBoxItem Content="Head"/>
 				<ComboBoxItem Content="Neck"/>
@@ -63,11 +63,11 @@
 				<ComboBoxItem Content="Trinket 1"/>
 				<ComboBoxItem Content="Trinket 2"/>
 				<ComboBoxItem Content="Back"/>
-				<ComboBoxItem Content="MainHand"/>
-				<ComboBoxItem Content="OffHand"/>
+				<ComboBoxItem Content="Main Hand"/>
+				<ComboBoxItem Content="Off Hand"/>
 				<ComboBoxItem Content="Ranged"/>
 			</ComboBox>
-			<ComboBox x:Name="EnchantCombo" Margin="4,0,4,0" Width="80" VerticalAlignment="Stretch" SelectionChanged="EnchantChanged" Visibility="Collapsed">
+			<ComboBox x:Name="EnchantCombo" Margin="4,0,4,0" Width="90" VerticalAlignment="Stretch" SelectionChanged="EnchantChanged" Visibility="Collapsed">
 				<ComboBoxItem Visibility="Collapsed"/>		
 				<ComboBoxItem Content="Head"/>
 				<ComboBoxItem Visibility="Collapsed"/>
@@ -83,10 +83,10 @@
 				<ComboBoxItem Content="Feet"/>
 				<ComboBoxItem Content="Finger"/>
 				<ComboBoxItem Visibility="Collapsed"/>
-				<ComboBoxItem Content="OneHand"/>
-				<ComboBoxItem Content="TwoHand"/>
-				<ComboBoxItem Content="MainHand"/>
-				<ComboBoxItem Content="OffHand"/>
+				<ComboBoxItem Content="One Hand"/>
+				<ComboBoxItem Content="Two Hand"/>
+				<ComboBoxItem Content="Main Hand"/>
+				<ComboBoxItem Content="Off Hand"/>
 				<ComboBoxItem Content="Ranged"/>
 			</ComboBox>
 			<ComboBox x:Name="GemCombo" Margin="4,0,4,0" Width="80" VerticalAlignment="Stretch" SelectionChanged="GemChanged" Visibility="Collapsed">
@@ -98,7 +98,11 @@
 				<ComboBoxItem Content="Current"/>
 			</ComboBox>
 			<ComboBox x:Name="CustomCombo" Margin="4,0,4,0" Width="150" VerticalAlignment="Stretch" SelectionChanged="CustomChanged" Visibility="Collapsed"/>
-			<local:ItemFilterPopup Width="50" Margin="4,0,4,0"/>
+            <ComboBox x:Name="SortCombo" SelectedIndex="1" SelectionChanged="SortChanged" Margin="2,0,2,0" Width="80">
+                <ComboBoxItem Content="Alphabetical"/>
+                <ComboBoxItem Content="Overall"/>
+            </ComboBox>
+            <local:ItemFilterPopup Width="50" Margin="4,0,4,0"/>
 		</StackPanel>
 	</Grid>
 </UserControl>

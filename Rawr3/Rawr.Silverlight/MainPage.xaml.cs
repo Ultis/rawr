@@ -19,6 +19,8 @@ namespace Rawr.Silverlight
     {
 
         public static ItemTooltip Tooltip { get; private set; }
+        public static MainPage Instance { get; private set; }
+
 
         private Status status;
         public Status Status
@@ -106,6 +108,7 @@ namespace Rawr.Silverlight
 
         public MainPage()
         {
+            Instance = this;
             InitializeComponent();
 			if (Application.Current.RunningOffline) OfflineInstallButton.Visibility = Visibility.Collapsed;
 
@@ -282,10 +285,21 @@ namespace Rawr.Silverlight
                     if (newIndex == 1) NewCharacter();
                     else if (newIndex == 2) OpenCharacter();
                     else if (newIndex == 3) SaveCharacter();
-                    else if (newIndex == 5) LoadFromArmory();
-                    //else if (newIndex == 6) LoadFromProfiler(0;
+                    else if (newIndex == 4) OpenSavedUpgradeList();
+                    else if (newIndex == 6) LoadFromArmory();
+                    //else if (newIndex == 7) LoadFromProfiler(0;
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
+            }
+        }
+
+        private void OpenSavedUpgradeList()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Rawr Upgrade List Files|*.xml";
+            if (ofd.ShowDialog().GetValueOrDefault())
+            {
+                new UpgradesComparison(ofd.File.OpenText()).Show();
             }
         }
 
