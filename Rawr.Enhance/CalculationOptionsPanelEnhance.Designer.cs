@@ -30,6 +30,9 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.labelAverageLag = new System.Windows.Forms.Label();
+            this.trackBarAverageLag = new System.Windows.Forms.TrackBar();
+            this.label5 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
@@ -39,8 +42,6 @@
             this.comboBoxMainhandImbue = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.radioButtonScryer = new System.Windows.Forms.RadioButton();
-            this.radioButtonAldor = new System.Windows.Forms.RadioButton();
             this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
@@ -50,6 +51,7 @@
             this.btnEnhSim = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.tabPage3.SuspendLayout();
@@ -67,6 +69,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.labelAverageLag);
+            this.tabPage1.Controls.Add(this.trackBarAverageLag);
+            this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.label12);
             this.tabPage1.Controls.Add(this.cmbLength);
             this.tabPage1.Controls.Add(this.chbMagmaSearing);
@@ -76,8 +81,6 @@
             this.tabPage1.Controls.Add(this.comboBoxMainhandImbue);
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.radioButtonScryer);
-            this.tabPage1.Controls.Add(this.radioButtonAldor);
             this.tabPage1.Controls.Add(this.trackBarTargetArmor);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.comboBoxTargetLevel);
@@ -89,6 +92,41 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // labelAverageLag
+            // 
+            this.labelAverageLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelAverageLag.Location = new System.Drawing.Point(71, 124);
+            this.labelAverageLag.Name = "labelAverageLag";
+            this.labelAverageLag.Size = new System.Drawing.Size(192, 12);
+            this.labelAverageLag.TabIndex = 39;
+            this.labelAverageLag.Text = "250";
+            // 
+            // trackBarAverageLag
+            // 
+            this.trackBarAverageLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarAverageLag.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarAverageLag.LargeChange = 100;
+            this.trackBarAverageLag.Location = new System.Drawing.Point(74, 91);
+            this.trackBarAverageLag.Maximum = 1500;
+            this.trackBarAverageLag.Name = "trackBarAverageLag";
+            this.trackBarAverageLag.Size = new System.Drawing.Size(184, 45);
+            this.trackBarAverageLag.SmallChange = 10;
+            this.trackBarAverageLag.TabIndex = 38;
+            this.trackBarAverageLag.TickFrequency = 300;
+            this.trackBarAverageLag.Value = 1500;
+            this.trackBarAverageLag.ValueChanged += new System.EventHandler(this.trackBarAverageLag_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(-1, 91);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(71, 13);
+            this.label5.TabIndex = 37;
+            this.label5.Text = "Average Lag:";
             // 
             // label12
             // 
@@ -156,10 +194,9 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 73);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(192, 40);
+            this.labelTargetArmorDescription.Size = new System.Drawing.Size(192, 12);
             this.labelTargetArmorDescription.TabIndex = 34;
-            this.labelTargetArmorDescription.Text = "7700 Armor: Hydross, Lurker, Leotheras, Tidewalker, Al\'ar, Naj\'entus, Supremus, A" +
-                "kama, Gurtogg";
+            this.labelTargetArmorDescription.Text = "10643";
             // 
             // comboBoxOffhandImbue
             // 
@@ -208,40 +245,6 @@
             this.label3.TabIndex = 30;
             this.label3.Text = "Mainhand Imbue:";
             // 
-            // radioButtonScryer
-            // 
-            this.radioButtonScryer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.radioButtonScryer.AutoSize = true;
-            this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonScryer.Location = new System.Drawing.Point(74, 119);
-            this.radioButtonScryer.Name = "radioButtonScryer";
-            this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
-            this.radioButtonScryer.TabIndex = 26;
-            this.radioButtonScryer.Tag = "Shred";
-            this.radioButtonScryer.Text = "Scryer";
-            this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonScryer.UseVisualStyleBackColor = true;
-            this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.radioButtonScryer_CheckedChanged);
-            // 
-            // radioButtonAldor
-            // 
-            this.radioButtonAldor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.radioButtonAldor.AutoSize = true;
-            this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonAldor.Checked = true;
-            this.radioButtonAldor.Location = new System.Drawing.Point(6, 119);
-            this.radioButtonAldor.Name = "radioButtonAldor";
-            this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
-            this.radioButtonAldor.TabIndex = 25;
-            this.radioButtonAldor.TabStop = true;
-            this.radioButtonAldor.Tag = "Mangle";
-            this.radioButtonAldor.Text = "Aldor";
-            this.radioButtonAldor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonAldor.UseVisualStyleBackColor = true;
-            this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.radioButtonAldor_CheckedChanged);
-            // 
             // trackBarTargetArmor
             // 
             this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -257,7 +260,7 @@
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 24;
             this.trackBarTargetArmor.TickFrequency = 300;
-            this.trackBarTargetArmor.Value = (int) StatConversion.NPC_BOSS_ARMOR;
+            this.trackBarTargetArmor.Value = 10643;
             // 
             // label2
             // 
@@ -338,6 +341,7 @@
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.tabPage3.ResumeLayout(false);
@@ -355,8 +359,6 @@
         private System.Windows.Forms.ComboBox comboBoxMainhandImbue;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.RadioButton radioButtonScryer;
-        private System.Windows.Forms.RadioButton radioButtonAldor;
         private System.Windows.Forms.TrackBar trackBarTargetArmor;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTargetLevel;
@@ -368,6 +370,9 @@
         private System.Windows.Forms.CheckBox chbMagmaSearing;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown cmbLength;
+        private System.Windows.Forms.Label labelAverageLag;
+        private System.Windows.Forms.TrackBar trackBarAverageLag;
+        private System.Windows.Forms.Label label5;
 
     }
 }

@@ -214,7 +214,6 @@ namespace Rawr
                 se.GreatnessProc();
             //Set up some talent variables
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
-            float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
@@ -256,10 +255,6 @@ namespace Rawr
                     unleashedRage = .1f;
                     break;
             }
-
-            //gear stuff
-            if (stats.ShatteredSunMightProc > 0 && calcOpts.ShattrathFaction == "Aldor")
-                stats.AttackPower += 39.13f;
 
             float FTspellpower = (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
             if (calcOpts.MainhandImbue == "Flametongue")
@@ -372,8 +367,7 @@ namespace Rawr
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
-            float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
-            float shockdps = damageES / shockSpeed;
+            float shockdps = damageES / cs.ShockSpeed;
             float shockNormal = shockdps * cs.SpellHitModifier;
             float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
             float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance;
@@ -402,12 +396,11 @@ namespace Rawr
             }
 
             //7: Lightning Shield DPS
-            float staticShockProcsPerS = (cs.HitsPerSMH + cs.HitsPerSOH) * staticShockChance;
             float damageLSBase = 380;
             float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
             // no crit needed as LS can't crit
-            float dpsLS = cs.ChanceSpellHit * staticShockProcsPerS * damageLS * bonusNatureDamage * bonusLSDamage * bossNatureResistance;
+            float dpsLS = cs.ChanceSpellHit * cs.StaticShockProcsPerS * damageLS * bonusNatureDamage * bonusLSDamage * bossNatureResistance;
             if (character.ShamanTalents.GlyphofLightningShield)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
@@ -736,7 +729,6 @@ namespace Rawr
                     Mana = stats.Mana,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
-					ShatteredSunMightProc = stats.ShatteredSunMightProc,
 					SpellPower = stats.SpellPower,
                     CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
@@ -810,8 +802,7 @@ namespace Rawr
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.ExposeWeakness + stats.Bloodlust + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
-                stats.SpellCrit + stats.SpellHaste + stats.SpellHit + 
-                stats.ShatteredSunMightProc + /*stats.MongooseProc + stats.BerserkingProc +*/ stats.GreatnessProc +
+                stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.GreatnessProc +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +

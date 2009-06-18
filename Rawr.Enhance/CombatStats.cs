@@ -60,16 +60,23 @@ namespace Rawr.Enhance
         private float spellMissesPerSec = 0f;
 
         private float callOfThunder = 0f;
-            
+
+        private List<Ability> abilities = new List<Ability>();
+        private float _gcd = 0f;
+
         public CombatStats(Character character, Stats stats)
         {
             _stats = stats;
             _character = character;
             _calcOpts = _character.CalculationOptions as CalculationOptionsEnhance;
             _talents = _character.ShamanTalents;
+            SetupAbilities();
             UpdateCalcs();
+            CalculateAbilities();
         }
 
+        public float GCD { get { return _gcd; } }
+        
         public float GlancingRate { get { return glancingRate; } }
         public float FightLength { get { return _calcOpts.FightLength * 60f; } }
         public float BloodlustHaste { get { return bloodlustHaste; } }
@@ -105,6 +112,10 @@ namespace Rawr.Enhance
         public float HastedOHSpeed { get { return hastedOHSpeed; } }
 
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
+        public float ShockSpeed { get { return 6f - .2f * _character.ShamanTalents.Reverberation; } }
+        public float StaticShockProcsPerS { get { return (HitsPerSMH + HitsPerSOH) * .02f * _character.ShamanTalents.StaticShock; } }
+        public float StaticShockAvDuration { get { return (3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS; } }
+            
         public float HitsPerSOH { get { return hitsPerSOH; } }
         public float HitsPerSMH { get { return hitsPerSMH; } }
         public float HitsPerSOHSS { get { return hitsPerSOHSS; } }
@@ -129,6 +140,44 @@ namespace Rawr.Enhance
         private const float WHITE_MISS = 0.27f;
         private const float YELLOW_MISS = 0.08f;
         private const float SPELL_MISS = 0.17f;
+
+        private void SetupAbilities()
+        {
+            int priority = 0;
+            if (_talents.FeralSpirit == 1)
+                abilities.Add(new Ability("Feral Spirits", 300f, ++priority));
+            if (_talents.MaelstromWeapon > 0)
+                abilities.Add(new Ability("Lightning Bolt", SecondsToFiveStack, ++priority));
+            if (_talents.Stormstrike == 1)
+                abilities.Add(new Ability("Stormstrike", 8f, ++priority));
+            abilities.Add(new Ability("Earth Shock", ShockSpeed, ++priority));
+            if (_talents.LavaLash == 1)
+                abilities.Add(new Ability("Lava Lash", 6f, ++priority));
+            if (_talents.StaticShock > 0)
+                abilities.Add(new Ability("Lightning Shield", StaticShockAvDuration, ++priority));
+            if (_calcOpts.Magma)
+                abilities.Add(new Ability("Magma Totem", 20f, ++priority));
+            else
+                abilities.Add(new Ability("Searing Totem", 60f, ++priority));
+            abilities.Sort();
+        }
+
+        private void CalculateAbilities()
+        {
+            _gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
+            float combatDuration = 60f * _calcOpts.FightLength;
+            for (float timeElapsed = 0f; timeElapsed < combatDuration; timeElapsed += _gcd)
+            {
+                foreach (Ability ability in abilities)
+                {
+                    if (ability.OffCooldown(timeElapsed))
+                    {
+                        ability.AddUse(timeElapsed, _calcOpts.AverageLag / 1000f);
+                        break;
+                    }
+                }
+            }
+        }
 
         public void UpdateCalcs()
         {
@@ -303,12 +352,12 @@ namespace Rawr.Enhance
 
     public class DPSAnalysis
     {
-        float _dps = 0f;
-        float _miss = -1f;
-        float _dodge = -1f;
-        float _glancing = -1f;
-        float _hit = -1f;
-        float _crit = -1f;
+        private float _dps = 0f;
+        private float _miss = -1f;
+        private float _dodge = -1f;
+        private float _glancing = -1f;
+        private float _hit = -1f;
+        private float _crit = -1f;
 
         public DPSAnalysis(float dps, float miss, float dodge, float glancing, float crit)
         {
@@ -346,6 +395,48 @@ namespace Rawr.Enhance
                 sb.AppendLine("Crit Hit       " + (100f * _crit).ToString("F2", CultureInfo.InvariantCulture) + "%");
             return sb.ToString();
         }
+    }
+    #endregion
+
+    #region Ability class
+    public class Ability : IComparable<Ability>
+    {
+        private string _name;
+        private float _duration;
+        private int _priority;
+        private float _cooldownOver;
+        private int _uses;
+
+        public Ability(string name, float duration, int priority)
+        {
+            _name = name;
+            _duration = duration;
+            _priority = priority;
+            _cooldownOver = 0f;
+            _uses = 0;
+        }
+
+        public string Name { get { return _name; } }
+        public float Duration { get { return _duration; } }
+        public float CooldownOver { get { return _cooldownOver; } }
+        public int Uses { get { return _uses; } }
+
+        public void AddUse(float useTime, float lag)
+        {
+            _uses++;
+            _cooldownOver = useTime + _duration + lag;
+        }
+
+        public bool OffCooldown(float starttime)
+        {
+            return starttime >= _cooldownOver;
+        }
+
+        public int CompareTo(Ability other)
+        {
+            return _priority.CompareTo(other._priority);
+        }
+
     }
     #endregion
 }

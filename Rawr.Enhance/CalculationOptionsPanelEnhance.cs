@@ -26,6 +26,7 @@ namespace Rawr
             CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             trackBarTargetArmor.Value = calcOpts.TargetArmor;
+            trackBarAverageLag.Value = calcOpts.AverageLag;
             cmbLength.Value = (decimal) calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
@@ -33,7 +34,8 @@ namespace Rawr
             chbBaseStatOption.Checked = calcOpts.BaseStatOption;
 
             labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
-            
+            labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+
             tbModuleNotes.Text = "The EnhSim export option exists for users that wish to have very detailed analysis of their stats. " +
                 "For most users the standard model should be quite sufficient.\r\n\r\n" +
                 "If you wish to use the EnhSim Simulator you will need to get the latest version from http://enhsim.wikidot.com\r\n\r\n" +
@@ -52,14 +54,14 @@ namespace Rawr
             {
                 trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
                 labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
-                
+                labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
                 calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 calcOpts.FightLength = (float)cmbLength.Value;
                 calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
                 calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
-                calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
                 calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 calcOpts.Magma = chbMagmaSearing.Checked;
@@ -112,15 +114,17 @@ namespace Rawr
             }
         }
 
-        private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
+        private void trackBarAverageLag_ValueChanged(object sender, EventArgs e)
         {
-            Character.OnCalculationsInvalidated();
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+                calcOpts.AverageLag = trackBarAverageLag.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
-        private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
-        {
-            Character.OnCalculationsInvalidated();
-        }
     }
 
 	[Serializable]
@@ -141,8 +145,8 @@ namespace Rawr
 
 		public int TargetLevel = 83;
 		public int TargetArmor = (int) StatConversion.NPC_BOSS_ARMOR;
-		public string ShattrathFaction = "Aldor";
-        public string MainhandImbue = "Windfury";
+        public int AverageLag = 250;
+		public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
         public float FightLength = 6.0f;
         public int TargetFireResistance = 0;
