@@ -136,7 +136,8 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * .26f + Stats.SpellPower * .18f + Stats.AttackPower * .11f)
+            if (CalcOpts.Mode32) return 0;
+            else return (Combats.WeaponDamage * .26f + Stats.SpellPower * .18f + Stats.AttackPower * .11f)
                 * (1f + .05f * Talents.TheArtOfWar)
                 * (Talents.GlyphOfJudgement ? 1.1f : 1f);
         }
@@ -214,7 +215,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.NormalWeaponDamage * 1.1f + Stats.CrusaderStrikeDamage)
+            return (Combats.NormalWeaponDamage * (CalcOpts.Mode32 ? .75f : 1.1f) + Stats.CrusaderStrikeDamage)
                 * (1f + .05f * Talents.SanctityOfBattle)
                 * (1f + .05f * Talents.TheArtOfWar)
                 * (1f + Stats.CrusaderStrikeMultiplier);
@@ -319,7 +320,8 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.WeaponDamage * .48f;
+            if (CalcOpts.Mode32) return 0;
+            else return Combats.WeaponDamage * .48f;
         }
 
     }
@@ -331,7 +333,9 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage + Stats.SpellPower * .23f) * .45f;
+            return CalcOpts.Mode32
+                ? (Combats.WeaponDamage + .36f) 
+                : ((Combats.WeaponDamage + Stats.SpellPower * .23f) * .45f);
         }
 
     }
@@ -353,10 +357,10 @@ namespace Rawr.Retribution
 
     }
 
-    public class SealOfVengeance : Skill
+    public class SealOfVengeanceDoT : Skill
     {
 
-        public SealOfVengeance(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+        public SealOfVengeanceDoT(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
 
         public override float AbilityDamage()
         {
@@ -367,7 +371,20 @@ namespace Rawr.Retribution
         public override float AbilityCritChance() { return -1f; }
         public override float ChanceToLand() { return 1f; }
 
-    }    
+    }
+
+    public class SealOfVengeance : Skill
+    {
+
+        public SealOfVengeance(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, false, false) { }
+
+        public override float AbilityDamage()
+        {
+            return CalcOpts.Mode32
+                ? ((Combats.WeaponDamage * 0.33f) * (1f + .03f * Talents.SealsOfThePure))
+                : 0f;
+        }
+    }  
 
     public class White : Skill
     {

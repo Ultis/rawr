@@ -154,6 +154,7 @@ namespace Rawr.Silverlight
                 GearCombo.Visibility = Visibility.Visible;
                 bool seenEquippedItem = (Character[Gear] == null);
 
+                Calculations.ClearCache();
                 List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Gear);
                 ComparisonCalculationBase[] itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count + 1];
 
@@ -163,7 +164,7 @@ namespace Rawr.Silverlight
                     foreach (ItemInstance item in relevantItemInstances)
                     {
                         if (!seenEquippedItem && Character[Gear].Equals(item)) seenEquippedItem = true;
-                        itemCalculations[index++] = Calculations.GetItemCalculations((ItemInstance)item, Character, Gear);
+                        itemCalculations[index++] = Calculations.GetItemCalculations(item, Character, Gear);
                     }
                 }
                 if (!seenEquippedItem) itemCalculations[index++] = Calculations.GetItemCalculations(Character[Gear], Character, Gear);
@@ -181,6 +182,7 @@ namespace Rawr.Silverlight
             {
                 GemCombo.Visibility = Visibility.Visible;
 
+                Calculations.ClearCache();
                 List<Item> relevantItems = Character.GetRelevantItems(Gem);
                 ComparisonCalculationBase[] itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
 

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.Retribution
 {
@@ -19,8 +20,48 @@ namespace Rawr.Retribution
             InitializeComponent();
         }
 
+        private bool isLoading = false;
+
+        private CheckBox RotationCheckBox(int abilityIndex)
+        {
+            if (abilityIndex == 0) return SimulatorCheck1;
+            else if (abilityIndex == 1) return SimulatorCheck2;
+            else if (abilityIndex == 2) return SimulatorCheck3;
+            else if (abilityIndex == 3) return SimulatorCheck4;
+            else if (abilityIndex == 4) return SimulatorCheck5;
+            else if (abilityIndex == 5) return SimulatorCheck6;
+            else return null;
+        }
+
+        private TextBlock RotationLabel(int abilityIndex)
+        {
+            if (abilityIndex == 0) return SimulatorLabel1;
+            else if (abilityIndex == 1) return SimulatorLabel2;
+            else if (abilityIndex == 2) return SimulatorLabel3;
+            else if (abilityIndex == 3) return SimulatorLabel4;
+            else if (abilityIndex == 4) return SimulatorLabel5;
+            else if (abilityIndex == 5) return SimulatorLabel6;
+            else return null;
+        }
+
+        private void UpdateRotation()
+        {
+            isLoading = true;
+            for (int i = 0; i < 6; i++)
+            {
+                RotationCheckBox(i).IsChecked = CalcOpts.Selected[i];
+                RotationLabel(i).Text = CalcOpts.Order[i].ToString();
+            }
+            isLoading = false;
+        }
+
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
+
+        private CalculationOptionsRetribution CalcOpts
+        {
+            get { return DataContext as CalculationOptionsRetribution; }
+        }
 
         private Character character;
         public Character Character
@@ -31,20 +72,92 @@ namespace Rawr.Retribution
             }
             set
             {
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsRetribution)
+                    ((CalculationOptionsRetribution)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+
                 character = value;
-                LoadCalculationOptions();
+                if (character.CalculationOptions == null)
+                    character.CalculationOptions = new CalculationOptionsRetribution();
+
+                CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+                
+                DataContext = calcOpts;
+                UpdateRotation();
+
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
             }
         }
 
-        private bool _loadingCalculationOptions;
-        public void LoadCalculationOptions()
+        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsRetribution();
+            if (e.PropertyName != "EffectiveCD")
+            {
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        #endregion
 
-            _loadingCalculationOptions = false;
+        private void SimulatorCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (!isLoading)
+            {
+                int abilityIndex = int.Parse(((StackPanel)((CheckBox)sender).Parent).Tag.ToString());
+                CalcOpts.Selected[abilityIndex] = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+                UpdateRotation();
+                Character.OnCalculationsInvalidated();
+            }
         }
 
-        #endregion
+        private void RotationUpClick(object sender, RoutedEventArgs e)
+        {
+            int abilityIndex = int.Parse(((StackPanel)RotationList.SelectedItem).Tag.ToString());
+            if (abilityIndex > 0)
+            {
+                Ability temp = CalcOpts.Order[abilityIndex];
+                CalcOpts.Order[abilityIndex] = CalcOpts.Order[abilityIndex - 1];
+                CalcOpts.Order[abilityIndex - 1] = temp;
+
+                bool tempSel = CalcOpts.Selected[abilityIndex];
+                CalcOpts.Selected[abilityIndex] = CalcOpts.Selected[abilityIndex - 1];
+                CalcOpts.Selected[abilityIndex - 1] = tempSel;
+
+                RotationList.SelectedIndex = abilityIndex - 1;
+                UpdateRotation();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void RotationDownClick(object sender, RoutedEventArgs e)
+        {
+            int abilityIndex = int.Parse(((StackPanel)RotationList.SelectedItem).Tag.ToString());
+            if (abilityIndex < 5)
+            {
+                Ability temp = CalcOpts.Order[abilityIndex];
+                CalcOpts.Order[abilityIndex] = CalcOpts.Order[abilityIndex + 1];
+                CalcOpts.Order[abilityIndex + 1] = temp;
+
+                bool tempSel = CalcOpts.Selected[abilityIndex];
+                CalcOpts.Selected[abilityIndex] = CalcOpts.Selected[abilityIndex + 1];
+                CalcOpts.Selected[abilityIndex + 1] = tempSel;
+
+                RotationList.SelectedIndex = abilityIndex + 1;
+                UpdateRotation();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void SetRotationControls(bool simulateRotation)
+        {
+            foreach (UIElement element in RotationGrid.Children)
+            {
+                if (element is Control) ((Control)element).IsEnabled = simulateRotation;
+            }
+            foreach (UIElement element in EffectiveCDGrid.Children)
+            {
+                if (element is Control) ((Control)element).IsEnabled = !simulateRotation;
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace Rawr.Silverlight
             }
         }
 
+        public void RefreshSpec() { character_ClassChanged(this, EventArgs.Empty); }
         private void character_ClassChanged(object sender, EventArgs e)
         {
             Tree1.Talents = Character.CurrentTalents;

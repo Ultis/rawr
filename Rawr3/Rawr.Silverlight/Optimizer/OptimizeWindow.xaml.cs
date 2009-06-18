@@ -106,7 +106,7 @@ namespace Rawr.Silverlight
             requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
             requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-            requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(26) });
+            requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
 
             ComboBox requirementCalculationCombo = new ComboBox();
             requirementCalculationCombo.Style = Resources["RequirementComboStyle"] as Style;
@@ -353,10 +353,11 @@ namespace Rawr.Silverlight
                 if (TalentsCheck.IsChecked.GetValueOrDefault())
                 {
                     character.CurrentTalents = results.BestCharacter.CurrentTalents;
+                    MainPage.Instance.TalentPicker.RefreshSpec();
                 }
                 character.IsLoading = false;
                 character.OnCalculationsInvalidated();
-                Close();
+                DialogResult = true;
             }
             else ControlsEnabled(true);
         }

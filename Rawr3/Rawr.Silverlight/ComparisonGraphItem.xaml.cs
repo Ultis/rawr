@@ -57,7 +57,7 @@ namespace Rawr.Silverlight
 
         private void character_AvailableItemsChanged(object sender, EventArgs e)
         {
-            if (Character != null && ((ItemInstance != null && ItemInstance.Id > 0) || (OtherItem != null && OtherItem.Id > 0)))
+            if (Character != null && ((ItemInstance != null && ItemInstance.Id > 0) || (OtherItem != null && OtherItem.Id != 0)))
             {
                 AvailableImage.Visibility = Visibility.Visible;
                 Character.ItemAvailability itemAvailability;

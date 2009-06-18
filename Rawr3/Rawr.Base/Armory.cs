@@ -890,8 +890,6 @@ namespace Rawr
                     items.ContainsKey(Character.CharacterSlot.Projectile) ? items[Character.CharacterSlot.Projectile] : null,
                     null);
                 Result.Class = charClass;
-                InitializeAvailableItemList();
-                ApplyRacialandProfessionBuffs();
 
                 StatusMessaging.UpdateStatus("Get Talent Tree From Armory", "Downloading Talent Tree");
                 StatusMessaging.UpdateStatusFinished("Get Character From Armory");
@@ -929,6 +927,7 @@ namespace Rawr
                     }
                 }
             }
+            if (ItemsToLoad == 0) InitializeAvailableItemList();
         }
 
         private void ItemLoaded(Item item)
@@ -938,6 +937,7 @@ namespace Rawr
             if (ItemsToLoad == 0)
             {
                 StatusMessaging.UpdateStatusFinished("Get Items from Armory");
+                InitializeAvailableItemList();
                 Invoke();
             }
             else StatusMessaging.UpdateStatus("Get Items from Armory",
@@ -1033,6 +1033,7 @@ namespace Rawr
                     pi.SetValue(talents, true, null);
                 }
             }
+            ApplyRacialandProfessionBuffs();
 
             StatusMessaging.UpdateStatusFinished("Get Talent Tree From Armory");
             TalentTree = null;

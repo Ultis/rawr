@@ -61,6 +61,7 @@ namespace Rawr.Silverlight
                     character.IsLoading = true;
                     DataContext = character;
                     Calculations.LoadModel(Calculations.Models[character.CurrentModel]);
+                    Calculations.ClearCache();
                     Calculations.CalculationOptionsPanel.Character = character;
                     HeadButton.Character = character;
                     NeckButton.Character = character;

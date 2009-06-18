@@ -21,7 +21,7 @@ namespace Rawr.Retribution
             SimulatorAbility[] abilities = new SimulatorAbility[6];
 
             abilities[(int)Ability.Judgement] = new SimulatorAbility(rot.T7_4pc ? 7 : 8);
-            abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(6);
+            abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(rot.Mode32 ? 4 : 6);
             abilities[(int)Ability.DivineStorm] = new SimulatorAbility(10);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8);
             abilities[(int)Ability.Exorcism] = new SimulatorAbility(15);

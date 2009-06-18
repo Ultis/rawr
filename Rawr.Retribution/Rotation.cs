@@ -14,6 +14,7 @@ namespace Rawr.Retribution
         public Skill HoW;
         public Skill Cons;
         public Skill Seal;
+        public Skill SealDot;
         public White White;
 
         protected CombatStats Combats;
@@ -46,6 +47,7 @@ namespace Rawr.Retribution
             else if (combats.CalcOpts.Seal == SealOf.Vengeance)
             {
                 Seal = new SealOfVengeance(combats);
+                SealDot = new SealOfVengeanceDoT(combats);
                 Judge = new JudgementOfVengeance(combats);
             }
             else
@@ -91,11 +93,6 @@ namespace Rawr.Retribution
                 float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
                 return 1f / timeBetweenProcs;
             }
-
-            if (Seal.GetType() == typeof(SealOfVengeance))
-            {
-                return 1f / 3f;
-            }
             else
             {
                 return GetMeleeAttacksPerSec();
@@ -126,7 +123,8 @@ namespace Rawr.Retribution
                     combats.CalcOpts.Wait,
                     combats.CalcOpts.Delay,
                     combats.Stats.JudgementCDReduction > 0 ? true : false,
-                    combats.Talents.GlyphOfConsecration)
+                    combats.Talents.GlyphOfConsecration,
+                    combats.CalcOpts.Mode32)
             );
         }
 
@@ -136,6 +134,7 @@ namespace Rawr.Retribution
 
 
             calc.SealDPS = Seal.AverageDamage() * SealProcsPerSec();
+            if (SealDot != null) calc.SealDPS += SealDot.AverageDamage() / 3f;
 
             calc.JudgementDPS = Judge.AverageDamage() * Solution.Judgement / Solution.FightLength;
             calc.CrusaderStrikeDPS = CS.AverageDamage() * Solution.CrusaderStrike / Solution.FightLength;

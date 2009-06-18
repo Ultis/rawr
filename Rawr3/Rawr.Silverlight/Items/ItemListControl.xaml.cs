@@ -112,6 +112,7 @@ namespace Rawr.Silverlight
             }
             else
             {
+                Calculations.ClearCache();
 				List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
 				if (relevantItemInstances.Count > 0)
                 {
