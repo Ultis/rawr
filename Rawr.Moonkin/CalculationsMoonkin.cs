@@ -261,17 +261,14 @@ namespace Rawr.Moonkin
         }
 
         private string[] customChartNames = null;
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                if (customChartNames == null)
-                {
+        public override string[] CustomChartNames {
+            get {
+                if (customChartNames == null) {
                     customChartNames = new string[] { 
                     "Talent DPS Comparison",
                     "Talent MP5 Comparison",
                     "Mana Gains",
-                    "Damage per Cast Time"
+                    "Damage per Cast Time"//,
 					//"Relative Stat Values"
                     };
                 }

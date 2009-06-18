@@ -23,6 +23,9 @@ namespace Rawr.DPSWarr {
         public float Miss { get; set; }
         public float HitRating { get; set; }
         public float HitPercent { get; set; }
+        public float HitPercBonus { get; set; }
+        public float HitPercentTtl { get; set; }
+        public float HitCanFree { get; set; }
         public float ExpertiseRating { get; set; }
         public float Expertise { get; set; }
         public float MhExpertise { get; set; }
@@ -69,10 +72,15 @@ namespace Rawr.DPSWarr {
         public Skills.BloodThirst BT { get; set; }
         public Skills.WhirlWind WW { get; set; }
         public Skills.ThunderClap TH { get; set; }
+        public Skills.BerserkerRage BZ { get; set; }
+        public Skills.Bloodrage BR { get; set; }
+        public Skills.SunderArmor SN { get; set; }
+        public Skills.DemoralizingShout DS { get; set; }
         #endregion
         #region Neutral
         public float WhiteRage { get; set; }
         public float OtherRage { get; set; }
+        public float NeedyRage { get; set; }
         public float FreeRage { get; set; }
         public float Stamina { get; set; }
         public float Health { get; set; }
@@ -110,7 +118,7 @@ namespace Rawr.DPSWarr {
                 Environment.NewLine + "MH Crit {3:0.00%}" +
                 Environment.NewLine + "OH Crit {4:0.00%}" +
                 Environment.NewLine + "Boss level affects this" +
-                Environment.NewLine + "LVL 80 will match tootlip in game" +
+                Environment.NewLine + "LVL 80 will match tooltip in game" +
                 Environment.NewLine + "83 has a total of ~4.8% drop",
                 CritPercent, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating), MhCrit, OhCrit));
             dictValues.Add("Armor Penetration",  string.Format("{0:0.00%}*Armor Penetration Rating {1}- {2:0.00%}" +
@@ -123,10 +131,14 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
             dictValues.Add("Hit Rating",
                 string.Format("{0}*{1:0.00%} Increased Chance to hit" +
-                                Environment.NewLine + "Note: This does not include Precision" +
-                                Environment.NewLine + Environment.NewLine + "You can free up {2:0} Rating",
-                                BasicStats.HitRating,StatConversion.GetHitFromRating(BasicStats.HitRating),
-                                StatConversion.GetRatingFromHit(.08f - StatConversion.GetHitFromRating(BasicStats.HitRating))*-1f));
+                                Environment.NewLine + "{2:0.00%} : From Other Bonuses" +
+                                Environment.NewLine + "{3:0.00%} : Total Hit % Bonus" +
+                                Environment.NewLine + Environment.NewLine + "You can free up {4:0} Rating",
+                                BasicStats.HitRating,
+                                StatConversion.GetHitFromRating(BasicStats.HitRating),
+                                HitPercBonus,
+                                HitPercentTtl,
+                                HitCanFree));
             dictValues.Add("Expertise",
                 string.Format("{0:0.00}*Expertise Rating {1}" +
                                 Environment.NewLine + "Num Displayed is Rating Converted + Strength of Arms" +
@@ -167,7 +179,9 @@ namespace Rawr.DPSWarr {
             // Rage
             dictValues.Add("Generated White DPS Rage",  string.Format("{0:00.000}",WhiteRage));
             dictValues.Add("Generated Other Rage",      string.Format("{0:00.000}",OtherRage));
-            dictValues.Add("Available Free Rage",       string.Format("{0:00.000}",FreeRage));
+            dictValues.Add("Total Generated Rage",      string.Format("{0:00.000}",WhiteRage+OtherRage));
+            dictValues.Add("Needed Rage for Abilities", string.Format("{0:00.000}",NeedyRage));
+            dictValues.Add("Available Free Rage",       string.Format("{0:00.000}",FreeRage ));
             
             return dictValues;
         }
@@ -192,8 +206,8 @@ namespace Rawr.DPSWarr {
 
                 case "Hit Rating": return BasicStats.HitRating;
                 case "Hit %": return combatFactors.HitPerc;
-                case "White Miss %": return combatFactors.WhiteMissChance;
-                case "Yellow Miss %": return combatFactors.YellowMissChance;
+                case "White Miss %": return combatFactors.WhMissChance;
+                case "Yellow Miss %": return combatFactors.YwMissChance;
 
                 case "Expertise Rating": return BasicStats.ExpertiseRating;
                 case "Expertise": return BasicStats.Expertise;
@@ -201,7 +215,7 @@ namespace Rawr.DPSWarr {
                 case "Dodge %": return combatFactors.MhDodgeChance;
                 case "Parry %": return combatFactors.MhParryChance;
 
-                case "Chance to be Avoided %": return combatFactors.YellowMissChance + combatFactors.MhDodgeChance;
+                case "Chance to be Avoided %": return combatFactors.YwMissChance + combatFactors.MhDodgeChance;
 
                 //case "Threat Reduction": return ThreatReduction;
                 //case "Threat Per Second": return ThreatPerSecond;*/

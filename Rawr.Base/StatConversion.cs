@@ -54,23 +54,51 @@ namespace Rawr
         public const float RATING_PER_DODGEPARRYREDUC = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
         public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
 
+        // Attack Table for players attacking mobs
+        public const float WHITE_MISS_CHANCE_CAP            = 0.0800f; //  8%
+        public const float WHITE_MISS_CHANCE_CAP_DW         = 0.2700f; //  8% + 19% = 27%
+        public const float WHITE_MISS_CHANCE_CAP_BEHIND     = WHITE_MISS_CHANCE_CAP;
+        public const float WHITE_MISS_CHANCE_CAP_DW_BEHIND  = WHITE_MISS_CHANCE_CAP_DW;
+        public const float YELLOW_MISS_CHANCE_CAP           = WHITE_MISS_CHANCE_CAP;
+        public const float YELLOW_MISS_CHANCE_CAP_BEHIND    = WHITE_MISS_CHANCE_CAP_BEHIND;
+
+        public const float WHITE_DODGE_CHANCE_CAP           = 0.0650f; //  6.5%
+        public const float WHITE_DODGE_CHANCE_CAP_BEHIND    = WHITE_DODGE_CHANCE_CAP; // 6.5% Attacks from behind *can* be dodged
+        public const float YELLOW_DODGE_CHANCE_CAP          = WHITE_DODGE_CHANCE_CAP;
+        public const float YELLOW_DODGE_CHANCE_CAP_BEHIND   = WHITE_DODGE_CHANCE_CAP_BEHIND;
+
+        public const float WHITE_PARRY_CHANCE_CAP           = 0.1375f; // 13.75%
+        public const float WHITE_PARRY_CHANCE_CAP_BEHIND    = 0.0000f; //  0% Attacks from behind can't be parried
+        public const float YELLOW_PARRY_CHANCE_CAP          = WHITE_PARRY_CHANCE_CAP;
+        public const float YELLOW_PARRY_CHANCE_CAP_BEHIND   = WHITE_PARRY_CHANCE_CAP_BEHIND;
+
+        public const float WHITE_GLANCE_CHANCE_CAP          = 0.2500f; // 25%
+        public const float WHITE_GLANCE_CHANCE_CAP_BEHIND   = WHITE_GLANCE_CHANCE_CAP;
+        public const float YELLOW_GLANCE_CHANCE_CAP         = 0.000f; //  0% Yellows don't glance
+        public const float YELLOW_GLANCE_CHANCE_CAP_BEHIND  = YELLOW_GLANCE_CHANCE_CAP;
+
+        public const float WHITE_BLOCK_CHANCE_CAP           = 0.0650f; //  6.5%
+        public const float WHITE_BLOCK_CHANCE_CAP_BEHIND    = 0.0000f; //  0% Attacks from behind can't be blocked
+        public const float YELLOW_BLOCK_CHANCE_CAP          = WHITE_BLOCK_CHANCE_CAP;
+        public const float YELLOW_BLOCK_CHANCE_CAP_BEHIND   = WHITE_BLOCK_CHANCE_CAP_BEHIND;
+
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 166.66667f;
         public const float REGEN_CONSTANT = 0.003345f;
 
         // Sigh, depends on class.
         public static float[] AGI_PER_PHYSICALCRIT = { 0.0f, // CharacterClass starts at 1
-            62.50f, // Warrior 1
-            52.083f, // Paladin 2
-            83.333f, // Hunter 3
-            83.333f, // Rogue 4
-            52.083f, // Priest 5
-            62.50f, // Death Knight 6
-            83.333f, // Shaman 7
+            62.50f,   // Warrior 1
+            52.083f,  // Paladin 2
+            83.333f,  // Hunter 3
+            83.333f,  // Rogue 4
+            52.083f,  // Priest 5
+            62.50f,   // Death Knight 6
+            83.333f,  // Shaman 7
             51.0204f, // Mage 8
-            50.505f, // Warlock 9
-            0.0f,   // Empty 10
-            83.333f, // Druid 11
+            50.505f,  // Warlock 9
+            0.0f,     // Empty 10
+            83.333f,  // Druid 11
         };
 
         public static float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
@@ -97,22 +125,22 @@ namespace Rawr
             0.9880f, // Shaman 7
             0.9530f, // Mage 8
             0.9530f, // Warlock 9
-            0.0f,         // Empty 10
+            0.0f,    // Empty 10
             0.9720f, // Druid 11
         };
 
         // This is the cap value for DODGE PERCENTAGE.
         public static float[] CAP_DODGE = { 0.0f, // Starts at 0
-            88.129021f, // Warrior 1
-            88.129021f, // Paladin 2
+            88.129021f,  // Warrior 1
+            88.129021f,  // Paladin 2
             145.560408f, // Hunter 3
             145.560408f, // Rogue 4
             150.375940f, // Priest 5
-            88.129021f, // Death Knight 6
+            88.129021f,  // Death Knight 6
             145.560408f, // Shaman 7
             150.375940f, // Mage 8
             150.375940f, // Warlock 9
-            0.0f,         // Empty 10
+            0.0f,        // Empty 10
             116.890707f, // Druid 11
         };
 
@@ -129,27 +157,27 @@ namespace Rawr
             0.006870f, // Shaman 7
             0.006650f, // Mage 8
             0.006650f, // Warlock 9
-            0.0f,         // Empty 10
+            0.0f,      // Empty 10
             0.008555f, // Druid 11
         };
 
         // This is the cap value for PARRY PERCENTAGE.
         public static float[] CAP_PARRY = { 0.0f, // Starts at 0
-            47.003525f, // Warrior 1
-            47.003525f, // Paladin 2
+            47.003525f,  // Warrior 1
+            47.003525f,  // Paladin 2
             145.560408f, // Hunter 3
             145.560408f, // Rogue 4
-            0f, // Priest 5
-            47.003525f, // Death Knight 6
+            0f,          // Priest 5
+            47.003525f,  // Death Knight 6
             145.560408f, // Shaman 7
-            0f, // Mage 8
-            0f, // Warlock 9
-            0.0f,         // Empty 10
-            0f, // Druid 11
+            0f,          // Mage 8
+            0f,          // Warlock 9
+            0.0f,        // Empty 10
+            0f,          // Druid 11
         };
 
         /// <summary>
-        /// This is the 1/CAP_PARRY to cut down the ammount of math going on.
+        /// This is the 1/CAP_PARRY to cut down the amount of math going on.
         /// And prevent divide by 0 errors.
         /// </summary>
         public static float[] CAP_PARRY_INV = { 0.0f, // Starts at 0
@@ -157,28 +185,28 @@ namespace Rawr
             0.021275f, // Paladin 2
             0.006870f, // Hunter 3
             0.006870f, // Rogue 4
-            0f, // Priest 5
+            0f,        // Priest 5
             0.021275f, // Death Knight 6
             0.006870f, // Shaman 7
-            0f, // Mage 8
-            0f, // Warlock 9
-            0.0f,         // Empty 10
-            0f, // Druid 11
+            0f,        // Mage 8
+            0f,        // Warlock 9
+            0.0f,      // Empty 10
+            0f,        // Druid 11
         };
 
         //This is the cap value for MISS PERCENTAGE
         public static float[] CAP_MISSED = { 0.0f, // Starts at 0
-            16f, // Warrior 1
-            16f, // Paladin 2
-            0f, // Hunter 3
-            0f, // Rogue 4
-            0f, // Priest 5
-            16f, // Death Knight 6
-            0f, // Shaman 7
-            0f, // Mage 8
-            0f, // Warlock 9
-            0.0f,         // Empty 10
-            0f, // Druid 11
+            16f,  // Warrior 1
+            16f,  // Paladin 2
+            0f,   // Hunter 3
+            0f,   // Rogue 4
+            0f,   // Priest 5
+            16f,  // Death Knight 6
+            0f,   // Shaman 7
+            0f,   // Mage 8
+            0f,   // Warlock 9
+            0.0f, // Empty 10
+            0f,   // Druid 11
         };
 
         #endregion
