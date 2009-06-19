@@ -1001,6 +1001,10 @@ namespace Rawr
                 line = line.Substring("Reduces the mana cost of your spells by ".Length);
                 stats.SpellsManaReduction = float.Parse(line);
             }
+            else if (line == "Your Blood Strike and Heart Strikes have a chance to grant 173 critical strike rating for 10 sec.")
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeOrHeartStrikeHit, new Stats() { CritRating = 173 }, 10f, 0f, .15f, 0));
+            }
             else
             {
                 #region Prototype Sigil Code:

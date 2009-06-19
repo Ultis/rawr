@@ -59,7 +59,7 @@ namespace Rawr.DPSDK
                         break;
                     case Trigger.BloodStrikeOrHeartStrikeHit:
                         trigger = (rotation.BloodStrike + rotation.HeartStrike) / rotation.curRotationDuration;
-                        chance = 0.15f;
+                        chance = 1f;
                         break;
                     case Trigger.PlagueStrikeHit:
                         trigger = rotation.PlagueStrike / rotation.curRotationDuration;
