@@ -70,9 +70,10 @@ namespace Rawr.Enhance
             _character = character;
             _calcOpts = _character.CalculationOptions as CalculationOptionsEnhance;
             _talents = _character.ShamanTalents;
-            SetupAbilities();
             UpdateCalcs();
+            SetupAbilities();
             CalculateAbilities();
+            UpdateCalcs(); // second pass to revise calcs based on new ability cooldowns
         }
 
         public float GCD { get { return _gcd; } }
@@ -112,9 +113,12 @@ namespace Rawr.Enhance
         public float HastedOHSpeed { get { return hastedOHSpeed; } }
 
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
-        public float ShockSpeed { get { return 6f - .2f * _character.ShamanTalents.Reverberation; } }
+        public float BaseShockSpeed { get { return 6f - .2f * _character.ShamanTalents.Reverberation; } }
         public float StaticShockProcsPerS { get { return (HitsPerSMH + HitsPerSOH) * .02f * _character.ShamanTalents.StaticShock; } }
-        public float StaticShockAvDuration { get { return (3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS; } }
+        public float StaticShockAvDuration 
+        { get { 
+            return StaticShockProcsPerS == 0 ? 600f : ((3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS); 
+        } }
             
         public float HitsPerSOH { get { return hitsPerSOH; } }
         public float HitsPerSMH { get { return hitsPerSMH; } }
@@ -150,7 +154,7 @@ namespace Rawr.Enhance
                 abilities.Add(new Ability("Lightning Bolt", SecondsToFiveStack, ++priority));
             if (_talents.Stormstrike == 1)
                 abilities.Add(new Ability("Stormstrike", 8f, ++priority));
-            abilities.Add(new Ability("Earth Shock", ShockSpeed, ++priority));
+            abilities.Add(new Ability("Earth Shock", BaseShockSpeed, ++priority));
             if (_talents.LavaLash == 1)
                 abilities.Add(new Ability("Lava Lash", 6f, ++priority));
             if (_talents.StaticShock > 0)
@@ -177,6 +181,17 @@ namespace Rawr.Enhance
                     }
                 }
             }
+            // at this stage abilities now contains the number of procs per fight for each ability.
+        }
+
+        public float AbilityCooldown(string name)
+        {
+            foreach (Ability ability in abilities)
+            {
+                if (ability.Name.Equals(name))
+                    return ability.Uses == 0 ? ability.Duration : _calcOpts.FightLength * 60f / ability.Uses;
+            }
+            return _calcOpts.FightLength * 60f;
         }
 
         public void UpdateCalcs()
@@ -232,8 +247,8 @@ namespace Rawr.Enhance
             flurryUptime = 1f;
             edUptime = 0f;
             urUptime = 0f;
-            int stormstrikeSpeed = 8;
-            float shockSpeed = 6f - (.2f * _talents.Reverberation);
+            float stormstrikeSpeed = AbilityCooldown("Stormstrike");
+            float shockSpeed = AbilityCooldown("Earth Shock");
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
@@ -265,19 +280,11 @@ namespace Rawr.Enhance
                 
                 float hitsThatProcWFPerS = (1f - chanceWhiteMiss) * swingsPerSMHMelee + hitsPerSMHSS;
 
-                // old WF model - aka Flat Windfury Society
-                /* 
-                float windfuryTimeToFirstHit = hastedMHSpeed - (3 % hastedMHSpeed);
-                //later -- //windfuryTimeToFirstHit = hasted
-                wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * hitsThatProcWFPerS));
-                */
                 // new WF model - slighly curved Windfury Society
-                // /*
                 float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * FightLength;
                 float ineligibleSeconds = maxExpectedWFPerFight * (3f - hastedMHSpeed);
                 float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - ineligibleSeconds);
                 wfProcsPerSecond = expectedWFPerFight / FightLength;
-                // */
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMiss);
                 
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
@@ -292,7 +299,7 @@ namespace Rawr.Enhance
                     hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMiss - chanceDodge) + hitsPerSOHSS + hitsPerSLL;
                     mwProcsPerSecond += (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
                 }
-                secondsToFiveStack /* oh but i want it now! */ = 5 / mwProcsPerSecond;
+                secondsToFiveStack = 5 / mwProcsPerSecond;
 
                 float couldCritSpellsPerS = (earthShocksPerS + 1 / secondsToFiveStack) * (1f - chanceSpellMiss);
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
@@ -317,6 +324,7 @@ namespace Rawr.Enhance
             chanceMeleeHit = meleeAttacksPerSec / (swingsPerSMHMelee + swingsPerSOHMelee + 2f * wfProcsPerSecond + .25f + 1f/6f);
         }
 
+        #region getters
         public float GetMeleeCritsPerSec()
         {
             return  meleeCritsPerSec;
@@ -346,6 +354,7 @@ namespace Rawr.Enhance
         {
             return spellMissesPerSec;
         }
+        #endregion
     }
 
     #region DPSAnalysis
