@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
+#if SILVERLIGHT
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
 namespace Rawr.DPSDK
 {
     //[Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", Character.CharacterClass.Paladin)]  wont work until wotlk goes live on wowhead
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
-    class CalculationsDPSDK : CalculationsBase
+    public class CalculationsDPSDK : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -51,7 +57,7 @@ namespace Rawr.DPSDK
             }
         }
 
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
+        private Dictionary<string, Color> _subPointNameColors = null;
         /// <summary>
 
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -70,14 +76,19 @@ namespace Rawr.DPSDK
 
         /// </summary>
 
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
                 if (_subPointNameColors == null)
                 {
+#if SILVERLIGHT
+                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,0,0,255));
+#else
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("DPS", System.Drawing.Color.Blue);
+#endif
                 }
                 return _subPointNameColors;
             }
@@ -186,9 +197,13 @@ namespace Rawr.DPSDK
             }
         }
 
-
+#if SILVERLIGHT
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSDK()); }
         }
@@ -230,8 +245,8 @@ namespace Rawr.DPSDK
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSDK));
+            XmlSerializer serializer =
+                new XmlSerializer(typeof(CalculationOptionsDPSDK));
             System.IO.StringReader reader = new System.IO.StringReader(xml);
             CalculationOptionsDPSDK calcOpts = serializer.Deserialize(reader) as CalculationOptionsDPSDK;
             return calcOpts;

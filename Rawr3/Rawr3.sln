@@ -21,43 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue", "Rawr.Rogue\Ra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr", "Rawr.DPSWarr\Rawr.DPSWarr.csproj", "{FB0E8A91-FE4B-425B-8773-792AB0232245}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK", "Rawr.DPSDK\Rawr.DPSDK.csproj", "{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs03.codeplex.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Rawr.Base\\Rawr.Base.csproj
-		SccProjectName1 = Rawr.Base
-		SccLocalPath1 = Rawr.Base
-		SccProjectUniqueName2 = Rawr.Healadin\\Rawr.Healadin.csproj
-		SccProjectName2 = Rawr.Healadin
-		SccLocalPath2 = Rawr.Healadin
-		SccProjectUniqueName3 = Rawr.Retribution\\Rawr.Retribution.csproj
-		SccProjectName3 = Rawr.Retribution
-		SccLocalPath3 = Rawr.Retribution
-		SccProjectUniqueName4 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
-		SccProjectName4 = Rawr.Silverlight.Web
-		SccLocalPath4 = Rawr.Silverlight.Web
-		SccProjectUniqueName5 = Rawr.Silverlight\\Rawr.Silverlight.csproj
-		SccProjectName5 = Rawr.Silverlight
-		SccLocalPath5 = Rawr.Silverlight
-		SccProjectUniqueName6 = Rawr.Mage\\Rawr.Mage.csproj
-		SccProjectName6 = Rawr.Mage
-		SccLocalPath6 = Rawr.Mage
-		SccProjectUniqueName7 = Rawr.Cat\\Rawr.Cat.csproj
-		SccProjectName7 = Rawr.Cat
-		SccLocalPath7 = Rawr.Cat
-		SccProjectUniqueName8 = Rawr.Bear\\Rawr.Bear.csproj
-		SccProjectName8 = Rawr.Bear
-		SccLocalPath8 = Rawr.Bear
-		SccProjectUniqueName9 = Rawr.Rogue\\Rawr.Rogue.csproj
-		SccProjectName9 = Rawr.Rogue
-		SccLocalPath9 = Rawr.Rogue
-		SccProjectUniqueName10 = Rawr.DPSWarr\\Rawr.DPSWarr.csproj
-		SccProjectName10 = Rawr.DPSWarr
-		SccLocalPath10 = Rawr.DPSWarr
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -103,8 +69,48 @@ Global
 		{FB0E8A91-FE4B-425B-8773-792AB0232245}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB0E8A91-FE4B-425B-8773-792AB0232245}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB0E8A91-FE4B-425B-8773-792AB0232245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 11
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs03.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Rawr.Base\\Rawr.Base.csproj
+		SccProjectName1 = Rawr.Base
+		SccLocalPath1 = Rawr.Base
+		SccProjectUniqueName2 = Rawr.Healadin\\Rawr.Healadin.csproj
+		SccProjectName2 = Rawr.Healadin
+		SccLocalPath2 = Rawr.Healadin
+		SccProjectUniqueName3 = Rawr.Retribution\\Rawr.Retribution.csproj
+		SccProjectName3 = Rawr.Retribution
+		SccLocalPath3 = Rawr.Retribution
+		SccProjectUniqueName4 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
+		SccProjectName4 = Rawr.Silverlight.Web
+		SccLocalPath4 = Rawr.Silverlight.Web
+		SccProjectUniqueName5 = Rawr.Silverlight\\Rawr.Silverlight.csproj
+		SccProjectName5 = Rawr.Silverlight
+		SccLocalPath5 = Rawr.Silverlight
+		SccProjectUniqueName6 = Rawr.Mage\\Rawr.Mage.csproj
+		SccProjectName6 = Rawr.Mage
+		SccLocalPath6 = Rawr.Mage
+		SccProjectUniqueName7 = Rawr.Cat\\Rawr.Cat.csproj
+		SccProjectName7 = Rawr.Cat
+		SccLocalPath7 = Rawr.Cat
+		SccProjectUniqueName8 = Rawr.Bear\\Rawr.Bear.csproj
+		SccProjectName8 = Rawr.Bear
+		SccLocalPath8 = Rawr.Bear
+		SccProjectUniqueName9 = Rawr.Rogue\\Rawr.Rogue.csproj
+		SccProjectName9 = Rawr.Rogue
+		SccLocalPath9 = Rawr.Rogue
+		SccProjectUniqueName10 = Rawr.DPSWarr\\Rawr.DPSWarr.csproj
+		SccProjectName10 = Rawr.DPSWarr
+		SccLocalPath10 = Rawr.DPSWarr
 	EndGlobalSection
 EndGlobal

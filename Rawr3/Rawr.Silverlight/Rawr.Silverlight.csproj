@@ -373,6 +373,10 @@
       <Project>{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}</Project>
       <Name>Rawr.Cat</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.csproj">
+      <Project>{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}</Project>
+      <Name>Rawr.DPSDK</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.csproj">
       <Project>{FB0E8A91-FE4B-425B-8773-792AB0232245}</Project>
       <Name>Rawr.DPSWarr</Name>
