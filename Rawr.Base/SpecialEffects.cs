@@ -1003,7 +1003,8 @@ namespace Rawr
             }
             else if (line == "Your Blood Strike and Heart Strikes have a chance to grant 173 critical strike rating for 10 sec.")
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeOrHeartStrikeHit, new Stats() { CritRating = 173 }, 10f, 0f, .15f, 0));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { CritRating = 173 }, 10f, 0f, .15f, 0));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { CritRating = 173 }, 10f, 0f, .15f, 0));
             }
             else
             {
@@ -1466,8 +1467,11 @@ namespace Rawr
                     trigger = Trigger.RuneStrikeHit;
                     break;
                 case "Blood Strike":
+                    trigger = Trigger.BloodStrikeHit;
+                    break;
+                case "Heart Strike":
                 case "Heart Strikes":
-                    trigger = Trigger.BloodStrikeOrHeartStrikeHit;
+                    trigger = Trigger.HeartStrikeHit;
                     break;
                 default:
                     trigger = Trigger.SpellHit;

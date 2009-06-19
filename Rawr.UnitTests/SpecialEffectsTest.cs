@@ -115,7 +115,8 @@ namespace Rawr.UnitTests
             tempStat = new Stats();
             elementStat = new Stats();
             tempStat.CritRating = 173;
-            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeOrHeartStrikeHit, tempStat, 10f, 0f, 0.15f));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, tempStat, 10f, 0f, 0.15f));
+            elementStat.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, tempStat, 10f, 0f, 0.15f));
             m_ExpectedArray[i] = elementStat;
             i++;
 

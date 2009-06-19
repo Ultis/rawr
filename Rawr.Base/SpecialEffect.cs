@@ -34,7 +34,8 @@ namespace Rawr
         ShamanLavaLash,
         ShamanShock,
         ShamanStormStrike,
-        BloodStrikeOrHeartStrikeHit,
+        BloodStrikeHit,
+        HeartStrikeHit,
         PlagueStrikeHit,
         IcyTouchHit,
         RuneStrikeHit,
@@ -1023,8 +1024,10 @@ namespace Rawr
                         return "on Shock Hit";
                     case Trigger.ShamanStormStrike:
                         return "on Stormstrike Hit";
-                    case Trigger.BloodStrikeOrHeartStrikeHit:
-                        return "on Blood Strike or Heart Strike";
+                    case Trigger.BloodStrikeHit:
+                        return "on Blood Strike";
+                    case Trigger.HeartStrikeHit:
+                        return "on Heart Strike";
                     case Trigger.IcyTouchHit:
                         return "on Icy Touch";
                     case Trigger.PlagueStrikeHit:
