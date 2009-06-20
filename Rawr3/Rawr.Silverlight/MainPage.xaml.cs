@@ -271,7 +271,7 @@ namespace Rawr.Silverlight
 
         private void ShowGemmingTemplates()
         {
-            new GemmingTemplates().Show();
+            new GemmingTemplates(Character).Show();
         }
 
         private void FileMenu_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

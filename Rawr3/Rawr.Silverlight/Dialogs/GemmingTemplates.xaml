@@ -5,11 +5,12 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:local="clr-namespace:Rawr.Silverlight"
 	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
 	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 	x:Class="Rawr.Silverlight.GemmingTemplates"
 	Title="Edit Gemming Templates"
-	Height="450" Width="400">
+	Height="450" Width="420">
 	<Grid x:Name="LayoutRoot" Background="White">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
@@ -17,67 +18,30 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="2" Margin="4,2,4,4" />
-		<Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" HorizontalAlignment="Right"  Margin="4,2,83,4" Grid.Row="2" />
-		<data:DataGrid x:Name="TemplateGrid" Grid.RowSpan="1" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="4,4,4,2" CanUserReorderColumns="False"
-		CanUserResizeColumns="False" CanUserSortColumns="False" RowDetailsVisibilityMode="Collapsed" GridLinesVisibility="Horizontal">
-			<data:DataGrid.Columns>
-				<data:DataGridCheckBoxColumn Width="40" Binding="{Binding Path=Enabled}" />
-				<data:DataGridTemplateColumn Width="60" Header="Red">
- 					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-								<Image Width="32" Height="32"
-								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=RedGem}"/>
-							</Button>
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="60" Header="Yellow">
- 					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-								<Image Width="32" Height="32"
-								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=YellowGem}"/>
-							</Button>
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="60" Header="Blue">
- 					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-								<Image Width="32" Height="32"
-								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=BlueGem}"/>
-							</Button>
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="60" Header="Prismatic">
- 					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-								<Image Width="32" Height="32"
-								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=PrismaticGem}"/>
-							</Button>
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="60" Header="Meta">
- 					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-								<Image Width="32" Height="32"
-								Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath, Path=MetaGem}"/>
-							</Button>
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-			</data:DataGrid.Columns>
-		</data:DataGrid>
+		<Button x:Name="OKButton" Content="Done" Click="OKButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="2" Margin="4,2,4,4" />
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4,2,4,2" HorizontalAlignment="Center">
 			<TextBlock VerticalAlignment="Center" Text="Top Gemmings to Show:" Margin="0,0,2,0"/>
-			<inputToolkit:NumericUpDown d:LayoutOverrides="Height" Width="50" Margin="2,0,0,0"/>
+			<inputToolkit:NumericUpDown x:Name="GemmingsShownNum" Width="50" Margin="2,0,0,0" ValueChanged="GemmingsShownChanged" Maximum="25"/>
 		</StackPanel>
-	</Grid>
+        <Popup x:Name="GemPopup">
+            <local:ItemListControl x:Name="ComparisonGemList"/>
+        </Popup>
+        <Popup x:Name="MetaPopup">
+            <local:ItemListControl x:Name="ComparisonMetaList"/>
+        </Popup>
+        <ScrollViewer Margin="4,4,4,2" VerticalScrollBarVisibility="Auto">
+        	<StackPanel>
+        		<StackPanel x:Name="GroupStack"/>
+        		<basics:Expander IsExpanded="true">
+        			<basics:Expander.Header>
+        				<CheckBox x:Name="CustomCheck" Content="Custom" IsThreeState="True" Checked="groupCheckBox_Checked" Unchecked="groupCheckBox_Checked" Indeterminate="groupCheckBox_Checked"/>
+        			</basics:Expander.Header>
+                    <StackPanel>
+                        <StackPanel x:Name="CustomStack"/>
+                        <Button x:Name="AddButton" Margin="2,2,2,2" HorizontalAlignment="Left" Content="Add" Width="46" Click="AddTemplate"/>
+                    </StackPanel>
+                </basics:Expander>
+        	</StackPanel>
+        </ScrollViewer>
+    </Grid>
 </basics:ChildWindow>

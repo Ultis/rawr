@@ -33,6 +33,10 @@ namespace Rawr.Silverlight
         }
 
         public bool IsEnchantList { get; set; }
+        private bool IsGemList
+        {
+            get { return Slot == Character.CharacterSlot.Gems || Slot == Character.CharacterSlot.Metas; }
+        }
 
 		private Character.CharacterSlot _slot;
 		public Character.CharacterSlot Slot
@@ -45,7 +49,7 @@ namespace Rawr.Silverlight
 			}
 		}
 
-        public Character character;
+        private Character character;
         public Character Character
         {
             get { return character; }
@@ -57,6 +61,20 @@ namespace Rawr.Silverlight
                 IsPopulated = false;
             }
         }
+
+        private Item selectedItem;
+        public Item SelectedItem
+        {
+            get { return selectedItem; }
+            set
+            {
+                selectedItem = value;
+                IsPopulated = false;
+                if (SelectedItemChanged != null) SelectedItemChanged(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler SelectedItemChanged;
 
         private void character_CalculationsInvalidated(object sender, EventArgs e)
         {
@@ -110,11 +128,27 @@ namespace Rawr.Silverlight
                     itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current);
                 }
             }
+            else if (IsGemList)
+            {
+                Calculations.ClearCache();
+                List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                foreach (Item item in relevantItems)
+                {
+                    ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                    if (SelectedItem != null && SelectedItem.Id == item.Id)
+                    {
+                        itemCalc.Equipped = true;
+                        seenEquippedItem = true;
+                    }
+                    itemCalculations.Add(itemCalc);
+                }
+                if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+            }
             else
             {
                 Calculations.ClearCache();
-				List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
-				if (relevantItemInstances.Count > 0)
+                List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
+                if (relevantItemInstances.Count > 0)
                 {
                     foreach (ItemInstance item in relevantItemInstances)
                     {
@@ -129,24 +163,34 @@ namespace Rawr.Silverlight
 
 			Items.Clear();
 			List<ItemListItem> itemListItems = new List<ItemListItem>();
-			ItemListItem selectedItem = null;
+			ItemListItem selectedListItem = null;
 			int selectedEnchantId = 0;
 			if (IsEnchantList)
 			{
 				Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
 				if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
 			}
-			else
-			{
-				ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
-				emptyCalcs.Name = "Empty";
-				emptyCalcs.Item = new Item();
-				emptyCalcs.Item.Name = "Empty";
-				emptyCalcs.ItemInstance = new ItemInstance();
-				emptyCalcs.ItemInstance.Id = -1;
-				emptyCalcs.Equipped = Character[Slot] == null;
-				itemCalculations.Add(emptyCalcs);
-			}
+            else if (IsGemList)
+            {
+                ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+                emptyCalcs.Name = "Empty";
+                emptyCalcs.Item = new Item();
+                emptyCalcs.Item.Name = "Empty";
+                emptyCalcs.Item.Id = -1;
+                emptyCalcs.Equipped = SelectedItem == null;
+                itemCalculations.Add(emptyCalcs);
+            }
+            else
+            {
+                ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+                emptyCalcs.Name = "Empty";
+                emptyCalcs.Item = new Item();
+                emptyCalcs.Item.Name = "Empty";
+                emptyCalcs.ItemInstance = new ItemInstance();
+                emptyCalcs.ItemInstance.Id = -1;
+                emptyCalcs.Equipped = Character[Slot] == null;
+                itemCalculations.Add(emptyCalcs);
+            }
 			foreach (ComparisonCalculationBase calc in itemCalculations)
 			{
 				ItemListItem itemListItem = new ItemListItem(calc, maxValue, 344d);
@@ -154,17 +198,21 @@ namespace Rawr.Silverlight
 				if (IsEnchantList)
 				{
 					if (itemListItem.EnchantId == selectedEnchantId)
-						selectedItem = itemListItem;
+						selectedListItem = itemListItem;
 				}
-				else
-				{
-					if (calc.ItemInstance == Character[Slot] ||
-						(calc.ItemInstance.Id == -1 && Character[Slot] == null))
-						selectedItem = itemListItem;
-				}
+                else if (IsGemList)
+                {
+                    if ((SelectedItem != null && calc.Item.Id == SelectedItem.Id) || (calc.Item.Id == -1 && SelectedItem == null))
+                        selectedListItem = itemListItem;
+                }
+                else
+                {
+                    if (calc.ItemInstance == Character[Slot] || (calc.ItemInstance.Id == -1 && Character[Slot] == null))
+                        selectedListItem = itemListItem;
+                }
 			}
 			Items.AddRange(itemListItems);
-			listBoxItems.SelectedItem = selectedItem;
+			listBoxItems.SelectedItem = selectedListItem;
 			listBoxItems.Focus();
             IsPopulated = true;
         }
@@ -202,7 +250,8 @@ namespace Rawr.Silverlight
 		{
 			// Required to initialize variables
 			InitializeComponent();
-			this.DataContext = this;
+
+            this.DataContext = this;
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 			BuildSorts();
 		}
@@ -225,16 +274,24 @@ namespace Rawr.Silverlight
                     IsPopulated = false;
                     Character[Slot] = copy;
                 }
+                else if (IsGemList)
+                {
+                    ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
+                    IsShown = false;
+                    IsPopulated = false;
+                    SelectedItem = listItem.Item.Id == -1 ? null : listItem.Item;
+                }
                 else
                 {
                     ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
                     IsShown = false;
                     IsPopulated = false;
-					Character[Slot] = listItem.ItemInstance.Id == -1 ? null : listItem.ItemInstance;
+                    Character[Slot] = listItem.ItemInstance.Id == -1 ? null : listItem.ItemInstance;
                 }
-				this.Close();
+                this.Close();
             }
             catch { }
+            this.Close();
         }
 
 		private void UserControl_LostFocus(object sender, RoutedEventArgs e)

@@ -46,7 +46,7 @@
 			<Border HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Center" Grid.Row="3" BorderThickness="0" Padding="1,1,1,1"
 				Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=3, Mode=OneWay}"
 				Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=3}">
-				<Image Height="16" Width="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem2}"/>
+				<Image Height="16" Width="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem3}"/>
 			</Border>
 			<TextBlock Margin="24,2,2,2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"
 				Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=3}"

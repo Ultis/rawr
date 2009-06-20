@@ -11,7 +11,7 @@ namespace Rawr
     {
     }
 
-	public class GemmingTemplate
+    public class GemmingTemplate : INotifyPropertyChanged
 	{
 		[XmlElement("Id")]
 		public string _id;
@@ -37,7 +37,11 @@ namespace Rawr
 		public bool Enabled
 		{
 			get { return _enabled; }
-			set { _enabled = value; }
+            set
+            {
+                _enabled = value;
+                OnPropertyChanged("Enabled");
+            }
 		}
 
 		[XmlElement("Group")]
@@ -79,6 +83,7 @@ namespace Rawr
                 else
                     RedId = value.Id;
                 _redGem = value;
+                OnPropertyChanged("RedGem");
             }
         }
 
@@ -112,6 +117,7 @@ namespace Rawr
                 else
                     YellowId = value.Id;
                 _yellowGem = value;
+                OnPropertyChanged("YellowGem");
             }
         }
 
@@ -145,6 +151,7 @@ namespace Rawr
                 else
                     BlueId = value.Id;
                 _blueGem = value;
+                OnPropertyChanged("BlueGem");
             }
         }
 
@@ -178,6 +185,7 @@ namespace Rawr
                 else
                     MetaId = value.Id;
                 _metaGem = value;
+                OnPropertyChanged("MetaGem");
             }
         }
 
@@ -211,6 +219,7 @@ namespace Rawr
                 else
                     PrismaticId = value.Id;
                 _prismaticGem = value;
+                OnPropertyChanged("PrismaticGem");
             }
         }
 
@@ -268,12 +277,6 @@ namespace Rawr
 			return new ItemInstance(item, gem1, gem2, gem3, enchant);
 		}
 
-        private static readonly string SavedFilePath = "GemmingTemplates.xml";
-        static GemmingTemplate()
-        {
-            LoadTemplates();
-        }
-
         private static Dictionary<string, List<GemmingTemplate>> _allTemplates = new Dictionary<string, List<GemmingTemplate>>();
         public static Dictionary<string, List<GemmingTemplate>> AllTemplates
         {
@@ -294,68 +297,55 @@ namespace Rawr
             }
         }
 
-        public static void SaveTemplates()
+        public static void Save(TextWriter writer)
         {
-            //try
-            //{
-            //    using (StreamWriter writer = new StreamWriter(_savedFilePath, false, Encoding.UTF8))
-            //    {
-            //        GemmingTemplateList list = new GemmingTemplateList();
-            //        foreach (KeyValuePair<string, List<GemmingTemplate>> kvp in AllTemplates)
-            //        {
-            //            foreach (GemmingTemplate template in kvp.Value)
-            //            {
-            //                template.Model = kvp.Key;
-            //            }
-            //            list.AddRange(kvp.Value);
-            //        }
-            //        XmlSerializer serializer = new XmlSerializer(typeof(GemmingTemplateList));
-            //        serializer.Serialize(writer, list);
-            //        writer.Close();
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //}
+            try
+            {
+                GemmingTemplateList list = new GemmingTemplateList();
+                foreach (KeyValuePair<string, List<GemmingTemplate>> kvp in AllTemplates)
+                {
+                    foreach (GemmingTemplate template in kvp.Value)
+                    {
+                        template.Model = kvp.Key;
+                    }
+                    list.AddRange(kvp.Value);
+                }
+                XmlSerializer serializer = new XmlSerializer(typeof(GemmingTemplateList));
+                serializer.Serialize(writer, list);
+            }
+            catch { }
+            finally { writer.Close(); }
         }
 
-        private static void LoadTemplates()
+        public static void Load(TextReader reader)
         {
-//            try
-//            {
-//                _allTemplates = new Dictionary<string, List<GemmingTemplate>>();
-//                try
-//                {
-//                    if (File.Exists(_savedFilePath))
-//                    {
-//                        using (StreamReader reader = new StreamReader(_savedFilePath, Encoding.UTF8))
-//                        {
-//                            XmlSerializer serializer = new XmlSerializer(typeof(GemmingTemplateList));
-//                            GemmingTemplateList list = (GemmingTemplateList)serializer.Deserialize(reader);
-//                            foreach (GemmingTemplate template in list)
-//                            {
-//                                List<GemmingTemplate> modelList;
-//                                if (!_allTemplates.TryGetValue(template.Model, out modelList))
-//                                {
-//                                    modelList = new List<GemmingTemplate>();
-//                                    _allTemplates[template.Model] = modelList;
-//                                }
-//                                modelList.Add(template);
-//                            }
-//                            reader.Close();
-//                        }
-//                    }
-//                }
-//                catch (System.Exception)
-//                {
-//                    //Log.Write(ex.Message);
-//#if !DEBUG
-//                    MessageBox.Show("The current GemmingTemplates.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with gemming templates included in the current version.", "Incompatible GemmingTemplate.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-//#endif
-//                }
-//                //the serializer doens't throw an exception in the designer, just sets the value null, have to move this outside the try cactch
-//            }
-//            catch { }
+            try
+            {
+                _allTemplates = new Dictionary<string, List<GemmingTemplate>>();
+                XmlSerializer serializer = new XmlSerializer(typeof(GemmingTemplateList));
+                GemmingTemplateList list = (GemmingTemplateList)serializer.Deserialize(reader);
+                foreach (GemmingTemplate template in list)
+                {
+                    List<GemmingTemplate> modelList;
+                    if (!_allTemplates.TryGetValue(template.Model, out modelList))
+                    {
+                        modelList = new List<GemmingTemplate>();
+                        _allTemplates[template.Model] = modelList;
+                    }
+                    modelList.Add(template);
+                }
+            }
+            catch { }
+            finally { reader.Close(); }
         }
-	}
+
+        #region INotifyPropertyChanged Members
+        private void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
+    }
 }
