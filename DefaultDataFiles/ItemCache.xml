@@ -22778,7 +22778,17 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>BloodStrikeOrHeartStrikeHit</Trigger>
+          <Trigger>BloodStrikeHit</Trigger>
+          <Stats>
+            <CritRating>173</CritRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>HeartStrikeHit</Trigger>
           <Stats>
             <CritRating>173</CritRating>
           </Stats>
