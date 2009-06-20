@@ -169,18 +169,18 @@ namespace Rawr.TankDK
                     {
 
 					    @"Summary:Survival Points*Survival Points represents the total raw damage 
-(pre-Avoidance) you can take before dying. Unlike 
-Avoidance Points, you should not attempt to maximize this, 
-but rather get 'enough' of it, and then focus on Avoidance. 
+(pre-Mitigation) you can take before dying. Unlike 
+Mitigation Points, you should not attempt to maximize this, 
+but rather get 'enough' of it, and then focus on Mitigation. 
 'Enough' can vary greatly by fight and by your healers, but 
-keeping it roughly even with Avoidance Points is a good 
+keeping it roughly even with Mitigation Points is a good 
 way to maintain 'enough' as you progress. If you find that 
 you are being killed by burst damage, focus on Survival Points.",
 					    @"Summary:Mitigation Points*Mitigation Points represent the amount of damage you avoid, 
 on average, through avoidance stats (Miss, Dodge, Parry) along with ways to improve survivablity, +heal or self 
 healing, ability cooldowns.  It is directly relational to your Damage Taken. Ideally, you want to maximize 
 Mitigation Points, while maintaining 'enough' Survival Points 
-(see Effective Health Points). If you find yourself dying due to healers 
+(see Survival Points). If you find yourself dying due to healers 
 running OOM, or being too busy healing you and letting other 
 raid members die, then focus on Mitigation Points.",
 					    @"Summary:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
@@ -219,7 +219,7 @@ Survival Points individually may be important.",
                         "Threat Stats:Threat",
 
                         "Overall Stats:Overall",
-                        "Overall Stats:Modified Effective Health",
+                        "Overall Stats:Modified Survival",
                         "Overall Stats:Modified Mitigation",
                         "Overall Stats:Modified Threat",
                     });
