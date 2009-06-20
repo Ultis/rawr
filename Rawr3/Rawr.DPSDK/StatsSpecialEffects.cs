@@ -57,7 +57,8 @@ namespace Rawr.DPSDK
                         trigger = 1f /rotation.getSpellSpecialsPerSecond();
                         chance = combatTable.spellCrits;
                         break;
-                    case Trigger.BloodStrikeOrHeartStrikeHit:
+                    case Trigger.BloodStrikeHit:
+                    case Trigger.HeartStrikeHit:
                         trigger = (rotation.BloodStrike + rotation.HeartStrike) / rotation.curRotationDuration;
                         chance = 0.15f;
                         break;

@@ -1515,7 +1515,8 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.MeleeHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
-                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
+                        effect.Trigger == Trigger.BloodStrikeHit ||
+                        effect.Trigger == Trigger.HeartStrikeHit ||
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.RuneStrikeHit ||
@@ -1547,7 +1548,8 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.MeleeHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
-                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
+                        effect.Trigger == Trigger.BloodStrikeHit ||
+                        effect.Trigger == Trigger.HeartStrikeHit ||
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.RuneStrikeHit ||
