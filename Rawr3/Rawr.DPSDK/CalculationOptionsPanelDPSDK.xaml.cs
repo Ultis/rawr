@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace Rawr.DPSDK
 {
-    public partial class CalculationOptionsPanelDPSDK : ICalculationOptionsPanel
+    public partial class CalculationOptionsPanelDPSDK : UserControl, ICalculationOptionsPanel
     {
         public CalculationOptionsPanelDPSDK()
         {

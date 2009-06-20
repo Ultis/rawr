@@ -37,7 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Data.Services.Client, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
     <Reference Include="system" />
@@ -48,32 +47,18 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.DPSDK\CalculationsDPSDK.cs">
-      <Link>CalculationsDPSDK.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSDK\CharacterCalculationsDPSDK.cs">
-      <Link>CharacterCalculationsDPSDK.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSDK\CombatTable.cs">
-      <Link>CombatTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSDK\ComparisonCalculationDPSDK.cs">
-      <Link>ComparisonCalculationDPSDK.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSDK\Rotation.cs">
-      <Link>Rotation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSDK\StatsSpecialEffects.cs">
-      <Link>StatsSpecialEffects.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSDK\Weapon.cs">
-      <Link>Weapon.cs</Link>
-    </Compile>
-    <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="CalculationOptionsPanelDPSDK.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSDK.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsDPSDK.cs" />
+    <Compile Include="CalculationsDPSDK.cs" />
+    <Compile Include="CharacterCalculationsDPSDK.cs" />
+    <Compile Include="CombatTable.cs" />
+    <Compile Include="ComparisonCalculationDPSDK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rotation.cs" />
+    <Compile Include="StatsSpecialEffects.cs" />
+    <Compile Include="Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
@@ -83,8 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="CalculationOptionsPanelDPSDK.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v3.0\Microsoft.Silverlight.CSharp.targets" />

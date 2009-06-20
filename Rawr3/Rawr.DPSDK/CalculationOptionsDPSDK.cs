@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,21 +8,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Text;
 
 namespace Rawr.DPSDK
 {
     public class CalculationOptionsDPSDK : ICalculationOptionBase
     {
         public string GetXml()
-        {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSDK));
-            StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-            serializer.Serialize(writer, this);
-            return xml.ToString();
-        }
-
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSDK));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
 
         public enum Presence
         {
@@ -31,9 +30,9 @@ namespace Rawr.DPSDK
         }
 
         public int TargetLevel = 83;
-        public int BossArmor = (int)StatConversion.NPC_BOSS_ARMOR;
-        public int FightLength = 10;
-        public bool EnforceMetagemRequirements = false;
+		public int BossArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+		public int FightLength = 10;
+		public bool EnforceMetagemRequirements = false;
         public bool Bloodlust = false;
         public bool DrumsOfBattle = false;
         public bool DrumsOfWar = false;
@@ -44,9 +43,9 @@ namespace Rawr.DPSDK
         public float GhoulUptime = 1f;
         public Presence presence = Presence.Blood;
 
-        public DeathKnightTalents talents = null;
-        public Rotation rotation;
+	    public DeathKnightTalents talents = null;
+	    public Rotation rotation;
 
-        public bool TalentsSaved = false;
-    }
+		public bool TalentsSaved = false;
+	}
 }
