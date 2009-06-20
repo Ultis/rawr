@@ -12,32 +12,32 @@ using System.Windows.Shapes;
 
 namespace Rawr.Silverlight
 {
-    public partial class ErrorWindow : ChildWindow
+    public partial class ConfirmationWindow : ChildWindow
     {
 		public static void ShowDialog(string message, EventHandler callback)
 		{
-			ErrorWindow window = new ErrorWindow() { Message = message };
+			ConfirmationWindow window = new ConfirmationWindow() { Message = message };
 			if (callback != null) window.Closed += callback;
 			window.Show();
 		}
 
-        public string Message
+		public string Message
         {
             get { return MessageText.Text; }
             set { MessageText.Text = value; }
         }
 
-        public ErrorWindow()
+		public ConfirmationWindow()
         {
             InitializeComponent();
         }
 
-        private void OKButton_Click(object sender, RoutedEventArgs e)
+        private void YesButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
         }

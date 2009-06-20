@@ -149,7 +149,7 @@
 			this.numericUpDownTargetArmor.TabIndex = 3;
 			this.numericUpDownTargetArmor.ThousandsSeparator = true;
 			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
-            (int) StatConversion.NPC_BOSS_ARMOR,
+            10643,
             0,
             0,
             0});
@@ -291,7 +291,7 @@
 			this.numericUpDownSurvivalSoftCap.TabIndex = 3;
 			this.numericUpDownSurvivalSoftCap.ThousandsSeparator = true;
 			this.numericUpDownSurvivalSoftCap.Value = new decimal(new int[] {
-            140000,
+            160000,
             0,
             0,
             0});
@@ -380,6 +380,7 @@
             "Heroic T7 Raids",
             "Normal T8 Raids",
             "Heroic T8 Raids",
+            "Hard Mode Heroic T8 Raids",
             "Custom..."});
 			this.comboBoxTargetDamage.Location = new System.Drawing.Point(146, 257);
 			this.comboBoxTargetDamage.Name = "comboBoxTargetDamage";
@@ -400,6 +401,7 @@
             "Heroic T7 Raids",
             "Normal T8 Raids",
             "Heroic T8 Raids",
+            "Hard Mode Heroic T8 Raids",
             "Custom..."});
 			this.comboBoxSurvivalSoftCap.Location = new System.Drawing.Point(146, 84);
 			this.comboBoxSurvivalSoftCap.Name = "comboBoxSurvivalSoftCap";

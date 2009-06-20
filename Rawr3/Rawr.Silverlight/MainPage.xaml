@@ -51,7 +51,7 @@
 			</Rectangle.Fill>
     	</Rectangle>
     	<StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-    		<ComboBox x:Name="FileMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="FileMenu_SelectionChanged">
+			<ComboBox x:Name="FileMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="FileMenu_SelectionChanged">
 				<ComboBoxItem Content="File" Visibility="Collapsed"/>
 				<ComboBoxItem Content="New"/>
 				<ComboBoxItem Content="Open"/>

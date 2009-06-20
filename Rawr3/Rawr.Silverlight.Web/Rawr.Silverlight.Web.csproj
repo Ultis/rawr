@@ -57,9 +57,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ClientBin\Armory.aspx" />
+    <Content Include="ClientBin\BuffCache.xml" />
+    <Content Include="ClientBin\EnchantCache.xml" />
+    <Content Include="ClientBin\ItemCache.xml" />
     <Content Include="ClientBin\Rawr.Silverlight.xap" />
+    <Content Include="ClientBin\Talents.xml" />
     <Content Include="Default.aspx" />
+    <Content Include="index.html" />
+    <Content Include="MicrosoftAjax.js" />
+    <Content Include="MicrosoftAjaxWebForms.js" />
+    <Content Include="MicrosoftWebForms.js" />
     <Content Include="Silverlight.js" />
+    <Content Include="SilverlightControl.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

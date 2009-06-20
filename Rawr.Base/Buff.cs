@@ -116,6 +116,10 @@ namespace Rawr
                 Buff[] allBuffArray = new Buff[allBuffs.Count];
                 allBuffs.Values.CopyTo(allBuffArray, 0);
                 _allBuffs = new BuffList(allBuffs.Values);
+				_allBuffsByName.Clear();
+				_allSetBonuses.Clear();
+				_relevantBuffs.Clear();
+				_relevantSetBonuses.Clear();
                 CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
             } catch { }
         }

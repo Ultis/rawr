@@ -58,8 +58,9 @@ namespace Rawr
 				case "37000": comboBoxTargetDamage.SelectedIndex = 1; break;
 				case "40000": comboBoxTargetDamage.SelectedIndex = 2; break;
 				case "47000": comboBoxTargetDamage.SelectedIndex = 3; break;
-				case "50000": comboBoxTargetDamage.SelectedIndex = 4; break;
-				case "57000": comboBoxTargetDamage.SelectedIndex = 5; break;
+				case "55000": comboBoxTargetDamage.SelectedIndex = 4; break;
+				case "65000": comboBoxTargetDamage.SelectedIndex = 5; break;
+				case "80000": comboBoxTargetDamage.SelectedIndex = 5; break;
 				default: comboBoxTargetDamage.SelectedIndex = 6; break;
 			}
 
@@ -69,9 +70,10 @@ namespace Rawr
 				case "110000": comboBoxSurvivalSoftCap.SelectedIndex = 1; break; 
 				case "120000": comboBoxSurvivalSoftCap.SelectedIndex = 2; break; 
 				case "140000": comboBoxSurvivalSoftCap.SelectedIndex = 3; break; 
-				case "150000": comboBoxSurvivalSoftCap.SelectedIndex = 4; break; 
-				case "170000": comboBoxSurvivalSoftCap.SelectedIndex = 5; break; 
-				default: comboBoxSurvivalSoftCap.SelectedIndex = 6; break;
+				case "160000": comboBoxSurvivalSoftCap.SelectedIndex = 4; break;
+				case "180000": comboBoxSurvivalSoftCap.SelectedIndex = 5; break;
+				case "200000": comboBoxSurvivalSoftCap.SelectedIndex = 6; break;
+				default: comboBoxSurvivalSoftCap.SelectedIndex = 7; break;
 			}
 
 			_loadingCalculationOptions = false;
@@ -108,18 +110,18 @@ namespace Rawr
 				numericUpDownThreatValue.Value = (new decimal[] { 0.0001M, 10, 50, 100 })[comboBoxThreatValue.SelectedIndex];
 		}
 
-		private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			numericUpDownTargetDamage.Enabled = comboBoxTargetDamage.SelectedIndex == 6;
-			if (comboBoxTargetDamage.SelectedIndex < 6)
-				numericUpDownTargetDamage.Value = (new decimal[] { 30000, 37000, 40000, 47000, 50000, 57000 })[comboBoxTargetDamage.SelectedIndex];
-		}
-
 		private void comboBoxSurvivalSoftCap_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 6;
-			if (comboBoxSurvivalSoftCap.SelectedIndex < 6)
-				numericUpDownSurvivalSoftCap.Value = (new decimal[] { 90000, 110000, 120000, 140000, 150000, 170000 })[comboBoxSurvivalSoftCap.SelectedIndex];
+			numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 7;
+			if (comboBoxSurvivalSoftCap.SelectedIndex < 7)
+				numericUpDownSurvivalSoftCap.Value = (new decimal[] { 90000, 110000, 120000, 140000, 160000, 180000, 200000 })[comboBoxSurvivalSoftCap.SelectedIndex];
+		}
+
+		private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			numericUpDownTargetDamage.Enabled = comboBoxTargetDamage.SelectedIndex == 7;
+			if (comboBoxTargetDamage.SelectedIndex < 7)
+				numericUpDownTargetDamage.Value = (new decimal[] { 30000, 37000, 40000, 47000, 55000, 65000, 80000 })[comboBoxTargetDamage.SelectedIndex];
 		}
 	}
 
@@ -139,8 +141,8 @@ namespace Rawr
 		public int TargetLevel = 83;
 		public float ThreatScale = 10f;
 		public int TargetArmor = (int) StatConversion.NPC_BOSS_ARMOR;
-		public int SurvivalSoftCap = 140000;
-		public int TargetDamage = 50000;
+		public int SurvivalSoftCap = 160000;
+		public int TargetDamage = 65000;
 		public float TargetAttackSpeed = 2.0f;
 
 		public bool? CustomUseMaul = null;

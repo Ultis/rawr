@@ -370,12 +370,66 @@ namespace Rawr.Silverlight
                 if (newIndex > 0)
                 {
                     OptionsMenu.IsDropDownOpen = false;
-                    OptionsMenu.SelectedIndex = 0;
-                    new ErrorWindow() { Message = "Not yet implemented." }.Show();
+					OptionsMenu.SelectedIndex = 0;
+					if (newIndex == 3) ResetItemCache();
+					else if (newIndex == 4) ResetAllCaches();
+					else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
 
         }
+
+		private void ResetAllCaches()
+		{
+			ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload all caches?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
+				new EventHandler(ResetAllCaches_Confirmation));
+		}
+
+		private void ResetAllCaches_Confirmation(object sender, EventArgs e)
+		{
+			if (((ConfirmationWindow)sender).DialogResult == true)
+			{
+				Character = new Character();
+				new FileUtils("BuffCache.xml").Delete();
+				new FileUtils("EnchantCache.xml").Delete();
+				new FileUtils("ItemCache.xml").Delete();
+				new FileUtils("Talents.xml").Delete();
+				new FileUtils("ItemSource.xml").Delete();
+				new FileUtils("ItemFilter.xml").Delete();
+				new FileUtils("Settings.xml").Delete();
+				LoadScreen ls = new LoadScreen();
+				(App.CurrentApplication.RootVisual as Grid).Children.Add(ls);
+				this.Visibility = Visibility.Collapsed;
+				ls.StartLoading(new EventHandler(ResetCaches_Finished));
+				Character = new Character();
+			}
+		}
+		
+		private void ResetItemCache()
+		{
+			ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload the item cache?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
+				new EventHandler(ResetItemCaches_Confirmation));
+		}
+
+		private void ResetItemCaches_Confirmation(object sender, EventArgs e)
+		{
+			if (((ConfirmationWindow)sender).DialogResult == true)
+			{
+				Character = new Character();
+				new FileUtils("ItemCache.xml").Delete();
+				LoadScreen ls = new LoadScreen();
+				(App.CurrentApplication.RootVisual as Grid).Children.Add(ls);
+				this.Visibility = Visibility.Collapsed;
+				ls.StartLoading(new EventHandler(ResetCaches_Finished));
+				Character = new Character();
+			}
+		}
+
+		private void ResetCaches_Finished(object sender, EventArgs e)
+		{
+			(App.CurrentApplication.RootVisual as Grid).Children.Remove(sender as LoadScreen);
+			this.Visibility = Visibility.Visible;
+		}
 
         private void character_ClassChanged(object sender, EventArgs e)
         {

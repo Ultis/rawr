@@ -50,6 +50,21 @@ namespace Rawr.Silverlight
             }
         }
 
+		public void Delete()
+		{
+#if WPF
+            if (File.Exists(Filename))
+            {
+                File.Delete(Filename);
+            }
+#else
+			if (IsolatedStorageFile.GetUserStoreForApplication().FileExists(Filename))
+			{
+				IsolatedStorageFile.GetUserStoreForApplication().DeleteFile(Filename);
+			}
+#endif
+		}
+
         private void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             if (e.Error == null)
