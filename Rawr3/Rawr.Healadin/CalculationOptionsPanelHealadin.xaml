@@ -29,7 +29,8 @@
     		<RowDefinition Height="Auto"/>
     		<RowDefinition Height="Auto"/>
     		<RowDefinition Height="Auto"/>
-    		<RowDefinition Height="0.731*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
     	</Grid.RowDefinitions>
     	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Text="Fight Length:"/>
     	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Activity:"/>
@@ -83,6 +84,7 @@
 		</StackPanel>
 		<CheckBox Margin="4,2,4,2" Content="Maintain JotP" Grid.Column="1" Grid.Row="10" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding Mode=TwoWay, Path=JotP}"/>
 		<CheckBox Margin="4,2,4,2" VerticalAlignment="Center" Content="Lay on Hands Self" Grid.Column="1" Grid.Row="11" HorizontalAlignment="Left" IsChecked="{Binding Mode=TwoWay, Path=LoHSelf}"/>
+        <CheckBox Margin="4,2,4,2" VerticalAlignment="Center" Content="3.2 Mode" Grid.Column="1" Grid.Row="12" HorizontalAlignment="Left" IsChecked="{Binding Mode=TwoWay, Path=Mode32}"/>
 
 	</Grid>
 </UserControl>

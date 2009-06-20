@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace Rawr
 {

@@ -35,6 +35,7 @@ namespace Rawr.Healadin
             jotP = true;
             loHSelf = false;
             sSUptime = 1f;
+            mode32 = false;
         }
 
         private float length;
@@ -140,6 +141,13 @@ namespace Rawr.Healadin
         {
             get { return sSUptime; }
             set { sSUptime = value; OnPropertyChanged("SSUptime"); }
+        }
+
+        private bool mode32;
+        public bool Mode32
+        {
+            get { return mode32; }
+            set { mode32 = value; OnPropertyChanged("Mode32"); }
         }
 
         #region INotifyPropertyChanged Members

@@ -50,7 +50,7 @@ namespace Rawr.Retribution
             for (int i = 0; i < 6; i++)
             {
                 RotationCheckBox(i).IsChecked = CalcOpts.Selected[i];
-                RotationLabel(i).Text = CalcOpts.Order[i].ToString();
+                RotationLabel(i).Text = RotationParameters.AbilityString(CalcOpts.Order[i]);
             }
             isLoading = false;
         }

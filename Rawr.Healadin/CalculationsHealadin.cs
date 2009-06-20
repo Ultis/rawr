@@ -363,7 +363,7 @@ namespace Rawr.Healadin
         private void ConvertRatings(Stats stats, PaladinTalents talents, CalculationOptionsHealadin calcOpts)
         {
             stats.Stamina *= 1 + stats.BonusStaminaMultiplier;
-            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
+            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * (calcOpts.Mode32 ? .02f : .03f));
             stats.HighestStat *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
             stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat) * talents.HolyGuidance;
             stats.SpellCrit = .03336f + stats.SpellCrit + (stats.Intellect + stats.HighestStat) / 16666.66709f

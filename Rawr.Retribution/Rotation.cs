@@ -123,6 +123,7 @@ namespace Rawr.Retribution
                     combats.CalcOpts.Wait,
                     combats.CalcOpts.Delay,
                     combats.Stats.JudgementCDReduction > 0 ? true : false,
+                    combats.Talents.ImprovedJudgements,
                     combats.Talents.GlyphOfConsecration,
                     combats.CalcOpts.Mode32)
             );
@@ -207,6 +208,7 @@ namespace Rawr.Retribution
             calc.Rotation.HammerOfWrathCD = _calcOpts.HoWCD20;
 
             calc.SealDPS = Seal.AverageDamage() * SealProcsPerSec();
+            if (SealDot != null) calc.SealDPS += SealDot.AverageDamage() / 3f;
 
             calc.JudgementDPS = Judge.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.JudgeCD + _calcOpts.TimeUnder20 / _calcOpts.JudgeCD20);
             calc.CrusaderStrikeDPS = CS.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.CSCD + _calcOpts.TimeUnder20 / _calcOpts.CSCD20);

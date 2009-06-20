@@ -69,6 +69,7 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblIoLFoL = new System.Windows.Forms.Label();
             this.lblIoLHL = new System.Windows.Forms.Label();
+            this.chkMode32 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -134,7 +135,7 @@
             this.groupBox2.Controls.Add(this.lblDivinePlea);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 209);
+            this.groupBox2.Location = new System.Drawing.Point(3, 232);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(294, 123);
             this.groupBox2.TabIndex = 22;
@@ -304,7 +305,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.lblBoLUp);
             this.groupBox1.Controls.Add(this.trkBoLUp);
-            this.groupBox1.Location = new System.Drawing.Point(3, 338);
+            this.groupBox1.Location = new System.Drawing.Point(3, 355);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(294, 87);
             this.groupBox1.TabIndex = 28;
@@ -548,10 +549,22 @@
             this.lblIoLHL.Text = "100% HL";
             this.lblIoLHL.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
+            // chkMode32
+            // 
+            this.chkMode32.AutoSize = true;
+            this.chkMode32.Location = new System.Drawing.Point(151, 209);
+            this.chkMode32.Name = "chkMode32";
+            this.chkMode32.Size = new System.Drawing.Size(71, 17);
+            this.chkMode32.TabIndex = 54;
+            this.chkMode32.Text = "3.2 Mode";
+            this.chkMode32.UseVisualStyleBackColor = true;
+            this.chkMode32.CheckedChanged += new System.EventHandler(this.chkMode32_CheckedChanged);
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkMode32);
             this.Controls.Add(this.lblIoLHL);
             this.Controls.Add(this.lblIoLFoL);
             this.Controls.Add(this.lblSacredShield);
@@ -576,7 +589,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(300, 437);
+            this.Size = new System.Drawing.Size(300, 463);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -639,5 +652,6 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.Label lblIoLFoL;
         private System.Windows.Forms.Label lblIoLHL;
+        private System.Windows.Forms.CheckBox chkMode32;
     }
 }

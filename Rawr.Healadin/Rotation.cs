@@ -68,9 +68,9 @@ namespace Rawr.Healadin
             calc.ManaLayOnHands = 1950 * ((Talents.GlyphOfDivinity ? 1 : 0) + (CalcOpts.LoHSelf ? 1 : 0)) * (Talents.GlyphOfDivinity ? 2f : 1f);
             calc.ManaArcaneTorrent = (Character.Race == Character.CharacterRace.BloodElf ? Stats.Mana * .06f * (float)Math.Ceiling(FightLength / 120f - .25f) : 0);
             calc.ManaDivinePlea = Stats.Mana * .25f * DivinePleas;
-            calc.ManaMp5 = FightLength * Stats.Mp5 / 5;
+            calc.ManaMp5 = FightLength * Stats.Mp5 / 5f * (CalcOpts.Mode32 ? 1.25f : 1f);
             calc.ManaPotion = (1 + Stats.BonusManaPotion) * CalcOpts.ManaAmt;
-            calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
+            calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment * (CalcOpts.Mode32 ? .8f : 1f);
             calc.ManaOther += Stats.ManaRestore;
             if (Stats.HighestStat > 0)
             {

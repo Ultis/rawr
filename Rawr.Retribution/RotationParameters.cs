@@ -32,6 +32,7 @@ namespace Rawr.Retribution
         }       
 
         public readonly bool T7_4pc;
+        public readonly int ImpJudgements;
         public readonly bool GlyphConsecrate;
         public readonly Ability[] Priorities;
         public readonly float TimeUnder20;
@@ -39,7 +40,7 @@ namespace Rawr.Retribution
         public readonly float Delay;
         public readonly bool Mode32;
 
-        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, bool GlyphConsecrate, bool mode32)
+        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate, bool mode32)
         {
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
@@ -48,6 +49,7 @@ namespace Rawr.Retribution
             this.Wait = (float)Math.Round(Wait, 2);
             this.Delay = (float)Math.Round(Delay, 2);
             this.Mode32 = mode32;
+            this.ImpJudgements = ImpJudgements;
         }
 
         public bool Equals(RotationParameters other)
@@ -65,7 +67,8 @@ namespace Rawr.Retribution
                 && (TimeUnder20 == other.TimeUnder20)
                 && (Delay == other.Delay)
                 && (Wait == other.Wait)
-                && (Mode32 == other.Mode32);
+                && (Mode32 == other.Mode32)
+                && (ImpJudgements == other.ImpJudgements);
         }
 
         public static string ShortAbilityString(Ability ability)

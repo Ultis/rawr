@@ -92,7 +92,7 @@ namespace Rawr.Silverlight
 				ListPopup.VerticalOffset = distBetweenBottomOfPopupAndBottomOfWindow;
 			} 
 			distBetweenBottomOfPopupAndBottomOfWindow =
-				 Application.Current.RootVisual.DesiredSize.Height -
+                 Application.Current.RootVisual.RenderSize.Height -
 				 transform.Transform(new Point(0, 66 + ComparisonEnchantList.Height)).Y;
 			if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
 			{

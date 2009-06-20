@@ -195,7 +195,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (1.0f + Stats.SpellPower * 0.28f + Stats.AttackPower * 0.175f) * 1.5f
+            return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * 1.5f
                 * (1f + .05f * Talents.TheArtOfWar)
                 * (1f + .03f * Talents.SealsOfThePure)
                 * (Talents.GlyphOfJudgement ? 1.1f : 1f);
@@ -364,7 +364,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return 5f * (Stats.SpellPower * 0.016f + Stats.AttackPower * 0.032f)
+            return 5f * (Stats.SpellPower * 0.013f + Stats.AttackPower * 0.025f)
                 * (1f + .03f * Talents.SealsOfThePure);
         }
 
@@ -376,7 +376,7 @@ namespace Rawr.Retribution
     public class SealOfVengeance : Skill
     {
 
-        public SealOfVengeance(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, false, false) { }
+        public SealOfVengeance(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
 
         public override float AbilityDamage()
         {

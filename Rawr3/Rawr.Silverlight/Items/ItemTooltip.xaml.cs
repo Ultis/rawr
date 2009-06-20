@@ -388,7 +388,7 @@ namespace Rawr.Silverlight
 
             GeneralTransform transform = relativeTo.TransformToVisual(Application.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
-                Application.Current.RootVisual.DesiredSize.Height - offsetY -
+                Application.Current.RootVisual.RenderSize.Height - offsetY -
                 transform.Transform(new Point(0, ItemGrid.DesiredSize.Height)).Y;
             if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
             {
