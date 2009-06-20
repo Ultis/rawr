@@ -33,6 +33,7 @@ namespace Rawr {
         BonusLacerateDamageMultiplier,
         BonusMangleBearDamage,
         BonusMangleCatDamage,
+        BonusMaxRunicPower,
         BonusRipDamagePerCPPerTick,
         BonusRipDuration,
 		BonusSavageRoarDuration,
@@ -106,6 +107,7 @@ namespace Rawr {
         RangedCritRating,
         RangedHasteRating,
         Resilience,
+        RPp5,
         ScopeDamage,
         ShadowResistance,
         ShatteredSunAcumenProc,
@@ -414,6 +416,7 @@ namespace Rawr {
         SpellHaste,
         HealingReceivedMultiplier,
         DamageTakenMultiplier,
+        SpellDamageTakenMultiplier,
         #region Added by Rawr.HolyPriest
         BonusPoHManaCostReductionMultiplier,
         BonusGHHealingMultiplier,
@@ -2116,6 +2119,25 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.HealingOmenProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.HealingOmenProc] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [CommonStat]
+        public float RPp5
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RPp5]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RPp5] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [CommonStat]
+        public float BonusMaxRunicPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusMaxRunicPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusMaxRunicPower] = value; }
+        }
+
         #endregion
 
         #region Old Equipment Procs
@@ -4151,6 +4173,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.DamageTakenMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.DamageTakenMultiplier] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Spell Damage Taken")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float SpellDamageTakenMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier] = value; }
         }
         #endregion
 

@@ -70,9 +70,18 @@
     </Compile>
     <Compile Include="CalculationsTankDK.cs" />
     <Compile Include="CharacterCalculationsTankDK.cs" />
+    <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationTankDK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RotationViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RotationViewer.designer.cs">
+      <DependentUpon>RotationViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="ShotRotation.cs" />
+    <Compile Include="StatsSpecialEffects.cs" />
+    <Compile Include="Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
@@ -84,6 +93,9 @@
     <EmbeddedResource Include="CalculationOptionsPanelTankDK.resx">
       <DependentUpon>CalculationOptionsPanelTankDK.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RotationViewer.resx">
+      <DependentUpon>RotationViewer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

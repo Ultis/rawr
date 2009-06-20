@@ -96,6 +96,23 @@ namespace Rawr.TankDK
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void btnRotation_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsTankDK calcOpts = Character.CalculationOptions as CalculationOptionsTankDK;
+            RotationViewer RV = new RotationViewer(calcOpts, Character);
+            RV.ShowDialog();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsTankDK calcOpts = Character.CalculationOptions as CalculationOptionsTankDK;
+            calcOpts.BossArmor = (int)nudTargetArmor.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+
     }
 
     [Serializable]
@@ -109,9 +126,16 @@ namespace Rawr.TankDK
         public int TargetLevel = 83;
         public float ThreatWeight = 1.00f;
         public float SurvivalWeight = 1.00f;
-        public uint IncomingDamage = 25000;
+        public uint IncomingDamage = 100000;
         public float PercThreatFromSpells = .5f;
-        public float PercentIncomingFromMagic = .5f;
+        public float PercentIncomingFromMagic = .0f;
+        public float BossArmor = 13000f;
+
+        public bool Bloodlust = false;
+        public float FightLength = 0f;
+        public uint uNumberTargets = 1;
+        public Rotation rotation;
+        public DeathKnightTalents talents = new DeathKnightTalents(); 
 
         public string GetXml()
         {

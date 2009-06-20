@@ -40,11 +40,24 @@
             this.label5 = new System.Windows.Forms.Label();
             this.numPercIncFromMagic = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
+            this.nudTargetArmor = new System.Windows.Forms.NumericUpDown();
+            this.lblTargetArmor = new System.Windows.Forms.Label();
+            this.tbFightLength = new System.Windows.Forms.TrackBar();
+            this.btnRotation = new System.Windows.Forms.Button();
+            this.gbFightInfo = new System.Windows.Forms.GroupBox();
+            this.numTargets = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblFightLengthNum = new System.Windows.Forms.Label();
+            this.lblFightLength = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPercThreatFromSpell)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
+            this.gbFightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numTargets)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -146,7 +159,7 @@
             0});
             this.numIncomingDamage.Location = new System.Drawing.Point(150, 122);
             this.numIncomingDamage.Maximum = new decimal(new int[] {
-            100000,
+            200000,
             0,
             0,
             0});
@@ -160,7 +173,7 @@
             this.numIncomingDamage.TabIndex = 9;
             this.numIncomingDamage.ThousandsSeparator = true;
             this.numIncomingDamage.Value = new decimal(new int[] {
-            25000,
+            100000,
             0,
             0,
             0});
@@ -225,11 +238,6 @@
             this.numPercIncFromMagic.Name = "numPercIncFromMagic";
             this.numPercIncFromMagic.Size = new System.Drawing.Size(105, 20);
             this.numPercIncFromMagic.TabIndex = 11;
-            this.numPercIncFromMagic.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
             this.numPercIncFromMagic.ValueChanged += new System.EventHandler(this.numPercIncFromMagic_ValueChanged);
             // 
             // label6
@@ -241,8 +249,128 @@
             this.label6.TabIndex = 10;
             this.label6.Text = "% Incoming from Magic";
             // 
+            // nudTargetArmor
+            // 
+            this.nudTargetArmor.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudTargetArmor.Location = new System.Drawing.Point(135, 17);
+            this.nudTargetArmor.Maximum = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+            this.nudTargetArmor.Name = "nudTargetArmor";
+            this.nudTargetArmor.Size = new System.Drawing.Size(84, 20);
+            this.nudTargetArmor.TabIndex = 28;
+            this.nudTargetArmor.Value = new decimal(new int[] {
+            13000,
+            0,
+            0,
+            0});
+            // 
+            // lblTargetArmor
+            // 
+            this.lblTargetArmor.AutoSize = true;
+            this.lblTargetArmor.Location = new System.Drawing.Point(6, 20);
+            this.lblTargetArmor.Name = "lblTargetArmor";
+            this.lblTargetArmor.Size = new System.Drawing.Size(71, 13);
+            this.lblTargetArmor.TabIndex = 24;
+            this.lblTargetArmor.Text = "Target Armor:";
+            // 
+            // tbFightLength
+            // 
+            this.tbFightLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbFightLength.Location = new System.Drawing.Point(135, 48);
+            this.tbFightLength.Name = "tbFightLength";
+            this.tbFightLength.Size = new System.Drawing.Size(86, 42);
+            this.tbFightLength.TabIndex = 2;
+            this.tbFightLength.Value = 10;
+            // 
+            // btnRotation
+            // 
+            this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRotation.Location = new System.Drawing.Point(46, 131);
+            this.btnRotation.Name = "btnRotation";
+            this.btnRotation.Size = new System.Drawing.Size(125, 23);
+            this.btnRotation.TabIndex = 38;
+            this.btnRotation.Text = "Rotation Details";
+            this.btnRotation.UseVisualStyleBackColor = true;
+            this.btnRotation.Click += new System.EventHandler(this.btnRotation_Click);
+            // 
+            // gbFightInfo
+            // 
+            this.gbFightInfo.Controls.Add(this.numTargets);
+            this.gbFightInfo.Controls.Add(this.btnRotation);
+            this.gbFightInfo.Controls.Add(this.label7);
+            this.gbFightInfo.Controls.Add(this.nudTargetArmor);
+            this.gbFightInfo.Controls.Add(this.lblFightLengthNum);
+            this.gbFightInfo.Controls.Add(this.lblTargetArmor);
+            this.gbFightInfo.Controls.Add(this.tbFightLength);
+            this.gbFightInfo.Controls.Add(this.lblFightLength);
+            this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbFightInfo.Location = new System.Drawing.Point(17, 176);
+            this.gbFightInfo.Name = "gbFightInfo";
+            this.gbFightInfo.Size = new System.Drawing.Size(227, 167);
+            this.gbFightInfo.TabIndex = 37;
+            this.gbFightInfo.TabStop = false;
+            this.gbFightInfo.Text = "Fight Info";
+            // 
+            // numTargets
+            // 
+            this.numTargets.Location = new System.Drawing.Point(135, 100);
+            this.numTargets.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numTargets.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numTargets.Name = "numTargets";
+            this.numTargets.Size = new System.Drawing.Size(84, 20);
+            this.numTargets.TabIndex = 39;
+            this.numTargets.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 102);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 13);
+            this.label7.TabIndex = 38;
+            this.label7.Text = "# Targets";
+            // 
+            // lblFightLengthNum
+            // 
+            this.lblFightLengthNum.AutoSize = true;
+            this.lblFightLengthNum.Location = new System.Drawing.Point(202, 80);
+            this.lblFightLengthNum.Name = "lblFightLengthNum";
+            this.lblFightLengthNum.Size = new System.Drawing.Size(19, 13);
+            this.lblFightLengthNum.TabIndex = 2;
+            this.lblFightLengthNum.Text = "10";
+            // 
+            // lblFightLength
+            // 
+            this.lblFightLength.AutoSize = true;
+            this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFightLength.Location = new System.Drawing.Point(6, 48);
+            this.lblFightLength.Name = "lblFightLength";
+            this.lblFightLength.Size = new System.Drawing.Size(114, 13);
+            this.lblFightLength.TabIndex = 0;
+            this.lblFightLength.Text = "Fight Length (minutes):";
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.gbFightInfo);
             this.Controls.Add(this.numPercIncFromMagic);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.numPercThreatFromSpell);
@@ -256,12 +384,17 @@
             this.Controls.Add(this.cmbAttackerLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelTankDK";
-            this.Size = new System.Drawing.Size(258, 320);
+            this.Size = new System.Drawing.Size(258, 360);
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPercThreatFromSpell)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
+            this.gbFightInfo.ResumeLayout(false);
+            this.gbFightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numTargets)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -281,5 +414,14 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numPercIncFromMagic;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown nudTargetArmor;
+        private System.Windows.Forms.Label lblTargetArmor;
+        private System.Windows.Forms.TrackBar tbFightLength;
+        private System.Windows.Forms.Button btnRotation;
+        private System.Windows.Forms.GroupBox gbFightInfo;
+        private System.Windows.Forms.Label lblFightLengthNum;
+        private System.Windows.Forms.Label lblFightLength;
+        private System.Windows.Forms.NumericUpDown numTargets;
+        private System.Windows.Forms.Label label7;
     }
 }
