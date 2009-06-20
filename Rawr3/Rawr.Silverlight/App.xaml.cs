@@ -29,6 +29,7 @@ namespace Rawr.Silverlight
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Properties.NetworkSettings.UseAspx = e.InitParams.ContainsKey("UseAspx");
             Grid g = new Grid();
             LoadScreen ls = new LoadScreen();
             g.Children.Add(ls);

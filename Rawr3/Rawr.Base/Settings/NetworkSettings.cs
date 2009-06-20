@@ -14,8 +14,12 @@ namespace Rawr.Properties
     public class NetworkSettings
     {
 
+        public static bool UseAspx { get; set; }
+
         static NetworkSettings()
         {
+            UseAspx = false;
+
             _default = new NetworkSettings();
 
             _default.ProxyServer = "";
@@ -31,12 +35,12 @@ namespace Rawr.Properties
             _default.UserAgent_FireFox2 = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4";
             _default.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4";
             _default.ClassTalentURI = "http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js";
-            _default.CharacterTalentURI = "Armory.aspx?character-talents.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-talents.xml?r={1}&cn={2}";
-            _default.CharacterSheetURI = "Armory.aspx?character-sheet.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}";
-            _default.ItemToolTipSheetURI = "Armory.aspx?item-tooltip.xml*i={0}";//"http://www.wowarmory.com/item-tooltip.xml?i={0}";
+            _default.CharacterTalentURI = "Armory.php?{0}*character-talents.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-talents.xml?r={1}&cn={2}";
+            _default.CharacterSheetURI = "Armory.php?{0}*character-sheet.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}";
+            _default.ItemToolTipSheetURI = "Armory.php?item-tooltip.xml*i={0}";//"http://www.wowarmory.com/item-tooltip.xml?i={0}";
             _default.ItemUpgradeURI = "http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}";
             _default.TalentIconURI = "http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
-            _default.ItemInfoURI = "Armory.aspx?item-info.xml*i={0}";//"http://www.wowarmory.com/item-info.xml?i={0}";
+            _default.ItemInfoURI = "Armory.php?item-info.xml*i={0}";//"http://www.wowarmory.com/item-info.xml?i={0}";
             _default.DownloadItemInfo = false;
             _default.ProxyRequiresAuthentication = false;
             _default.UseDefaultAuthenticationForProxy = false;
@@ -67,13 +71,55 @@ namespace Rawr.Properties
         public string UserAgent_IE6 { get; set; }
         public string UserAgent_FireFox2 { get; set; }
         public string UserAgent { get; set; }
-        public string ClassTalentURI { get; set; }  
-        public string CharacterTalentURI { get; set; }    
-        public string CharacterSheetURI { get; set; }
-        public string ItemToolTipSheetURI { get; set; }  
+        public string ClassTalentURI { get; set; }
+
+        private string characterTalentURI;
+        public string CharacterTalentURI
+        {
+            get
+            {
+                if (UseAspx) return characterTalentURI.Replace("php", "aspx");
+                else return characterTalentURI;
+            }
+            set { characterTalentURI = value; }
+        }  
+
+        private string characterSheetURI;
+        public string CharacterSheetURI
+        {
+            get
+            {
+                if (UseAspx) return characterSheetURI.Replace("php", "aspx");
+                else return characterSheetURI;
+            }
+            set { characterSheetURI = value; }
+        }
+
+        private string itemToolTipSheetURI;
+        public string ItemToolTipSheetURI
+        {
+            get
+            {
+                if (UseAspx) return itemToolTipSheetURI.Replace("php", "aspx");
+                else return itemToolTipSheetURI;
+            }
+            set { itemToolTipSheetURI = value; }
+        }   
+
         public string ItemUpgradeURI { get; set; }
         public string TalentIconURI { get; set; }
-        public string ItemInfoURI { get; set; } 
+
+        private string itemInfoURI;
+        public string ItemInfoURI
+        {
+            get
+            {
+                if (UseAspx) return itemInfoURI.Replace("php", "aspx");
+                else return itemInfoURI;
+            }
+            set { itemInfoURI = value; }
+        }  
+
         public bool DownloadItemInfo { get; set; } 
         public bool ProxyRequiresAuthentication { get; set; } 
         public bool UseDefaultAuthenticationForProxy { get; set; }
