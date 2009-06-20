@@ -755,7 +755,7 @@ namespace Rawr
         {
             get
             {
-                return string.Format("Reward from [{0}{1}{2}] {3} in {4}", MinLevel, Party > 0 ? "g" : "", Party > 0 ? Party.ToString() : "", Quest, Area);                
+                return string.Format("Reward from [{0}{1}{2}] {3} in {4}", MinLevel > 0 ? MinLevel.ToString() : "", Party > 0 ? "g" : Type, Party > 0 ? Party.ToString() : "", Quest, Area);
             }
         }
 
@@ -764,6 +764,7 @@ namespace Rawr
         public String Quest {get;set;}
         public int MinLevel {get;set;}
         public int Party {get;set;}
+        public String Type {get;set;}
 
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
@@ -776,6 +777,12 @@ namespace Rawr
             Quest = subNode.Attributes["name"].Value;
             MinLevel = int.Parse(subNode.Attributes["reqMinLevel"].Value);
             Party = int.Parse(subNode.Attributes["suggestedPartySize"].Value);
+            switch (subNode.Attributes["type"].Value)
+            {
+                case "Dungeon": Type = "d"; break;
+                case "Raid": Type = "r"; break;
+                default: Type = ""; break;
+            }
             return this;
         }
         public static new ItemLocation Construct()

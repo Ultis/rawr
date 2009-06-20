@@ -969,6 +969,56 @@ namespace Rawr
 					break;
 
 				case "ti":      // NPC ID that drops/gives... We use the name, so ignoring this
+                    ItemLocation questName = item.LocationInfo;
+                    if (questName is QuestItem)
+                    {
+                        WebRequestWrapper wrw = new WebRequestWrapper();
+                        XmlDocument questItem = wrw.DownloadQuestWowhead(value);
+                        if (questItem != null && !questItem.InnerXml.Contains("This quest doesn't exist or is not yet in the database."))
+                        {
+                            int levelStart = questItem.InnerXml.IndexOf("<div>Required level: ") + 21;
+                            if (levelStart == 20)
+                            {
+                                levelStart = questItem.InnerXml.IndexOf("<div>Requires level ") + 20;
+                            }
+                            if (levelStart > 19)
+                            {
+                                int levelEnd = questItem.InnerXml.IndexOf("</div>", levelStart);
+                                string level = questItem.InnerXml.Substring(levelStart, levelEnd - levelStart);
+                                if (level == "??")
+                                {
+                                    levelStart = questItem.InnerXml.IndexOf("<div>Level: ") + 12;
+                                    levelEnd = questItem.InnerXml.IndexOf("</div>", levelStart);
+                                    (questName as QuestItem).MinLevel = int.Parse(questItem.InnerXml.Substring(levelStart, levelEnd - levelStart));
+                                }
+                                else
+                                {
+                                    (questName as QuestItem).MinLevel = int.Parse(level);
+                                }
+                            }
+
+                            int typeStart = questItem.InnerXml.IndexOf("<div>Type: ") + 11;
+                            if (typeStart > 10)
+                            {
+                                int typeEnd = questItem.InnerXml.IndexOf("</div>", typeStart);
+                                switch (questItem.InnerXml.Substring(typeStart, typeEnd - typeStart))
+                                {
+                                    case "Group":
+                                        int partyStart = questItem.InnerXml.IndexOf("Suggested Players [") + 19;
+                                        if (partyStart > 18)
+                                        {
+                                            int partyEnd = questItem.InnerXml.IndexOf("]", partyStart);
+                                            (questName as QuestItem).Party = int.Parse(questItem.InnerXml.Substring(partyStart, partyEnd - partyStart));
+                                        }
+                                        break;
+
+                                    case "Dungeon": (questName as QuestItem).Type = "d"; break;
+                                    case "Raid": (questName as QuestItem).Type = "r"; break;
+                                    default: (questName as QuestItem).Type = ""; break;
+                                }
+                            }
+                        }
+                    }
                     break;
 
 				case "n":       // NPC 'Name'

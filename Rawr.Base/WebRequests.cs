@@ -69,6 +69,7 @@ namespace Rawr
 			string ItemUpgradeURI { get; }
 			string ItemWowheadURI { get; }
             string ItemWowheadUpgradeURI { get; }
+            string QuestWowheadURI { get; }
             string TalentIconURI { get; }
             string ArmoryTalentIconURI { get; }
             string ItemInfoURI { get; }
@@ -205,6 +206,11 @@ namespace Rawr
                 get { return Rawr.Properties.NetworkSettings.Default.ItemWowheadUpgradeURI; }
 			}
             
+            public string QuestWowheadURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.QuestWowheadURI; }
+            }
+
             public string TalentIconURI
             {
                 get { return Rawr.Properties.NetworkSettings.Default.TalentIconURI; }
@@ -406,12 +412,32 @@ namespace Rawr
             return doc;
         }
 
+        public XmlDocument DownloadQuestWowhead(string id) 
+        {
+            XmlDocument doc = null;
+            if (!string.IsNullOrEmpty(id))
+            {
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.QuestWowheadURI, id), true);
+            }
+            return doc;
+        }
+
         public XmlDocument DownloadItemHtmlWowhead(string id)
         {
             XmlDocument doc = null;
             if (!string.IsNullOrEmpty(id))
             {
                 doc = DownloadXml(string.Format("http://www.wowhead.com/?item={0}", id), true);
+            }
+            return doc;
+        }
+
+        public XmlDocument DownloadQuestHtmlWowhead(string id)
+        {
+            XmlDocument doc = null;
+            if (!string.IsNullOrEmpty(id))
+            {
+                doc = DownloadXml(string.Format("http://www.wowhead.com/?quest={0}", id), true);
             }
             return doc;
         }

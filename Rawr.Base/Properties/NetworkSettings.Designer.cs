@@ -279,6 +279,17 @@ namespace Rawr.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowhead.com/?quest={0}&xml")]
+        public string QuestWowheadURI
+        {
+            get
+            {
+                return ((string)(this["QuestWowheadURI"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items")]
         public string ItemSearchURI {
             get {

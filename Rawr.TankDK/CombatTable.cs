@@ -310,7 +310,6 @@ namespace Rawr.TankDK
             //spell AP multipliers, for diseases its per tick
             float BloodBoilAPMult = .04f;
             float BloodPlagueAPMult = 0.055f;
-            float BloodwormsAPMult = 0.006f;
             float CorpseExplosionAPMult = .0475f;
             float DeathCoilAPMult = 0.15f;
             float DeathNDecayAPMult = .0475f;

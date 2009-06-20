@@ -1,9 +1,11 @@
-﻿Tracking doc for status of Rawr.Hunter Module.
+﻿Tracking doc for status of Rawr.Tank Module.
 
-As of May 19, 2009, has light support for 3.1 but needs more work and alot of validation.
+As of June 20, 2009, has support for 3.1 needs alot of validation.
+
+Re-worked Talents
+Re-worked point evaluations
+Including a shot rotation improving combat model.
 
 Current TODOs:
-(not in any specific order)
-* Migrate to using global combat system functions and consts.
-* Ensure that the procs are properly being evalutated.
-* 
+* Fix defects
+* refine evaluations

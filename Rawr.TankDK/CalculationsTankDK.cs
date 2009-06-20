@@ -12,9 +12,7 @@ namespace Rawr.TankDK
         /// Setup constants that need to be answered.
         /// </summary>
         #region Constants
-        private static readonly float critImpact = 1f;  // How severe is getting crit? 1 = 100%
         private static readonly float BaseThreatValue = 1f; // Base value of threat modified by Threat weight.
-        private static readonly float BasePhysicalCrit = 0f; 
         #endregion // Constants
 
 
@@ -554,8 +552,6 @@ Survival Points individually may be important.",
             // Integrate Expertise values to prevent additional physical damage coming in:
             // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
-            // Assuming a rotation of 10 secs.
-            float fRotationDuration = 10f;
             // Figure out how many shots there are.  Right now, just calculating white damage.
             // TODO: once rotation is worked out, use that to get shotCount per rotation.
             float fShotCount = 0f;
