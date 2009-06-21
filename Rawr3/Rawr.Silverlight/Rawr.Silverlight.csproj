@@ -136,6 +136,9 @@
     <Compile Include="Dialogs\IncreaseQuota.xaml.cs">
       <DependentUpon>IncreaseQuota.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OptionsDialog.xaml.cs">
+      <DependentUpon>OptionsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Items\ItemEditor.xaml.cs">
       <DependentUpon>ItemEditor.xaml</DependentUpon>
     </Compile>
@@ -263,6 +266,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\IncreaseQuota.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\OptionsDialog.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

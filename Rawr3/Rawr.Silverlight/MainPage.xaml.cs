@@ -371,12 +371,18 @@ namespace Rawr.Silverlight
                 {
                     OptionsMenu.IsDropDownOpen = false;
 					OptionsMenu.SelectedIndex = 0;
-					if (newIndex == 3) ResetItemCache();
-					else if (newIndex == 4) ResetAllCaches();
-					else new ErrorWindow() { Message = "Not yet implemented." }.Show();
+                    if (newIndex == 1) ShowOptions();
+                    else if (newIndex == 3) ResetItemCache();
+                    else if (newIndex == 4) ResetAllCaches();
+                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
 
+        }
+
+        private void ShowOptions()
+        {
+            new OptionsDialog().Show();
         }
 
 		private void ResetAllCaches()

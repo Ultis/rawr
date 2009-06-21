@@ -6,13 +6,13 @@
 	mc:Ignorable="d"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	x:Class="Rawr.Silverlight.ConfirmationWindow"
-	Title="Error" Width="255">
+	Title="Are you sure?" Width="300">
 	<StackPanel>
-		<TextBlock x:Name="MessageText" Text="This is a long error message" TextWrapping="Wrap" Width="230" Margin="4,4,4,4"/>
+		<TextBlock x:Name="MessageText" Text="This is a long error message" TextWrapping="Wrap" Margin="4,4,4,4"/>
 
-		<StackPanel Orientation="Horizontal">
-			<Button x:Name="YesButton" Content="Yes" Click="YesButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="4,4,4,8" />
-			<Button x:Name="NoButton" Content="No" Click="NoButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="4,4,4,8" />
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+			<Button x:Name="YesButton" Content="Yes" Click="YesButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="2,2,2,4" />
+			<Button x:Name="NoButton" Content="No" Click="NoButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="2,2,2,4" />
 		</StackPanel>
 	</StackPanel>
 </basics:ChildWindow>

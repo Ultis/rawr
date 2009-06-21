@@ -14,6 +14,9 @@ namespace Rawr
 
         public static void Save(TextWriter writer)
         {
+            bool wasAspx = NetworkSettings.UseAspx;
+            NetworkSettings.UseAspx = false;
+
             Settings current = new Settings()
             {
                 Cache = CacheSettings.Default,
@@ -24,6 +27,8 @@ namespace Rawr
             XmlSerializer serializer = new XmlSerializer(typeof(Settings));
             serializer.Serialize(writer, current);
             writer.Close();
+
+            NetworkSettings.UseAspx = wasAspx;
         }
 
         public static void Load(TextReader reader)
