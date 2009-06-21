@@ -36,6 +36,7 @@ namespace Rawr
         ShamanStormStrike,
         BloodStrikeHit,
         HeartStrikeHit,
+        BloodStrikeOrHeartStrikeHit, // Deprecated.
         PlagueStrikeHit,
         IcyTouchHit,
         RuneStrikeHit,
@@ -1028,6 +1029,8 @@ namespace Rawr
                         return "on Blood Strike";
                     case Trigger.HeartStrikeHit:
                         return "on Heart Strike";
+                    case Trigger.BloodStrikeOrHeartStrikeHit:
+                        return "on Blood Strike or Heart Strike";
                     case Trigger.IcyTouchHit:
                         return "on Icy Touch";
                     case Trigger.PlagueStrikeHit:
