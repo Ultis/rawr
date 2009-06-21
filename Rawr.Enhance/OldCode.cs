@@ -131,3 +131,42 @@ float windfuryTimeToFirstHit = hastedMHSpeed - (3 % hastedMHSpeed);
 //later -- //windfuryTimeToFirstHit = hasted
 wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * hitsThatProcWFPerS));
 */
+
+/*
+CombatStats.cs
+        private void CalculateAbilities()
+        {
+            _gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
+            int deadTimes = 0;
+            string name = "";
+            for (float timeElapsed = 0f; timeElapsed < FightLength; timeElapsed += _gcd)
+            {
+                bool abilityUsed = false;
+                foreach (Ability ability in abilities)
+                {
+                    if (ability.OffCooldown(timeElapsed))
+                    {
+                        ability.AddUse(timeElapsed, _calcOpts.AverageLag / 1000f);
+                        abilityUsed = true;
+                        name = ability.Name;
+                        break;
+                    }
+                }
+                if (!abilityUsed)
+                {
+                    deadTimes++;
+                    name = "Deadtime";
+                }
+//                System.Diagnostics.Debug.Print("Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
+//                    timeElapsed, 
+//                    abilities[0].Uses, abilities[0].CooldownOver,
+//                    abilities[1].Uses, abilities[1].CooldownOver,
+//                    abilities[2].Uses, abilities[2].CooldownOver,
+//                    abilities[3].Uses, abilities[3].CooldownOver,
+//                    abilities[4].Uses, abilities[4].CooldownOver,
+//                    abilities[5].Uses, abilities[5].CooldownOver,
+//                    abilities[6].Uses, abilities[6].CooldownOver, name); 
+            }
+            // at this stage abilities now contains the number of procs per fight for each ability.
+        }
+*/

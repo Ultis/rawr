@@ -149,7 +149,7 @@ namespace Rawr.Enhance
         {
             int priority = 0;
             if (_talents.FeralSpirit == 1)
-                abilities.Add(new Ability("Feral Spirits", 300f, ++priority));
+                abilities.Add(new Ability("Feral Spirits", 180f, ++priority));
             if (_talents.MaelstromWeapon > 0)
                 abilities.Add(new Ability("Lightning Bolt", SecondsToFiveStack, ++priority));
             if (_talents.Stormstrike == 1)
@@ -169,8 +169,7 @@ namespace Rawr.Enhance
         private void CalculateAbilities()
         {
             _gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
-            float combatDuration = FightLength;
-            for (float timeElapsed = 0f; timeElapsed < combatDuration; timeElapsed += _gcd)
+            for (float timeElapsed = 0f; timeElapsed < FightLength; timeElapsed += _gcd)
             {
                 foreach (Ability ability in abilities)
                 {
@@ -250,6 +249,12 @@ namespace Rawr.Enhance
             float stormstrikeSpeed = AbilityCooldown("Stormstrike");
             float shockSpeed = AbilityCooldown("Earth Shock");
             float lavaLashSpeed = AbilityCooldown("Lava Lash");
+            if (stormstrikeSpeed == FightLength && _talents.Stormstrike == 1) // first time round loop so abilities not initialised
+            {
+                stormstrikeSpeed = 8f;
+                shockSpeed = BaseShockSpeed;
+                lavaLashSpeed = 6f;
+            }
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
