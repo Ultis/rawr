@@ -58,15 +58,15 @@ namespace Rawr.DPSDK
                         chance = combatTable.spellCrits;
                         break;
                     case Trigger.BloodStrikeHit:
-                        trigger = rotation.BloodStrike / rotation.curRotationDuration;
+                        trigger = rotation.curRotationDuration / rotation.BloodStrike;
                         chance = 1f;
                         break;
                     case Trigger.HeartStrikeHit:
-                        trigger = rotation.HeartStrike / rotation.curRotationDuration;
+                        trigger = rotation.curRotationDuration / rotation.HeartStrike;
                         chance = 1f;
                         break;
                     case Trigger.PlagueStrikeHit:
-                        trigger = rotation.PlagueStrike / rotation.curRotationDuration;
+                        trigger = rotation.curRotationDuration / rotation.PlagueStrike;
                         chance = 1f;
                         break;
                     case Trigger.DoTTick:
