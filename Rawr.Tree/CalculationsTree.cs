@@ -404,7 +404,7 @@ namespace Rawr.Tree
                 {
                   resultNew += effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration);   // 0 cooldown, 100% chance to use
                 }
-                else if (effect.Trigger == Trigger.SpellCast ||  effect.Trigger == Trigger.SpellHit)
+                else if (effect.Trigger == Trigger.SpellCast )
                 {
                     resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
                 }
@@ -1359,15 +1359,17 @@ namespace Rawr.Tree
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.Intellect * character.DruidTalents.LunarGuidance * 0.04); //LunarGuidance, 4% per Point
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * character.DruidTalents.LunarGuidance * 0.04) + (character.DruidTalents.NurturingInstinct * 0.35f * statsTotal.Agility));
 
-            statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f); //don't know why, but it's right..
+//            statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f); //don't know why, but it's right..
+            statsTotal.Mana = statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
 
-            statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f);
+//            statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f);
+            statsTotal.Health = (float)Math.Round(statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina));
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (character.DruidTalents.Dreamstate > 0 ? character.DruidTalents.Dreamstate * 0.03f + 0.01f : 0f));
 
 //            statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + (statsTotal.SpellCrit*100.0f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
             statsTotal.SpellCrit = (float)Math.Round( (StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) + StatConversion.GetSpellCritFromRating(statsTotal.CritRating) + (statsTotal.SpellCrit) + 0.01f * character.DruidTalents.NaturalPerfection) * 100f, 2);
-            statsTotal.SpellCombatManaRegeneration += 0.1f * 5f / 3f * character.DruidTalents.Intensity;
+            statsTotal.SpellCombatManaRegeneration += 0.5f / 3f * character.DruidTalents.Intensity;
 
             // SpellPower (actually healing only, but we have no damaging spells, so np)
             statsTotal.SpellPower += ((statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting) * character.DruidTalents.ImprovedTreeOfLife * 0.05f);
@@ -1680,7 +1682,7 @@ namespace Rawr.Tree
             foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
+                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit 
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
                 {
                     if (HasRelevantSpecialEffectStats(effect.Stats))
