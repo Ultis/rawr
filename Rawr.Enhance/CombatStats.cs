@@ -169,7 +169,7 @@ namespace Rawr.Enhance
         private void CalculateAbilities()
         {
             _gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
-            float combatDuration = 60f * _calcOpts.FightLength;
+            float combatDuration = FightLength;
             for (float timeElapsed = 0f; timeElapsed < combatDuration; timeElapsed += _gcd)
             {
                 foreach (Ability ability in abilities)
@@ -189,9 +189,9 @@ namespace Rawr.Enhance
             foreach (Ability ability in abilities)
             {
                 if (ability.Name.Equals(name))
-                    return ability.Uses == 0 ? ability.Duration : _calcOpts.FightLength * 60f / ability.Uses;
+                    return ability.Uses == 0 ? ability.Duration : FightLength / ability.Uses;
             }
-            return _calcOpts.FightLength * 60f;
+            return FightLength;
         }
 
         public void UpdateCalcs()
@@ -249,6 +249,7 @@ namespace Rawr.Enhance
             urUptime = 0f;
             float stormstrikeSpeed = AbilityCooldown("Stormstrike");
             float shockSpeed = AbilityCooldown("Earth Shock");
+            float lavaLashSpeed = AbilityCooldown("Lava Lash");
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
@@ -258,14 +259,13 @@ namespace Rawr.Enhance
             hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
             hitsPerSMHSS = (1f - chanceYellowMiss) / stormstrikeSpeed;
             hitsPerSOHSS = _character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMiss) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
-            hitsPerSLL = (1f - chanceYellowMiss) / 6f;
+            hitsPerSLL = (1f - chanceYellowMiss) / lavaLashSpeed;
             float swingsPerSMHMelee = 0f;
             float swingsPerSOHMelee = 0f;
             float wfProcsPerSecond = 0f;
             float mwProcsPerSecond = 0f;
             secondsToFiveStack = 10f;
             float averageMeleeCritChance = chanceYellowCrit;
-            float earthShocksPerS = (1f - chanceSpellMiss) / shockSpeed;
             float couldCritSwingsPerSecond = 0f;
             hitsPerSOH = 0f;
             hitsPerSMH = 0f;
@@ -301,7 +301,8 @@ namespace Rawr.Enhance
                 }
                 secondsToFiveStack = 5 / mwProcsPerSecond;
 
-                float couldCritSpellsPerS = (earthShocksPerS + 1 / secondsToFiveStack) * (1f - chanceSpellMiss);
+                spellAttacksPerSec = 1 / secondsToFiveStack + 1 / shockSpeed;
+                float couldCritSpellsPerS = spellAttacksPerSec * (1f - chanceSpellMiss);
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
 
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
