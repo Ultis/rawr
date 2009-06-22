@@ -153,7 +153,7 @@ namespace Rawr.DPSWarr {
         #region Miss
         public float MissPrevBonuses {
             get {
-                return _stats.PhysicalHit / 100f // Hit Perc bonuses like Draenei Racial
+                return _stats.PhysicalHit        // Hit Perc bonuses like Draenei Racial
                         + HitPerc;               // Bonus from Hit Rating
             }
         }
@@ -223,12 +223,12 @@ namespace Rawr.DPSWarr {
         #region Chance of Hitting (be it Ordinary, Glance or Blocked, but not Crit)
         // White
         public float ProbWhiteHit(Item i)  { float exp = CalcExpertise(i); return 1f - WhMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
-        public float ProbMhWhiteHit  { get { return 1f - WhMissChance - MhCrit - MhDodgeChance - MhParryChance; } }
-        public float ProbOhWhiteHit  { get { return 1f - WhMissChance - OhCrit - OhDodgeChance - MhParryChance; } }
+        public float ProbMhWhiteHit  { get { return 1f - WhMissChance - MhCrit - MhDodgeChance - MhParryChance - GlanceChance - MhBlockChance; } }
+        public float ProbOhWhiteHit  { get { return 1f - WhMissChance - OhCrit - OhDodgeChance - MhParryChance - GlanceChance - OhBlockChance; } }
         // Yellow (Doesn't Glance and has different MissChance Cap)
         public float ProbYellowHit(Item i) { float exp = CalcExpertise(i); return 1f - YwMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
-        public float ProbMhYellowHit { get { return 1f - YwMissChance - MhCrit - MhDodgeChance - MhParryChance; } }
-        public float ProbOhYellowHit { get { return 1f - YwMissChance - OhCrit - OhDodgeChance - OhParryChance; } }
+        public float ProbMhYellowHit { get { return 1f - YwMissChance - MhCrit - MhDodgeChance - MhParryChance - MhBlockChance; } }
+        public float ProbOhYellowHit { get { return 1f - YwMissChance - OhCrit - OhDodgeChance - OhParryChance - OhBlockChance; } }
         #endregion
         #endregion
         #region Other

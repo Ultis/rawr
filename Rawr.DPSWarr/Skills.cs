@@ -121,21 +121,25 @@ namespace Rawr.DPSWarr {
                 rage += (_combatFactors.MainHand.Speed * (3f * _talents.UnbridledWrath) / 60.0f) * (1.0f - _combatFactors.WhMissChance);
                 return rage;
             }
+            public float MHRageGenPerSec
+            {
+                get
+                {
+                    return (_character.MainHand != null && _character.MainHand.MaxDamage > 0 ? GetSwingRage(_character.MainHand.Item, true) / _combatFactors.MainHandSpeed : 0f);
+                }
+            }
+            public float OHRageGenPerSec
+            {
+                get
+                {
+                    if (_character.OffHand == null) return 0;
+                    return (_character.OffHand.MaxDamage > 0 ? GetSwingRage(_character.OffHand.Item, false) / _combatFactors.OffHandSpeed : 0f);
+                }
+            }
             // Rage generated per second
             public float whiteRageGenPerSec {
                 get {
-                    bool useOH = _character.OffHand != null;
-                    float MHRage = (_character.MainHand != null && _character.MainHand.MaxDamage > 0 ? GetSwingRage(_character.MainHand.Item, true) : 0f);
-                    float OHRage = 0f;
-                    OHRage = (useOH && _character.OffHand != null && _character.OffHand.MaxDamage > 0 ? GetSwingRage(_character.OffHand.Item, false) : 0f);
-
-                    // Rage per Second
-                    MHRage /= _combatFactors.MainHandSpeed;
-                    if (useOH) { OHRage /= _combatFactors.OffHandSpeed; }
-
-                    float rage = MHRage + (useOH ? OHRage : 0f);
-
-                    return rage;
+                    return MHRageGenPerSec + OHRageGenPerSec;
                 }
             }
             public float RageFormula(float d, float s, float f) {
@@ -153,6 +157,28 @@ namespace Rawr.DPSWarr {
                 //R = 3.75f * d / c + f * s / 2.0f;
                 R *= (1.0f + 0.25f * _talents.EndlessRage);
                 return R;
+            }
+            public float AvoidanceStreak
+            {
+                get
+                {
+                    float mhRagePercent = MHRageGenPerSec / whiteRageGenPerSec;
+                    float ohRagePercent = 1f - mhRagePercent;
+                    float missChance = mhRagePercent * (_combatFactors.WhMissChance + _combatFactors.MhDodgeChance + _combatFactors.MhParryChance) +
+                                             ohRagePercent * (_combatFactors.WhMissChance + _combatFactors.OhDodgeChance + _combatFactors.OhParryChance);
+                    float doubleChance = missChance * missChance;
+                    float tripleChance = doubleChance * missChance;
+                    float quadChance = doubleChance * doubleChance;
+
+                    float doubleRecovery = 1f / (1f / _combatFactors.MainHandSpeed + 1f / _combatFactors.OffHandSpeed);
+                    float tripleRecovery = 1f / (1f / (1.5f * _combatFactors.MainHandSpeed) + 1f / (1.5f * _combatFactors.OffHandSpeed));
+                    float quadRecovery = 1f / (1f / (2f * _combatFactors.MainHandSpeed) + 1f / (2f * _combatFactors.OffHandSpeed));
+
+                    float doubleSlip = doubleChance * doubleRecovery;
+                    float tripleSlip = tripleChance * tripleRecovery;
+                    float quadSlip = quadChance * quadRecovery;
+                    return doubleSlip + tripleSlip + quadSlip;
+                }
             }
         }
         // Ability class base
@@ -409,7 +435,7 @@ namespace Rawr.DPSWarr {
                 get
                 {
                     if (!GetValided()) { return 0f; }
-                    return 2.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
+                    return 2.0f * (1f - Whiteattacks.AvoidanceStreak); // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
                 }
             }
             public override float GetHealing() {
@@ -448,7 +474,7 @@ namespace Rawr.DPSWarr {
                 {
                     if (!GetValided()) { return 0f; }
                     //return RotationLength / (Cd - (Talents.GlyphOfWhirlwind ? 2f : 0f));
-                    return 1f;
+                    return 1f * (1f - Whiteattacks.AvoidanceStreak);
                 }
             }
             // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
@@ -573,6 +599,13 @@ namespace Rawr.DPSWarr {
                 }
                 return numProcs;
             }
+            public override float MaxActivates
+            {
+                get
+                {
+                    return Activates;
+                }
+            }
             public override float Activates
             {
                 get
@@ -597,7 +630,7 @@ namespace Rawr.DPSWarr {
                     // procs = (procs / RotationLength) - (chance * chance + 0.01f); // WTF is with squaring chance?
                     if (procs2 < 0) { procs2 = 0; }
                     if (procs2 > 1) { procs2 = 1; } // Only have 1 free GCD in the default rotation
-                    return procs3;
+                    return procs3 * (1f - Whiteattacks.AvoidanceStreak);
 
                     // ORIGINAL LINES
                     //float chance = _talents.Bloodsurge * 0.0666666666f;
@@ -1107,7 +1140,7 @@ namespace Rawr.DPSWarr {
                     if (!GetValided()) { return 0f; }
                     float Hits = (float)Math.Max(0f, OverridesPerSec);
                     HSorCLVPerSecond = Hits;
-                    return Hits * RotationLength;
+                    return Hits * RotationLength * (1f - Whiteattacks.AvoidanceStreak);
                 }
             }
             public override float MaxActivates { get { return Activates; } }
