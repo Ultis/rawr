@@ -15,6 +15,16 @@ namespace Rawr.TankDK
         private static readonly float BaseThreatValue = 1f; // Base value of threat modified by Threat weight.
         #endregion // Constants
 
+        enum Quality
+        {
+            Uncommon,
+            Rare, 
+            Epic,
+            Jewelcraft,
+
+            NUM_Quality
+        }
+
 
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -22,35 +32,36 @@ namespace Rawr.TankDK
             {
 				////Relevant Gem IDs for TankDKs
 				//Red
-				int[] subtle = { 39907, 40000, 40115, 42151 }; //
-                int[] bold = { }; // +Str
-                int[] bright = { }; // +AP
-                int[] delicate = { }; // +Agi
-                int[] flashing = { }; // +Parry
+                //                    UC     Rare   Epic   JC
+				int[] subtle =      { 39907, 40000, 40115, 42151 }; // +Dodge
+//                int[] bold =        { 39900, 39996, 40111, 42142 }; // +Str
+//                int[] bright =      { 39906, 39999, 40114, 36766 }; // +AP
+//                int[] delicate =    { 39905, 39997, 40112, 42143 }; // +Agi
+//                int[] flashing =    { 39908, 40001, 40116, 42152 }; // +Parry
 
 				//Purple
-				int[] regal = { 39938, 40031, 40138 };
-                int[] balanced = { }; // +AP +Stam
-                int[] defenders = { }; // +Parry +Stam
+				int[] regal =       { 39938, 40031, 40138, }; // +dodge, Stam
+                //                int[] balanced =    { 39937, 40029, 40136, }; // +AP +Stam
+                //                int[] defenders =   { 39939, 40032, 40139, }; // +Parry +Stam
 
 				//Blue
-				int[] solid = { 39919, 40008, 40119, 36767 }; // +Stam
+				int[] solid =       { 39919, 40008, 40119, 36767 }; // +Stam
 
 				//Green
-				int[] enduring = { 39976, 40089, 40167 }; // +Def +Stam
+				int[] enduring =    { 39976, 40089, 40167,  }; // +Def +Stam
 
 				//Yellow
-				int[] thick = { 39916, 40015, 40126, 42157 }; // +def
-                int[] gleaming = { }; // +Crit.
+				int[] thick =       { 39916, 40015, 40126, 42157 }; // +def
+                //                int[] gleaming =    { }; // +Crit.
 
 				//Orange
-				int[] stalwart = { 39964, 40056, 40160 };
-                int[] accurate = { }; // +Hit +Expertise
-                int[] deadly = { }; // +agi +crit
-                int[] deft = { }; // +Agi +Haste
-                int[] etched = { }; // +hit +Str
-                int[] glimmering = { }; // +parry +def
-                int[] glinting = { }; // +Agi +Hit
+				int[] stalwart =    { 39964, 40056, 40160 };
+                //                int[] accurate =    { }; // +Hit +Expertise
+                //               int[] deadly =      { }; // +agi +crit
+                //                int[] deft =        { }; // +Agi +Haste
+                //                int[] etched =      { }; // +hit +Str
+                //                int[] glimmering =  { }; // +parry +def
+                //               int[] glinting =    { }; // +Agi +Hit
 
 
 
@@ -196,19 +207,20 @@ Survival Points individually may be important.",
 					    "Basic Stats:Haste Rating",
 					    "Basic Stats:Armor Penetration",
 					    "Basic Stats:Armor Penetration Rating",
-                        "Basic Stats:Health",
+                        "Basic Stats:Health*Including Frost Presence",
                         "Basic Stats:Armor*Including Frost Presence",
 
-                        "Defense:Crit*Enemy's crit chance on you",
+                        @"Defense:Crit*Enemy's crit chance on you. When using the optimizer, set a secondary criteria to this <= 0 to ensure that
+you stay default capped.",
                         "Defense:Defense Rating",
                         "Defense:Defense",
                         "Defense:Resilience",
-                        "Defense:Defense Rating needed",
+                        "Defense:Defense Rating needed*Including Resilience to ensure being uncrittable.",
 
-                        "Advanced Stats:Miss",
-                        "Advanced Stats:Dodge",
-                        "Advanced Stats:Parry*With Blade Barrier and Str bonus from Unbreakable Armor's average uptime.",
-                        "Advanced Stats:Total Avoidance",
+                        "Advanced Stats:Miss*After Diminishing Returns - will not match in-game character pane.",
+                        "Advanced Stats:Dodge*After Diminishing Returns - will not match in-game character pane.",
+                        "Advanced Stats:Parry*After Diminishing Returns - will not match in-game character pane.  Includes Str bonus from Unbreakable Armor's average uptime.",
+                        "Advanced Stats:Total Avoidance*Miss + Dodge + Parry",
                         "Advanced Stats:Armor Damage Reduction",
 
                         "Threat Stats:Target Miss*Chance to miss the target",
@@ -545,6 +557,24 @@ Survival Points individually may be important.",
 
             #endregion
 
+            #region ***** THREAT *****
+
+            float fGCD = rot.getGCDTime();
+            float fDamageTotal = ct.GetTotalThreat();
+            if (fDamageTotal > 0)
+            {
+                calcs.Threat = fDamageTotal;
+            }
+            else
+            {
+                rot.setRotation(Rotation.Type.Frost);
+                fDamageTotal = ct.GetTotalThreat();
+            }
+
+            calcs.ThreatWeight = BaseThreatValue * opts.ThreatWeight;
+
+            #endregion
+
             #region ***** Mitigation Rating *****
 
             float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
@@ -554,15 +584,28 @@ Survival Points individually may be important.",
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
             // Figure out how many shots there are.  Right now, just calculating white damage.
             // TODO: once rotation is worked out, use that to get shotCount per rotation.
-            float fShotCount = 0f;
-            /*
-            if (character.MainHand != null)
-                fShotCount += (fRotationDuration / character.MainHand.Speed);
-            if (character.OffHand != null)
-                fShotCount += (fRotationDuration / character.OffHand.Speed);
-            */
-            // So now add in the 40% damage increase per shot, * the likelihood of being parried.
-            fIncPhysicalDamage += (fIncPhysicalDamage * .4f * fShotCount) * calcs.TargetParry;
+            if (fGCD > 0)
+            {
+                float fBossShotCount = fGCD / opts.BossAttackSpeed;
+                // How fast is a hasted shot? 40% faster.
+                float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .4f);
+                float fCharacterShotCount = 0f;
+                if (character.MainHand != null)
+                    fCharacterShotCount += (fGCD / ct.MH.hastedSpeed);
+                if (character.OffHand != null)
+                    fCharacterShotCount += (fGCD / ct.OH.hastedSpeed);
+                // The number of shots taken * the chance to be parried.
+                // Ensure that this value doesn't go over 100%
+                float fShotsParried = Math.Min(1f, calcs.TargetParry * fCharacterShotCount);
+                // How much damage per shot normal shot?
+                float fPerShotPhysical = fIncPhysicalDamage / fBossShotCount;
+                // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
+                float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+                float fTimeNormal = fGCD - fTimeHasted;
+                // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+                fBossShotCount = (fTimeNormal / opts.BossAttackSpeed) + fShotsParried;
+                fIncPhysicalDamage = fPerShotPhysical * fBossShotCount;
+            }
 
             if (character.DeathKnightTalents.SpellDeflection > 0)
             {
@@ -624,90 +667,7 @@ Survival Points individually may be important.",
 
             #endregion
 
-            #region ***** THREAT *****
 
-            float fGCD = rot.getGCDTime();
-            float fDamageTotal = ct.GetTotalThreat();
-            if (fDamageTotal > 0)
-            {
-                calcs.Threat = fDamageTotal;
-            }
-            else
-            if (character.MainHand != null)
-            {
-
-                // Base chance of spell hit is 83%
-                float SpellHitChance = .83f;
-                SpellHitChance += stats.SpellHit;
-                // Can't have more than 100% hit chance.
-                SpellHitChance = Math.Min(1f, SpellHitChance);
-
-                float totalStaticHaste = stats.PhysicalHaste;
-                totalStaticHaste += StatConversion.GetHasteFromRating(stats.HasteRating, character.Class);
-
-                // Every 14 AP == +1DPS
-                float fDPSfromAP = stats.AttackPower / 14.0f;
-                float fDamageWhite = (character.MainHand.Item.DPS + fDPSfromAP) * (character.MainHand.Speed);
-                // Talent: BloodCaked Blade .////////////////////////////////////////////
-                // 10% chance per point per auto attack
-                // to cause 25% (+12.5% per disease) weapon damage (assuming 1 disease)
-                fDamageWhite += (fDamageWhite * .375f) * (.1f * character.DeathKnightTalents.BloodCakedBlade);
-
-                // Talent: Nerves of Cold Steel. .////////////////////////////////////////////
-                // +5% damage to off-hand damage.
-                if (bDualWielding && character.OffHand != null)
-                {
-                    fDamageWhite += (character.OffHand.Item.DPS * (1f + (.05f * character.DeathKnightTalents.NervesOfColdSteel))
-                                    + (stats.AttackPower / 14.0f)) * (character.OffHand.Speed);
-                }
-
-                // TODO: Entry point for shot rotation function.
-                // Hack!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // provide a % based way of scaling the damage by magic.
-                float fDamageSpecial = fDamageWhite * opts.PercThreatFromSpells;
-                fDamageWhite = fDamageWhite - fDamageSpecial;
-
-                // Apply Haste.
-                // Haste really only affects white damage w/ some slight GCD changes - but those are negligible.
-                fDamageWhite *= 1f + totalStaticHaste;
-                // White Damage modifiers:
-                fDamageWhite *= (1f + 0.04f * character.DeathKnightTalents.Necrosis); // 4% shadow damage added to auto attacks per point.
-
-                // Talent: Black Ice //////////////////////////////////////////////////////
-                // Factoring it to all special effects since most shadow and frost damage is being done by special effects.
-                fDamageSpecial *= (1f + 0.01f * character.DeathKnightTalents.BlackIce);
-                // Talent: Rage of Rivendare //////////////////////////////////////////////////////
-                // +2% damage by non-white damage per point.
-                fDamageSpecial *= (1f + 0.02f * character.DeathKnightTalents.RageOfRivendare);
-
-                // Remove hitchance problems, add Crit chance..
-                fDamageWhite *= hitChance;
-                fDamageSpecial *= SpellHitChance;
-
-
-                fDamageTotal = fDamageWhite + fDamageSpecial;
-                fDamageTotal *= (1f + 0.01f * character.DeathKnightTalents.Desecration) // 1% additional damage done while on unholy ground.
-                    * (1f + 0.02f * character.DeathKnightTalents.BloodGorged * .5f); // 2% additional Damage done per point while > 75% health.  Assuming that's going to be 1/2 the time.
-
-                // For right now all damage is only looking at melee damage.  
-                // so Annihillation is going in full.  Once we get shot rotation, I'll break it out.
-                fDamageTotal = (fDamageWhite + fDamageSpecial)
-                                * (1f + .02f * bsUptime) // Bone Shield 2% damage increase when active.
-                                * (1f + f2hWeaponDamageMultiplier) // 2h Weapon spec.
-                                ;
-
-                // Increase the total damage done by the chance of crits hitting and each crit does 100% extra damage.
-                fDamageTotal += (fDamageTotal * calcs.BasicStats.PhysicalCrit);
-
-                calcs.Threat = fDamageTotal;
-
-                // Threat buffs.
-                calcs.Threat *= 1.0f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
-            }
-
-            calcs.ThreatWeight = BaseThreatValue * opts.ThreatWeight;
-
-            #endregion
 
             return calcs;
         }
@@ -788,6 +748,9 @@ Survival Points individually may be important.",
 
             // Parry from str. is only available to DKs.
             statsTotal.ParryRating += statsTotal.Strength * 0.25f;
+
+            // Expertise Rating -> Expertise:
+            statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
             return (statsTotal);
         }

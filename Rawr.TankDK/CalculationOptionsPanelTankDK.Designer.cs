@@ -36,7 +36,7 @@
             this.numSurvivalWeight = new System.Windows.Forms.NumericUpDown();
             this.numIncomingDamage = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.numPercThreatFromSpell = new System.Windows.Forms.NumericUpDown();
+            this.numBossAttackSpeed = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.numPercIncFromMagic = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
@@ -52,7 +52,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numPercThreatFromSpell)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBossAttackSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
@@ -87,7 +87,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 36);
+            this.label2.Location = new System.Drawing.Point(3, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 13);
             this.label2.TabIndex = 2;
@@ -101,7 +101,7 @@
             0,
             0,
             131072});
-            this.numThreatWeight.Location = new System.Drawing.Point(150, 36);
+            this.numThreatWeight.Location = new System.Drawing.Point(150, 34);
             this.numThreatWeight.Maximum = new decimal(new int[] {
             5,
             0,
@@ -120,7 +120,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 95);
+            this.label3.Location = new System.Drawing.Point(3, 72);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 4;
@@ -134,7 +134,7 @@
             0,
             0,
             131072});
-            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 95);
+            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 72);
             this.numSurvivalWeight.Maximum = new decimal(new int[] {
             5,
             0,
@@ -142,7 +142,7 @@
             0});
             this.numSurvivalWeight.Name = "numSurvivalWeight";
             this.numSurvivalWeight.Size = new System.Drawing.Size(105, 20);
-            this.numSurvivalWeight.TabIndex = 7;
+            this.numSurvivalWeight.TabIndex = 5;
             this.numSurvivalWeight.Value = new decimal(new int[] {
             10,
             0,
@@ -188,38 +188,43 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "Incoming Damage";
             // 
-            // numPercThreatFromSpell
+            // numBossAttackSpeed
             // 
-            this.numPercThreatFromSpell.DecimalPlaces = 2;
-            this.numPercThreatFromSpell.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            131072});
-            this.numPercThreatFromSpell.Location = new System.Drawing.Point(150, 62);
-            this.numPercThreatFromSpell.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numPercThreatFromSpell.Name = "numPercThreatFromSpell";
-            this.numPercThreatFromSpell.Size = new System.Drawing.Size(105, 20);
-            this.numPercThreatFromSpell.TabIndex = 5;
-            this.numPercThreatFromSpell.Value = new decimal(new int[] {
+            this.numBossAttackSpeed.DecimalPlaces = 2;
+            this.numBossAttackSpeed.Increment = new decimal(new int[] {
             5,
             0,
             0,
             65536});
-            this.numPercThreatFromSpell.ValueChanged += new System.EventHandler(this.numPercThreatFromSpell_ValueChanged);
+            this.numBossAttackSpeed.Location = new System.Drawing.Point(150, 97);
+            this.numBossAttackSpeed.Maximum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numBossAttackSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numBossAttackSpeed.Name = "numBossAttackSpeed";
+            this.numBossAttackSpeed.Size = new System.Drawing.Size(105, 20);
+            this.numBossAttackSpeed.TabIndex = 7;
+            this.numBossAttackSpeed.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            65536});
+            this.numBossAttackSpeed.ValueChanged += new System.EventHandler(this.numBossAttackSpeed_ValueChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 62);
+            this.label5.Location = new System.Drawing.Point(3, 97);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(141, 13);
+            this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 8;
-            this.label5.Text = "% Threat from Spells/Effects";
+            this.label5.Text = "Boss Attack Speed";
             // 
             // numPercIncFromMagic
             // 
@@ -229,7 +234,7 @@
             0,
             0,
             131072});
-            this.numPercIncFromMagic.Location = new System.Drawing.Point(150, 150);
+            this.numPercIncFromMagic.Location = new System.Drawing.Point(150, 148);
             this.numPercIncFromMagic.Maximum = new decimal(new int[] {
             1,
             0,
@@ -243,7 +248,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 150);
+            this.label6.Location = new System.Drawing.Point(3, 148);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(116, 13);
             this.label6.TabIndex = 10;
@@ -264,7 +269,7 @@
             0});
             this.nudTargetArmor.Name = "nudTargetArmor";
             this.nudTargetArmor.Size = new System.Drawing.Size(84, 20);
-            this.nudTargetArmor.TabIndex = 28;
+            this.nudTargetArmor.TabIndex = 13;
             this.nudTargetArmor.Value = new decimal(new int[] {
             13000,
             0,
@@ -286,7 +291,7 @@
             this.tbFightLength.Location = new System.Drawing.Point(135, 48);
             this.tbFightLength.Name = "tbFightLength";
             this.tbFightLength.Size = new System.Drawing.Size(86, 42);
-            this.tbFightLength.TabIndex = 2;
+            this.tbFightLength.TabIndex = 15;
             this.tbFightLength.Value = 10;
             // 
             // btnRotation
@@ -295,7 +300,7 @@
             this.btnRotation.Location = new System.Drawing.Point(46, 131);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
-            this.btnRotation.TabIndex = 38;
+            this.btnRotation.TabIndex = 19;
             this.btnRotation.Text = "Rotation Details";
             this.btnRotation.UseVisualStyleBackColor = true;
             this.btnRotation.Click += new System.EventHandler(this.btnRotation_Click);
@@ -333,7 +338,7 @@
             0});
             this.numTargets.Name = "numTargets";
             this.numTargets.Size = new System.Drawing.Size(84, 20);
-            this.numTargets.TabIndex = 39;
+            this.numTargets.TabIndex = 17;
             this.numTargets.Value = new decimal(new int[] {
             1,
             0,
@@ -373,7 +378,7 @@
             this.Controls.Add(this.gbFightInfo);
             this.Controls.Add(this.numPercIncFromMagic);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.numPercThreatFromSpell);
+            this.Controls.Add(this.numBossAttackSpeed);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.numIncomingDamage);
             this.Controls.Add(this.label4);
@@ -388,7 +393,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numPercThreatFromSpell)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBossAttackSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
@@ -410,7 +415,7 @@
         private System.Windows.Forms.NumericUpDown numSurvivalWeight;
         private System.Windows.Forms.NumericUpDown numIncomingDamage;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown numPercThreatFromSpell;
+        private System.Windows.Forms.NumericUpDown numBossAttackSpeed;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numPercIncFromMagic;
         private System.Windows.Forms.Label label6;

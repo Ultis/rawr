@@ -61,11 +61,11 @@ namespace Rawr.TankDK
             }
         }
 
-        private void numPercThreatFromSpell_ValueChanged(object sender, EventArgs e)
+        private void numBossAttackSpeed_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
-                options.PercThreatFromSpells = (float)(numPercThreatFromSpell.Value);
+                options.BossAttackSpeed = (float)(numBossAttackSpeed.Value);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -127,8 +127,8 @@ namespace Rawr.TankDK
         public float ThreatWeight = 1.00f;
         public float SurvivalWeight = 1.00f;
         public uint IncomingDamage = 100000;
-        public float PercThreatFromSpells = .5f;
         public float PercentIncomingFromMagic = .0f;
+        public float BossAttackSpeed = 2.5f;
         public float BossArmor = 13000f;
 
         public bool Bloodlust = false;
