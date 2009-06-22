@@ -176,6 +176,8 @@ namespace Rawr.Enhance
                     if (ability.OffCooldown(timeElapsed))
                     {
                         ability.AddUse(timeElapsed, _calcOpts.AverageLag / 1000f);
+                        if (ability.Name.EndsWith("Totem"))
+                            timeElapsed -= _gcd - 1; // if dropping a totem reduce next GCD to 1.0 seconds.
                         break;
                     }
                 }
