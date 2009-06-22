@@ -62,7 +62,6 @@ namespace Rawr.Enhance
         private float callOfThunder = 0f;
 
         private List<Ability> abilities = new List<Ability>();
-        private float _gcd = 0f;
 
         public CombatStats(Character character, Stats stats)
         {
@@ -76,8 +75,6 @@ namespace Rawr.Enhance
             UpdateCalcs(); // second pass to revise calcs based on new ability cooldowns
         }
 
-        public float GCD { get { return _gcd; } }
-        
         public float GlancingRate { get { return glancingRate; } }
         public float FightLength { get { return _calcOpts.FightLength * 60f; } }
         public float BloodlustHaste { get { return bloodlustHaste; } }
@@ -148,39 +145,58 @@ namespace Rawr.Enhance
         private void SetupAbilities()
         {
             int priority = 0;
+            float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             if (_talents.FeralSpirit == 1)
-                abilities.Add(new Ability("Feral Spirits", 180f, ++priority));
+                abilities.Add(new Ability("Feral Spirits", 180f, 1.5f, ++priority));
             if (_talents.MaelstromWeapon > 0)
-                abilities.Add(new Ability("Lightning Bolt", SecondsToFiveStack, ++priority));
+                abilities.Add(new Ability("Lightning Bolt", SecondsToFiveStack, gcd, ++priority));
             if (_talents.Stormstrike == 1)
-                abilities.Add(new Ability("Stormstrike", 8f, ++priority));
-            abilities.Add(new Ability("Earth Shock", BaseShockSpeed, ++priority));
-            if (_talents.LavaLash == 1)
-                abilities.Add(new Ability("Lava Lash", 6f, ++priority));
-            if (_talents.StaticShock > 0)
-                abilities.Add(new Ability("Lightning Shield", StaticShockAvDuration, ++priority));
-            if (_calcOpts.Magma)
-                abilities.Add(new Ability("Magma Totem", 20f, ++priority));
+                abilities.Add(new Ability("Stormstrike", 8f, 1.5f, ++priority));
+            if (_character.ShamanTalents.GlyphofShocking)
+                abilities.Add(new Ability("Earth Shock", BaseShockSpeed, 1.0f, ++priority));
             else
-                abilities.Add(new Ability("Searing Totem", 60f, ++priority));
+                abilities.Add(new Ability("Earth Shock", BaseShockSpeed, gcd, ++priority));
+            if (_talents.LavaLash == 1)
+                abilities.Add(new Ability("Lava Lash", 6f, 1.5f, ++priority));
+            if (_talents.StaticShock > 0)
+                abilities.Add(new Ability("Lightning Shield", StaticShockAvDuration, gcd, ++priority));
+            if (_calcOpts.Magma)
+                abilities.Add(new Ability("Magma Totem", 20f, 1.0f, ++priority));
+            else
+                abilities.Add(new Ability("Searing Totem", 60f, 1.0f, ++priority));
+            abilities.Add(new Ability("Refresh Totems", 300f, 3.0f, ++priority)); // patch 3.1 takes 3 seconds GCD to refresh totems.
             abilities.Sort();
         }
 
         private void CalculateAbilities()
         {
-            _gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
-            for (float timeElapsed = 0f; timeElapsed < FightLength; timeElapsed += _gcd)
+            float gcd = 1.5f;
+            string name = "";
+            for (float timeElapsed = 0f; timeElapsed < FightLength; timeElapsed += gcd)
             {
+                gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
+                name = "deadtime";
                 foreach (Ability ability in abilities)
                 {
                     if (ability.OffCooldown(timeElapsed))
                     {
                         ability.AddUse(timeElapsed, _calcOpts.AverageLag / 1000f);
-                        if (ability.Name.EndsWith("Totem"))
-                            timeElapsed -= _gcd - 1; // if dropping a totem reduce next GCD to 1.0 seconds.
+                        gcd = ability.GCD;
+                        name = ability.Name;
                         break;
                     }
                 }
+ /*
+                   System.Diagnostics.Debug.Print("Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
+                   timeElapsed,
+                   abilities[0].Uses, abilities[0].CooldownOver,
+                   abilities[1].Uses, abilities[1].CooldownOver,
+                   abilities[2].Uses, abilities[2].CooldownOver,
+                   abilities[3].Uses, abilities[3].CooldownOver,
+                   abilities[4].Uses, abilities[4].CooldownOver,
+                   abilities[5].Uses, abilities[5].CooldownOver,
+                   abilities[6].Uses, abilities[6].CooldownOver, name);
+ */
             }
             // at this stage abilities now contains the number of procs per fight for each ability.
         }
@@ -423,18 +439,21 @@ namespace Rawr.Enhance
         private int _priority;
         private float _cooldownOver;
         private int _uses;
+        private float _gcd = 1.5f;
 
-        public Ability(string name, float duration, int priority)
+        public Ability(string name, float duration, float gcd, int priority)
         {
             _name = name;
             _duration = duration;
             _priority = priority;
+            _gcd = gcd;
             _cooldownOver = 0f;
             _uses = 0;
         }
 
         public string Name { get { return _name; } }
         public float Duration { get { return _duration; } }
+        public float GCD { get { return _gcd; } }
         public float CooldownOver { get { return _cooldownOver; } }
         public int Uses { get { return _uses; } }
 
