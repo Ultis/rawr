@@ -1,8 +1,96 @@
-Rawr v2.2.6.0
+Rawr v2.2.7.0
 ------------
-Welcome to Rawr 2.2.6.0.
+Welcome to Rawr 2.2.7.0.
    
 Recent Changes:
+ - Reordered/revised alot of things in the readme
+ - Improvements to alternate locale handling
+ - Rawr.Cat: Improvements to Ferocious Bite and HighestStat calculations
+ - Rawr.Bear: Fix for HighrstStat calculations
+ - Rawr.Enhance: Lots of accuracy improvements all around 
+ - Rawr.DPSWarr: Lots of accuracy improvements all around
+ - Rawr.DPSDK: Lots of accuracy improvements all around
+ - Rawr.TankDL: Initial pass at fixing all the calculations
+ - Rawr.Hunter: Lots of accuracy improvements all around, but still a work in progress
+ - Rawr.Healadin: Minor fix for burst ratings from procs. Initial implementation of 3.2 mode
+ - Rawr.Retribution: Initial implementation of 3.2 mode
+ 
+TEASER: We're working on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel.
+ 
+Instructions
+------------
+There's no installer for Rawr. Just unzip the zip anywhere you like, that you have full permissions to (that means NOT Program Files on Vista+), and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is available at http://www.codeplex.com/Rawr/ for you to review and/or to build yourself)
+
+Once you've got it running, you should see a basic character-screen-like layout of items. All slots will start out blank, so you can either start filling in items, or open an Armory profile. You'll probably want to open your own Armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If you'd like to edit the gems in an item, right click on it, hit edit, and change the gems.
+
+Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
+
+~Astrylian on Suramar, cnervig@hotmail.com
+
+
+Overview of Rawr
+----------------
+Rawr is a windows app, designed to help you create sets of gear for your WoW character. You can play with different items, enchants, and buffs, and see how they affect your stats and ratings. Based on your current stats, it will also display a graph of the value of known items for a selected slot, including multiple ratings relevant to your class/spec.
+
+How Rawr Handles Items
+----------------------
+Of paramount importance in an app like this is how it handles items. Nobody wants to type in the stats of all their items, let alone the stats of all the other prospective items for each slot. If you want to customize items, or create new ones (to prepare for test server changes, for example), you still can type in stats, but you don't have to. There are two ways to load Rawr's item database with new items:
+
+First, you can open an armory profile. Use File->Load from Armory..., type in a character name and server, and choose a region if necessary. It will load up and select all of the items used by that armory profile. Second, you can go to the item editor, choose add, and type in just the item id of an item you'd like to add. In both of these cases, the stats about each item is pulled from the Armory, so a web connection is required.
+
+When loading a character from the armory, or starting a new blank character, all buffs are turned off, so be sure to go check off what buffs you typicaly tank with, to ensure you get accurate ratings.
+
+Source Code
+-----------
+Rawr's source code is freely available at its website, http://www.codeplex.com/Rawr/ .
+
+Rawr on Mac OS X / Linux
+------------------------
+NOTE: Rawr v3 is currently in development, and will run natively on OSX Intel. Until then...
+
+You can run Rawr using Mono. Mono is a set of libraries that mimic the .NET Framework, which Rawr is built on, allowing it to run on OSX (and Linux). However, unfortunately, it's extremely buggy. If you want to give it a try, please do, it very well may work just fine for you. For most users, running Rawr via some form of emulation (Boot Camp, VMWare Fusion, Parallels, etc) will give you the best results, though. 
+
+That said, I'm doing what I can to make Rawr available to Mac users, and that means officially supporting running Rawr on OSX, via Mono. 
+
+How to Run Rawr on OSX:
+ 1) Install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. 
+	1a) NOTE: At time of writing, Mono v2.4 is the latest, however, it's broken; use Mono v2.2 if you have issues with the latest version.
+ 2) Unzip Rawr. 
+ 3) Open the Terminal, navigate to where you unzipped Rawr (look for basic guides to the Terminal, if you need help with that), and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. 
+ 
+Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono. I strongly suggest saving often for now.
+
+Known Issues:
+ - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take time.
+ - Mono has some crashing problems. Things will be running fine, then all of a sudden, the whole app'll close. I can try to work around these bugs in Mono, but it's going to take time. 
+ - Tooltips on labels don't work in Mono. I'll see if I can work around this for a later version. At least for stats, you can work around this by using the Copy Character Stats to Clipboard feature.
+ - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
+ - More issues, I'm sure.
+
+
+
+
+OLDER VERSION HISTORY
+---------------------
+v2.2.6.0
+ - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all 
+the 3.1 modeling changes.
+ - Fix for startup crash, also improved startup performance.
+ - Several new advanced options in the Optimizer and Batch Tools. Fix for Optimizer crashes.
+ - Rawr.Cat: Fix for FB damage calculations.
+ - Rawr.Hunter: Significant improvements all over.
+ - Rawr.Rogue: Further progress.
+ - Rawr.Mage: Correction to DoT overlap calculations.
+ - Rawr.DPSWarr: Further improvements to a variety of formulae and features.
+ - Rawr.Moonkin: Fix for 4T8 proc rate.
+ - Rawr.Healadin: Improvements to proc values. Fix for some base stats
+ - Rawr.Retribution: Improvements to proc values. Fix for a couple talent calculations.
+ - Rawr.ProtWarr: Improvements to proc values.
+ - Rawr.RestoSham: Updates to glyphs, and added healing stream calculations.
+ - Rawr.Elemental: Fix for haste valuing from buffs.
+ - Rawr.HolyPriest: Haste fixes and tweaks.
+ - Rawr.ShadowPriest: Haste fixes.
+ 
 v2.2.6.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all 
 the 3.1 modeling changes.
@@ -777,58 +865,6 @@ Beta 2a:
 Beta 2:
  -Initial Public Release
 
-
-Rawr on Mac OS X
-----------------
-In the last version, I began officially supporting Rawr on OSX, using Mono. But it became quickly apparent that Mono, currently, is extremely buggy. There's supposed to be a huge new version (2.0) of Mono coming soon, and we're all really hoping that it'll improve the situation alot. Until then, Rawr b15 should work just as well as b14 did, under Mono, so if you were using it that way, it should still work for you. And if you want to give it a try, please do, it very well may work just fine for you. For most users, running Rawr via some form of emulation (Boot Camp, VMWare Fusion, Parallels, etc) will give you the best results, though. 
-
-That said, I'm doing what I can to make Rawr available to Mac users, and that means officially supporting running Rawr on OSX, via Mono. 
-
-*>*>*> You no longer need CrossOver, nor do you need to have an intel-based Mac. <*<*<*
-
-How to Run Rawr on OSX:
- 1) Install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. 
- 2) Unzip Rawr. 
- 3) Open the Terminal, navigate to where you unzipped Rawr, and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. 
- 
-Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono. I strongly suggest saving often for now.
-
-Known Issues:
- - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take time.
- - Mono has some crashing problems. Things will be running fine, then all of a sudden, the whole app'll close. I can try to work around these bugs in Mono, but it's going to take time. 
- - Tooltips on labels don't work in Mono. I'll see if I can work around this for a later version. At least for stats, you can work around this by using the Copy Character Stats to Clipboard feature.
- - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
- - More issues, I'm sure.
-
-Source Code
------------
-Rawr's source code is freely available at its website, http://www.codeplex.com/Rawr/ .
-
-Overview of Rawr
-----------------
-Rawr is a windows app, designed to help you create sets of gear for your WoW character. You can play with different items, enchants, and buffs, and see how they affect your stats and ratings. Based on your current stats, it will also display a graph of the value of known items for a selected slot, including multiple ratings relevant to your class/spec.
-
-How Rawr Handles Items
-----------------------
-Of paramount importance in an app like this is how it handles items. Nobody wants to type in the stats of all their items, let alone the stats of all the other prospective items for each slot. If you want to customize items, or create new ones (to prepare for test server changes, for example), you still can type in stats, but you don't have to. There are two ways to load Rawr's item database with new items:
-
-First, you can open an armory profile. Use File->Load from Armory..., type in a character name and server, and choose a region if necessary. It will load up and select all of the items used by that armory profile. Second, you can go to the item editor, choose add, and type in just the item id of an item you'd like to add. In both of these cases, the stats about each item is pulled from the Armory, so a web connection is required.
-
-When loading a character from the armory, or starting a new blank character, all buffs are turned off, so be sure to go check off what buffs you typicaly tank with, to ensure you get accurate ratings.
-
-
-Instructions
-------------
-There's no installer for Rawr (at least, not yet). Just unzip the zip anywhere you like, and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is available at http://www.codeplex.com/Rawr/ for you to review and/or to build yourself)
-
-Once you've got it running, you should see a basic character-screen-like layout of items. All slots will start out blank, so you can either start filling in items, or open an armory profile. You'll probably want to open your own armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If you'd like to edit the gems in an item, right click on it, hit edit, and change the gems.
-
-Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
-
-
-
-That's about it, let me know how it works (or doesn't) for you! Thanks!
-~Astrylian on Eonar, cnervig@hotmail.com
 
 
 LICENSE
