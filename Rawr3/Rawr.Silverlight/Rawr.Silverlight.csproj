@@ -124,6 +124,9 @@
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Items\CustomItemInstance.xaml.cs">
+      <DependentUpon>CustomItemInstance.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GemmingTemplateItem.xaml.cs">
       <DependentUpon>GemmingTemplateItem.xaml</DependentUpon>
     </Compile>
@@ -138,6 +141,9 @@
     </Compile>
     <Compile Include="Dialogs\OptionsDialog.xaml.cs">
       <DependentUpon>OptionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\ItemContextMenu.xaml.cs">
+      <DependentUpon>ItemContextMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Items\ItemEditor.xaml.cs">
       <DependentUpon>ItemEditor.xaml</DependentUpon>
@@ -253,6 +259,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Items\CustomItemInstance.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\GemmingTemplateItem.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -270,6 +280,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\OptionsDialog.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\ItemContextMenu.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

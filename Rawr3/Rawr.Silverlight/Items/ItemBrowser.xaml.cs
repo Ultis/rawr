@@ -72,7 +72,7 @@ namespace Rawr.Silverlight
                 List<Item.ItemSlot> slots = new List<Item.ItemSlot>();
                 foreach (ListBoxItem lbi in SlotList.SelectedItems)
                 {
-                    slots.Add((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), lbi.Content.ToString(), false));
+                    slots.Add((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), lbi.Content.ToString().Replace(" ", ""), false));
                     items = items.Where(i => slots.Contains(i.Slot));
                 }
             }

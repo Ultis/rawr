@@ -348,6 +348,11 @@ namespace Rawr.Silverlight
             new OptimizeWindow(Character).Show();
         }
 
+        private void ShowHelp(string uri)
+        {
+            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri(uri, UriKind.Absolute), "_blank");
+        }
+
         private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (HelpMenu != null)
@@ -357,7 +362,14 @@ namespace Rawr.Silverlight
                 {
                     HelpMenu.IsDropDownOpen = false;
                     HelpMenu.SelectedIndex = 0;
-                    new ErrorWindow() { Message = "Not yet implemented." }.Show();
+                    if (newIndex == 1) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Help");
+                    else if (newIndex == 2) ShowHelp("http://www.youtube.com/watch?v=OjRM5SUoOoQ");
+                    else if (newIndex == 3) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Gemmings");
+                    else if (newIndex == 4) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=GearOptimization");
+                    else if (newIndex == 5) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering");
+                    else if (newIndex == 7) ShowHelp("http://rawr.codeplex.com/");
+                    else if (newIndex == 8) ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
+                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
         }

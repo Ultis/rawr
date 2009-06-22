@@ -19,7 +19,7 @@ namespace Rawr.Properties
             _default = new GeneralSettings();
 
             _default.CountGemmingsShown = 3;
-            _default.UseMultithreading = false;
+            _default.UseMultithreading = true;
             _default.Locale = "en";
             _default.DisplayBuffSource = false;
             _default.DisplayGemNames = false;

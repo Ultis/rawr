@@ -49,6 +49,7 @@ namespace Rawr.Silverlight
             set
             {
                 gear = value;
+                ComparisonGraph.Slot = gear;
                 UpdateGraph();
             }
         }

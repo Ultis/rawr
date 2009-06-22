@@ -186,6 +186,8 @@ namespace Rawr.Silverlight
                 Character.ToggleItemAvailability(ItemInstance, (Keyboard.Modifiers & ModifierKeys.Shift) == 0);
             else if (OtherItem != null && OtherItem.Id != 0)
                 Character.ToggleItemAvailability(OtherItem, (Keyboard.Modifiers & ModifierKeys.Shift) == 0);
+
+            e.Handled = true;
 		}
 	}
 }

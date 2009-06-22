@@ -16,6 +16,17 @@ namespace Rawr.Silverlight
 	public partial class ComparisonGraph : UserControl
 	{
 
+        private Character.CharacterSlot slot;
+        public Character.CharacterSlot Slot
+        {
+            get { return slot; }
+            set
+            {
+                slot = value;
+                ContextMenu.Slot = slot;
+            }
+        }
+
         private Character character;
         public Character Character
         {
@@ -23,8 +34,11 @@ namespace Rawr.Silverlight
             set
             {
                 character = value;
+                ContextMenu.Character = character;
                 if (comparisonItems != null)
+                {
                     foreach (ComparisonGraphItem cgi in comparisonItems) cgi.Character = character;
+                }
             }
         }
 
@@ -182,6 +196,7 @@ namespace Rawr.Silverlight
                     ItemStack.Children.Add(item);
                     item.NameGrid.MouseEnter += new MouseEventHandler(NameGrid_MouseEnter);
                     item.NameGrid.MouseLeave += new MouseEventHandler(NameGrid_MouseLeave);
+                    item.NameGrid.MouseLeftButtonDown += new MouseButtonEventHandler(NameGrid_MouseLeftButtonDown);
                 }
                 else item = comparisonItems[i];
 
@@ -203,6 +218,20 @@ namespace Rawr.Silverlight
             for (; i < comparisonItems.Count; i++) comparisonItems[i].Visibility = Visibility.Collapsed;
         }
 
+        private void NameGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Grid senderGrid = sender as Grid;
+            ComparisonCalculationBase calc = senderGrid.Tag as ComparisonCalculationBase;
+            if (calc.ItemInstance != null)
+            {
+                MainPage.Tooltip.Hide();
+                Point mousePoint = e.GetPosition(senderGrid);
+                ContextMenu.SelectedItemInstance = calc.ItemInstance;
+                ContextMenu.Show(senderGrid, mousePoint.X + 4, mousePoint.Y + 4);
+            }
+            e.Handled = true;
+        }
+
         private void NameGrid_MouseLeave(object sender, MouseEventArgs e)
         {
             MainPage.Tooltip.Hide();
@@ -211,7 +240,7 @@ namespace Rawr.Silverlight
         private void NameGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             ComparisonCalculationBase calc = ((Grid)sender).Tag as ComparisonCalculationBase;
-            if (calc.ItemInstance != null || calc.Item != null)
+            if ((calc.ItemInstance != null || calc.Item != null) && (!ContextMenu.IsShown))
             {
                 if (calc.ItemInstance != null) MainPage.Tooltip.ItemInstance = calc.ItemInstance;
                 else MainPage.Tooltip.Item = calc.Item;

@@ -1,0 +1,1305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ItemFilterData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RelevantItemTypes>
+    <item>
+      <key>
+        <string>Mage</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>Dagger</ItemType>
+          <ItemType>OneHandSword</ItemType>
+          <ItemType>Staff</ItemType>
+          <ItemType>Wand</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Bear</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>Leather</ItemType>
+          <ItemType>Staff</ItemType>
+          <ItemType>Polearm</ItemType>
+          <ItemType>TwoHandMace</ItemType>
+          <ItemType>Idol</ItemType>
+          <ItemType>None</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>HolyPriest</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>Dagger</ItemType>
+          <ItemType>Wand</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>Staff</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>ShadowPriest</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>Dagger</ItemType>
+          <ItemType>Wand</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>Staff</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Healadin</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>Plate</ItemType>
+          <ItemType>Mail</ItemType>
+          <ItemType>Leather</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Shield</ItemType>
+          <ItemType>Libram</ItemType>
+          <ItemType>OneHandAxe</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>OneHandSword</ItemType>
+          <ItemType>TwoHandAxe</ItemType>
+          <ItemType>TwoHandMace</ItemType>
+          <ItemType>TwoHandSword</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Cat</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Leather</ItemType>
+          <ItemType>Idol</ItemType>
+          <ItemType>Staff</ItemType>
+          <ItemType>TwoHandMace</ItemType>
+          <ItemType>Polearm</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Tree</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>Leather</ItemType>
+          <ItemType>Dagger</ItemType>
+          <ItemType>FistWeapon</ItemType>
+          <ItemType>Idol</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>TwoHandMace</ItemType>
+          <ItemType>Staff</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+  </RelevantItemTypes>
+  <RegexList>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Dungeons</Name>
+      <Pattern>(?&lt;! Heroic (The )?)Oculus|(?&lt;! Heroic )Azjol-Nerub|(?&lt;! Heroic )Ahn'kahet|(?&lt;! Heroic )Drak'Tharon|(?&lt;! Heroic )Gundrak|(?&lt;! Heroic (CoT: )?)Stratholme|(?&lt;! Heroic (The )?)Nexus|(?&lt;! Heroic (The )?)Violet Hold|(?&lt;! Heroic )Halls of Lightning|(?&lt;! Heroic )Halls of Stone|(?&lt;! Heroic )Utgarde Keep|(?&lt;! Heroic )Utgarde Pinnacle</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Heroic Dungeons</Name>
+      <Pattern>Heroic (The )?Oculus|Heroic Azjol-Nerub|Heroic Ahn'kahet|Heroic Drak'Tharon|Heroic Gundrak|Heroic (CoT: )?Stratholme|Heroic (The )?Nexus|Heroic (The )?Violet Hold|Heroic Halls of Lightning|Heroic Halls of Stone|Heroic Utgarde Keep|Heroic Utgarde Pinnacle</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Tier 7 Raids</Name>
+      <Pattern>(?&lt;! Heroic )Naxxramas|(?&lt;! Heroic.*)Eye of Eternity|(?&lt;! Heroic (The )?)Obsidian Sanctum|(?&lt;! Heroic )Archavon</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Heroic Tier 7 Raids</Name>
+      <Pattern>Heroic Naxxramas|Heroic.*Eye of Eternity|Heroic (The )?Obsidian Sanctum|Heroic Archavon</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList>
+        <ItemFilterRegex>
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Flame Leviathan</Name>
+              <Pattern>Flame Leviathan</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Ignis the Furnace Master</Name>
+              <Pattern>Ignis the Furnace Master</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Razorscale</Name>
+              <Pattern>Razorscale</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>XT-002 Deconstructor</Name>
+              <Pattern>XT-002 Deconstructor</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Assembly of Iron</Name>
+              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Kologarn</Name>
+              <Pattern>Cache of Living Stone</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Auriaya</Name>
+              <Pattern>Auriaya</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Mimiron</Name>
+              <Pattern>Cache of Innovation</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Hodir</Name>
+              <Pattern>Cache of Winter</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Thorim</Name>
+              <Pattern>Cache of Storms</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Freya</Name>
+              <Pattern>Freya's Gift</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>General Vezax</Name>
+              <Pattern>General Vezax</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Yogg-Saron</Name>
+              <Pattern>Yogg-Saron</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Algalon the Observer</Name>
+              <Pattern>Algalon the Observer</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Normal Ulduar</Name>
+          <Pattern />
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>219</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Flame Leviathan</Name>
+              <Pattern>Flame Leviathan</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Ignis the Furnace Master</Name>
+              <Pattern>Ignis the Furnace Master</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Razorscale</Name>
+              <Pattern>Razorscale</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>XT-002 Deconstructor</Name>
+              <Pattern>XT-002 Deconstructor</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Assembly of Iron</Name>
+              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Kologarn</Name>
+              <Pattern>Cache of Living Stone</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Auriaya</Name>
+              <Pattern>Auriaya</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Mimiron</Name>
+              <Pattern>Cache of Innovation</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Hodir</Name>
+              <Pattern>Cache of Winter</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Thorim</Name>
+              <Pattern>Cache of Storms</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Freya</Name>
+              <Pattern>Freya's Gift</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>General Vezax</Name>
+              <Pattern>General Vezax</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Yogg-Saron</Name>
+              <Pattern>Yogg-Saron</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Algalon the Observer</Name>
+              <Pattern>Algalon the Observer</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Hard Ulduar</Name>
+          <Pattern />
+          <MinItemLevel>220</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+      </RegexList>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Tier 8 Raids</Name>
+      <Pattern>(?&lt;! Heroic )Ulduar</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList>
+        <ItemFilterRegex>
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Flame Leviathan</Name>
+              <Pattern>Flame Leviathan</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Ignis the Furnace Master</Name>
+              <Pattern>Ignis the Furnace Master</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Razorscale</Name>
+              <Pattern>Razorscale</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>XT-002 Deconstructor</Name>
+              <Pattern>XT-002 Deconstructor</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Assembly of Iron</Name>
+              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Kologarn</Name>
+              <Pattern>Cache of Living Stone</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Auriaya</Name>
+              <Pattern>Auriaya</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Mimiron</Name>
+              <Pattern>Cache of Innovation</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Hodir</Name>
+              <Pattern>Cache of Winter</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Thorim</Name>
+              <Pattern>Cache of Storms</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Freya</Name>
+              <Pattern>Freya's Gift</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>General Vezax</Name>
+              <Pattern>General Vezax</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Yogg-Saron</Name>
+              <Pattern>Yogg-Saron</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Algalon the Observer</Name>
+              <Pattern>Algalon the Observer</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Normal Ulduar</Name>
+          <Pattern />
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>232</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Flame Leviathan</Name>
+              <Pattern>Flame Leviathan</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Ignis the Furnace Master</Name>
+              <Pattern>Ignis the Furnace Master</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Razorscale</Name>
+              <Pattern>Razorscale</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>XT-002 Deconstructor</Name>
+              <Pattern>XT-002 Deconstructor</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Assembly of Iron</Name>
+              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Kologarn</Name>
+              <Pattern>Cache of Living Stone</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Auriaya</Name>
+              <Pattern>Auriaya</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Mimiron</Name>
+              <Pattern>Cache of Innovation</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Hodir</Name>
+              <Pattern>Cache of Winter</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Thorim</Name>
+              <Pattern>Cache of Storms</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Freya</Name>
+              <Pattern>Freya's Gift</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>General Vezax</Name>
+              <Pattern>General Vezax</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Yogg-Saron</Name>
+              <Pattern>Yogg-Saron</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Algalon the Observer</Name>
+              <Pattern>Algalon the Observer</Pattern>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Hard Ulduar</Name>
+          <Pattern />
+          <MinItemLevel>233</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+      </RegexList>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Heroic Tier 8 Raids</Name>
+      <Pattern>Heroic Ulduar</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Emblem of Heroism</Name>
+      <Pattern>Emblem of Heroism</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Emblem of Valor</Name>
+      <Pattern>Emblem of Valor|Brasael</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Emblem of Conquest</Name>
+      <Pattern>Emblem of Conquest</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Crafted</Name>
+      <Pattern>Created|(?&lt;!Bop )Crafted</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>PVP</Name>
+      <Pattern>Points|Griz Gutshank|Hall of Legends|Champions' Hall|Argex Irongut|Mark of Honor</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>World Drop</Name>
+      <Pattern>World Drop</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Engineer</Name>
+      <Pattern>BoP crafted Engineering</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Tailoring</Name>
+      <Pattern>BoP crafted Tailoring</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Jewelcrafting</Name>
+      <Pattern>BoP crafted Jewelcrafting</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Inscription</Name>
+      <Pattern>BoP crafted Inscription</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Blacksmithing</Name>
+      <Pattern>BoP crafted Blacksmithing</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Alchemy</Name>
+      <Pattern>BoP crafted Alchemy</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Faction</Name>
+      <Pattern>Friendly|Honored|Revered|Exalted|Duchess Mynx|Archmage Alvareaux|Cielstrasza|Tanak|Geen|Veteran Crusader Aliocha Segard|Lillehoff</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Quest</Name>
+      <Pattern>Reward from</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Unknown</Name>
+      <Pattern>please refresh|not found on armory</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Classic</Name>
+      <Pattern>Zul'Gurub|Ahn'Qiraj</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>false</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Burning Crusade</Name>
+      <Pattern>Sunwell|Yrma|Theremis|Tydormu|Black Temple|Hyjal|Veynna Dawnstar|Tempest Keep|Serpentshrine Cavern|Zul'Aman|G'eras|Anwehu|Badge of Justice|Asuur|Karazhan|Gruul's Lair|Magtheridon's Lair|Old Hillsbrad Foothills|Blood Furnace|Slave Pens|Arcatraz|Underbog|Shattered Halls|Hellfire Ramparts|Magisters' Terrace|Auchenai Crypts|Shadow Labyrinth|Sethekk Halls|Steamvault|Mana-Tombs|Botanica|Mechanar|Black Morass|Spirit Shard|Forgotten Vanquisher</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>false</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Hide Unavailable Gems</Name>
+      <Pattern>Unknown Location</Pattern>
+      <MinItemLevel>80</MinItemLevel>
+      <MaxItemLevel>80</MaxItemLevel>
+      <MinItemQuality>Epic</MinItemQuality>
+      <MaxItemQuality>Epic</MaxItemQuality>
+      <AdditiveFilter>false</AdditiveFilter>
+      <AppliesToItems>false</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+  </RegexList>
+  <OtherRegexEnabled>true</OtherRegexEnabled>
+</ItemFilterData>

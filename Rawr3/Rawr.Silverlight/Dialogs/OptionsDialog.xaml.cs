@@ -17,6 +17,7 @@ namespace Rawr.Silverlight
         {
             InitializeComponent();
 
+            MultiThreadingCheck.IsChecked = GeneralSettings.Default.UseMultithreading;
             WarningsCheck.IsChecked = OptimizerSettings.Default.WarningsEnabled;
             TemplateGemsCheck.IsChecked = OptimizerSettings.Default.TemplateGemsEnabled;
             switch (OptimizerSettings.Default.OptimizationMethod)
@@ -48,6 +49,7 @@ namespace Rawr.Silverlight
         {
             OptimizerSettings.Default.TemplateGemsEnabled = TemplateGemsCheck.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.WarningsEnabled = WarningsCheck.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.UseMultithreading = MultiThreadingCheck.IsChecked.GetValueOrDefault();
             switch (OptimizationMethodCombo.SelectedIndex)
             {
                 case 0:
