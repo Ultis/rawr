@@ -714,34 +714,35 @@ namespace Rawr.DPSWarr {
             public float LandedAtksPerSec { get; set; }
             public float FreeRage { get { return FREERAGE; } set { EXECUTE.FreeRage = value; FREERAGE = value; } }
             // Functions
-            public override float MaxActivates { get { return GetMaxActivates(true); } }
-            public float GetMaxActivates(bool Override) {
-                if (!GetValided()) { return 0f; }
+            public override float MaxActivates {
+                get {
+                    if (!GetValided()) { return 0f; }
 
-                // ACTUAL CALCS
-                float talent = 3f * Talents.SuddenDeath / 100f;
-                float hitspersec = (Override ? 1f : LandedAtksPerSec);
-                float latency = 1.5f * latencyMOD;
-                float mod = 1f;// 100f;
-                float acts = talent * hitspersec * latency * mod;
-                // END ACTUAL CALCS */
+                    // ACTUAL CALCS
+                    float talent = 3f * Talents.SuddenDeath / 100f;
+                    float hitspersec = (LandedAtksPerSec == 0 ? 1f : LandedAtksPerSec);
+                    float latency = 1.5f * latencyMOD;
+                    float mod = 1f;// 100f;
+                    float acts = talent * hitspersec * latency * mod;
+                    // END ACTUAL CALCS */
 
-                /*float fightDuration = CalcOpts.Duration;
-                float hasteBonus = StatConversion.GetPhysicalHasteFromRating(combatFactors.TotalHaste, Character.CharacterClass.Warrior);
-                hasteBonus = (1f + hasteBonus) * (1f + combatFactors.TotalHaste) * (1f + StatS.Bloodlust * 40f / fightDuration) - 1f;
-                float meleeHitsPerSecond = 1f / 1.5f;
-                if (Char.MainHand != null && Char.MainHand.Speed > 0f){ meleeHitsPerSecond += (1f / Char.MainHand.Speed) * (1f + hasteBonus); }
-                if (Char.OffHand  != null && Char.OffHand.Speed  > 0f){ meleeHitsPerSecond += (1f / Char.OffHand.Speed ) * (1f + hasteBonus); }
-                float meleeHitInterval = 1f / meleeHitsPerSecond;
-                float baseWeaponSpeed = Char.MainHand != null ? Char.MainHand.Speed : 3f;
+                    /*float fightDuration = CalcOpts.Duration;
+                    float hasteBonus = StatConversion.GetPhysicalHasteFromRating(combatFactors.TotalHaste, Character.CharacterClass.Warrior);
+                    hasteBonus = (1f + hasteBonus) * (1f + combatFactors.TotalHaste) * (1f + StatS.Bloodlust * 40f / fightDuration) - 1f;
+                    float meleeHitsPerSecond = 1f / 1.5f;
+                    if (Char.MainHand != null && Char.MainHand.Speed > 0f){ meleeHitsPerSecond += (1f / Char.MainHand.Speed) * (1f + hasteBonus); }
+                    if (Char.OffHand  != null && Char.OffHand.Speed  > 0f){ meleeHitsPerSecond += (1f / Char.OffHand.Speed ) * (1f + hasteBonus); }
+                    float meleeHitInterval = 1f / meleeHitsPerSecond;
+                    float baseWeaponSpeed = Char.MainHand != null ? Char.MainHand.Speed : 3f;
 
-                SpecialEffect SuddenDeath = new SpecialEffect(Trigger.MeleeHit,
-                    new Stats() { BonusCritChance = 0f, },
-                    1f, 1.5f, Talents.SuddenDeath * (3f / 100f));
-                float procs = SuddenDeath.GetAverageProcsPerSecond(meleeHitInterval, 1f, baseWeaponSpeed, CalcOpts.Duration);
+                    SpecialEffect SuddenDeath = new SpecialEffect(Trigger.MeleeHit,
+                        new Stats() { BonusCritChance = 0f, },
+                        1f, 1.5f, Talents.SuddenDeath * (3f / 100f));
+                    float procs = SuddenDeath.GetAverageProcsPerSecond(meleeHitInterval, 1f, baseWeaponSpeed, CalcOpts.Duration);
 
-                return procs / 1.5f;//*/
-                return acts;
+                    return procs / 1.5f;//*/
+                    return acts;
+                }
             }
             public override float Damage {
                 get {
@@ -1128,12 +1129,7 @@ namespace Rawr.DPSWarr {
             private float OVERRIDESPERSEC;
             // Get/Set
             public float OverridesPerSec { get { return OVERRIDESPERSEC; } set { OVERRIDESPERSEC = value; } }
-            public virtual float FullRageCost {
-                get {
-                    return RageCost
-                        + Whiteattacks.GetSwingRage(combatFactors.MainHand, true);
-                }
-            }
+            public virtual float FullRageCost { get { return RageCost + Whiteattacks.GetSwingRage(combatFactors.MainHand, true); } }
             // Functions
             public override float Activates {
                 get {
@@ -1634,7 +1630,7 @@ namespace Rawr.DPSWarr {
                     new Stats() { ArmorPenetration = 0.04f, },
                     Duration, Cd, 1f, 5);
             }
-            public override float Activates { get { return base.Activates * Cd / Duration; } }
+            public override float MaxActivates { get { return base.Activates * Cd / Duration; } }
         }
         public class ShatteringThrow : BuffEffect {
             // Constructors

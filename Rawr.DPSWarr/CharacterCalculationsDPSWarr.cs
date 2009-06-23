@@ -128,7 +128,7 @@ namespace Rawr.DPSWarr {
                                 BasicStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
                                 ArmorPenetrationStance,
                                 ArmorPenetrationMaceSpec));
-            dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
+            //dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
             dictValues.Add("Hit Rating",
                 string.Format("{0}*{1:0.00%} Increased Chance to hit" +
                                 Environment.NewLine + "{2:0.00%} : From Other Bonuses" +
@@ -177,11 +177,12 @@ namespace Rawr.DPSWarr {
                                 WhiteDPS,WhiteDmg,WhiteRage,0f,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
             dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}*"+Rot.GCDUsage, TotalDPS,TotalDPS*BT.RotationLength,TotalDPS*Duration));
             // Rage
-            dictValues.Add("Generated White DPS Rage",  string.Format("{0:00.000}",WhiteRage));
-            dictValues.Add("Generated Other Rage",      string.Format("{0:00.000}",OtherRage));
-            dictValues.Add("Total Generated Rage",      string.Format("{0:00.000}",WhiteRage+OtherRage));
-            dictValues.Add("Needed Rage for Abilities", string.Format("{0:00.000}",NeedyRage));
-            dictValues.Add("Available Free Rage",       string.Format("{0:00.000}",FreeRage ));
+            format = "{0:00.000}";
+            dictValues.Add("Generated White DPS Rage",  string.Format(format,WhiteRage));
+            dictValues.Add("Generated Other Rage",      string.Format(format,OtherRage));
+            dictValues.Add("Total Generated Rage",      string.Format(format,WhiteRage+OtherRage));
+            dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
+            dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
             
             return dictValues;
         }

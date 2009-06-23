@@ -102,13 +102,13 @@ namespace Rawr.DPSWarr {
                         "Base Stats:Strength*1 STR = 2 AP x Kings Buff",
                         "Base Stats:Attack Power*2 AP is just 2 AP, go for STR",
                         "Base Stats:Agility",
-                        "Base Stats:Haste",
                         "Base Stats:Crit",
+                        "Base Stats:Haste",
                         @"Base Stats:Armor Penetration*Rating to Cap with bonuses applied
 1232-None
 1109-Arms(123)
 0924-Arms(123)+Mace(185)",
-                        "Base Stats:Damage Reduction*Should be exact opposite of ArP in Percentage (%)",
+                        //"Base Stats:Damage Reduction*Should be exact opposite of ArP in Percentage (%)",
                         @"Base Stats:Hit Rating*8.00% chance to miss base for Yellow Attacks
 Precision 0- 8%-0%=8%=262 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
@@ -333,22 +333,29 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
 
-            calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
-            calculatedStats.OtherRage = Rot.OtherRageGenPerSec();
-            calculatedStats.NeedyRage = Rot.neededRagePerSecond();
-            calculatedStats.FreeRage = Rot.freeRage();
-
             if (calcOpts.FuryStance) {
                 calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH
                     + calculatedStats.BT.DPS + calculatedStats.WW.DPS + calculatedStats.BS.DPS
                     + calculatedStats.DW.DPS + calculatedStats.MS.DPS + calculatedStats.SD.DPS
                     + calculatedStats.SL.DPS + calculatedStats.OP.DPS + calculatedStats.RD.DPS
                     + calculatedStats.HS.DPS + calculatedStats.BLS.DPS;
-            } else {
+            }else{
                 calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
                     calculatedStats.Rot._DW_DPS + calculatedStats.Rot._OVD_DPS/*+ calculatedStats.HS.DPS*/;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
+
+            if (calcOpts.FuryStance) {
+                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
+                calculatedStats.OtherRage = Rot.RageGenOtherPerSec;
+                calculatedStats.NeedyRage = Rot.RageNeededPerSec;
+                calculatedStats.FreeRage = Rot.freeRage;
+            }else{
+                calculatedStats.WhiteRage = Rot.RageGenWhite;
+                calculatedStats.OtherRage = Rot.RageGenOther;
+                calculatedStats.NeedyRage = Rot.RageNeeded;
+                calculatedStats.FreeRage = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
+            }
 
             return calculatedStats;
         }
@@ -610,7 +617,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float haste2PT8Bonus = 0f;
             if (statsTotal.BonusWarrior2PT8Haste > 0f){
                 //approximate the number of Heroic Strike crits and slam crits that are done in the 10 sec proc of the 2-piece T8 haste buff
-                Skills.Ability sl = new Skills.Slam(character, statsTotal, combatFactors, whiteAttacks);
+                //Skills.Ability sl = new Skills.Slam(character, statsTotal, combatFactors, whiteAttacks);
                 float hsSlamPerProc = Rot.GetCritHsSlamPerSec() * 10f;
                 
                 //calculate the average uptime of the 2P T8 buff, and scale the haste bonus to match
@@ -631,11 +638,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus) * (1f - combatFactors.WhMissChance); }
             if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus) * (1f - combatFactors.WhMissChance); }
             
-            float mhHitInterval = 1f / mhHitsPerSecond;
-            float ohHitInterval = 1f / ohHitsPerSecond;
-            float bothHitInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond);
+            float mhHitInterval    = 1f /  mhHitsPerSecond;
+            float ohHitInterval    = 1f /  ohHitsPerSecond;
+            float bothHitInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond);
             float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-            float dmgDoneInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
+            float dmgDoneInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
             Stats statsProcs = new Stats();
             Stats bersStats = null;
@@ -709,6 +716,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
+            statsProcs.Strength += statsProcs.HighestStat;
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
             statsProcs.AttackPower += statsProcs.Strength * 2f;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
@@ -814,7 +822,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.MortalstrikeBloodthirstCritIncrease +
                 stats.BonusSlamDamage +
                 stats.BloodlustProc +
-                stats.DarkmoonCardDeathProc
+                stats.DarkmoonCardDeathProc + 
+                stats.HighestStat
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
