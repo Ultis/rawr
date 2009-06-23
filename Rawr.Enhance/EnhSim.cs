@@ -93,8 +93,6 @@ namespace Rawr.Enhance
             {
                 if (character.OffHand.Type == Item.ItemType.OneHandAxe)
                     weaponType = "axe";
-                else if (character.OffHand.Type == Item.ItemType.TwoHandAxe)
-                    weaponType = "axe";
             }
             sb.AppendLine("oh_weapon                       " + weaponType);
             sb.AppendLine();
