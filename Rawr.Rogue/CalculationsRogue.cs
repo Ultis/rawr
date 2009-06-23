@@ -334,7 +334,7 @@ namespace Rawr.Rogue
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats
+            var relevantStats = new Stats
                        {
                            Agility = stats.Agility,
                            Strength = stats.Strength,
@@ -387,6 +387,21 @@ namespace Rawr.Rogue
                            RogueT8TwoPieceBonus = stats.RogueT8TwoPieceBonus,
                            RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus
                        };
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.DamageDone)
+                {
+                    if (HasRelevantStats(effect.Stats))
+                    {
+                        relevantStats.AddSpecialEffect(effect);
+                    }
+                }
+            }
+
+            return relevantStats;
         }
 
         public override bool IsEnchantRelevant(Enchant enchant)
@@ -408,7 +423,7 @@ namespace Rawr.Rogue
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return
+            var relevant = 
                 (
                     stats.Agility +
                     stats.Strength +
@@ -461,6 +476,21 @@ namespace Rawr.Rogue
                     stats.RogueT8TwoPieceBonus +
                     stats.RogueT8FourPieceBonus
                 ) != 0;
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.DamageDone)
+                {
+                    relevant |= HasRelevantStats(effect.Stats);
+                    if (relevant)
+                    {
+                        break;
+                    }
+                }
+            }
+            return relevant;
         }
 
         public override List<string> GetRelevantGlyphs()
