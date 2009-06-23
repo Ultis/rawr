@@ -104,8 +104,9 @@ namespace Rawr.RestoSham
                 if (_subpointColors == null)
                 {
                     _subpointColors = new Dictionary<string, System.Drawing.Color>();
-                    _subpointColors.Add("Healing", System.Drawing.Color.Green);
-                    _subpointColors.Add("Mana Usable", System.Drawing.Color.Blue);
+                    _subpointColors.Add("Burst", System.Drawing.Color.Red);
+                    _subpointColors.Add("Sustained", System.Drawing.Color.Blue);
+                    _subpointColors.Add("Survival", System.Drawing.Color.Green);
                 }
                 return _subpointColors;
             }
@@ -123,6 +124,12 @@ namespace Rawr.RestoSham
                 if (_characterDisplayCalcLabels == null)
                 {
                     _characterDisplayCalcLabels = new string[] {
+                          "Totals:Total HPS*This is averaged including the time you are OOM and your overhealing %, acutal HPS during is below",
+                          "Totals:Time to OOM*In Seconds",
+                          "Totals:Total Healed*Includes Burst and Sustained",
+                          "Totals:HPS - Burst",
+                          "Totals:HPS - Sustained",
+                          "Totals:Survival",
                           "Basic Stats:Health",
                           "Basic Stats:Mana",
                           "Basic Stats:Stamina",
@@ -131,10 +138,8 @@ namespace Rawr.RestoSham
                           "Basic Stats:MP5*Mana regeneration while casting",
                           "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
                           "Basic Stats:Spell Haste",
-                          "Totals:Total HPS*This is averaged including the time you are OOM and your overhealing %, acutal HPS during is below",
-                          "Totals:Time to OOM*In Seconds",
-                          "Totals:Total Healed*Includes Burst and Sustained",
                           "Healing Style Breakdowns:Chosen Sequence",
+                          "Healing Style Breakdowns:Mana Usable per Second",
                           "Healing Style Breakdowns:Healing Stream HPS",
                           "Healing Style Breakdowns:RT+HW Spam HPS",
                           "Healing Style Breakdowns:RT+HW Spam MPS",
@@ -159,9 +164,9 @@ namespace Rawr.RestoSham
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-                    "Health",
                     "Haste %",
                     "Crit %",
+                    "Mana Usable per Second",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -173,7 +178,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-                return new string[]{"Stat Relative Weights"};
+                return new string[]{"Mana Usable per Second - NYI"};
             }
         }
 
@@ -522,9 +527,16 @@ namespace Rawr.RestoSham
             if (calcStats.TillOOM > (60 * options.FightLength))
                 calcStats.TillOOM = 60 * options.FightLength;
             calcStats.TotalHPS = calcStats.FightHPS;
+            calcStats.MUPS = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / (60f * options.FightLength);
             calcStats.TotalHealed = (calcStats.FightHPS * (calcStats.TillOOM / (options.FightLength * 60f))) * (options.FightLength * 60f);
-            calcStats.OverallPoints = calcStats.TotalHealed / 10f;
-            calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
+            calcStats.BurstHPS = calcStats.TotalHealed / (options.FightLength * 60);
+            calcStats.SustainedHPS = calcStats.TotalHealed / (options.FightLength * 60);
+            calcStats.Survival = calcStats.BasicStats.Health * .02f;
+            calcStats.OverallPoints = calcStats.BurstHPS + calcStats.SustainedHPS + calcStats.Survival;
+            calcStats.SubPoints[0] = calcStats.BurstHPS;
+            calcStats.SubPoints[1] = calcStats.SustainedHPS;
+            calcStats.SubPoints[2] = calcStats.Survival;
+            calcStats.SubPoints[3] = calcStats.MUPS;
 
             return calcStats;
             #endregion
@@ -624,23 +636,23 @@ namespace Rawr.RestoSham
             List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
             switch (chartName)
             {
-                case "Stat Relative Weights":
+                case "Mana Usable per Second - NYI":
                     StatRelativeWeight[] stats = new StatRelativeWeight[] {
-                      new StatRelativeWeight("Int", new Stats() { Intellect = 10f }),
-                      new StatRelativeWeight("Haste", new Stats() { HasteRating = 10f }),
-                      new StatRelativeWeight("+Heal", new Stats() { SpellPower = 10f}),
-                      new StatRelativeWeight("Mp5", new Stats() { Mp5 = 10f }),
-                      new StatRelativeWeight("Spell Crit", new Stats() { CritRating = 10f })};
+                      new StatRelativeWeight("10 Intellect", new Stats() { Intellect = 10f }),
+                      new StatRelativeWeight("10 Haste Rating", new Stats() { HasteRating = 10f }),
+                      new StatRelativeWeight("10 Spellpower", new Stats() { SpellPower = 10f}),
+                      new StatRelativeWeight("10 MP5", new Stats() { Mp5 = 10f }),
+                      new StatRelativeWeight("10 Crit Rating", new Stats() { CritRating = 10f })};
 
                     // Get the percentage total healing is changed by a change in a single stat:
 
-                    float healPct = 0f;
+                    float mpsPct = 0f;
                     foreach (StatRelativeWeight weight in stats)
                     {
                         CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character, null, weight.Stat);
-                        weight.PctChange = ((statCalc.TotalHealed - calc.TotalHealed) / calc.TotalHealed);
-                        if (weight.Name == "+Heal")
-                            healPct = weight.PctChange;
+                        weight.PctChange = ((statCalc.MUPS - calc.MUPS) / calc.MUPS);
+                        if (weight.Name == "+MUPS")
+                            mpsPct = weight.PctChange;
                     }
 
                     // Create the chart data points:
@@ -648,8 +660,7 @@ namespace Rawr.RestoSham
                     foreach (StatRelativeWeight weight in stats)
                     {
                         ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(weight.Name);
-                        comp.OverallPoints = weight.PctChange / healPct;
-                        comp.SubPoints[0] = comp.OverallPoints;
+                        comp.OverallPoints = weight.PctChange / mpsPct;
                         list.Add(comp);
                     }
 

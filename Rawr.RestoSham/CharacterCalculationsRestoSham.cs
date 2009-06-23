@@ -13,7 +13,7 @@ namespace Rawr.RestoSham
         }
 
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -39,6 +39,7 @@ namespace Rawr.RestoSham
         public float TillOOM { get; set; }
         public float FightHPS { get; set; }
         public string ChosenSequence { get; set; }
+        public float MUPS { get; set; }
         public float HSTHeals { get; set; }
         public float HWSpamHPS { get; set; }
         public float HWSpamMPS { get; set; }
@@ -52,11 +53,20 @@ namespace Rawr.RestoSham
         public float RTLHWMPS { get; set; }
         public float RTCHHPS { get; set; }
         public float RTCHMPS { get; set; }
+        public float BurstHPS { get; set; }
+        public float SustainedHPS { get; set; }
+        public float Survival { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
-
+            
+            values.Add("Total HPS", Math.Round(TotalHPS, 0).ToString());
+            values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
+            values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
+            values.Add("HPS - Burst", Math.Round(BurstHPS, 0).ToString());
+            values.Add("HPS - Sustained", Math.Round(SustainedHPS, 0).ToString());
+            values.Add("Survival", Math.Round(Survival, 0).ToString());
             values.Add("Health", Math.Round(BasicStats.Health, 0).ToString());
             values.Add("Stamina", Math.Round(BasicStats.Stamina, 0).ToString());
             values.Add("Intellect", Math.Round(BasicStats.Intellect, 0).ToString());
@@ -67,10 +77,8 @@ namespace Rawr.RestoSham
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
                        Math.Round(SpellHaste * 100, 2),BasicStats.HasteRating.ToString()));
-            values.Add("Total HPS", Math.Round(TotalHPS, 0).ToString());
-            values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
-            values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
             values.Add("Chosen Sequence", ChosenSequence.ToString());
+            values.Add("Mana Usable per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
             values.Add("RT+HW Spam HPS", Math.Round(RTHWHPS, 0).ToString());
             values.Add("RT+HW Spam MPS", Math.Round(RTHWMPS, 0).ToString());
@@ -95,6 +103,8 @@ namespace Rawr.RestoSham
                     return FightHPS;
                 case "Time to OOM":
                     return TillOOM;
+                case "Mana Usable per Second":
+                    return MUPS;
                 case "Health":
                     return BasicStats.Health;
                 case "Haste %":
