@@ -268,6 +268,12 @@ namespace Rawr {
         RTCDDecrease,
         CHCTDecrease,
         Earthliving,
+        TotemCHBaseHeal,
+        TotemHWBaseCost,
+        TotemCHBaseCost,
+        TotemHWSpellpower,
+        TotemLHWSpellpower,
+        TotemThunderhead,
         #endregion
         #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
@@ -3239,6 +3245,43 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Earthliving]; }
             set { _rawAdditiveData[(int)AdditiveStat.Earthliving] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("RestoSham")]
+        public float TotemCHBaseHeal
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemCHBaseHeal]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemCHBaseHeal] = value; }
+        }
+        [Category("RestoSham")]
+        public float TotemHWBaseCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemHWBaseCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemHWBaseCost] = value; }
+        }
+        [Category("RestoSham")]
+        public float TotemCHBaseCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemCHBaseCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemCHBaseCost] = value; }
+        }
+        [Category("RestoSham")]
+        public float TotemHWSpellpower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemHWSpellpower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemHWSpellpower] = value; }
+        }
+        [Category("RestoSham")]
+        public float TotemLHWSpellpower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemLHWSpellpower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemLHWSpellpower] = value; }
+        }
+        [Category("RestoSham")]
+        public float TotemThunderhead
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemThunderhead]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemThunderhead] = value; }
         }
         #endregion
         #region Added by Rawr.ProtPaladin

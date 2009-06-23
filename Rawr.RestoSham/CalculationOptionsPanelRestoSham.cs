@@ -51,34 +51,6 @@ namespace Rawr.RestoSham
             #endregion
             #region Glyphs Page:
             #endregion
-            #region Relics Page:
-            // Check for what totem is equipped and check the appropriate option on the totems page
-            if (Character != null && Character.Ranged != null)
-            {
-                foreach (Control groupControl in this.RelicsPage.Controls)
-                {
-                    if (groupControl is GroupBox)
-                    {
-                        foreach (Control c in groupControl.Controls)
-                        {
-                            if (c is CheckBox && c.Tag != null)
-                            {
-                                if (Character.Ranged.Item.Name == ((CheckBox)c).Text)
-                                {
-                                    ((CheckBox)c).Checked = true;
-                                    this[c.Tag.ToString()] = true;
-                                }
-                                else
-                                {
-                                    ((CheckBox)c).Checked = false;
-                                    this[c.Tag.ToString()] = false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion
 
             _bLoading = false;
         }
@@ -242,47 +214,6 @@ namespace Rawr.RestoSham
         }
         #endregion
 
-        #region Relic CheckBox Handling
-        private void Relic_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                if (sender is CheckBox)
-                {
-                    CheckBox cb = sender as CheckBox;
-                    if (cb.Tag == null)
-                        return;
-
-                    string key = cb.Tag.ToString();
-                    this[key] = cb.Checked;
-                    
-                    // Uncheck all other options
-                    _bLoading = true;
-                    foreach (Control groupControl in this.RelicsPage.Controls)
-                    {
-                        if (groupControl is GroupBox)
-                        {
-                            foreach (Control c in groupControl.Controls)
-                            {
-                                if (c is CheckBox)
-                                {
-                                    CheckBox cb2 = c as CheckBox;
-                                    if (cb2.Checked && cb2.Tag != null && cb2.Name != cb.Name)
-                                    {
-                                        this[c.Tag.ToString()] = false;
-                                        cb2.Checked = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    _bLoading = false;
-
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-        #endregion
 
         #region Combo Box Handling
         private void cboHealingStyle_TextChanged(object sender, EventArgs e)

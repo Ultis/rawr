@@ -995,6 +995,44 @@ namespace Rawr
                 }
             }
             #endregion
+            #region Added by Rawr.RestoSham
+            else if (line.StartsWith("Increases the base amount healed by your chain heal by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases the base amount healed by your chain heal by ".Length);
+                stats.TotemCHBaseHeal = float.Parse(line); // Steamcaller's Totem & Totem of the Bay
+            }
+            else if (line.StartsWith("Reduces the mana cost of Healing Wave by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Reduces the mana cost of Healing Wave by ".Length);
+                stats.TotemHWBaseCost = float.Parse(line); // Totem of Misery
+            }
+            else if (line.StartsWith("Reduces the base mana cost of Chain Heal by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Reduces the base mana cost of Chain Heal by ".Length);
+                stats.TotemCHBaseCost = float.Parse(line); // Totem of Forest Growth (old, Totem of Healing Rains)
+            }
+            else if (line.StartsWith("Increases spell power of Healing Wave by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Healing Wave by ".Length);
+                stats.TotemHWSpellpower = float.Parse(line); // Totem of Spontaneous Regrowth
+            }
+            else if (line.StartsWith("Increases spell power of Lesser Healing Wave by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Lesser Healing Wave by ".Length);
+                stats.TotemLHWSpellpower = float.Parse(line); // Totem of the Plains, Possible Future totems
+            }
+            else if (line.StartsWith("Your Water Shield ability grants an additional "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Your Water Shield ability grants an additional ".Length);
+                stats.TotemThunderhead = 1f; // Totem of the Thunderhead, Possible Future totems
+            }
+            #endregion
             else if (line.StartsWith("Reduces the mana cost of your spells by "))
             {
                 line = line.Replace(".", "");
