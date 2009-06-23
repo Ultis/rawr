@@ -460,6 +460,15 @@ namespace Rawr.Retribution
                         trigger = rot.GetJudgementCD();
                         procChance = rot.Judge.ChanceToLand();
                     }
+                    else if (effect.Trigger == Trigger.SealOfVengeanceTick)
+                    {
+                        if (calcOpts.Seal == SealOf.Vengeance)
+                        {
+                            trigger = (float)Math.Min(4, calcOpts.Targets) / 3f;
+                            procChance = 1f;
+                        }
+                        else continue;
+                    }
                     else if (effect.Trigger == Trigger.Use)
                     {
                         trigger = 0f;
@@ -633,7 +642,7 @@ namespace Rawr.Retribution
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust +
-                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower +
+                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
@@ -686,7 +695,9 @@ namespace Rawr.Retribution
                 CrusaderStrikeCrit = stats.CrusaderStrikeCrit,
                 ExorcismMultiplier = stats.ExorcismMultiplier,
                 HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
-                CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier
+                CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier,
+                JudgementCrit = stats.JudgementCrit,
+                RighteousVengeanceCanCrit = stats.RighteousVengeanceCanCrit,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -698,7 +709,7 @@ namespace Rawr.Retribution
         public bool HasRelevantSpecialEffect(SpecialEffect effect)
         {
             if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit|| effect.Trigger == Trigger.MeleeHit
-                || effect.Trigger == Trigger.CrusaderStrikeHit || effect.Trigger == Trigger.PhysicalCrit
+                || effect.Trigger == Trigger.CrusaderStrikeHit || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.SealOfVengeanceTick
                 || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit)
             {
                 Stats stats = effect.Stats;
@@ -714,7 +725,7 @@ namespace Rawr.Retribution
                 stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
-                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower +
+                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.Bloodlust) > 0;

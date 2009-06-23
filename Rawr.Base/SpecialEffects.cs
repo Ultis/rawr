@@ -930,6 +930,10 @@ namespace Rawr
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ShieldFromHealed = .15f }, 15f, 45f, .1f));
             }
+            else if (line == "Each time your Seal of Vengeance ability deals periodic damage, you have a chance to gain 200 strength for 16 sec.")
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SealOfVengeanceTick, new Stats() { Strength = 200 }, 16, 45, .2f));
+            }
             #region Added by Rawr.ProtPaladin
             else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
             {

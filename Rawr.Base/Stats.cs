@@ -303,6 +303,7 @@ namespace Rawr {
         CrusaderStrikeDamage,
         ConsecrationSpellPower,
         JudgementCDReduction,
+        JudgementCrit,
         #endregion
         #region Added by Rawr.ProtPaladin
         DivineProtectionDurationBonus,
@@ -474,7 +475,7 @@ namespace Rawr {
         HighestStat,
         ManacostReduceWithin15OnUse1Min,
         ShieldFromHealed,
-
+        RighteousVengeanceCanCrit,
         NUM_NonStackingStat // This should always be the last entry.
     }
 
@@ -2665,6 +2666,24 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction] = value; }
         }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Righteous Vengeance Can Crit")]
+        [Category("Retribution")]
+        public float RighteousVengeanceCanCrit
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.RighteousVengeanceCanCrit]; }
+            set { _rawNoStackData[(int)NonStackingStat.RighteousVengeanceCanCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Judgement Crit")]
+        [Category("Retribution")]
+        public float JudgementCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementCrit] = value; }
+        }        
         #endregion
         #region Added by Rawr.Healadin
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -80,7 +80,18 @@ namespace Rawr.Retribution
 
         public float CritBonus()
         {
-            float rightVen = RighteousVengeance ? 1f + .1f * Talents.RighteousVengeance : 1f;
+            float rightVen = 1;
+            if (RighteousVengeance)
+            {
+                if (Stats.RighteousVengeanceCanCrit != 0)
+                {
+                    rightVen += .1f * Talents.RighteousVengeance * (1f + Stats.PhysicalCrit);
+                }
+                else
+                {
+                    rightVen += .1f * Talents.RighteousVengeance;
+                }
+            }
             if (AbilityType == AbilityType.Spell)
             {
                 return 1.5f * (1f + Stats.BonusSpellCritMultiplier) * rightVen;
@@ -144,7 +155,7 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
-            return Talents.Fanaticism * .06f;
+            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
         }
 
     }
@@ -156,14 +167,14 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * .24f + Stats.SpellPower * .25f + Stats.AttackPower * .16f)
+            return (Combats.WeaponDamage * .19f + Stats.SpellPower * .13f + Stats.AttackPower * .08f)
                 * (1f + .05f * Talents.TheArtOfWar)
                 * (Talents.GlyphOfJudgement ? 1.1f : 1f);
         }
 
         public override float AbilityCritChance()
         {
-            return Talents.Fanaticism * .06f;
+            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
         }
 
     }
@@ -183,7 +194,7 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
-            return Talents.Fanaticism * .06f;
+            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
         }
 
     }
@@ -203,7 +214,7 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
-            return Talents.Fanaticism * .06f;
+            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
         }
 
     }
@@ -334,7 +345,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return CalcOpts.Mode32
-                ? (Combats.WeaponDamage + .36f) 
+                ? (Combats.WeaponDamage * .36f) 
                 : ((Combats.WeaponDamage + Stats.SpellPower * .23f) * .45f);
         }
 
@@ -364,7 +375,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return 5f * (Stats.SpellPower * 0.013f + Stats.AttackPower * 0.025f)
+            return 5f * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 6f
                 * (1f + .03f * Talents.SealsOfThePure);
         }
 

@@ -87,16 +87,16 @@ namespace Rawr.Retribution
 
         public float SealProcsPerSec()
         {
-            if (Seal.GetType() == typeof(SealOfCommand))
-            {
-                float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
-                float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
-                return 1f / timeBetweenProcs;
-            }
-            else
-            {
+            //if (Seal.GetType() == typeof(SealOfCommand))
+            //{
+            //    float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
+            //    float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
+            //    return 1f / timeBetweenProcs;
+            //}
+            //else
+            //{
                 return GetMeleeAttacksPerSec();
-            }
+            //}
         }
 
         public abstract float GetMeleeAttacksPerSec();
@@ -147,9 +147,10 @@ namespace Rawr.Retribution
 
         public override float GetMeleeAttacksPerSec()
         {
-            return Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets()
-                + Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets()
-                + White.ChanceToLand() / Combats.AttackSpeed;
+            float cs = Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets();
+            float ds = Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets();
+            float white = White.ChanceToLand() / Combats.AttackSpeed;
+            return cs + ds + white;
         }
 
         public override float GetMeleeCritsPerSec()
