@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    class CharacterCalculationsMoonkin : CharacterCalculationsBase
+    public class CharacterCalculationsMoonkin : CharacterCalculationsBase
     {
         private float overallPoints = 0f;
         public override float OverallPoints { get { return overallPoints; } set { overallPoints = value; } }

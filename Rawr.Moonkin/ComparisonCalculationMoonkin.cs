@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    class ComparisonCalculationMoonkin : ComparisonCalculationBase
+    public class ComparisonCalculationMoonkin : ComparisonCalculationBase
     {
         private string name = String.Empty;
         public override string Name

@@ -5,15 +5,8 @@ using System.Text;
 namespace Rawr.Moonkin
 {
 	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", Character.CharacterClass.Druid)]
-	class CalculationsMoonkin : CalculationsBase
+	public class CalculationsMoonkin : CalculationsBase
     {
-        public override bool SupportsMultithreading
-        {
-            get
-            {
-                return false;
-            }
-        }
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -181,6 +174,22 @@ namespace Rawr.Moonkin
         //public static float intPerCritPercent = 166.0f + (2 / 3.0f);
         public static float BaseMana = 3496.0f;
         //public static float ManaRegenConstant = 0.005575f * 0.6f;
+#if SILVERLIGHT
+        private Dictionary<string, System.Windows.Media.Color> subColors = null;
+        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+        {
+            get
+            {
+                if (subColors == null)
+                {
+                    subColors = new Dictionary<string, System.Windows.Media.Color>();
+                    subColors.Add("Sustained Damage", System.Windows.Media.Color.FromArgb(255, 0, 0, 255));
+                    subColors.Add("Burst Damage", System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+                }
+                return subColors;
+            }
+        }
+#else
         private Dictionary<string, System.Drawing.Color> subColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -195,6 +204,7 @@ namespace Rawr.Moonkin
                 return subColors;
             }
         }
+#endif
 
         private string[] characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
@@ -276,8 +286,13 @@ namespace Rawr.Moonkin
             }
         }
 
+#if SILVERLIGHT
+        private ICalculationOptionsPanel calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         private CalculationOptionsPanelBase calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get
             {

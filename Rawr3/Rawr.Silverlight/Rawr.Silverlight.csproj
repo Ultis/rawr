@@ -424,6 +424,10 @@
       <Project>{F0F978C4-0F75-4487-B29C-C9C1AE726EC5}</Project>
       <Name>Rawr.Mage</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Moonkin\Rawr.Moonkin.csproj">
+      <Project>{7C127814-1ABF-4A8A-A644-577769226EA5}</Project>
+      <Name>Rawr.Moonkin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.csproj">
       <Project>{F515017D-CBC1-40E8-9E73-33AF171D697E}</Project>
       <Name>Rawr.Retribution</Name>

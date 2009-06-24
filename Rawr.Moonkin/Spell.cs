@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    enum SpellSchool
+    public enum SpellSchool
     {
         Arcane,
         Nature
     }
-    class Spell
+    public class Spell
     {
         public Spell() { AllDamageModifier = 1.0f; CriticalDamageModifier = 1.0f; }
         public Spell(Spell copy)
@@ -43,7 +43,7 @@ namespace Rawr.Moonkin
         public float NGCastTime { get; set; }
         public float ManaCost { get; set; }
     }
-    class DotEffect
+    public class DotEffect
     {
         public DotEffect() { AllDamageModifier = 1.0f; }
         public DotEffect(DotEffect copy)
@@ -93,7 +93,7 @@ namespace Rawr.Moonkin
         // Section for variables which get filled in during rotation calcs
         public float DamagePerHit { get; set; }
     }
-    class RotationData
+    public class RotationData
     {
         public float BurstDPS = 0.0f;
         public float DPS = 0.0f;
@@ -103,21 +103,21 @@ namespace Rawr.Moonkin
         public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
     }
 
-    // Define delegate types for proc effect class
+    // Define delegate types for proc effect public class
     // Enable and disable the effect of the proc.  These two delegates should perform exact opposite operations.
-    delegate void Activate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
-    delegate void Deactivate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    public delegate void Activate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    public delegate void Deactivate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
     // Calculate the uptime of the effect.  This will be used to weight the proc when calculating the rotational DPS.
-    delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs);
+    public delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs);
     // Optional calculations for complicated proc effects like Eclipse or trinkets that proc additional damage.
     // The return value of this calculation will be ADDED to the rotational DPS.
-    delegate float CalculateDPS(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
+    public delegate float CalculateDPS(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
     // The return value of this calculation will be used to adjust the mana statistics of the rotation.
-    delegate float CalculateMP5(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
+    public delegate float CalculateMP5(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
 
-    // The proc effect class itself.
+    // The proc effect public class itself.
     // NOTE: Adding constructor with special effect to allow efficient construction of the proc list in a loop.
-    class ProcEffect
+    public class ProcEffect
     {
         public ProcEffect() { }
         public ProcEffect(SpecialEffect effect)
@@ -291,9 +291,9 @@ namespace Rawr.Moonkin
         public CalculateMP5 CalculateMP5 { get; set; }
     }
 
-    // Combination generator class
-    // Helper class to generate all possible combinations of proc effects to mathematically account for interactions.
-    class CombinationGenerator
+    // Combination generator public class
+    // Helper public class to generate all possible combinations of proc effects to mathematically account for interactions.
+    public class CombinationGenerator
     {
         int[] a;
         int n;
@@ -363,12 +363,18 @@ namespace Rawr.Moonkin
     }
 
     // Our old friend the spell rotation.
-    class SpellRotation
+    public class SpellRotation
     {
         public MoonkinSolver Solver { get; set; }
         private Spell LocateSpell(Spell[] SpellData, string name)
         {
-            return Array.Find<Spell>(SpellData, delegate(Spell sp) { return sp.Name == name; });
+            foreach (Spell sp in SpellData)
+            {
+                if (sp.Name == name)
+                    return sp;
+            }
+            return null;
+            //return Array.Find<Spell>(SpellData, delegate(Spell sp) { return sp.Name == name; });
         }
         public List<string> SpellsUsed;
         public RotationData RotationData = new RotationData();
@@ -791,8 +797,8 @@ namespace Rawr.Moonkin
         }
     }
 
-    // The interface class to the rest of Rawr.  Provides a single Solve method that runs all the calculations.
-    class MoonkinSolver
+    // The interface public class to the rest of Rawr.  Provides a single Solve method that runs all the calculations.
+    public class MoonkinSolver
     {
         // A list of all currently active proc effects.
         public List<ProcEffect> procEffects;
@@ -1075,10 +1081,21 @@ namespace Rawr.Moonkin
                             keyCount = innerVals.Count;
                             newSign = -newSign;
                         }
-                        if (vals.TrueForAll(delegate(int val)
+
+                        /*if (vals.TrueForAll(delegate(int val)
                         {
                             return innerVals.Contains(val);
-                        }))
+                        }))*/
+                        bool containsAll = true;
+                        foreach (int val in vals)
+                        {
+                            if (!innerVals.Contains(val))
+                            {
+                                containsAll = false;
+                                break;
+                            }
+                        }
+                        if (containsAll)
                         {
                             cachedUptimes[vals] += newSign * cachedUptimes[innerVals];
                         }
