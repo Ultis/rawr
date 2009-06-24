@@ -375,7 +375,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return 5f * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 6f
+            return 5f * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f
                 * (1f + .03f * Talents.SealsOfThePure);
         }
 
@@ -392,9 +392,11 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return CalcOpts.Mode32
-                ? ((Combats.WeaponDamage * 0.33f) * (1f + .03f * Talents.SealsOfThePure))
+                ? (Combats.WeaponDamage * 0.33f)
                 : 0f;
         }
+
+        public override float ChanceToLand() { return 1f; }
     }  
 
     public class White : Skill
