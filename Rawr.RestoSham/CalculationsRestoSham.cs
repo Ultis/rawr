@@ -536,7 +536,6 @@ namespace Rawr.RestoSham
             calcStats.SubPoints[0] = calcStats.BurstHPS;
             calcStats.SubPoints[1] = calcStats.SustainedHPS;
             calcStats.SubPoints[2] = calcStats.Survival;
-            calcStats.SubPoints[3] = calcStats.MUPS;
 
             return calcStats;
             #endregion

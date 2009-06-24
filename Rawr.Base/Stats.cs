@@ -3266,36 +3266,47 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.Earthliving] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Base Healing to CH")]
         [Category("RestoSham")]
         public float TotemCHBaseHeal
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemCHBaseHeal]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemCHBaseHeal] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("HW Cost Reduction:")]
         [Category("RestoSham")]
         public float TotemHWBaseCost
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemHWBaseCost]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemHWBaseCost] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("CH Cost Reduction:")]
         [Category("RestoSham")]
         public float TotemCHBaseCost
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemCHBaseCost]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemCHBaseCost] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("HW Spellpower added:")]
         [Category("RestoSham")]
         public float TotemHWSpellpower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemHWSpellpower]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemHWSpellpower] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("LHW Spellpower added:")]
         [Category("RestoSham")]
         public float TotemLHWSpellpower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemLHWSpellpower]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemLHWSpellpower] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Thunderhead Effect")]
         [Category("RestoSham")]
         public float TotemThunderhead
         {
