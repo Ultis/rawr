@@ -614,18 +614,18 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Rot.Initialize();
 
             float fightDuration = calcOpts.Duration;
-            float haste2PT8Bonus = 0f;
-            if (statsTotal.BonusWarrior2PT8Haste > 0f){
+            //float haste2PT8Bonus = 0f;
+            //if (statsTotal.BonusWarrior2PT8Haste > 0f) {
                 //approximate the number of Heroic Strike crits and slam crits that are done in the 10 sec proc of the 2-piece T8 haste buff
                 //Skills.Ability sl = new Skills.Slam(character, statsTotal, combatFactors, whiteAttacks);
-                float hsSlamPerProc = Rot.GetCritHsSlamPerSec() * 10f;
+                //float hsSlamPerProc = Rot.CritHsSlamPerSec * 10f;
                 
                 //calculate the average uptime of the 2P T8 buff, and scale the haste bonus to match
-                float procChance = 0.4f;
-                haste2PT8Bonus = statsTotal.BonusWarrior2PT8Haste * (1f - (float)Math.Pow(1f - procChance, hsSlamPerProc));
-            }
+                //float procChance = 0.4f;
+                //haste2PT8Bonus = statsTotal.BonusWarrior2PT8Haste * (1f - (float)Math.Pow(1f - procChance, hsSlamPerProc));
+            //}
 
-            statsTotal.HasteRating += haste2PT8Bonus;
+            //statsTotal.HasteRating += haste2PT8Bonus;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
             float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
@@ -693,6 +693,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             break;
                     }
                 }
+            }
+            if (statsTotal.BonusWarrior2PT8Haste > 0f)
+            {
+                SpecialEffect hasteBonusEffect = new SpecialEffect(Trigger.MeleeHit,
+                    new Stats() { HasteRating = statsTotal.BonusWarrior2PT8Haste },
+                    5f, // duration
+                    0f // cooldown
+                );
+
+                statsProcs += hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec, 1f, combatFactors.MainHand.Speed, fightDuration);
             }
             // Warrior Abilities as SpecialEffects
             float IntenseCDMod = 1f - (1f/9f)*talents.IntensifyRage;

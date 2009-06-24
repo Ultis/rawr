@@ -214,7 +214,7 @@ namespace Rawr.DPSWarr {
                 DamageBonus = 0f;
                 HealingBase = 0f;
                 HealingBonus = 0f;
-                CritPercBonus = 0.00f;
+                BonusCritChance = 0.00f;
             }
             #region Variables
             private string NAME;
@@ -222,7 +222,7 @@ namespace Rawr.DPSWarr {
             private float DAMAGEBONUS;
             private float HEALINGBASE;
             private float HEALINGBONUS;
-            private float CRITPERCBONUS;
+            private float BONUSCRITCHANCE;
             private bool CANBEDODGED;
             private bool CANBEPARRIED;
             private bool CANBEBLOCKED;
@@ -268,7 +268,7 @@ namespace Rawr.DPSWarr {
             public float DamageBonus { get { return DAMAGEBONUS; } set { DAMAGEBONUS = value; } }
             public float HealingBase { get { return HEALINGBASE; } set { HEALINGBASE = value; } }
             public float HealingBonus { get { return HEALINGBONUS; } set { HEALINGBONUS = value; } }
-            public float CritPercBonus { get { return CRITPERCBONUS; } set { CRITPERCBONUS = value; } }
+            public float BonusCritChance { get { return BONUSCRITCHANCE; } set { BONUSCRITCHANCE = value; } }
             public bool StanceOkFury { get { return STANCEOKFURY; } set { STANCEOKFURY = value; } }
             public bool StanceOkArms { get { return STANCEOKARMS; } set { STANCEOKARMS = value; } }
             public bool StanceOkDef { get { return STANCEOKDEF; } set { STANCEOKDEF = value; } }
@@ -347,7 +347,7 @@ namespace Rawr.DPSWarr {
 
                     float Crit = 0f;
                     // Following keeps the crit perc between 0f and 1f (0%-100%)
-                    Crit = (float)Math.Max(0f, (float)Math.Min(1f, combatFactors.MhYellowCrit + CritPercBonus));
+                    Crit = (float)Math.Max(0f, (float)Math.Min(1f, combatFactors.MhYellowCrit + BonusCritChance));
 
                     // Work the Attack Table
                     dmg *= (1f
@@ -423,7 +423,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = true;
                 DamageBase = StatS.AttackPower * 50f / 100f;
                 DamageBonus = Talents.UnendingFury * 0.02f;
-                CritPercBonus = StatS.MortalstrikeBloodthirstCritIncrease;
+                BonusCritChance = StatS.MortalstrikeBloodthirstCritIncrease;
             }
             // Variables
             private float DURATION;
@@ -677,7 +677,7 @@ namespace Rawr.DPSWarr {
                 DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
                 DamageBonus = Talents.ImprovedMortalStrike / 3f * 0.1f +
                               (Talents.GlyphOfMortalStrike ? 0.1f : 0f);
-                CritPercBonus = StatS.MortalstrikeBloodthirstCritIncrease;
+                BonusCritChance = StatS.MortalstrikeBloodthirstCritIncrease;
             }
             // Variables
             // Get/Set
@@ -775,7 +775,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = true;
                 DamageBase = combatFactors.NormalizedMhWeaponDmg;
                 DamageBonus = (0.1f * Talents.UnrelentingAssault);
-                CritPercBonus = 0.25f * Talents.ImprovedOverpower;
+                BonusCritChance = 0.25f * Talents.ImprovedOverpower;
             }
             // Variables
             // Get/Set
@@ -931,7 +931,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = 300f + StatS.AttackPower * 0.12f;
                 DamageBonus = Talents.ImprovedThunderClap * 0.10f;
-                CritPercBonus = Talents.Incite * 0.05f;
+                BonusCritChance = Talents.Incite * 0.05f;
             }
             // Variables
             // Get/Set
@@ -1163,7 +1163,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
                 DamageBase = combatFactors.AvgMhWeaponDmg + 495f;
-                CritPercBonus = Talents.Incite * 0.05f;
+                BonusCritChance = Talents.Incite * 0.05f;
             }
             // Variables
             // Get/Set
@@ -1191,7 +1191,7 @@ namespace Rawr.DPSWarr {
                 bloodsurgeRPS = 0.0f;
                 DamageBase = combatFactors.AvgMhWeaponDmg + 222f;
                 DamageBonus = Talents.ImprovedCleave * 0.40f;
-                CritPercBonus = Talents.Incite * 0.05f;
+                BonusCritChance = Talents.Incite * 0.05f;
             }
             // Variables
             // Get/Set

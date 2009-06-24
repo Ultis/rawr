@@ -199,17 +199,30 @@ namespace Rawr.DPSWarr {
             return result;
         }
         public float GetLandedAtksPerSec() { return GetLandedAtksPerSecNoSS(); }// TODO: add swordspec to this
-        public float GetCritHsSlamPerSec() {
-            Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
-            float MS_Acts = MS.Activates;
-            float OP_Acts = OP.Activates;
-            float SD_Acts = SD.Activates;
-            float HS_Acts = Which.Activates;
-            float SL_Acts = MS.RotationLength / 1.5f - MS_Acts - OP_Acts - SD_Acts;
+        public float CritHsSlamPerSec {
+            get
+            {
+                if (CalcOpts.FuryStance)
+                {
+                    float critsPerRot = HS.Activates * (CombatFactors.MhYellowCrit + HS.BonusCritChance) + 
+                                        SL.Activates * (CombatFactors.MhYellowCrit + SL.BonusCritChance);
+                    return critsPerRot / HS.RotationLength;
+                }
+                else
+                {
+                    Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
+                    float MS_Acts = MS.Activates;
+                    float OP_Acts = OP.Activates;
+                    float SD_Acts = SD.Activates;
+                    float HS_Acts = Which.Activates;
+                    float SL_Acts = MS.RotationLength / 1.5f - MS_Acts - OP_Acts - SD_Acts;
 
-            float result = COMBATFACTORS.MhYellowCrit * (SL_Acts / Which.RotationLength + HS_Acts / Which.RotationLength);
+                    float result = (SL.BonusCritChance + CombatFactors.MhYellowCrit) * (SL_Acts / Which.RotationLength) +
+                                   (HS.BonusCritChance + CombatFactors.MhYellowCrit) * (HS_Acts / Which.RotationLength);
 
-            return result;
+                    return result;
+                }
+            }
         }
         #endregion
         #region Rage Calcs
