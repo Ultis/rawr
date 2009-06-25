@@ -37,6 +37,7 @@ namespace Rawr.DPSDK
         public Boolean GlyphofIT = false;
         public Boolean GlyphofFS = false;
         public Boolean managedRP = false;
+        public Boolean PTRCalcs = false;
         public float GCDTime;
         public float RP;
 
@@ -97,33 +98,65 @@ namespace Rawr.DPSDK
 
         public float manageRPDumping(DeathKnightTalents talents, float RP)
         {
-            if (talents.DancingRuneWeapon > 0f)
+            #region non-ptr
+            if (!PTRCalcs)
             {
-                RP = RP - curRotationDuration * ((100f + 15f * talents.RunicPowerMastery) / 90f);
+                if (talents.DancingRuneWeapon > 0f)
+                {
+                    RP = RP - curRotationDuration * ((100f + 15f * talents.RunicPowerMastery) / 90f);
+                }
+                if (talents.FrostStrike > 0f)
+                {
+                    FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
+                    DeathCoil = 0f;
+                    UnholyBlight = 0f;
+                    RP = 0f;
+                }
+                else if (talents.UnholyBlight > 0f)
+                {
+                    UnholyBlight = curRotationDuration / (talents.GlyphofUnholyBlight ? 30f : 20f);
+                    RP -= UnholyBlight * 40f;
+                    DeathCoil = RP / 40f;
+                    FrostStrike = 0f;
+                    RP = 0f;
+                }
+                else
+                {
+                    DeathCoil = RP / 40f;
+                    FrostStrike = 0f;
+                    UnholyBlight = 0f;
+                    RP = 0f;
+                }
             }
-            if (talents.FrostStrike > 0f)
-            {
-                FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
-                DeathCoil = 0f;
-                UnholyBlight = 0f;
-                RP = 0f;
-            }
-            else if (talents.UnholyBlight > 0f)
-            {
-                UnholyBlight = curRotationDuration / (talents.GlyphofUnholyBlight ? 30f : 20f);
-                RP -= UnholyBlight * 40f;
-                DeathCoil = RP / 40f;
-                FrostStrike = 0f;
-                RP = 0f;
-            }
+            #endregion
+            #region 3.2 PTR
             else
             {
-                DeathCoil = RP / 40f;
-                FrostStrike = 0f;
-                UnholyBlight = 0f;
-                RP = 0f;
+                if (talents.DancingRuneWeapon > 0f)
+                {
+                    RP -= curRotationDuration * (60f / 90f);
+                }
+                if (talents.SummonGargoyle > 0f)
+                {
+                    RP -= curRotationDuration * (60f / 180f);
+                    GargoyleDuration = 30f;
+                }
+                if (talents.FrostStrike > 0f)
+                {
+                    FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
+                    DeathCoil = 0f;
+                    UnholyBlight = 0f;
+                    RP = 0f;
+                }
+                else
+                {
+                    DeathCoil = RP / 40f;
+                    FrostStrike = 0f;
+                    UnholyBlight = 0f;
+                    RP = 0f;
+                }
             }
-
+            #endregion
             return RP;
         }
 

@@ -253,7 +253,6 @@ namespace Rawr.DPSDK
         public bool DrumsOfBattle = false;
         public bool DrumsOfWar = false;
         public int FerociousInspiration = 1;
-        public bool HammerOfWrath = false;
         public bool Ghoul = false;
         public float BloodwormsUptime = 0.25f;
         public float GhoulUptime = 1f;

@@ -77,6 +77,7 @@
             this.txtHoW = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.cbManagedRP = new System.Windows.Forms.CheckBox();
+            this.PTRCalcs = new System.Windows.Forms.CheckBox();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -546,11 +547,24 @@
             this.cbManagedRP.UseVisualStyleBackColor = true;
             this.cbManagedRP.CheckedChanged += new System.EventHandler(this.cbManagedRP_CheckedChanged);
             // 
+            // PTRCalcs
+            // 
+            this.PTRCalcs.AutoSize = true;
+            this.PTRCalcs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PTRCalcs.Location = new System.Drawing.Point(180, 91);
+            this.PTRCalcs.Name = "PTRCalcs";
+            this.PTRCalcs.Size = new System.Drawing.Size(136, 17);
+            this.PTRCalcs.TabIndex = 80;
+            this.PTRCalcs.Text = "Enable 3.2 calculations";
+            this.PTRCalcs.UseVisualStyleBackColor = true;
+            this.PTRCalcs.CheckedChanged += new System.EventHandler(this.PTRCalcs_CheckedChanged);
+            // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(352, 424);
+            this.Controls.Add(this.PTRCalcs);
             this.Controls.Add(this.cbManagedRP);
             this.Controls.Add(this.txtHoW);
             this.Controls.Add(this.label22);
@@ -659,5 +673,6 @@
         private System.Windows.Forms.TextBox txtHoW;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.CheckBox cbManagedRP;
+        private System.Windows.Forms.CheckBox PTRCalcs;
     }
 }

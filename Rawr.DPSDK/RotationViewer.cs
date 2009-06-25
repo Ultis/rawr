@@ -80,6 +80,7 @@ namespace Rawr.DPSDK
             txtUptime.Text = rotation.diseaseUptime.ToString();
             txtHoW.Text = rotation.Horn.ToString();
             cbManagedRP.Checked = rotation.managedRP;
+            PTRCalcs.Checked = rotation.PTRCalcs;
             txtGargoyleDuration.Text = rotation.GargoyleDuration.ToString();
             if (rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
             {
@@ -505,6 +506,12 @@ namespace Rawr.DPSDK
                 txtFS.Text = rotation.FrostStrike.ToString();
                 txtDC.Text = rotation.DeathCoil.ToString();
                 txtUB.Text = rotation.UnholyBlight.ToString();
+        }
+
+        private void PTRCalcs_CheckedChanged(object sender, EventArgs e)
+        {
+            rotation.PTRCalcs = PTRCalcs.Checked;
+            updateLabels();
         }
     }
 }
