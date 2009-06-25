@@ -1144,7 +1144,7 @@ namespace Rawr
                 if (match.Success)
                 {
                     string statName = match.Groups["stat"].Value;
-                    float amount = float.Parse(match.Groups["amount"].Value);
+                    float amount = float.Parse(match.Groups["amount"].Value, System.Globalization.CultureInfo.InvariantCulture);
                     string ability = match.Groups["ability"].Value;
                     //string ability2 = match.Groups["ability2"].Value;
 

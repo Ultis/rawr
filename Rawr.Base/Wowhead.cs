@@ -1290,6 +1290,30 @@ namespace Rawr
                 case "430":
                     stats.SpellPower += 9;
                     break;
+                case "440":
+                    stats.SpellPower += 9;
+                    break;
+                case "1587":
+                    stats.AttackPower += 12;
+                    break;
+                case "1589":
+                    stats.AttackPower += 16;
+                    break;
+                case "1597":
+                    stats.AttackPower += 32;
+                    break;
+                case "1886":
+                    stats.Stamina += 9;
+                    break;
+                case "2314":
+                    stats.SpellPower += 9;
+                    break;
+                case "2370":
+                    stats.Mp5 += 3;
+                    break;
+                case "2767":
+                    stats.HitRating += 8;
+                    break;
                 case "2770":
                     stats.SpellPower += 7;
                     break;
@@ -1305,6 +1329,9 @@ namespace Rawr
                 case "2843":
                     stats.CritRating += 8;
                     break;
+                case "2844":
+                    stats.HitRating += 8;
+                    break;
                 case "2854":
                     stats.Mp5 += 3;
                     break;
@@ -1319,6 +1346,9 @@ namespace Rawr
                     break;
                 case "2869":
                     stats.Intellect += 4;
+                    break;
+                case "2871":
+                    stats.DodgeRating += 4;
                     break;
                 case "2872":
                     stats.SpellPower += 5;
@@ -1403,6 +1433,9 @@ namespace Rawr
                     break;
                 case "3303":
                     stats.HasteRating += 8;
+                    break;
+                case "3304":
+                    stats.DodgeRating += 8;
                     break;
                 case "3305":
                     stats.Stamina += 12;
@@ -1509,35 +1542,11 @@ namespace Rawr
                 case "3821":
                     stats.Resilience += 8;
                     break;
-                case "440":
-                    stats.SpellPower += 9;
-                    break;
-                case "2767":
-                    stats.HitRating += 8;
-                    break;
                 case "3857":
                     stats.DefenseRating += 6;
                     break;
-                case "2871":
-                    stats.DodgeRating += 4;
-                    break;
                 case "3871":
                     stats.ParryRating += 6;
-                    break;
-                case "3304":
-                    stats.DodgeRating += 8;
-                    break;
-                case "2314":
-                    stats.SpellPower += 9;
-                    break;
-                case "2844":
-                    stats.HitRating += 8;
-                    break;
-                case "1597":
-                    stats.AttackPower += 32;
-                    break;
-                case "1589":
-                    stats.AttackPower += 16;
                     break;
                 default:
                     if (!_unhandledSocketBonus.Contains(socketbonus))

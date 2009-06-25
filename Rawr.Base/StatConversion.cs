@@ -283,7 +283,7 @@ namespace Rawr
         /// <returns>A Value (5.4 = 5 extra Defense)</returns>
         public static float GetDefenseFromRating(float Rating)
         {
-            return (float)Math.Floor(Math.Round(Rating / RATING_PER_DEFENSE));
+            return (float)Math.Round(Rating / RATING_PER_DEFENSE);
         }
 
         public static float GetDodgeFromRating(float Rating, Character.CharacterClass Class) { return GetDodgeFromRating(Rating); }
@@ -647,9 +647,9 @@ namespace Rawr
         public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int TargetLevel) { return GetDRAvoidanceChance(character, stats, avoidanceType, (uint)TargetLevel); }
         public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, uint TargetLevel)
         {
-            float defSkill = (GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
-            float defSkillMod = ((defSkill - (TargetLevel * 5)) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
-            float baseAvoid = 0.0f;
+            float defSkill = stats.Defense;
+            float defSkillMod = (GetDefenseFromRating(stats.DefenseRating, character.Class) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
+            float baseAvoid = (defSkill - (TargetLevel * 5)) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER;
             float modifiedAvoid = defSkillMod;
             float finalAvoid = 0f; // I know it breaks my lack of redundancy rule, but it helps w/ readability.
             int iClass = (int)character.Class;
@@ -657,20 +657,20 @@ namespace Rawr
             switch (avoidanceType)
             {
                 case HitResult.Dodge:
-                    baseAvoid = ((stats.Dodge + GetDodgeFromAgility(stats.BaseAgility, character.Class)) * 100f);
+                    baseAvoid += ((stats.Dodge + GetDodgeFromAgility(stats.BaseAgility, character.Class)) * 100f);
                     modifiedAvoid += (GetDodgeFromAgility((stats.Agility - stats.BaseAgility), character.Class) +
                                     GetDodgeFromRating(stats.DodgeRating) * 100f);
                     modifiedAvoid = DRMath(CAP_DODGE_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
                     break;
                 case HitResult.Parry:
-                    baseAvoid = stats.Parry * 100f;
+                    baseAvoid += stats.Parry * 100f;
                     modifiedAvoid += (GetParryFromRating(stats.ParryRating) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
                     break;
                 case HitResult.Miss:
                     // Base Miss rate according is 5%
                     // However, this can be talented up (e.g. Frigid Dreadplate, NE racial, etc.) 
-                    baseAvoid = stats.Miss * 100f;
+                    baseAvoid += stats.Miss * 100f;
                     modifiedAvoid = DRMath( (1f/CAP_MISSED[iClass]), DR_COEFFIENT[iClass], modifiedAvoid );
                     // Factoring in the Miss Cap. 
                     modifiedAvoid = Math.Min(CAP_MISSED[iClass], modifiedAvoid);

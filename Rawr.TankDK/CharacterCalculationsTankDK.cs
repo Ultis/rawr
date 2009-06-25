@@ -46,7 +46,9 @@ namespace Rawr.TankDK
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
-            get { return new float[] { Survival * SurvivalWeight, Mitigation, Threat * ThreatWeight }; }
+            get { return new float[] {  Survival * SurvivalWeight, 
+                                        Mitigation, 
+                                        Threat * ThreatWeight }; }
             set { _subPoints = value; }
         }
 
@@ -351,7 +353,7 @@ namespace Rawr.TankDK
 
             dict["Overall Points"] = OverallPoints.ToString("F1"); 
             dict["Mitigation Points"] = String.Format("{0:0.0}", Mitigation); // Unmodified Mitigation.
-            dict["Effective Health"] = String.Format("{0:0.0}", Survival); // Unmodified Survival
+            dict["Survival Points"] = String.Format("{0:0.0}", Survival); // Unmodified Survival
 
             dict["Crit"] = Crit.ToString("F2");
             dict["Defense"] = Defense.ToString("F0");
@@ -365,7 +367,7 @@ namespace Rawr.TankDK
 
             dict["Threat"] = Threat.ToString("F1"); // Unmodified Threat.
             dict["Overall"] = OverallPoints.ToString("F1");  
-            dict["Modified Effective Health"] = (Survival * SurvivalWeight).ToString("F1"); // another place of duplicate math.
+            dict["Modified Survival"] = (Survival * SurvivalWeight).ToString("F1"); // another place of duplicate math.
             dict["Modified Mitigation"] = (Mitigation).ToString("F1");
             dict["Modified Threat"] = (Threat * ThreatWeight).ToString("F1"); // another place of duplicate math.
 

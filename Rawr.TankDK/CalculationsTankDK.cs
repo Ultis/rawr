@@ -217,9 +217,9 @@ you stay default capped.",
                         "Defense:Resilience",
                         "Defense:Defense Rating needed*Including Resilience to ensure being uncrittable.",
 
-                        "Advanced Stats:Miss*After Diminishing Returns - will not match in-game character pane.",
-                        "Advanced Stats:Dodge*After Diminishing Returns - will not match in-game character pane.",
-                        "Advanced Stats:Parry*After Diminishing Returns - will not match in-game character pane.  Includes Str bonus from Unbreakable Armor's average uptime.",
+                        "Advanced Stats:Miss*After Diminishing Returns",
+                        "Advanced Stats:Dodge*After Diminishing Returns",
+                        "Advanced Stats:Parry*After Diminishing Returns. Includes Str bonus from Unbreakable Armor's average uptime.",
                         "Advanced Stats:Total Avoidance*Miss + Dodge + Parry",
                         "Advanced Stats:Armor Damage Reduction",
 
@@ -483,8 +483,6 @@ you stay default capped.",
                     bDualWielding = (character.OffHand != null);
                 }
 
-                // TODO: Shot rotation
-                // TODO: Single vs. Multi Target tanking.
                 float hitBonus = StatConversion.GetHitFromRating(stats.HitRating, character.Class) + stats.PhysicalHit;
                 // 8% default miss rate vs lvl 83
                 float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
@@ -537,13 +535,15 @@ you stay default capped.",
 
             // The extra 10% health for Frost presence is now include in the character by default.
             float hp = calcs.BasicStats.Health;
+            float fPhysicalSurvival = hp;
+            float fMagicalSurvival = hp;
 
             // For right now Effective Health will be HP + Armor/Resistance mitigation values.
             // Everything else is really mitigating damage based on RNG.
 
             // Physical damage:
             // So need the percent that is NOT from magic.
-            calcs.Survival = hp / (1f - calcs.ArmorDamageReduction * (1f - opts.PercentIncomingFromMagic));
+            fPhysicalSurvival = hp / (1f - calcs.ArmorDamageReduction);
 
             // Magical damage:
             // if there is a max resistance, then it's likely they are stacking for that resistance.  So factor in that Max resistance.
@@ -552,7 +552,9 @@ you stay default capped.",
             fMaxResist = Math.Max(fMaxResist, stats.NatureResistance);
             fMaxResist = Math.Max(fMaxResist, stats.ShadowResistance);
 
-            calcs.Survival += hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f) * opts.PercentIncomingFromMagic);
+            fMagicalSurvival = hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f) * opts.PercentIncomingFromMagic);
+
+            calcs.Survival = (fPhysicalSurvival * (1 - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
             calcs.SurvivalWeight = opts.SurvivalWeight;
 
             #endregion
@@ -561,16 +563,15 @@ you stay default capped.",
 
             float fGCD = rot.getGCDTime();
             float fDamageTotal = ct.GetTotalThreat();
-            if (fDamageTotal > 0)
-            {
-                calcs.Threat = fDamageTotal;
-            }
-            else
+            if (fDamageTotal <= 0)
             {
                 rot.setRotation(Rotation.Type.Frost);
                 fDamageTotal = ct.GetTotalThreat();
             }
+            calcs.Threat = fDamageTotal;
 
+            // Threat buffs.
+            calcs.Threat *= 1.0f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
             calcs.ThreatWeight = BaseThreatValue * opts.ThreatWeight;
 
             #endregion
@@ -588,15 +589,17 @@ you stay default capped.",
             {
                 float fBossShotCount = fGCD / opts.BossAttackSpeed;
                 // How fast is a hasted shot? 40% faster.
-                float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .4f);
+                // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
+                float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .24f); 
                 float fCharacterShotCount = 0f;
                 if (character.MainHand != null)
                     fCharacterShotCount += (fGCD / ct.MH.hastedSpeed);
                 if (character.OffHand != null)
                     fCharacterShotCount += (fGCD / ct.OH.hastedSpeed);
+                fCharacterShotCount += ct.totalParryableAbilities;
                 // The number of shots taken * the chance to be parried.
                 // Ensure that this value doesn't go over 100%
-                float fShotsParried = Math.Min(1f, calcs.TargetParry * fCharacterShotCount);
+                float fShotsParried = Math.Min(1f, calcs.TargetParry) * fCharacterShotCount;
                 // How much damage per shot normal shot?
                 float fPerShotPhysical = fIncPhysicalDamage / fBossShotCount;
                 // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
@@ -643,11 +646,7 @@ you stay default capped.",
             fIncPhysicalDamage -= uaDR;
 
             // Four T8 : AMS grants 10% damage reductions.
-            Boolean fourT8 = character.ActiveBuffsContains("Darkruned Plate 4 Piece Bonus");
-            if (fourT8)
-            {
-                stats.DamageTakenMultiplier -= (0.1f * amsUptime); 
-            }
+            stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptime); 
 
             // Factor in the AMS damage reduction value 
             fIncMagicalDamage -= amsDRvalue;
@@ -666,8 +665,6 @@ you stay default capped.",
             calcs.Mitigation *= fMitigationWeight;
 
             #endregion
-
-
 
             return calcs;
         }
@@ -721,8 +718,8 @@ you stay default capped.",
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
             statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
             statsTotal.Stamina = StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier);
-            statsTotal.Armor += StatConversion.GetArmorFromAgility(statsTotal.Agility);
             statsTotal.Armor = StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier);
+            statsTotal.Armor += StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
             statsTotal.Armor += StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
 
             statsTotal.Health = StatConversion.ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsTotal.BonusHealthMultiplier);
@@ -824,6 +821,7 @@ you stay default capped.",
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
@@ -891,6 +889,39 @@ you stay default capped.",
         /// I realize that there aren't many stats that have negative values, but for completeness.</returns>
         public override bool HasRelevantStats(Stats stats)
         {
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (relevantStats(effect.Stats))
+                {
+                    if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageSpellCast ||
+                        effect.Trigger == Trigger.DamageSpellCrit ||
+                        effect.Trigger == Trigger.DamageSpellHit ||
+                        effect.Trigger == Trigger.SpellCast ||
+                        effect.Trigger == Trigger.SpellCrit ||
+                        effect.Trigger == Trigger.SpellHit ||
+                        effect.Trigger == Trigger.DoTTick ||
+                        effect.Trigger == Trigger.MeleeCrit ||
+                        effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.PhysicalCrit ||
+                        effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.BloodStrikeHit ||
+                        effect.Trigger == Trigger.HeartStrikeHit ||
+                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
+                        effect.Trigger == Trigger.IcyTouchHit ||
+                        effect.Trigger == Trigger.PlagueStrikeHit ||
+                        effect.Trigger == Trigger.RuneStrikeHit ||
+                        effect.Trigger == Trigger.Use)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return relevantStats(stats);
+        }
+
+        private bool relevantStats(Stats stats)
+        {
             bool bResults = false;
             bResults |= (stats.Health != 0);
             bResults |= (stats.Strength != 0);
@@ -909,6 +940,7 @@ you stay default capped.",
             bResults |= (stats.Expertise != 0);
             bResults |= (stats.HasteRating != 0);
             bResults |= (stats.WeaponDamage != 0);
+            bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
             bResults |= (stats.DodgeRating != 0);
             bResults |= (stats.DefenseRating != 0);
@@ -929,6 +961,7 @@ you stay default capped.",
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusSpellPowerMultiplier != 0);
+            bResults |= (stats.BonusDamageMultiplier != 0);
             bResults |= (stats.DamageTakenMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
@@ -961,32 +994,6 @@ you stay default capped.",
             bResults |= (stats.NatureResistance != 0);
             bResults |= (stats.ShadowResistance != 0);
 
-
-            if (bResults)
-            {
-                foreach (SpecialEffect effect in stats.SpecialEffects())
-                {
-                    bResults |= (effect.Trigger == Trigger.DamageDone ||
-                                effect.Trigger == Trigger.DamageSpellCast ||
-                                effect.Trigger == Trigger.DamageSpellCrit ||
-                                effect.Trigger == Trigger.DamageSpellHit ||
-                                effect.Trigger == Trigger.SpellCast ||
-                                effect.Trigger == Trigger.SpellCrit ||
-                                effect.Trigger == Trigger.SpellHit ||
-                                effect.Trigger == Trigger.DoTTick ||
-                                effect.Trigger == Trigger.MeleeCrit ||
-                                effect.Trigger == Trigger.MeleeHit ||
-                                effect.Trigger == Trigger.PhysicalCrit ||
-                                effect.Trigger == Trigger.PhysicalHit ||
-                                effect.Trigger == Trigger.BloodStrikeHit ||
-                                effect.Trigger == Trigger.HeartStrikeHit ||
-                                effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
-                                effect.Trigger == Trigger.IcyTouchHit ||
-                                effect.Trigger == Trigger.PlagueStrikeHit ||
-                                effect.Trigger == Trigger.RuneStrikeHit ||
-                                effect.Trigger == Trigger.Use);
-                }
-            }
             return bResults;
         }
 
@@ -1015,6 +1022,7 @@ you stay default capped.",
             Stats sReturn = new Stats();
             Stats newStats = new Stats();
             float fDamageDone = 0f;
+            float fHealth = StatConversion.ApplyMultiplier((FullCharacterStats.Health + StatConversion.GetHealthFromStamina(FullCharacterStats.Stamina)), FullCharacterStats.BonusHealthMultiplier);
 
             #region Blood Talents.
             // Butchery
@@ -1056,7 +1064,7 @@ you stay default capped.",
             {
                 newStats = new Stats();
                 float fCD = 60f;
-                newStats.Healed = (FullCharacterStats.Health * .1f);
+                newStats.Healed = (fHealth * .1f);
                 if (character.DeathKnightTalents.ImprovedRuneTap == 0)
                 {
                     sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
@@ -1110,7 +1118,7 @@ you stay default capped.",
                 // TODO: Need to know how many hits are incoming.
                 // for now assuming 10 hits.
                 newStats = new Stats();
-                newStats.Healed = (FullCharacterStats.Health * .04f * 10f);
+                newStats.Healed = (fHealth * .04f * 10f);
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, newStats, 20, 3f * 60f));
             }
 
@@ -1162,7 +1170,7 @@ you stay default capped.",
                 float fDur = 30f;
                 newStats = new Stats();
                 newStats.BonusPhysicalDamageMultiplier += .2f;
-                newStats.Healed -= (FullCharacterStats.Health * .01f * fDur);
+                newStats.Healed -= (fHealth * .01f * fDur);
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fDur, 3f * 60f));
             }
 
@@ -1193,7 +1201,7 @@ you stay default capped.",
             if (character.DeathKnightTalents.VampiricBlood > 0)
             {
                 newStats = new Stats();
-                newStats.Health += (FullCharacterStats.Health * .15f);
+                newStats.Health += (fHealth * .15f);
                 newStats.HealingReceivedMultiplier += .35f;
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20, 2f * 60f));
             }
@@ -1409,10 +1417,10 @@ you stay default capped.",
             // Implmenting IBF here because it's affected by GoGF
             // Four T7 increases IBF by 3 sec.
             // IBF has a 60 sec CD.
-            Boolean fourT7 = character.ActiveBuffsContains("Scourgeborne Plate 4 Piece Bonus");
-            float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + (fourT7 ? 3.0f : 0.0f));
+            float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + FullCharacterStats.BonusIceboundFortitudeDuration);
             // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
-            float ibfReduction = 0.2f + ((FullCharacterStats.Defense - 400) * 0.03f / 28.0f);
+            float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
+            float ibfReduction = 0.2f + (ibfDefense * 0.03f / 28.0f);
             if (character.DeathKnightTalents.GlyphofIceboundFortitude)
             {
                 // Glyphed to 30% + def value.

@@ -61,32 +61,130 @@ namespace Rawr.UnitTests
         #endregion
 
         /// <summary>
-        ///A test for GetDRAvoidanceChance
-        ///</summary>
+        /// Tests for GetDRAvoidanceChance
+        /// http://www.tankspot.com/forums/f63/40003-diminishing-returns-avoidance.html
+        /// The paper doll is correct. This can be verified very easily in game. So if dodge/parry are not matching up between 
+        /// TankDK and in-game (with no buffs), then TankDK is incorrect.
+        /// Important notes: Defense from Stoneskin Gargoyle is NOT subject to diminishing returns (meaning 1% dodge, 1% parry, 
+        /// and 1% miss) in addition to 5% dodge from talents.
+        /// This leaves Miss to be calculated separately: 5% base, 1% from SG rune, and 3% from talents are all NOT subject to 
+        /// diminishing returns (9%), leaving only defense rating to contribute to DR miss. This means at 566 defense rating 
+        /// (the DK cap with SG rune), you would expect to have 5.6% chance to miss from defense rating (+9% from talents/SG
+        /// rune/base), or 14.6% chance to be missed. After diminishing returns, however, you would only have roughly 13.29% 
+        /// total chance to be missed.
+        /// NOTE: The miss cap has only been confirmed for Warriors, so diminishing returns on miss from defense rating for 
+        /// DK's (and druids/paladins) is currently only able to be estimated based on the Warrior miss cap.
+        /// Additional note: Night Elf racial 2% miss is also not subject to diminishing returns."
+        /// "Slight accuracy correction: knock 0.6% off of the non-DR counts on all 3 stats due to the level difference on bosses.
+        /// This brings 566 defense rating miss rate to roughly 13.1%, rather than 13.29%"
+        /// </summary>
         [TestMethod()]
-        public void GetDRAvoidanceChanceTest_Warrior_NoGear()
+        public void GetDRAvoidanceChanceTest_DK_TestFromForums()
         {
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestWarrior", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestDK", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "TankDK"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
-            toon.Class = Character.CharacterClass.Warrior;
+            toon.Class = Character.CharacterClass.DeathKnight;
 
             Stats stats = new Stats();
+            stats += BaseStats.GetBaseStats(toon);
+            stats.Miss += .03f; // 3% Miss from talents
+            stats.Defense = 425; // 25 Def from SSG rune
+            stats.Dodge += .05f; // 5% dodge from talents.
+            stats.DefenseRating = 566f;
             uint TargetLevel = 83;
+            //float levelDiff = 0.006f;
             float[] expected = new float[(int)HitResult.NUM_HitResult];
-            expected[(int)HitResult.Miss] = -0.006f;
-            expected[(int)HitResult.Dodge] = -0.006f;
-            expected[(int)HitResult.Parry] = -0.006f;
-            expected[(int)HitResult.Block] = 0.044f;
-            expected[(int)HitResult.Crit] = -0f;
+            expected[(int)HitResult.Miss] = 0.121f;
+            expected[(int)HitResult.Dodge] = 0.134f;
+            expected[(int)HitResult.Parry] = 0.098f;
+            expected[(int)HitResult.Block] = 0.096f;
+            expected[(int)HitResult.Crit] = .05f;
+            expected[(int)HitResult.AnyMiss] = .05f;
+            expected[(int)HitResult.AnyHit] = .05f;
+            expected[(int)HitResult.Glance] = .05f;
+            expected[(int)HitResult.Resist] = .05f;
+            expected[(int)HitResult.Hit] = .05f;
 
             // Iterate through the hit result types.
             for (HitResult i = 0; i < HitResult.NUM_HitResult; i++)
             {
-                float actual = StatConversion.GetDRAvoidanceChance(toon, stats, i, TargetLevel);
+                float actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, i, TargetLevel), 3);
                 Assert.AreEqual(expected[(int)i], actual, i.ToString());
             }
+        }
+
+        [TestMethod()]
+        public void GetDRAvoidanceChanceTest_Warr_TestTableRaw689()
+        {
+            const float testValue = 689f;
+            ItemInstance[] IIArray = new ItemInstance[1];
+            Character toon = new Character("TestWarrior", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Assert.IsNotNull(toon);
+            //toon.Level = 80;  //Asumption here.
+            toon.Class = Character.CharacterClass.DeathKnight;
+
+            Stats stats = new Stats();
+            stats += BaseStats.GetBaseStats(toon);
+            stats.Defense = 400;
+            stats.DefenseRating = testValue;
+            uint TargetLevel = 80;
+            //float levelDiff = 0.006f;
+            float[] expected = new float[(int)HitResult.NUM_HitResult];
+            expected[(int)HitResult.Miss] = 0.0929f;
+            expected[(int)HitResult.Dodge] = 0.1516f;
+            expected[(int)HitResult.Parry] = 0.1117f;
+            // Miss test
+            float actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Miss, TargetLevel), 4);
+            Assert.AreEqual(expected[(int)HitResult.Miss], actual, HitResult.Miss.ToString());
+
+            stats = new Stats(); // Don't want' defense messing w/ the numbers.
+            stats.Defense = 400;
+            // Dodge Test
+            stats.DodgeRating = testValue;
+            actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Dodge, TargetLevel), 4);
+            Assert.AreEqual(expected[(int)HitResult.Dodge], actual, HitResult.Dodge.ToString());
+            // Parry Test
+            stats.ParryRating = testValue;
+            actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Parry, TargetLevel), 4);
+            Assert.AreEqual(expected[(int)HitResult.Parry], actual, HitResult.Parry.ToString());
+        }
+
+        [TestMethod()]
+        public void GetDRAvoidanceChanceTest_Warr_TestTableRaw10000()
+        {
+            const float testValue = 10000f;
+            ItemInstance[] IIArray = new ItemInstance[1];
+            Character toon = new Character("TestWarrior", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Assert.IsNotNull(toon);
+            //toon.Level = 80;  //Asumption here.
+            toon.Class = Character.CharacterClass.DeathKnight;
+
+            Stats stats = new Stats();
+            stats += BaseStats.GetBaseStats(toon);
+            stats.Defense = 400;
+            stats.DefenseRating = testValue;
+            uint TargetLevel = 80;
+            //float levelDiff = 0.006f;
+            float[] expected = new float[(int)HitResult.NUM_HitResult];
+            expected[(int)HitResult.Miss] = 0.1847f;
+            expected[(int)HitResult.Dodge] = 0.6619f;
+            expected[(int)HitResult.Parry] = 0.3850f;
+            // Miss test
+            float actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Miss, TargetLevel), 4);
+            Assert.AreEqual(expected[(int)HitResult.Miss], actual, HitResult.Miss.ToString());
+
+            stats = new Stats(); // Don't want' defense messing w/ the numbers.
+            stats.Defense = 400;
+            // Dodge Test
+            stats.DodgeRating = testValue;
+            actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Dodge, TargetLevel), 4);
+            Assert.AreEqual(expected[(int)HitResult.Dodge], actual, HitResult.Dodge.ToString());
+            // Parry Test
+            stats.ParryRating = testValue;
+            actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Parry, TargetLevel), 4);
+            Assert.AreEqual(expected[(int)HitResult.Parry], actual, HitResult.Parry.ToString());
         }
 
         /// <summary>

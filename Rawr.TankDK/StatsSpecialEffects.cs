@@ -66,6 +66,10 @@ namespace Rawr.TankDK
                         trigger = rotation.PlagueStrike / rotation.curRotationDuration;
                         chance = 1f;
                         break;
+                    case Trigger.RuneStrikeHit:
+                        trigger = rotation.RuneStrike / rotation.curRotationDuration;
+                        chance = 1f;
+                        break;
                     case Trigger.DoTTick:
                         trigger = (rotation.BloodPlague + rotation.FrostFever) / 3;
                         chance = 1f;

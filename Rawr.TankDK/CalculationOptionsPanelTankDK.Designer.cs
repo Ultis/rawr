@@ -271,7 +271,7 @@
             this.nudTargetArmor.Size = new System.Drawing.Size(84, 20);
             this.nudTargetArmor.TabIndex = 13;
             this.nudTargetArmor.Value = new decimal(new int[] {
-            13000,
+            15000,
             0,
             0,
             0});

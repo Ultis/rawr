@@ -55,7 +55,7 @@ namespace Rawr.DPSDK
             #region Crits, Resists
             {
                 // Attack Rolltable (DW):
-                // 27.0% miss     (9.0% with 2H)
+                // 27.0% miss     (8.0% with 2H)
                 //  6.5% dodge
                 // 24.0% glancing (75% hit-dmg)
                 // xx.x% crit

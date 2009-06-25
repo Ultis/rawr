@@ -80,16 +80,15 @@ namespace Rawr.TankDK
             this.GlyphofIT = talents.GlyphofIcyTouch;
             this.GlyphofFS = talents.GlyphofFrostStrike;
 
-            RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave + 2.5f * talents.Dirge) * (Obliterate)) +
-                ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
-                ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
-                ((15 * (DeathNDecay)) +
-                ((10 + 2.5f * talents.Dirge) * (PlagueStrike)) +
-                (10 * (BloodStrike + HeartStrike + BloodBoil)) +
-                ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
+            RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave + 2.5f * talents.Dirge) * Obliterate) +
+                 ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * ScourgeStrike) +
+                 ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * DeathStrike) +
+                 ((10 + 2.5f * talents.Dirge) * PlagueStrike) +
+                 ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * IcyTouch) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
-                (10 * Horn) +
-                ((curRotationDuration / 5f)*talents.Butchery));
+                  (15 * DeathNDecay) +
+                  (10 * (BloodStrike + HeartStrike + BloodBoil + Horn)) +
+                 ((curRotationDuration / 5f) * talents.Butchery);
 
             if (managedRP)
             {

@@ -20,7 +20,7 @@ namespace Rawr.TankDK
             missedSpecial, dodgedSpecial, 
             spellCrits, spellResist, 
             totalMHMiss, totalOHMiss,
-            realDuration, totalMeleeAbilities,
+            realDuration, totalMeleeAbilities, totalParryableAbilities, 
         totalSpellAbilities, normalizationFactor;
         private float fDuration;
 
@@ -41,9 +41,14 @@ namespace Rawr.TankDK
 
             totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
                 calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike +
-                calcOpts.rotation.FrostStrike;
+                calcOpts.rotation.FrostStrike + calcOpts.rotation.DeathStrike;
 
-            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
+            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast 
+                + calcOpts.rotation.UnholyBlight + calcOpts.rotation.Pestilence + calcOpts.rotation.Horn + calcOpts.rotation.DeathNDecay
+                + calcOpts.rotation.BoneShield;
+
+            totalParryableAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
+                calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike;
 
             Weapons();
             CritsAndResists();
@@ -55,7 +60,7 @@ namespace Rawr.TankDK
             #region Crits, Resists
             {
                 // Attack Rolltable (DW):
-                // 27.0% miss     (9.0% with 2H)
+                // 27.0% miss     (8.0% with 2H)
                 //  6.5% dodge
                 // 24.0% glancing (75% hit-dmg)
                 // xx.x% crit
@@ -331,6 +336,7 @@ namespace Rawr.TankDK
             }
 
             /* Threat table as of 3.0.8
+             * http://www.tankspot.com/forums/f200/40485-death-knight-threat-values.html
             Anti-Magic Shell ___________________  0
             Anti-Magic Shell RP gain ___________  5 per RP (approx), unaffected by presence.  See * below.
             Anti-Magic Zone ____________________  0
@@ -787,7 +793,7 @@ namespace Rawr.TankDK
                     //float HSCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
                     float HSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine) + stats.CritBonusDamage;
                     float HSCrit = 1f + ((this.physCrits + (.03f * (float)talents.Subversion)) * HSCritDmgMult);
-                    fDamHeartStrike *= HSCrit;
+                    fDamHeartStrike *= HSCrit * Math.Min(2, calcOpts.uNumberTargets);
                     fDamHeartStrike *= 1f + (.15f * (float)talents.BloodyStrikes);
                 }
             }
@@ -796,6 +802,7 @@ namespace Rawr.TankDK
             #region Rune Strike
             {
                 float RSDmg = (this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) + (150 * stats.AttackPower * 10 / 10000);
+                RSDmg *= (1f + stats.BonusRuneStrikeMultiplier); // Two T8.
                 // what's the threat modifier?
                 RSDmg *= 1.5f;
                 float RSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine) + stats.CritBonusDamage + (talents.GlyphofRuneStrike ? .01f : 0f);
