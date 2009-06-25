@@ -1,8 +1,82 @@
-﻿<UserControl x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
+﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-    Width="400" Height="300">
-    <Grid x:Name="LayoutRoot" Background="White">
-
-    </Grid>
+    xmlns:local="clr-namespace:Rawr.Moonkin" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin" 
+    d:DesignWidth="555" d:DesignHeight="397">
+	<UserControl.DataContext>
+		<local:CalculationOptionsMoonkin/>
+	</UserControl.DataContext>
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" d:LayoutOverrides="Width" HorizontalAlignment="Right" VerticalAlignment="Center" Text="Target Level:"/>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Center" Text="Latency:" Grid.Row="1"/>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Center" Text="Fight Length:" Grid.Row="2"/>
+		<CheckBox Margin="0,2,4,2" Content="Innervate Delay:" Grid.Row="3" d:LayoutOverrides="Width, Height" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding Mode=TwoWay, Path=Innervate, UpdateSourceTrigger=Default}"/>
+		<CheckBox HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Content="Mana Potion Type:" Grid.Row="4" IsChecked="{Binding Mode=TwoWay, Path=ManaPots, UpdateSourceTrigger=Default}"/>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Center" Text="Replenishment Uptime:" Grid.Row="5"/>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Center" Text="Treant Lifespan:" Grid.Row="6"/>
+		<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" Grid.Row="7" Text="Shattrath Affiliation:" TextWrapping="NoWrap" d:LayoutOverrides="Height" VerticalAlignment="Center"/>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Center" Text="Use Lunar Eclipse?" Grid.Row="8"/>
+		<TextBlock Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="9" Text="Maintain 100% Moonfire Uptime?" TextWrapping="NoWrap" d:LayoutOverrides="Width" HorizontalAlignment="Right"/>
+		<TextBlock Margin="0,2,4,2" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Center" Text="User Rotation:" Grid.Row="10"/>
+		<inputToolkit:NumericUpDown HorizontalAlignment="Left" Grid.Column="1" d:LayoutOverrides="Height" VerticalAlignment="Center" Margin="4,2,0,2" Maximum="83" Minimum="80" Value="{Binding Mode=TwoWay, Path=TargetLevel, UpdateSourceTrigger=Default}" />
+		<StackPanel Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto" Grid.Column="1" Orientation="Horizontal" Grid.Row="1">
+			<inputToolkit:NumericUpDown Margin="4,2,4,2" Increment="10" Maximum="500" Minimum="50" HorizontalAlignment="Left" Value="{Binding Mode=TwoWay, Path=ExternalLatency, UpdateSourceTrigger=Default}"/>
+			<TextBlock Margin="4,2,4,2" VerticalAlignment="Center" Text="ms" HorizontalAlignment="Left"/>
+		</StackPanel>
+		<StackPanel Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto" Grid.Column="1" Orientation="Horizontal" Grid.Row="2">
+			<inputToolkit:NumericUpDown Margin="4,2,4,2" Value="{Binding Mode=TwoWay, Path=FightLength, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="15" Minimum="1" HorizontalAlignment="Left" DecimalPlaces="1"/>
+			<TextBlock Margin="4,2,4,2" VerticalAlignment="Center" Text="mins" HorizontalAlignment="Left"/>
+		</StackPanel>
+		<StackPanel Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto" Grid.Column="1" Orientation="Horizontal" Grid.Row="3">
+			<inputToolkit:NumericUpDown Margin="4,2,4,2" Value="{Binding Mode=TwoWay, Path=InnervateDelay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="15" Minimum="1" HorizontalAlignment="Left" DecimalPlaces="1"/>
+			<TextBlock Margin="4,2,4,2" VerticalAlignment="Center" Text="mins" HorizontalAlignment="Left"/>
+		</StackPanel>
+		<ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" Grid.Column="1" Grid.Row="4" SelectedIndex="0" SelectedItem="{Binding Mode=TwoWay, Path=ManaPotType, UpdateSourceTrigger=Default}">
+			<System:String>Runic Mana Potion</System:String>
+		</ComboBox>
+		<StackPanel Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto" Grid.Column="1" Orientation="Horizontal" Grid.Row="5">
+			<inputToolkit:NumericUpDown Margin="4,2,4,2" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=ReplenishmentUptime, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" HorizontalAlignment="Left" DecimalPlaces="1"/>
+			<TextBlock Margin="4,2,4,2" VerticalAlignment="Center" Text="%" HorizontalAlignment="Left"/>
+		</StackPanel>
+		<StackPanel Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto" Grid.Column="1" Orientation="Horizontal" Grid.Row="6">
+			<inputToolkit:NumericUpDown Margin="4,2,4,2" Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=TreantLifespan, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" HorizontalAlignment="Left" DecimalPlaces="1"/>
+			<TextBlock Margin="4,2,4,2" VerticalAlignment="Center" Text="%" HorizontalAlignment="Left"/>
+		</StackPanel>
+		<ComboBox HorizontalAlignment="Left" Margin="4,2,0,2" VerticalAlignment="Center" SelectedItem="{Binding Mode=TwoWay, Path=AldorScryer, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment" Grid.Row="7" Grid.Column="1">
+			<System:String>Aldor</System:String>
+			<System:String>Scryer</System:String>
+		</ComboBox>
+		<CheckBox HorizontalAlignment="Left" Margin="4,2,4,2" Content="" Grid.Column="1" Grid.Row="8" d:LayoutOverrides="Height" IsChecked="{Binding Mode=TwoWay, Path=LunarEclipse, UpdateSourceTrigger=Default}" VerticalAlignment="Center"/>
+		<CheckBox HorizontalAlignment="Left" Margin="4,2,4,2" Content="" Grid.Column="1" Grid.Row="9" d:LayoutOverrides="Height" VerticalAlignment="Center" IsChecked="{Binding Mode=TwoWay, Path=MoonfireAlways, UpdateSourceTrigger=Default}"/>
+		<ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Column="1" Grid.Row="10" SelectedItem="{Binding Mode=TwoWay, Path=UserRotation, UpdateSourceTrigger=Default}">
+			<System:String>None</System:String>
+			<System:String>SF Spam</System:String>
+			<System:String>W Spam</System:String>
+			<System:String>IS/MF</System:String>
+			<System:String>IS/W</System:String>
+			<System:String>MF/SF</System:String>
+			<System:String>MF/W</System:String>
+			<System:String>IS/MF/SF</System:String>
+			<System:String>IS/MF/W</System:String>
+		</ComboBox>
+	</Grid>
 </UserControl>

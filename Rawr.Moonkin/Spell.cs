@@ -1119,7 +1119,7 @@ namespace Rawr.Moonkin
                 sustainedDPS += trinketDPS + treeDPS + starfallDPS;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.DPS = sustainedDPS;
-                if ((calcOpts.userRotation == "None" && sustainedDPS > maxDamageDone) || calcOpts.userRotation == rot.Name)
+                if ((calcOpts.UserRotation == "None" && sustainedDPS > maxDamageDone) || calcOpts.UserRotation == rot.Name)
                 {
                     maxDamageDone = sustainedDPS;
                     maxRotation = rot;

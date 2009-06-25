@@ -19,22 +19,9 @@ namespace Rawr.Moonkin
             InitializeComponent();
         }
 
-        #region Private Members
+        #region ICalculationOptionsPanel Members
 
         private Character character;
-
-        private bool _loadingCalculationOptions;
-
-        private void LoadCalculationOptions()
-        {
-            _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMoonkin();
-            _loadingCalculationOptions = false;
-        }
-
-        #endregion
-
-        #region ICalculationOptionsPanel Members
 
         public Character Character
         {
@@ -44,14 +31,29 @@ namespace Rawr.Moonkin
             }
             set
             {
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsMoonkin)
+                    ((CalculationOptionsMoonkin)character.CalculationOptions).PropertyChanged
+                        -= new System.ComponentModel.PropertyChangedEventHandler(calcOpts_PropertyChanged);
+
                 character = value;
-                LoadCalculationOptions();
+                if (character.CalculationOptions == null)
+                    character.CalculationOptions = new CalculationOptionsMoonkin();
+
+                CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+                DataContext = calcOpts;
+                calcOpts.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(calcOpts_PropertyChanged);
             }
         }
 
         public UserControl PanelControl
         {
             get { return this; }
+        }
+
+        private void calcOpts_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Character.OnCalculationsInvalidated();
         }
 
         #endregion

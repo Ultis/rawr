@@ -36,7 +36,7 @@ namespace Rawr.Moonkin
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
-            cmbUserRotation.SelectedItem = calcOpts.userRotation;
+            cmbUserRotation.SelectedItem = calcOpts.UserRotation;
             if (calcOpts.LunarEclipse)
                 cmbEclipseType.SelectedItem = "Lunar";
             else
@@ -121,7 +121,7 @@ namespace Rawr.Moonkin
         private void cmbUserRotation_SelectedIndexChanged(object sender, EventArgs e)
         {
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.userRotation = cmbUserRotation.SelectedItem.ToString();
+            calcOpts.UserRotation = cmbUserRotation.SelectedItem.ToString();
             Character.OnCalculationsInvalidated();
         }
 
@@ -274,6 +274,6 @@ namespace Rawr.Moonkin
         public float TreantLifespan = 1.0f;
         public bool LunarEclipse = true;
         public bool MoonfireAlways = true;
-        public string userRotation = "None";
+        public string UserRotation = "None";
 	}
 }
