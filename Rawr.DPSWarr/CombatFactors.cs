@@ -207,18 +207,40 @@ namespace Rawr.DPSWarr {
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || weapon.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
             return crit;
         }
-        private float CalcYellowCrit(Item weapon) {
+        /* Commenting this out, because yellow uses 2-roll attack
+         * private float CalcYellowCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
             float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-            // This line doesn't really make sense, we only want the crit perc here, dodge and other crap is handled elsewhere
-            //crit *= (1f - YellowMissChance - MhDodgeChance);
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || weapon.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+            crit *= (1f - YwMissChance - MhDodgeChance);
             return crit;
-        }
+        }*/
         public float MhCrit         { get { return CalcCrit(MainHand); } }
-        public float MhYellowCrit   { get { return CalcYellowCrit(MainHand); } }
+        public float MhYellowCrit
+        {
+            get
+            {
+                if (MainHand == null || MainHand.MaxDamage == 0f) { return 0f; }
+                float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
+                crit += (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                crit *= (1f - YwMissChance - MhDodgeChance);
+                return crit;
+                //return CalcYellowCrit(MainHand);
+            }
+        }
         public float OhCrit         { get { return CalcCrit(OffHand); } }
-        public float OhYellowCrit   { get { return CalcYellowCrit(OffHand); } }
+        public float OhYellowCrit
+        {
+            get
+            {
+                if (OffHand == null || OffHand.MaxDamage == 0f) { return 0f; }
+                float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
+                crit += (OffHand.Type == Item.ItemType.TwoHandAxe || OffHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                crit *= (1f - YwMissChance - OhDodgeChance);
+                return crit;
+                //return CalcYellowCrit(OffHand);
+            }
+        }
         #endregion
         #region Chance of Hitting (be it Ordinary, Glance or Blocked, but not Crit)
         // White

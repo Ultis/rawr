@@ -211,7 +211,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = false;
                 StanceOkDef = false;
                 DamageBase = 0f;
-                DamageBonus = 0f;
+                DamageBonus = 1f;
                 HealingBase = 0f;
                 HealingBonus = 0f;
                 BonusCritChance = 0.00f;
@@ -298,8 +298,8 @@ namespace Rawr.DPSWarr {
             public CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
             public virtual float RageUsePerSecond { get { return (!GetValided() ? 0f : Activates * RageCost / RotationLength); } }
             public virtual float RotationLength {
-                get { 
-                    return (1f + CalcOpts.GetLatency()) *
+                get {
+                    return (1f + CalcOpts.GetLatency()) * (1f - Whiteattacks.AvoidanceStreak) *
                         (CalcOpts.FuryStance
                         ?
                             Rotation.ROTATION_LENGTH_FURY
@@ -336,8 +336,8 @@ namespace Rawr.DPSWarr {
                     return (float)Math.Max(0f, hp);
                 }
             }
-            public virtual float Damage { get { return (!GetValided() ? 0f : (float)Math.Max(0f, DamageBase * (1f + DamageBonus) * Targets)); } }
-            public virtual float DamageOverride {get { return (float)Math.Max(0f, DamageBase * (1f + DamageBonus) * Targets); } }
+            public virtual float Damage { get { return (!GetValided() ? 0f : (float)Math.Max(0f, DamageBase * (DamageBonus) * Targets)); } }
+            public virtual float DamageOverride {get { return (float)Math.Max(0f, DamageBase * (DamageBonus) * Targets); } }
             public virtual float AvgDamage { get { return Damage * MaxActivates; } }
             public virtual float DamageOnUse {
                 get {
@@ -351,11 +351,11 @@ namespace Rawr.DPSWarr {
 
                     // Work the Attack Table
                     dmg *= (1f
-                        - combatFactors.YwMissChance // Missed so no damage at all
-                        - (CanBeDodged  ? combatFactors.MhDodgeChance : 0f) // If it can be dodged,  then no damage when being dodged
-                        - (CanBeParried ? combatFactors.MhParryChance : 0f) // If it can be parried, then no damage when being parried
-                        // Yellows don't glance
-                        + (CanBeBlocked ? combatFactors.MhBlockChance * combatFactors.BonusYwBlockedDmg : 0f) // If it can be blocked, then partial damage when blocked
+                        - combatFactors.YwMissChance /* Missed so no damage at all */
+                        - (CanBeDodged  ? combatFactors.MhDodgeChance : 0f) /* If it can be dodged,  then no damage when being dodged */
+                        - (CanBeParried ? combatFactors.MhParryChance : 0f) /* If it can be parried, then no damage when being parried */
+                        /* Yellows don't glance */
+                        + (CanBeBlocked ? combatFactors.MhBlockChance * combatFactors.BonusYwBlockedDmg : 0f) /* If it can be blocked, then partial damage when blocked */
                         + Crit * combatFactors.BonusYellowCritDmg); // Attack Table
 
                     return (float)Math.Max(0f, dmg);
@@ -363,6 +363,7 @@ namespace Rawr.DPSWarr {
             }
             public virtual float AvgDamageOnUse { get { return DamageOnUse * MaxActivates; } }
             public virtual float DPS { get { return AvgDamageOnUse / RotationLength; } }
+            //public virtual float LandedHitsPerSec { get { return (1f - (CanBeDodged?combatFactors.MhDodgeChance:0f) - (CanBeParried?combatFactors.MhParryChance:0f) - combatFactors.YwMissChance) * Activates / RotationLength; } }
             #endregion
             #region Functions
             public virtual float GetRageUsePerSecond(float acts) {
@@ -422,7 +423,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 20f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
                 DamageBase = StatS.AttackPower * 50f / 100f;
-                DamageBonus = Talents.UnendingFury * 0.02f;
+                DamageBonus = 1f + Talents.UnendingFury * 0.02f;
                 BonusCritChance = StatS.MortalstrikeBloodthirstCritIncrease;
             }
             // Variables
@@ -435,7 +436,7 @@ namespace Rawr.DPSWarr {
                 get
                 {
                     if (!GetValided()) { return 0f; }
-                    return 2.0f * (1f - Whiteattacks.AvoidanceStreak); // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
+                    return 2.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
                 }
             }
             public override float GetHealing() {
@@ -463,7 +464,7 @@ namespace Rawr.DPSWarr {
                 Targets *= (CalcOpts.MultipleTargets?4f:1f);
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
-                DamageBonus = Talents.ImprovedWhirlwind * 0.10f + Talents.UnendingFury * 0.02f;
+                DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
             }
             // Variables
             // Get/Set
@@ -474,7 +475,7 @@ namespace Rawr.DPSWarr {
                 {
                     if (!GetValided()) { return 0f; }
                     //return RotationLength / (Cd - (Talents.GlyphOfWhirlwind ? 2f : 0f));
-                    return 1f * (1f - Whiteattacks.AvoidanceStreak);
+                    return 1f;
                 }
             }
             // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
@@ -500,7 +501,7 @@ namespace Rawr.DPSWarr {
                     }else{ Damage = 0f; }
                 }else{ Damage = combatFactors.NormalizedMhWeaponDmg; }
 
-                return (float)Math.Max(0f, Damage * (1f + DamageBonus) * Targets);
+                return (float)Math.Max(0f, Damage * (DamageBonus) * Targets);
             }
             public override float DamageOnUse
             {
@@ -630,7 +631,7 @@ namespace Rawr.DPSWarr {
                     // procs = (procs / RotationLength) - (chance * chance + 0.01f); // WTF is with squaring chance?
                     if (procs2 < 0) { procs2 = 0; }
                     if (procs2 > 1) { procs2 = 1; } // Only have 1 free GCD in the default rotation
-                    return procs3 * (1f - Whiteattacks.AvoidanceStreak);
+                    return procs3;
 
                     // ORIGINAL LINES
                     //float chance = _talents.Bloodsurge * 0.0666666666f;
@@ -675,8 +676,8 @@ namespace Rawr.DPSWarr {
                 RageCost = 30f;
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
-                DamageBonus = Talents.ImprovedMortalStrike / 3f * 0.1f +
-                              (Talents.GlyphOfMortalStrike ? 0.1f : 0f);
+                DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f) *
+                              (Talents.GlyphOfMortalStrike ? 1.1f : 1f);
                 BonusCritChance = StatS.MortalstrikeBloodthirstCritIncrease;
             }
             // Variables
@@ -774,7 +775,7 @@ namespace Rawr.DPSWarr {
                 Targets += StatS.BonusTargets;
                 StanceOkArms = true;
                 DamageBase = combatFactors.NormalizedMhWeaponDmg;
-                DamageBonus = (0.1f * Talents.UnrelentingAssault);
+                DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
                 BonusCritChance = 0.25f * Talents.ImprovedOverpower;
             }
             // Variables
@@ -930,7 +931,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 20f - cost - (Talents.GlyphOfResonatingPower?5f:0f) - (Talents.FocusedRage*1f);
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = 300f + StatS.AttackPower * 0.12f;
-                DamageBonus = Talents.ImprovedThunderClap * 0.10f;
+                DamageBonus = 1f + Talents.ImprovedThunderClap * 0.10f;
                 BonusCritChance = Talents.Incite * 0.05f;
             }
             // Variables
@@ -1000,7 +1001,7 @@ namespace Rawr.DPSWarr {
                 CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)) /** latencyMOD*/; // In Seconds
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.AvgMhWeaponDmg + 250f;
-                DamageBonus = (Talents.UnendingFury * 0.02f) + (StatS.BonusSlamDamage);
+                DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusSlamDamage);
             }
             // Variables
             // Get/Set
@@ -1136,7 +1137,7 @@ namespace Rawr.DPSWarr {
                     if (!GetValided()) { return 0f; }
                     float Hits = (float)Math.Max(0f, OverridesPerSec);
                     HSorCLVPerSecond = Hits;
-                    return Hits * RotationLength * (1f - Whiteattacks.AvoidanceStreak);
+                    return Hits * RotationLength;
                 }
             }
             public override float MaxActivates { get { return Activates; } }
@@ -1190,7 +1191,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
                 DamageBase = combatFactors.AvgMhWeaponDmg + 222f;
-                DamageBonus = Talents.ImprovedCleave * 0.40f;
+                DamageBonus = 1f + Talents.ImprovedCleave * 0.40f;
                 BonusCritChance = Talents.Incite * 0.05f;
             }
             // Variables
@@ -1244,7 +1245,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = 380f;
-                DamageBonus = 0.10f * Talents.ImprovedRend + 0.15f * Talents.Trauma;
+                DamageBonus = (1f + 0.10f * Talents.ImprovedRend) * (1f + 0.15f * Talents.Trauma);
             }
             // Variables
             // Get/Set
@@ -1263,7 +1264,7 @@ namespace Rawr.DPSWarr {
                     float DmgBonusBase = ((StatS.AttackPower * combatFactors.MainHand.Speed) / 14f + (combatFactors.MainHand.MaxDamage + combatFactors.MainHand.MinDamage) / 2f) * (743f / 300000f);
                     float DmgBonusO75 = 0.25f * 1.35f * DmgBonusBase;
                     float DmgBonusU75 = 0.75f * 1.00f * DmgBonusBase;
-                    float DmgMod = (1f + StatS.BonusBleedDamageMultiplier + DamageBonus);
+                    float DmgMod = (1f + StatS.BonusBleedDamageMultiplier) * DamageBonus;
 
                     float TickSize = (DamageBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
                     return TickSize;

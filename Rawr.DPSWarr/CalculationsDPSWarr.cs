@@ -555,18 +555,21 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          character.MainHand.Type == Item.ItemType.Dagger ||
                                          character.MainHand.Type == Item.ItemType.FistWeapon)
                                          ? talents.OneHandedWeaponSpecialization * 0.02f: 0f)
-                                         +*/ (character.MainHand != null &&
+                                         +*/ 
+                                        1f *
+                                        (character.MainHand != null &&
                                         (character.MainHand.Type == Item.ItemType.Polearm     ||
                                          character.MainHand.Type == Item.ItemType.TwoHandAxe  ||
                                          character.MainHand.Type == Item.ItemType.TwoHandMace ||
                                          character.MainHand.Type == Item.ItemType.TwoHandSword)
-                                         ? talents.TwoHandedWeaponSpecialization * 0.02f : 0f)
-                                         +
+                                         ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 0f)
+                                         *
                                          ((talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
                                         (character.OffHand.Type  == Item.ItemType.TwoHandAxe  ||
                                          character.OffHand.Type  == Item.ItemType.TwoHandMace ||
                                          character.OffHand.Type  == Item.ItemType.TwoHandSword)
-                                         ? -0.10f : 0f)),
+                                         ? 0.90f : 1f)) -
+                                         1f,
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
@@ -594,7 +597,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //statsTotal.Strength = (float)(int)statsTotal.Strength;
 
             // Agility
-
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+            
             // Armor
             statsTotal.Armor *= (1f + statsTotal.BonusArmorMultiplier);
             statsTotal.Armor += statsTotal.Agility * 2f;
@@ -709,7 +713,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (calcOpts.FuryStance) {
                 if (talents.DeathWish > 0) {
                     Skills.BuffEffect Death = new Skills.DeathWish(character, statsTotal, combatFactors, whiteAttacks);
-                    statsProcs += Death.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
+                    statsProcs += Death.AverageStats;
                 }
                 /*SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
