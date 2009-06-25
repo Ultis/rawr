@@ -29,7 +29,7 @@ namespace Rawr.Enhance
 
         public int TargetLevel = 83;
         public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
-        public string ShattrathFaction = "Aldor";
+        public int AverageLag = 250;
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
         public float FightLength = 6.0f;

@@ -76,6 +76,7 @@
     <Compile Include="CalculationOptionsPanelEnhance.xaml.cs">
       <DependentUpon>CalculationOptionsPanelEnhance.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Clipboard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +90,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="clipboard.swf" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v3.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

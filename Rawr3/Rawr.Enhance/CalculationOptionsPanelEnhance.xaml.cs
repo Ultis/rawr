@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace Rawr.Enhance
 {
-    public partial class CalculationOptionsPanelEnhance : UserControl
+    public partial class CalculationOptionsPanelEnhance : ICalculationOptionsPanel
     {
         public CalculationOptionsPanelEnhance()
         {

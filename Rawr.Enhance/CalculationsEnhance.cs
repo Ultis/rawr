@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-using Rawr.Enhance;
 
-namespace Rawr
+namespace Rawr.Enhance
 {
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", Character.CharacterClass.Shaman)]
 	public class CalculationsEnhance : CalculationsBase
     {
+        private string VERSION = "3.0.0.0";
+
         #region Gemming Template
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -155,8 +156,8 @@ namespace Rawr
 				if (_subPointNameColors == null)
 				{
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
-                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(160, 0, 224));
-                    _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(64, 128, 32));
+                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255, 160, 0, 224));
+                    _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(255, 64, 128, 32));
                 }
 				return _subPointNameColors;
 			}
@@ -504,6 +505,11 @@ namespace Rawr
             calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.ChanceYellowHit, -1, -1, cs.ChanceYellowCrit);
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
             
+#if SILVERLIGHT
+            calculatedStats.Version = VERSION;
+#else
+            calculatedStats.Version = typeof(CalculationsEnhance).Assembly.GetName().Version.ToString();
+#endif
 			return calculatedStats;
             #endregion
         }

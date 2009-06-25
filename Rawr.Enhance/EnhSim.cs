@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
+using System.Windows;
 
 namespace Rawr.Enhance
 {
@@ -166,6 +167,20 @@ namespace Rawr.Enhance
             _configText = sb.ToString();
         }
 
+#if SILVERLIGHT
+        public void copyToClipboard()
+        {
+			try
+			{
+                Clipboard.SetText(_configText);
+			}
+			catch { }
+            MessageBox.Show("EnhSim config data copied to clipboard\n" + 
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.7.0 or higher, to import it\n" +
+                "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
+                "Enhance Module", MessageBoxButton.OK);
+        }
+#else
         public void copyToClipboard()
         {
 			try
@@ -178,7 +193,7 @@ namespace Rawr.Enhance
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
-
+#endif
         private void addBuffs(Character character, StringBuilder sb)
         {
             sb.AppendLine("#########");

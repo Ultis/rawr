@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 
 namespace Rawr.Enhance
@@ -279,6 +280,13 @@ namespace Rawr.Enhance
             set { _lavaLash = value; }
         }
 
+        private string _version;
+        public string Version
+        {
+            get { return _version; }
+            set { _version = value; }
+        }
+
         public List<Buff> ActiveBuffs { get; set; }
         #endregion
 
@@ -360,9 +368,9 @@ namespace Rawr.Enhance
             dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield,DPSPoints));
             dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
-            
-            dictValues.Add("Enhance Version", typeof(CalculationsEnhance).Assembly.GetName().Version.ToString());
 
+            dictValues.Add("Enhance Version", _version);
+ 
             dictValues.Add("Status", String.Format("Enhance Model : DPS Points {0}, Survivability Points {1}, Overall Points {2}",
                 DPSPoints.ToString("F2", CultureInfo.InvariantCulture),
                 SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture),

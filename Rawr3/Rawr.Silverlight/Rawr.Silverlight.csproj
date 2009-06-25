@@ -416,6 +416,10 @@
       <Project>{FB0E8A91-FE4B-425B-8773-792AB0232245}</Project>
       <Name>Rawr.DPSWarr</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.csproj">
+      <Project>{3D73B646-5271-4E55-9089-CCBD3E26EECD}</Project>
+      <Name>Rawr.Enhance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
