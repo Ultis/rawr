@@ -285,8 +285,19 @@ namespace Rawr.DPSDK
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             GetTalents(character);
+
+#if SILVERLIGHT
+            if (character != null && character.MainHand != null && character.MainHand.Item == null)
+            {
+                character.MainHand.Item = new Item("Test Weapon", Item.ItemQuality.Artifact, Item.ItemType.TwoHandAxe, 12345, "",
+                   Item.ItemSlot.TwoHand, "", false, new Stats() { Strength = 100f }, new Stats() { }, Item.ItemSlot.None, Item.ItemSlot.None,
+                   Item.ItemSlot.None, 500, 1500, Item.ItemDamageType.Physical, 3.6f, "");
+            }
+#endif
+
             Stats stats = GetCharacterStats(character, additionalItem);
 
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
@@ -295,8 +306,7 @@ namespace Rawr.DPSDK
             calcs.Talents = calcOpts.talents;
 
             CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts);
-            StatsSpecialEffects se = new StatsSpecialEffects(character, stats, combatTable);
-
+            
             //DPS Subgroups
             float dpsWhite = 0f;
             float dpsBCB = 0f;
@@ -342,7 +352,7 @@ namespace Rawr.DPSDK
 
             //damage multipliers
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
-            float frostSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f); //implement razorice here later
+            float frostSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f);
 
             float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
             // Covers all % physical damage increases.  Blood Frenzy, FI.

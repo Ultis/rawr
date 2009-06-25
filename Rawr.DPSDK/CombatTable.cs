@@ -39,6 +39,15 @@ namespace Rawr.DPSDK
             totalMeleeAbilities = 0f;
             totalSpellAbilities = 0f;
 
+
+#if SILVERLIGHT
+            if (calcOpts.rotation == null)
+            {
+                calcOpts.rotation = new Rotation();
+                calcOpts.rotation.setRotation(Rotation.Type.Blood);
+            }
+#endif
+
             totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
                 calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike +
                 calcOpts.rotation.FrostStrike;
