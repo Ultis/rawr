@@ -737,16 +737,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		[Percentage]
-        [Category("Combat Values")]
-		[DisplayName("% Armor Penetration")]
-		public float ArmorPenetration
-        {
-            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorPenetration]; }
-			set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorPenetration] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         [DisplayName("Armor Penetration Rating")]
         [CommonStat]
@@ -793,6 +783,125 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.SpellPenetration] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Crit Rating")]
+        [CommonStat]
+        public float CritRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Hit Rating")]
+        [CommonStat]
+        public float HitRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HitRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Dodge Rating")]
+        [CommonStat]
+        public float DodgeRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DodgeRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Parry Rating")]
+        [CommonStat]
+        public float ParryRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ParryRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ParryRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Block Rating")]
+        [CommonStat]
+        public float BlockRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BlockRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Block Value")]
+        [CommonStat]
+        public float BlockValue
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BlockValue]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BlockValue] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Defense Rating")]
+        [CommonStat]
+        public float DefenseRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DefenseRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Resilience")]
+        [CommonStat]
+        public float Resilience
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Resilience]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Resilience] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Expertise Rating")]
+        [CommonStat]
+        public float ExpertiseRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExpertiseRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Haste Rating")]
+        [CommonStat]
+        public float HasteRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HasteRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Mana per 5 sec")]
+        [CommonStat]
+        public float Mp5
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mp5]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mp5] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Health per 5 sec")]
+        [CommonStat]
+        public float Hp5
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Hp5]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Hp5] = value; }
+        }
         #endregion
 
         #region Resistances
@@ -860,6 +969,36 @@ namespace Rawr {
         #endregion
 
         #region Buffs / Debuffs
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% Healing Received")]
+        public float HealingReceivedMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Base Mana / Hit")]
+        [Category("Buffs / Debuffs")]
+        public float ManaRestoreFromBaseManaPerHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Max Mana / Sec")]
+        [Category("Buffs / Debuffs")]
+        public float ManaRestoreFromMaxManaPerSecond
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond] = value; }
+        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -982,6 +1121,16 @@ namespace Rawr {
         #endregion
 
         #region Combat Values
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Armor Penetration")]
+        public float ArmorPenetration
+        {
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorPenetration]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorPenetration] = value; }
+        }
+
         [Percentage]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% Spell Crit")]
@@ -990,6 +1139,130 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellCrit] = value; }
+        }
+        [Percentage]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
+        [DisplayName("% Spell Hit")]
+        public float SpellHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Spell Haste")]
+        public float SpellHaste
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellHaste]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellHaste] = value; }
+        }
+
+        // percentage mana generation while casting
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
+        [DisplayName("Combat Mana Regeneration")]
+        public float SpellCombatManaRegeneration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellCombatManaRegeneration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellCombatManaRegeneration] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Physical Crit")]
+        public float PhysicalCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PhysicalCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        public float Parry
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Parry]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Parry] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
+        [Percentage]
+        [DisplayName("% Block")]
+        public float Block
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Block]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Block] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hit")]
+        [Category("Combat Values")]
+        public float PhysicalHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PhysicalHit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Dodge")]
+        [Category("Combat Values")]
+        public float Dodge
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Dodge]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Dodge] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
+        public float Defense
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Defense]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Defense] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
+        public float Expertise
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Expertise]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Expertise] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Physical Haste")]
+        public float PhysicalHaste
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Ranged Haste")]
+        public float RangedHaste
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.RangedHaste]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.RangedHaste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Combat Values")]
+        [DisplayName("% Miss")]
+        public float Miss
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Miss]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Miss] = value; }
         }
         #endregion
 
@@ -1003,8 +1276,40 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellCritRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellCritRating] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        [DisplayName("Spell Hit Rating")]
+        [CommonStat]
+        public float SpellHitRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHitRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        [DisplayName("Spell Haste Rating")]
+        [CommonStat]
+        public float SpellHasteRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Deprecated")]
+        [DisplayName("Melee Crit")]
+        [CommonStat]
+        public float CritMeleeRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritMeleeRating] = value; }
+        }
+
         #endregion
 
+        #region Spell Combat Ratings
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Shadow Damage")]
@@ -1054,86 +1359,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellNatureDamageRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellNatureDamageRating] = value; }
         }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Spell Hit Rating")]
-        [CommonStat]
-        public float SpellHitRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHitRating] = value; }
-        }
-
-        [Percentage]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Values")]
-        [DisplayName("% Spell Hit")]
-        public float SpellHit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Spell Haste Rating")]
-        [CommonStat]
-        public float SpellHasteRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Combat Values")]
-        [DisplayName("% Spell Haste")]
-        public float SpellHaste
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellHaste]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellHaste] = value; }
-        }
-
-        // percentage mana generation while casting
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Values")]
-        [DisplayName("Combat Mana Regeneration")]
-        public float SpellCombatManaRegeneration
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellCombatManaRegeneration]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellCombatManaRegeneration] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Combat Values")]
-        [DisplayName("% Physical Crit")]
-        public float PhysicalCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PhysicalCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Crit Rating")]
-        [CommonStat]
-        public float CritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CritRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Melee Crit")]
-        [CommonStat]
-        public float CritMeleeRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CritMeleeRating] = value; }
-        }
+        #endregion
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -1146,151 +1372,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Hit Rating")]
-        [CommonStat]
-        public float HitRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HitRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Hit")]
-        [Category("Combat Values")]
-        public float PhysicalHit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PhysicalHit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Dodge Rating")]
-        [CommonStat]
-        public float DodgeRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DodgeRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Dodge")]
-        [Category("Combat Values")]
-        public float Dodge
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Dodge]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Dodge] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Combat Values")]
-        public float Parry
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Parry]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Parry] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Parry Rating")]
-        [CommonStat]
-        public float ParryRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ParryRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ParryRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Values")]
-        [Percentage]
-        [DisplayName("% Block")]
-        public float Block
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Block]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Block] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Block Rating")]
-        [CommonStat]
-        public float BlockRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BlockRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Block Value")]
-        [CommonStat]
-        public float BlockValue
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BlockValue]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BlockValue] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Values")]
-        public float Defense
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Defense]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Defense] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Defense Rating")]
-        [CommonStat]
-        public float DefenseRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DefenseRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Resilience")]
-        [CommonStat]
-        public float Resilience
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Resilience]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Resilience] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Values")]
-        public float Expertise
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Expertise]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Expertise] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Expertise Rating")]
-        [CommonStat]
-        public float ExpertiseRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExpertiseRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Haste Rating")]
-        [CommonStat]
-        public float HasteRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HasteRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Old Equipment Procs")]
         public float HasteRatingOnPhysicalAttack
         {
@@ -1299,92 +1380,11 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Combat Values")]
-        [DisplayName("% Physical Haste")]
-        public float PhysicalHaste
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste] = value; }
-        }
-
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Combat Values")]
-        [DisplayName("% Ranged Haste")]
-        public float RangedHaste
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.RangedHaste]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.RangedHaste] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Buffs / Debuffs")]
-        [DisplayName("% Healing Received")]
-        public float HealingReceivedMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Mana per 5 sec")]
-        [CommonStat]
-        public float Mp5
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mp5]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mp5] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Health per 5 sec")]
-        [CommonStat]
-        public float Hp5
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Hp5]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Hp5] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Combat Values")]
-        [DisplayName("% Miss")]
-        public float Miss
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Miss]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Miss] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
         public float InterruptProtection
         {
             get { return _rawAdditiveData[(int)AdditiveStat.InterruptProtection]; }
             set { _rawAdditiveData[(int)AdditiveStat.InterruptProtection] = value; }
-        }
-        [Percentage]
-        [DisplayName("% Base Mana / Hit")]
-        [Category("Buffs / Debuffs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestoreFromBaseManaPerHit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit] = value; }
-        }
-
-
-        [Percentage]
-        [DisplayName("% Max Mana / Sec")]
-        [Category("Buffs / Debuffs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestoreFromMaxManaPerSecond
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond] = value; }
         }
 
         #region Hunter Bonuses
