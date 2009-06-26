@@ -231,8 +231,6 @@ namespace Rawr {
         #region Added by Rawr.Enhance
         TotemLLAttackPower,
         TotemShockSpellPower,
-        TotemShockAttackPower,
-        TotemSSHaste,
         TotemSSDamage,
         TotemWFAttackPower,
         BonusFlurryHaste,
@@ -3038,22 +3036,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TotemShockSpellPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.TotemShockSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float TotemShockAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TotemShockAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TotemShockAttackPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float TotemSSHaste
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TotemSSHaste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TotemSSHaste] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

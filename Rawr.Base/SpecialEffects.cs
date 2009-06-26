@@ -932,7 +932,7 @@ namespace Rawr
             }
             else if (line == "Each time your Seal of Vengeance ability deals periodic damage, you have a chance to gain 200 strength for 16 sec.")
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SealOfVengeanceTick, new Stats() { Strength = 200 }, 16, 45, .2f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SealOfVengeanceTick, new Stats() { Strength = 200 }, 16f, 45f, .2f));
             }
             #region Added by Rawr.ProtPaladin
             else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
@@ -959,11 +959,11 @@ namespace Rawr
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
             {
-                stats.TotemShockAttackPower += 110f * 10f / 45f; // Stonebreaker's Totem
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanShock, new Stats() { AttackPower = 110 }, 10f, 45f));
             }
             else if (line == "Your Storm Strike ability also grants you 60 haste rating for 6 sec.")
             {
-                stats.TotemSSHaste += 60f; // Totem of Dueling
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanStormStrike, new Stats() { HasteRating = 60 }, 6f, 0f));
             }
             else if (line == "Increases the attack power bonus on Windfury Weapon attacks by ")
             {
@@ -976,6 +976,15 @@ namespace Rawr
                 Regex r = new Regex("Your Lava Lash ability also grants you (?<attackpower>\\d*) attack power for 6 sec.");
                 Match m = r.Match(line);
                 if (m.Success) // XXX Gladiators Totem of Indomitability
+                {
+                    stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
+                }
+            }
+            else if (line.StartsWith(""))
+            {
+                Regex r = new Regex("Each time you use your Lava Lash ability, you have the chance to gain (?<attackpower>\\d*) attack power for 18 sec.");
+                Match m = r.Match(line);
+                if (m.Success) // Totem of Quaking Earth
                 {
                     stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
                 }

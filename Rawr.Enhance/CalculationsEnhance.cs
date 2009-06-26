@@ -264,9 +264,8 @@ namespace Rawr.Enhance
                 stats.SpellPower += FTspellpower;
             
             //totem procs
-            stats.HasteRating += stats.TotemSSHaste * 6f / 8f; // last 6 seconds per 8 seconds SS CD
             stats.SpellPower += stats.TotemShockSpellPower;
-            stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
+            stats.AttackPower += stats.TotemLLAttackPower;
             float addedAttackPower = stats.AttackPower - initialAP;
             float MQSpellPower = mentalQuickness * addedAttackPower * (1 + stats.BonusAttackPowerMultiplier);
             // make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
@@ -714,8 +713,6 @@ namespace Rawr.Enhance
 					ExpertiseRating = stats.ExpertiseRating,
                     ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
-					//MongooseProc = stats.MongooseProc,
-                    //BerserkingProc = stats.BerserkingProc,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -739,9 +736,7 @@ namespace Rawr.Enhance
                     CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
                     TotemLLAttackPower = stats.TotemLLAttackPower,
-                    TotemShockAttackPower = stats.TotemShockAttackPower,
                     TotemShockSpellPower = stats.TotemShockSpellPower,
-                    TotemSSHaste = stats.TotemSSHaste,
                     TotemSSDamage = stats.TotemSSDamage,
                     TotemWFAttackPower = stats.TotemWFAttackPower,
                     GreatnessProc = stats.GreatnessProc,
@@ -810,8 +805,8 @@ namespace Rawr.Enhance
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.GreatnessProc +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
-                stats.TotemWFAttackPower + stats.TotemSSHaste +
-                stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower +
+                stats.TotemWFAttackPower + 
+                stats.TotemShockSpellPower + stats.TotemLLAttackPower +
                 stats.BonusLSDamage + stats.BonusLLSSDamage + stats.TotemSSDamage) > 0
 
                 &&

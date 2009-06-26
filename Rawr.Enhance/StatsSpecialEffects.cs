@@ -28,7 +28,7 @@ namespace Rawr.Enhance
                 else
                 {
                     float trigger = 0f;
-                    float chance = 0f;
+                    float chance = effect.Chance;
                     float unhastedAttackSpeed = 3f;
                     switch (effect.Trigger)
                     {
@@ -64,8 +64,16 @@ namespace Rawr.Enhance
                             chance = 1 - cs.ChanceSpellHit;
                             break;
                         case Trigger.ShamanLightningBolt :
-                            trigger = cs.SecondsToFiveStack;
-                            chance = 0.15f;
+                            trigger = 1f / cs.AbilityCooldown("Lightning Bolt");
+                            break;
+                        case Trigger.ShamanStormStrike :
+                            trigger = 1f / cs.AbilityCooldown("Stormstrike");
+                            break;
+                        case Trigger.ShamanShock :
+                            trigger = 1f / cs.AbilityCooldown("Earth Shock");
+                            break;
+                        case Trigger.ShamanLavaLash :
+                            trigger = 1f / cs.AbilityCooldown("Lava Lash");
                             break;
                     }
                     if (effect.MaxStack > 1)

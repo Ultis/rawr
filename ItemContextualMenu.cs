@@ -318,7 +318,7 @@ namespace Rawr
 			{
 				ItemCache.AddItem(newItem, true);
 			}*/
-                        Item newItem = Item.LoadFromId(_item.Id, true, true, true);
+            Item newItem = Item.LoadFromId(_item.Id, true, true, true);
 			ItemCache.OnItemsChanged();
 		}
 
