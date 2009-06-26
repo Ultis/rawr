@@ -81,6 +81,7 @@ namespace Rawr.DPSDK
             txtHoW.Text = rotation.Horn.ToString();
             cbManagedRP.Checked = rotation.managedRP;
             PTRCalcs.Checked = rotation.PTRCalcs;
+            cbTAT.Checked = rotation.TAT;
             txtGargoyleDuration.Text = rotation.GargoyleDuration.ToString();
             if (rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
             {
@@ -511,6 +512,12 @@ namespace Rawr.DPSDK
         private void PTRCalcs_CheckedChanged(object sender, EventArgs e)
         {
             rotation.PTRCalcs = PTRCalcs.Checked;
+            updateLabels();
+        }
+
+        private void cbTAT_CheckedChanged(object sender, EventArgs e)
+        {
+            rotation.TAT = cbTAT.Checked;
             updateLabels();
         }
     }

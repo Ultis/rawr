@@ -310,26 +310,10 @@ namespace Rawr.DPSDK
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             float critRating = BasicStats.CritRating;
-       /*     if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
-                critRating -= 3444f / 52f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Leader of the Pack")))
-                critRating -= 22.08f * 5;*/
 
             float hitRating = BasicStats.HitRating;
-          /*  if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Faerie Fire")))
-                hitRating -= 47.3077f;*/
-         /*   if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-                hitRating -= 15.769f;*/
 
             float armorPenetrationRating = BasicStats.ArmorPenetrationRating;
-			//if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")) ||
-			//    ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")) ||
-			//    ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
-			//    armorPenetration -= 3925f;
-			//if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")) ||
-			//    ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) ||
-			//    ActiveBuffs.Contains(Buff.GetBuffByName("Sting")))
-			//    armorPenetration -= 1260f;
 
             float attackPower = BasicStats.AttackPower;
             if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))

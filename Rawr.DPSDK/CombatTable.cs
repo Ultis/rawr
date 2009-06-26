@@ -223,8 +223,8 @@ namespace Rawr.DPSDK
             {
                 OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
 
-                float OHMult = .05f * (float)talents.NervesOfColdSteel;
-                OH.damage *= .5f + OHMult;
+               // float OHMult = .05f * (float)talents.NervesOfColdSteel;
+               // OH.damage *= .5f + OHMult;
 
                 calcs.OHAttackSpeed = OH.hastedSpeed;
                 calcs.OHWeaponDamage = OH.damage;

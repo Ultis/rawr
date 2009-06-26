@@ -38,6 +38,7 @@ namespace Rawr.DPSDK
         public Boolean GlyphofFS = false;
         public Boolean managedRP = false;
         public Boolean PTRCalcs = false;
+		public Boolean TAT = false;
         public float GCDTime;
         public float RP;
 

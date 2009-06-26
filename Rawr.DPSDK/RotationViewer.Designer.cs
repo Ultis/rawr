@@ -78,6 +78,7 @@
             this.label22 = new System.Windows.Forms.Label();
             this.cbManagedRP = new System.Windows.Forms.CheckBox();
             this.PTRCalcs = new System.Windows.Forms.CheckBox();
+            this.cbTAT = new System.Windows.Forms.CheckBox();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -559,11 +560,24 @@
             this.PTRCalcs.UseVisualStyleBackColor = true;
             this.PTRCalcs.CheckedChanged += new System.EventHandler(this.PTRCalcs_CheckedChanged);
             // 
+            // cbTAT
+            // 
+            this.cbTAT.AutoSize = true;
+            this.cbTAT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbTAT.Location = new System.Drawing.Point(199, 114);
+            this.cbTAT.Name = "cbTAT";
+            this.cbTAT.Size = new System.Drawing.Size(112, 17);
+            this.cbTAT.TabIndex = 81;
+            this.cbTAT.Text = "Specced into ToT";
+            this.cbTAT.UseVisualStyleBackColor = true;
+            this.cbTAT.CheckedChanged += new System.EventHandler(this.cbTAT_CheckedChanged);
+            // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(352, 424);
+            this.Controls.Add(this.cbTAT);
             this.Controls.Add(this.PTRCalcs);
             this.Controls.Add(this.cbManagedRP);
             this.Controls.Add(this.txtHoW);
@@ -674,5 +688,6 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.CheckBox cbManagedRP;
         private System.Windows.Forms.CheckBox PTRCalcs;
+        private System.Windows.Forms.CheckBox cbTAT;
     }
 }
