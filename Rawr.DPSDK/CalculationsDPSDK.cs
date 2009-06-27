@@ -364,7 +364,8 @@ namespace Rawr.DPSDK
             float BloodPlagueAPMult = 0.055f;
             float DeathCoilAPMult = 0.15f;
             float UnholyBlightAPMult = 0.013f;
-            float GargoyleAPMult = 0.37f;   // pre 3.0.8 == 0.42f...now probably ~0.3f
+            float GargoyleAPMult = 0.4f;   // pre 3.0.8 == 0.42f...now probably ~0.3f
+                                            // TESTED on june 27th 2009 and found to be 0.40f
             float BloodwormsAPMult = 0.006f;
 
             //for estimating rotation pushback
@@ -833,19 +834,16 @@ namespace Rawr.DPSDK
 
                 #region Gargoyle
                 {
-                    if (calcOpts.rotation.GargoyleDuration > 0f)
+                    if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
                     {
-                        float GargoyleCastTime = 2.4f;
-                        /* // Gargoyle usually doesn't get Bloodlust because he is triggered at the beginning of the fight...might take a BL over time ratio...maybe
-                        if (stats.Bloodlust > 0)
-                        {
-                            GargoyleCastTime *= .7f;
-                        }
-                        */
-                        float GargoyleStrike = GargoyleAPMult * stats.AttackPower;
+                        float GargoyleCastTime = 2.0f;  //2.0 second base cast time
+                        GargoyleCastTime *= combatTable.MH.baseSpeed / combatTable.MH.hastedSpeed;
+                        // benefits from all haste effects
+
+                        float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
                         float GargoyleStrikeCount = calcOpts.rotation.GargoyleDuration / GargoyleCastTime;
                         float GargoyleDmg = GargoyleStrike * GargoyleStrikeCount;
-                        GargoyleDmg *= 1f + (.5f * combatTable.spellCrits);  // Gargoyle does 150% crits apparently
+                        GargoyleDmg *= 1f + (.5f * .05f);  // crit rate is uninfluenced by stats, but roughly crap
                         dpsGargoyle = GargoyleDmg / 180f;
                     }
                 }
@@ -1723,18 +1721,14 @@ namespace Rawr.DPSDK
                 {
                     if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
                     {
-                        float GargoyleCastTime = 2.4f;
-                        if (stats.Bloodlust > 0)
-                        {
-                            GargoyleCastTime *= .7f;
-                        }
+                        float GargoyleCastTime = 2.0f;  //2.0 second base cast time
+						GargoyleCastTime *= combatTable.MH.baseSpeed / combatTable.MH.hastedSpeed;
+                        // benefits from all haste effects
 						
-						GargoyleCastTime /= (1f / (1f +stats.PhysicalHaste));
-						
-                        float GargoyleStrike = GargoyleAPMult * stats.AttackPower;
+                        float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
                         float GargoyleStrikeCount = calcOpts.rotation.GargoyleDuration / GargoyleCastTime;
                         float GargoyleDmg = GargoyleStrike * GargoyleStrikeCount;
-                        GargoyleDmg *= 1f + (.5f * combatTable.spellCrits);  // Gargoyle does 150% crits apparently
+                        GargoyleDmg *= 1f + (.5f * .05f);  // crit rate is uninfluenced by stats, but roughly crap
                         dpsGargoyle = GargoyleDmg / 180f;
                     }
                 }
