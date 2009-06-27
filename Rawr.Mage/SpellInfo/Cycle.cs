@@ -584,6 +584,27 @@ namespace Rawr.Mage
             spellList.Add(spell);
         }
 
+        public void AddSpell(DotSpell spell, CastingState castingState, float dotUptime)
+        {
+            if (recalc5SR)
+            {
+                fsr.AddSpell(spell.CastTime - castingState.Latency, castingState.Latency, spell.Channeled);
+            }
+            Ticks += spell.Ticks;
+            CastTime += spell.CastTime;
+            NukeProcs += spell.NukeProcs;
+            HitProcs += spell.HitProcs;
+            CastProcs += spell.CastProcs;
+            CritProcs += spell.CritProcs;
+            TargetProcs += spell.TargetProcs;
+            damagePerSecond += (spell.DamagePerSecond + dotUptime * spell.DotDamagePerSecond) * spell.CastTime;
+            threatPerSecond += (spell.ThreatPerSecond + dotUptime * spell.DotThreatPerSecond) * spell.CastTime;
+            costPerSecond += spell.CostPerSecond * spell.CastTime;
+            DpsPerSpellPower += (spell.DpsPerSpellPower + dotUptime * spell.DotDpsPerSpellPower) * spell.CastTime;
+            AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
+            spellList.Add(spell);
+        }
+
         public void AddPause(float duration)
         {
             if (recalc5SR)
@@ -686,6 +707,26 @@ namespace Rawr.Mage
             damagePerSecond += weight * spell.CastTime * spell.DamagePerSecond;
             threatPerSecond += weight * spell.CastTime * spell.ThreatPerSecond;
             DpsPerSpellPower += weight * spell.CastTime * spell.DpsPerSpellPower;
+        }
+
+        protected void AddSpell(bool needsDisplayCalculations, DotSpell spell, float weight, float dotUptime)
+        {
+            if (needsDisplayCalculations)
+            {
+                Cycle.Add(spell);
+                Weight.Add(weight);
+            }
+            CastTime += weight * spell.CastTime;
+            CastProcs += weight * spell.CastProcs;
+            NukeProcs += weight * spell.NukeProcs;
+            Ticks += weight * spell.Ticks;
+            HitProcs += weight * spell.HitProcs;
+            CritProcs += weight * spell.CritProcs;
+            TargetProcs += weight * spell.TargetProcs;
+            costPerSecond += weight * spell.CastTime * spell.CostPerSecond;
+            damagePerSecond += weight * spell.CastTime * (spell.DamagePerSecond + dotUptime * spell.DotDamagePerSecond);
+            threatPerSecond += weight * spell.CastTime * (spell.ThreatPerSecond + dotUptime * spell.DotThreatPerSecond);
+            DpsPerSpellPower += weight * spell.CastTime * (spell.DpsPerSpellPower + dotUptime * spell.DotDpsPerSpellPower);
         }
 
         protected void AddPause(float duration, float weight)

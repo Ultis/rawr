@@ -52,6 +52,7 @@ namespace Rawr.Mage
         [Description("POM+Pyroblast")]
         PyroblastPOM,
         PyroblastPOMSpammed,
+        PyroblastPOMDotUptime,
         [Description("Fire Blast")]
         FireBlast,
         [Description("Scorch")]
@@ -699,6 +700,14 @@ namespace Rawr.Mage
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState, false, pom, spammedDot);
+            return spell;
+        }
+
+        public DotSpell GetSpell(CastingState castingState, bool pom)
+        {
+            DotSpell spell = new DotSpell(this);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState, false, pom);
             return spell;
         }
 

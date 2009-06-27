@@ -836,6 +836,9 @@ namespace Rawr.Mage
                 case SpellId.PyroblastPOMSpammed:
                     s = Calculations.PyroblastTemplate.GetSpell(this, true, true);
                     break;
+                case SpellId.PyroblastPOMDotUptime:
+                    s = Calculations.PyroblastTemplate.GetSpell(this, true);
+                    break;
                 case SpellId.LivingBomb:
                     s = Calculations.LivingBombTemplate.GetSpell(this);
                     break;

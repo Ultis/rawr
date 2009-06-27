@@ -89,6 +89,66 @@ namespace Rawr.Mage
         }
     }
 
+    public class DotSpell : Spell
+    {
+        public DotSpell(SpellTemplate template) : base(template) { }
+
+        public float DotDamagePerSecond;
+        public float DotThreatPerSecond;
+        public float DotDpsPerSpellPower;
+
+        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom)
+        {
+            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, false, false, false);
+        }
+
+        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool round, bool forceHit, bool forceMiss)
+        {
+            MageTalents mageTalents = castingState.MageTalents;
+            Stats baseStats = castingState.BaseStats;
+            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+
+            if (CritRate < 0.0f) CritRate = 0.0f;
+            if (CritRate > 1.0f) CritRate = 1.0f;
+
+            HitProcs = Ticks * HitRate;
+            CritProcs = HitProcs * CritRate;
+            TargetProcs = HitProcs;
+
+            if (Instant) InterruptProtection = 1;
+            if (castingState.IcyVeins) InterruptProtection = 1;
+
+            float channelReduction;
+            CastTime = SpellTemplate.CalculateCastTime(castingState.Calculations.HasteRatingEffects, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+
+            if (Ticks > 0)
+            {
+                if (!forceMiss)
+                {
+                    float damagePerSpellPower;
+                    AverageDamage = CalculateDirectAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out damagePerSpellPower);
+
+                    DamagePerSecond = AverageDamage / CastTime;
+                    ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+                    DpsPerSpellPower = damagePerSpellPower / CastTime;
+
+                    float dotAverageDamage = CalculateDotAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out damagePerSpellPower);
+
+                    DotDamagePerSecond = dotAverageDamage / CastTime;
+                    DotThreatPerSecond = DotDamagePerSecond * ThreatMultiplier;
+                    DotDpsPerSpellPower = damagePerSpellPower / CastTime;
+                }
+            }
+            CastTime *= (1 - channelReduction);
+            CostPerSecond = CalculateCost(castingState.Calculations, round) / CastTime;
+
+            if (outOfFiveSecondRule)
+            {
+                OO5SR = 1;
+            }
+        }
+    }
+
     public class AbsorbSpell : Spell
     {
         public AbsorbSpell(SpellTemplate template) : base(template) { }
@@ -412,7 +472,34 @@ namespace Rawr.Mage
             return averageDamage + damagePerSpellPower * spellPower;
         }
 
-        private float CalculateCost(CharacterCalculationsMage calculations, bool round)
+        public virtual float CalculateDirectAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool forceHit, out float damagePerSpellPower)
+        {
+            float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
+            float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
+            float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
+            float commonMultiplier = SpellModifier * resistMultiplier;
+            float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
+            float averageDamage = baseAverage * nukeMultiplier;
+            damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
+            return averageDamage + damagePerSpellPower * spellPower;
+        }
+
+        public virtual float CalculateDotAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool forceHit, out float damagePerSpellPower)
+        {
+            float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
+            float commonMultiplier = SpellModifier * resistMultiplier;
+            float averageDamage = 0.0f;
+            damagePerSpellPower = 0.0f;
+            if (BasePeriodicDamage > 0.0f)
+            {
+                float dotFactor = commonMultiplier * DotDamageModifier;
+                averageDamage = BasePeriodicDamage * dotFactor;
+                damagePerSpellPower = DotDamageCoefficient * dotFactor;
+            }
+            return averageDamage + damagePerSpellPower * spellPower;
+        }
+
+        protected float CalculateCost(CharacterCalculationsMage calculations, bool round)
         {
             float cost;
             if (round)
