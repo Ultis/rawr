@@ -218,7 +218,7 @@ namespace Rawr.Enhance
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
-            float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
+            float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;
             float windfuryDamageBonus = 1f;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
@@ -263,9 +263,6 @@ namespace Rawr.Enhance
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
                 stats.SpellPower += FTspellpower;
             
-            //totem procs
-            stats.SpellPower += stats.TotemShockSpellPower;
-            stats.AttackPower += stats.TotemLLAttackPower;
             float addedAttackPower = stats.AttackPower - initialAP;
             float MQSpellPower = mentalQuickness * addedAttackPower * (1 + stats.BonusAttackPowerMultiplier);
             // make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
@@ -297,7 +294,7 @@ namespace Rawr.Enhance
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float bonusLSDamage = 1f + stats.BonusLSDamage; // 2 piece T7 set bonus
             float bonusLLSSDamage = 1f + stats.BonusLLSSDamage;
-            float bonusSSDamage = stats.TotemSSDamage;
+            float bonusSSDamage = stats.BonusSSDamage;
             int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
@@ -735,10 +732,8 @@ namespace Rawr.Enhance
 					SpellPower = stats.SpellPower,
                     CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
-                    TotemLLAttackPower = stats.TotemLLAttackPower,
-                    TotemShockSpellPower = stats.TotemShockSpellPower,
-                    TotemSSDamage = stats.TotemSSDamage,
-                    TotemWFAttackPower = stats.TotemWFAttackPower,
+                    BonusSSDamage = stats.BonusSSDamage,
+                    BonusWFAttackPower = stats.BonusWFAttackPower,
                     GreatnessProc = stats.GreatnessProc,
                     BonusLSDamage = stats.BonusLSDamage,
                     BonusFlurryHaste = stats.BonusFlurryHaste,
@@ -805,9 +800,8 @@ namespace Rawr.Enhance
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.GreatnessProc +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
-                stats.TotemWFAttackPower + 
-                stats.TotemShockSpellPower + stats.TotemLLAttackPower +
-                stats.BonusLSDamage + stats.BonusLLSSDamage + stats.TotemSSDamage) > 0
+                stats.BonusWFAttackPower +
+                stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0
 
                 &&
 

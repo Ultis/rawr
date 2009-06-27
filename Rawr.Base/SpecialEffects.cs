@@ -969,7 +969,7 @@ namespace Rawr
             {
                 line = line.Replace(".", "");
                 line = line.Substring("Increases the attack power bonus on Windfury Weapon attacks by ".Length);
-                stats.TotemWFAttackPower = float.Parse(line); // Totem of Astral Winds & Totem of Splintering
+                stats.BonusWFAttackPower = float.Parse(line); // Totem of Astral Winds & Totem of Splintering
             }
             else if (line.StartsWith("Your Lava Lash ability also grants you "))
             {
@@ -977,7 +977,8 @@ namespace Rawr
                 Match m = r.Match(line);
                 if (m.Success) // XXX Gladiators Totem of Indomitability
                 {
-                    stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
+                    float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 6f, 0f)); 
                 }
             }
             else if (line.StartsWith(""))
@@ -986,7 +987,8 @@ namespace Rawr
                 Match m = r.Match(line);
                 if (m.Success) // Totem of Quaking Earth
                 {
-                    stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
+                    float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 0f, 0.8f)); 
                 }
             }
             else if (line.StartsWith("Your Shock spells grant "))
@@ -995,7 +997,8 @@ namespace Rawr
                 Match m = r.Match(line);
                 if (m.Success) // XXX Gladiators Totem of Survival
                 {
-                    stats.TotemShockSpellPower += (float)int.Parse(m.Groups["spellpower"].Value);
+                    float bonusSpellpower = (float)int.Parse(m.Groups["spellpower"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanShock, new Stats() { SpellPower = bonusSpellpower }, 6f, 0f));
                 }
             }
             else if (line.StartsWith("Increases weapon damage when you use Stormstrike by "))
@@ -1004,7 +1007,7 @@ namespace Rawr
                 Match m = r.Match(line);
                 if (m.Success) // Totem of Dancing Flame
                 {
-                    stats.TotemSSDamage += (float)int.Parse(m.Groups["damage"].Value);
+                    stats.BonusSSDamage += (float)int.Parse(m.Groups["damage"].Value);
                 }
             }
             #endregion

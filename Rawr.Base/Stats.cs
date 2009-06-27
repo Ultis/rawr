@@ -229,10 +229,8 @@ namespace Rawr {
         SwiftmendBonus,
         #endregion
         #region Added by Rawr.Enhance
-        TotemLLAttackPower,
-        TotemShockSpellPower,
-        TotemSSDamage,
-        TotemWFAttackPower,
+        BonusSSDamage,
+        BonusWFAttackPower,
         BonusFlurryHaste,
         BonusLSDamage,
         BonusLLSSDamage,
@@ -3024,34 +3022,18 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Enhance")]
-        public float TotemLLAttackPower
+        public float BonusSSDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.TotemLLAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TotemLLAttackPower] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSSDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSSDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Enhance")]
-        public float TotemShockSpellPower
+        public float BonusWFAttackPower
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.TotemShockSpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TotemShockSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float TotemSSDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TotemSSDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TotemSSDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float TotemWFAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TotemWFAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TotemWFAttackPower] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWFAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWFAttackPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
