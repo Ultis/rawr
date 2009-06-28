@@ -1825,6 +1825,26 @@ namespace Rawr //O O . .
 		}
 #endif
 
+#if SILVERLIGHT
+        public void SaveBuffs(Stream writer)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+            serializer.Serialize(writer, _activeBuffs);
+            writer.Close();
+        }
+#else
+        public void SaveBuffs(string path)
+        {
+            List<string> buffs = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
+            using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
+            {
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<string>));
+                serializer.Serialize(writer, buffs);
+                writer.Close();
+            }
+        }
+#endif
+
 #if !SILVERLIGHT
         public static Character Load(string path)
         {
@@ -1877,7 +1897,7 @@ namespace Rawr //O O . .
 				catch (Exception)
 				{
 #if !SILVERLIGHT
-					Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
+					Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous version of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 #endif
 					character = new Character();
 				}
@@ -1887,9 +1907,46 @@ namespace Rawr //O O . .
 
             return character;
 		}
+
+        public void LoadBuffsFromXml(string path)
+        {
+            string xml = null;
+#if !SILVERLIGHT
+            if (File.Exists(path))
+            {
+                try
+                {
+                    xml = System.IO.File.ReadAllText(path);
+                }
+                catch (Exception)
+                {
+                    Log.Show("There was an error attempting to open this buff file.");
+                }
+            }
+#endif
+            if (!string.IsNullOrEmpty(xml))
+            {
+                try
+                {
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<string>));
+                    System.IO.StringReader reader = new System.IO.StringReader(xml);
+                    List<string> buffs = (List<string>)serializer.Deserialize(reader);
+                    _activeBuffs = new List<Buff>(buffs.ConvertAll(buff => Buff.GetBuffByName(buff))); ;
+                    _activeBuffs.RemoveAll(buff => buff == null);
+                    OnCalculationsInvalidated();
+                    reader.Close();
+                }
+                catch (Exception)
+                {
+#if !SILVERLIGHT
+                    Log.Show("There was an error attempting to open this buffs file. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. No buff changes have been applied.");
+#endif
+                }
+			}
+		}
 	}
 
-	public interface ICalculationOptionBase
+    public interface ICalculationOptionBase
 	{
 		string GetXml();
 	}

@@ -2248,5 +2248,35 @@ namespace Rawr
 			}
 			catch { }
         }
+
+        private void saveBuffsToolstripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.DefaultExt = ".buffs.xml";
+            dialog.Filter = "Rawr Xml Buff Files | *.buffs.xml";
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                this.Cursor = Cursors.WaitCursor;
+                Character.SaveBuffs(dialog.FileName);
+                this.Cursor = Cursors.Default;
+            }
+            dialog.Dispose();
+        }
+
+        private void loadBuffsToolstripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (PromptToSaveBeforeClosing())
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.DefaultExt = ".buffs.xml";
+                dialog.Filter = "Rawr Xml Buff Files | *.buffs.xml";
+                dialog.Multiselect = false;
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    Character.LoadBuffsFromXml(dialog.FileName);
+                }
+                dialog.Dispose();
+            }
+        }
     }
 }
