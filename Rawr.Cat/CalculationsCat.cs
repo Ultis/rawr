@@ -477,7 +477,8 @@ namespace Rawr.Cat
 			//TODO: TEMPORARY! Remove this once we have ability-specific procs working!
 			if (statsTotal.TerrorProc > 0)
 			{
-				float terrorUptime = 0.4f; //TODO: Calculate this
+				float terrorUptime = (character.ActiveBuffsContains("Mangle") || 
+					character.ActiveBuffsContains("Trauma")) ? 0f: 1f; //TODO: Calculate this
 				statsTotal.Agility += statsTotal.TerrorProc * terrorUptime * (1f + statsTotal.BonusAgilityMultiplier);
 				statsTotal.AttackPower += statsTotal.TerrorProc * terrorUptime * (1f + statsTotal.BonusAgilityMultiplier) * (1f + statsTotal.BonusAttackPowerMultiplier);
 			}

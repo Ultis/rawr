@@ -1026,6 +1026,16 @@ namespace Rawr
                         if (localItem != null)
                             newItem.LocalizedName = localItem.Name;
                     }
+					if (!useWowhead && newItem.SocketBonus.ToString() == "")
+					{
+						Item oldItem = ItemCache.FindItemById(id);
+						if (oldItem != null)
+						{ //If we loaded from the Armory, and got no socket bonus, and we used to 
+							//have a socket bonus, just reuse the old one; Armory has been bugged for a while now
+							//to not show socket bonuses.
+							newItem.SocketBonus = oldItem.SocketBonus.Clone();
+						}
+					}
                     ItemCache.AddItem(newItem, raiseEvent);
                 }
 				return ItemCache.FindItemById(id);
