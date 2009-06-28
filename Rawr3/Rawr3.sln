@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin", "Rawr.Moonki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance", "Rawr.Enhance\Rawr.Enhance.csproj", "{3D73B646-5271-4E55-9089-CCBD3E26EECD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Tree", "Rawr.Tree\Rawr.Tree.csproj", "{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 13
@@ -127,6 +129,10 @@ Global
 		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D73B646-5271-4E55-9089-CCBD3E26EECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

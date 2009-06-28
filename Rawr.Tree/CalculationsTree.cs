@@ -59,7 +59,7 @@ namespace Rawr.Tree
     }
 
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
-    class CalculationsTree : CalculationsBase
+    public class CalculationsTree : CalculationsBase
     {
         public static string[] predefRotations = {
                         "Tank Nourish (plus RJ/RG/Roll LB)",
@@ -182,7 +182,27 @@ namespace Rawr.Tree
             list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = brilliant, BlueId = sparkling, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
+#if SILVERLIGHT
+        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
+#else
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
+#endif
+
+#if SILVERLIGHT
+        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+                    _subPointNameColors.Add("HealBurst", System.Windows.Media.Colors.Red);
+                    _subPointNameColors.Add("HealSustained", System.Windows.Media.Colors.Blue);
+                }
+                return _subPointNameColors;
+            }
+        }
+#else
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get
@@ -196,6 +216,8 @@ namespace Rawr.Tree
                 return _subPointNameColors;
             }
         }
+#endif
+ 
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
@@ -343,8 +365,13 @@ namespace Rawr.Tree
         }
 
 
+#if SILVERLIGHT
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
         private CalculationOptionsPanelTree _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get
             {

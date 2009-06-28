@@ -440,6 +440,10 @@
       <Project>{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}</Project>
       <Name>Rawr.Rogue</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.csproj">
+      <Project>{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}</Project>
+      <Name>Rawr.Tree</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\across-left-green.png">

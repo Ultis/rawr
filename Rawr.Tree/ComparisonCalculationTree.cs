@@ -26,11 +26,11 @@ namespace Rawr.Tree
             set { subPoints[1] = value; }
         }
 
-        public float SurvivalPoints
+/*        public float SurvivalPoints
         {
             get { return subPoints[2]; }
             set { subPoints[2] = value; }
-        }
+        } */
 
         private Item _item = null;
         public override Item Item 
@@ -50,7 +50,7 @@ namespace Rawr.Tree
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M {4:0.0}S)", Name, OverallPoints, BurstPoints, SustainedPoints, SurvivalPoints);
+            return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M )", Name, OverallPoints, BurstPoints, SustainedPoints);
         }
     }
 }
