@@ -33,12 +33,10 @@ namespace Rawr.RestoSham
         public float SpellCrit { get; set; }
         public float SpellHaste { get; set; }
         public float TotalManaPool { get; set; }
-        public float TotalHealed { get; set; }
-        public float FightMPS { get; set; }
-        public float TotalHPS { get; set; }
         public float TillOOM { get; set; }
         public float FightHPS { get; set; }
-        public string ChosenSequence { get; set; }
+        public string SustainedSequence { get; set; }
+        public string BurstSequence { get; set; }
         public float MUPS { get; set; }
         public float HSTHeals { get; set; }
         public float HWSpamHPS { get; set; }
@@ -51,6 +49,8 @@ namespace Rawr.RestoSham
         public float RTHWMPS { get; set; }
         public float RTLHWHPS { get; set; }
         public float RTLHWMPS { get; set; }
+        public float RTCHLHW2HPS { get; set; }
+        public float RTCHLHW2MPS { get; set; }
         public float RTCHHPS { get; set; }
         public float RTCHMPS { get; set; }
         public float BurstHPS { get; set; }
@@ -61,9 +61,6 @@ namespace Rawr.RestoSham
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
             
-            values.Add("Total HPS", Math.Round(TotalHPS, 0).ToString());
-            values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
-            values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
             values.Add("HPS - Burst", Math.Round(BurstHPS, 0).ToString());
             values.Add("HPS - Sustained", Math.Round(SustainedHPS, 0).ToString());
             values.Add("Survival", Math.Round(Survival, 0).ToString());
@@ -76,16 +73,19 @@ namespace Rawr.RestoSham
             values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
-                       Math.Round(SpellHaste * 100, 2),BasicStats.HasteRating.ToString()));
-            values.Add("Chosen Sequence", ChosenSequence.ToString());
+                       Math.Round(SpellHaste * 100, 2), BasicStats.HasteRating.ToString()));
+            values.Add("Burst Sequence", BurstSequence.ToString());
+            values.Add("Sustained Sequence", SustainedSequence.ToString());
             values.Add("Mana Usable per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
-            values.Add("RT+HW Spam HPS", Math.Round(RTHWHPS, 0).ToString());
-            values.Add("RT+HW Spam MPS", Math.Round(RTHWMPS, 0).ToString());
-            values.Add("RT+LHW Spam HPS", Math.Round(RTLHWHPS, 0).ToString());
-            values.Add("RT+LHW Spam MPS", Math.Round(RTLHWMPS, 0).ToString());
-            values.Add("RT+CH Spam HPS", Math.Round(RTCHHPS, 0).ToString());
-            values.Add("RT+CH Spam MPS", Math.Round(RTCHMPS, 0).ToString());
+            values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
+            values.Add("RT+HW MPS", Math.Round(RTHWMPS, 0).ToString());
+            values.Add("RT+LHW HPS", Math.Round(RTLHWHPS, 0).ToString());
+            values.Add("RT+LHW MPS", Math.Round(RTLHWMPS, 0).ToString());
+            values.Add("RT+CH HPS", Math.Round(RTCHHPS, 0).ToString());
+            values.Add("RT+CH MPS", Math.Round(RTCHMPS, 0).ToString());
+            values.Add("RT+LHW+CH+LHW HPS", Math.Round(RTCHLHW2HPS, 0).ToString());
+            values.Add("RT+LHW+CH+LHW MPS", Math.Round(RTCHLHW2MPS, 0).ToString());
             values.Add("HW Spam HPS", Math.Round(HWSpamHPS, 0).ToString());
             values.Add("HW Spam MPS", Math.Round(HWSpamMPS, 0).ToString());
             values.Add("LHW Spam HPS", Math.Round(LHWSpamHPS, 0).ToString());
@@ -99,8 +99,6 @@ namespace Rawr.RestoSham
         {
             switch (calculation)
             {
-                case "Total HPS":
-                    return FightHPS;
                 case "Time to OOM":
                     return TillOOM;
                 case "Mana Usable per Second":

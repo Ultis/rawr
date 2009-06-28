@@ -42,14 +42,13 @@ namespace Rawr.RestoSham
             chkWaterShield.Checked = options.WaterShield;
             chkMT.Checked = options.TankHeal;
             txtESInterval.Text = options.ESInterval.ToString();
-            cboHealingStyle.Text = options.HealingStyle.ToString();
+            cboBurstStyle.Text = options.BurstStyle.ToString();
+            cboSustStyle.Text = options.SustStyle.ToString();
             // The track bars
             tbBurst.Value = (Int32)options.BurstPercentage;
             UpdateTrackBarLabel(tbBurst);
             tbOverhealing.Value = (Int32)options.OverhealingPercentage;
             UpdateTrackBarLabel(tbOverhealing);
-            #endregion
-            #region Glyphs Page:
             #endregion
 
             _bLoading = false;
@@ -216,20 +215,25 @@ namespace Rawr.RestoSham
 
 
         #region Combo Box Handling
-        private void cboHealingStyle_TextChanged(object sender, EventArgs e)
+        private void cboBurstStyle_TextChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
             {
-                this["HealingStyle"] = cboHealingStyle.Text;
+                this["BurstStyle"] = cboBurstStyle.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void cboSustStyle_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["SustStyle"] = cboSustStyle.Text;
                 Character.OnCalculationsInvalidated();
             }
         }
         #endregion
 
-        private void label2_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 
     #region Calculations, do not edit.
@@ -265,7 +269,6 @@ namespace Rawr.RestoSham
         }
         #endregion
         #region Defaults for variables
-        #region Page One Defaults
         /// <summary>
         /// Fight length, in minutes.
         /// </summary>
@@ -303,7 +306,12 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Your style of healing.
         /// </summary>
-        public string HealingStyle = "CH Spam";
+        public string BurstStyle = "CH Spam";
+
+        /// <summary>
+        /// Your style of healing.
+        /// </summary>
+        public string SustStyle = "CH Spam";
 
         /// <summary>
         /// The percentage of healing that is intended to be burst.
@@ -314,84 +322,6 @@ namespace Rawr.RestoSham
         /// The percentage of healing that is overhealing.
         /// </summary>
         public float OverhealingPercentage = 35f;
-        #endregion
-        #region Page Two Defaults
-        /// <summary>
-        /// Whether a Mana Tide totem is placed every time the cooldown is up.
-        /// </summary>
-        public bool ManaTidePlus = false;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool WaterShield2 = false;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool WaterShield3 = false;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool GlyphCH = false;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool ELWGlyph = false;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool LHWPlus = false;
-        #endregion
-        #region Page Three Defaults
-        /// <summary>
-        /// Is the first healing wave totem in use.
-        /// </summary>
-        public bool TotemHW1 = false;
-
-        /// <summary>
-        /// Is the second healing wave totem in use.
-        /// </summary>
-        public bool TotemHW2 = false;
-
-        /// <summary>
-        /// Is the third healing wave totem in use.
-        /// </summary>
-        public bool TotemHW3 = false;
-
-        /// <summary>
-        /// Is the first chain heal totem in use.
-        /// </summary>
-        public bool TotemCH1 = false;
-
-        /// <summary>
-        /// Is the second chain heal totem in use.
-        /// </summary>
-        public bool TotemCH2 = false;
-
-        /// <summary>
-        /// Is the third chain heal totem in use.
-        /// </summary>
-        public bool TotemCH3 = false;
-
-        /// <summary>
-        /// Is the fourth chain heal totem in use.
-        /// </summary>
-        public bool TotemCH4 = false;
-
-        /// <summary>
-        /// Is the first lesser healing wave totem in use.
-        /// </summary>
-        public bool TotemLHW1 = false;
-
-        /// <summary>
-        /// Is the first water shield totem in use.
-        /// </summary>
-        public bool TotemWS1 = false;
-        #endregion
         #endregion
 
         }
