@@ -87,17 +87,26 @@ namespace Rawr.Retribution
 
         public float SealProcsPerSec()
         {
-            if (Seal.GetType() == typeof(SealOfCommand) && !Combats.CalcOpts.Mode32)
+            if (Seal.GetType() == typeof(SealOfCommand))
             {
-                float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
-                float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
-                return 1f / timeBetweenProcs;
+                if (Combats.CalcOpts.Mode32)
+                {
+                    return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
+                }
+                else
+                {
+                    float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
+                    float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
+                    return 1f / timeBetweenProcs;
+                }
             }
             else
             {
                 return GetMeleeAttacksPerSec();
             }
         }
+
+        public abstract float GetJudgementsPerSec();
 
         public abstract float GetMeleeAttacksPerSec();
         public abstract float GetPhysicalAttacksPerSec();
@@ -145,12 +154,16 @@ namespace Rawr.Retribution
             calc.HammerOfWrathDPS = HoW.AverageDamage() * Solution.HammerOfWrath / Solution.FightLength;
         }
 
+        public override float GetJudgementsPerSec()
+        {
+            return Solution.Judgement / Solution.FightLength * Judge.ChanceToLand() * Judge.Targets();
+        }
+
         public override float GetMeleeAttacksPerSec()
         {
-            float cs = Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets();
-            float ds = Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets();
-            float white = White.ChanceToLand() / Combats.AttackSpeed;
-            return cs + ds + white;
+            return Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets()
+                + Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets()
+                + White.ChanceToLand() / Combats.AttackSpeed;
         }
 
         public override float GetMeleeCritsPerSec()
@@ -217,6 +230,12 @@ namespace Rawr.Retribution
             calc.ConsecrationDPS = Cons.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ConsCD + _calcOpts.TimeUnder20 / _calcOpts.ConsCD20);
             calc.ExorcismDPS = Exo.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ExoCD + _calcOpts.TimeUnder20 / _calcOpts.ExoCD20);
             calc.HammerOfWrathDPS = HoW.AverageDamage() * (_calcOpts.TimeUnder20 / _calcOpts.HoWCD20);
+        }
+
+        public override float GetJudgementsPerSec()
+        {
+            return Judge.ChanceToLand() / _calcOpts.JudgeCD * Judge.Targets() * (1f - _calcOpts.TimeUnder20)
+                + Judge.ChanceToLand() / _calcOpts.JudgeCD20 * Judge.Targets() * _calcOpts.TimeUnder20;
         }
 
         public override float GetMeleeAttacksPerSec()

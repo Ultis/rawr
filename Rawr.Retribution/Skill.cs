@@ -149,8 +149,7 @@ namespace Rawr.Retribution
         {
             if (CalcOpts.Mode32) return 0;
             else return (Combats.WeaponDamage * .26f + Stats.SpellPower * .18f + Stats.AttackPower * .11f)
-                * (1f + .05f * Talents.TheArtOfWar)
-                * (Talents.GlyphOfJudgement ? 1.1f : 1f);
+                * (1f + .05f * Talents.TheArtOfWar + (Talents.GlyphOfJudgement ? 0.1f : 0f));
         }
 
         public override float AbilityCritChance()
@@ -168,8 +167,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (Combats.WeaponDamage * .19f + Stats.SpellPower * .13f + Stats.AttackPower * .08f)
-                * (1f + .05f * Talents.TheArtOfWar)
-                * (Talents.GlyphOfJudgement ? 1.1f : 1f);
+                * (1f + .05f * Talents.TheArtOfWar + (Talents.GlyphOfJudgement ? 0.1f : 0f));
         }
 
         public override float AbilityCritChance()
@@ -187,9 +185,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (1f + Stats.SpellPower * .32f + Stats.AttackPower * .2f)
-                * (1f + .05f * Talents.TheArtOfWar)
-                * (1f + .03f * Talents.SealsOfThePure)
-                * (Talents.GlyphOfJudgement ? 1.1f : 1f);
+                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure + (Talents.GlyphOfJudgement ? 0.1f : 0f));
         }
 
         public override float AbilityCritChance()
@@ -207,9 +203,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * 1.5f
-                * (1f + .05f * Talents.TheArtOfWar)
-                * (1f + .03f * Talents.SealsOfThePure)
-                * (Talents.GlyphOfJudgement ? 1.1f : 1f);
+                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure * .03f + (Talents.GlyphOfJudgement ? 0.1f : 0f));
         }
 
         public override float AbilityCritChance()
@@ -227,9 +221,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (Combats.NormalWeaponDamage * (CalcOpts.Mode32 ? .75f : 1.1f) + Stats.CrusaderStrikeDamage)
-                * (1f + .05f * Talents.SanctityOfBattle)
-                * (1f + .05f * Talents.TheArtOfWar)
-                * (1f + Stats.CrusaderStrikeMultiplier);
+                * (1f + .05f * Talents.SanctityOfBattle + .05f * Talents.TheArtOfWar + Stats.CrusaderStrikeMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -247,8 +239,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (Combats.NormalWeaponDamage * 1.1f + Stats.DivineStormDamage)
-                * (1f + .05f * Talents.TheArtOfWar)
-                * (1f + Stats.DivineStormMultiplier);
+                * (1f + .05f * Talents.TheArtOfWar + Stats.DivineStormMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -289,9 +280,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (1087f + .42f * Stats.SpellPower)
-                * (1f + .05f * Talents.SanctityOfBattle)
-                * (1f + Stats.ExorcismMultiplier)
-                * (Talents.GlyphOfExorcism ? 1.2f : 1f);
+                * (1f + .05f * Talents.SanctityOfBattle + Stats.ExorcismMultiplier + (Talents.GlyphOfExorcism ? 0.2f : 0f));
         }
 
         public override float AbilityCritChance()
@@ -359,8 +348,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return Combats.BaseWeaponSpeed * (0.022f * Stats.AttackPower + 0.044f * Stats.SpellPower)
-                * (1f + .03f * Talents.SealsOfThePure)
-                * (Talents.GlyphOfSealOfRighteousness ? 1.1f : 1f);
+                * (1f + .03f * Talents.SealsOfThePure + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f));
         }
 
         public override float AbilityCritChance() { return -1f; }
