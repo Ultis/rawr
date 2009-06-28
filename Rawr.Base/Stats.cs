@@ -220,6 +220,8 @@ namespace Rawr {
         MageMageArmor,
         MageMoltenArmor,
         Mage4T8,
+        Mage2T9,
+        Mage4T9,
         #endregion
         #region Added by Rawr.Tree
         LifebloomCostReduction,
@@ -2494,6 +2496,24 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Mage4T8]; }
             set { _rawAdditiveData[(int)AdditiveStat.Mage4T8] = value; }
+        }
+
+        [DisplayName("Khadgar's Regalia 2 Piece Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Mage2T9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mage2T9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mage2T9] = value; }
+        }
+
+        [DisplayName("Khadgar's Regalia 4 Piece Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Mage4T9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mage4T9] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

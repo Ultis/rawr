@@ -606,6 +606,8 @@ namespace Rawr
 				htmlTooltip = htmlTooltip.Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
 					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Kirin'dor", "Kirin Tor");
+                // normalize alliance/horde set names
+                htmlTooltip = htmlTooltip.Replace("Sundtrider's Regalia", "Khadgar's Regalia");
 				item.SetName = htmlTooltip;
 			}
 			//if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";

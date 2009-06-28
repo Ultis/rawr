@@ -543,7 +543,7 @@ namespace Rawr.Mage
             }
             BaseCritRate += 0.01f * calculations.MageTalents.WintersChill;
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFrostbolt;
-            BaseCritRate += 0.02f * calculations.MageTalents.EmpoweredFrostbolt;
+            BaseCritRate += 0.02f * calculations.MageTalents.EmpoweredFrostbolt + 0.05f * calculations.BaseStats.Mage4T9;
             BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFrostbolt;
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier) * (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
@@ -600,7 +600,7 @@ namespace Rawr.Mage
                 BasePeriodicDamage = 0.0f;
                 BaseCritRate += 0.05f;
             }
-            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
+            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch + 0.05f * calculations.BaseStats.Mage4T9;
             DotDuration = 8;
             DotTickInterval = 2;
             BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
@@ -660,7 +660,7 @@ namespace Rawr.Mage
                 BaseCritRate += 0.02f;
                 BaseDirectDamageModifier *= 1.02f;
             }
-            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
+            BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch + 0.05f * calculations.BaseStats.Mage4T9;
             tormentFactor = 0.04f * calculations.MageTalents.TormentTheWeak;
             BaseSpellModifier *= (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
@@ -1033,6 +1033,7 @@ namespace Rawr.Mage
             Calculate(calculations);
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
             BaseCostModifier += baseStats.ArcaneBlastBonus;
+            BaseCritRate += 0.05f * calculations.BaseStats.Mage4T9;
             arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
             baseAdditiveSpellModifier = 1.0f + baseStats.ArcaneBlastBonus + 0.02f * mageTalents.SpellImpact;
             tormentTheWeak = 0.04f * mageTalents.TormentTheWeak;

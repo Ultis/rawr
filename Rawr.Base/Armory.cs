@@ -908,6 +908,9 @@ namespace Rawr
 				else if (desc.Contains("meta gem slot"))
 					slot = Item.ItemSlot.Meta;
 
+                // normalize alliance/horde set names
+                setName = setName.Replace("Sunstrider's Regalia", "Khadgar's Regalia");
+
                 Item item = new Item()
                 {
 					Id = id,

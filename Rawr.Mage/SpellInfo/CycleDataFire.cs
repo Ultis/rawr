@@ -167,6 +167,10 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
+            // ignite ticks
+
+            
+
             AddSpell(needsDisplayCalculations, FB, 1);
             AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
             Calculate();

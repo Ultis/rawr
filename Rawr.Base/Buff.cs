@@ -1974,6 +1974,24 @@ namespace Rawr
                 SetName = "Kirin Tor Garb",
                 SetThreshold = 4
             });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Khadgar's Regalia 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mage2T9 = 1 },
+                SetName = "Khadgar's Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Khadgar's Regalia 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mage4T9 = 1 },
+                SetName = "Khadgar's Regalia",
+                SetThreshold = 4
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Duskweaver 2 Piece",
