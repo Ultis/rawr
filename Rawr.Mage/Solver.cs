@@ -2990,10 +2990,12 @@ namespace Rawr.Mage
                         else if (talents.ArcaneEmpowerment > 0)
                         {
                             list.Add(CycleId.ABAM);
+                            list.Add(CycleId.AB2AM);
                             list.Add(CycleId.AB3AM);
                             if (talents.MissileBarrage > 0)
                             {
                                 list.Add(CycleId.AB3AM2MBAM);
+                                list.Add(CycleId.ABSpam03MBAM);
                                 list.Add(CycleId.ABSpam3MBAM);
                                 if (talents.ArcaneBarrage > 0)
                                 {
@@ -3045,10 +3047,12 @@ namespace Rawr.Mage
                         }
                         list.Add(CycleId.ArcaneBlastSpam);
                         list.Add(CycleId.ABAM);
+                        list.Add(CycleId.AB2AM);
                         list.Add(CycleId.AB3AM);
                         if (talents.MissileBarrage > 0)
                         {
                             list.Add(CycleId.AB3AM2MBAM);
+                            list.Add(CycleId.ABSpam03MBAM);
                             list.Add(CycleId.ABSpam3MBAM);
                         }
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)

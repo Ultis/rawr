@@ -470,6 +470,9 @@ namespace Rawr.Mage
                 case CycleId.AB3AM:
                     c = new AB3AM(Calculations.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.AB2AM:
+                    c = new AB2AM(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.AB3AM2MBAM:
                     c = new AB3AM2MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -484,6 +487,9 @@ namespace Rawr.Mage
                     break;
                 case CycleId.ABSpam3MBAM:
                     c = new ABSpam3MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam03MBAM:
+                    c = new ABSpam03MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABAMABar:
                     c = new ABAMABar(Calculations.NeedsDisplayCalculations, this);

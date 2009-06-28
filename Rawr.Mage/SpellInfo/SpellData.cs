@@ -750,7 +750,15 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             if (castingState.MageTalents.GlyphOfLivingBomb)
             {
-                spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus - 1));
+                if (castingState.CalculationOptions.Mode32)
+                {
+                    // no ignite from dot crits
+                    spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus / (1 + 0.08f * castingState.MageTalents.Ignite) - 1));
+                }
+                else
+                {
+                    spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus - 1));
+                }
             }
             spell.CalculateDerivedStats(castingState, false, false, false);
             return spell;
@@ -1030,6 +1038,10 @@ namespace Rawr.Mage
             Stats baseStats = calculations.BaseStats;
             MageTalents mageTalents = calculations.MageTalents;
             CalculationOptionsMage calculationOptions = calculations.CalculationOptions;
+            if (calculationOptions.Mode32)
+            {
+                BaseCost = (int)(0.07 * BaseMana[calculationOptions.PlayerLevel]);
+            }
             Calculate(calculations);
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
             BaseCostModifier += baseStats.ArcaneBlastBonus;
