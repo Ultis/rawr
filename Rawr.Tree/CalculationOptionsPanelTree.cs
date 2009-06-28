@@ -77,7 +77,7 @@ namespace Rawr.Tree
 
              */
              
-//            cbNewManaRegen.Checked = calcOpts.newManaRegen;
+            cbPatch3_2.Checked = calcOpts.patch3_2;
             cbInnervate.Checked = calcOpts.Innervates > 0;
             //tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
@@ -205,11 +205,11 @@ namespace Rawr.Tree
             Character.OnCalculationsInvalidated();
         }
 
-        private void cbNewManaRegen_CheckedChanged(object sender, EventArgs e)
+        private void cbPatch3_2_CheckedChanged(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.newManaRegen = cbNewManaRegen.Checked;
+            calcOpts.patch3_2 = cbPatch3_2.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -250,47 +250,5 @@ namespace Rawr.Tree
        
     }
 
-    [Serializable]
-    public class CalculationOptionsTree : ICalculationOptionBase
-    {
-        //I want the calculated Stats in the SpellrotationsEditor .. so I trade them over the Options
-        [System.Xml.Serialization.XmlIgnore]
-        public CharacterCalculationsTree calculatedStats = null;
-
-        public int BSRatio = 75; // goes from 0 to 100
-
-        public int FightDuration = 240; // 4 Minutes
-        public int Rotation = 4; // default: heal 2 tanks using nourish
-        public int ManaPot = 4; // best pot
-        public int FSRRatio = 100;
-        public int ReplenishmentUptime = 70;
-        public int WildGrowthPerMinute = 3;
-//        public int MainSpellFraction = 60;
-        public int Innervates = 1;
-
-        public int SwiftmendPerMinute = 0;
-
-        public bool PenalizeEverything = false;
-
-        public bool glyphOfHealingTouch = false;
-        public bool glyphOfRegrowth = false;
-        public bool glyphOfRejuvenation = false;
-
-        public bool glyphOfLifebloom = true;
-        public bool glyphOfInnervate = true;
-        public bool glyphOfSwiftmend = true;
-
-        public bool newManaRegen = true;
-
-        public RotationSettings customRotationSettings;
-
-        public string GetXml()
-        {
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsTree));
-            StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-            serializer.Serialize(writer, this);
-            return xml.ToString();
-        }
-    }
+ 
 }

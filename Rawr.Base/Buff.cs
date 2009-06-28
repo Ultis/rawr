@@ -2193,6 +2193,27 @@ namespace Rawr
                 SetThreshold = 4
             });
             #endregion
+            #region Tree Tier 9 set bonuses
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Stormrage's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { NourishCritBonus = 0.05f },
+                SetName = "Stormrage Regalia",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Stormrage's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RejuvenationCrit = 1.0f },
+                SetName = "Stormrage Regalia",
+                SetThreshold = 4
+            });
+            #endregion
             #region Warrior set bonuses
             defaultBuffs.Add(new Buff()
             {

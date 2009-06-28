@@ -685,6 +685,14 @@ namespace Rawr
                 line = line.Replace(".", "");
                 stats.RejuvenationSpellpower += (float)int.Parse(line);
             }
+            else if ((match = Regex.Match(line, @"Each time your Rejuvenation spell deals periodic healing, you have a chance to gain (?<spellPower>\d+) spell power for (?<duration>\d+) sec.")).Success)
+            {
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
+                // Idol of Flaring Growth
+                // Not yet sure about cooldown and proc chance
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
+            }
+
             else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
             {
                 line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);

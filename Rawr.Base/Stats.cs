@@ -229,6 +229,8 @@ namespace Rawr {
         NourishSpellpower,
         RejuvenationInstantTick,
         SwiftmendBonus,
+        NourishCritBonus,
+        RejuvenationCrit,
         #endregion
         #region Added by Rawr.Enhance
         BonusSSDamage,
@@ -2993,6 +2995,25 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.RejuvenationInstantTick] = value; }
         }
 
+        // Tier 9 2 Set bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Crit Chance for Nourish")]
+        [Category("Tree")]
+        public float NourishCritBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.NourishCritBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.NourishCritBonus] = value; }
+        }
+
+        // Tier 9 4 Set Bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Rejuvenation Crit Multiplier")]
+        [Category("Tree")]
+        public float RejuvenationCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationCrit] = value; }
+        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healing by Lifebloom Ticks")]

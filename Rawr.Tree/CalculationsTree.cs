@@ -38,6 +38,7 @@ namespace Rawr.Tree
         public float TotalHealsPerMinute;
         public float UnusedMana;
         public float UnusedCastTimeFrac;
+        public float RejuvenationHealsPerMinute;
         public RotationSettings rotSettings;
 //        public int LifebloomStackSize;
 //        public bool LifebloomFastStacking;
@@ -393,7 +394,7 @@ namespace Rawr.Tree
             return new CharacterCalculationsTree();
         }
 
-        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, out float Healing)
+        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, out float Healing)
         {
             #region New_SpecialEffect_Handling
 
@@ -416,6 +417,10 @@ namespace Rawr.Tree
                 else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
                 {
                     resultNew += effect.GetAverageStats(CastInterval, CritsRatio, CastInterval, FightDuration);
+                }
+                else if (effect.Trigger == Trigger.RejuvenationTick)
+                {
+                    resultNew += effect.GetAverageStats(RejuvInterval, 1.0f, RejuvInterval, FightDuration);
                 }
                 else
                 {
@@ -517,6 +522,8 @@ namespace Rawr.Tree
             float critsPerMinute = 0;
             float healsPerMinute = 0;
 
+            float rejuvTicksPerMinute = 0;
+
             #region WildGrowthPerMinute
             float wgCastTime = wildGrowth.CastTime / 60f * rotSettings.WildGrowthPerMinute;
             float wgMPS = wildGrowth.ManaCost / 60f * rotSettings.WildGrowthPerMinute;
@@ -541,6 +548,7 @@ namespace Rawr.Tree
                 hotsCastTime += rejuvenate.CastTime / rejuvenate.Duration;
                 hotsCastsPerMinute += 60f / rejuvenate.Duration;
                 hotsHealsPerMinute += 20; // hot component
+                rejuvTicksPerMinute += 20;
             }
             if (rotSettings.rgOnTank)
             {
@@ -574,6 +582,7 @@ namespace Rawr.Tree
             castsPerMinute += hotsCastsPerMinute;
             critsPerMinute += hotsCritsPerMinute;
             healsPerMinute += hotsHealsPerMinute;
+            rejuvTicksPerMinute *= rotSettings.noTanks;
             #endregion
 
             #region Swiftmend
@@ -633,7 +642,15 @@ namespace Rawr.Tree
 
             spiritRegen *= 5.0f;    // Change to MP5, since GetSpiritRegenSec works per sec 
             
-            float replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
+            float replenishment;
+            if (calcOpts.patch3_2)
+            {
+                replenishment = stats.Mana * 0.01f * (calcOpts.ReplenishmentUptime / 100f); // Now 1% every 5 sec
+            }
+            else
+            {
+                replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);   // Old: 0.25% every sec
+            }
             float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegen * stats.SpellCombatManaRegeneration;
             float ManaRegenOutFSR = stats.Mp5 + replenishment + spiritRegen;
             float ManaRegenOutFSRNoCast =  stats.Mp5 + replenishment + 0.2f * spiritRegen + 0.8f * spiritRegen;
@@ -684,7 +701,7 @@ namespace Rawr.Tree
 
 
             #region Determine if Mana or GCD limited
-//            if (calcOpts.newManaRegen)
+//            if (calcOpts.patch3_1)
             {
                 primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
             }
@@ -757,6 +774,8 @@ namespace Rawr.Tree
             healsPerMinute += primaryCPM; // direct component
             if (primaryHeal is Regrowth || primaryHeal is Rejuvenation)
                 healsPerMinute += primaryCPM * primaryHeal.PeriodicTicks; // hot component
+            if (primaryHeal is Rejuvenation)
+                rejuvTicksPerMinute += primaryCPM * primaryHeal.PeriodicTicks;
             #endregion
 
             #region Calculate total healing in the fight
@@ -814,6 +833,7 @@ namespace Rawr.Tree
                 TotalCastsPerMinute = castsPerMinute * TotalMod,
                 TotalCritsPerMinute = critsPerMinute * TotalMod,
                 TotalHealsPerMinute = healsPerMinute * TotalMod,
+                RejuvenationHealsPerMinute = rejuvTicksPerMinute,
                 ReplenishRegen = replenishment,
                 UnusedMana = unusedMana,
                 UnusedCastTimeFrac = unusedCastTimeFrac,
@@ -1234,6 +1254,7 @@ namespace Rawr.Tree
                 Stats procs = getTrinketStats(calculatedStats.LocalCharacter, stats,
                     rot.TotalTime, 60f / rot.TotalCastsPerMinute,
                     60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
+                    60 / rot.RejuvenationHealsPerMinute, 
                     out ExtraHPS);
 
                 
@@ -1637,6 +1658,8 @@ namespace Rawr.Tree
                 LifebloomCostReduction = stats.LifebloomCostReduction,  //T7 (2) Bonus
                 NourishBonusPerHoT = stats.NourishBonusPerHoT,          //T7 (4) Bonus
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
+                NourishCritBonus = stats.NourishCritBonus,              // T9 (2) Bonus
+                RejuvenationCrit = stats.RejuvenationCrit,              // T9 (4) Bonus
                 NourishSpellpower = stats.NourishSpellpower,
                 SpellsManaReduction = stats.SpellsManaReduction,
                 HealingOmenProc = stats.HealingOmenProc,
@@ -1707,7 +1730,7 @@ namespace Rawr.Tree
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
                 stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
 //                stats.ManacostReduceWithin15OnHealingCast +
-                stats.HealingOmenProc + stats.SwiftmendBonus
+                stats.HealingOmenProc + stats.SwiftmendBonus + stats.NourishCritBonus + stats.RejuvenationCrit
                 > 0)
                 return true;
 

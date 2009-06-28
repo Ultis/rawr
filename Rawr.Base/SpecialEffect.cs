@@ -41,6 +41,7 @@ namespace Rawr
         IcyTouchHit,
         RuneStrikeHit,
         SealOfVengeanceTick,
+        RejuvenationTick,
         NUM_Trigger // Should always be the last entry.
     }
 

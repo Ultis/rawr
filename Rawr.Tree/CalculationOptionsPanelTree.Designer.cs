@@ -52,7 +52,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbInnervate = new System.Windows.Forms.CheckBox();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.cbNewManaRegen = new System.Windows.Forms.CheckBox();
+            this.cbPatch3_2 = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.trkTimeInFSR = new System.Windows.Forms.TrackBar();
             this.lblFSR = new System.Windows.Forms.Label();
@@ -369,7 +369,7 @@
             // 
             this.groupBox3.Controls.Add(this.cbInnervate);
             this.groupBox3.Controls.Add(this.cmbManaAmt);
-            this.groupBox3.Controls.Add(this.cbNewManaRegen);
+            this.groupBox3.Controls.Add(this.cbPatch3_2);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.trkTimeInFSR);
             this.groupBox3.Controls.Add(this.lblFSR);
@@ -410,19 +410,18 @@
             this.cmbManaAmt.ValueMember = "2400";
             this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
             // 
-            // cbNewManaRegen
+            // cbPatch3_2
             // 
-            this.cbNewManaRegen.AutoSize = true;
-            this.cbNewManaRegen.Checked = true;
-            this.cbNewManaRegen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbNewManaRegen.Location = new System.Drawing.Point(6, 174);
-            this.cbNewManaRegen.Name = "cbNewManaRegen";
-            this.cbNewManaRegen.Size = new System.Drawing.Size(122, 17);
-            this.cbNewManaRegen.TabIndex = 51;
-            this.cbNewManaRegen.Text = "Use 3.1 calculations";
-            this.cbNewManaRegen.UseVisualStyleBackColor = true;
-            this.cbNewManaRegen.Visible = false;
-            this.cbNewManaRegen.CheckedChanged += new System.EventHandler(this.cbNewManaRegen_CheckedChanged);
+            this.cbPatch3_2.AutoSize = true;
+            this.cbPatch3_2.Checked = true;
+            this.cbPatch3_2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbPatch3_2.Location = new System.Drawing.Point(6, 174);
+            this.cbPatch3_2.Name = "cbPatch3_2";
+            this.cbPatch3_2.Size = new System.Drawing.Size(122, 17);
+            this.cbPatch3_2.TabIndex = 51;
+            this.cbPatch3_2.Text = "Use 3.2 calculations";
+            this.cbPatch3_2.UseVisualStyleBackColor = true;
+            this.cbPatch3_2.CheckedChanged += new System.EventHandler(this.cbPatch3_2_CheckedChanged);
             // 
             // label10
             // 
@@ -801,7 +800,7 @@
         private System.Windows.Forms.TrackBar tbPrimaryHealFrac;
         private System.Windows.Forms.Label lblPrimaryHeal;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.CheckBox cbNewManaRegen;
+        private System.Windows.Forms.CheckBox cbPatch3_2;
         private System.Windows.Forms.TrackBar tkReplenishment;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.Label label10;
