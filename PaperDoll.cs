@@ -307,7 +307,7 @@ namespace Rawr
 
                     Character.CurrentModel = null;
 
-                    Calculations.CalculationOptionsPanel.Character = _character;
+                    //Calculations.CalculationOptionsPanel.Character = _character;
                     ItemToolTip.Instance.Character =
                         ItemContextualMenu.Instance.Character =
                         itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
