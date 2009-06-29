@@ -2152,6 +2152,26 @@ namespace Rawr
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.08f, 1));
             #endregion
+            #region Moonkin Tier 9 set bonuses
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Stormrage's Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MoonfireDotCrit = 1f },
+                SetName = "Stormrage's Garb",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Stormrage's Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { StarfireCritChance = 0.05f },
+                SetName = "Stormrage's Garb",
+                SetThreshold = 4
+            });
+            #endregion
             #region Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {

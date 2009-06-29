@@ -313,6 +313,7 @@ namespace Rawr {
         #region Added by Rawr.Moonkin
         StarfireProc,
         EclipseBonus,
+        MoonfireDotCrit,
         #endregion
         #region Added by Rawr.DPSWarr
         BonusTargets,
@@ -3494,6 +3495,15 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.StarfireProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.StarfireProc] = value; }
+        }
+        // Moonkin 2-piece T9 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Moonfire Dot Crit")]
+        [Category("Moonkin")]
+        public float MoonfireDotCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireDotCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MoonfireDotCrit] = value; }
         }
         #endregion
         #endregion

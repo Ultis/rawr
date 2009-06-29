@@ -30,6 +30,8 @@ namespace Rawr
         ShieldofRighteousness,
         CrusaderStrikeHit,
         InsectSwarmTick,
+        MoonfireCast,
+        MoonfireTick,
         ShamanLightningBolt,
         ShamanLavaLash,
         ShamanShock,

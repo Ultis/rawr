@@ -885,7 +885,8 @@ namespace Rawr.Moonkin
                 Bloodlust = stats.Bloodlust,
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 EclipseBonus = stats.EclipseBonus,
-                InsectSwarmDmg = stats.InsectSwarmDmg
+                InsectSwarmDmg = stats.InsectSwarmDmg,
+                MoonfireDotCrit = stats.MoonfireDotCrit
             };
             // Add special effects that meet the following criteria:
             // 1) On-use OR
@@ -906,7 +907,9 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellMiss ||
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.InsectSwarmTick)
+                    effect.Trigger == Trigger.InsectSwarmTick ||
+                    effect.Trigger == Trigger.MoonfireTick ||
+                    effect.Trigger == Trigger.MoonfireCast)
                 {
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.CritRating > 0 ||
@@ -945,7 +948,9 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellMiss ||
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.InsectSwarmTick)
+                    effect.Trigger == Trigger.InsectSwarmTick ||
+                    effect.Trigger == Trigger.MoonfireTick ||
+                    effect.Trigger == Trigger.MoonfireCast)
                 {
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.CritRating > 0 ||
@@ -971,7 +976,8 @@ namespace Rawr.Moonkin
                 + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
-                + stats.Bloodlust + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg) > 0;
+                + stats.Bloodlust + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
+                + stats.MoonfireDotCrit) > 0;
         }
     }
 }

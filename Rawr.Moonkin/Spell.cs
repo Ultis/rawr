@@ -45,7 +45,7 @@ namespace Rawr.Moonkin
     }
     public class DotEffect
     {
-        public DotEffect() { AllDamageModifier = 1.0f; }
+        public DotEffect() { AllDamageModifier = 1.0f;  }
         public DotEffect(DotEffect copy)
         {
             this.AllDamageModifier = copy.AllDamageModifier;
@@ -59,6 +59,7 @@ namespace Rawr.Moonkin
         public float Duration { get; set; }
         public float TickLength { get; set; }
         public float TickDamage { get; set; }
+        public bool CanCrit { get; set; }
         public float SpellDamageModifier
         {
             get
@@ -190,7 +191,9 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.SpellCrit ||
                 Effect.Trigger == Trigger.SpellHit ||
                 Effect.Trigger == Trigger.SpellMiss ||
-                Effect.Trigger == Trigger.Use)
+                Effect.Trigger == Trigger.Use ||
+                Effect.Trigger == Trigger.MoonfireCast ||
+                Effect.Trigger == Trigger.MoonfireTick)
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
@@ -274,6 +277,12 @@ namespace Rawr.Moonkin
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
                             upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
+                            break;
+                        case Trigger.MoonfireCast:
+                            upTime = Effect.GetAverageUptime(r.Duration / r.MoonfireCasts, r.Solver.GetSpellHit(c));
+                            break;
+                        case Trigger.MoonfireTick:
+                            upTime = Effect.GetAverageUptime(r.Duration / r.MoonfireTicks, 1f);
                             break;
                         default:
                             break;
@@ -387,6 +396,8 @@ namespace Rawr.Moonkin
         public float WrathCount { get; set; }
         public float StarfireCount { get; set; }
         public float InsectSwarmTicks { get; set; }
+        public float MoonfireCasts { get; set; }
+        public float MoonfireTicks { get; set; }
 
         // Calculate damage and casting time for a single, direct-damage spell.
         private void DoMainNuke(Character character, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
@@ -441,7 +452,17 @@ namespace Rawr.Moonkin
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
             float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
             dotSpell.DamagePerHit = (totalCritChance * mfCritDamage + (1 - totalCritChance) * mfDirectDamage) * spellHit;
-            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower) * dotSpell.DotEffect.AllDamageModifier;
+            float normalDamagePerTick = dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower;
+            float damagePerTick = 0.0f;
+            if (dotSpell.DotEffect.CanCrit)
+            {
+                float critDamagePerTick = normalDamagePerTick * dotSpell.CriticalDamageModifier;
+                damagePerTick = (totalCritChance * critDamagePerTick + (1 - totalCritChance) * normalDamagePerTick) * dotSpell.DotEffect.AllDamageModifier;
+            }
+            else
+            {
+                damagePerTick = normalDamagePerTick * dotSpell.DotEffect.AllDamageModifier;
+            }
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
 
@@ -523,6 +544,11 @@ namespace Rawr.Moonkin
                     DotTicks = DotEffectSpell.DotEffect.NumberOfTicks;
                     if (DotEffectSpell.Name == "IS")
                         InsectSwarmTicks = DotTicks;
+                    else if (DotEffectSpell.Name == "MF")
+                    {
+                        MoonfireTicks = DotTicks;
+                        MoonfireCasts = 1f;
+                    }
 
                     float manaFromJoW = (numNukeCasts + 1) / 4 * JoWProc * spellHit;
                     float manaFromOoC = ((0.06f) * mainNuke.BaseManaCost
@@ -588,6 +614,8 @@ namespace Rawr.Moonkin
                     StarfireCount = mainNuke.Name == "SF" ? numNukeCasts : 0.0f;
                     DotTicks = moonFire.DotEffect.NumberOfTicks + numISCasts * insectSwarm.DotEffect.NumberOfTicks;
                     InsectSwarmTicks = numISCasts * insectSwarm.DotEffect.NumberOfTicks;
+                    MoonfireTicks = moonFire.DotEffect.NumberOfTicks;
+                    MoonfireCasts = 1.0f;
 
                     manaFromJoW = (numNukeCasts + 1 + numISCasts) / 4 * JoWProc * spellHit;
                     manaFromOoC = ((0.06f) * mainNuke.BaseManaCost
@@ -751,6 +779,8 @@ namespace Rawr.Moonkin
             Duration = preEclipseTime + eclipseTime + postEclipseTime + moonfireTime + insectSwarmTime;
             DotTicks = moonfireTicks + insectSwarmTicks;
             InsectSwarmTicks = insectSwarmTicks;
+            MoonfireTicks = moonfireTicks;
+            MoonfireCasts = moonfireCasts;
             CastCount = expectedCastsToProc + (eclipseTime / eclipseCast.CastTime) + (postEclipseTime / postEclipseCast.CastTime);
             if (calcOpts.LunarEclipse)
             {
@@ -1419,6 +1449,7 @@ namespace Rawr.Moonkin
             Starfire.CriticalChanceModifier += stats.StarfireCritChance;
             Starfire.CriticalChanceModifier += stats.BonusNukeCritChance;
             Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
+            Moonfire.DotEffect.CanCrit = stats.MoonfireDotCrit == 1;
 
             // Nature's Grace
             NaturesGrace = character.DruidTalents.NaturesGrace;

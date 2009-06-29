@@ -642,14 +642,26 @@ namespace Rawr
             else if (line.StartsWith("Your Moonfire ability has a chance to grant "))
             {
                 line = line.Substring("Your Moonfire ability has a chance to grant ".Length);
-                line = line.Substring(0, line.IndexOf(" spell power for 10 sec."));
-                stats.UnseenMoonDamageBonus += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+                string spellPowerLine = line.Substring(0, line.IndexOf(" spell power for"));
+                string durationLine = line.Substring(line.IndexOf("for") + 3, line.IndexOf(" sec.") - line.IndexOf("for") - 3);
+                float spellPower = float.Parse(spellPowerLine, System.Globalization.CultureInfo.InvariantCulture);
+                float duration = float.Parse(durationLine, System.Globalization.CultureInfo.InvariantCulture);
+                stats.AddSpecialEffect(new SpecialEffect() { Chance = 0.5f, Cooldown = 0f, Duration = duration, Trigger = Trigger.MoonfireCast, Stats = new Stats() { SpellPower = spellPower }, MaxStack = 1 });
             }
             else if (line.StartsWith("Increases the spell power of your Insect Swarm by "))
             {
                 line = line.Substring("Increases the spell power of your Insect Swarm by ".Length);
                 line = line.Replace(".", "");
                 stats.InsectSwarmDmg += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else if (line.StartsWith("Each time your Moonfire spell deals periodic damage, you have a chance to gain "))
+            {
+                line = line.Substring("Each time your Moonfire spell deals periodic damage, you have a chance to gain ".Length);
+                string spellPowerLine = line.Substring(0, line.IndexOf(" critical strike rating for"));
+                string durationLine = line.Substring(line.IndexOf("for") + 3, line.IndexOf(" sec.") - line.IndexOf("for") - 3);
+                float critRating = float.Parse(spellPowerLine, System.Globalization.CultureInfo.InvariantCulture);
+                float duration = float.Parse(durationLine, System.Globalization.CultureInfo.InvariantCulture);
+                stats.AddSpecialEffect(new SpecialEffect() { Chance = 0.7f, Cooldown = 0f, Duration = duration, Trigger = Trigger.MoonfireTick, Stats = new Stats() { CritRating = critRating }, MaxStack = 1 });
             }
             else if (line.StartsWith("Increases the final healing value of your Lifebloom by "))
             {
@@ -986,7 +998,7 @@ namespace Rawr
                 if (m.Success) // XXX Gladiators Totem of Indomitability
                 {
                     float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 6f, 0f)); 
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 6f, 0f));
                 }
             }
             else if (line.StartsWith(""))
@@ -996,7 +1008,7 @@ namespace Rawr
                 if (m.Success) // Totem of Quaking Earth
                 {
                     float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 0f, 0.8f)); 
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 0f, 0.8f));
                 }
             }
             else if (line.StartsWith("Your Shock spells grant "))
