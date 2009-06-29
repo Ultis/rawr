@@ -816,15 +816,19 @@ namespace Rawr.Moonkin
                     return "Force of Nature";
                 case 26:
                     return "Earth and Moon";
-                case 59:
+				case 27:
+					return "Starfall";
+				case 58:
+					return "Improved Mark of the Wild";
+                case 60:
                     return "Furor";
-                case 62:
-                    return "Natural Shapeshifter";
                 case 63:
-                    return "Intensity";
+                    return "Natural Shapeshifter";
                 case 64:
-                    return "Omen of Clarity";
+                    return "Intensity";
                 case 65:
+                    return "Omen of Clarity";
+                case 66:
                     return "Master Shapeshifter";
                 default:
                     return "Not implemented";
