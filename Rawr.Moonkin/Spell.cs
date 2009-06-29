@@ -903,14 +903,14 @@ namespace Rawr.Moonkin
                 ((spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (JoWProc / 4 * spellHit);
 
-            float lunarTime = eclipseDuration - (preLunarCast.NGCastTime * 1.5f) -  preSolarCast.CastTime * 0.5f;
+            float lunarTime = eclipseDuration - (preLunarCast.NGCastTime * 1.5f) -  lunarEclipseCast.CastTime * 0.5f;
             float lunarDPS = lunarEclipseCast.DamagePerHit / lunarEclipseCast.CastTime;
             float lunarManaUsed = lunarEclipseCast.BaseManaCost / lunarEclipseCast.CastTime * lunarTime;
             float lunarManaGained = (lunarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
                 ((spellCrit + lunarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (JoWProc / 4 * spellHit);
 
-            float preSolarTime = timeToProcSolar + (preSolarCast.CastTime * 0.5f) + preSolarCast.NGCastTime;
+            float preSolarTime = timeToProcSolar + (lunarEclipseCast.CastTime * 0.5f) + preSolarCast.NGCastTime;
             float preSolarDPS = preSolarCast.DamagePerHit / preSolarCast.CastTime;
             float preSolarManaUsed = preSolarCast.BaseManaCost / preSolarCast.CastTime * preSolarTime;
             float preSolarManaGained = (preSolarCast.BaseManaCost * omenOfClarityProcChance) +
