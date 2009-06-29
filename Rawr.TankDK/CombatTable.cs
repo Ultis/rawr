@@ -23,6 +23,8 @@ namespace Rawr.TankDK
             realDuration, totalMeleeAbilities, totalParryableAbilities, 
         totalSpellAbilities, normalizationFactor;
         private float fDuration;
+        public float m_fRSCount = 0f;
+        public Rotation.Type rotType;
 
         public CombatTable(Character c, Stats stats, CalculationOptionsTankDK calcOpts) :
             this(c, new CharacterCalculationsTankDK(), stats, calcOpts)
@@ -31,28 +33,31 @@ namespace Rawr.TankDK
 
         public CombatTable(Character c, CharacterCalculationsTankDK calcs, Stats stats, CalculationOptionsTankDK calcOpts)
         {
-            character = c;
+            this.character = c;
             this.calcs = calcs;
-            this.talents = character.DeathKnightTalents;
             this.calcOpts = calcOpts;
+            this.calcOpts.talents = character.DeathKnightTalents;
+            this.talents = character.DeathKnightTalents;
             this.stats = stats;
             totalMeleeAbilities = 0f;
             totalSpellAbilities = 0f;
 
-            totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
-                calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike +
-                calcOpts.rotation.FrostStrike + calcOpts.rotation.DeathStrike;
+            totalMeleeAbilities = calcOpts.m_Rotation.PlagueStrike + calcOpts.m_Rotation.ScourgeStrike +
+                calcOpts.m_Rotation.Obliterate + calcOpts.m_Rotation.BloodStrike + calcOpts.m_Rotation.HeartStrike +
+                calcOpts.m_Rotation.FrostStrike + calcOpts.m_Rotation.DeathStrike;
 
-            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast 
-                + calcOpts.rotation.UnholyBlight + calcOpts.rotation.Pestilence + calcOpts.rotation.Horn + calcOpts.rotation.DeathNDecay
-                + calcOpts.rotation.BoneShield;
+            totalSpellAbilities = calcOpts.m_Rotation.DeathCoil + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast
+                + calcOpts.m_Rotation.UnholyBlight + calcOpts.m_Rotation.Pestilence + calcOpts.m_Rotation.Horn + calcOpts.m_Rotation.DeathNDecay
+                + calcOpts.m_Rotation.BoneShield;
 
-            totalParryableAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
-                calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike;
+            totalParryableAbilities = calcOpts.m_Rotation.PlagueStrike + calcOpts.m_Rotation.ScourgeStrike +
+                calcOpts.m_Rotation.Obliterate + calcOpts.m_Rotation.BloodStrike + calcOpts.m_Rotation.HeartStrike;
 
             Weapons();
             CritsAndResists();
-            fDuration = calcOpts.rotation.getGCDTime();
+            fDuration = calcOpts.m_Rotation.getGCDTime();
+
+            rotType = calcOpts.m_Rotation.curRotationType;
         }
 
         public void CritsAndResists()
@@ -127,10 +132,10 @@ namespace Rawr.TankDK
                 // Total physical misses
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
-                realDuration = calcOpts.rotation.curRotationDuration;
-                realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (1.5f)) +
-                    ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (1.5f)) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)))))); 
+                realDuration = calcOpts.m_Rotation.curRotationDuration;
+                realDuration += ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceDodged * (1.5f)) +
+                    ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceMiss * (1.5f)) +
+                    ((calcOpts.m_Rotation.IcyTouch * spellResist * (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)))))); 
                 //still need to implement spellhaste here
             }
             #endregion
@@ -327,12 +332,12 @@ namespace Rawr.TankDK
 
             //for estimating rotation pushback
 
-            calcOpts.rotation.avgDiseaseMult = calcOpts.rotation.numDisease * (calcOpts.rotation.diseaseUptime / 100);
+            calcOpts.m_Rotation.avgDiseaseMult = calcOpts.m_Rotation.numDisease * (calcOpts.m_Rotation.diseaseUptime / 100);
             float commandMult = 0f;
 
-            if (calcOpts.rotation.managedRP)
+            if (calcOpts.m_Rotation.managedRP)
             {
-                calcOpts.rotation.getRP(talents, character);
+                calcOpts.m_Rotation.getRP(talents, character);
             }
 
             /* Threat table as of 3.0.8
@@ -431,16 +436,16 @@ namespace Rawr.TankDK
             {
                 float KMPpM = (1f * talents.KillingMachine) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
 
-                float KMPpR = KMPpM / (60 / calcOpts.rotation.curRotationDuration);
-                float totalAbilities = calcOpts.rotation.FrostStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
+                float KMPpR = KMPpM / (60 / calcOpts.m_Rotation.curRotationDuration);
+                float totalAbilities = calcOpts.m_Rotation.FrostStrike + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast;
                 KMRatio = KMPpR / totalAbilities;
             }
             #endregion
 
             #region Cinderglacier
             {
-                float shadowFrostAbilitiesPerSecond = ((calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
-                        calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) /
+                float shadowFrostAbilitiesPerSecond = ((calcOpts.m_Rotation.DeathCoil + calcOpts.m_Rotation.FrostStrike +
+                        calcOpts.m_Rotation.ScourgeStrike + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast) /
                         this.realDuration);
 
                 CinderglacierMultiplier *= 1f + (0.2f / (shadowFrostAbilitiesPerSecond / stats.CinderglacierProc));
@@ -501,11 +506,11 @@ namespace Rawr.TankDK
                 float fDamOHBCB = 0f;
                 if ((this.OH.damage != 0) && (DW || this.MH.damage == 0))
                 {
-                    fDamOHBCB = this.OH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
+                    fDamOHBCB = this.OH.damage * (.25f + .125f * calcOpts.m_Rotation.avgDiseaseMult);
                 }
                 if (this.MH.damage != 0)
                 {
-                    fDamMHBCB = this.MH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
+                    fDamMHBCB = this.MH.damage * (.25f + .125f * calcOpts.m_Rotation.avgDiseaseMult);
                 }
                 fDamBCB = fDamMHBCB + fDamOHBCB;
                 fDamBCB *= .1f * (float)talents.BloodCakedBlade;
@@ -514,11 +519,11 @@ namespace Rawr.TankDK
 
             #region Death Coil
             {
-                if (calcOpts.rotation.DeathCoil > 0f)
+                if (calcOpts.m_Rotation.DeathCoil > 0f)
                 {
-                    float DCCD = this.realDuration / (calcOpts.rotation.DeathCoil + (0.05f * (float)talents.SuddenDoom * calcOpts.rotation.HeartStrike));
+                    float DCCD = this.realDuration / (calcOpts.m_Rotation.DeathCoil + (0.05f * (float)talents.SuddenDoom * calcOpts.m_Rotation.HeartStrike));
                     float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower) + stats.BonusDeathCoilDamage;
-                    fDamDeathCoil = DCDmg / DCCD * calcOpts.rotation.DeathCoil;
+                    fDamDeathCoil = DCDmg / DCCD * calcOpts.m_Rotation.DeathCoil;
                     float DCCritDmgMult = .5f * (2f + stats.CritBonusDamage);
                     float DCCrit = 1f + ((this.spellCrits + stats.BonusDeathCoilCrit) * DCCritDmgMult);
                     fDamDeathCoil *= DCCrit;
@@ -532,14 +537,14 @@ namespace Rawr.TankDK
             // this seems to handle crit strangely.
             // additionally, looks like it's missing some multipliers? maybe they're applied later
             {
-                if (calcOpts.rotation.IcyTouch > 0f)
+                if (calcOpts.m_Rotation.IcyTouch > 0f)
                 {
                     float addedCritFromKM = KMRatio;
-                    float ITCD = this.realDuration / calcOpts.rotation.IcyTouch;
+                    float ITCD = this.realDuration / calcOpts.m_Rotation.IcyTouch;
                     float ITDmg = 236f + (IcyTouchAPMult * stats.AttackPower) + stats.BonusIcyTouchDamage;
                     ITDmg *= 1f + .1f * (float)talents.ImprovedIcyTouch;
                     // Total damage for IT is ITdam * # of ITs
-                    fDamIcyTouch = ITDmg * calcOpts.rotation.IcyTouch;
+                    fDamIcyTouch = ITDmg * calcOpts.m_Rotation.IcyTouch;
                     float ITCritDmgMult = .5f * (2f + stats.CritBonusDamage);
                     float ITCrit = 1f + ((this.spellCrits + addedCritFromKM + (.05f * (float)talents.Rime)) * ITCritDmgMult);
                     fDamIcyTouch *= ITCrit;
@@ -551,11 +556,11 @@ namespace Rawr.TankDK
 
             #region Plague Strike
             {
-                if (calcOpts.rotation.PlagueStrike > 0f)
+                if (calcOpts.m_Rotation.PlagueStrike > 0f)
                 {
-                    float PSCD = this.realDuration / calcOpts.rotation.PlagueStrike;
+                    float PSCD = this.realDuration / calcOpts.m_Rotation.PlagueStrike;
                     float PSDmg = (this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) * .5f + 189f;
-                    fDamPlagueStrike = PSDmg * calcOpts.rotation.PlagueStrike;
+                    fDamPlagueStrike = PSDmg * calcOpts.m_Rotation.PlagueStrike;
                     float PSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes);
                     float PSCrit = 1f + ((this.physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusPlagueStrikeCrit) * PSCritDmgMult);
                     fDamPlagueStrike *= PSCrit;
@@ -571,11 +576,11 @@ namespace Rawr.TankDK
 
             #region Frost Fever
             {
-                if (calcOpts.rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) || (talents.GlyphofDisease))
+                if (calcOpts.m_Rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.m_Rotation.HowlingBlast > 0f) || (talents.GlyphofDisease))
                 {
                     // Frost Fever is renewed with every Icy Touch and starts a new cd
-                    float ITCD = calcOpts.rotation.curRotationDuration / (calcOpts.rotation.IcyTouch + (talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
-                    float FFCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
+                    float ITCD = calcOpts.m_Rotation.curRotationDuration / (calcOpts.m_Rotation.IcyTouch + (talents.GlyphofHowlingBlast ? calcOpts.m_Rotation.HowlingBlast : 0f));
+                    float FFCD = 3f / (calcOpts.m_Rotation.diseaseUptime / 100);
                     int tempF = (int)Math.Floor(ITCD / FFCD);
                     FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
                     float FFDmg = FrostFeverAPMult * stats.AttackPower + 25.6f;
@@ -590,11 +595,11 @@ namespace Rawr.TankDK
 
             #region Blood Plague
             {
-                if (calcOpts.rotation.PlagueStrike > 0f || talents.GlyphofPestilence)
+                if (calcOpts.m_Rotation.PlagueStrike > 0f || talents.GlyphofPestilence)
                 {
                     // Blood Plague is renewed with every Plague Strike and starts a new cd
-                    float PSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.PlagueStrike;
-                    float BPCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
+                    float PSCD = calcOpts.m_Rotation.curRotationDuration / calcOpts.m_Rotation.PlagueStrike;
+                    float BPCD = 3f / (calcOpts.m_Rotation.diseaseUptime / 100);
                     int tempF = (int)Math.Floor(PSCD / BPCD);
                     BPCD = ((PSCD - ((float)tempF * BPCD)) / ((float)tempF + 1f)) + BPCD;
                     float BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
@@ -615,12 +620,12 @@ namespace Rawr.TankDK
 
             #region Scourge Strike
             {
-                if (talents.ScourgeStrike > 0 && calcOpts.rotation.ScourgeStrike > 0f)
+                if (talents.ScourgeStrike > 0 && calcOpts.m_Rotation.ScourgeStrike > 0f)
                 {
-                    float SSCD = this.realDuration / calcOpts.rotation.ScourgeStrike;
+                    float SSCD = this.realDuration / calcOpts.m_Rotation.ScourgeStrike;
                     float SSDmg = ((this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) * .45f) + 357.188f +
                         stats.BonusScourgeStrikeDamage;
-                    SSDmg *= 1f + 0.11f * calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
+                    SSDmg *= 1f + 0.11f * calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
                     SSDmg += 120; // Bonus threat
                     fDamScourgeStrike = SSDmg / SSCD * fDuration;
                     float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.CritBonusDamage;
@@ -643,13 +648,13 @@ namespace Rawr.TankDK
 
             #region Frost Strike
             {
-                if (talents.FrostStrike > 0 && calcOpts.rotation.FrostStrike > 0f)
+                if (talents.FrostStrike > 0 && calcOpts.m_Rotation.FrostStrike > 0f)
                 {
                     float addedCritFromKM = KMRatio;
-                    float FSCD = this.realDuration / calcOpts.rotation.FrostStrike;
+                    float FSCD = this.realDuration / calcOpts.m_Rotation.FrostStrike;
                     float FSDmg = (this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) * .6f +
                         150f + stats.BonusFrostStrikeDamage;
-                    fDamFrostStrike = FSDmg / FSCD * calcOpts.rotation.FrostStrike;
+                    fDamFrostStrike = FSDmg / FSCD * calcOpts.m_Rotation.FrostStrike;
                     float FSCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.CritBonusDamage;
                     float FSCrit = 1f + ((this.physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit) * FSCritDmgMult);
                     fDamFrostStrike *= FSCrit;
@@ -686,12 +691,12 @@ namespace Rawr.TankDK
 
             #region Howling Blast
             {
-                if (talents.HowlingBlast > 0 && calcOpts.rotation.HowlingBlast > 0f)
+                if (talents.HowlingBlast > 0 && calcOpts.m_Rotation.HowlingBlast > 0f)
                 {
                     float addedCritFromKM = KMRatio;
-                    float HBCD = this.realDuration / calcOpts.rotation.HowlingBlast;
+                    float HBCD = this.realDuration / calcOpts.m_Rotation.HowlingBlast;
                     float HBDmg = 540 + HowlingBlastAPMult * stats.AttackPower;
-                    fDamHowlingBlast = HBDmg / HBCD * calcOpts.rotation.HowlingBlast;
+                    fDamHowlingBlast = HBDmg / HBCD * calcOpts.m_Rotation.HowlingBlast;
                     float HBCritDmgMult = .5f * (2f + (.15f * (float)talents.GuileOfGorefiend) + stats.CritBonusDamage);
                     float HBCrit = 1f + ((this.spellCrits + addedCritFromKM) * HBCritDmgMult);
                     fDamHowlingBlast *= HBCrit;
@@ -703,12 +708,12 @@ namespace Rawr.TankDK
 
             #region Death n Decay
             {
-                if (calcOpts.rotation.DeathNDecay > 0f)
+                if (calcOpts.m_Rotation.DeathNDecay > 0f)
                 {
                     float DNDCD = 30f - (talents.Morbidity * 5f); // 30 sec cool down modified by Morbidity
                     float DNDDur = 10f; // 10 sec duration
                     float DNDDmg = 62 + DeathNDecayAPMult * stats.AttackPower * DNDDur * (talents.GlyphofDeathandDecay ? 1.2f : 1f);
-                    fDamDeathNDecay = DNDDmg * (Math.Min(calcOpts.rotation.DeathNDecay, (fDuration / DNDCD)));
+                    fDamDeathNDecay = DNDDmg * (Math.Min(calcOpts.m_Rotation.DeathNDecay, (fDuration / DNDCD)));
                     float DNDCritDmgMult = .5f * (2f + stats.CritBonusDamage);
                     float DNDCrit = 1f + (this.spellCrits * DNDCritDmgMult);
                     fDamDeathNDecay *= DNDCrit;
@@ -722,13 +727,13 @@ namespace Rawr.TankDK
 
             #region Obliterate
             {
-                if (calcOpts.rotation.Obliterate > 0f)
+                if (calcOpts.m_Rotation.Obliterate > 0f)
                 {
                     // this is missing +crit chance from rime
-                    float OblitCD = this.realDuration / calcOpts.rotation.Obliterate;
+                    float OblitCD = this.realDuration / calcOpts.m_Rotation.Obliterate;
                     float OblitDmg = ((this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) *
                         0.8f) + stats.BonusObliterateDamage;
-                    OblitDmg *= 1f + 0.125f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
+                    OblitDmg *= 1f + 0.125f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                     fDamObliterate = OblitDmg / OblitCD;
                     float OblitCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.CritBonusDamage;
                     float OblitCrit = 1f + ((this.physCrits +
@@ -743,34 +748,34 @@ namespace Rawr.TankDK
 
             #region Death Strike
             {
-                if (calcOpts.rotation.DeathStrike > 0f)
+                if (calcOpts.m_Rotation.DeathStrike > 0f)
                 {
                     // TODO: this is missing +crit chance from rime
-                    float DSCD = this.realDuration / calcOpts.rotation.DeathStrike;
+                    float DSCD = this.realDuration / calcOpts.m_Rotation.DeathStrike;
                     // TODO: This should be changed to make use of the new glyph stats:
                     float DSDmg = ((this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) * 0.75f) + 222.75f + stats.BonusDeathStrikeDamage;
                     DSDmg *= 1f + 0.15f * (float)talents.ImprovedDeathStrike;
                     DSDmg *= (talents.GlyphofDeathStrike ? 1.25f : 1f);
-                    fDamDeathStrike = DSDmg / DSCD * calcOpts.rotation.DeathStrike;
+                    fDamDeathStrike = DSDmg / DSCD * calcOpts.m_Rotation.DeathStrike;
                     float DSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine) + stats.CritBonusDamage;
                     float DSCrit = 1f + ((this.physCrits +
                         (.03f * (float)talents.ImprovedDeathStrike) +
                         stats.BonusDeathStrikeCrit) * DSCritDmgMult);
                     fDamDeathStrike *= DSCrit; // threat from Damage.
-                    fDamDeathStrike *= ((stats.Health * .05f * calcOpts.rotation.numDisease) / calcOpts.uNumberTargets / 2); // threat from Healing divided by number of targets.
+                    fDamDeathStrike *= ((stats.Health * .05f * calcOpts.m_Rotation.numDisease) / calcOpts.uNumberTargets / 2); // threat from Healing divided by number of targets.
                 }
             }
             #endregion
 
             #region Blood Strike
             {
-                if (calcOpts.rotation.BloodStrike > 0f)
+                if (calcOpts.m_Rotation.BloodStrike > 0f)
                 {
-                    float BSCD = this.realDuration / calcOpts.rotation.BloodStrike;
+                    float BSCD = this.realDuration / calcOpts.m_Rotation.BloodStrike;
                     float BSDmg = ((this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) *
                         0.4f) + 305.6f + stats.BonusBloodStrikeDamage;
-                    BSDmg *= 1f + 0.125f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
-                    fDamBloodStrike = BSDmg / BSCD * calcOpts.rotation.BloodStrike;
+                    BSDmg *= 1f + 0.125f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
+                    fDamBloodStrike = BSDmg / BSCD * calcOpts.m_Rotation.BloodStrike;
                     float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                     BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend) + stats.CritBonusDamage;
                     float BSCrit = 1f + ((this.physCrits + (.03f * (float)talents.Subversion)) * BSCritDmgMult);
@@ -783,13 +788,13 @@ namespace Rawr.TankDK
 
             #region Heart Strike
             {
-                if (talents.HeartStrike > 0 && calcOpts.rotation.HeartStrike > 0f)
+                if (talents.HeartStrike > 0 && calcOpts.m_Rotation.HeartStrike > 0f)
                 {
-                    float HSCD = this.realDuration / calcOpts.rotation.HeartStrike;
+                    float HSCD = this.realDuration / calcOpts.m_Rotation.HeartStrike;
                     float HSDmg = ((this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) *
                         0.5f) + 368f + stats.BonusHeartStrikeDamage;
-                    HSDmg *= 1f + 0.1f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
-                    fDamHeartStrike = HSDmg / HSCD * calcOpts.rotation.HeartStrike;
+                    HSDmg *= 1f + 0.1f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
+                    fDamHeartStrike = HSDmg / HSCD * calcOpts.m_Rotation.HeartStrike;
                     //float HSCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
                     float HSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine) + stats.CritBonusDamage;
                     float HSCrit = 1f + ((this.physCrits + (.03f * (float)talents.Subversion)) * HSCritDmgMult);
@@ -809,17 +814,17 @@ namespace Rawr.TankDK
                 float RSCrit = 1f + ((this.physCrits) * RSCritDmgMult);
                 // How many RS do we get?
                 // No more than the number of white swings
-                float fRSCount = Math.Min((fDuration / MH.hastedSpeed), (calcOpts.rotation.RP / 20f) * (stats.Dodge + stats.Parry));
-                if (fRSCount == 0)
+                m_fRSCount = Math.Min((fDuration / MH.hastedSpeed), (calcOpts.m_Rotation.RP / 20f) * (stats.Dodge + stats.Parry));
+                if (m_fRSCount == 0)
                 {
-                    fRSCount = calcOpts.rotation.RuneStrike;
+                    m_fRSCount = calcOpts.m_Rotation.RuneStrike;
                 }
                 else
                 {
                     // Update the rotation with this number. 
-                    calcOpts.rotation.RuneStrike = fRSCount;
+                    calcOpts.m_Rotation.RuneStrike = m_fRSCount;
                 }
-                fDamRuneStrike = RSDmg * fRSCount;
+                fDamRuneStrike = RSDmg * m_fRSCount;
                 fDamRuneStrike *= RSCrit;
             }
             #endregion
@@ -1050,11 +1055,28 @@ namespace Rawr.TankDK
                 fDamOtherArcane * otherArcaneMult +
                 fDamOtherFrost * otherFrostMult;
 
-
-            float DPSPoints = calcs.BCBDPS + calcs.BloodPlagueDPS + calcs.BloodStrikeDPS + calcs.DeathCoilDPS + calcs.FrostFeverDPS + calcs.FrostStrikeDPS +
-                              calcs.WanderingPlagueDPS + calcs.HeartStrikeDPS + calcs.HowlingBlastDPS + calcs.IcyTouchDPS +
-                              calcs.NecrosisDPS + calcs.ObliterateDPS + calcs.DeathStrikeDPS + calcs.PlagueStrikeDPS + calcs.ScourgeStrikeDPS + calcs.UnholyBlightDPS +
-                              calcs.WhiteDPS + calcs.OtherDPS + calcs.BloodwormsDPS + calcs.RuneStrikeDPS + calcs.DeathNDecayDPS;
+            float DPSPoints = 0;
+            DPSPoints += calcs.BCBDPS;
+            DPSPoints += calcs.BloodPlagueDPS;
+            DPSPoints += calcs.BloodStrikeDPS;
+            DPSPoints += calcs.DeathCoilDPS;
+            DPSPoints += calcs.FrostFeverDPS;
+            DPSPoints += calcs.FrostStrikeDPS;
+            DPSPoints += calcs.WanderingPlagueDPS;
+            DPSPoints += calcs.HeartStrikeDPS;
+            DPSPoints += calcs.HowlingBlastDPS;
+            DPSPoints += calcs.IcyTouchDPS;
+            DPSPoints += calcs.NecrosisDPS;
+            DPSPoints += calcs.ObliterateDPS;
+            DPSPoints += calcs.DeathStrikeDPS;
+            DPSPoints += calcs.PlagueStrikeDPS;
+            DPSPoints += calcs.ScourgeStrikeDPS;
+            DPSPoints += calcs.UnholyBlightDPS;
+            DPSPoints += calcs.WhiteDPS;
+            DPSPoints += calcs.OtherDPS;
+            DPSPoints += calcs.BloodwormsDPS;
+            DPSPoints += calcs.RuneStrikeDPS;
+            DPSPoints += calcs.DeathNDecayDPS;
 
             DPSPoints *= 2.0735f;
 

@@ -8,13 +8,6 @@ namespace Rawr.TankDK
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", Character.CharacterClass.DeathKnight)]
     class CalculationsTankDK : CalculationsBase
     {
-        /// <summary>
-        /// Setup constants that need to be answered.
-        /// </summary>
-        #region Constants
-        private static readonly float BaseThreatValue = 1f; // Base value of threat modified by Threat weight.
-        #endregion // Constants
-
         enum Quality
         {
             Uncommon,
@@ -186,16 +179,20 @@ keeping it roughly even with Mitigation Points is a good
 way to maintain 'enough' as you progress. If you find that 
 you are being killed by burst damage, focus on Survival Points.",
 					    @"Summary:Mitigation Points*Mitigation Points represent the amount of damage you avoid, 
-on average, through avoidance stats (Miss, Dodge, Parry) along with ways to improve survivablity, +heal or self 
-healing, ability cooldowns.  It is directly relational to your Damage Taken. Ideally, you want to maximize 
-Mitigation Points, while maintaining 'enough' Survival Points 
-(see Survival Points). If you find yourself dying due to healers 
-running OOM, or being too busy healing you and letting other 
-raid members die, then focus on Mitigation Points.",
-					    @"Summary:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+on average, through avoidance stats (Miss, Dodge, Parry) along 
+with ways to improve survivablity, +heal or self healing, ability 
+cooldowns.  It is directly relational to your Damage Taken. 
+Ideally, you want to maximize Mitigation Points, while maintaining 
+'enough' Survival Points (see Survival Points). If you find 
+yourself dying due to healers running OOM, or being too busy 
+healing you and letting other raid members die, then focus on 
+Mitigation Points.",
+					    @"Summary:Threat Points*Threat Points represent how much threat is capable for the current 
+gear/talent setup.  Threat points are represented in Threat per second.",
+					    @"Summary:Overall Points*Overall Points are a sum of Mitigation, Survival and Threat Points. 
 Overall is typically, but not always, the best way to rate gear. 
-For specific encounters, closer attention to Mitigation and 
-Survival Points individually may be important.",
+For specific encounters, closer attention to Mitigation and Survival 
+Points individually may be important.",
 
                         "Basic Stats:Strength*Unbreakable Armor not factored in.",
 					    "Basic Stats:Agility",
@@ -210,8 +207,8 @@ Survival Points individually may be important.",
                         "Basic Stats:Health*Including Frost Presence",
                         "Basic Stats:Armor*Including Frost Presence",
 
-                        @"Defense:Crit*Enemy's crit chance on you. When using the optimizer, set a secondary criteria to this <= 0 to ensure that
-you stay default capped.",
+                        @"Defense:Crit*Enemy's crit chance on you. When using the optimizer, set a secondary 
+criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         "Defense:Defense Rating",
                         "Defense:Defense",
                         "Defense:Resilience",
@@ -367,42 +364,37 @@ you stay default capped.",
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             #region Setup what we need and validate.
+            // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
+            // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
+            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
+            if (null == calcs)
+                return null;
+
+            Stats stats = GetCharacterStats(character, additionalItem);
+            // validate that we get a stats object;
+            if (null == stats)
+                return calcs;
+
+            calcs.BasicStrength = stats.Strength;
+            calcs.BasicStats = stats.Clone() as Stats;
+
+
             // Import the option values from the options tab on the UI.
             CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
             // Validate opts 
-            if (null == opts) return null;
+            if (null == opts) 
+                return calcs;
 
-            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
-            if (null == calcs) return null;
 
             // Level differences.
             int iTargetLevel = opts.TargetLevel;
             // The full character data.
-            Stats stats = GetCharacterStats(character, additionalItem);
-            // validate that we get a stats object;
-            if (null == stats) return null;
-
-            // Get the shotrotation/combat model here.
-            Rotation rot = opts.rotation;
-            if (null == rot)
-            {
-                rot = new Rotation();
-                opts.rotation = rot;
-            }
-            rot.m_FullStats = stats;
-
-            CombatTable ct = new CombatTable(character, stats, opts);
-
-            #endregion
-
-            #region Store off values for display.
-            calcs.BasicStrength = stats.Strength;
-            calcs.BasicStats = stats;
             calcs.TargetLevel = iTargetLevel;
+            float fLevelDiffModifier = (iTargetLevel - character.Level) * 0.2f;
 
             #endregion
 
-            float fLevelDiffModifier = (iTargetLevel - character.Level) * 0.2f;
+            #region Avoidance Numbers
             float fChanceToGetHit = 100.0f;
 
             // Get all the character avoidance numbers including deminishing returns.
@@ -435,6 +427,20 @@ you stay default capped.",
             calcs.Defense = (StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
             calcs.Resilience = stats.Resilience;
             calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, iTargetLevel);
+            #endregion 
+
+            // Get the shotrotation/combat model here.
+            if (opts.m_Rotation == null)
+            {
+                return calcs;
+            }
+
+            // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss.
+            opts.m_Rotation.m_FullStats = stats.Clone() as Stats;
+
+
+            CombatTable ct = new CombatTable(character, stats, opts);
+
 
             #region Talents with general reach that aren't already in stats.
 
@@ -561,53 +567,64 @@ you stay default capped.",
 
             #region ***** THREAT *****
 
-            float fGCD = rot.getGCDTime();
-            float fDamageTotal = ct.GetTotalThreat();
-            if (fDamageTotal <= 0)
-            {
-                rot.setRotation(Rotation.Type.Frost);
-                fDamageTotal = ct.GetTotalThreat();
-            }
-            calcs.Threat = fDamageTotal;
+            float fRotDuration = ct.calcOpts.m_Rotation.getRotationDuration();
+            float fThreatTotal = 0f;
+            float fThreatPS = 0f;
+
+            fThreatTotal = ct.GetTotalThreat();
+            fThreatPS = fThreatTotal / fRotDuration;
+
+            calcs.Threat = fThreatPS;
 
             // Threat buffs.
             calcs.Threat *= 1.0f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
-            calcs.ThreatWeight = BaseThreatValue * opts.ThreatWeight;
+            calcs.ThreatWeight = opts.ThreatWeight;
 
             #endregion
 
             #region ***** Mitigation Rating *****
 
-            float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
-            float fIncPhysicalDamage = (opts.IncomingDamage - fIncMagicalDamage);
+            float fFightDuration = opts.FightLength;
+            if (fFightDuration == 0f)
+            {
+                opts.FightLength = fFightDuration = 10f;
+            }
+            float fNumRotations = 0f;
+            float fIncMagicalDamage = (opts.IncomingDPS * opts.PercentIncomingFromMagic);
+            float fIncPhysicalDamage = (opts.IncomingDPS - fIncMagicalDamage);
+            // How much damage per shot normal shot?
+            float fPerShotPhysical = fIncPhysicalDamage * opts.BossAttackSpeed;
+            // How many shots over the length of the fight?
+            float fTotalBossAttacksPerFight = (fFightDuration * 60f) / opts.BossAttackSpeed;
             // Integrate Expertise values to prevent additional physical damage coming in:
             // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
             // Figure out how many shots there are.  Right now, just calculating white damage.
-            // TODO: once rotation is worked out, use that to get shotCount per rotation.
-            if (fGCD > 0)
+            float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .24f); 
+
+            if (fRotDuration > 0)
             {
-                float fBossShotCount = fGCD / opts.BossAttackSpeed;
+                fNumRotations = (fFightDuration * 60f) / fRotDuration;
+                // How many shots does the boss take over a given rotation period.
+                float fBossShotCountPerRot = fRotDuration / opts.BossAttackSpeed;
                 // How fast is a hasted shot? 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
-                float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .24f); 
                 float fCharacterShotCount = 0f;
                 if (character.MainHand != null)
-                    fCharacterShotCount += (fGCD / ct.MH.hastedSpeed);
+                    fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
                 if (character.OffHand != null)
-                    fCharacterShotCount += (fGCD / ct.OH.hastedSpeed);
+                    fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
                 fCharacterShotCount += ct.totalParryableAbilities;
                 // The number of shots taken * the chance to be parried.
                 // Ensure that this value doesn't go over 100%
                 float fShotsParried = Math.Min(1f, calcs.TargetParry) * fCharacterShotCount;
-                // How much damage per shot normal shot?
-                float fPerShotPhysical = fIncPhysicalDamage / fBossShotCount;
                 // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
                 float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
-                float fTimeNormal = fGCD - fTimeHasted;
+                float fTimeNormal = fRotDuration - fTimeHasted;
                 // Update the shot count w/ the new # of normal shots + the number of hasted shots.
-                fBossShotCount = (fTimeNormal / opts.BossAttackSpeed) + fShotsParried;
-                fIncPhysicalDamage = fPerShotPhysical * fBossShotCount;
+                fBossShotCountPerRot = (fTimeNormal / opts.BossAttackSpeed) + fShotsParried;
+                // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
+                fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
             }
 
             if (character.DeathKnightTalents.SpellDeflection > 0)
@@ -617,6 +634,7 @@ you stay default capped.",
                 stats += new SpecialEffect(Trigger.DamageSpellHit, newStats, 0, 0).GetAverageStats(3.0f, stats.Parry);
             }
 
+            #region Anti-Magic Shell
             // Anti-Magic Shell. ////////////////////////////////////////////////////////
             // Talent: MagicSuppression increases AMS by 8/16/25% per point.
             // Glyph: GlyphofAntiMagicShell increases AMS by 2 sec.
@@ -628,22 +646,26 @@ you stay default capped.",
             // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
             // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
             float amsDRvalue = (Math.Min(amsReductionMax, fIncMagicalDamage * amsReduction) * amsUptime);
+            #endregion 
 
-            // For any physical only damage reductions. 
-            // if only 60% of the hits are landing, then tank is only taking 60% of the inc damage.
-            fIncPhysicalDamage *= (fChanceToGetHit / 100f);
-            // Adjust the damage by chance of crit getting through
-            fIncPhysicalDamage += (fIncPhysicalDamage * attackerCrit) * 2f;
-            // Factor in armor Damage Reduction
-            fIncPhysicalDamage *= (1f - calcs.ArmorDamageReduction);
-            // Talent: Unbreakable Armor
             float uaDR = (stats.Armor * 5f * .01f);
             // Glyph increases DR by 20%
             if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
                 uaDR *= 1.2f;
             // Mitigate the UA Damage reduction by its uptime.
             uaDR *= 20f / 120f;
-            fIncPhysicalDamage -= uaDR;
+            fPerShotPhysical -= uaDR;
+
+            // For any physical only damage reductions. 
+            // if only 60% of the hits are landing, then tank is only taking 60% of the inc damage.
+            fTotalBossAttacksPerFight *= (fChanceToGetHit / 100f);
+            // Turn IncPhysical to TOTALIncomingPhysical over fight Duration.
+            fIncPhysicalDamage = fTotalBossAttacksPerFight * fPerShotPhysical;
+            // Adjust the damage by chance of crit getting through
+            fIncPhysicalDamage += (fIncPhysicalDamage * attackerCrit) * 2f;
+            // Factor in armor Damage Reduction
+            fIncPhysicalDamage *= (1f - calcs.ArmorDamageReduction);
+            // Talent: Unbreakable Armor
 
             // Four T8 : AMS grants 10% damage reductions.
             stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptime); 
@@ -655,14 +677,15 @@ you stay default capped.",
             fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.DamageTakenMultiplier);
             fIncPhysicalDamage = StatConversion.ApplyMultiplier(fIncPhysicalDamage, stats.DamageTakenMultiplier);
 
+            // Since IncMagical was MagicalDPS - now distribute the damage over the whole fight.
+            fIncMagicalDamage *= (fFightDuration * 60f);
+
             // Let's make sure we don't go into negative damage here.
             fIncMagicalDamage = Math.Max(0f, fIncMagicalDamage);
             fIncPhysicalDamage = Math.Max(0f, fIncPhysicalDamage);
 
-            calcs.Mitigation = opts.IncomingDamage - (fIncMagicalDamage + fIncPhysicalDamage);
-            // HACK: Throwing my weight around.
-            float fMitigationWeight = 10f;
-            calcs.Mitigation *= fMitigationWeight;
+            calcs.Mitigation = (opts.IncomingDPS * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
+            calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
 
             #endregion
 
@@ -677,7 +700,8 @@ you stay default capped.",
         /// GetEnchantsStats(character), and GetBuffsStats(character.ActiveBuffs).
         /// </summary>
         /// <param name="character">The character whose stats should be totaled.</param>
-        /// <param name="additionalItem">An additional item to treat the character as wearing.
+        /// <param name="addition
+        /// alItem">An additional item to treat the character as wearing.
         /// This is used for gems, which don't have a slot on the character to fit in, so are just
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>

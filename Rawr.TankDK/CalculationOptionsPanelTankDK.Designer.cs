@@ -63,7 +63,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 9);
+            this.label1.Location = new System.Drawing.Point(3, 70);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 0;
@@ -78,16 +78,16 @@
             "81",
             "82",
             "83"});
-            this.cmbAttackerLevel.Location = new System.Drawing.Point(150, 9);
+            this.cmbAttackerLevel.Location = new System.Drawing.Point(150, 70);
             this.cmbAttackerLevel.Name = "cmbAttackerLevel";
             this.cmbAttackerLevel.Size = new System.Drawing.Size(105, 21);
-            this.cmbAttackerLevel.TabIndex = 1;
+            this.cmbAttackerLevel.TabIndex = 5;
             this.cmbAttackerLevel.SelectedIndexChanged += new System.EventHandler(this.cmbAttackerLevel_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 34);
+            this.label2.Location = new System.Drawing.Point(3, 4);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 13);
             this.label2.TabIndex = 2;
@@ -101,15 +101,10 @@
             0,
             0,
             131072});
-            this.numThreatWeight.Location = new System.Drawing.Point(150, 34);
-            this.numThreatWeight.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+            this.numThreatWeight.Location = new System.Drawing.Point(150, 4);
             this.numThreatWeight.Name = "numThreatWeight";
             this.numThreatWeight.Size = new System.Drawing.Size(105, 20);
-            this.numThreatWeight.TabIndex = 3;
+            this.numThreatWeight.TabIndex = 1;
             this.numThreatWeight.Value = new decimal(new int[] {
             10,
             0,
@@ -120,7 +115,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 72);
+            this.label3.Location = new System.Drawing.Point(3, 28);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 4;
@@ -134,15 +129,15 @@
             0,
             0,
             131072});
-            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 72);
+            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 28);
             this.numSurvivalWeight.Maximum = new decimal(new int[] {
-            5,
+            10,
             0,
             0,
             0});
             this.numSurvivalWeight.Name = "numSurvivalWeight";
             this.numSurvivalWeight.Size = new System.Drawing.Size(105, 20);
-            this.numSurvivalWeight.TabIndex = 5;
+            this.numSurvivalWeight.TabIndex = 3;
             this.numSurvivalWeight.Value = new decimal(new int[] {
             10,
             0,
@@ -159,12 +154,12 @@
             0});
             this.numIncomingDamage.Location = new System.Drawing.Point(150, 122);
             this.numIncomingDamage.Maximum = new decimal(new int[] {
-            200000,
+            500000,
             0,
             0,
             0});
             this.numIncomingDamage.Minimum = new decimal(new int[] {
-            10000,
+            1000,
             0,
             0,
             0});
@@ -184,9 +179,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 122);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(93, 13);
+            this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Incoming Damage";
+            this.label4.Text = "Incoming DPS";
             // 
             // numBossAttackSpeed
             // 
@@ -198,7 +193,7 @@
             65536});
             this.numBossAttackSpeed.Location = new System.Drawing.Point(150, 97);
             this.numBossAttackSpeed.Maximum = new decimal(new int[] {
-            4,
+            5,
             0,
             0,
             0});
@@ -271,7 +266,7 @@
             this.nudTargetArmor.Size = new System.Drawing.Size(84, 20);
             this.nudTargetArmor.TabIndex = 13;
             this.nudTargetArmor.Value = new decimal(new int[] {
-            15000,
+            10643,
             0,
             0,
             0});
@@ -288,19 +283,21 @@
             // tbFightLength
             // 
             this.tbFightLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbFightLength.Location = new System.Drawing.Point(135, 48);
+            this.tbFightLength.Location = new System.Drawing.Point(153, 302);
             this.tbFightLength.Name = "tbFightLength";
             this.tbFightLength.Size = new System.Drawing.Size(86, 42);
             this.tbFightLength.TabIndex = 15;
             this.tbFightLength.Value = 10;
+            this.tbFightLength.Visible = false;
+            this.tbFightLength.Scroll += new System.EventHandler(this.tbFightLength_Scroll);
             // 
             // btnRotation
             // 
             this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotation.Location = new System.Drawing.Point(46, 131);
+            this.btnRotation.Location = new System.Drawing.Point(47, 75);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
-            this.btnRotation.TabIndex = 19;
+            this.btnRotation.TabIndex = 17;
             this.btnRotation.Text = "Rotation Details";
             this.btnRotation.UseVisualStyleBackColor = true;
             this.btnRotation.Click += new System.EventHandler(this.btnRotation_Click);
@@ -311,21 +308,18 @@
             this.gbFightInfo.Controls.Add(this.btnRotation);
             this.gbFightInfo.Controls.Add(this.label7);
             this.gbFightInfo.Controls.Add(this.nudTargetArmor);
-            this.gbFightInfo.Controls.Add(this.lblFightLengthNum);
             this.gbFightInfo.Controls.Add(this.lblTargetArmor);
-            this.gbFightInfo.Controls.Add(this.tbFightLength);
-            this.gbFightInfo.Controls.Add(this.lblFightLength);
             this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbFightInfo.Location = new System.Drawing.Point(17, 176);
             this.gbFightInfo.Name = "gbFightInfo";
-            this.gbFightInfo.Size = new System.Drawing.Size(227, 167);
+            this.gbFightInfo.Size = new System.Drawing.Size(227, 110);
             this.gbFightInfo.TabIndex = 37;
             this.gbFightInfo.TabStop = false;
             this.gbFightInfo.Text = "Fight Info";
             // 
             // numTargets
             // 
-            this.numTargets.Location = new System.Drawing.Point(135, 100);
+            this.numTargets.Location = new System.Drawing.Point(136, 44);
             this.numTargets.Maximum = new decimal(new int[] {
             5,
             0,
@@ -338,17 +332,18 @@
             0});
             this.numTargets.Name = "numTargets";
             this.numTargets.Size = new System.Drawing.Size(84, 20);
-            this.numTargets.TabIndex = 17;
+            this.numTargets.TabIndex = 15;
             this.numTargets.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            this.numTargets.ValueChanged += new System.EventHandler(this.numTargets_ValueChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 102);
+            this.label7.Location = new System.Drawing.Point(7, 46);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 13);
             this.label7.TabIndex = 38;
@@ -357,21 +352,23 @@
             // lblFightLengthNum
             // 
             this.lblFightLengthNum.AutoSize = true;
-            this.lblFightLengthNum.Location = new System.Drawing.Point(202, 80);
+            this.lblFightLengthNum.Location = new System.Drawing.Point(220, 334);
             this.lblFightLengthNum.Name = "lblFightLengthNum";
             this.lblFightLengthNum.Size = new System.Drawing.Size(19, 13);
             this.lblFightLengthNum.TabIndex = 2;
             this.lblFightLengthNum.Text = "10";
+            this.lblFightLengthNum.Visible = false;
             // 
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
             this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFightLength.Location = new System.Drawing.Point(6, 48);
+            this.lblFightLength.Location = new System.Drawing.Point(24, 302);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(114, 13);
             this.lblFightLength.TabIndex = 0;
             this.lblFightLength.Text = "Fight Length (minutes):";
+            this.lblFightLength.Visible = false;
             // 
             // CalculationOptionsPanelTankDK
             // 
@@ -379,8 +376,11 @@
             this.Controls.Add(this.numPercIncFromMagic);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.numBossAttackSpeed);
+            this.Controls.Add(this.lblFightLengthNum);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.numIncomingDamage);
+            this.Controls.Add(this.tbFightLength);
+            this.Controls.Add(this.lblFightLength);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numSurvivalWeight);
             this.Controls.Add(this.label3);

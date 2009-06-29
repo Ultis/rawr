@@ -20,7 +20,7 @@ namespace Rawr.TankDK
         {
             InitializeComponent();
             this.calcOpts = calcOpts;
-            rotation = calcOpts.rotation;
+            rotation = calcOpts.m_Rotation;
             talents = character.DeathKnightTalents;
             this.character = character;
 

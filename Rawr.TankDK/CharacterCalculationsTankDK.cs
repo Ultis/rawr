@@ -354,6 +354,7 @@ namespace Rawr.TankDK
             dict["Overall Points"] = OverallPoints.ToString("F1"); 
             dict["Mitigation Points"] = String.Format("{0:0.0}", Mitigation); // Unmodified Mitigation.
             dict["Survival Points"] = String.Format("{0:0.0}", Survival); // Unmodified Survival
+            dict["Threat Points"] = String.Format("{0:0.0}", Threat); // Unmodified Threat
 
             dict["Crit"] = Crit.ToString("F2");
             dict["Defense"] = Defense.ToString("F0");

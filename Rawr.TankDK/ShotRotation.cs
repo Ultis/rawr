@@ -7,7 +7,7 @@ namespace Rawr.TankDK
     public class Rotation
     {
         // I need FullCharacterStats
-        public Stats m_FullStats = null;
+        public Stats m_FullStats = new Stats();
         
         // Initial Code taken from DPSDK
         public Type curRotationType = Type.Frost;
@@ -106,12 +106,13 @@ namespace Rawr.TankDK
 
         public float manageRPDumping(DeathKnightTalents talents, float RP)
         {
+/*
             RuneStrike = RP / 20f;
             // RuneStrikes count is also based on Dodge & Parry chance:
             RuneStrike *= (m_FullStats.Dodge + m_FullStats.Parry);
             // Remove the RS shots from the pool of available RP.
             RP -= (RuneStrike * 20f);
-            
+*/            
             if (talents.FrostStrike > 0f)
             {
                 FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
@@ -138,9 +139,9 @@ namespace Rawr.TankDK
             return RP;
         }
 
+        public float getRotationDuration() { return getGCDTime(); }
         public float getGCDTime()
         {
-           // TODO: Update rotation to just factor in the number of strikes minus haste.
             GCDTime = GetGCDHasted() * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
                 BloodStrike + HeartStrike);
             GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + UnholyBlight + HowlingBlast + Horn + DeathNDecay + BloodBoil + Pestilence);
@@ -155,15 +156,20 @@ namespace Rawr.TankDK
         {
             float fHR = m_FullStats.HasteRating;
             float fPH = m_FullStats.PhysicalHaste;
+            float fNormalGCD = 1.5f;
             if (null == m_FullStats) 
             {
                 fHR = 0f;
                 fPH = 0f;
             }
-            float fNormalGCD = 1.5f;
             float fPercHaste = StatConversion.GetHasteFromRating(fHR, Character.CharacterClass.DeathKnight) + fPH;
             float fHastedGCD = Math.Max( 1f, fNormalGCD/(1f + fPercHaste) );
             return fHastedGCD;
+        }
+
+        public Rotation()
+        {
+            this.setRotation(this.curRotationType);
         }
 
         public void setRotation(Type t)
@@ -200,7 +206,7 @@ namespace Rawr.TankDK
                     UnholyBlight = 0f;
                     FrostStrike = 2f;
                     HowlingBlast = 2f;
-                    Obliterate = 4f;
+                    Obliterate = 3f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;

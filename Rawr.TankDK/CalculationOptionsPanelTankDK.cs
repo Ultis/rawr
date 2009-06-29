@@ -83,7 +83,7 @@ namespace Rawr.TankDK
         {
             if (!_loadingCalculationOptions)
             {
-                options.IncomingDamage = (uint)(numIncomingDamage.Value);
+                options.IncomingDPS = (uint)(numIncomingDamage.Value);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -107,12 +107,30 @@ namespace Rawr.TankDK
 
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {
-            CalculationOptionsTankDK calcOpts = Character.CalculationOptions as CalculationOptionsTankDK;
-            calcOpts.BossArmor = (int)nudTargetArmor.Value;
-            Character.OnCalculationsInvalidated();
+            if (!_loadingCalculationOptions)
+            {
+                options.BossArmor = (int)nudTargetArmor.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
+        private void tbFightLength_Scroll(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.FightLength = (int)tbFightLength.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 
+        private void numTargets_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.uNumberTargets = (uint)numTargets.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
@@ -126,16 +144,16 @@ namespace Rawr.TankDK
         public int TargetLevel = 83;
         public float ThreatWeight = 1.00f;
         public float SurvivalWeight = 1.00f;
-        public uint IncomingDamage = 100000;
+        public uint IncomingDPS = 100000;
         public float PercentIncomingFromMagic = .0f;
         public float BossAttackSpeed = 2.5f;
         public float BossArmor = StatConversion.NPC_BOSS_ARMOR;
 
         public bool Bloodlust = false;
-        public float FightLength = 0f;
+        public float FightLength = 10f;
         public uint uNumberTargets = 1;
-        public Rotation rotation;
-        public DeathKnightTalents talents = new DeathKnightTalents(); 
+        public Rotation m_Rotation = new Rotation();
+        public DeathKnightTalents talents; 
 
         public string GetXml()
         {

@@ -21,7 +21,7 @@ namespace Rawr.TankDK
         public Stats getSpecialEffects(CalculationOptionsTankDK calcOpts, SpecialEffect effect)
         {
             Stats statsAverage = new Stats();
-            Rotation rotation = calcOpts.rotation;
+            Rotation rRotation = calcOpts.m_Rotation;
             if (effect.Trigger == Trigger.Use)
             {
                 statsAverage += effect.GetAverageStats();
@@ -35,13 +35,13 @@ namespace Rawr.TankDK
                 {
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        trigger = (1f / rotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        trigger = (1f /  rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
                         chance = combatTable.physCrits;
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        trigger = (1f / rotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        trigger = (1f /  rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
@@ -49,29 +49,29 @@ namespace Rawr.TankDK
                     case Trigger.SpellCast:
                     case Trigger.DamageSpellHit:
                     case Trigger.SpellHit:
-                        trigger = 1f /rotation.getSpellSpecialsPerSecond();
+                        trigger = 1f / rRotation.getSpellSpecialsPerSecond();
                         chance = 1f - combatTable.spellResist;
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
-                        trigger = 1f /rotation.getSpellSpecialsPerSecond();
+                        trigger = 1f / rRotation.getSpellSpecialsPerSecond();
                         chance = combatTable.spellCrits;
                         break;
                     case Trigger.BloodStrikeHit:
                     case Trigger.HeartStrikeHit:
-                        trigger = (rotation.BloodStrike + rotation.HeartStrike) / rotation.curRotationDuration;
+                        trigger = ( rRotation.BloodStrike +  rRotation.HeartStrike) /  rRotation.curRotationDuration;
                         chance = 0.15f;
                         break;
                     case Trigger.PlagueStrikeHit:
-                        trigger = rotation.PlagueStrike / rotation.curRotationDuration;
+                        trigger =  rRotation.PlagueStrike /  rRotation.curRotationDuration;
                         chance = 1f;
                         break;
                     case Trigger.RuneStrikeHit:
-                        trigger = rotation.RuneStrike / rotation.curRotationDuration;
+                        trigger =  rRotation.RuneStrike /  rRotation.curRotationDuration;
                         chance = 1f;
                         break;
                     case Trigger.DoTTick:
-                        trigger = (rotation.BloodPlague + rotation.FrostFever) / 3;
+                        trigger = ( rRotation.BloodPlague +  rRotation.FrostFever) / 3;
                         chance = 1f;
                         break;
 
