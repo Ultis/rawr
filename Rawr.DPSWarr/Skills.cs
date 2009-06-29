@@ -69,7 +69,7 @@ namespace Rawr.DPSWarr {
             }
             public float MhAvgSwingDmg {
                 get {
-                    float mhWhiteSwing = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;
+                    float mhWhiteSwing = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;// - _combatFactors.GlanceChance);
                     mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1 + _combatFactors.BonusWhiteCritDmg);
                     mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
 
@@ -81,7 +81,7 @@ namespace Rawr.DPSWarr {
             }
             public float OhAvgSwingDmg {
                 get {
-                    float ohWhiteSwing = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;
+                    float ohWhiteSwing = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;// - _combatFactors.GlanceChance);
                     ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1f + _combatFactors.BonusWhiteCritDmg);
                     ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
 
@@ -299,7 +299,7 @@ namespace Rawr.DPSWarr {
             public virtual float RageUsePerSecond { get { return (!GetValided() ? 0f : Activates * RageCost / RotationLength); } }
             public virtual float RotationLength {
                 get {
-                    return (1f + CalcOpts.GetLatency()) * (1f - Whiteattacks.AvoidanceStreak) *
+                    return (1f + CalcOpts.GetLatency()) *
                         (CalcOpts.FuryStance
                         ?
                             Rotation.ROTATION_LENGTH_FURY
@@ -312,7 +312,7 @@ namespace Rawr.DPSWarr {
             public virtual float Activates {
                 get {
                     if (!GetValided()) { return 0f; }
-                    return (float)Math.Max(0f, RotationLength / Cd * latencyMOD);
+                    return (float)Math.Max(0f, RotationLength / Cd * latencyMOD * (1f - Whiteattacks.AvoidanceStreak));
                 } 
             } // Number of times used in rotation (For Fury)
             public virtual float MaxActivates {
@@ -436,7 +436,7 @@ namespace Rawr.DPSWarr {
                 get
                 {
                     if (!GetValided()) { return 0f; }
-                    return 2.0f; // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
+                    return 2.0f * (1f - Whiteattacks.AvoidanceStreak); // Only have time for 3 in rotation due to clashes in BT and WW cooldown timers
                 }
             }
             public override float GetHealing() {
@@ -475,7 +475,7 @@ namespace Rawr.DPSWarr {
                 {
                     if (!GetValided()) { return 0f; }
                     //return RotationLength / (Cd - (Talents.GlyphOfWhirlwind ? 2f : 0f));
-                    return 1f;
+                    return 1f * (1f - Whiteattacks.AvoidanceStreak);
                 }
             }
             // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
@@ -631,7 +631,7 @@ namespace Rawr.DPSWarr {
                     // procs = (procs / RotationLength) - (chance * chance + 0.01f); // WTF is with squaring chance?
                     if (procs2 < 0) { procs2 = 0; }
                     if (procs2 > 1) { procs2 = 1; } // Only have 1 free GCD in the default rotation
-                    return procs3;
+                    return procs3 * (1f - Whiteattacks.AvoidanceStreak);
 
                     // ORIGINAL LINES
                     //float chance = _talents.Bloodsurge * 0.0666666666f;
@@ -1137,7 +1137,7 @@ namespace Rawr.DPSWarr {
                     if (!GetValided()) { return 0f; }
                     float Hits = (float)Math.Max(0f, OverridesPerSec);
                     HSorCLVPerSecond = Hits;
-                    return Hits * RotationLength;
+                    return Hits * RotationLength * (1f - Whiteattacks.AvoidanceStreak);
                 }
             }
             public override float MaxActivates { get { return Activates; } }
@@ -1296,7 +1296,7 @@ namespace Rawr.DPSWarr {
             private float mhActivates, ohActivates;
             public void SetAllAbilityActivates(float mh, float oh) { 
                 mhActivates = mh * combatFactors.MhYellowCrit + RotationLength / combatFactors.MainHandSpeed * combatFactors.MhCrit;
-                if (Char.OffHand == null) {
+                if (Char.OffHand == null || Char.OffHand.Speed == 0f) {
                     ohActivates = 0f;
                 }else{
                     ohActivates = oh * combatFactors.OhYellowCrit + RotationLength / combatFactors.OffHandSpeed * combatFactors.OhCrit; 
@@ -1329,7 +1329,7 @@ namespace Rawr.DPSWarr {
                     //if (Talents.TitansGrip == 1 && Char.OffHand != null && Char.OffHand.Slot == Item.ItemSlot.TwoHand) { Damage *= 0.9f; } // Titan's Grip penalty, since we're not modifying by combatFactors.DamageReduction
 
                     // Because Deep Wounds is rolling, each tick is compounded by total number of times it's activated over its duration
-                    Damage = Damage * (mhActivates+ohActivates) * Duration / RotationLength;
+                    Damage = Damage * (mhActivates + ohActivates) * Duration / RotationLength;
 
                     // Tick size
                     Damage = Damage / Duration * TimeBtwnTicks;

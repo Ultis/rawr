@@ -191,8 +191,8 @@ namespace Rawr.DPSWarr {
             float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS.MhCrit)
                 * (COMBATFACTORS.MainHand.Speed / COMBATFACTORS.TotalHaste);
 
-            float ProbYellowHit = (1f - COMBATFACTORS.WhMissChance - COMBATFACTORS.MhDodgeChance);
-            float ProbYellowHitOP = (1f - COMBATFACTORS.WhMissChance);
+            float ProbYellowHit = (1f - COMBATFACTORS.YwMissChance - COMBATFACTORS.MhDodgeChance);
+            float ProbYellowHitOP = (1f - COMBATFACTORS.YwMissChance);
 
             float result = white + (Dable * ProbYellowHit) + (nonDable * ProbYellowHitOP);
 
