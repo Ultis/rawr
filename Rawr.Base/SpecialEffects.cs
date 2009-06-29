@@ -704,7 +704,6 @@ namespace Rawr
                 // Not yet sure about cooldown and proc chance
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
             }
-
             else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
             {
                 line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);
@@ -1412,9 +1411,15 @@ namespace Rawr
                 // Shifting Naaru Sliver
                 stats.SpellPowerFor15SecOnUse90Sec += 320;
             }
-            else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
+            else if ((match = Regex.Match(line, @"Each spell cast within 20 seconds will grant a stacking bonus of (?<mp5>\d+) mana regen per 5 sec. Expires after (?<duration>\d+) seconds.")).Success)
             {
-                stats.Mp5OnCastFor20SecOnUse2Min += 21;
+                int mp5 = int.Parse(match.Groups["mp5"].Value);
+                // Meteorite Crystal and Pendant of the Violet Eye
+                // Estimate cast as every 2.0f seconds, average stack height is 0.5f of final value
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Mp5 = mp5 * int.Parse(match.Groups["duration"].Value) * 0.5f / 2.0f }, int.Parse(match.Groups["duration"].Value), 120));
+
+                // Old entry in case some models still use it
+                stats.Mp5OnCastFor20SecOnUse2Min += int.Parse(match.Groups["mp5"].Value);
             }
             // Figurine - Talasite Owl, 5 min cooldown
             else if (line.StartsWith("Restores 900 mana over 12 sec."))
