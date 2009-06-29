@@ -278,8 +278,7 @@ namespace Rawr.Moonkin
                     "Talent DPS Comparison",
                     "Talent MP5 Comparison",
                     "Mana Gains",
-                    "Damage per Cast Time"//,
-					//"Relative Stat Values"
+                    "Damage per Cast Time"
                     };
                 }
                 return customChartNames;
@@ -366,7 +365,6 @@ namespace Rawr.Moonkin
             calcs.Latency = calcOpts.Latency;
             calcs.FightLength = calcOpts.FightLength;
             calcs.TargetLevel = calcOpts.TargetLevel;
-            calcs.Scryer = calcOpts.AldorScryer == "Scryer";
 
             // 3.1 spirit regen
             float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
@@ -446,7 +444,7 @@ namespace Rawr.Moonkin
 
             Stats statsFuror = new Stats()
             {
-                BonusIntellectMultiplier = (character.ActiveBuffsContains("Moonkin Form")) ? 0.02f * character.DruidTalents.Furor : 0.0f
+                BonusIntellectMultiplier = 0.02f * character.DruidTalents.Furor
             };
 
             Stats statsEarthAndMoon = new Stats()
@@ -456,7 +454,7 @@ namespace Rawr.Moonkin
 
             Stats statsMasterSS = new Stats()
             {
-                BonusSpellPowerMultiplier = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0) ?
+                BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0) ?
                                             0.01f * character.DruidTalents.MasterShapeshifter : 0.0f
             };
 
@@ -497,7 +495,7 @@ namespace Rawr.Moonkin
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
-			if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
+			if (character.DruidTalents.MoonkinForm > 0)
 			{
 				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor/* + statsEnchants.Armor*/) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
 			}
@@ -524,13 +522,10 @@ namespace Rawr.Moonkin
 
             // All spells: Spell Power + (0.5 * Imp Moonkin) * Spirit
             // Add the crit bonus from the idol, if present
-            if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
+            if (character.DruidTalents.MoonkinForm > 0)
             {
                 statsTotal.CritRating += statsTotal.IdolCritRating;
-                if (character.ActiveBuffsContains("Improved Moonkin Form"))
-                {
-                    statsTotal.SpellDamageFromSpiritPercentage += (0.1f * character.DruidTalents.ImprovedMoonkinForm);
-                }
+                statsTotal.SpellDamageFromSpiritPercentage += (0.1f * character.DruidTalents.ImprovedMoonkinForm);
             }
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
             statsTotal.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;

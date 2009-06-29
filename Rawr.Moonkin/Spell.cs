@@ -485,7 +485,7 @@ namespace Rawr.Moonkin
             float latency = calcs.Latency;
 
             float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
-            float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
 
@@ -650,11 +650,15 @@ namespace Rawr.Moonkin
 
         private float DoEclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
+            // Do 3.2 Eclipse calculations in a new function to minimize code impact in non-3.2 mode
+            if ((character.CalculationOptions as CalculationOptionsMoonkin).Use32Mode)
+                return Do32EclipseCalcs(character, calcs, solver, spellPower, spellHit, spellCrit, spellHaste);
+
             float latency = calcs.Latency;
 
             float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
             float omenOfClarityProcChance = character.DruidTalents.OmenOfClarity * 0.06f;
-            float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
 
@@ -821,6 +825,160 @@ namespace Rawr.Moonkin
                     postEclipseCast.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                 else if (postEclipseCast.Name == "SF" && moonfire != null)
                     postEclipseCast.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            }
+
+            return damageDone;
+        }
+
+        private float Do32EclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            float latency = calcs.Latency;
+
+            float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
+            float omenOfClarityProcChance = character.DruidTalents.OmenOfClarity * 0.06f;
+            float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
+
+            float moonfireCasts = SpellsUsed.Contains("MF") ? 2.0f : 0.0f;
+            float insectSwarmCasts = SpellsUsed.Contains("IS") ? 2.0f : 0.0f;
+
+            Spell moonfire = moonfireCasts > 0 ? LocateSpell(solver.SpellData, "MF") : null;
+            Spell insectSwarm = insectSwarmCasts > 0 ? LocateSpell(solver.SpellData, "IS") : null;
+
+            // Do SF glyph
+            if (starfireGlyph && moonfire != null) moonfire.DotEffect.Duration += 9.0f;
+
+            float eclipseMultiplier = 0.3f + calcs.BasicStats.EclipseBonus;
+
+            float eclipseDuration = 15.0f;
+            float eclipseCooldown = 30.0f;
+
+            Spell preLunarCast = LocateSpell(solver.SpellData, "W");
+
+            // Do improved Insect Swarm
+            if (insectSwarm != null)
+                preLunarCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+
+            Spell solarEclipseCast = new Spell(LocateSpell(solver.SpellData, "W"));
+
+            // Eclipse bonus and improved Insect Swarm
+            solarEclipseCast.AllDamageModifier *= 1.0f + eclipseMultiplier;
+            if (insectSwarm != null)
+                solarEclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+
+            Spell preSolarCast = LocateSpell(solver.SpellData, "SF");
+            if (moonfire != null)
+                preSolarCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+
+            Spell lunarEclipseCast = new Spell(LocateSpell(solver.SpellData, "SF"));
+            lunarEclipseCast.CriticalChanceModifier += eclipseMultiplier;
+            if (moonfire != null)
+                lunarEclipseCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+
+            DoMainNuke(character, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(character, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(character, calcs, ref preLunarCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(character, calcs, ref lunarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+
+            if (moonfire != null)
+                DoDotSpell(character, calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
+            if (insectSwarm != null)
+                DoDotSpell(character, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+
+            float lunarProcChance = (spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * character.DruidTalents.Eclipse / 3.0f * 0.6f;
+            float castsToProcLunar = 1.0f / lunarProcChance;
+            float timeToProcLunar = preLunarCast.CastTime * (castsToProcLunar - 0.5f);
+
+            float solarProcChance = (spellCrit + preSolarCast.CriticalChanceModifier) * spellHit * character.DruidTalents.Eclipse / 3.0f;
+            float castsToProcSolar = 1.0f / solarProcChance;
+            float timeToProcSolar = preSolarCast.CastTime * (castsToProcSolar - 0.5f);
+
+            float rotationLength = 2 * eclipseDuration + timeToProcLunar + timeToProcSolar + 2 * insectSwarmCasts + 2 * moonfireCasts;
+
+            float preLunarTime = timeToProcLunar + (preLunarCast.CastTime * 0.5f) + preLunarCast.NGCastTime * 1.5f;
+            float preLunarDPS = preLunarCast.DamagePerHit / preLunarCast.CastTime;
+            float preLunarManaUsed = preLunarCast.BaseManaCost / preLunarCast.CastTime * preLunarTime;
+            float preLunarManaGained = (preLunarCast.BaseManaCost * omenOfClarityProcChance) +
+                ((spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
+                (JoWProc / 4 * spellHit);
+
+            float lunarTime = eclipseDuration - (preLunarCast.NGCastTime * 1.5f) -  preSolarCast.CastTime * 0.5f;
+            float lunarDPS = lunarEclipseCast.DamagePerHit / lunarEclipseCast.CastTime;
+            float lunarManaUsed = lunarEclipseCast.BaseManaCost / lunarEclipseCast.CastTime * lunarTime;
+            float lunarManaGained = (lunarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
+                ((spellCrit + lunarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
+                (JoWProc / 4 * spellHit);
+
+            float preSolarTime = timeToProcSolar + (preSolarCast.CastTime * 0.5f) + preSolarCast.NGCastTime;
+            float preSolarDPS = preSolarCast.DamagePerHit / preSolarCast.CastTime;
+            float preSolarManaUsed = preSolarCast.BaseManaCost / preSolarCast.CastTime * preSolarTime;
+            float preSolarManaGained = (preSolarCast.BaseManaCost * omenOfClarityProcChance) +
+                ((spellCrit + preSolarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
+                (JoWProc / 4 * spellHit);
+
+            float solarTime = eclipseDuration - (preSolarCast.NGCastTime) - (preLunarCast.CastTime * 0.5f);
+            float solarDPS = solarEclipseCast.DamagePerHit / solarEclipseCast.CastTime;
+            float solarManaUsed = solarEclipseCast.BaseManaCost / solarEclipseCast.CastTime * solarTime;
+            float solarManaGained = (solarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
+                ((spellCrit + solarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
+                (JoWProc / 4 * spellHit);
+
+            // Moonfire tick calculation:
+            // Min(rotationLength, SFglyph + regMF + regMF) / tickLength if 100% uptime specified
+            float preSolarMfTicks = moonfire != null ? (float)Math.Min(moonfire.CastTime + ((insectSwarm != null ? insectSwarm.CastTime : 0.0f) + preSolarTime + solarTime) / 3, moonfire.DotEffect.NumberOfTicks) : 0.0f;
+            float preLunarMfTicks = moonfire != null ? (float)Math.Min(moonfire.CastTime + ((insectSwarm != null ? insectSwarm.CastTime : 0.0f) + preLunarTime + lunarTime) / 3, moonfire.DotEffect.NumberOfTicks) : 0.0f;
+            float moonfireTicks = preSolarMfTicks + preLunarMfTicks;
+            float insectSwarmTicks = insectSwarm != null ? insectSwarmCasts * insectSwarm.DotEffect.NumberOfTicks : 0.0f;
+
+            float moonfireDamage = moonfire != null ? moonfireCasts * moonfire.DamagePerHit + (moonfire.DotEffect.DamagePerHit / moonfire.DotEffect.NumberOfTicks) * moonfireTicks : 0.0f;
+            float insectSwarmDamage = insectSwarm != null ? insectSwarmCasts * insectSwarm.DotEffect.DamagePerHit : 0.0f;
+
+            float moonfireTime = moonfire != null ? moonfireCasts * moonfire.CastTime : 0.0f;
+            float insectSwarmTime = insectSwarm != null ? insectSwarmCasts * insectSwarm.CastTime : 0.0f;
+
+            float moonfireManaUsed = moonfire != null ? moonfireCasts * moonfire.BaseManaCost : 0.0f;
+            float insectSwarmManaUsed = insectSwarm != null ? insectSwarmCasts * insectSwarm.BaseManaCost : 0.0f;
+
+            float damageDone = preSolarTime * preSolarDPS + solarTime * solarDPS + preLunarTime * preLunarDPS + lunarTime * lunarDPS +
+                moonfireDamage + insectSwarmDamage;
+
+            Duration = rotationLength;
+            DotTicks = moonfireTicks + insectSwarmTicks;
+            InsectSwarmTicks = insectSwarmTicks;
+            MoonfireTicks = moonfireTicks;
+            MoonfireCasts = moonfireCasts;
+            CastCount = castsToProcLunar + (lunarTime / lunarEclipseCast.CastTime) + castsToProcSolar + (solarTime / solarEclipseCast.CastTime) + moonfireCasts + insectSwarmCasts;
+
+            WrathCount = castsToProcLunar + (solarTime / solarEclipseCast.CastTime);
+            StarfireCount = castsToProcSolar + (lunarTime / lunarEclipseCast.CastTime);
+
+            ManaUsed = preSolarManaUsed + solarManaUsed + preLunarManaUsed + lunarManaUsed + moonfireManaUsed + insectSwarmManaUsed;
+            ManaGained = castsToProcSolar * preSolarManaGained + (solarTime / solarEclipseCast.CastTime) * solarManaGained + castsToProcLunar * preLunarManaGained + (lunarTime / lunarEclipseCast.CastTime) * lunarManaGained;
+
+            float mfSavingsFromOoC = moonfire != null ? (moonfire.BaseManaCost - (moonfire.BaseManaCost *
+                (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
+            float isSavingsFromOoC = insectSwarm != null ? (insectSwarm.BaseManaCost - (insectSwarm.BaseManaCost *
+                (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
+            ManaGained += moonfire != null ? (moonfireCasts * (mfSavingsFromOoC + ((spellCrit + moonfire.CriticalChanceModifier) * moonkinFormProc * spellHit) + JoWProc * spellHit / 4.0f)) : 0.0f;
+            ManaGained += insectSwarm != null ? (insectSwarmCasts * (isSavingsFromOoC + JoWProc * spellHit / 4.0f)) : 0.0f;
+
+            RotationData.ManaGained = ManaGained;
+            RotationData.DPM = damageDone / ManaUsed;
+            ManaUsed -= ManaGained;
+            RotationData.ManaUsed = ManaUsed;
+
+            // Undo SF glyph
+            if (starfireGlyph && moonfire != null) moonfire.DotEffect.Duration -= 9.0f;
+
+            // Undo improved Insect Swarm
+            if (insectSwarm != null)
+            {
+                preLunarCast.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            }
+            if (moonfire != null)
+            {
+                preSolarCast.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
             }
 
             return damageDone;
@@ -1026,14 +1184,14 @@ namespace Rawr.Moonkin
             // Simple faerie fire mana calc
             float faerieFireCasts = (float)Math.Floor(calcOpts.FightLength / 5) + (calcOpts.FightLength % 5 != 0 ? 1.0f : 0.0f);
             float faerieFireMana = faerieFireCasts * CalculationsMoonkin.BaseMana * 0.08f;
-            if (character.ActiveBuffsContains("Improved Faerie Fire") && character.DruidTalents.ImprovedFaerieFire > 0)
+            if (character.DruidTalents.ImprovedFaerieFire > 0)
                 manaPool -= faerieFireMana;
 
             // Calculate effect of casting Starfall/Treants/ImpFF (regular FF is assumed to be provided by a feral)
             float globalCooldown = 1.5f / (1 + baseHaste) + calcs.Latency;
             float treantLatency = (character.DruidTalents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
             float starfallLatency = (character.DruidTalents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
-            float faerieFireLatency = (character.ActiveBuffsContains("Improved Faerie Fire") && character.DruidTalents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
+            float faerieFireLatency = (character.DruidTalents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
             float totalAverageLatency = (treantLatency + starfallLatency + faerieFireLatency) / (calcOpts.FightLength * 60.0f);
 
             calcs.Latency += totalAverageLatency;
@@ -1236,7 +1394,10 @@ namespace Rawr.Moonkin
             float totalInnervateMana = numInnervates * CalculationsMoonkin.BaseMana * (4.5f + (character.DruidTalents.GlyphOfInnervate ? 0.9f : 0.0f));
 
             // Replenishment calculations
+            // 3.2 MODE: 1% max mana per 5s (down from 1.25 max mana per 5s, .25 max mana per second)
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
+            if (calcOpts.Use32Mode)
+                replenishmentPerTick = calcs.BasicStats.Mana * (0.01f / 5f);
             float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength * 60;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;

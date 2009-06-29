@@ -40,8 +40,6 @@
             this.lblInnervateOffset = new System.Windows.Forms.Label();
             this.txtInnervateDelay = new System.Windows.Forms.TextBox();
             this.lblManaPotType = new System.Windows.Forms.Label();
-            this.rdbAldor = new System.Windows.Forms.RadioButton();
-            this.rdbScryer = new System.Windows.Forms.RadioButton();
             this.trkReplenishmentUptime = new System.Windows.Forms.TrackBar();
             this.trkTreantLifespan = new System.Windows.Forms.TrackBar();
             this.lblReplenishmentUptime = new System.Windows.Forms.Label();
@@ -53,6 +51,7 @@
             this.lblEclipseType = new System.Windows.Forms.Label();
             this.cmbEclipseType = new System.Windows.Forms.ComboBox();
             this.chkMoonfireAlways = new System.Windows.Forms.CheckBox();
+            this.chk32Mode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
@@ -174,29 +173,6 @@
             this.lblManaPotType.TabIndex = 21;
             this.lblManaPotType.Text = "Mana Potion Type:";
             // 
-            // rdbAldor
-            // 
-            this.rdbAldor.AutoSize = true;
-            this.rdbAldor.Location = new System.Drawing.Point(39, 278);
-            this.rdbAldor.Name = "rdbAldor";
-            this.rdbAldor.Size = new System.Drawing.Size(49, 17);
-            this.rdbAldor.TabIndex = 13;
-            this.rdbAldor.TabStop = true;
-            this.rdbAldor.Text = "Aldor";
-            this.rdbAldor.UseVisualStyleBackColor = true;
-            // 
-            // rdbScryer
-            // 
-            this.rdbScryer.AutoSize = true;
-            this.rdbScryer.Location = new System.Drawing.Point(108, 278);
-            this.rdbScryer.Name = "rdbScryer";
-            this.rdbScryer.Size = new System.Drawing.Size(55, 17);
-            this.rdbScryer.TabIndex = 14;
-            this.rdbScryer.TabStop = true;
-            this.rdbScryer.Text = "Scryer";
-            this.rdbScryer.UseVisualStyleBackColor = true;
-            this.rdbScryer.CheckedChanged += new System.EventHandler(this.rdbScryer_CheckedChanged);
-            // 
             // trkReplenishmentUptime
             // 
             this.trkReplenishmentUptime.Location = new System.Drawing.Point(125, 182);
@@ -258,7 +234,7 @@
             // lblUserRotation
             // 
             this.lblUserRotation.AutoSize = true;
-            this.lblUserRotation.Location = new System.Drawing.Point(6, 354);
+            this.lblUserRotation.Location = new System.Drawing.Point(3, 331);
             this.lblUserRotation.Name = "lblUserRotation";
             this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
             this.lblUserRotation.TabIndex = 44;
@@ -277,7 +253,7 @@
             "IS/MF/SF",
             "SF Spam",
             "W Spam"});
-            this.cmbUserRotation.Location = new System.Drawing.Point(108, 351);
+            this.cmbUserRotation.Location = new System.Drawing.Point(108, 328);
             this.cmbUserRotation.Name = "cmbUserRotation";
             this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
             this.cmbUserRotation.TabIndex = 21;
@@ -286,7 +262,7 @@
             // lblEclipseType
             // 
             this.lblEclipseType.AutoSize = true;
-            this.lblEclipseType.Location = new System.Drawing.Point(3, 304);
+            this.lblEclipseType.Location = new System.Drawing.Point(3, 281);
             this.lblEclipseType.Name = "lblEclipseType";
             this.lblEclipseType.Size = new System.Drawing.Size(68, 13);
             this.lblEclipseType.TabIndex = 46;
@@ -298,7 +274,7 @@
             this.cmbEclipseType.Items.AddRange(new object[] {
             "Lunar",
             "Solar"});
-            this.cmbEclipseType.Location = new System.Drawing.Point(108, 301);
+            this.cmbEclipseType.Location = new System.Drawing.Point(108, 278);
             this.cmbEclipseType.Name = "cmbEclipseType";
             this.cmbEclipseType.Size = new System.Drawing.Size(93, 21);
             this.cmbEclipseType.TabIndex = 19;
@@ -307,7 +283,7 @@
             // chkMoonfireAlways
             // 
             this.chkMoonfireAlways.AutoSize = true;
-            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 328);
+            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 305);
             this.chkMoonfireAlways.Name = "chkMoonfireAlways";
             this.chkMoonfireAlways.Size = new System.Drawing.Size(138, 17);
             this.chkMoonfireAlways.TabIndex = 20;
@@ -315,10 +291,22 @@
             this.chkMoonfireAlways.UseVisualStyleBackColor = true;
             this.chkMoonfireAlways.CheckedChanged += new System.EventHandler(this.chkMoonfireAlways_CheckedChanged);
             // 
+            // chk32Mode
+            // 
+            this.chk32Mode.AutoSize = true;
+            this.chk32Mode.Location = new System.Drawing.Point(6, 357);
+            this.chk32Mode.Name = "chk32Mode";
+            this.chk32Mode.Size = new System.Drawing.Size(71, 17);
+            this.chk32Mode.TabIndex = 47;
+            this.chk32Mode.Text = "3.2 Mode";
+            this.chk32Mode.UseVisualStyleBackColor = true;
+            this.chk32Mode.CheckedChanged += new System.EventHandler(this.chk32Mode_CheckedChanged);
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chk32Mode);
             this.Controls.Add(this.chkMoonfireAlways);
             this.Controls.Add(this.cmbEclipseType);
             this.Controls.Add(this.lblEclipseType);
@@ -330,8 +318,6 @@
             this.Controls.Add(this.lblReplenishmentUptime);
             this.Controls.Add(this.trkTreantLifespan);
             this.Controls.Add(this.trkReplenishmentUptime);
-            this.Controls.Add(this.rdbScryer);
-            this.Controls.Add(this.rdbAldor);
             this.Controls.Add(this.lblManaPotType);
             this.Controls.Add(this.txtInnervateDelay);
             this.Controls.Add(this.lblInnervateOffset);
@@ -345,7 +331,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 383);
+            this.Size = new System.Drawing.Size(204, 387);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -367,8 +353,6 @@
         private System.Windows.Forms.Label lblInnervateOffset;
         private System.Windows.Forms.TextBox txtInnervateDelay;
         private System.Windows.Forms.Label lblManaPotType;
-        private System.Windows.Forms.RadioButton rdbAldor;
-        private System.Windows.Forms.RadioButton rdbScryer;
         private System.Windows.Forms.TrackBar trkReplenishmentUptime;
         private System.Windows.Forms.TrackBar trkTreantLifespan;
         private System.Windows.Forms.Label lblReplenishmentUptime;
@@ -380,6 +364,7 @@
         private System.Windows.Forms.Label lblEclipseType;
         private System.Windows.Forms.ComboBox cmbEclipseType;
         private System.Windows.Forms.CheckBox chkMoonfireAlways;
+        private System.Windows.Forms.CheckBox chk32Mode;
 
     }
 }

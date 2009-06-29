@@ -127,6 +127,13 @@ namespace Rawr.Moonkin
             set { userRotation = value; OnPropertyChanged("UserRotation"); }
         }
 
+        private bool use32Mode = false;
+        public bool Use32Mode
+        {
+            get { return use32Mode; }
+            set { use32Mode = value; OnPropertyChanged("Use32Mode"); }
+        }
+
 
         #region INotifyPropertyChanged Members
 
