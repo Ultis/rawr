@@ -210,9 +210,7 @@ namespace Rawr.Healadin
             calc.AvgHPS = calc.TotalHealed / FightLength;
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
 
-            calc.FightPoints = calc.AvgHPS * (1f - CalcOpts.BurstScale);
-
-            return calc.FightPoints + calc.BurstPoints;
+            return calc.AvgHPS * (1f - CalcOpts.BurstScale);
         }
 
         public float CalculateBurstHealing(CharacterCalculationsHealadin calc)
