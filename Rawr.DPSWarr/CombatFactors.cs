@@ -202,12 +202,12 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Crit
-        public float CalcCrit(Item weapon) {
+        /*public float CalcCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
             float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
             crit += (weapon.Type == Item.ItemType.TwoHandAxe || weapon.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
             return crit;
-        }
+        }*/
         /* Commenting this out, because yellow uses 2-roll attack
          * private float CalcYellowCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
@@ -216,7 +216,17 @@ namespace Rawr.DPSWarr {
             crit *= (1f - YwMissChance - MhDodgeChance);
             return crit;
         }*/
-        public float MhCrit         { get { return CalcCrit(MainHand); } }
+        public float MhCrit
+        {
+            get
+            {
+                if (MainHand == null || MainHand.MaxDamage == 0f) { return 0f; }
+                float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
+                crit += (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                return crit;
+                //return CalcCrit(MainHand); 
+            }
+        }
         public float MhYellowCrit
         {
             get
@@ -229,7 +239,17 @@ namespace Rawr.DPSWarr {
                 //return CalcYellowCrit(MainHand);
             }
         }
-        public float OhCrit         { get { return CalcCrit(OffHand); } }
+        public float OhCrit
+        {
+            get
+            {
+                if (OffHand == null || OffHand.MaxDamage == 0f) { return 0f; }
+                float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
+                crit += (OffHand.Type == Item.ItemType.TwoHandAxe || OffHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                return crit;
+                //return CalcCrit(OffHand);
+            }
+        }
         public float OhYellowCrit
         {
             get
@@ -245,11 +265,11 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Chance of Hitting (be it Ordinary, Glance or Blocked, but not Crit)
         // White
-        public float ProbWhiteHit(Item i)  { float exp = CalcExpertise(i); return 1f - WhMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
+        //public float ProbWhiteHit(Item i)  { float exp = CalcExpertise(i); return 1f - WhMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
         public float ProbMhWhiteHit  { get { return 1f - WhMissChance - MhCrit - MhDodgeChance - MhParryChance - GlanceChance - MhBlockChance; } }
         public float ProbOhWhiteHit  { get { return 1f - WhMissChance - OhCrit - OhDodgeChance - MhParryChance - GlanceChance - OhBlockChance; } }
         // Yellow (Doesn't Glance and has different MissChance Cap)
-        public float ProbYellowHit(Item i) { float exp = CalcExpertise(i); return 1f - YwMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
+        //public float ProbYellowHit(Item i) { float exp = CalcExpertise(i); return 1f - YwMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
         public float ProbMhYellowHit { get { return 1f - YwMissChance - MhCrit - MhDodgeChance - MhParryChance - MhBlockChance; } }
         public float ProbOhYellowHit { get { return 1f - YwMissChance - OhCrit - OhDodgeChance - OhParryChance - OhBlockChance; } }
         #endregion

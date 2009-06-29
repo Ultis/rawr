@@ -105,12 +105,12 @@ namespace Rawr.DPSWarr {
                 // regular hit
                 d = _combatFactors.AvgWeaponDmg(i,isMH) * _combatFactors.DamageReduction;
                 f = (isMH ? 3.5f : 1.75f);
-                rage += RageFormula(d, s, f) * _combatFactors.ProbWhiteHit(i);
+                rage += RageFormula(d, s, f) * (isMH?_combatFactors.ProbMhWhiteHit:_combatFactors.ProbOhWhiteHit);
 
                 // crit
                 d *= (1f + _combatFactors.BonusWhiteCritDmg);
                 f = (isMH ? 7.0f : 3.5f);
-                rage += RageFormula(d, s, f) * _combatFactors.CalcCrit(i);
+                rage += RageFormula(d, s, f) * (isMH ? _combatFactors.MhCrit : _combatFactors.OhCrit);// _combatFactors.CalcCrit(i);
 
                 // glance
                 d = d / (1f + _combatFactors.BonusWhiteCritDmg) * 0.75f;
