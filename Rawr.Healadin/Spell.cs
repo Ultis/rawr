@@ -260,7 +260,7 @@ namespace Rawr.Healadin
             return (float)Math.Ceiling(Uptime / Duration);
         }
 
-        public float CastTime()
+        public virtual float CastTime()
         {
             return (float)Math.Max(1f, 1.5f / (1f + Stats.SpellHaste));
         }
@@ -354,6 +354,11 @@ namespace Rawr.Healadin
             Duration = 60f;
             Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
             BaseCost = 219f;
+        }
+
+        public override float CastTime()
+        {
+            return 1.5f;
         }
 
     }
