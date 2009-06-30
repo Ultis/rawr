@@ -761,7 +761,7 @@ namespace Rawr.Mage
             }
             if (statsTotal.MageMoltenArmor > 0)
             {
-                statsTotal.CritRating += (0.35f + (character.MageTalents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.25f * statsTotal.Mage2T9) * statsTotal.Spirit;
+                statsTotal.CritRating += (0.35f + (character.MageTalents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
