@@ -183,6 +183,7 @@ namespace Rawr.Mage
 
         public float HitProcs;
         public float CritProcs;
+        public float IgniteProcs;
         public float TargetProcs;
 
         public float CastTime;
@@ -260,6 +261,7 @@ namespace Rawr.Mage
                 CastProcs = spell.CastProcs;
                 NukeProcs = spell.NukeProcs;
                 CritProcs = spell.CritProcs;
+                IgniteProcs = spell.IgniteProcs;
                 TargetProcs = spell.TargetProcs;
                 damagePerSecond = spell.DamagePerSecond;
                 threatPerSecond = spell.ThreatPerSecond;
@@ -420,6 +422,10 @@ namespace Rawr.Mage
 
             HitProcs = Ticks * HitRate;
             CritProcs = HitProcs * CritRate;
+            if ((MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && mageTalents.Ignite > 0)
+            {
+                IgniteProcs = CritProcs;
+            }
             TargetProcs = HitProcs;
 
             if (Instant) InterruptProtection = 1;

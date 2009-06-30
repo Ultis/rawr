@@ -753,6 +753,10 @@ namespace Rawr.Mage
                 spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus - 1));
             }
             spell.CalculateDerivedStats(castingState, false, false, false);
+            if (castingState.MageTalents.GlyphOfLivingBomb)
+            {
+                spell.IgniteProcs *= 5; // 4 ticks can proc ignite in addition to the explosion
+            }
             return spell;
         }
 
