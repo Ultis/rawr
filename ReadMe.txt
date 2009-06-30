@@ -1,19 +1,22 @@
-Rawr v2.2.7.0
+Rawr v2.2.8.0
 ------------
-Welcome to Rawr 2.2.7.0.
+Welcome to Rawr 2.2.8.0.
    
 Recent Changes:
- - Reordered/revised alot of things in the readme
- - Improvements to alternate locale handling
- - Rawr.Cat: Improvements to Ferocious Bite and HighestStat calculations
- - Rawr.Bear: Fix for HighrstStat calculations
- - Rawr.Enhance: Lots of accuracy improvements all around 
- - Rawr.DPSWarr: Lots of accuracy improvements all around
- - Rawr.DPSDK: Lots of accuracy improvements all around
- - Rawr.TankDL: Initial pass at fixing all the calculations
- - Rawr.Hunter: Lots of accuracy improvements all around, but still a work in progress
- - Rawr.Healadin: Minor fix for burst ratings from procs. Initial implementation of 3.2 mode
- - Rawr.Retribution: Initial implementation of 3.2 mode
+ - Improvements for handling locale-specific item names
+ - Reenabled loading possible upgrades from Wowhead PTR
+ - Fixed some bugs with loading items from Wowhead/Armory. NOTE: Armory *still* isn't returning socket bonus data, however if an item already has a socket bonus (ie, from Wowhead), reloading it from Armory will preserve the existing socket bonus
+ - Rawr.Cat: Improved the calculation of Idol of the Corruptor
+ - Rawr.Moonkin: Added a 3.2 mode, improved performance
+ - Rawr.Retribution: Added a 3.2 mode
+ - Rawr.RestoSham: Implemented all resto relics with special effects
+ - Rawr.TankDK: Many calculation fixes and improvements
+ - Rawr.DPSWarr: Fix for a wide variety of calculation issues
+ - Rawr.Enhance: Improved GCD conflict calculations
+ - Rawr.DPSDK: Added a 3.2 mode
+ - Rawr.Mage: Added 3.2 mode
+ - Rawr.Tree: Added 3.2 mode
+ - Rawr.Healadin: Fix for minor rating calculation bug
  
 TEASER: We're working on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel.
  
@@ -26,6 +29,18 @@ Once you've got it running, you should see a basic character-screen-like layout 
 Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 
 ~Astrylian on Suramar, cnervig@hotmail.com
+
+
+FAQ
+---
+ Q: I get a "Cannot access disposed object." error. How can I fix that?
+ A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
+
+ Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
+ A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
+
+ Q: There's an item missing! Can you please add [Some Item]?
+ A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
 
 
 Overview of Rawr
@@ -72,6 +87,19 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.7.0
+ - Reordered/revised alot of things in the readme
+ - Improvements to alternate locale handling
+ - Rawr.Cat: Improvements to Ferocious Bite and HighestStat calculations
+ - Rawr.Bear: Fix for HighrstStat calculations
+ - Rawr.Enhance: Lots of accuracy improvements all around 
+ - Rawr.DPSWarr: Lots of accuracy improvements all around
+ - Rawr.DPSDK: Lots of accuracy improvements all around
+ - Rawr.TankDL: Initial pass at fixing all the calculations
+ - Rawr.Hunter: Lots of accuracy improvements all around, but still a work in progress
+ - Rawr.Healadin: Minor fix for burst ratings from procs. Initial implementation of 3.2 mode
+ - Rawr.Retribution: Initial implementation of 3.2 mode
+
 v2.2.6.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all 
 the 3.1 modeling changes.
@@ -363,20 +391,6 @@ Here's a quick rundown of the status of each model:
     
     
  As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!
-
-FAQ
----
- Q: I get a "Cannot access disposed object." error. How can I fix that?
- A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
-
- Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
- A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
-
- Q: There's an item missing! Can you please add [Some Item]?
- A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
- 
-Version History
----------------
 
 v2.1.9:
 	Rawr is now accepting donations. Please use Tools > Donate, or goto https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163 if you'd like to donate, to help accelerate the development of Rawr and its models. Thank you!
