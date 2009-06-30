@@ -1498,9 +1498,9 @@ namespace Rawr.DPSDK
 
                 #region Unholy Blight
                 {
-                    // now does 30% damage of each death coil over 10 seconds, with glyph increasing
+                    // now does 20% damage of each death coil over 10 seconds, with glyph increasing
 					// damage by 40%. It rolls like deep wounds, but luckily, we don't care.
-                    dpsUnholyBlight = dpsDeathCoil * (0.3f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
+                    dpsUnholyBlight = dpsDeathCoil * (0.2f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
                 }
                 #endregion
 
@@ -1694,7 +1694,7 @@ namespace Rawr.DPSDK
                         float BSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.Subversion)) * BSCritDmgMult);
                         dpsBloodStrike = (dpsBloodStrike) * BSCrit;
                         dpsBloodStrike *= 1f + (.03f * (float)talents.BloodOfTheNorth);
-                        dpsBloodStrike *= 1f + (.15f * (float)talents.BloodyStrikes);
+                        dpsBloodStrike *= 1f + (.05f * (float)talents.BloodyStrikes);
                     }
                 }
                 #endregion
