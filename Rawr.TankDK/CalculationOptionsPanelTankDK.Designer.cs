@@ -147,6 +147,7 @@
             // 
             // numIncomingDamage
             // 
+            this.numIncomingDamage.Enabled = false;
             this.numIncomingDamage.Increment = new decimal(new int[] {
             1000,
             0,
@@ -177,6 +178,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.Enabled = false;
             this.label4.Location = new System.Drawing.Point(3, 122);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 13);
@@ -186,6 +188,7 @@
             // numBossAttackSpeed
             // 
             this.numBossAttackSpeed.DecimalPlaces = 2;
+            this.numBossAttackSpeed.Enabled = false;
             this.numBossAttackSpeed.Increment = new decimal(new int[] {
             5,
             0,
@@ -215,6 +218,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.Enabled = false;
             this.label5.Location = new System.Drawing.Point(3, 97);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
@@ -224,6 +228,7 @@
             // numPercIncFromMagic
             // 
             this.numPercIncFromMagic.DecimalPlaces = 2;
+            this.numPercIncFromMagic.Enabled = false;
             this.numPercIncFromMagic.Increment = new decimal(new int[] {
             5,
             0,
@@ -243,6 +248,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.Enabled = false;
             this.label6.Location = new System.Drawing.Point(3, 148);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(116, 13);
