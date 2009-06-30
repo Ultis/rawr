@@ -546,6 +546,7 @@ namespace Rawr.DPSWarr {
             }
             // Variables
             public float hsActivates { get; set; }
+            public float maintainActs { get; set; }
             private Slam SL;
             private WhirlWind WW;
             private BloodThirst BT;
@@ -621,16 +622,26 @@ namespace Rawr.DPSWarr {
                     float chanceMhHitLands = (1f - combatFactors.YwMissChance - combatFactors.MhDodgeChance);
                     float chanceOhHitLands = (1f - combatFactors.YwMissChance - combatFactors.OhDodgeChance);
 
-                    float procs2 = CalcSlamProcs(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
+                    //float procs2 = CalcSlamProcs(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
                     float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
 
-                    float procs = BT.Activates * chanceMhHitLands + Whirlwind.Activates * chanceMhHitLands + Whirlwind.Activates * chanceOhHitLands
-                        + hsActivates * chanceMhHitLands;// HS.Activates;
-                    procs *= chance;
+                    //float procs = BT.Activates * chanceMhHitLands + Whirlwind.Activates * chanceMhHitLands + Whirlwind.Activates * chanceOhHitLands
+                    //    + hsActivates * chanceMhHitLands;// HS.Activates;
+                    //procs *= chance;
                     //procs /= RotationLength;
                     // procs = (procs / RotationLength) - (chance * chance + 0.01f); // WTF is with squaring chance?
-                    if (procs2 < 0) { procs2 = 0; }
-                    if (procs2 > 1) { procs2 = 1; } // Only have 1 free GCD in the default rotation
+                    //if (procs2 < 0) { procs2 = 0; }
+                    //if (procs2 > 1) { procs2 = 1; } // Only have 1 free GCD in the default rotation
+
+                    if (maintainActs > procs3)
+                    {
+                        procs3 = 0;
+                    }
+                    else
+                    {
+                        procs3 -= maintainActs;
+                    }
+
                     return procs3 * (1f - Whiteattacks.AvoidanceStreak);
 
                     // ORIGINAL LINES
@@ -1357,6 +1368,17 @@ namespace Rawr.DPSWarr {
                     return bonus;
                 }
             }
+            /*public override float Activates
+            {
+                get
+                {
+                    if (Duration > Cd)
+                    {
+                        return (float)Math.Max(0f, RotationLength / Duration * latencyMOD * (1f - Whiteattacks.AvoidanceStreak));
+                    }
+                    else return base.Activates;
+                }
+            }*/
         }
         public class Trauma : BuffEffect {
             // Constructors
@@ -1702,6 +1724,18 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Hamstring [Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
+            public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Hamstring";
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                MaxRange = 10f; // In Yards 
+                Duration = 15f;
+                RageCost = 10f;
+                StanceOkArms = StanceOkFury = true;
+                
+            }
         }
         #endregion
         #region Anti-Debuff Abilities

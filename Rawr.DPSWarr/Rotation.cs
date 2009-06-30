@@ -40,6 +40,8 @@ namespace Rawr.DPSWarr {
         public Skills.Bloodrage BR;
         public Skills.SunderArmor SN;
         public Skills.DemoralizingShout DS;
+        public Skills.BattleShout BTS;
+        public Skills.Hamstring HMS;
         
         public const float ROTATION_LENGTH_FURY = 8.0f;
         public const float ROTATION_LENGTH_ARMS_GLYPH = 42.0f;
@@ -120,7 +122,9 @@ namespace Rawr.DPSWarr {
             TH = new Skills.ThunderClap(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SN = new Skills.SunderArmor(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             DS = new Skills.DemoralizingShout(  CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            
+            BTS = new Skills.BattleShout(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HMS = new Skills.Hamstring(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+
             SD.FreeRage = freeRage;
             
             BS.Slam = SL;
@@ -147,6 +151,7 @@ namespace Rawr.DPSWarr {
             // Fury Iteration
             Which.OverridesPerSec = GetOvdActivates(Which);
             float oldActivates = 0.0f, newHSActivates = Which.Activates;
+            BS.maintainActs = MaintainCDs;
             while (CalcOpts.FuryStance && Math.Abs(newHSActivates - oldActivates) > 0.01f) {
                 oldActivates = Which.Activates;
                 BS.hsActivates = oldActivates;
@@ -224,6 +229,18 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
+        public float MaintainCDs
+        {
+            get
+            {
+                float ThunderActs = CalcOpts.Mntn_Thunder ? TH.Activates : 0f;
+                float SunderActs = CalcOpts.Mntn_Sunder ? SN.Activates : 0f;
+                float DemoActs = CalcOpts.Mntn_Demo ? DS.Activates : 0f;
+                float HamstringActs = CalcOpts.Mntn_Hamstring ? HMS.Activates : 0f;
+                float BattleActs = CalcOpts.Mntn_Battle ? BTS.Activates : 0f;
+                return ThunderActs + SunderActs + DemoActs + HamstringActs + BattleActs;
+            }
+        }
         #endregion
         #region Rage Calcs
         public virtual float RageGenBloodPerSec {
@@ -285,10 +302,12 @@ namespace Rawr.DPSWarr {
                 float ThunderRage = CalcOpts.Mntn_Thunder ? TH.RageUsePerSecond : 0f;
                 float SunderRage = CalcOpts.Mntn_Sunder ? SN.RageUsePerSecond : 0f;
                 float DemoRage = CalcOpts.Mntn_Demo ? DS.RageUsePerSecond : 0f;
+                float HamstringRage = CalcOpts.Mntn_Hamstring ? HMS.RageUsePerSecond : 0f;
+                float BattleRage = CalcOpts.Mntn_Battle ? BTS.RageUsePerSecond : 0f;
                 // Total
                 float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage +
                     BloodSurgeRage + SweepingRage + BladestormRage + RendRage +
-                    ThunderRage + SunderRage + DemoRage;
+                    ThunderRage + SunderRage + DemoRage + HamstringRage + BattleRage;
                 return rage;
             }
         }
