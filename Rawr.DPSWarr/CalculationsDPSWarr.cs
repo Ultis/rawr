@@ -352,7 +352,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.NeedyRage = Rot.RageNeededPerSec;
                 calculatedStats.FreeRage  = Rot.freeRage;
             }else{
-                calculatedStats.WhiteRage = Rot.RageGenWhite;
+                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;//Rot.RageGenWhite;
                 calculatedStats.OtherRage = Rot.RageGenOther;
                 calculatedStats.NeedyRage = Rot.RageNeeded;
                 calculatedStats.FreeRage  = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
@@ -559,16 +559,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                          +*/ 
                                         1f *
                                         (character.MainHand != null &&
-                                        (character.MainHand.Type == Item.ItemType.Polearm     ||
-                                         character.MainHand.Type == Item.ItemType.TwoHandAxe  ||
-                                         character.MainHand.Type == Item.ItemType.TwoHandMace ||
-                                         character.MainHand.Type == Item.ItemType.TwoHandSword)
+                                        (character.MainHand.Slot == Item.ItemSlot.TwoHand)
                                          ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 0f)
                                          *
                                          ((talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
-                                        (character.OffHand.Type  == Item.ItemType.TwoHandAxe  ||
-                                         character.OffHand.Type  == Item.ItemType.TwoHandMace ||
-                                         character.OffHand.Type  == Item.ItemType.TwoHandSword)
+                                        (character.OffHand.Slot  == Item.ItemSlot.TwoHand ||
+                                         character.MainHand.Slot == Item.ItemSlot.TwoHand)
                                          ? 0.90f : 1f)) -
                                          1f,
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
@@ -640,8 +636,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 mhHitsPerSecond = (bt.Activates + ww.Activates) / bt.RotationLength * (1f - combatFactors.YwMissChance);
                 ohHitsPerSecond = (ww.Activates) / bt.RotationLength * (1f - combatFactors.YwMissChance);
             }else{mhHitsPerSecond = 1f / 1.5f;}
-            if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / character.MainHand.Speed) * (1f + hasteBonus) * (1f - combatFactors.WhMissChance); }
-            if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / character.OffHand.Speed ) * (1f + hasteBonus) * (1f - combatFactors.WhMissChance); }
+            if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / combatFactors.MainHandSpeed) * (1f - combatFactors.WhMissChance); }
+            if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / combatFactors.OffHandSpeed) * (1f - combatFactors.WhMissChance); }
             
             float mhHitInterval    = 1f /  mhHitsPerSecond;
             float ohHitInterval    = 1f /  ohHitsPerSecond;

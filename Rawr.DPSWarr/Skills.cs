@@ -1425,7 +1425,7 @@ namespace Rawr.DPSWarr {
                     return bonus;
                 }
             }
-            /*public override float Activates
+            public override float Activates
             {
                 get
                 {
@@ -1435,7 +1435,7 @@ namespace Rawr.DPSWarr {
                     }
                     else return base.Activates;
                 }
-            }*/
+            }
         }
         public class Trauma : BuffEffect {
             // Constructors
