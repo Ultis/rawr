@@ -1000,7 +1000,7 @@ namespace Rawr
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 6f, 0f));
                 }
             }
-            else if (line.StartsWith(""))
+            else if (line.StartsWith("Each time you use your Lava Lash ability,"))
             {
                 Regex r = new Regex("Each time you use your Lava Lash ability, you have the chance to gain (?<attackpower>\\d*) attack power for 18 sec.");
                 Match m = r.Match(line);
@@ -1073,11 +1073,6 @@ namespace Rawr
                 line = line.Replace(".", "");
                 line = line.Substring("Reduces the mana cost of your spells by ".Length);
                 stats.SpellsManaReduction = float.Parse(line);
-            }
-            else if (line == "Your Blood Strike and Heart Strikes have a chance to grant 173 critical strike rating for 10 sec.")
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { CritRating = 173 }, 10f, 0f, .15f, 0));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { CritRating = 173 }, 10f, 0f, .15f, 0));
             }
             else
             {
@@ -1161,9 +1156,9 @@ namespace Rawr
                     string ability = match.Groups["ability"].Value;
                     string ability2 = match.Groups["ability2"].Value;
 
-                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f);
+                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f, 0.15f);
                     stats.AddSpecialEffect(SE1);
-                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f);
+                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f, 0.15f);
                     if (SE1.ToString() != SE2.ToString())
                     {
                         stats.AddSpecialEffect(SE2);
@@ -1492,6 +1487,7 @@ namespace Rawr
             }
         }
 
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown) { return EvalRegex(statName, amount, duration, ability, cooldown, 1f); } 
         /// <summary>
         /// For those objects that have a special effect trigger (As opposed to just straight stat upgrades)
         /// This allows you to pass in a statName, amount, duration, trigger type, and cooldown and get a SpecialEffect back.
@@ -1501,8 +1497,9 @@ namespace Rawr
         /// <param name="duration">How long in seconds?</param>
         /// <param name="ability">What is the spell triggering? For right now, this only effects the Sigils.  So we're going to use the ability to setup the trigger.</param>
         /// <param name="cooldown">How long in seconds?</param>
+        /// <param name="chance">What is the percent chance? (0-1)</param>
         /// <returns>A new SpecialEffect instance that can be used in Stats.AddSpecialEffect()</returns>
-        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown)
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown, float chance)
         {
             Stats s = new Stats();
 
@@ -1548,7 +1545,7 @@ namespace Rawr
                     break;
             }
 
-            return new SpecialEffect(trigger, s, duration, cooldown);
+            return new SpecialEffect(trigger, s, duration, cooldown, chance);
  
         }
 
