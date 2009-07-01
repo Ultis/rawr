@@ -754,7 +754,6 @@ namespace Rawr.RestoSham
         {
             return SpecialEffects.GetRelevantStats(stats) + new Stats()
             {
-                #region Base Stats
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 SpellPower = stats.SpellPower,
@@ -763,12 +762,8 @@ namespace Rawr.RestoSham
                 Mana = stats.Mana,
                 Mp5 = stats.Mp5,
                 Earthliving = stats.Earthliving,
-                #endregion
-                #region Trinkets
                 ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
                 BonusManaPotion = stats.BonusManaPotion,
-                #endregion
-                #region Totems and Sets
                 WaterShieldIncrease = stats.WaterShieldIncrease,
                 CHHWHealIncrease = stats.CHHWHealIncrease,
                 CHCTDecrease = stats.CHCTDecrease,
@@ -779,12 +774,10 @@ namespace Rawr.RestoSham
                 TotemHWSpellpower = stats.TotemHWSpellpower,
                 TotemLHWSpellpower = stats.TotemLHWSpellpower,
                 TotemThunderhead = stats.TotemThunderhead,
-                #endregion
-                #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier
-                #endregion
+                
             };
         }
 
