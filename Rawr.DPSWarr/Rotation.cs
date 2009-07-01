@@ -618,7 +618,23 @@ namespace Rawr.DPSWarr {
             }
             
             if (ok) {
-                float TotalNumofAtks =
+                availRage += rotation / (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / _SL_GCDs) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / rotation;
+                float numHSPerSec = availRage / Which.FullRageCost;
+                Which.OverridesPerSec = numHSPerSec;
+                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MainHandSpeed;
+                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                _WhiteDPS = _WhiteDPSMH;
+                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _OVD_DPS = Which.DPS;
+                _OVD_PerHit = Which.DamageOnUse;
+                DPS_TTL += _WhiteDPS;
+                DPS_TTL += _OVD_DPS;
+
+                
+                
+                
+                
+                /*float TotalNumofAtks =
                     // Rotation Length
                     rotation
                        // Length of time to complete a swing
@@ -642,26 +658,33 @@ namespace Rawr.DPSWarr {
 
                 // TODO: Enable the commented out areas to make it give value to HS Glyph and Imp HS talent
                 // problem is: it won't iterate down to avail rage of zero when i do that
-                while (AtksThatAreWhite > 0 && (rageSum) > 0.001f) {
+
+                /*while (AtksThatAreWhite > 0 && (rageSum) > 0.001f) {
                     AtksThatAreWhite -= 0.001f;
                     WhiteRageGenned = AtksThatAreWhite * WhiteRageGennedPerSwing / rotation;
                     //AtksThatAreOvrdn = TotalNumofAtks - AtksThatAreWhite;
                     //OvrdnRageUsed = AtksThatAreOvrdn * OvrdrsRageCostPerSwing / rotation;
-                    rageSum = WhiteRageGenned + RageGenOther - RageNeeded /*- OvrdnRageUsed*/;
-                }
+                    rageSum = WhiteRageGenned + RageGenOther - RageNeeded /*- OvrdnRageUsed*//*;
+                }*/
+                /*
+                AtksThatAreWhite = rotation / WhiteRageGennedPerSwing * (RageNeeded - RageGenOther);
+                WhiteRageGenned = AtksThatAreWhite * WhiteRageGennedPerSwing / rotation;
+                rageSum = WhiteRageGenned + RageGenOther - RageNeeded;
+
                 AtksThatAreOvrdn = TotalNumofAtks - AtksThatAreWhite;
-                availRage -= /*OvrdnRageUsed;*/AtksThatAreOvrdn * OvrdrsRageCostPerSwing / rotation;
+                availRage -= /*OvrdnRageUsed;*//*AtksThatAreOvrdn * OvrdrsRageCostPerSwing / rotation;
                 RageGenWhite = WhiteRageGenned;
 
                 Which.OverridesPerSec = AtksThatAreOvrdn / rotation;
-                WhiteAtks.Ovd_Freq = Which.MaxActivates * (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / _SL_GCDs) / rotation;
+                //WhiteAtks.Ovd_Freq = Which.MaxActivates * (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / _SL_GCDs) / rotation;
+                WhiteAtks.Ovd_Freq = AtksThatAreOvrdn / TotalNumofAtks;
                 _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
                 _OVD_DPS = Which.DPS;
                 _OVD_PerHit = Which.DamageOnUse;
                 DPS_TTL += _WhiteDPS;
-                DPS_TTL += _OVD_DPS;
+                DPS_TTL += _OVD_DPS;*/
             }else{
                 RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
                 availRage += RageGenWhite;
