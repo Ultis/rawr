@@ -56,26 +56,30 @@ namespace Rawr.DPSWarr {
         public float TotalDamagePerSecond { get; set; }
         #endregion
         #region Abilities
-        public Skills.HeroicStrike HS { get; set; }
-        public Skills.Cleave CL { get; set; }
-        public Skills.OnAttack Which { get; set; }
-        public Skills.DeepWounds DW { get; set; }
-        public Skills.Slam SL { get; set; }
-        public Skills.Rend RD { get; set; }
-        public Skills.MortalStrike MS { get; set; }
-        public Skills.OverPower OP { get; set; }
-        public Skills.Swordspec SS { get; set; }
-        public Skills.BloodSurge BS { get; set; }
-        public Skills.SweepingStrikes SW { get; set; }
-        public Skills.Bladestorm BLS { get; set; }
-        public Skills.Suddendeath SD { get; set; }
-        public Skills.BloodThirst BT { get; set; }
-        public Skills.WhirlWind WW { get; set; }
-        public Skills.ThunderClap TH { get; set; }
+        public Skills.BattleShout Battle { get; set; }
         public Skills.BerserkerRage BZ { get; set; }
+        public Skills.Bladestorm BLS { get; set; }
         public Skills.Bloodrage BR { get; set; }
-        public Skills.SunderArmor SN { get; set; }
+        public Skills.BloodSurge BS { get; set; }
+        public Skills.BloodThirst BT { get; set; }
+        public Skills.Cleave CL { get; set; }
+        public Skills.DeathWish Death { get; set; }
+        public Skills.DeepWounds DW { get; set; }
         public Skills.DemoralizingShout DS { get; set; }
+        public Skills.HeroicStrike HS { get; set; }
+        public Skills.MortalStrike MS { get; set; }
+        public Skills.OnAttack Which { get; set; }
+        public Skills.OverPower OP { get; set; }
+        public Skills.Recklessness RK { get; set; }
+        public Skills.Rend RD { get; set; }
+        public Skills.ShatteringThrow ST { get; set; }
+        public Skills.Slam SL { get; set; }
+        public Skills.Suddendeath SD { get; set; }
+        public Skills.SunderArmor SN { get; set; }
+        public Skills.SweepingStrikes SW { get; set; }
+        public Skills.Swordspec SS { get; set; }
+        public Skills.ThunderClap TH { get; set; }
+        public Skills.WhirlWind WW { get; set; }
         #endregion
         #region Neutral
         public float WhiteRage { get; set; }
@@ -171,16 +175,16 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
             dictValues.Add("Heroic Strike",     string.Format(format,HS.DPS, HS.DamageOnUse, HS.FullRageCost, HS.Activates, HS.DPS / TotalDPS));
             dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.FullRageCost, CL.Activates, CL.DPS / TotalDPS));
-            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00} : {3:00.0}*Main Hand-{4:0.00}" + 
-                                Environment.NewLine + "Off Hand- {5:0.00}" + 
-                                Environment.NewLine + "{6:00.0%} of DPS",
-                                WhiteDPS,WhiteDmg,WhiteRage,0f,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
+            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00}*Main Hand-{3:0.00}" + 
+                                Environment.NewLine + "Off Hand- {4:0.00}" + 
+                                Environment.NewLine + "{5:00.0%} of DPS",
+                                WhiteDPS,WhiteDmg,WhiteRage,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
             dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0} : {2:#,###,##0}*"+Rot.GCDUsage, TotalDPS,TotalDPS*BT.RotationLength,TotalDPS*Duration));
             // Rage
             format = "{0:00.000}";
-            dictValues.Add("Generated White DPS Rage",  string.Format(format,WhiteRage));
-            dictValues.Add("Generated Other Rage",      string.Format(format,OtherRage));
-            dictValues.Add("Total Generated Rage",      string.Format(format,WhiteRage+OtherRage));
+            //dictValues.Add("Generated White DPS Rage",  string.Format(format,WhiteRage));
+            //dictValues.Add("Generated Other Rage",      string.Format(format,OtherRage));
+            dictValues.Add("Total Generated Rage",      string.Format("{0:00.000} = {1:00.000} + {2:00.000}",WhiteRage+OtherRage,WhiteRage,OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
             

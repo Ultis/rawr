@@ -145,8 +145,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
 2nd number is total DMG over Rotation
 3rd number is total DMG over Duration",
                       
-                        "Rage Details:Generated White DPS Rage",
-                        "Rage Details:Generated Other Rage",
+                        //"Rage Details:Generated White DPS Rage",
+                        //"Rage Details:Generated Other Rage",
                         "Rage Details:Total Generated Rage",
                         "Rage Details:Needed Rage for Abilities",
                         "Rage Details:Available Free Rage",
@@ -340,8 +340,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     + calculatedStats.SL.DPS + calculatedStats.OP.DPS + calculatedStats.RD.DPS
                     + calculatedStats.HS.DPS + calculatedStats.BLS.DPS;
             }else{
-                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.WhiteDPS +
-                    calculatedStats.Rot._DW_DPS + calculatedStats.Rot._OVD_DPS/*+ calculatedStats.HS.DPS*/;
+                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + //calculatedStats.WhiteDPS +
+                    calculatedStats.Rot._DW_DPS /*+ calculatedStats.Rot._OVD_DPS + calculatedStats.HS.DPS*/;
+                calculatedStats.WhiteDPS = Rot._WhiteDPS;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
@@ -349,12 +350,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
                 calculatedStats.OtherRage = Rot.RageGenOtherPerSec;
                 calculatedStats.NeedyRage = Rot.RageNeededPerSec;
-                calculatedStats.FreeRage = Rot.freeRage;
+                calculatedStats.FreeRage  = Rot.freeRage;
             }else{
                 calculatedStats.WhiteRage = Rot.RageGenWhite;
                 calculatedStats.OtherRage = Rot.RageGenOther;
                 calculatedStats.NeedyRage = Rot.RageNeeded;
-                calculatedStats.FreeRage = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
+                calculatedStats.FreeRage  = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
             }
 
             return calculatedStats;
@@ -942,7 +943,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
             // But the other buffs don't stay up like Sunder
             // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
-            doit = calcOpts.Mntn_Sunder && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
+            doit = calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
             removeother = doit;
             if (removeother) {
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {

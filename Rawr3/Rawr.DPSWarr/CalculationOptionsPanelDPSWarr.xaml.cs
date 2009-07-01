@@ -137,19 +137,13 @@ namespace Rawr.DPSWarr {
         public UserControl PanelControl { get { return this; } }
 
         private Character character;
-        public Character Character
-        {
+        public Character Character {
             get { return character; }
-            set
-            {
-                character = value;
-                LoadCalculationOptions();
-            }
+            set { character = value; LoadCalculationOptions(); }
         }
 
         private bool _loadingCalculationOptions;
-        public void LoadCalculationOptions()
-        {
+        public void LoadCalculationOptions() {
             _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsDPSWarr();
 
@@ -171,7 +165,7 @@ namespace Rawr.DPSWarr {
                 CB_React.Value = (int)opts.React;
                 //
                 Character.OnCalculationsInvalidated();
-                return; 
+                return;
             }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             if (calcOpts != null) {

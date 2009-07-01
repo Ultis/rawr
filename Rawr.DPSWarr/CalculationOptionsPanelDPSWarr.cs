@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
@@ -32,11 +33,6 @@ namespace Rawr.DPSWarr {
                 RB_StanceFury.Checked = opts.FuryStance;
                 RB_StanceArms.Checked = !RB_StanceFury.Checked;
                 // Abilities to Maintain
-                CK_Thunder.Checked = opts.Mntn_Thunder;
-                CK_Sunder.Checked = opts.Mntn_Sunder;
-                CK_DemoShout.Checked = opts.Mntn_Demo;
-                CK_Hamstring.Checked = opts.Mntn_Hamstring;
-                CK_BattleShout.Checked = opts.Mntn_Battle;
                 // Latency
                 CB_Lag.Value = (int)opts.Lag;
                 CB_React.Value = (int)opts.React;
@@ -57,11 +53,9 @@ namespace Rawr.DPSWarr {
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
                 CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 // Abilities to Maintain
-                CK_Thunder.Checked = calcOpts.Mntn_Thunder;
-                CK_Sunder.Checked = calcOpts.Mntn_Sunder;
-                CK_DemoShout.Checked = calcOpts.Mntn_Demo;
-                CK_Hamstring.Checked = calcOpts.Mntn_Hamstring;
-                CK_BattleShout.Checked = calcOpts.Mntn_Battle;
+                for (int i = 0; i < CLB_Maints.Items.Count; i++) {
+                    CLB_Maints.SetItemChecked(i, calcOpts.Maintenance[i]);
+                }
                 // Latency
                 CB_Lag.Value   = (int)calcOpts.Lag;
                 CB_React.Value = (int)calcOpts.React;
@@ -75,10 +69,10 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
-        //
-        private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
+        // Basics
+        private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
             int targetArmor = int.Parse(CB_TargArmor.Text);
-            LB_TargArmorDesc.Text = armorBosses[targetArmor];
+            //LB_TargArmorDesc.Text = armorBosses[targetArmor];
 
             if (Character != null && Character.CalculationOptions != null) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -86,7 +80,7 @@ namespace Rawr.DPSWarr {
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CB_TargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
             if (Character != null && Character.CalculationOptions != null) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
@@ -104,70 +98,37 @@ namespace Rawr.DPSWarr {
             Character.OnCalculationsInvalidated();
         }
         // Rotational Changes
-        private void CK_MultiTargs_CheckedChanged(object sender, EventArgs e) {
+        private void RotChanges_ChecksChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.MultipleTargets = CK_MultiTargs.Checked;
-            CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+            //
+            calcOpts.MultipleTargets = CK_MultiTargs.Checked; CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+            calcOpts.MovingTargets = CK_MovingTargs.Checked; CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+            calcOpts.StunningTargets = CK_StunningTargs.Checked; CB_StunningTargsPerc.Enabled = calcOpts.StunningTargets;
+            calcOpts.DisarmingTargets = CK_DisarmTargs.Checked; CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
+            calcOpts.InBack = CK_InBack.Checked; CB_InBackPerc.Enabled = calcOpts.InBack;
+            //
             Character.OnCalculationsInvalidated();
         }
-        private void CB_MultiTargs_ValueChanged(object sender, EventArgs e) {
+        private void RotChanges_ValuesChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CK_MovingTargs_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.MovingTargets = CK_MovingTargs.Checked;
-            this.CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_MovingTargs_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.MovingTargetsPerc = (int)CB_MoveTargsPerc.Value;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CK_StunningTargs_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.StunningTargets = CK_StunningTargs.Checked;
-            CB_StunningTargsPerc.Enabled = calcOpts.StunningTargets;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_StunningTargs_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.StunningTargetsPerc = (int)CB_StunningTargsPerc.Value;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CK_DisarmingTargs_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.DisarmingTargets = CK_DisarmTargs.Checked;
-            CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_DisarmingTargs_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CK_InBack_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.InBack = CK_InBack.Checked;
-            CB_InBackPerc.Enabled = calcOpts.InBack;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_InBack_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
+            //
             Character.OnCalculationsInvalidated();
         }
         // Abilities to Maintain Changes
-        private void CK_Maints_CheckedChanged(object sender, EventArgs e) {
+        private void CLB_Maints_SelectedValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.Mntn_Thunder = CK_Thunder.Checked;
-            calcOpts.Mntn_Sunder = CK_Sunder.Checked;
-            calcOpts.Mntn_Demo = CK_DemoShout.Checked;
-            calcOpts.Mntn_Hamstring = CK_Hamstring.Checked;
-            calcOpts.Mntn_Battle = CK_BattleShout.Checked;
-
+            //
+            for (int i=0; i<CLB_Maints.Items.Count; i++) {
+                if (CLB_Maints.GetItemText(CLB_Maints.Items[i]).Contains("==")) { }
+                calcOpts.Maintenance[i] = CLB_Maints.GetItemChecked(i);
+            }
+            //
             Character.OnCalculationsInvalidated();
         }
         // Latency
@@ -191,11 +152,39 @@ namespace Rawr.DPSWarr {
         public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         public bool InBack           = true ; public int InBackPerc           = 100;
         // Abilities to Maintain
-        public bool Mntn_Thunder = false;
-        public bool Mntn_Sunder = false;
-        public bool Mntn_Battle = false;
-        public bool Mntn_Demo = false;
-        public bool Mntn_Hamstring = false;
+        public bool[] Maintenance = new bool[] {
+            true,  // == Rage Gen ==
+            true,  // Berserker Rage
+            true,  // Bloodrage
+            false, // == Maintenance ==
+            false, // Battle Shout
+            false, // Demoralizing Shout
+            false, // Sunder Armor
+            false, // Thunder Clap
+            false, // Hamstring
+            true,  // == Periodics ==
+            true,  // Shattering Throw
+            true,  // Sweeping Strikes
+            true,  // DeathWish
+            true,  // Recklessness
+            true,  // == Damage Dealers ==
+            true,  // Bladestorm
+            true,  // Mortal Strike
+            true,  // Rend
+            true,  // Overpower
+            true,  // Sudden Death
+            true,  // Slam
+            true,  // == Rage Dumps ==
+            true,  // Cleave
+            true   // Heroic Strike
+        };
+        public enum Maintenances : int {
+            _RageGen__ = 0,   BerserkerRage_,   Bloodrage_,
+            _Maintenance__,   BattleShout_,     DemoralizingShout_, SunderArmor_, ThunderClap_,  Hamstring_,
+            _Periodics__,     ShatteringThrow_, SweepingStrikes_,   DeathWish_,   Recklessness_,
+            _DamageDealers__, Bladestorm_,      MortalStrike_,      Rend_,        Overpower_,    SuddenDeath_, Slam_,
+            _RageDumps__,     Cleave_,          HeroicStrike_
+        };
         // Latency
         public float Lag = 179f;
         public float React = 220f;

@@ -21,31 +21,34 @@ namespace Rawr.DPSWarr {
         private Skills.WhiteAttacks WHITEATTACKS;
         private CalculationOptionsDPSWarr CALCOPTS;
 
-        public Skills.Slam SL;
-        public Skills.Rend RD;
+        public Skills.BattleShout Battle;
+        public Skills.BerserkerRage BZ;
+        public Skills.Bladestorm BLS;
+        public Skills.Bloodrage BR;
+        public Skills.BloodSurge BS;
+        public Skills.BloodThirst BT;
+        public Skills.Cleave CL;
+        public Skills.DeathWish Death;
+        public Skills.DeepWounds DW;
+        public Skills.DemoralizingShout DS;
+        public Skills.HeroicStrike HS;
         public Skills.MortalStrike MS;
         public Skills.OverPower OP;
-        public Skills.Swordspec SS;
-        public Skills.SweepingStrikes SW;
-        public Skills.Bladestorm BLS;
+        public Skills.Recklessness RK;
+        public Skills.Rend RD;
+        public Skills.ShatteringThrow ST;
+        public Skills.Slam SL;
         public Skills.Suddendeath SD;
-        public Skills.BloodThirst BT;
-        public Skills.WhirlWind WW;
-        public Skills.HeroicStrike HS;
-        public Skills.Cleave CL;
-        public Skills.BloodSurge BS;
-        public Skills.DeepWounds DW;
-        public Skills.ThunderClap TH;
-        public Skills.BerserkerRage BZ;
-        public Skills.Bloodrage BR;
         public Skills.SunderArmor SN;
-        public Skills.DemoralizingShout DS;
+        public Skills.SweepingStrikes SW;
+        public Skills.Swordspec SS;
+        public Skills.ThunderClap TH;
+        public Skills.WhirlWind WW;
         public Skills.BattleShout BTS;
         public Skills.Hamstring HMS;
         
         public const float ROTATION_LENGTH_FURY = 8.0f;
-        public const float ROTATION_LENGTH_ARMS_GLYPH = 42.0f;
-        public const float ROTATION_LENGTH_ARMS_NOGLYPH = 30.0f;
+        public const float ROTATION_LENGTH_ARMS = 30.0f;
         #endregion
         #region Get/Set
         public Character Char { get { return CHARACTER; } set { CHARACTER = value; } }
@@ -75,29 +78,37 @@ namespace Rawr.DPSWarr {
 
             calcDeepWounds();
 
-            calcs.SL = SL;
-            calcs.RD = RD;
+            calcs.Battle = Battle;
+            calcs.BZ = BZ;
+            calcs.BLS = BLS;
+            calcs.BR = BR;
+            calcs.BS = BS;
+            calcs.BT = BT;
+            calcs.CL = CL;
+            calcs.Death = Death;
+            calcs.DW = DW;
+            calcs.DS = DS;
+            calcs.HS = HS;
             calcs.MS = MS;
             calcs.OP = OP;
-            calcs.SS = SS;
-            calcs.SW = SW;
-            calcs.BLS = BLS;
+            calcs.RK = RK;
+            calcs.RD = RD;
+            calcs.ST = ST;
+            calcs.SL = SL;
             calcs.SD = SD;
-            calcs.BT = BT;
-            calcs.WW = WW;
-            calcs.HS = HS;
-            calcs.CL = CL;
-            calcs.BS = BS;
-            calcs.DW = DW;
-            calcs.TH = TH;
-            calcs.BZ = BZ;
-            calcs.BR = BR;
             calcs.SN = SN;
-            calcs.DS = DS;
+            calcs.SW = SW;
+            calcs.SS = SS;
+            calcs.TH = TH;
+            calcs.WW = WW;
         }
         public void Initialize() {initAbilities();doIterations();calcDeepWounds();}
 
         private void initAbilities() {
+            Battle = new Skills.BattleShout(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            Death = new Skills.DeathWish(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            ST = new Skills.ShatteringThrow(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Fury
             BT = new Skills.BloodThirst(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -160,16 +171,18 @@ namespace Rawr.DPSWarr {
                 newHSActivates = Which.Activates;
             }
             BS.hsActivates = newHSActivates;
-            _OVD_DPS = Which.DPS;
-            _OVD_PerHit = Which.DamageOnUse;
+            if (CalcOpts.FuryStance) {
+                _OVD_DPS = Which.DPS;
+                _OVD_PerHit = Which.DamageOnUse;
+            }
         }
 
         private void calcDeepWounds() {
             //DW = new Skills.DeepWounds(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-//            float MHAbilityActivates = SL.Activates + MS.Activates +
-//                OP.Activates + /*SW.Activates + SS.Activates*/ +
-//                BLS.Activates * 6f + BS.Activates + SD.Activates +
-//                BT.Activates + WW.Activates;
+            //float MHAbilityActivates = SL.Activates + MS.Activates +
+            //  OP.Activates + /*SW.Activates + SS.Activates*/ +
+            //  BLS.Activates * 6f + BS.Activates + SD.Activates +
+            //  BT.Activates + WW.Activates;
             float MHAbilityActivates = _SL_GCDs + _MS_GCDs +
                 _OP_GCDs + /*SW.Activates + SS.Activates*/ +
                 _BLS_GCDs *6 + BS.Activates + _SD_GCDs +
@@ -185,36 +198,55 @@ namespace Rawr.DPSWarr {
             return (CalcOpts.FuryStance ? freeRage : RageGenWhite + RageGenOther - RageNeeded) / Which.FullRageCost;
         }
         private float GetLandedAtksPerSecNoSS() {
-            float MS_Acts = /*_MS_GCDs!=0?_MS_GCDs:*/MS.MaxActivates;
-            float OP_Acts = /*_OP_GCDs!=0?_OP_GCDs:*/OP.MaxActivates;
-            float SD_Acts = /*_SD_GCDs!=0?_SD_GCDs:*/SD.MaxActivates;
-            float SL_Acts = /*_SL_GCDs!=0?_SL_GCDs:*/(MS.RotationLength / 1.5f - MS_Acts - OP_Acts - SD_Acts);
+            float BZ_Acts = /*_BZ_GCDs !=0?_BZ_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_    ] ? BZ.MaxActivates  : 0f;
+            float BL_Acts = /*_BL_GCDs !=0?_BL_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bloodrage_        ] ? BR.MaxActivates  : 0f;
+            float BS_Acts = /*_BS_GCDs !=0?_BS_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_      ] ? BS.MaxActivates  : 0f;
+            float DS_Acts = /*_DS_GCDs !=0?_DS_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_] ? DS.MaxActivates  : 0f;
+            float SN_Acts = /*_SN_GCDs !=0?_SN_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_      ] ? SN.MaxActivates  : 0f;
+            float TH_Acts = /*_TH_GCDs !=0?_TH_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_      ] ? TH.MaxActivates  : 0f;
+            float ST_Acts = /*_ST_GCDs !=0?_ST_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_  ] ? ST.MaxActivates  : 0f;
+            float SW_Acts = /*_SW_GCDs !=0?_SW_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_  ] ? SW.MaxActivates  : 0f;
+            float DW_Acts = /*_DW_GCDs !=0?_DW_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DeathWish_        ] ? DW.MaxActivates  : 0f;
+            float RK_Acts = /*_RK_GCDs !=0?_RK_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Recklessness_     ] ? RK.MaxActivates  : 0f;
+            float BLS_Acts= /*_BLS_GCDs!=0?_BLS_GCDs:*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_       ] ? BLS.MaxActivates : 0f;
 
-            float Dable = MS_Acts + SD_Acts + SL_Acts;
+            float MS_Acts = /*_MS_GCDs !=0?_MS_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_     ] ? MS.MaxActivates  : 0f;
+            float OP_Acts = /*_OP_GCDs !=0?_OP_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_        ] ? OP.MaxActivates  : 0f;
+            float SD_Acts = /*_SD_GCDs !=0?_SD_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_      ] ? SD.MaxActivates  : 0f;
+            float SL_Acts = /*_SL_GCDs !=0?_SL_GCDs :*/CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_             ] ?
+                (MS.RotationLength / 1.5f
+                - BZ_Acts - BL_Acts - BS_Acts
+                - DS_Acts - SN_Acts - TH_Acts
+                - ST_Acts - SW_Acts - DW_Acts
+                - RK_Acts
+                - BLS_Acts - MS_Acts - OP_Acts - SD_Acts) : 0f;
+
+            float Dable = BLS_Acts*6*2 + TH_Acts + MS_Acts + SD_Acts + SL_Acts;
             float nonDable = OP_Acts;
+
+            //Dable    /= 1.5f;
+            //nonDable /= 1.5f;
 
             float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS.MhCrit)
                 * (COMBATFACTORS.MainHand.Speed / COMBATFACTORS.TotalHaste);
 
-            float ProbYellowHit = (1f - COMBATFACTORS.YwMissChance - COMBATFACTORS.MhDodgeChance);
+            float ProbYellowHit   = (1f - COMBATFACTORS.YwMissChance - COMBATFACTORS.MhDodgeChance);
             float ProbYellowHitOP = (1f - COMBATFACTORS.YwMissChance);
 
-            float result = white + (Dable * ProbYellowHit) + (nonDable * ProbYellowHitOP);
+            float result = white
+                + (Dable    * ProbYellowHit  )
+                + (nonDable * ProbYellowHitOP);
 
-            return result;
+            return result / 60f;
         }
         public float GetLandedAtksPerSec() { return GetLandedAtksPerSecNoSS(); }// TODO: add swordspec to this
         public float CritHsSlamPerSec {
-            get
-            {
-                if (CalcOpts.FuryStance)
-                {
+            get {
+                if (CalcOpts.FuryStance) {
                     float critsPerRot = HS.Activates * (CombatFactors.MhYellowCrit + HS.BonusCritChance) + 
                                         SL.Activates * (CombatFactors.MhYellowCrit + SL.BonusCritChance);
                     return critsPerRot / HS.RotationLength;
-                }
-                else
-                {
+                } else {
                     Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
                     float MS_Acts = MS.Activates;
                     float OP_Acts = OP.Activates;
@@ -229,15 +261,13 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
-        public float MaintainCDs
-        {
-            get
-            {
-                float ThunderActs = CalcOpts.Mntn_Thunder ? TH.Activates : 0f;
-                float SunderActs = CalcOpts.Mntn_Sunder ? SN.Activates : 0f;
-                float DemoActs = CalcOpts.Mntn_Demo ? DS.Activates : 0f;
-                float HamstringActs = CalcOpts.Mntn_Hamstring ? HMS.Activates : 0f;
-                float BattleActs = CalcOpts.Mntn_Battle ? BTS.Activates : 0f;
+        public float MaintainCDs {
+            get {
+                float ThunderActs   = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_] ? TH.Activates : 0f;
+                float SunderActs    = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] ? SN.Activates : 0f;
+                float DemoActs      = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_] ? DS.Activates : 0f;
+                float HamstringActs = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_] ? HMS.Activates : 0f;
+                float BattleActs    = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_] ? BTS.Activates : 0f;
                 return ThunderActs + SunderActs + DemoActs + HamstringActs + BattleActs;
             }
         }
@@ -246,10 +276,10 @@ namespace Rawr.DPSWarr {
         public virtual float RageGenBloodPerSec {
             get {
                 float result = 0f;
-                if (CalcOpts.FuryStance){
+                if (CalcOpts.FuryStance) {
                     result = (20f * (1f + 0.25f * Talents.ImprovedBloodrage)) / (60f * (1f - 1.0f / 9.0f * Talents.IntensifyRage));
                 }else{
-                    result = BR.RageUsePerSecond;
+                    result = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_] ? BR.RageUsePerSecond : 0f;
                 }
                 return result;
             }
@@ -262,7 +292,7 @@ namespace Rawr.DPSWarr {
                 if (CalcOpts.FuryStance) {
                     result = Talents.ImprovedBerserkerRage * 10f / (30f * (1f - 1f / 9f * Talents.IntensifyRage));
                 }else{
-                    result = BZ.RageUsePerSecond;
+                    result = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] ? BZ.RageUsePerSecond : 0f;
                 }
                 return result;
             }
@@ -299,11 +329,11 @@ namespace Rawr.DPSWarr {
                 float SDRage         = _SD_GCDs  != 0 ? SD.GetRageUsePerSecond(_SD_GCDs ) : SD.RageUsePerSecond;
                 float SlamRage       = _SL_GCDs  != 0 ? SL.GetRageUsePerSecond(_SL_GCDs ) : SL.RageUsePerSecond;
                 // Maintenance
-                float ThunderRage = CalcOpts.Mntn_Thunder ? TH.RageUsePerSecond : 0f;
-                float SunderRage = CalcOpts.Mntn_Sunder ? SN.RageUsePerSecond : 0f;
-                float DemoRage = CalcOpts.Mntn_Demo ? DS.RageUsePerSecond : 0f;
-                float HamstringRage = CalcOpts.Mntn_Hamstring ? HMS.RageUsePerSecond : 0f;
-                float BattleRage = CalcOpts.Mntn_Battle ? BTS.RageUsePerSecond : 0f;
+                float ThunderRage = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_] ? TH.RageUsePerSecond : 0f;
+                float SunderRage = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] ? SN.RageUsePerSecond : 0f;
+                float DemoRage = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_] ? DS.RageUsePerSecond : 0f;
+                float HamstringRage = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_] ? HMS.RageUsePerSecond : 0f;
+                float BattleRage = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_] ? BTS.RageUsePerSecond : 0f;
                 // Total
                 float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage +
                     BloodSurgeRage + SweepingRage + BladestormRage + RendRage +
@@ -324,7 +354,6 @@ namespace Rawr.DPSWarr {
 
         #region FuryRotVariables
         float _bloodsurgeRPS;
-
         #endregion
 
         #region ArmsRotVariables
@@ -350,8 +379,8 @@ namespace Rawr.DPSWarr {
             float DPS_TTL = 0f;
             float rotation = BLS.RotationLength;
             float duration = CalcOpts.Duration;
-            float latencyMOD = 1f - CalcOpts.GetLatency();
-            float NumGCDs = rotation / 1.5f * latencyMOD;
+            //float latencyMOD = 1f - CalcOpts.GetLatency();
+            float NumGCDs = rotation / (1.5f + CalcOpts.GetLatency()); //1.5f * latencyMOD;
             GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
             float GCDsused = 0f;
             float availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
@@ -372,212 +401,279 @@ namespace Rawr.DPSWarr {
             if (StatS.DreadnaughtBonusRageProc != 0f) {
                 RageGenOther += 5.0f * 0.1f * ((Talents.DeepWounds > 0f ? 1f : 0f) + (!CalcOpts.FuryStance ? 1f / 3f : 0f));
             }
-
-            Skills.Bloodrage Blood = new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks);
-            float Blood_GCDs = (float)Math.Min(availGCDs, Blood.MaxActivates);
-            _Blood_GCDs = Blood_GCDs; _Blood_GCDsD = _Blood_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, Blood_GCDs);
-            GCDUsage += Blood.Name + ": " + Blood_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = Blood.GetRageUsePerSecond(Blood_GCDs) + Blood.AverageStats.BonusRageGen; // used per sec reverses the rage cost in this instance
-            RageGenOther += rageadd;
-            availRage += rageadd;
-
-            Skills.BerserkerRage ZRage = new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks);
-            if (ZRage.RageCost > 0) {
-                float ZRage_GCDs = (float)Math.Min(availGCDs, ZRage.MaxActivates);
-                _ZRage_GCDs = ZRage_GCDs; _ZRage_GCDsD = _ZRage_GCDs * duration / rotation;
-                GCDsused += (float)Math.Min(NumGCDs, ZRage_GCDs);
-                GCDUsage += ZRage.Name + ": " + ZRage_GCDs.ToString() + "\n";
+            availRage += RageGenOther;
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_]) {
+                // Enforcing a "Maintaining" argument
+                float Blood_GCDs = (float)Math.Min(availGCDs, BR.MaxActivates);
+                _Blood_GCDs = Blood_GCDs; _Blood_GCDsD = _Blood_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, Blood_GCDs);
+                GCDUsage += BR.Name + ": " + Blood_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = ZRage.GetRageUsePerSecond(ZRage_GCDs); // used per sec reverses the rage cost in this instance
+                rageadd = BR.GetRageUsePerSecond(Blood_GCDs) + BR.AverageStats.BonusRageGen; // used per sec reverses the rage cost in this instance
                 RageGenOther += rageadd;
                 availRage += rageadd;
             }
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]) {
+                // Enforcing a "Maintaining" argument
+                // Also, not using it unless it generates rage
+                if (BZ.RageCost > 0) {
+                    float ZRage_GCDs = (float)Math.Min(availGCDs, BZ.MaxActivates);
+                    _ZRage_GCDs = ZRage_GCDs; _ZRage_GCDsD = _ZRage_GCDs * duration / rotation;
+                    GCDsused += (float)Math.Min(NumGCDs, ZRage_GCDs);
+                    GCDUsage += BZ.Name + ": " + ZRage_GCDs.ToString() + "\n";
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    rageadd = BZ.GetRageUsePerSecond(ZRage_GCDs); // used per sec reverses the rage cost in this instance
+                    RageGenOther += rageadd;
+                    availRage += rageadd;
+                }
+            }
 
             // Periodic GCD eaters (DPS for these handled elsewhere)
-            if (CalcOpts.Mntn_Battle) {
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
                 // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-                Skills.BattleShout Shout = new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks);
-                float Shout_GCDs = (float)Math.Min(availGCDs, Shout.MaxActivates);
+                float Shout_GCDs = (float)Math.Min(availGCDs, Battle.MaxActivates);
                 _Shout_GCDs = Shout_GCDs; _Shout_GCDsD = _Shout_GCDs * duration / rotation;
                 GCDsused += (float)Math.Min(NumGCDs, Shout_GCDs);
-                GCDUsage += Shout.Name + ": " + Shout_GCDs.ToString() + "\n";
+                GCDUsage += Battle.Name + ": " + Shout_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Shout.GetRageUsePerSecond(Shout_GCDs);
+                rageadd = Battle.GetRageUsePerSecond(Shout_GCDs);
                 availRage -= rageadd;
                 RageNeeded += rageadd;
             }
-            if (CalcOpts.Mntn_Demo) {
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_]) {
                 // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-                Skills.DemoralizingShout Demo = new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks);
-                float Demo_GCDs = (float)Math.Min(availGCDs, Demo.MaxActivates);
+                float Demo_GCDs = (float)Math.Min(availGCDs, DS.MaxActivates);
                 _Demo_GCDs = Demo_GCDs; _Demo_GCDsD = _Demo_GCDs * duration / rotation;
                 GCDsused += (float)Math.Min(NumGCDs, Demo_GCDs);
-                GCDUsage += Demo.Name + ": " + Demo_GCDs.ToString() + "\n";
+                GCDUsage += DS.Name + ": " + Demo_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Demo.GetRageUsePerSecond(Demo_GCDs);
+                rageadd = DS.GetRageUsePerSecond(Demo_GCDs);
                 availRage -= rageadd;
                 RageNeeded += rageadd;
             }
-            if (CalcOpts.Mntn_Sunder) {
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_]) {
                 // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-                Skills.SunderArmor Sunder = new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks);
-                float Sunder_GCDs = (float)Math.Min(availGCDs, 4f + Sunder.MaxActivates); // 4 to stack up the initial, 5th+ are just maintenance
+                float Sunder_GCDs = (float)Math.Min(availGCDs, 4f + SN.MaxActivates); // 4 to stack up the initial, 5th+ are just maintenance
                 _Sunder_GCDs = Sunder_GCDs; _Sunder_GCDsD = _Sunder_GCDs * duration / rotation;
                 GCDsused += (float)Math.Min(NumGCDs, Sunder_GCDs);
-                GCDUsage += Sunder.Name + ": " + Sunder_GCDs.ToString() + "\n";
+                GCDUsage += SN.Name + ": " + Sunder_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Sunder.GetRageUsePerSecond(Sunder_GCDs);
+                rageadd = SN.GetRageUsePerSecond(Sunder_GCDs);
                 availRage -= rageadd;
                 RageNeeded += rageadd;
             }
-            if (CalcOpts.Mntn_Thunder) {
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_]) {
                 // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-                Skills.ThunderClap Thunder = new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks);
-                float Thunder_GCDs = (float)Math.Min(availGCDs, Thunder.MaxActivates);
+                float Thunder_GCDs = (float)Math.Min(availGCDs, TH.MaxActivates);
                 _Thunder_GCDs = Thunder_GCDs; _Thunder_GCDsD = _Thunder_GCDs * duration / rotation;
                 GCDsused += (float)Math.Min(NumGCDs, Thunder_GCDs);
-                GCDUsage += Thunder.Name + ": " + Thunder_GCDs.ToString() + "\n";
+                GCDUsage += TH.Name + ": " + Thunder_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                _TH_DPS = Thunder.GetDPS(Thunder_GCDs);
+                _TH_DPS = TH.GetDPS(Thunder_GCDs);
                 DPS_TTL += _TH_DPS;
-                rageadd = Thunder.GetRageUsePerSecond(Thunder_GCDs);
+                rageadd = TH.GetRageUsePerSecond(Thunder_GCDs);
                 availRage -= rageadd;
                 RageNeeded += rageadd;
             }
 
             if (!CalcOpts.FuryStance) {
-                Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks);
-                float Shatt_GCDs = (float)Math.Min(availGCDs, Shatt.MaxActivates);
-                _Shatt_GCDs = Shatt_GCDs; _Shatt_GCDsD = _Shatt_GCDs * duration / rotation;
-                GCDsused += (float)Math.Min(NumGCDs, Shatt_GCDs);
-                GCDUsage += Shatt.Name + ": " + Shatt_GCDs.ToString() + "\n";
-                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Shatt.GetRageUsePerSecond(Shatt_GCDs);
-                availRage -= rageadd;
-                RageNeeded += rageadd;
-                //
-                Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks);
-                float Sweep_GCDs = (float)Math.Min(availGCDs, Sweep.MaxActivates);
-                _SW_GCDs = Sweep_GCDs; _SW_GCDsD = _SW_GCDs * duration / rotation;
-                GCDsused += (float)Math.Min(NumGCDs, Sweep_GCDs);
-                if (Sweep_GCDs > 0) { GCDUsage += Sweep.Name + ": " + Sweep_GCDs.ToString() + "\n"; }
-                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Sweep.GetRageUsePerSecond(Sweep_GCDs);
-                availRage -= rageadd;
-                RageNeeded += rageadd;
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_]) {
+                    float Shatt_GCDs = (float)Math.Min(availGCDs, ST.MaxActivates);
+                    _Shatt_GCDs = Shatt_GCDs; _Shatt_GCDsD = _Shatt_GCDs * duration / rotation;
+                    GCDsused += (float)Math.Min(NumGCDs, Shatt_GCDs);
+                    GCDUsage += ST.Name + ": " + Shatt_GCDs.ToString() + "\n";
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    rageadd = ST.GetRageUsePerSecond(Shatt_GCDs);
+                    availRage -= rageadd;
+                    RageNeeded += rageadd;
+                }
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]) {
+                    float Sweep_GCDs = (float)Math.Min(availGCDs, SW.MaxActivates);
+                    _SW_GCDs = Sweep_GCDs; _SW_GCDsD = _SW_GCDs * duration / rotation;
+                    GCDsused += (float)Math.Min(NumGCDs, Sweep_GCDs);
+                    if (Sweep_GCDs > 0) { GCDUsage += SW.Name + ": " + Sweep_GCDs.ToString() + "\n"; }
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    rageadd = SW.GetRageUsePerSecond(Sweep_GCDs);
+                    availRage -= rageadd;
+                    RageNeeded += rageadd;
+                }
             }else{
-                Skills.DeathWish Death = new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks);
-                float Death_GCDs = (float)Math.Min(availGCDs, Death.MaxActivates);
-                _Death_GCDs = Death_GCDs; _Death_GCDsD = _Death_GCDs * duration / rotation;
-                GCDsused += (float)Math.Min(NumGCDs, Death_GCDs);
-                GCDUsage += Death.Name + ": " + Death_GCDs.ToString() + "\n";
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) {
+                    float Death_GCDs = (float)Math.Min(availGCDs, Death.MaxActivates);
+                    _Death_GCDs = Death_GCDs; _Death_GCDsD = _Death_GCDs * duration / rotation;
+                    GCDsused += (float)Math.Min(NumGCDs, Death_GCDs);
+                    GCDUsage += Death.Name + ": " + Death_GCDs.ToString() + "\n";
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    rageadd = Death.GetRageUsePerSecond(Death_GCDs);
+                    availRage -= rageadd;
+                    RageNeeded += rageadd;
+                }
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_]) {
+                    float Reck_GCDs = (float)Math.Min(availGCDs, RK.MaxActivates);
+                    _Reck_GCDs = Reck_GCDs; _Reck_GCDsD = _Reck_GCDs * duration / rotation;
+                    GCDsused += (float)Math.Min(NumGCDs, Reck_GCDs);
+                    GCDUsage += RK.Name + ": " + Reck_GCDs.ToString() + "\n";
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    rageadd = RK.GetRageUsePerSecond(Reck_GCDs);
+                    availRage -= rageadd;
+                    RageNeeded += rageadd;
+                }
+            }
+
+            // Periodic DPS (run only once every few rotations)
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_]) {
+                float BLS_GCDs = (float)Math.Min(availGCDs, BLS.MaxActivates);
+                _BLS_GCDs = BLS_GCDs; _BLS_GCDsD = _BLS_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, BLS_GCDs * 4f); // the *4 is because it is channeled over 6 secs (4 GCD's consumed from 1 activate)
+                GCDUsage += BLS.Name + ": " + BLS_GCDs.ToString() + "\n";
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Death.GetRageUsePerSecond(Death_GCDs);
-                availRage -= rageadd;
-                RageNeeded += rageadd;
-                //
-                Skills.Recklessness Reck = new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks);
-                float Reck_GCDs = (float)Math.Min(availGCDs, Reck.MaxActivates);
-                _Reck_GCDs = Reck_GCDs; _Reck_GCDsD = _Reck_GCDs * duration / rotation;
-                GCDsused += (float)Math.Min(NumGCDs, Reck_GCDs);
-                GCDUsage += Reck.Name + ": " + Reck_GCDs.ToString() + "\n";
-                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                rageadd = Reck.GetRageUsePerSecond(Reck_GCDs);
+                _BLS_DPS = BLS.GetDPS(BLS_GCDs);
+                DPS_TTL += _BLS_DPS;
+                rageadd = BLS.GetRageUsePerSecond(BLS_GCDs);
                 availRage -= rageadd;
                 RageNeeded += rageadd;
             }
 
-            // Periodic DPS (run only once every few rotations)
-            float BLS_GCDs = (float)Math.Min(availGCDs, BLS.MaxActivates);
-            _BLS_GCDs = BLS_GCDs; _BLS_GCDsD = _BLS_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, BLS_GCDs * 4f); // the *4 is because it is channeled over 6 secs (4 GCD's consumed from 1 activate)
-            GCDUsage += BLS.Name + ": " + BLS_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _BLS_DPS = BLS.GetDPS(BLS_GCDs);
-            DPS_TTL += _BLS_DPS;
-            rageadd = BLS.GetRageUsePerSecond(BLS_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
             // Priority 1 : Mortal Strike on every CD
-            float MS_GCDs = (float)Math.Min(availGCDs, MS.MaxActivates);
-            _MS_GCDs = MS_GCDs; _MS_GCDsD = _MS_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, MS_GCDs);
-            GCDUsage += MS.Name + ": " + MS_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _MS_DPS = MS.GetDPS(MS_GCDs);
-            DPS_TTL += _MS_DPS;
-            rageadd = MS.GetRageUsePerSecond(MS_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.MortalStrike_]) {
+                float MS_GCDs = (float)Math.Min(availGCDs, MS.MaxActivates);
+                _MS_GCDs = MS_GCDs; _MS_GCDsD = _MS_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, MS_GCDs);
+                GCDUsage += MS.Name + ": " + MS_GCDs.ToString() + "\n";
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                _MS_DPS = MS.GetDPS(MS_GCDs);
+                DPS_TTL += _MS_DPS;
+                rageadd = MS.GetRageUsePerSecond(MS_GCDs);
+                availRage -= rageadd;
+                RageNeeded += rageadd;
+            }
 
             // Priority 2 : Rend on every tick off
-            float RND_GCDs = (float)Math.Min(availGCDs, RD.MaxActivates);
-            _RD_GCDs = RND_GCDs; _RD_GCDsD = _RD_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, RND_GCDs);
-            GCDUsage += RD.Name + ": " + RND_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _RD_DPS = RD.GetDPS(RND_GCDs);
-            DPS_TTL += _RD_DPS;
-            rageadd = RD.GetRageUsePerSecond(RND_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_]) {
+                float RND_GCDs = (float)Math.Min(availGCDs, RD.MaxActivates);
+                _RD_GCDs = RND_GCDs; _RD_GCDsD = _RD_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, RND_GCDs);
+                GCDUsage += RD.Name + ": " + RND_GCDs.ToString() + "\n";
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                _RD_DPS = RD.GetDPS(RND_GCDs);
+                DPS_TTL += _RD_DPS;
+                rageadd = RD.GetRageUsePerSecond(RND_GCDs);
+                availRage -= rageadd;
+                RageNeeded += rageadd;
+            }
 
             // Priority 3 : Taste for Blood Proc (Do Overpower) if available
-            float OP_GCDs = (float)Math.Min(availGCDs, OP.MaxActivates);
-            _OP_GCDs = OP_GCDs; _OP_GCDsD = _OP_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, OP_GCDs);
-            GCDUsage += OP.Name + ": " + OP_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _OP_DPS = OP.GetDPS(OP_GCDs);
-            DPS_TTL += _OP_DPS;
-            rageadd = OP.GetRageUsePerSecond(OP_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_]) {
+                float OP_GCDs = (float)Math.Min(availGCDs, OP.MaxActivates);
+                _OP_GCDs = OP_GCDs; _OP_GCDsD = _OP_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, OP_GCDs);
+                GCDUsage += OP.Name + ": " + OP_GCDs.ToString() + "\n";
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                _OP_DPS = OP.GetDPS(OP_GCDs);
+                DPS_TTL += _OP_DPS;
+                rageadd = OP.GetRageUsePerSecond(OP_GCDs);
+                availRage -= rageadd;
+                RageNeeded += rageadd;
+            }
 
-            // Priority 4 : Sudden Death Proc (Do Execute) if available
             doIterations();
-            float SD_GCDs = (float)Math.Min(availGCDs, SD.MaxActivates);
-            _SD_GCDs = SD_GCDs; _SD_GCDsD = _SD_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, SD_GCDs);
-            GCDUsage += SD.Name + ": " + SD_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _SD_DPS = SD.GetDPS(SD_GCDs);
-            DPS_TTL += _SD_DPS;
-            rageadd = SD.GetRageUsePerSecond(SD_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
+            // Priority 4 : Sudden Death Proc (Do Execute) if available
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_]) {
+                float SD_GCDs = (float)Math.Min(availGCDs, SD.MaxActivates);
+                _SD_GCDs = SD_GCDs; _SD_GCDsD = _SD_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, SD_GCDs);
+                GCDUsage += SD.Name + ": " + SD_GCDs.ToString() + "\n";
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                _SD_DPS = SD.GetDPS(SD_GCDs);
+                DPS_TTL += _SD_DPS;
+                rageadd = SD.GetRageUsePerSecond(SD_GCDs);
+                availRage -= rageadd;
+                RageNeeded += rageadd;
+            }
 
             // Priority 5 : Slam for remainder of GCDs
-            float SL_GCDs = SL.GetValided() ? availGCDs /* * latencyMOD*/ : 0f;
-            _SL_GCDs = SL_GCDs; _SL_GCDsD = _SL_GCDs * duration / rotation;
-            GCDsused += (float)Math.Min(NumGCDs, SL_GCDs);
-            GCDUsage += SL.Name + ": " + SL_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _SL_DPS = SL.GetDPS(SL_GCDs);
-            DPS_TTL += _SL_DPS;
-            rageadd = SL.GetRageUsePerSecond(SL_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // White DPS
-            //DPS_TTL += _whiteStats.MhWhiteDPS; // White DPS is being handled in CharacterCalculationsBase() now
-            RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
-            availRage += RageGenWhite;
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_]) {
+                float SL_GCDs = SL.GetValided() ? availGCDs /* * latencyMOD*/ : 0f;
+                _SL_GCDs = SL_GCDs; _SL_GCDsD = _SL_GCDs * duration / rotation;
+                GCDsused += (float)Math.Min(NumGCDs, SL_GCDs);
+                GCDUsage += SL.Name + ": " + SL_GCDs.ToString() + "\n";
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                _SL_DPS = SL.GetDPS(SL_GCDs);
+                DPS_TTL += _SL_DPS;
+                rageadd = SL.GetRageUsePerSecond(SL_GCDs);
+                availRage -= rageadd;
+                RageNeeded += rageadd;
+            }
 
             // Priority 6 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active
-            doIterations();
-            Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; }
-            WhiteAtks.Ovd_Freq = Which.Activates * CombatFactors.MainHandSpeed / Which.RotationLength;
-            _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
-            _WhiteDPS = _WhiteDPSMH;
-            _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
-            _OVD_DPS = Which.DPS;//(/*WhiteAtks.Ovd_Freq*/);
-            WhiteAtks.Ovd_Freq = 0;
-            _OVD_PerHit = Which.DamageOnUse;
+            // After iterating how many Overrides can be done and still do other abilities, then do the white dps
+
+            Skills.OnAttack Which = null;
+            bool ok = false;
+            if (CalcOpts.MultipleTargets) {
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_      ]) { ok = true; Which = CL; }
+            }else{
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
+            }
+            
+            if (ok) {
+                float TotalNumofAtks =
+                    // Rotation Length
+                    rotation
+                       // Length of time to complete a swing
+                    / (CombatFactors.MainHandSpeed
+                         // Slams delay the swing timer, so the average amount 
+                         // of delay should be added to the swing timer
+                       + (1.5f - 0.5f * Talents.ImprovedSlam) / _SL_GCDs);
+                float AtksThatAreWhite = TotalNumofAtks;
+                float AtksThatAreOvrdn = 0f;
+                //float OvrdnRageUsed    = 0f;
+                float WhiteRageGennedPerSwing =
+                    Char.MainHand != null && Char.MainHand.MaxDamage > 0
+                    ?
+                        WhiteAtks.GetSwingRage(Char.MainHand.Item, true)
+                    :
+                        0f
+                    ;
+                float OvrdrsRageCostPerSwing = Which.FullRageCost;
+                float WhiteRageGenned = AtksThatAreWhite * WhiteRageGennedPerSwing / rotation;
+                float rageSum = WhiteRageGenned + RageGenOther - RageNeeded /*- OvrdnRageUsed*/;
+
+                // TODO: Enable the commented out areas to make it give value to HS Glyph and Imp HS talent
+                // problem is: it won't iterate down to avail rage of zero when i do that
+                while (AtksThatAreWhite > 0 && (rageSum) > 0.001f) {
+                    AtksThatAreWhite -= 0.001f;
+                    WhiteRageGenned = AtksThatAreWhite * WhiteRageGennedPerSwing / rotation;
+                    //AtksThatAreOvrdn = TotalNumofAtks - AtksThatAreWhite;
+                    //OvrdnRageUsed = AtksThatAreOvrdn * OvrdrsRageCostPerSwing / rotation;
+                    rageSum = WhiteRageGenned + RageGenOther - RageNeeded /*- OvrdnRageUsed*/;
+                }
+                AtksThatAreOvrdn = TotalNumofAtks - AtksThatAreWhite;
+                availRage -= /*OvrdnRageUsed;*/AtksThatAreOvrdn * OvrdrsRageCostPerSwing / rotation;
+                RageGenWhite = WhiteRageGenned;
+
+                Which.OverridesPerSec = AtksThatAreOvrdn / rotation;
+                WhiteAtks.Ovd_Freq = Which.MaxActivates * (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / _SL_GCDs) / rotation;
+                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                _WhiteDPS = _WhiteDPSMH;
+                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _OVD_DPS = Which.DPS;
+                _OVD_PerHit = Which.DamageOnUse;
+                DPS_TTL += _WhiteDPS;
+                DPS_TTL += _OVD_DPS;
+            }else{
+                RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
+                availRage += RageGenWhite;
+                WhiteAtks.Ovd_Freq = 0f;
+                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                _WhiteDPS = _WhiteDPSMH;
+                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _OVD_DPS = 0f;
+                _OVD_PerHit = 0f;
+                DPS_TTL += _WhiteDPS;
+                DPS_TTL += _OVD_DPS;
+            }
 
             GCDUsage += "\nAvail: " + availGCDs.ToString();
 
