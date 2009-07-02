@@ -1,22 +1,13 @@
-Rawr v2.2.8.0
+Rawr v2.2.9.0
 ------------
-Welcome to Rawr 2.2.8.0.
+Welcome to Rawr 2.2.9.0.
    
 Recent Changes:
- - Improvements for handling locale-specific item names
- - Reenabled loading possible upgrades from Wowhead PTR
- - Fixed some bugs with loading items from Wowhead/Armory. NOTE: Armory *still* isn't returning socket bonus data, however if an item already has a socket bonus (ie, from Wowhead), reloading it from Armory will preserve the existing socket bonus
- - Rawr.Cat: Improved the calculation of Idol of the Corruptor
- - Rawr.Moonkin: Added a 3.2 mode, improved performance
- - Rawr.Retribution: Added a 3.2 mode
- - Rawr.RestoSham: Implemented all resto relics with special effects
- - Rawr.TankDK: Many calculation fixes and improvements
- - Rawr.DPSWarr: Fix for a wide variety of calculation issues
- - Rawr.Enhance: Improved GCD conflict calculations
- - Rawr.DPSDK: Added a 3.2 mode
- - Rawr.Mage: Added 3.2 mode
- - Rawr.Tree: Added 3.2 mode
- - Rawr.Healadin: Fix for minor rating calculation bug
+ - Now supports the new armory data format Blizz just posted. Also fixed several Armory parsing errors
+ - Rawr.Mage: Fix for procs affecting per-spell damage. Split ignite damage into its own line in the spell damage breakdown.
+ - Rawr.DPSWarr: Fixed bug in Maintaining Debuffs and added Furry support. Many improvements to Arms calculations
+ - Rawr.Healadin: Fix for Judgement GCD time.
+ 
  
 TEASER: We're working on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel.
  
@@ -33,11 +24,11 @@ Now that you have your current character fairly well defined, use the item compa
 
 FAQ
 ---
- Q: I get a "Cannot access disposed object." error. How can I fix that?
- A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
-
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
  A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
+
+ Q: I get a "Cannot access disposed object." error. How can I fix that?
+ A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
 
  Q: There's an item missing! Can you please add [Some Item]?
  A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
@@ -87,6 +78,22 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.8.0
+ - Improvements for handling locale-specific item names
+ - Reenabled loading possible upgrades from Wowhead PTR
+ - Fixed some bugs with loading items from Wowhead/Armory. NOTE: Armory *still* isn't returning socket bonus data, however if an item already has a socket bonus (ie, from Wowhead), reloading it from Armory will preserve the existing socket bonus
+ - Rawr.Cat: Improved the calculation of Idol of the Corruptor
+ - Rawr.Moonkin: Added a 3.2 mode, improved performance
+ - Rawr.Retribution: Added a 3.2 mode
+ - Rawr.RestoSham: Implemented all resto relics with special effects
+ - Rawr.TankDK: Many calculation fixes and improvements
+ - Rawr.DPSWarr: Fix for a wide variety of calculation issues
+ - Rawr.Enhance: Improved GCD conflict calculations
+ - Rawr.DPSDK: Added a 3.2 mode
+ - Rawr.Mage: Added 3.2 mode
+ - Rawr.Tree: Added 3.2 mode
+ - Rawr.Healadin: Fix for minor rating calculation bug
+
 v2.2.7.0
  - Reordered/revised alot of things in the readme
  - Improvements to alternate locale handling

@@ -18,23 +18,12 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.3.0
- - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
- - Batch Optimizer supports using multiple models
- - Optimizer doesn't report changes where it just swapped ring or trinket slots.
- - Rawr.Cat: Fixes and improvements to rotations
- - Rawr.Enhance: Lots of fixes for calculations
- - Rawr.ProtPaladin: Support for more procs and effects
- - Rawr.Retribution: Added some optimizable values, support for more procs and effects, and a Consecration effectiveness option
- - Rawr.Healadin: Added some optimizable values
- - Rawr.Warlock: Support for glyphs, and fix for Supression double dipping, lots of haste fixes
- - Rawr.DPSWarr: Many calculation improvements
- - Rawr.HolyPriest: Support for 2T8, new default talents
- - Rawr.ShadowPriest: Support for 2T8, gemmings fixed
- - Rawr.Mage: Improvements to the advanced solver, updated 4T8 to 25% chance, and added support for Frost Warding as a mana regen source
- - Rawr.ProtWarr: Added support for Vigilance threat and glyph.
- - Rawr.Moonkin: Updated Spirit->SpellPower conversion for 3.1.2";
-			labelVersionHistory.Height = 560;
+			labelVersionHistory.Text = @"v2.2.9.0
+ - Now supports the new armory data format Blizz just posted. Also fixed several Armory parsing errors
+ - Rawr.Mage: Fix for procs affecting per-spell damage. Split ignite damage into its own line in the spell damage breakdown.
+ - Rawr.DPSWarr: Fixed bug in Maintaining Debuffs and added Furry support. Many improvements to Arms calculations
+ - Rawr.Healadin: Fix for Judgement GCD time.";
+ 			labelVersionHistory.Height = 560;
 
 			this.DoubleBuffered = true;
 			_formMain = formMain;
