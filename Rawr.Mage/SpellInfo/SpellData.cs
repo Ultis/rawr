@@ -203,10 +203,14 @@ namespace Rawr.Mage
             spell.TargetProcs = spell.HitProcs;
 
             float damagePerSpellPower;
-            spell.AverageDamage = spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false, out damagePerSpellPower);
+            float igniteDamage;
+            float igniteDamagePerSpellPower;
+            spell.AverageDamage = spell.CalculateAverageDamage(castingState.Calculations, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
 
             spell.DamagePerSecond = spell.AverageDamage / speed;
             spell.ThreatPerSecond = spell.DamagePerSecond * ThreatMultiplier;
+            spell.IgniteDamagePerSecond = 0;
+            spell.IgniteDpsPerSpellPower = 0;
             spell.CostPerSecond = 0;
             spell.OO5SR = 1;
             return spell;
@@ -756,6 +760,13 @@ namespace Rawr.Mage
             if (castingState.MageTalents.GlyphOfLivingBomb)
             {
                 spell.IgniteProcs *= 5; // 4 ticks can proc ignite in addition to the explosion
+                // add ignite contribution from dot
+                if (castingState.Calculations.NeedsDisplayCalculations)
+                {
+                    float igniteFactor = spell.SpellModifier * spell.HitRate * spell.PartialResistFactor * Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * castingState.FireCritBonus * (0.08f * castingState.MageTalents.Ignite) / (1 + 0.08f * castingState.MageTalents.Ignite);
+                    spell.IgniteDamagePerSecond += spell.BasePeriodicDamage * igniteFactor;
+                    spell.IgniteDpsPerSpellPower += spell.DotDamageCoefficient * igniteFactor;
+                }
             }
             return spell;
         }

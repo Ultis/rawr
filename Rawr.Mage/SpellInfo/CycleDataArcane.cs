@@ -1860,25 +1860,24 @@ namespace Rawr.Mage
             }
         }
 
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
         {
-            AB0.AddSpellContribution(dict, KAB0 * AB0.CastTime / CastTime * duration);
-            ABar0.AddSpellContribution(dict, KABar0 * ABar0.CastTime / CastTime * duration);
-            AM0.AddSpellContribution(dict, KAM0 * AM0.CastTime / CastTime * duration);
-            MBAM0.AddSpellContribution(dict, KMBAM0 * MBAM0.CastTime / CastTime * duration);
-            AB1.AddSpellContribution(dict, KAB1 * AB1.CastTime / CastTime * duration);
-            ABar1.AddSpellContribution(dict, KABar1 * ABar1.CastTime / CastTime * duration);
-            AM1.AddSpellContribution(dict, KAM1 * AM1.CastTime / CastTime * duration);
-            MBAM1.AddSpellContribution(dict, KMBAM1 * MBAM1.CastTime / CastTime * duration);
-            AB2.AddSpellContribution(dict, KAB2 * AB2.CastTime / CastTime * duration);
-            ABar2.AddSpellContribution(dict, KABar2 * ABar2.CastTime / CastTime * duration);
-            AM2.AddSpellContribution(dict, KAM2 * AM2.CastTime / CastTime * duration);
-            MBAM2.AddSpellContribution(dict, KMBAM2 * MBAM2.CastTime / CastTime * duration);
-            AB3.AddSpellContribution(dict, KAB3 * AB3.CastTime / CastTime * duration);
-            ABar3.AddSpellContribution(dict, KABar3 * ABar3.CastTime / CastTime * duration);
-            AM3.AddSpellContribution(dict, KAM3 * AM3.CastTime / CastTime * duration);
-            MBAM3.AddSpellContribution(dict, KMBAM3 * MBAM3.CastTime / CastTime * duration);
-            AddEffectContribution(dict, duration);
+            AB0.AddSpellContribution(dict, KAB0 * AB0.CastTime / CastTime * duration, effectSpellPower);
+            ABar0.AddSpellContribution(dict, KABar0 * ABar0.CastTime / CastTime * duration, effectSpellPower);
+            AM0.AddSpellContribution(dict, KAM0 * AM0.CastTime / CastTime * duration, effectSpellPower);
+            MBAM0.AddSpellContribution(dict, KMBAM0 * MBAM0.CastTime / CastTime * duration, effectSpellPower);
+            AB1.AddSpellContribution(dict, KAB1 * AB1.CastTime / CastTime * duration, effectSpellPower);
+            ABar1.AddSpellContribution(dict, KABar1 * ABar1.CastTime / CastTime * duration, effectSpellPower);
+            AM1.AddSpellContribution(dict, KAM1 * AM1.CastTime / CastTime * duration, effectSpellPower);
+            MBAM1.AddSpellContribution(dict, KMBAM1 * MBAM1.CastTime / CastTime * duration, effectSpellPower);
+            AB2.AddSpellContribution(dict, KAB2 * AB2.CastTime / CastTime * duration, effectSpellPower);
+            ABar2.AddSpellContribution(dict, KABar2 * ABar2.CastTime / CastTime * duration, effectSpellPower);
+            AM2.AddSpellContribution(dict, KAM2 * AM2.CastTime / CastTime * duration, effectSpellPower);
+            MBAM2.AddSpellContribution(dict, KMBAM2 * MBAM2.CastTime / CastTime * duration, effectSpellPower);
+            AB3.AddSpellContribution(dict, KAB3 * AB3.CastTime / CastTime * duration, effectSpellPower);
+            ABar3.AddSpellContribution(dict, KABar3 * ABar3.CastTime / CastTime * duration, effectSpellPower);
+            AM3.AddSpellContribution(dict, KAM3 * AM3.CastTime / CastTime * duration, effectSpellPower);
+            MBAM3.AddSpellContribution(dict, KMBAM3 * MBAM3.CastTime / CastTime * duration, effectSpellPower);
         }
 
         public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)

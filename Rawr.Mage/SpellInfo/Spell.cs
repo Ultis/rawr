@@ -64,16 +64,26 @@ namespace Rawr.Mage
             TargetProcs *= castingState.CalculationOptions.AoeTargets;
         }
 
-        public override float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit, out float damagePerSpellPower)
+        public override float CalculateAverageDamage(CharacterCalculationsMage calculations, float spellPower, bool spammedDot, bool forceHit, out float damagePerSpellPower, out float igniteDamage, out float igniteDamagePerSpellPower)
         {
             damagePerSpellPower = 0; // do we really need this for aoe?
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + spellPower * SpellDamageCoefficient;
             float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
-            int targets = calculationOptions.AoeTargets;
+            int targets = calculations.CalculationOptions.AoeTargets;
             float averageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (forceHit ? 1.0f : HitRate);
             if (averageDamage > AoeDamageCap) averageDamage = AoeDamageCap;
-            averageDamage = averageDamage * critMultiplier * PartialResistFactor;
+            if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
+            {
+                igniteDamage = averageDamage * PartialResistFactor * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);
+                igniteDamagePerSpellPower = 0; // we're not applying effect spell power to aoe
+            }
+            else
+            {
+                igniteDamage = 0;
+                igniteDamagePerSpellPower = 0;
+            }
+            averageDamage = averageDamage * critMultiplier * PartialResistFactor;            
             if (BasePeriodicDamage > 0.0f)
             {
                 if (spammedDot)
@@ -126,11 +136,16 @@ namespace Rawr.Mage
                 if (!forceMiss)
                 {
                     float damagePerSpellPower;
-                    AverageDamage = CalculateDirectAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out damagePerSpellPower);
+                    float igniteDamage;
+                    float igniteDamagePerSpellPower;
+                    AverageDamage = CalculateDirectAverageDamage(castingState.Calculations, RawSpellDamage, forceHit, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
 
                     DamagePerSecond = AverageDamage / CastTime;
                     ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
                     DpsPerSpellPower = damagePerSpellPower / CastTime;
+
+                    IgniteDamagePerSecond = igniteDamage / CastTime;
+                    IgniteDpsPerSpellPower = igniteDamagePerSpellPower / CastTime;
 
                     float dotAverageDamage = CalculateDotAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out damagePerSpellPower);
 
@@ -273,9 +288,9 @@ namespace Rawr.Mage
                 if (AreaEffect) AoeSpell = spell;
             }
 
-            public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+            public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
             {
-                spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime);
+                spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime, effectSpellPower);
             }
 
             public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
@@ -312,6 +327,8 @@ namespace Rawr.Mage
         public float PartialResistFactor { get { return template.PartialResistFactor; } }
         public float RawSpellDamage;
         public float AverageDamage;
+        public float IgniteDamagePerSecond;
+        public float IgniteDpsPerSpellPower;
         public float DpsPerSpellPower;
 
         public float InterruptProtection;
@@ -440,11 +457,17 @@ namespace Rawr.Mage
                 if (!forceMiss)
                 {
                     float damagePerSpellPower;
-                    AverageDamage = CalculateAverageDamage(baseStats, calculationOptions, RawSpellDamage, spammedDot, forceHit, out damagePerSpellPower);
+                    float igniteDamage;
+                    float igniteDamagePerSpellPower;
+
+                    AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
 
                     DamagePerSecond = AverageDamage / CastTime;
                     ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
                     DpsPerSpellPower = damagePerSpellPower / CastTime;
+
+                    IgniteDamagePerSecond = igniteDamage / CastTime;
+                    IgniteDpsPerSpellPower = igniteDamagePerSpellPower / CastTime;
                 }
             }
             CastTime *= (1 - channelReduction);
@@ -456,7 +479,7 @@ namespace Rawr.Mage
             }
         }
 
-        public virtual float CalculateAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool spammedDot, bool forceHit, out float damagePerSpellPower)
+        public virtual float CalculateAverageDamage(CharacterCalculationsMage calculations, float spellPower, bool spammedDot, bool forceHit, out float damagePerSpellPower, out float igniteDamage, out float igniteDamagePerSpellPower)
         {
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
@@ -465,6 +488,17 @@ namespace Rawr.Mage
             float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
             float averageDamage = baseAverage * nukeMultiplier;
             damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
+            if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
+            {
+                float igniteMultiplier = commonMultiplier * DirectDamageModifier * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);
+                igniteDamage = (baseAverage + SpellDamageCoefficient * spellPower) * igniteMultiplier;
+                igniteDamagePerSpellPower = SpellDamageCoefficient * igniteMultiplier;
+            }
+            else
+            {
+                igniteDamage = 0;
+                igniteDamagePerSpellPower = 0;
+            }            
             if (BasePeriodicDamage > 0.0f)
             {
                 float dotFactor = commonMultiplier * DotDamageModifier;
@@ -478,7 +512,7 @@ namespace Rawr.Mage
             return averageDamage + damagePerSpellPower * spellPower;
         }
 
-        public virtual float CalculateDirectAverageDamage(Stats baseStats, CalculationOptionsMage calculationOptions, float spellPower, bool forceHit, out float damagePerSpellPower)
+        public virtual float CalculateDirectAverageDamage(CharacterCalculationsMage calculations, float spellPower, bool forceHit, out float damagePerSpellPower, out float igniteDamage, out float igniteDamagePerSpellPower)
         {
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
@@ -487,6 +521,17 @@ namespace Rawr.Mage
             float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
             float averageDamage = baseAverage * nukeMultiplier;
             damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
+            if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
+            {
+                float igniteMultiplier = commonMultiplier * DirectDamageModifier * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);
+                igniteDamage = (baseAverage + SpellDamageCoefficient * spellPower) * igniteMultiplier;
+                igniteDamagePerSpellPower = SpellDamageCoefficient * igniteMultiplier;
+            }
+            else
+            {
+                igniteDamage = 0;
+                igniteDamagePerSpellPower = 0;
+            }
             return averageDamage + damagePerSpellPower * spellPower;
         }
 
@@ -562,7 +607,7 @@ namespace Rawr.Mage
             CostPerSecond = cost / CastTime;
         }
 
-        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
         {
             SpellContribution contrib;
             if (!dict.TryGetValue(Name, out contrib))
@@ -570,8 +615,20 @@ namespace Rawr.Mage
                 contrib = new SpellContribution() { Name = Name };
                 dict[Name] = contrib;
             }
+            float igniteContribution = 0;
+            if (IgniteDamagePerSecond > 0)
+            {
+                igniteContribution = (IgniteDamagePerSecond + effectSpellPower * IgniteDpsPerSpellPower) * duration;
+                SpellContribution igniteContrib;
+                if (!dict.TryGetValue("Ignite", out igniteContrib))
+                {
+                    igniteContrib = new SpellContribution() { Name = "Ignite" };
+                    dict["Ignite"] = igniteContrib;
+                }
+                igniteContrib.Damage += igniteContribution;
+            }
             contrib.Hits += HitProcs * duration / CastTime;
-            contrib.Damage += AverageDamage * duration / CastTime;
+            contrib.Damage += (DamagePerSecond + effectSpellPower * DpsPerSpellPower) * duration - igniteContribution;
             contrib.Range = Range;
         }
 

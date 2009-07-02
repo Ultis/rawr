@@ -86,7 +86,9 @@ namespace Rawr.Mage
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
             float damagePerSpellPower;
-            return spell.CalculateAverageDamage(castingState.BaseStats, castingState.CalculationOptions, 0, false, false, out damagePerSpellPower);
+            float igniteDamage;
+            float igniteDamagePerSpellPower;           
+            return spell.CalculateAverageDamage(castingState.Calculations, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
         }
 
         protected SpellTemplate() { }

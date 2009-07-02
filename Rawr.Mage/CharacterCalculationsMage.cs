@@ -1131,8 +1131,7 @@ namespace Rawr.Mage
                         case VariableType.Spell:
                             double value;
                             Cycle s = SolutionVariable[i].Cycle;
-                            s.AddSpellContribution(DamageSources, (float)Solution[i]);
-                            s.AddEffectContribution(DamageSources, (float)Solution[i]);
+                            s.AddDamageContribution(DamageSources, (float)Solution[i]);
                             s.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             s.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;

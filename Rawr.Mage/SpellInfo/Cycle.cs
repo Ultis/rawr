@@ -126,6 +126,7 @@ namespace Rawr.Mage
 
         internal float damagePerSecond;
         internal float effectDamagePerSecond;
+        internal float effectSpellPower;
         public float DamagePerSecond
         {
             get
@@ -202,7 +203,13 @@ namespace Rawr.Mage
         public float TargetProcs;
         public float OO5SR = 0;
 
-        public abstract void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration);
+        public void AddDamageContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            AddSpellContribution(dict, duration, effectSpellPower);
+            AddEffectContribution(dict, duration);
+        }
+
+        public abstract void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower);
         public abstract void AddManaUsageContribution(Dictionary<string, float> dict, float duration);
 
         private void Calculate()
@@ -252,6 +259,7 @@ namespace Rawr.Mage
                 }
                 if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
             }
+            effectSpellPower = spellPower;
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
             //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???
             if (CastingState.WaterElemental)
@@ -540,6 +548,14 @@ namespace Rawr.Mage
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Damage += boltDps * duration;
             }
+            if (IgniteProcs > 0 && dict.TryGetValue("Ignite", out contrib))
+            {
+                double rate = IgniteProcs / CastTime;
+                double k = Math.Exp(-2 * rate);
+                double ticks = k * (1 + k);
+                double ticksPerSecond = rate * ticks;
+                contrib.Hits += duration * (float)ticksPerSecond;
+            }
         }
     }
 
@@ -669,13 +685,13 @@ namespace Rawr.Mage
             }
         }
 
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
         {
             foreach (Spell spell in spellList)
             {
                 if (spell != null)
                 {
-                    spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime);
+                    spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime, effectSpellPower);
                 }
             }
         }
@@ -783,11 +799,11 @@ namespace Rawr.Mage
             DpsPerSpellPower /= CastTime;
         }
 
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
         {
             for (int i = 0; i < Cycle.Count; i++)
             {
-                if (Cycle[i] != null) Cycle[i].AddSpellContribution(dict, Weight[i] * Cycle[i].CastTime / CastTime * duration);
+                if (Cycle[i] != null) Cycle[i].AddSpellContribution(dict, Weight[i] * Cycle[i].CastTime / CastTime * duration, effectSpellPower);
             }
         }
 
