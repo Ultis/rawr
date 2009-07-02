@@ -54,12 +54,12 @@ namespace Rawr
             int[] _data = Data;
             string[] tmp = code.Split('.');
             string talents = tmp[0];
-            if (talents.Length == _data.Length)
+            if (talents.Length >= _data.Length)
             {
                 List<int> data = new List<int>();
                 foreach (Char digit in talents)
                     data.Add(int.Parse(digit.ToString()));
-                data.CopyTo(_data);
+				data.CopyTo(0, _data, 0, _data.Length);
             }
             if (tmp.Length > 1)
             {

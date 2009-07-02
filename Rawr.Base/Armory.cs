@@ -169,7 +169,7 @@ namespace Rawr
                 character.Class = charClass;
 
 				XmlNode activeTalentGroup = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
-					.SelectSingleNode("page/characterInfo/talentGroups/talentGroup[@active='1']");
+					.SelectSingleNode("page/characterInfo/talents/talentGroup[@active='1']");
                 string talentCode = activeTalentGroup.SelectSingleNode("talentSpec").Attributes["value"].Value;
 				switch (charClass)
 				{
@@ -887,16 +887,16 @@ namespace Rawr
 					}
 				}
 				string desc = string.Empty;
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText; }
-                if (desc.Contains("Matches any socket"))
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText.ToLower(); }
+                if (desc.Contains("matches any socket"))
                 {
                     slot = Item.ItemSlot.Prismatic;
                 }
-                else if (desc.Contains("Matches a "))
+                else if (desc.Contains("matches a "))
 				{
-					bool red = desc.Contains("Red");
-					bool blue = desc.Contains("Blue");
-					bool yellow = desc.Contains("Yellow");
+					bool red = desc.Contains("red");
+					bool blue = desc.Contains("blue");
+					bool yellow = desc.Contains("yellow");
 					slot = red && blue && yellow ? Item.ItemSlot.Prismatic :
 						red && blue ? Item.ItemSlot.Purple :
 						blue && yellow ? Item.ItemSlot.Green :

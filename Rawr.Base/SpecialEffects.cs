@@ -398,7 +398,14 @@ namespace Rawr
                 if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.ArmorPenetrationRating += int.Parse(line);
-            }
+			}
+			else if (isArmory && line.StartsWith("Increases armor penetration rating by "))
+			{
+				line = line.Substring("Increases armor penetration rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.ArmorPenetrationRating += int.Parse(line);
+			}
             else if (line.StartsWith("Increases the damage dealt by Shred by "))
             {
                 line = line.Substring("Increases the damage dealt by Shred by ".Length);
