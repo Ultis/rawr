@@ -809,6 +809,8 @@ namespace Rawr.Mage
             statsTotal.SpellPower += statsTotal.SpellDamageFromIntellectPercentage * statsTotal.Intellect;
             statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit;
 
+            statsTotal.CritBonusDamage += calculationOptions.EffectCritDamageBonus;
+
             statsTotal.ArcaneResistance += statsTotal.AllResist + statsTotal.ArcaneResistanceBuff;
             statsTotal.FireResistance += statsTotal.AllResist + statsTotal.FireResistanceBuff;
             statsTotal.FrostResistance += statsTotal.AllResist + statsTotal.FrostResistanceBuff;

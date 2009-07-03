@@ -212,6 +212,7 @@ namespace Rawr.Mage
 
         public float EffectSpiritMultiplier { get; set; }
         public float EffectCritBonus { get; set; }
+        public float EffectCritDamageBonus { get; set; }
         public float EffectDamageMultiplier { get; set; }
         public float EffectHasteMultiplier { get; set; }
         public float EffectCostMultiplier { get; set; }

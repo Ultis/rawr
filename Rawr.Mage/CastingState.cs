@@ -299,7 +299,7 @@ namespace Rawr.Mage
                 SpellHasteRating += 80;
             }
 
-            CastingSpeed = 1 + SpellHasteRating / 995f * levelScalingFactor;
+            CastingSpeed = calculations.BaseCastingSpeed;
 
             StateCritRate = stateCritRating / 1400f * levelScalingFactor;
             if (frozen) StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
@@ -325,8 +325,6 @@ namespace Rawr.Mage
             {
                 CastingSpeed *= 1.2f;
             }
-            CastingSpeed *= (1f + BaseStats.SpellHaste);
-            CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);
 
             StateSpellModifier = 1.0f;
             if (ArcanePower)
