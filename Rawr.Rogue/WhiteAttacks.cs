@@ -1,4 +1,5 @@
-﻿using Rawr.Rogue.ClassAbilities;
+﻿using System.Diagnostics;
+using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue
 {
@@ -51,12 +52,18 @@ namespace Rawr.Rogue
 
         private float MhSwingsPerSecond
         {
-			get { return (1f / _combatFactors.MainHand.Speed) * _combatFactors.Haste; }
+			get
+			{
+                return _combatFactors.MainHand.Speed == 0 ? 0 : (1f / _combatFactors.MainHand.Speed) * _combatFactors.Haste;
+			}
         }
 
         private float OhSwingsPerSecond
         {
-            get { return (1f / _combatFactors.OffHand.Speed) * _combatFactors.Haste; }
+            get
+            {
+                return _combatFactors.OffHand.Speed == 0 ? 0 : (1f / _combatFactors.OffHand.Speed) * _combatFactors.Haste;
+            }
         }
     }
 }
