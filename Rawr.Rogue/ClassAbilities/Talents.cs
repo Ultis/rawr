@@ -250,7 +250,7 @@ namespace Rawr.Rogue.ClassAbilities
             {
                 get
                 {
-                    var dmg = 1f;
+                    var dmg = 0f;
                     foreach (var talent in _talentList)
                     {
                         dmg += talent.Bonus;
