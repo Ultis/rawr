@@ -122,8 +122,8 @@ namespace Rawr.Rogue.ClassAbilities
 
         public class SavageCombat
         {
-            public static readonly Talents AttackPower = new TalentBonusPulledFromList(() => _talents.SavageCombat, .2f, .4f);
-            public static readonly Talents Damage = new TalentBonusPulledFromList(() => _talents.SavageCombat, .2f, .4f);
+            public static readonly Talents AttackPower = new TalentBonusPulledFromList(() => _talents.SavageCombat, .02f, .04f);
+            public static readonly Talents Damage = new TalentBonusPulledFromList(() => _talents.SavageCombat, .02f, .04f);
         }
 
         public static readonly Talents PreyOnTheWeak = new TalentBonusPulledFromList(() => _talents.PreyOnTheWeak, .2f, .4f, .6f, .8f, 1f);
