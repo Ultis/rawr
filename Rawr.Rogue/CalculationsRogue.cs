@@ -231,7 +231,6 @@ namespace Rawr.Rogue
             statsTotal.PhysicalHit = Talents.Precision.Bonus;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
-            statsTotal.Expertise += Talents.WeaponExpertise.Bonus;
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
