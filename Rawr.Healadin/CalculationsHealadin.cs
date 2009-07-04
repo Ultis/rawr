@@ -366,7 +366,7 @@ namespace Rawr.Healadin
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * (calcOpts.Mode32 ? .02f : .03f));
             stats.HighestStat *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f);
             stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat) * talents.HolyGuidance;
-            stats.SpellCrit = .03336f + stats.SpellCrit + (stats.Intellect + stats.HighestStat) / 16666.66709f
+            stats.SpellCrit = stats.SpellCrit + (stats.Intellect + stats.HighestStat) / 16666.66709f
                 + stats.CritRating / 4590.598679f + talents.SanctityOfBattle * .01f + talents.Conviction * .01f;
 
             stats.SpellHaste = (1f + talents.JudgementsOfThePure * (calcOpts.JotP ? .03f : 0f))

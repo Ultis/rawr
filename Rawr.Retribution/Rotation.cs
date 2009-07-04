@@ -87,18 +87,15 @@ namespace Rawr.Retribution
 
         public float SealProcsPerSec()
         {
-            if (Seal.GetType() == typeof(SealOfCommand))
+            if (Combats.CalcOpts.Mode32)
             {
-                if (Combats.CalcOpts.Mode32)
-                {
-                    return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
-                }
-                else
-                {
-                    float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
-                    float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
-                    return 1f / timeBetweenProcs;
-                }
+                return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
+            }
+            else if (Seal.GetType() == typeof(SealOfCommand))
+            {
+                float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
+                float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
+                return 1f / timeBetweenProcs;
             }
             else
             {
