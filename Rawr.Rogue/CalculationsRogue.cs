@@ -248,6 +248,11 @@ namespace Rawr.Rogue
             statsTotal.PhysicalCrit += statsTotal.Agility*RogueConversions.AgilityToCrit;
             statsTotal.PhysicalCrit += Talents.Malice.Bonus;
 
+            if (character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
+            {
+                statsTotal.PhysicalCrit += Talents.MasterPoisoner.Crit.Bonus;
+            }
+
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.Dodge += Talents.LightningReflexes.Dodge.Bonus + statsTotal.Agility*RogueConversions.AgilityToDodge;
             statsTotal.Parry += 5f+ Talents.Deflection.Bonus;  //base rogue parry is 5%
