@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.Mage
 {
@@ -19,7 +20,6 @@ namespace Rawr.Mage
             InitializeComponent();
         }
 
-        #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
         private Character character;
@@ -31,19 +31,23 @@ namespace Rawr.Mage
             }
             set
             {
+                if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsMage)
+                {
+                    ((CalculationOptionsMage)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelMage_PropertyChanged);
+                }
+
                 character = value;
-                LoadCalculationOptions();
+                if (character.CalculationOptions == null) character.CalculationOptions = new CalculationOptionsMage(character);
+                LayoutRoot.DataContext = Character.CalculationOptions;
+
+                ((CalculationOptionsMage)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelMage_PropertyChanged);
+
             }
         }
 
-        private bool _loadingCalculationOptions;
-        public void LoadCalculationOptions()
+        void CalculationOptionsPanelMage_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(Character);
-
-            _loadingCalculationOptions = false;
+            Character.OnCalculationsInvalidated();
         }
-        #endregion
     }
 }

@@ -769,6 +769,13 @@ namespace Rawr.Mage
         {
             if (RequiresAsynchronousDisplayCalculation)
             {
+#if SILVERLIGHT
+                Dictionary<string, string> ret; // = GetCharacterDisplayCalculationValuesInternal(false);
+                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
+                CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
+                ret = smp.GetCharacterDisplayCalculationValuesInternal(true);
+                ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
+#else
                 Dictionary<string, string> ret = GetCharacterDisplayCalculationValuesInternal(false);
                 ret["Dps"] = "...";
                 ret["Total Damage"] = "...";
@@ -778,10 +785,9 @@ namespace Rawr.Mage
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
                 displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
-#if !SILVERLIGHT
                 SolverLogForm.Instance.EnableSolver(displaySolver);
-#endif
                 CalculationOptions.SequenceReconstruction = null;
+#endif
                 return ret;
             }
             else

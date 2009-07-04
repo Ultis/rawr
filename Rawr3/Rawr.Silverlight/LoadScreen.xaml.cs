@@ -108,9 +108,9 @@ namespace Rawr.Silverlight
                 Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
                 Calculations.RegisterModel(typeof(Rawr.DPSWarr.CalculationsDPSWarr));
                 Calculations.RegisterModel(typeof(Rawr.DPSDK.CalculationsDPSDK));
-                Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
+                //Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
                 Calculations.RegisterModel(typeof(Rawr.Enhance.CalculationsEnhance));
-                Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
+                //Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
 
                 WaitingFor = new List<string>(Classes.Keys);
                 string[] files = WaitingFor.ToArray();

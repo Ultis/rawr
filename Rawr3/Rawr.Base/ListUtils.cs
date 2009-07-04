@@ -21,30 +21,27 @@ namespace Rawr
             return source.FirstOrDefault(t => match(t));
         }
 
-        public static int FindLastIndex<T>(this IEnumerable<T> source, Predicate<T> match)
+        public static int FindLastIndex<T>(this IList<T> source, Predicate<T> match)
         {
-            var v = source
-            .Select((item, index) => new { item = item, position = index })
-            .Last(x => match(x.item));
-            return v.position;
+            return FindLastIndex(source, source.Count - 1, source.Count, match);
         }
 
-        public static int FindLastIndex<T>(this IEnumerable<T> source, int startIndex, Predicate<T> match)
+        public static int FindLastIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
         {
-            var v = source
-            .Where((obj, index) => index >= startIndex)
-            .Select((item, index) => new { item = item, position = index })
-            .Last(x => match(x.item));
-            return v.position;
+            return FindLastIndex(source, startIndex, startIndex + 1, match);
         }
 
-        public static int FindLastIndex<T>(this IEnumerable<T> source, int startIndex, int count, Predicate<T> match)
+        public static int FindLastIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
         {
-            var v = source
-            .Where((obj, index) => (index >= startIndex) && (index <= count))
-            .Select((item, index) => new { item = item, position = index })
-            .Last(x => match(x.item));
-            return v.position;
+            int num = startIndex - count;
+            for (int i = startIndex; i > num; i--)
+            {
+                if (match(source[i]))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public static List<TOutput> ConvertAll<TInput, TOutput>(this IEnumerable<TInput> source, Converter<TInput, TOutput> converter)
@@ -53,31 +50,27 @@ namespace Rawr
         }
 
 
-        public static int FindIndex<T>(this IEnumerable<T> source, Predicate<T> match)
+        public static int FindIndex<T>(this IList<T> source, Predicate<T> match)
         {
-            var v = source
-            .Select((item, index) => new { Item = item, Position = index })
-            .Where(x => match(x.Item))
-			.FirstOrDefault();
-			return v == null ? -1 : v.Position;
+            return FindIndex(source, 0, source.Count, match);
         }
 
-        public static int FindIndex<T>(this IEnumerable<T> source, int startIndex, Predicate<T> match)
+        public static int FindIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
         {
-            var v = source
-            .Select((item, index) => new { Item = item, Position = index })
-            .Where(x => (x.Position >= startIndex) && match(x.Item))
-			.FirstOrDefault();
-			return v == null ? -1 : v.Position;
+            return FindIndex(source, startIndex, source.Count - startIndex, match);
 		}
 
-        public static int FindIndex<T>(this IEnumerable<T> source, int startIndex, int count, Predicate<T> match)
+        public static int FindIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
         {
-            var v = source
-            .Select((item, index) => new { Item = item, Position = index })
-			.Where(x => (x.Position >= startIndex) && (x.Position <= startIndex + count) && match(x.Item))
-			.FirstOrDefault();
-			return v == null ? -1 : v.Position;
+            int num = startIndex + count;
+            for (int i = startIndex; i < num; i++)
+            {
+                if (match(source[i]))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public static int RemoveAll<T>(this List<T> list, Predicate<T> match)
