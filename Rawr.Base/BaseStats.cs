@@ -102,7 +102,7 @@ namespace Rawr
                         case Character.CharacterRace.Orc:
                             S.Strength = 178;
                             S.Agility = 109;
-                            S.Stamina = 165;
+                            S.Stamina = 162;
                             S.Intellect = 32;
                             S.Spirit = 62;
                             break;
