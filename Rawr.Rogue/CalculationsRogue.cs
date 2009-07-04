@@ -163,8 +163,8 @@ namespace Rawr.Rogue
             displayedValues.AddPercentageToolTip(DisplayValue.CritRating, "OH Crit%: ", combatFactors.ProbOhCrit);
             displayedValues.AddToolTip(DisplayValue.CritRating, "Crit Multiplier: " + combatFactors.BaseCritMultiplier);
 
-            displayedValues.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
-            displayedValues.AddToolTip(DisplayValue.ArmorPenetration, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
+            displayedValues.AddDisplayValue(DisplayValue.ArmorDamageReduction, Math.Round(combatFactors.ArmorDamageReduction, 2) * 100 + "%");
+            displayedValues.AddToolTip(DisplayValue.ArmorDamageReduction, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
             displayedValues.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
@@ -239,7 +239,7 @@ namespace Rawr.Rogue
             statsTotal.PhysicalHaste += Talents.BladeFlurry.Haste.Bonus;
             statsTotal.PhysicalHaste += Talents.LightningReflexes.Haste.Bonus;
 
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration + Talents.SerratedBlades.ArmorPenetration.Bonus;
+            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;

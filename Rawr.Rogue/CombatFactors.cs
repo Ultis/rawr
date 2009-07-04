@@ -11,14 +11,14 @@ namespace Rawr.Rogue
 			_mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
 			_offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
             _calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            _characterRace = character.Race;
+            _character = character;
         }
 
         private readonly Stats _stats;
         private readonly Item _mainHand;
         private readonly Item _offHand;
         private readonly CalculationOptionsRogue _calcOpts;
-        private readonly Character.CharacterRace _characterRace;
+        private readonly Character _character;
 
         public Item MainHand
         {
@@ -40,23 +40,15 @@ namespace Rawr.Rogue
             get { return OffHand.Type == Item.ItemType.Dagger ? 1.7f : 2.4f; }
         }
 
-        public float TotalArmorPenetration
-        {
-			get
-			{
-				var armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
-				var reducedArmor = _calcOpts.TargetArmor * (armorReductionPercent);
-				return _calcOpts.TargetArmor - reducedArmor;
-			}
-        }
-
         public float DamageReduction
         {
-            get
-            {
-				return 1f - StatConversion.GetArmorDamageReduction(80, _calcOpts.TargetArmor, 0, 0, _stats.ArmorPenetrationRating);
-            }
+            get { return 1f - ArmorDamageReduction; }
         } 
+
+        public float ArmorDamageReduction
+        {
+            get { return StatConversion.GetArmorDamageReduction(80, _calcOpts.TargetArmor - Talents.SerratedBlades.ArmorPenetration.Bonus, 0, 0, _stats.ArmorPenetrationRating);}
+        }
 
         public float AvgMhWeaponDmg
         {
@@ -257,7 +249,7 @@ namespace Rawr.Rogue
         {
             var baseExpertise = BaseExpertise;
 
-            if (_characterRace == Character.CharacterRace.Human)
+            if (_character.Race == Character.CharacterRace.Human)
             {
                 if (weapon != null && (weapon.Type == Item.ItemType.OneHandSword || weapon.Type == Item.ItemType.OneHandMace))
                     baseExpertise += 5f;
