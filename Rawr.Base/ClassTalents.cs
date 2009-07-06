@@ -5073,9 +5073,9 @@ namespace Rawr
         public int MoonkinForm { get { return _data[17]; } set { _data[17] = value; } }
 
         [TalentData(18, "Improved Moonkin Form", 3, 0, 3, 7, 17, new string[] {
-@"Your Moonkin Aura also causes affected targets to gain 1% haste and you to gain 5% of your spirit as additional spell damage.",
-@"Your Moonkin Aura also causes affected targets to gain 2% haste and you to gain 10% of your spirit as additional spell damage.",
-@"Your Moonkin Aura also causes affected targets to gain 3% haste and you to gain 15% of your spirit as additional spell damage.",}, "ability_druid_improvedmoonkinform")]
+@"Your Moonkin Aura also causes affected targets to gain 1% haste and you to gain 10% of your spirit as additional spell damage.",
+@"Your Moonkin Aura also causes affected targets to gain 2% haste and you to gain 20% of your spirit as additional spell damage.",
+@"Your Moonkin Aura also causes affected targets to gain 3% haste and you to gain 30% of your spirit as additional spell damage.",}, "ability_druid_improvedmoonkinform")]
         public int ImprovedMoonkinForm { get { return _data[18]; } set { _data[18] = value; } }
 
         [TalentData(19, "Improved Faerie Fire", 3, 0, 4, 7, -1, new string[] {
