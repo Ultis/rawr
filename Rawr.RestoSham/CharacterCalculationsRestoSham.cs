@@ -33,7 +33,6 @@ namespace Rawr.RestoSham
         public float SpellCrit { get; set; }
         public float SpellHaste { get; set; }
         public float TotalManaPool { get; set; }
-        public float TillOOM { get; set; }
         public float FightHPS { get; set; }
         public string SustainedSequence { get; set; }
         public string BurstSequence { get; set; }
@@ -99,8 +98,6 @@ namespace Rawr.RestoSham
         {
             switch (calculation)
             {
-                case "Time to OOM":
-                    return TillOOM;
                 case "Mana Usable per Second":
                     return MUPS;
                 case "Health":

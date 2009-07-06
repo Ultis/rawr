@@ -22,9 +22,13 @@ namespace Rawr.RestoSham
 
             txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
             txtESInterval.Tag = new NumericField("ESInterval", 40f, 1000f, true);
+            txtSurvivalPerc.Tag = new NumericField("SurvivalPerc", 1f, 100f, true);
+            txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
             cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 3000f, true);
             tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
             tbOverhealing.Tag = new NumericField("OverhealingPercentage", 0f, 100f, true);
+            cboDivineHymn.Tag = new NumericField("DivineHymn", 0f, 4f, true);
+            cboInnervate.Tag = new NumericField("Innervate", 0f, 4f, true);
         }
 
         protected override void LoadCalculationOptions()
@@ -42,13 +46,20 @@ namespace Rawr.RestoSham
             chkWaterShield.Checked = options.WaterShield;
             chkMT.Checked = options.TankHeal;
             txtESInterval.Text = options.ESInterval.ToString();
+            txtCleanse.Text = options.Decurse.ToString();
+            txtSurvivalPerc.Text = options.SurvivalPerc.ToString();
             cboBurstStyle.Text = options.BurstStyle.ToString();
             cboSustStyle.Text = options.SustStyle.ToString();
-            // The track bars
+            cboExtraManaTide.Text = options.ExtraManaTide.ToString();
+            cboDivineHymn.Text = options.DivineHymn.ToString();
+            cboInnervate.Text = options.Innervate.ToString();
+            cboHeroism.Text = options.Heroism.ToString();
+            #region The track bars
             tbBurst.Value = (Int32)options.BurstPercentage;
             UpdateTrackBarLabel(tbBurst);
             tbOverhealing.Value = (Int32)options.OverhealingPercentage;
             UpdateTrackBarLabel(tbOverhealing);
+            #endregion
             #endregion
 
             _bLoading = false;
@@ -213,7 +224,6 @@ namespace Rawr.RestoSham
         }
         #endregion
 
-
         #region Combo Box Handling
         private void cboBurstStyle_TextChanged(object sender, EventArgs e)
         {
@@ -231,7 +241,39 @@ namespace Rawr.RestoSham
                 Character.OnCalculationsInvalidated();
             }
         }
-        #endregion
+        private void cboExtraManaTide_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["ExtraManaTide"] = cboExtraManaTide.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void cboDivineHymn_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["DivineHymn"] = cboDivineHymn.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void cboInnervate_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["Innervate"] = cboInnervate.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void cboHeroism_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["Heroism"] = cboHeroism.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        #endregion 
 
 
     }
@@ -314,6 +356,11 @@ namespace Rawr.RestoSham
         public string SustStyle = "CH Spam";
 
         /// <summary>
+        /// Will you or someone else use heroism?
+        /// </summary>
+        public string Heroism = "Me";
+
+        /// <summary>
         /// The percentage of healing that is intended to be burst.
         /// </summary>
         public float BurstPercentage = 85f;
@@ -322,6 +369,31 @@ namespace Rawr.RestoSham
         /// The percentage of healing that is overhealing.
         /// </summary>
         public float OverhealingPercentage = 35f;
+
+        /// <summary>
+        /// The percentage of fight you are active.
+        /// </summary>
+        public float Decurse = 0f;
+
+        /// <summary>
+        /// The percentage of usefulness survival is to you.
+        /// </summary>
+        public float SurvivalPerc = 2f;
+
+        /// <summary>
+        /// The number if extra Resto Shamans in your group.
+        /// </summary>
+        public float ExtraManaTide = 0f;
+
+        /// <summary>
+        /// The number if extra Healing Priests in your group.
+        /// </summary>
+        public float DivineHymn = 0f;
+
+        /// <summary>
+        /// The number if extra Druids that may innervate you.
+        /// </summary>
+        public float Innervate = 0f;
         #endregion
 
         }
