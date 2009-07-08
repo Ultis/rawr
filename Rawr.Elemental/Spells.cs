@@ -174,7 +174,7 @@ namespace Rawr.Elemental
 
         public void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
-            float Speed = (1f + stats.SpellHaste) / (1f + stats.HasteRating * 0.000304971132f);
+            float Speed = (1f + stats.SpellHaste) * (1f + stats.HasteRating * 0.000304971132f);
             gcd = (float)Math.Round(gcd / Speed, 4);
             castTime = (float)Math.Round(castTime / Speed, 4);
             critModifier += .20f * shamanTalents.ElementalFury;
