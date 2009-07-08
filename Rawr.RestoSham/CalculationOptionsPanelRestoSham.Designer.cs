@@ -33,7 +33,6 @@
             this.cboManaPotAmount = new System.Windows.Forms.ComboBox();
             this.chkManaTide = new System.Windows.Forms.CheckBox();
             this.chkMT = new System.Windows.Forms.CheckBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.txtESInterval = new System.Windows.Forms.TextBox();
             this.cboBurstStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,6 +42,7 @@
             this.cboHeroism = new System.Windows.Forms.ComboBox();
             this.txtCleanse = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.GeneralPage = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
@@ -110,15 +110,6 @@
             this.chkMT.UseVisualStyleBackColor = true;
             this.chkMT.CheckedChanged += new System.EventHandler(this.chkMT_CheckedChanged);
             // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(20, 61);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(61, 13);
-            this.label17.TabIndex = 10;
-            this.label17.Text = "ES Recast:";
-            // 
             // txtESInterval
             // 
             this.txtESInterval.Location = new System.Drawing.Point(81, 58);
@@ -135,6 +126,7 @@
             "RT+HW",
             "RT+LHW",
             "RT+CH",
+            "RT+CH+LHW",
             "HW Spam",
             "LHW Spam",
             "CH Spam",
@@ -173,6 +165,7 @@
             "RT+HW",
             "RT+LHW",
             "RT+CH",
+            "RT+CH+LHW",
             "HW Spam",
             "LHW Spam",
             "CH Spam",
@@ -223,6 +216,15 @@
             this.label16.TabIndex = 48;
             this.label16.Text = "Decurses";
             this.tipRestoSham.SetToolTip(this.label16, "The number of times per fight you use Cleanse Spirit.");
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(20, 61);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(61, 13);
+            this.label17.TabIndex = 10;
+            this.label17.Text = "ES Recast:";
             // 
             // errorRestoSham
             // 
