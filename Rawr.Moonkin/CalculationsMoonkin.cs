@@ -881,7 +881,8 @@ namespace Rawr.Moonkin
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 EclipseBonus = stats.EclipseBonus,
                 InsectSwarmDmg = stats.InsectSwarmDmg,
-                MoonfireDotCrit = stats.MoonfireDotCrit
+                MoonfireDotCrit = stats.MoonfireDotCrit,
+                BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage
             };
             // Add special effects that meet the following criteria:
             // 1) On-use OR
@@ -972,7 +973,7 @@ namespace Rawr.Moonkin
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
                 + stats.Bloodlust + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
-                + stats.MoonfireDotCrit) > 0;
+                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage) > 0;
         }
     }
 }

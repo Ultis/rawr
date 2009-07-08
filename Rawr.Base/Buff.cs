@@ -2167,7 +2167,7 @@ namespace Rawr
                 Name = "Stormrage's Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusNukeCritChance = 0.03f },
+                Stats = { BonusMoonkinNukeDamage = 0.04f },
                 SetName = "Stormrage's Garb",
                 SetThreshold = 4
             });

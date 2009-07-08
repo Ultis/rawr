@@ -314,6 +314,7 @@ namespace Rawr {
         StarfireProc,
         EclipseBonus,
         MoonfireDotCrit,
+        BonusMoonkinNukeDamage,
         #endregion
         #region Added by Rawr.DPSWarr
         BonusTargets,
@@ -3431,7 +3432,8 @@ namespace Rawr {
 
         // Moonkin 4-piece T5 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Starfire Crit Bonus")]
+        [DisplayName("% Starfire Crit Bonus")]
+        [Percentage]
         [Category("Moonkin")]
         public float StarfireBonusWithDot
         {
@@ -3450,7 +3452,8 @@ namespace Rawr {
         }
         // Moonkin 4-piece T6 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Starfire Crit")]
+        [DisplayName("% Starfire Crit")]
+        [Percentage]
         [Category("Moonkin")]
         public float StarfireCritChance
         {
@@ -3460,7 +3463,8 @@ namespace Rawr {
 
         // Moonkin 2-piece T7 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Insect Swarm Damage")]
+        [DisplayName("% Insect Swarm Damage")]
+        [Percentage]
         [Category("Moonkin")]
         public float BonusInsectSwarmDamage
         {
@@ -3470,7 +3474,8 @@ namespace Rawr {
 
         // Moonkin 4-piece T7 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("SF/W Crit")]
+        [DisplayName("% SF/W Crit")]
+        [Percentage]
         [Category("Moonkin")]
         public float BonusNukeCritChance
         {
@@ -3480,7 +3485,8 @@ namespace Rawr {
 
         // Moonkin 2-piece T8 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Eclipse Bonus")]
+        [DisplayName("% Eclipse Bonus")]
+        [Percentage]
         [Category("Moonkin")]
         public float EclipseBonus
         {
@@ -3504,6 +3510,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MoonfireDotCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.MoonfireDotCrit] = value; }
+        }
+        // Moonkin 4-piece T9 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% SF/W Damage")]
+        [Percentage]
+        [Category("Moonkin")]
+        public float BonusMoonkinNukeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusMoonkinNukeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusMoonkinNukeDamage] = value; }
         }
         #endregion
         #endregion

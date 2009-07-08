@@ -852,7 +852,7 @@ namespace Rawr.Moonkin
             float eclipseMultiplier = 0.3f + calcs.BasicStats.EclipseBonus;
 
             float eclipseDuration = 15.0f;
-            float eclipseCooldown = 30.0f;
+            //float eclipseCooldown = 30.0f;
 
             Spell preLunarCast = LocateSpell(solver.SpellData, "W");
 
@@ -1606,11 +1606,18 @@ namespace Rawr.Moonkin
             Wrath.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
 
             // Add set bonuses
+            // 2T6
             Moonfire.DotEffect.Duration += stats.MoonfireExtension;
+            // 4T6
             Starfire.CriticalChanceModifier += stats.StarfireCritChance;
+            // 4T7
             Starfire.CriticalChanceModifier += stats.BonusNukeCritChance;
             Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
+            // 2T9
             Moonfire.DotEffect.CanCrit = stats.MoonfireDotCrit == 1;
+            // 4T9
+            Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
 
             // Nature's Grace
             NaturesGrace = character.DruidTalents.NaturesGrace;
