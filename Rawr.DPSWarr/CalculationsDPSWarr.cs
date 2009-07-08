@@ -560,7 +560,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                         1f *
                                         (character.MainHand != null &&
                                         (character.MainHand.Slot == Item.ItemSlot.TwoHand)
-                                         ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 0f)
+                                         ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
                                          *
                                          ((talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
                                         (character.OffHand.Slot  == Item.ItemSlot.TwoHand ||
