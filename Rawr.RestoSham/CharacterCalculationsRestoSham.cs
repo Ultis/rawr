@@ -36,7 +36,8 @@ namespace Rawr.RestoSham
         public float FightHPS { get; set; }
         public string SustainedSequence { get; set; }
         public string BurstSequence { get; set; }
-        public float MUPS { get; set; }
+        public float MAPS { get; set; }
+        public float ManaUsed { get; set; }
         public float HSTHeals { get; set; }
         public float HWSpamHPS { get; set; }
         public float HWSpamMPS { get; set; }
@@ -54,7 +55,10 @@ namespace Rawr.RestoSham
         public float RTCHMPS { get; set; }
         public float BurstHPS { get; set; }
         public float SustainedHPS { get; set; }
+        public float MUPS { get; set; }
         public float Survival { get; set; }
+        public float HealPerSec { get; set; }
+        public float CritPerSec { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -75,22 +79,16 @@ namespace Rawr.RestoSham
                        Math.Round(SpellHaste * 100, 2), BasicStats.HasteRating.ToString()));
             values.Add("Burst Sequence", BurstSequence.ToString());
             values.Add("Sustained Sequence", SustainedSequence.ToString());
-            values.Add("Mana Usable per Second", Math.Round(MUPS, 0).ToString());
+            values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
+            values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
             values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
-            values.Add("RT+HW MPS", Math.Round(RTHWMPS, 0).ToString());
             values.Add("RT+LHW HPS", Math.Round(RTLHWHPS, 0).ToString());
-            values.Add("RT+LHW MPS", Math.Round(RTLHWMPS, 0).ToString());
             values.Add("RT+CH HPS", Math.Round(RTCHHPS, 0).ToString());
-            values.Add("RT+CH MPS", Math.Round(RTCHMPS, 0).ToString());
             values.Add("RT+LHW+CH+LHW HPS", Math.Round(RTCHLHW2HPS, 0).ToString());
-            values.Add("RT+LHW+CH+LHW MPS", Math.Round(RTCHLHW2MPS, 0).ToString());
             values.Add("HW Spam HPS", Math.Round(HWSpamHPS, 0).ToString());
-            values.Add("HW Spam MPS", Math.Round(HWSpamMPS, 0).ToString());
             values.Add("LHW Spam HPS", Math.Round(LHWSpamHPS, 0).ToString());
-            values.Add("LHW Spam MPS", Math.Round(LHWSpamMPS, 0).ToString());
             values.Add("CH Spam HPS", Math.Round(CHSpamHPS, 0).ToString());
-            values.Add("CH Spam MPS", Math.Round(CHSpamMPS, 0).ToString());
 
             return values;
         }
@@ -99,7 +97,7 @@ namespace Rawr.RestoSham
             switch (calculation)
             {
                 case "Mana Usable per Second":
-                    return MUPS;
+                    return MAPS;
                 case "Health":
                     return BasicStats.Health;
                 case "Haste %":

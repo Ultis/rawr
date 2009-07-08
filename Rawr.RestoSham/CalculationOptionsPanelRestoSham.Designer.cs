@@ -40,18 +40,12 @@
             this.txtFightLength = new System.Windows.Forms.TextBox();
             this.cboSustStyle = new System.Windows.Forms.ComboBox();
             this.txtSurvivalPerc = new System.Windows.Forms.TextBox();
-            this.cboExtraManaTide = new System.Windows.Forms.ComboBox();
-            this.cboDivineHymn = new System.Windows.Forms.ComboBox();
-            this.cboInnervate = new System.Windows.Forms.ComboBox();
             this.cboHeroism = new System.Windows.Forms.ComboBox();
             this.txtCleanse = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.GeneralPage = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -94,7 +88,7 @@
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(81, 322);
+            this.chkManaTide.Location = new System.Drawing.Point(81, 241);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(184, 17);
             this.chkManaTide.TabIndex = 14;
@@ -106,7 +100,7 @@
             // chkMT
             // 
             this.chkMT.AutoSize = true;
-            this.chkMT.Location = new System.Drawing.Point(81, 299);
+            this.chkMT.Location = new System.Drawing.Point(81, 218);
             this.chkMT.Name = "chkMT";
             this.chkMT.Size = new System.Drawing.Size(172, 17);
             this.chkMT.TabIndex = 24;
@@ -124,7 +118,6 @@
             this.label17.Size = new System.Drawing.Size(61, 13);
             this.label17.TabIndex = 10;
             this.label17.Text = "ES Recast:";
-            this.tipRestoSham.SetToolTip(this.label17, "Set to 0 to not use.");
             // 
             // txtESInterval
             // 
@@ -199,52 +192,6 @@
             this.txtSurvivalPerc.TabIndex = 36;
             this.tipRestoSham.SetToolTip(this.txtSurvivalPerc, "% of how useful Survival points are to you.  Default 2%.");
             // 
-            // cboExtraManaTide
-            // 
-            this.cboExtraManaTide.FormattingEnabled = true;
-            this.cboExtraManaTide.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.cboExtraManaTide.Location = new System.Drawing.Point(81, 191);
-            this.cboExtraManaTide.Name = "cboExtraManaTide";
-            this.cboExtraManaTide.Size = new System.Drawing.Size(75, 21);
-            this.cboExtraManaTide.TabIndex = 41;
-            this.tipRestoSham.SetToolTip(this.cboExtraManaTide, "Other shamans that will use Mana tide in your group.");
-            this.cboExtraManaTide.TextChanged += new System.EventHandler(this.cboBurstStyle_TextChanged);
-            // 
-            // cboDivineHymn
-            // 
-            this.cboDivineHymn.FormattingEnabled = true;
-            this.cboDivineHymn.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.cboDivineHymn.Location = new System.Drawing.Point(81, 218);
-            this.cboDivineHymn.Name = "cboDivineHymn";
-            this.cboDivineHymn.Size = new System.Drawing.Size(75, 21);
-            this.cboDivineHymn.TabIndex = 43;
-            this.tipRestoSham.SetToolTip(this.cboDivineHymn, "Number of Priests in your group that will use Hymn of Hope");
-            this.cboDivineHymn.TextChanged += new System.EventHandler(this.cboDivineHymn_TextChanged);
-            // 
-            // cboInnervate
-            // 
-            this.cboInnervate.FormattingEnabled = true;
-            this.cboInnervate.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.cboInnervate.Location = new System.Drawing.Point(81, 245);
-            this.cboInnervate.Name = "cboInnervate";
-            this.cboInnervate.Size = new System.Drawing.Size(75, 21);
-            this.cboInnervate.TabIndex = 45;
-            this.tipRestoSham.SetToolTip(this.cboInnervate, "Number of Innervates that will be used on you.");
-            this.cboInnervate.TextChanged += new System.EventHandler(this.cboInnervate_TextChanged);
-            // 
             // cboHeroism
             // 
             this.cboHeroism.FormattingEnabled = true;
@@ -252,7 +199,7 @@
             "No",
             "Yes",
             "Me"});
-            this.cboHeroism.Location = new System.Drawing.Point(81, 272);
+            this.cboHeroism.Location = new System.Drawing.Point(81, 191);
             this.cboHeroism.Name = "cboHeroism";
             this.cboHeroism.Size = new System.Drawing.Size(75, 21);
             this.cboHeroism.TabIndex = 47;
@@ -288,12 +235,6 @@
             this.GeneralPage.Controls.Add(this.label16);
             this.GeneralPage.Controls.Add(this.cboHeroism);
             this.GeneralPage.Controls.Add(this.label14);
-            this.GeneralPage.Controls.Add(this.cboInnervate);
-            this.GeneralPage.Controls.Add(this.label13);
-            this.GeneralPage.Controls.Add(this.cboDivineHymn);
-            this.GeneralPage.Controls.Add(this.label12);
-            this.GeneralPage.Controls.Add(this.cboExtraManaTide);
-            this.GeneralPage.Controls.Add(this.label11);
             this.GeneralPage.Controls.Add(this.label8);
             this.GeneralPage.Controls.Add(this.txtSurvivalPerc);
             this.GeneralPage.Controls.Add(this.label9);
@@ -324,38 +265,11 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(27, 275);
+            this.label14.Location = new System.Drawing.Point(27, 194);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(48, 13);
             this.label14.TabIndex = 46;
             this.label14.Text = "Heroism:";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(26, 248);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(55, 13);
-            this.label13.TabIndex = 44;
-            this.label13.Text = "Innervate:";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 221);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(78, 13);
-            this.label12.TabIndex = 42;
-            this.label12.Text = "Hymn of Hope:";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(14, 194);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(67, 13);
-            this.label11.TabIndex = 40;
-            this.label11.Text = "+Mana-Tide:";
             // 
             // label8
             // 
@@ -408,7 +322,7 @@
             this.groupBox1.Controls.Add(this.tbOverhealing);
             this.groupBox1.Controls.Add(this.tbBurst_Label);
             this.groupBox1.Controls.Add(this.tbBurst);
-            this.groupBox1.Location = new System.Drawing.Point(6, 368);
+            this.groupBox1.Location = new System.Drawing.Point(6, 287);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(280, 153);
             this.groupBox1.TabIndex = 27;
@@ -454,7 +368,7 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(81, 345);
+            this.chkWaterShield.Location = new System.Drawing.Point(81, 264);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
@@ -536,15 +450,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboSustStyle;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox cboExtraManaTide;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtSurvivalPerc;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox cboInnervate;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ComboBox cboDivineHymn;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ComboBox cboHeroism;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox txtCleanse;

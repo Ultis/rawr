@@ -24,11 +24,9 @@ namespace Rawr.RestoSham
             txtESInterval.Tag = new NumericField("ESInterval", 40f, 1000f, true);
             txtSurvivalPerc.Tag = new NumericField("SurvivalPerc", 1f, 100f, true);
             txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
-            cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 3000f, true);
+            cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 4300f, true);
             tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
             tbOverhealing.Tag = new NumericField("OverhealingPercentage", 0f, 100f, true);
-            cboDivineHymn.Tag = new NumericField("DivineHymn", 0f, 4f, true);
-            cboInnervate.Tag = new NumericField("Innervate", 0f, 4f, true);
         }
 
         protected override void LoadCalculationOptions()
@@ -50,9 +48,6 @@ namespace Rawr.RestoSham
             txtSurvivalPerc.Text = options.SurvivalPerc.ToString();
             cboBurstStyle.Text = options.BurstStyle.ToString();
             cboSustStyle.Text = options.SustStyle.ToString();
-            cboExtraManaTide.Text = options.ExtraManaTide.ToString();
-            cboDivineHymn.Text = options.DivineHymn.ToString();
-            cboInnervate.Text = options.Innervate.ToString();
             cboHeroism.Text = options.Heroism.ToString();
             #region The track bars
             tbBurst.Value = (Int32)options.BurstPercentage;
@@ -224,7 +219,7 @@ namespace Rawr.RestoSham
         }
         #endregion
 
-        #region Combo Box Handling
+        #region Combo Box and other Text Box Handling
         private void cboBurstStyle_TextChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
@@ -238,30 +233,6 @@ namespace Rawr.RestoSham
             if (!_bLoading)
             {
                 this["SustStyle"] = cboSustStyle.Text;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void cboExtraManaTide_TextChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["ExtraManaTide"] = cboExtraManaTide.Text;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void cboDivineHymn_TextChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["DivineHymn"] = cboDivineHymn.Text;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void cboInnervate_TextChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["Innervate"] = cboInnervate.Text;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -379,21 +350,6 @@ namespace Rawr.RestoSham
         /// The percentage of usefulness survival is to you.
         /// </summary>
         public float SurvivalPerc = 2f;
-
-        /// <summary>
-        /// The number if extra Resto Shamans in your group.
-        /// </summary>
-        public float ExtraManaTide = 0f;
-
-        /// <summary>
-        /// The number if extra Healing Priests in your group.
-        /// </summary>
-        public float DivineHymn = 0f;
-
-        /// <summary>
-        /// The number if extra Druids that may innervate you.
-        /// </summary>
-        public float Innervate = 0f;
         #endregion
 
         }

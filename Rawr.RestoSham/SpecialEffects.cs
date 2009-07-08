@@ -226,6 +226,8 @@ namespace Rawr.RestoSham
             createSpellPowerProc(stats.SpellPowerFor10SecOnCrit_20_45, 10, 45, 0, 0, .2f, 1);
             // Sextant of Unstable Currents
             createSpellPowerProc(stats.SpellPowerFor15SecOnCrit_20_45, 15, 45, 0, 0, .2f, 1);
+            // Eye of the Broodmother
+            createSpellPowerProc(stats.SpellPower, 10, 0, 0, 15, 0, 5);
 
             createSpellPowerUse(stats.SpellPowerFor15SecOnUse90Sec, 15, 90, false);
             createSpellPowerUse(stats.SpellPowerFor15SecOnUse2Min, 15, 120, false);
