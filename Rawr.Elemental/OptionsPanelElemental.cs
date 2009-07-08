@@ -53,64 +53,14 @@ namespace Rawr.Elemental
             tkReplenishment.Value = calcOpts.ReplenishmentUptime;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
 
-            cbFlameshock.Checked = calcOpts.glyphOfFlameShock;
-            cbElementalMastery.Checked = calcOpts.glyphOfElementalMastery;
-            cbFlametongue.Checked = calcOpts.glyphOfFlametongue;
-            cbLava.Checked = calcOpts.glyphOfLava;
-            cbLightningBolt.Checked = calcOpts.glyphOfLightningBolt;
-            cbShocking.Checked = calcOpts.glyphOfShocking;
-            cbWaterMastery.Checked = calcOpts.glyphOfWaterMastery;
-
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
 
             cbNup.Checked = (calcOpts.rotationType & 1) == 0;
             cbMup.Checked = (calcOpts.rotationType & 2) == 0;
 
             loading = false;
-
-            //Enable/Disable Glyph Checkboxes
-            chbSomeGlyph_CheckedChanged(null, null);
         }
 
-        private void chbSomeGlyph_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsElemental calcOpts = (CalculationOptionsElemental)Character.CalculationOptions;
-                calcOpts.glyphOfShocking = cbShocking.Checked;
-                calcOpts.glyphOfFlameShock = cbFlameshock.Checked;
-                calcOpts.glyphOfLava = cbLava.Checked;
-                calcOpts.glyphOfElementalMastery = cbElementalMastery.Checked;
-                calcOpts.glyphOfFlametongue = cbFlametongue.Checked;
-                calcOpts.glyphOfLightningBolt = cbLightningBolt.Checked;
-                calcOpts.glyphOfWaterMastery = cbWaterMastery.Checked;
-
-                //Disable Glyphcheckboxes to enable only X Glyphs (70 = 2, 80 = 3)
-                int maxGlyphs = 3;
-                if ((cbLightningBolt.Checked ? 1 : 0) + (cbFlametongue.Checked ? 1 : 0) + (cbElementalMastery.Checked ? 1 : 0) + (cbLava.Checked ? 1 : 0) + (cbFlameshock.Checked ? 1 : 0) + (cbShocking.Checked ? 1 : 0) + (cbWaterMastery.Checked ? 1 : 0) >= maxGlyphs)
-                {
-                    cbFlameshock.Enabled = cbFlameshock.Checked;
-                    cbShocking.Enabled = cbShocking.Checked;
-                    cbElementalMastery.Enabled = cbElementalMastery.Checked;
-                    cbFlametongue.Enabled = cbFlametongue.Checked;
-                    cbLightningBolt.Enabled = cbLightningBolt.Checked;
-                    cbLava.Enabled = cbLava.Checked;
-                    cbWaterMastery.Enabled = cbWaterMastery.Checked;
-                }
-                else
-                {
-                    cbFlameshock.Enabled = true;
-                    cbShocking.Enabled = true;
-                    cbElementalMastery.Enabled = true;
-                    cbFlametongue.Enabled = true;
-                    cbLightningBolt.Enabled = true;
-                    cbLava.Enabled = true;
-                    cbWaterMastery.Enabled = true;
-                }
-
-                Character.OnCalculationsInvalidated();
-            }
-        }
 
         private float parseFloat(string s)
         {
@@ -202,111 +152,7 @@ namespace Rawr.Elemental
         public int ReplenishmentUptime = 30;
         public bool UseThunderstorm = true;
 
-        public bool glyphOfFlameShock = false;
-        public bool glyphOfElementalMastery = false;
-        public bool glyphOfFlametongue = false;
-
-        public bool glyphOfLava = false;
-        public bool glyphOfLightningBolt = false;
-        public bool glyphOfShocking = false;
-
-        public bool glyphOfWaterMastery = false;
-
         public int rotationType = 0;
-
-        public void SetGlyph(int index, bool value)
-        {
-            switch (index)
-            {
-                case 0:
-                    glyphOfFlameShock = value;
-                    break;
-                case 1:
-                    glyphOfElementalMastery = value;
-                    break;
-                case 2:
-                    glyphOfFlametongue = value;
-                    break;
-                case 3:
-                    glyphOfLava = value;
-                    break;
-                case 4:
-                    glyphOfLightningBolt = value;
-                    break;
-                case 5:
-                    glyphOfShocking = value;
-                    break;
-                case 6:
-                    glyphOfWaterMastery = value;
-                    break;
-            }
-        }
-
-        public bool GetGlyph(int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    return glyphOfFlameShock;
-                case 1:
-                    return glyphOfElementalMastery;
-                case 2:
-                    return glyphOfFlametongue;
-                case 3:
-                    return glyphOfLava;
-                case 4:
-                    return glyphOfLightningBolt;
-                case 5:
-                    return glyphOfShocking;
-                case 6:
-                    return glyphOfWaterMastery;
-            }
-            return false;
-        }
-
-        public string getGlyphName(int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    return "Glyph of Flame Shock";
-                case 1:
-                    return "Glyph of Elemental Mastery";
-                case 2:
-                    return "Glyph of Flametongue";
-                case 3:
-                    return "Glyph of Lava";
-                case 4:
-                    return "Glyph of Lightning Bolt";
-                case 5:
-                    return "Glyph of Shocking";
-                case 6:
-                    return "Glyph of Water Mastery";
-            }
-            return "";
-        }
-
-        public string getShortGlyphName(int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    return "Flame Shock";
-                case 1:
-                    return "Elemental Mastery";
-                case 2:
-                    return "Flametongue";
-                case 3:
-                    return "Lava";
-                case 4:
-                    return "Lightning Bolt";
-                case 5:
-                    return "Shocking";
-                case 6:
-                    return "Water Mastery";
-            }
-            return "";
-        }
 
         public string GetXml()
         {

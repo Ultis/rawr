@@ -2400,7 +2400,7 @@ namespace Rawr
             });*/
             #endregion
 
-            #region Shaman Tier 7
+            #region Restoration Shaman set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthshatter Regalia 2 Piece Bonus",
@@ -2482,6 +2482,29 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //Tier 8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Conqueror's Worldbreaker Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Garb",
+                Stats = { FlameShockDoTCanCrit = 1f },
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Conqueror's Worldbreaker Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Garb",
+                Stats = { LightningBoltCritDamageModifier = 0.08f },
+                SetThreshold = 4
+            });
+            #endregion
+
+            #region Enhancement Shaman Set Bonuses
             //Enhancement Shaman Tier 7 Set Bonuses
             
             defaultBuffs.Add(new Buff()

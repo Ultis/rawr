@@ -206,122 +206,18 @@ namespace Rawr.Elemental
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
 
-        private string[] _customChartNames = null;
+        private string[] _customChartNames = {};
         public override string[] CustomChartNames
         {
             get
             {
-                if (_customChartNames == null)
-                    _customChartNames = new string[] {
-                        "Glyphs", "Glyph combinations"
-					};
                 return _customChartNames;
             }
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsElemental currentCalc, calc;
-            ComparisonCalculationBase comparison;
-            CalculationOptionsElemental calculationOptions;
-            float[] subPoints;
-
-            switch (chartName)
-            {
-                case "Glyphs":
-                    calculationOptions = character.CalculationOptions as CalculationOptionsElemental;
-
-                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
-
-                    for (int index = 0; index < 7; index++)
-                    {
-                        bool glyphEnabled = calculationOptions.GetGlyph(index);
-
-                        if (glyphEnabled)
-                        {
-                            calculationOptions.SetGlyph(index, false);
-                            calc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = calculationOptions.getGlyphName(index);
-                            comparison.Equipped = true;
-                            comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints);
-                            subPoints = new float[calc.SubPoints.Length];
-                            for (int i = 0; i < calc.SubPoints.Length; i++)
-                            {
-                                subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]);
-                            }
-                            comparison.SubPoints = subPoints;
-
-                            comparisonList.Add(comparison);
-                        }
-                        else
-                        {
-                            calculationOptions.SetGlyph(index, true);
-                            calc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = calculationOptions.getGlyphName(index);
-                            comparison.Equipped = false;
-                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints);
-                            subPoints = new float[calc.SubPoints.Length];
-                            for (int i = 0; i < calc.SubPoints.Length; i++)
-                            {
-                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]);
-                            }
-                            comparison.SubPoints = subPoints;
-
-                            comparisonList.Add(comparison);
-                        }
-
-                        calculationOptions.SetGlyph(index, glyphEnabled);
-                    }
-
-                    return comparisonList.ToArray();
-                case "Glyph combinations":
-                    calculationOptions = character.CalculationOptions as CalculationOptionsElemental;
-
-                    bool[] currentGlyphs = new bool[7];
-                    for (int index = 0; index < 7; index++) currentGlyphs[index] = calculationOptions.GetGlyph(index);
-                    for (int index = 0; index < 7; index++) calculationOptions.SetGlyph(index, false);
-                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
-
-                    for (int i = 0; i < 7; i++)
-                    {
-                        for (int j = 0; j < i; j++)
-                        {
-                            for (int k = 0; k < j; k++)
-                            {
-                                for (int index = 0; index < 7; index++) calculationOptions.SetGlyph(index, false);
-                                calculationOptions.SetGlyph(i, true);
-                                calculationOptions.SetGlyph(j, true);
-                                calculationOptions.SetGlyph(k, true);
-
-                                calc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
-
-                                comparison = CreateNewComparisonCalculation();
-                                comparison.Name = calculationOptions.getShortGlyphName(i) + " + " + calculationOptions.getShortGlyphName(j) + " + " + calculationOptions.getShortGlyphName(k);
-                                comparison.Equipped = true;
-                                comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints);
-                                subPoints = new float[calc.SubPoints.Length];
-                                for (int n = 0; n < calc.SubPoints.Length; n++)
-                                {
-                                    subPoints[n] = (calc.SubPoints[n] - currentCalc.SubPoints[n]);
-                                }
-                                comparison.SubPoints = subPoints;
-
-                                comparisonList.Add(comparison);
-                            }
-                        }
-                    }
-
-                    for (int index = 0; index < 6; index++) calculationOptions.SetGlyph(index, currentGlyphs[index]);
-
-                    return comparisonList.ToArray();
-                default:
-                    return new ComparisonCalculationBase[0];
-            }
+            return new ComparisonCalculationBase[0];
         }
 
 		public override ICalculationOptionBase DeserializeDataObject(string xml)
@@ -351,32 +247,6 @@ namespace Rawr.Elemental
 			
 		}
 
-        public Stats GetRaceStats(Character character)
-        {
-            Stats statsRace;
-            switch (character.Race)
-            {
-                // I know only the Str/Agi values for Draenei, just assuming the others are the same (should be close enough)
-                case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 135, Intellect = 128, Spirit = 145 };
-                    break;
-                case Character.CharacterRace.Orc:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 138, Intellect = 125, Spirit = 146 };
-                    break;
-                case Character.CharacterRace.Tauren:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 138, Intellect = 126, Spirit = 145 };
-                    statsRace.BonusHealthMultiplier = 0.05f;
-                    break;
-                case Character.CharacterRace.Troll:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 137, Intellect = 124, Spirit = 144 };
-                    break;
-                default:
-                    statsRace = new Stats() { Health = 0, Mana = 0, Strength = 0, Agility = 0, Stamina = 0, Intellect = 0, Spirit = 0 };
-                    break;
-            }
-            return statsRace;
-        }
-
         public Stats GetTalentStats(ShamanTalents talents)
         {
             Stats statsTalents = new Stats()
@@ -391,6 +261,10 @@ namespace Rawr.Elemental
                 SpellCrit = 0.01f * talents.ThunderingStrikes,
                 BonusFlametongueDamage = 0.10f * talents.ElementalWeapons,
                 SpellPowerFromAttackPowerPercentage = 0.1f * talents.MentalQuickness,
+                ShockManaCostReduction = talents.ShamanisticFocus * 0.45f,
+                #endregion
+                #region Glyphs
+                SpellPower = talents.GlyphofTotemofWrath?talents.TotemOfWrath * 84:0
                 #endregion
             };
             return statsTalents;
@@ -398,7 +272,7 @@ namespace Rawr.Elemental
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character);
 			Stats statsItems = GetItemStats(character, additionalItem);
 			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -452,9 +326,9 @@ namespace Rawr.Elemental
             // Flametongue weapon
             statsTotal.SpellPower += 211 * (1f + character.ShamanTalents.ElementalWeapons * .1f);
             statsTotal.Mp5 += 100; // Water shield
-            if (calcOpts.glyphOfWaterMastery) statsTotal.Mp5 += 30;
+            if (character.ShamanTalents.GlyphofWaterMastery) statsTotal.Mp5 += 30;
 
-            if (calcOpts.glyphOfFlametongue) statsTotal.SpellCrit += .02f;
+            if (character.ShamanTalents.GlyphofFlametongueWeapon) statsTotal.SpellCrit += .02f;
 
             return statsTotal;
 		}
@@ -504,6 +378,8 @@ namespace Rawr.Elemental
                 LightningBoltCostReduction = stats.LightningBoltCostReduction,
                 LightningBoltDamageModifier = stats.LightningBoltDamageModifier,
                 BonusLavaBurstCritDamage = stats.BonusLavaBurstCritDamage,
+                FlameShockDoTCanCrit = stats.FlameShockDoTCanCrit,
+                LightningBoltCritDamageModifier = stats.LightningBoltCritDamageModifier,
             #endregion
                 #region Trinkets
                 SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
@@ -580,7 +456,9 @@ namespace Rawr.Elemental
             elementalStats += 
                 stats.BonusLavaBurstCritDamage +
                 stats.LightningBoltCostReduction +
-                stats.LightningBoltDamageModifier;
+                stats.LightningBoltDamageModifier +
+                stats.LightningBoltCritDamageModifier + 
+                stats.FlameShockDoTCanCrit;
             #endregion
             #region Trinkets
             elementalStats +=
@@ -723,7 +601,7 @@ namespace Rawr.Elemental
 
             dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n");
             CalculationOptionsElemental calcOpts = (CalculationOptionsElemental)LocalCharacter.CalculationOptions;
-            if (calcOpts.glyphOfFlameShock)
+            if (LocalCharacter.ShamanTalents.GlyphofFlameShock)
             {
                 dictValues.Add("Rotation", "FS/LvB/"+Math.Round(nLBfirst, 2).ToString() + "LB/LvB/"+Math.Round(nLBsecond, 2).ToString() + "LB");
             }

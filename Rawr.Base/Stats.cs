@@ -257,6 +257,7 @@ namespace Rawr {
         LightningSpellPower,
         LightningBoltHasteProc_15_45,
         LavaBurstBonus,
+        LightningBoltCritDamageModifier,
         #endregion
         #region Added by Rawr.Restosham
         ManaSpringMp5Increase,
@@ -478,6 +479,7 @@ namespace Rawr {
         ManacostReduceWithin15OnUse1Min,
         ShieldFromHealed,
         RighteousVengeanceCanCrit,
+        FlameShockDoTCanCrit,
         NUM_NonStackingStat // This should always be the last entry.
     }
 
@@ -3236,6 +3238,23 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Flame Shock DoT Can Crit")]
+        [Category("Elemental")]
+        public float FlameShockDoTCanCrit
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.FlameShockDoTCanCrit]; }
+            set { _rawNoStackData[(int)NonStackingStat.FlameShockDoTCanCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Elemental")]
+        public float LightningBoltCritDamageModifier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltCritDamageModifier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningBoltCritDamageModifier] = value; }
         }
 
         #endregion

@@ -45,21 +45,6 @@
             this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.cbWaterMastery = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel13 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.cbShocking = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.cbLightningBolt = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.cbFlametongue = new System.Windows.Forms.CheckBox();
-            this.cbElementalMastery = new System.Windows.Forms.CheckBox();
-            this.cbLava = new System.Windows.Forms.CheckBox();
-            this.cbFlameshock = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel4 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel5 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel12 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
             this.lblReplenishment = new System.Windows.Forms.Label();
@@ -74,7 +59,6 @@
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox10.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
@@ -171,7 +155,6 @@
             // 
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -186,7 +169,7 @@
             this.groupBox1.Controls.Add(this.cbMup);
             this.groupBox1.Controls.Add(this.cbNup);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(6, 423);
+            this.groupBox1.Location = new System.Drawing.Point(6, 250);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(277, 98);
             this.groupBox1.TabIndex = 55;
@@ -272,176 +255,6 @@
             this.label10.Size = new System.Drawing.Size(74, 13);
             this.label10.TabIndex = 47;
             this.label10.Text = "Mana potions:";
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.cbWaterMastery);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel13);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel1);
-            this.groupBox10.Controls.Add(this.cbShocking);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel2);
-            this.groupBox10.Controls.Add(this.cbLightningBolt);
-            this.groupBox10.Controls.Add(this.cbFlametongue);
-            this.groupBox10.Controls.Add(this.cbElementalMastery);
-            this.groupBox10.Controls.Add(this.cbLava);
-            this.groupBox10.Controls.Add(this.cbFlameshock);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel3);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel4);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel5);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel12);
-            this.groupBox10.Location = new System.Drawing.Point(6, 250);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(277, 167);
-            this.groupBox10.TabIndex = 34;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Glyphs";
-            // 
-            // cbWaterMastery
-            // 
-            this.cbWaterMastery.AutoSize = true;
-            this.cbWaterMastery.Location = new System.Drawing.Point(256, 135);
-            this.cbWaterMastery.Name = "cbWaterMastery";
-            this.cbWaterMastery.Size = new System.Drawing.Size(15, 14);
-            this.cbWaterMastery.TabIndex = 10;
-            this.cbWaterMastery.Tag = "Glyph of Innervate";
-            this.cbWaterMastery.UseVisualStyleBackColor = true;
-            this.cbWaterMastery.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // extendedToolTipLabel13
-            // 
-            this.extendedToolTipLabel13.AutoSize = true;
-            this.extendedToolTipLabel13.Location = new System.Drawing.Point(6, 135);
-            this.extendedToolTipLabel13.Name = "extendedToolTipLabel13";
-            this.extendedToolTipLabel13.Size = new System.Drawing.Size(118, 13);
-            this.extendedToolTipLabel13.TabIndex = 9;
-            this.extendedToolTipLabel13.Text = "Glyph of Water Mastery";
-            this.extendedToolTipLabel13.ToolTipText = "Increases the passive mana regeneration of your Water Shield spell by 30%";
-            // 
-            // extendedToolTipLabel1
-            // 
-            this.extendedToolTipLabel1.AutoSize = true;
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(6, 116);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(94, 13);
-            this.extendedToolTipLabel1.TabIndex = 5;
-            this.extendedToolTipLabel1.Text = "Glyph of Shocking";
-            this.extendedToolTipLabel1.ToolTipText = "-0.5 gcd for Shock spells";
-            // 
-            // cbShocking
-            // 
-            this.cbShocking.AutoSize = true;
-            this.cbShocking.Location = new System.Drawing.Point(256, 115);
-            this.cbShocking.Name = "cbShocking";
-            this.cbShocking.Size = new System.Drawing.Size(15, 14);
-            this.cbShocking.TabIndex = 8;
-            this.cbShocking.Tag = "Glyph of Innervate";
-            this.cbShocking.UseVisualStyleBackColor = true;
-            this.cbShocking.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // extendedToolTipLabel2
-            // 
-            this.extendedToolTipLabel2.AutoSize = true;
-            this.extendedToolTipLabel2.Location = new System.Drawing.Point(6, 96);
-            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
-            this.extendedToolTipLabel2.Size = new System.Drawing.Size(113, 13);
-            this.extendedToolTipLabel2.TabIndex = 4;
-            this.extendedToolTipLabel2.Text = "Glyph of Lightning Bolt";
-            this.extendedToolTipLabel2.ToolTipText = "Lightning Bolt +4% damage";
-            // 
-            // cbLightningBolt
-            // 
-            this.cbLightningBolt.AutoSize = true;
-            this.cbLightningBolt.Location = new System.Drawing.Point(256, 95);
-            this.cbLightningBolt.Name = "cbLightningBolt";
-            this.cbLightningBolt.Size = new System.Drawing.Size(15, 14);
-            this.cbLightningBolt.TabIndex = 2;
-            this.cbLightningBolt.ToolTipText = "";
-            this.cbLightningBolt.UseVisualStyleBackColor = true;
-            this.cbLightningBolt.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // cbFlametongue
-            // 
-            this.cbFlametongue.AutoSize = true;
-            this.cbFlametongue.Location = new System.Drawing.Point(256, 55);
-            this.cbFlametongue.Name = "cbFlametongue";
-            this.cbFlametongue.Size = new System.Drawing.Size(15, 14);
-            this.cbFlametongue.TabIndex = 5;
-            this.cbFlametongue.Tag = "Glyph of Flametongue";
-            this.cbFlametongue.UseVisualStyleBackColor = true;
-            this.cbFlametongue.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // cbElementalMastery
-            // 
-            this.cbElementalMastery.AutoSize = true;
-            this.cbElementalMastery.Location = new System.Drawing.Point(256, 35);
-            this.cbElementalMastery.Name = "cbElementalMastery";
-            this.cbElementalMastery.Size = new System.Drawing.Size(15, 14);
-            this.cbElementalMastery.TabIndex = 4;
-            this.cbElementalMastery.Tag = "Glyph of Elemental Mastery";
-            this.cbElementalMastery.UseVisualStyleBackColor = true;
-            this.cbElementalMastery.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // cbLava
-            // 
-            this.cbLava.AutoSize = true;
-            this.cbLava.Location = new System.Drawing.Point(256, 75);
-            this.cbLava.Name = "cbLava";
-            this.cbLava.Size = new System.Drawing.Size(15, 14);
-            this.cbLava.TabIndex = 6;
-            this.cbLava.Tag = "Glyph of Lifebloom";
-            this.cbLava.UseVisualStyleBackColor = true;
-            this.cbLava.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // cbFlameshock
-            // 
-            this.cbFlameshock.AutoSize = true;
-            this.cbFlameshock.Location = new System.Drawing.Point(256, 15);
-            this.cbFlameshock.Name = "cbFlameshock";
-            this.cbFlameshock.Size = new System.Drawing.Size(15, 14);
-            this.cbFlameshock.TabIndex = 3;
-            this.cbFlameshock.Tag = "Glyph of Flame Shock";
-            this.cbFlameshock.UseVisualStyleBackColor = true;
-            this.cbFlameshock.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // extendedToolTipLabel3
-            // 
-            this.extendedToolTipLabel3.AutoSize = true;
-            this.extendedToolTipLabel3.Location = new System.Drawing.Point(6, 55);
-            this.extendedToolTipLabel3.Name = "extendedToolTipLabel3";
-            this.extendedToolTipLabel3.Size = new System.Drawing.Size(110, 13);
-            this.extendedToolTipLabel3.TabIndex = 2;
-            this.extendedToolTipLabel3.Text = "Glyph of Flametongue";
-            this.extendedToolTipLabel3.ToolTipText = "+2% crit with Flametongue active";
-            // 
-            // extendedToolTipLabel4
-            // 
-            this.extendedToolTipLabel4.AutoSize = true;
-            this.extendedToolTipLabel4.Location = new System.Drawing.Point(6, 76);
-            this.extendedToolTipLabel4.Name = "extendedToolTipLabel4";
-            this.extendedToolTipLabel4.Size = new System.Drawing.Size(73, 13);
-            this.extendedToolTipLabel4.TabIndex = 3;
-            this.extendedToolTipLabel4.Text = "Glyph of Lava";
-            this.extendedToolTipLabel4.ToolTipText = "+10% SP to Lava Burst";
-            // 
-            // extendedToolTipLabel5
-            // 
-            this.extendedToolTipLabel5.AutoSize = true;
-            this.extendedToolTipLabel5.Location = new System.Drawing.Point(6, 35);
-            this.extendedToolTipLabel5.Name = "extendedToolTipLabel5";
-            this.extendedToolTipLabel5.Size = new System.Drawing.Size(135, 13);
-            this.extendedToolTipLabel5.TabIndex = 1;
-            this.extendedToolTipLabel5.Text = "Glyph of Elemental Mastery";
-            this.extendedToolTipLabel5.ToolTipText = "-30sec on EM cd";
-            // 
-            // extendedToolTipLabel12
-            // 
-            this.extendedToolTipLabel12.AutoSize = true;
-            this.extendedToolTipLabel12.Location = new System.Drawing.Point(6, 16);
-            this.extendedToolTipLabel12.Name = "extendedToolTipLabel12";
-            this.extendedToolTipLabel12.Size = new System.Drawing.Size(111, 13);
-            this.extendedToolTipLabel12.TabIndex = 0;
-            this.extendedToolTipLabel12.Text = "Glyph of Flame Shock";
-            this.extendedToolTipLabel12.ToolTipText = "+6 sec FS and not consumed";
             // 
             // groupBox7
             // 
@@ -565,8 +378,6 @@
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
@@ -591,19 +402,6 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
-        private System.Windows.Forms.CheckBox cbShocking;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
-        private Rawr.CustomControls.ExtendedToolTipCheckBox cbLightningBolt;
-        private System.Windows.Forms.CheckBox cbFlametongue;
-        private System.Windows.Forms.CheckBox cbElementalMastery;
-        private System.Windows.Forms.CheckBox cbLava;
-        private System.Windows.Forms.CheckBox cbFlameshock;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel3;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel4;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel5;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel12;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.CheckBox cbThunderstorm;
         private System.Windows.Forms.TrackBar tkReplenishment;
@@ -618,8 +416,6 @@
         private System.Windows.Forms.TrackBar tbBSRatio;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox cbWaterMastery;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel13;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox cbMup;
         private System.Windows.Forms.CheckBox cbNup;

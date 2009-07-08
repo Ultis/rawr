@@ -22,6 +22,7 @@ namespace Rawr.Elemental
         protected float spCoef = 0f;
         protected float dotBaseCoef = 1f;
         protected float dotSpCoef = 0f;
+        protected float dotCanCrit = 0f;
         protected float spellPower = 0f;
 
         protected static void add(Spell sp1, Spell sp2, Spell nS)
@@ -124,7 +125,7 @@ namespace Rawr.Elemental
         { get { return spellPower * spCoef * totalCoef; } }
 
         public float PeriodicTick
-        { get { return periodicTick * dotBaseCoef + spellPower * dotSpCoef; } }
+        { get { return (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance); } }
 
         public float PeriodicTicks
         { get { return periodicTicks; } }
@@ -188,8 +189,8 @@ namespace Rawr.Elemental
 
         public void ApplyEM(float modifier)
         {
-            crit += modifier * .2f;
-            manaCost *= 1 - modifier * .2f;
+            crit += modifier * .15f;
+            manaCost *= 1 - modifier * .15f;
         }
 
         public virtual Spell Clone()
@@ -256,9 +257,11 @@ namespace Rawr.Elemental
             crit += .05f * shamanTalents.TidalMastery;
             manaCost *= 1 - stats.LightningBoltCostReduction / 100f;
             spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
-            if (calcOpts.glyphOfLightningBolt) totalCoef *= 1.04f;
+            if (shamanTalents.GlyphofLightningBolt) totalCoef *= 1.04f;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
             totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
+
+            critModifier *= 1 + stats.LightningBoltCritDamageModifier;
 
             /* emulate lightning overload by increasing crit chance
             totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
@@ -269,7 +272,7 @@ namespace Rawr.Elemental
 
         public void increaseCritFromOverload(int ranks)
         {
-            crit *= (1f + .04f * ranks);
+            crit *= (1f + .11f * ranks);
         }
 
         public static LightningBolt operator +(LightningBolt A, LightningBolt B)
@@ -322,7 +325,7 @@ namespace Rawr.Elemental
 
         public void increaseCritFromOverload(int ranks)
         {
-            crit *= (1f + .04f * ranks);
+            crit *= (1f + .11f * ranks);
         }
 
         public static ChainLightning operator +(ChainLightning A, ChainLightning B)
@@ -359,7 +362,6 @@ namespace Rawr.Elemental
             totalCoef *= 1f + .02f * shamanTalents.CallOfFlame;
             castTime -= .1f * shamanTalents.LightningMastery;
             spCoef += .04f * shamanTalents.Shamanism;
-            // emulate lightning overload by increasing crit chance
             crit += .05f * shamanTalents.TidalMastery;
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
             critModifier += stats.BonusLavaBurstCritDamage / 100f;
@@ -367,7 +369,7 @@ namespace Rawr.Elemental
             baseMinDamage += stats.LavaBurstBonus;
             baseMaxDamage += stats.LavaBurstBonus;
             spellPower += stats.SpellFireDamageRating;
-            if (calcOpts.glyphOfLava) spCoef += .1f;
+            if (shamanTalents.GlyphofLava) spCoef += .1f;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
 
             base.Initialize(stats, shamanTalents);
@@ -406,17 +408,29 @@ namespace Rawr.Elemental
             cooldown = 6f;
             #endregion
 
+            //for reference
+            //dottick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
+
+            spCoef *= 1 + 0.1f * shamanTalents.BoomingEchoes;
             totalCoef *= 1 + .01f * shamanTalents.Concussion;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             dotBaseCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
             dotSpCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
+            dotBaseCoef *= 1 + .01f * shamanTalents.Concussion;
+            dotSpCoef *= 1 + .01f * shamanTalents.Concussion;
+            dotBaseCoef *= 1 + stats.BonusFireDamageMultiplier;
+            dotSpCoef *= 1 + stats.BonusFireDamageMultiplier;
+            
             manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
             cooldown -= .2f * shamanTalents.Reverberation;
+            cooldown -= 1f * shamanTalents.BoomingEchoes;
             spellPower += stats.SpellFireDamageRating;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
 
-            if (calcOpts.glyphOfFlameShock) periodicTicks += 2;
-            if (calcOpts.glyphOfShocking) gcd -= 0.5f;
+            if (shamanTalents.GlyphofFlameShock) periodicTicks += 2;
+            if (shamanTalents.GlyphofShocking) gcd -= 0.5f;
+
+            dotCanCrit = stats.FlameShockDoTCanCrit;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -455,7 +469,7 @@ namespace Rawr.Elemental
             cooldown -= .2f * shamanTalents.Reverberation;
             spellPower += stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            if (calcOpts.glyphOfShocking) gcd -= 0.5f;
+            if (shamanTalents.GlyphofShocking) gcd -= 0.5f;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -494,7 +508,7 @@ namespace Rawr.Elemental
             cooldown -= .2f * shamanTalents.Reverberation;
             spellPower += stats.SpellFrostDamageRating;
             totalCoef *= 1 + stats.BonusFrostDamageMultiplier;
-            if (calcOpts.glyphOfShocking) gcd -= 0.5f;
+            if (shamanTalents.GlyphofShocking) gcd -= 0.5f;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -520,7 +534,7 @@ namespace Rawr.Elemental
         {
             #region Base Values
             missChance = 0;
-            cooldown = 180f - (calcOpts.glyphOfElementalMastery?30f:0f);
+            cooldown = 180f - (shamanTalents.GlyphofElementalMastery?30f:0f);
             gcd = 0; // no global cooldown ;)
             #endregion
 
