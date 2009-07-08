@@ -4,7 +4,6 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-	
     public static class Program
     {
         /// <summary>

@@ -334,14 +334,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.Armor = (int)stats.Armor;
 
             if (calcOpts.FuryStance) {
-                calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH
+                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Fury() + calculatedStats.Rot._DW_DPS;
+                calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
+                //calculatedStats.TotalDPS += calculatedStats.WhiteDPS;
+                /*calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH
                     + calculatedStats.BT.DPS + calculatedStats.WW.DPS + calculatedStats.BS.DPS
-                    + calculatedStats.DW.DPS + calculatedStats.MS.DPS + calculatedStats.SD.DPS
-                    + calculatedStats.SL.DPS + calculatedStats.OP.DPS + calculatedStats.RD.DPS
-                    + calculatedStats.HS.DPS + calculatedStats.BLS.DPS;
+                    + calculatedStats.DW.DPS + calculatedStats.HS.DPS;*/
             }else{
-                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + //calculatedStats.WhiteDPS +
-                    calculatedStats.Rot._DW_DPS /*+ calculatedStats.Rot._OVD_DPS + calculatedStats.HS.DPS*/;
+                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.Rot._DW_DPS;
                 calculatedStats.WhiteDPS = Rot._WhiteDPS;
             }
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
@@ -352,7 +352,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.NeedyRage = Rot.RageNeededPerSec;
                 calculatedStats.FreeRage  = Rot.freeRage;
             }else{
-                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;//Rot.RageGenWhite;
+                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
                 calculatedStats.OtherRage = Rot.RageGenOther;
                 calculatedStats.NeedyRage = Rot.RageNeeded;
                 calculatedStats.FreeRage  = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
@@ -633,8 +633,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (calcOpts.FuryStance) {
                 Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
                 Skills.Ability ww = new Skills.WhirlWind(character, statsTotal, combatFactors, whiteAttacks);
-                mhHitsPerSecond = (bt.Activates + ww.Activates) / bt.RotationLength * (1f - combatFactors.YwMissChance);
-                ohHitsPerSecond = (ww.Activates) / bt.RotationLength * (1f - combatFactors.YwMissChance);
+                mhHitsPerSecond = (bt.Activates + ww.Activates) / fightDuration * (1f - combatFactors.YwMissChance);
+                ohHitsPerSecond = (ww.Activates) / fightDuration * (1f - combatFactors.YwMissChance);
             }else{mhHitsPerSecond = 1f / 1.5f;}
             if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / combatFactors.MainHandSpeed) * (1f - combatFactors.WhMissChance); }
             if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / combatFactors.OffHandSpeed) * (1f - combatFactors.WhMissChance); }
@@ -695,46 +695,32 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     }
                 }
             }
-            if (statsTotal.BonusWarrior2PT8Haste > 0f)
-            {
+            if (statsTotal.BonusWarrior2PT8Haste > 0f) {
                 SpecialEffect hasteBonusEffect = new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { HasteRating = statsTotal.BonusWarrior2PT8Haste },
                     5f, // duration
                     0f // cooldown
                 );
-
                 statsProcs += hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec, 1f, combatFactors.MainHand.Speed, fightDuration);
             }
             // Warrior Abilities as SpecialEffects
-            float IntenseCDMod = 1f - (1f/9f)*talents.IntensifyRage;
-            if (calcOpts.FuryStance) {
-                if (talents.DeathWish > 0) {
-                    Skills.BuffEffect Death = new Skills.DeathWish(character, statsTotal, combatFactors, whiteAttacks);
-                    statsProcs += Death.AverageStats;
-                }
-                /*SpecialEffect Recklessness = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusCritChance = 1.00f, DamageTakenMultiplier = 0.20f, },
-                    12f, 5f * 60f * IntenseCDMod);
-                statsProcs += Recklessness.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);*/
-            }else{
-                Skills.BuffEffect Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors, whiteAttacks);
-                statsProcs += Shatt.Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration);
-            }
-            Skills.BuffEffect Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors, whiteAttacks);
-            if (Sweep.GetValided()) { statsProcs += Sweep.AverageStats; }
-            Skills.BuffEffect Blood = new Skills.Bloodrage(character, statsTotal, combatFactors, whiteAttacks);
-            if (Blood.GetValided()) { statsProcs += Blood.AverageStats; }
+            Stats avgstats;
+            Skills.DeathWish        Death = new Skills.DeathWish(       character, statsTotal, combatFactors, whiteAttacks); avgstats = Death.AverageStats; statsProcs += avgstats;
+            Skills.Recklessness     Reck  = new Skills.Recklessness(    character, statsTotal, combatFactors, whiteAttacks); avgstats = Reck.AverageStats ; statsProcs += avgstats;
+            Skills.ShatteringThrow  Shatt = new Skills.ShatteringThrow( character, statsTotal, combatFactors, whiteAttacks); avgstats = Shatt.AverageStats; statsProcs += avgstats;
+            Skills.SweepingStrikes  Sweep = new Skills.SweepingStrikes( character, statsTotal, combatFactors, whiteAttacks); avgstats = Sweep.AverageStats; statsProcs += avgstats;
+            Skills.Bloodrage        Blood = new Skills.Bloodrage(       character, statsTotal, combatFactors, whiteAttacks); avgstats = Blood.AverageStats; statsProcs += avgstats;
 
-            statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
-            statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
-            statsProcs.Strength += statsProcs.HighestStat;
-            statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+            statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + statsTotal.BonusStaminaMultiplier));
+            statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + statsTotal.BonusStrengthMultiplier));
+            statsProcs.Strength    += statsProcs.HighestStat;
+            statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility     * (1f + statsTotal.BonusAgilityMultiplier));
             statsProcs.AttackPower += statsProcs.Strength * 2f;
-            statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
-            statsProcs.Armor += 2f * statsProcs.Agility;
-            statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal += statsProcs;
+            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
+            statsProcs.Armor       += 2f * statsProcs.Agility;
+            statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor       * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal             += statsProcs;
 
             return statsTotal;
         }
@@ -787,6 +773,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusSlamDamage = stats.BonusSlamDamage,
+                ArcaneDamage = stats.ArcaneDamage,
                 DreadnaughtBonusRageProc = stats.DreadnaughtBonusRageProc,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -827,12 +814,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.Armor +
                 stats.PhysicalHaste +
                 stats.PhysicalCrit +
+                stats.ArcaneDamage +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.DreadnaughtBonusRageProc +
                 stats.BonusWarrior2PT8Haste +
                 stats.MortalstrikeBloodthirstCritIncrease +
                 stats.BonusSlamDamage +
-                stats.BloodlustProc +
+                //stats.BloodlustProc +
                 stats.DarkmoonCardDeathProc + 
                 stats.HighestStat
                 ) != 0;
@@ -980,5 +968,51 @@ Don't forget your weapons used matched with races can affect these numbers.",
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.talents = character.WarriorTalents;
         }
+
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs() {
+            if (_relevantGlyphs == null) {
+                _relevantGlyphs = new List<string>();
+                // ===== MAJOR GLYPHS =====
+                _relevantGlyphs.Add("Glyph of Bladestorm");
+                _relevantGlyphs.Add("Glyph of Bloodthirst");
+                _relevantGlyphs.Add("Glyph of Cleaving");
+                _relevantGlyphs.Add("Glyph of Enraged Regeneration");
+                _relevantGlyphs.Add("Glyph of Execution");
+                _relevantGlyphs.Add("Glyph of Hamstring");
+                _relevantGlyphs.Add("Glyph of Heroic Strike");
+                _relevantGlyphs.Add("Glyph of Mortal Strike");
+                _relevantGlyphs.Add("Glyph of Overpower");
+                _relevantGlyphs.Add("Glyph of Rapid Charge");
+                _relevantGlyphs.Add("Glyph of Rending");
+                _relevantGlyphs.Add("Glyph of Resonating Power");
+                _relevantGlyphs.Add("Glyph of Sweeping Strikes");
+                _relevantGlyphs.Add("Glyph of Victory Rush");
+                _relevantGlyphs.Add("Glyph of Vigilance");
+                _relevantGlyphs.Add("Glyph of Whirlwind");
+                /* The following Glyphs have been disabled as they are solely Defensive in nature.
+                _relevantGlyphs.Add("Glyph of Barbaric Insults");
+                _relevantGlyphs.Add("Glyph of Blocking");
+                _relevantGlyphs.Add("Glyph of Devastate");
+                _relevantGlyphs.Add("Glyph of Intervene");
+                _relevantGlyphs.Add("Glyph of Last Stand");
+                _relevantGlyphs.Add("Glyph of Revenge");
+                _relevantGlyphs.Add("Glyph of Shield Wall");
+                _relevantGlyphs.Add("Glyph of Shockwave");
+                _relevantGlyphs.Add("Glyph of Spell Reflection");
+                _relevantGlyphs.Add("Glyph of Sunder Armor");
+                _relevantGlyphs.Add("Glyph of Taunt");*/
+                // ===== MINOR GLYPHS =====
+                _relevantGlyphs.Add("Glyph of Battle");
+                _relevantGlyphs.Add("Glyph of Bloodrage");
+                _relevantGlyphs.Add("Glyph of Charge");
+                _relevantGlyphs.Add("Glyph of Enduring Victory");
+                _relevantGlyphs.Add("Glyph of Thunder Clap");
+                /* The following Glyphs have been disabled as they are solely Defensive in nature.
+                //_relevantGlyphs.Add("Glyph of Mocking Blow");*/
+            }
+            return _relevantGlyphs;
+        }
+    
     }
 }
