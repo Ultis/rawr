@@ -21,12 +21,10 @@ namespace Rawr.RestoSham
             InitializeComponent();
 
             txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
-            txtESInterval.Tag = new NumericField("ESInterval", 40f, 1000f, true);
-            txtSurvivalPerc.Tag = new NumericField("SurvivalPerc", 1f, 100f, true);
             txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
             cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 4300f, true);
             tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
-            tbOverhealing.Tag = new NumericField("OverhealingPercentage", 0f, 100f, true);
+            tbSurvival.Tag = new NumericField("OverhealingPercentage", 0f, 100f, true);
         }
 
         protected override void LoadCalculationOptions()
@@ -43,17 +41,16 @@ namespace Rawr.RestoSham
             chkManaTide.Checked = options.ManaTideEveryCD;
             chkWaterShield.Checked = options.WaterShield;
             chkMT.Checked = options.TankHeal;
-            txtESInterval.Text = options.ESInterval.ToString();
+            chkEarthShield.Checked = options.EarthShield;
             txtCleanse.Text = options.Decurse.ToString();
-            txtSurvivalPerc.Text = options.SurvivalPerc.ToString();
             cboBurstStyle.Text = options.BurstStyle.ToString();
             cboSustStyle.Text = options.SustStyle.ToString();
             cboHeroism.Text = options.Heroism.ToString();
             #region The track bars
             tbBurst.Value = (Int32)options.BurstPercentage;
             UpdateTrackBarLabel(tbBurst);
-            tbOverhealing.Value = (Int32)options.OverhealingPercentage;
-            UpdateTrackBarLabel(tbOverhealing);
+            tbSurvival.Value = (Int32)options.SurvivalPerc;
+            UpdateTrackBarLabel(tbSurvival);
             #endregion
             #endregion
 
@@ -147,6 +144,14 @@ namespace Rawr.RestoSham
             if (!_bLoading)
             {
                 this["ManaTideEveryCD"] = chkManaTide.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void chkEarthShield_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["EarthShield"] = chkEarthShield.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -244,6 +249,14 @@ namespace Rawr.RestoSham
                 Character.OnCalculationsInvalidated();
             }
         }
+        private void cboManaPotAmount_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["ManaPotAmount"] = cboManaPotAmount.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
         #endregion 
 
 
@@ -314,7 +327,7 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Interval of time between Earth Shield casts, in seconds.  Minimum in Calculations of 32.
         /// </summary>
-        public float ESInterval = 60f;
+        public bool EarthShield = true;
 
         /// <summary>
         /// Your style of healing.
@@ -335,11 +348,6 @@ namespace Rawr.RestoSham
         /// The percentage of healing that is intended to be burst.
         /// </summary>
         public float BurstPercentage = 85f;
-
-        /// <summary>
-        /// The percentage of healing that is overhealing.
-        /// </summary>
-        public float OverhealingPercentage = 35f;
 
         /// <summary>
         /// The percentage of fight you are active.
