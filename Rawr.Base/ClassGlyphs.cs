@@ -312,7 +312,7 @@ namespace Rawr
 
     public partial class ShamanTalents
     {
-        private bool[] _glyphData = new bool[28];
+        private bool[] _glyphData = new bool[29];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         [GlyphData(0, "Glyph of Healing Wave", true, @"Your Healing Wave also heals you for 20% of the healing effect when you heal someone else.")]
@@ -371,6 +371,8 @@ namespace Rawr
         public bool GlyphofLava { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
         [GlyphData(27, "Glyph of Fire Elemental Totem", true, @"Reduces the cooldown of your Fire Elemental Totem by 10 min.")]
         public bool GlyphofFireElementalTotem { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(28, "Glyph of Thunderatorm", false, @"Increases the mana you recieve from your Thunderstorm spell by 2%, but it no longer knocks enemies back.")]
+        public bool GlyphofThunderstorm { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
     }
 
     public partial class PriestTalents

@@ -252,19 +252,19 @@ namespace Rawr.Elemental
             Stats statsTalents = new Stats()
             {
                 #region Elemental
-                SpellHit = 0.01f * talents.ElementalPrecision,
-                ManaRegenIntPer5 = 0.04f * talents.UnrelentingStorm,
+                SpellHit = .01f * talents.ElementalPrecision,
+                ManaRegenIntPer5 = .04f * talents.UnrelentingStorm,
                 #endregion
                 #region Enhancement
-                BonusIntellectMultiplier = 0.02f * talents.AncestralKnowledge,
-                PhysicalCrit = 0.01f * talents.ThunderingStrikes,
-                SpellCrit = 0.01f * talents.ThunderingStrikes,
-                BonusFlametongueDamage = 0.10f * talents.ElementalWeapons,
-                SpellPowerFromAttackPowerPercentage = 0.1f * talents.MentalQuickness,
-                ShockManaCostReduction = talents.ShamanisticFocus * 0.45f,
+                BonusIntellectMultiplier = .02f * talents.AncestralKnowledge,
+                PhysicalCrit = .01f * talents.ThunderingStrikes,
+                SpellCrit =0.01f * talents.ThunderingStrikes,
+                BonusFlametongueDamage = .1f * talents.ElementalWeapons,
+                SpellPowerFromAttackPowerPercentage = .1f * talents.MentalQuickness,
+                ShockManaCostReduction = .45f * talents.ShamanisticFocus,
                 #endregion
                 #region Glyphs
-                SpellPower = talents.GlyphofTotemofWrath?talents.TotemOfWrath * 84:0
+                SpellPower = talents.GlyphofTotemofWrath ? talents.TotemOfWrath * 84 : 0
                 #endregion
             };
             return statsTalents;
@@ -278,17 +278,9 @@ namespace Rawr.Elemental
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = GetTalentStats(character.ShamanTalents);
 
-			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-
 			CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 
 			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
-
-            statsTotal.Strength *= 1 + statsTotal.BonusStrengthMultiplier;
-            statsTotal.Agility *= 1 + statsTotal.BonusAgilityMultiplier;
-            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
-            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
-            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
 
             if (statsTotal.GreatnessProc > 0)
             {
@@ -302,6 +294,12 @@ namespace Rawr.Elemental
                 }
             }
 
+            statsTotal.Strength *= 1 + statsTotal.BonusStrengthMultiplier;
+            statsTotal.Agility *= 1 + statsTotal.BonusAgilityMultiplier;
+            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
+            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
+            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
+
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength);
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility);
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
@@ -311,11 +309,11 @@ namespace Rawr.Elemental
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.AttackPower * statsTotal.SpellPowerFromAttackPowerPercentage);
 
-            statsTotal.Mana += Math.Max(0f, (statsTotal.Intellect - 20f) * 15f + 20f);
+            statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
 
-            statsTotal.Health += Math.Max(0f, (statsTotal.Stamina - 20f) * 10f + 20f);
-            statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusHealthMultiplier);
 
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * statsTotal.ManaRegenIntPer5);
 
@@ -323,12 +321,13 @@ namespace Rawr.Elemental
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
-            // Flametongue weapon
-            statsTotal.SpellPower += 211 * (1f + character.ShamanTalents.ElementalWeapons * .1f);
-            statsTotal.Mp5 += 100; // Water shield
-            if (character.ShamanTalents.GlyphofWaterMastery) statsTotal.Mp5 += 30;
-
+            // Flametongue weapon assumed
+            statsTotal.SpellPower += (float)Math.Floor(211 * (1f + character.ShamanTalents.ElementalWeapons * .1f));
             if (character.ShamanTalents.GlyphofFlametongueWeapon) statsTotal.SpellCrit += .02f;
+
+            // Water shield assumed
+            statsTotal.Mp5 += 100;
+            if (character.ShamanTalents.GlyphofWaterMastery) statsTotal.Mp5 += 30;
 
             return statsTotal;
 		}
@@ -343,8 +342,8 @@ namespace Rawr.Elemental
 		public override Stats GetRelevantStats(Stats stats)
 		{
 			return new Stats()
-				{
-            #region Basic stats
+            {
+                #region Basic stats
                 Intellect = stats.Intellect,
                 Mana = stats.Mana,
                 Spirit= stats.Spirit,
@@ -359,8 +358,8 @@ namespace Rawr.Elemental
                 SpellNatureDamageRating = stats.SpellNatureDamageRating,
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 Mp5 = stats.Mp5,
-            #endregion
-            #region Multipliers
+                #endregion
+                #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
@@ -368,19 +367,19 @@ namespace Rawr.Elemental
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
-            #endregion
-            #region Totems
+                #endregion
+                #region Totems
                 LightningSpellPower = stats.LightningSpellPower,
                 LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
                 LavaBurstBonus = stats.LavaBurstBonus,
-            #endregion
-            #region Sets
+                #endregion
+                #region Sets
                 LightningBoltCostReduction = stats.LightningBoltCostReduction,
                 LightningBoltDamageModifier = stats.LightningBoltDamageModifier,
                 BonusLavaBurstCritDamage = stats.BonusLavaBurstCritDamage,
                 FlameShockDoTCanCrit = stats.FlameShockDoTCanCrit,
                 LightningBoltCritDamageModifier = stats.LightningBoltCritDamageModifier,
-            #endregion
+                #endregion
                 #region Trinkets
                 SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
                 SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
@@ -412,8 +411,8 @@ namespace Rawr.Elemental
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
                 GreatnessProc = stats.GreatnessProc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
-            #endregion
-                };
+                #endregion
+            };
 		}
 
 		public override bool HasRelevantStats(Stats stats)
@@ -494,7 +493,6 @@ namespace Rawr.Elemental
                 stats.GreatnessProc;
             #endregion
             return (elementalStats > 0);
-
 		}
 	}
 
@@ -600,7 +598,6 @@ namespace Rawr.Elemental
             dictValues.Add("Frost Shock", Math.Round(FrostShock.MinHit).ToString() + "-" + Math.Round(FrostShock.MaxHit).ToString() + " / " + Math.Round(FrostShock.MinCrit).ToString() + "-" + Math.Round(FrostShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(FrostShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FrostShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FrostShock.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(FrostShock.CastTime, 2) + " sec.\n");
 
             dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n");
-            CalculationOptionsElemental calcOpts = (CalculationOptionsElemental)LocalCharacter.CalculationOptions;
             if (LocalCharacter.ShamanTalents.GlyphofFlameShock)
             {
                 dictValues.Add("Rotation", "FS/LvB/"+Math.Round(nLBfirst, 2).ToString() + "LB/LvB/"+Math.Round(nLBsecond, 2).ToString() + "LB");
@@ -609,8 +606,6 @@ namespace Rawr.Elemental
             {
                 dictValues.Add("Rotation", "LvB/FS/" + Math.Round(nLBfirst, 2).ToString() + "LB/LvB/FS/" + Math.Round(nLBsecond, 2).ToString() + "LB");
             }
-
-            
 
             return dictValues;
         }
@@ -748,11 +743,11 @@ namespace Rawr.Elemental
         {
             return new Rotation()
             {
-                DPS = b * A.DPS,
-                MPS = b * A.MPS,
-                CastFraction = b * A.CastFraction,
-                CritFraction = b * A.CritFraction,
-                MissFraction = b * A.MissFraction,
+                DPS = A.DPS * b,
+                MPS = A.MPS * b,
+                CastFraction = A.CastFraction * b,
+                CritFraction = A.CritFraction * b,
+                MissFraction =A.MissFraction * b,
                 LB = (LightningBolt)A.LB * b,
                 CL = (ChainLightning)A.CL * b,
                 CL3 = (ChainLightning)A.CL3 * b,
@@ -782,6 +777,5 @@ namespace Rawr.Elemental
     {
         // Source: http://www.wowwiki.com/Base_mana
         public static float BaseMana = 4396;
-        public static float HasteRatingToHaste = 3279f;
     }
 }

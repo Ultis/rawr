@@ -3123,7 +3123,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusCritChance] = value; }
         }
 
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
         public float BonusThunderCritChance
@@ -3204,6 +3203,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
         public float LightningBoltCostReduction
@@ -3211,6 +3211,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningBoltCostReduction] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
         public float LightningBoltDamageModifier
@@ -3218,6 +3219,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltDamageModifier]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningBoltDamageModifier] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
         public float LightningSpellPower
@@ -3225,6 +3227,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningSpellPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningSpellPower] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
         public float LightningBoltHasteProc_15_45
@@ -3232,6 +3235,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltHasteProc_15_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningBoltHasteProc_15_45] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
         public float LavaBurstBonus

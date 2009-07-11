@@ -175,7 +175,7 @@ namespace Rawr.Elemental
 
         public void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
-            float Speed = (1f + stats.SpellHaste) * (1f + stats.HasteRating * 0.000304971132f);
+            float Speed = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
             gcd = (float)Math.Round(gcd / Speed, 4);
             castTime = (float)Math.Round(castTime / Speed, 4);
             critModifier += .20f * shamanTalents.ElementalFury;
@@ -190,7 +190,8 @@ namespace Rawr.Elemental
         public void ApplyEM(float modifier)
         {
             crit += modifier * .15f;
-            manaCost *= 1 - modifier * .15f;
+            if (crit > 1f)
+                crit = 1f;
         }
 
         public virtual Spell Clone()
@@ -207,17 +208,18 @@ namespace Rawr.Elemental
             baseMinDamage = 1450;
             baseMaxDamage = 1656;
             castTime = 0f;
-            spCoef = .193f; // NOT CORRECT YET, assuming 1.5f/7f * 0.9f (aoe with additional effect)
+            spCoef = 1.5f / 7f * .9f; // NOT CORRECT YET, assuming 1.5f/7f * 0.9f (aoe with additional effect)
             manaCost = 0f;
             cooldown = 45f;
             #endregion
 
-            totalCoef *= 1f + .01f * shamanTalents.Concussion;
+            totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
-            crit += .05f * shamanTalents.TidalMastery;
+            crit += .01f * shamanTalents.TidalMastery;
             spellPower += stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
+            if (shamanTalents.GlyphofThunder)
+                cooldown -= 10f;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -245,34 +247,25 @@ namespace Rawr.Elemental
             baseMinDamage = 715;
             baseMaxDamage = 815;
             castTime = 2.5f;
-            spCoef = .7143f;
+            spCoef = 2.5f / 3.5f;
             manaCost = 0.1f * Constants.BaseMana;
             #endregion
 
             castTime -= .1f * shamanTalents.LightningMastery;
             manaCost *= 1f - .02f * shamanTalents.Convection;
-            totalCoef *= 1f + .01f * shamanTalents.Concussion;
+            totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
-            spCoef *= 1f + .02f * shamanTalents.Shamanism;
+            spCoef += .02f * shamanTalents.Shamanism;
             crit += .05f * shamanTalents.TidalMastery;
-            manaCost *= 1 - stats.LightningBoltCostReduction / 100f;
-            spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
+            manaCost *= 1 - stats.LightningBoltCostReduction / 100f; // T7 2 piece
+            spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating; // Totem (relic) + Nature SP
             if (shamanTalents.GlyphofLightningBolt) totalCoef *= 1.04f;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
+            totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f; // T6 4 piece
 
-            critModifier *= 1 + stats.LightningBoltCritDamageModifier;
-
-            /* emulate lightning overload by increasing crit chance
-            totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
-            crit *= 1 + .04f * shamanTalents.LightningOverload;*/
+            critModifier *= 1 + stats.LightningBoltCritDamageModifier; // T8 4 piece
 
             base.Initialize(stats, shamanTalents);
-        }
-
-        public void increaseCritFromOverload(int ranks)
-        {
-            crit *= (1f + .11f * ranks);
         }
 
         public static LightningBolt operator +(LightningBolt A, LightningBolt B)
@@ -299,7 +292,7 @@ namespace Rawr.Elemental
             baseMinDamage = 973;
             baseMaxDamage = 1111;
             castTime = 2f;
-            spCoef = 2f/3.5f;
+            spCoef = 2f / 3.5f;
             manaCost = 0.26f * Constants.BaseMana;
             cooldown = 6f;
             #endregion
@@ -310,13 +303,11 @@ namespace Rawr.Elemental
             totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
 
             manaCost *= 1f - .02f * shamanTalents.Convection;
-            totalCoef *= 1f + .01f * shamanTalents.Concussion;
+            totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
             castTime -= .1f * shamanTalents.LightningMastery;
             cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[shamanTalents.StormEarthAndFire];
-            /* emulate lightning overload by increasing crit chance
-            totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;*/
-            crit += .05f * shamanTalents.TidalMastery;
+            crit += .01f * shamanTalents.TidalMastery;
             spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
 
@@ -353,23 +344,22 @@ namespace Rawr.Elemental
             baseMaxDamage = 1518;
             castTime = 2f;
             spCoef = 2f / 3.5f;
-            manaCost = 0.1f * Constants.BaseMana;
+            manaCost = .1f * Constants.BaseMana;
             cooldown = 8f;
             #endregion
 
             manaCost *= 1f - .02f * shamanTalents.Convection;
-            totalCoef *= 1f + .01f * shamanTalents.Concussion;
-            totalCoef *= 1f + .02f * shamanTalents.CallOfFlame;
+            totalCoef += .01f * shamanTalents.Concussion;
+            totalCoef += .02f * shamanTalents.CallOfFlame;
             castTime -= .1f * shamanTalents.LightningMastery;
             spCoef += .04f * shamanTalents.Shamanism;
-            crit += .05f * shamanTalents.TidalMastery;
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
-            critModifier += stats.BonusLavaBurstCritDamage / 100f;
-            //critModifier *= 1 + stats.BonusLavaBurstCritDamage / 100f;
-            baseMinDamage += stats.LavaBurstBonus;
-            baseMaxDamage += stats.LavaBurstBonus;
+            critModifier += stats.BonusLavaBurstCritDamage / 100f; // t7 4 piece
+            baseMinDamage += stats.LavaBurstBonus; // Totem (relic)
+            baseMaxDamage += stats.LavaBurstBonus; // Totem (relic) 
             spellPower += stats.SpellFireDamageRating;
-            if (shamanTalents.GlyphofLava) spCoef += .1f;
+            if (shamanTalents.GlyphofLava)
+                spCoef += .1f;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
 
             base.Initialize(stats, shamanTalents);
@@ -400,19 +390,19 @@ namespace Rawr.Elemental
             #region Base Values
             baseMinDamage = 500;
             baseMaxDamage = 500;
-            spCoef = .2142f;
+            spCoef = 1.5f / 3.5f / 2f;
             dotSpCoef = .1f;
-            periodicTick = 139f; // 556f / 4f;
+            periodicTick = 556f / 4f;
             periodicTicks = 4f;
-            manaCost = 0.17f * Constants.BaseMana;
+            manaCost = .17f * Constants.BaseMana;
             cooldown = 6f;
             #endregion
 
             //for reference
-            //dottick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
+            //dotTick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
 
+            totalCoef += .01f * shamanTalents.Concussion;
             spCoef *= 1 + 0.1f * shamanTalents.BoomingEchoes;
-            totalCoef *= 1 + .01f * shamanTalents.Concussion;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             dotBaseCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
             dotSpCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
@@ -420,17 +410,18 @@ namespace Rawr.Elemental
             dotSpCoef *= 1 + .01f * shamanTalents.Concussion;
             dotBaseCoef *= 1 + stats.BonusFireDamageMultiplier;
             dotSpCoef *= 1 + stats.BonusFireDamageMultiplier;
-            
             manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
             cooldown -= .2f * shamanTalents.Reverberation;
             cooldown -= 1f * shamanTalents.BoomingEchoes;
             spellPower += stats.SpellFireDamageRating;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
 
-            if (shamanTalents.GlyphofFlameShock) periodicTicks += 2;
-            if (shamanTalents.GlyphofShocking) gcd -= 0.5f;
+            if (shamanTalents.GlyphofFlameShock)
+                periodicTicks += 2;
+            if (shamanTalents.GlyphofShocking)
+                gcd -= .5f;
 
-            dotCanCrit = stats.FlameShockDoTCanCrit;
+            dotCanCrit = stats.FlameShockDoTCanCrit; // T8 2 piece
 
             base.Initialize(stats, shamanTalents);
         }
@@ -458,18 +449,19 @@ namespace Rawr.Elemental
             #region Base Values
             baseMinDamage = 849;
             baseMaxDamage = 895;
-            spCoef = .3858f;
-            manaCost = 0.18f * Constants.BaseMana;
+            spCoef = 1.5f / 3.5f * .9f;
+            manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
             #endregion
 
-            totalCoef *= 1 + .01f * shamanTalents.Concussion;
+            totalCoef += .01f * shamanTalents.Concussion;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
             cooldown -= .2f * shamanTalents.Reverberation;
             spellPower += stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            if (shamanTalents.GlyphofShocking) gcd -= 0.5f;
+            if (shamanTalents.GlyphofShocking)
+                gcd -= .5f;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -497,18 +489,21 @@ namespace Rawr.Elemental
             #region Base Values
             baseMinDamage = 802;
             baseMaxDamage = 848;
-            spCoef = .3858f;
-            manaCost = 0.18f * Constants.BaseMana;
+            spCoef = 1.5f / 3.5f * .9f;
+            manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
             #endregion
 
-            totalCoef *= 1 + .01f * shamanTalents.Concussion;
+            totalCoef += .01f * shamanTalents.Concussion;
+            totalCoef *= 1f + .1f * shamanTalents.BoomingEchoes;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
             cooldown -= .2f * shamanTalents.Reverberation;
+            cooldown -= 1f * shamanTalents.BoomingEchoes;
             spellPower += stats.SpellFrostDamageRating;
             totalCoef *= 1 + stats.BonusFrostDamageMultiplier;
-            if (shamanTalents.GlyphofShocking) gcd -= 0.5f;
+            if (shamanTalents.GlyphofShocking)
+                gcd -= .5f;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -534,9 +529,12 @@ namespace Rawr.Elemental
         {
             #region Base Values
             missChance = 0;
-            cooldown = 180f - (shamanTalents.GlyphofElementalMastery?30f:0f);
+            cooldown = 180f;
             gcd = 0; // no global cooldown ;)
             #endregion
+
+            if (shamanTalents.GlyphofElementalMastery)
+                cooldown -= 30f;
 
             base.Initialize(stats, shamanTalents);
         }

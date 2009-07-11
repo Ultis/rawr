@@ -3586,9 +3586,9 @@ namespace Rawr
         public int ElementalOath { get { return _data[18]; } set { _data[18] = value; } }
 
         [TalentData(19, "Lightning Overload", 3, 0, 3, 8, -1, new string[] {
-@"Gives your Lightning Bolt and Chain Lightning spells a 7% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
-@"Gives your Lightning Bolt and Chain Lightning spells a 14% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
-@"Gives your Lightning Bolt and Chain Lightning spells a 20% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",}, "spell_nature_lightningoverload")]
+@"Gives your Lightning Bolt and Chain Lightning spells a 11% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
+@"Gives your Lightning Bolt and Chain Lightning spells a 22% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
+@"Gives your Lightning Bolt and Chain Lightning spells a 33% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",}, "spell_nature_lightningoverload")]
         public int LightningOverload { get { return _data[19]; } set { _data[19] = value; } }
 
         [TalentData(20, "Astral Shift", 3, 0, 1, 9, -1, new string[] {

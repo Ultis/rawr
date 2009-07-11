@@ -2485,7 +2485,7 @@ namespace Rawr
             //Tier 8
             defaultBuffs.Add(new Buff()
             {
-                Name = "Conqueror's Worldbreaker Garb 2 Piece Bonus",
+                Name = "Worldbreaker Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Garb",
@@ -2495,7 +2495,7 @@ namespace Rawr
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Conqueror's Worldbreaker Garb 4 Piece Bonus",
+                Name = "Worldbreaker Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Garb",

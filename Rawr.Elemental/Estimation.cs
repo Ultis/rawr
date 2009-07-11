@@ -130,7 +130,7 @@ namespace Rawr.Elemental.Estimation
             // float timeBetweenTS = TS.CDRefreshTime; // cast whenever available
             // float castFractionTS = calcOpts.UseThunderstorm ? TS.CastTime / timeBetweenTS : 0;
             // Lava Burst
-            float timeBetweenLvB = LvB.CDRefreshTime; // cast whenever available
+            float timeBetweenLvB = LvB.CDRefreshTime + LvB.CastTime; // cast whenever available
             // Flame Shock
             float timeBetweenFS = FS.PeriodicRefreshTime; // cast whenever DoT drops
             if (!talents.GlyphofFlameShock)
@@ -139,7 +139,7 @@ namespace Rawr.Elemental.Estimation
             }
             else
             {
-                timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                timeBetweenLvB = Math.Max(timeBetweenLvB, timeBetweenFS / 2);
                 timeBetweenFS = 2 * timeBetweenLvB;
             }
             // Lightning Bolt
@@ -157,18 +157,20 @@ namespace Rawr.Elemental.Estimation
             // 3. don't finish the cast, just wait both times
             if (type == 0)
             {
-                float shift = ((float)Math.Ceiling(nLBfirst) - nLBfirst) * LB.CastTime;
+                float shift1 = ((float)Math.Ceiling(nLBfirst) - nLBfirst) * LB.CastTime;
                 nLBfirst = (float)Math.Ceiling(nLBfirst);
-                shift += ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
+                //with flameshock recast
+                float shift2 = ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
                 nLBsecond = (float)Math.Ceiling(nLBsecond);
-                timeBetweenLvB += shift;
                 if (!talents.GlyphofFlameShock)
                 {
-                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
+                    timeBetweenLvB += shift2;
+                    timeBetweenFS = Math.Max(timeBetweenLvB , FS.CDRefreshTime);
                 }
                 else
                 {
-                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenLvB += (shift1 +shift2) / 2;
+                    timeBetweenLvB = Math.Max(timeBetweenLvB, timeBetweenFS / 2);
                     timeBetweenFS = 2 * timeBetweenLvB;
                 }
             }
@@ -178,14 +180,15 @@ namespace Rawr.Elemental.Estimation
                 nLBfirst = (float)Math.Floor(nLBfirst);
                 float shift = ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
                 nLBsecond = (float)Math.Ceiling(nLBsecond);
-                timeBetweenLvB += shift;
                 if (!talents.GlyphofFlameShock)
                 {
+                    timeBetweenLvB += shift;
                     timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
                 }
                 else
                 {
-                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenLvB += shift / 2;
+                    timeBetweenLvB = Math.Max(timeBetweenLvB, timeBetweenFS / 2);
                     timeBetweenFS = 2 * timeBetweenLvB;
                 }
             }
@@ -193,16 +196,17 @@ namespace Rawr.Elemental.Estimation
             {
                 float shift = ((float)Math.Ceiling(nLBfirst) - nLBfirst) * LB.CastTime;
                 nLBfirst = (float)Math.Ceiling(nLBfirst);
-                timeWasted += (nLBfirst - (float)Math.Floor(nLBsecond)) * LB.CastTime;
+                timeWasted += (nLBsecond - (float)Math.Floor(nLBsecond)) * LB.CastTime;
                 nLBsecond = (float)Math.Floor(nLBsecond);
-                timeBetweenLvB += shift;
                 if (!talents.GlyphofFlameShock)
                 {
+                    timeBetweenLvB += shift;
                     timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
                 }
                 else
                 {
-                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenLvB += shift / 2;
+                    timeBetweenLvB = Math.Max(timeBetweenLvB, timeBetweenFS / 2);
                     timeBetweenFS = 2 * timeBetweenLvB;
                 }
             }
@@ -210,17 +214,18 @@ namespace Rawr.Elemental.Estimation
             {
                 timeWasted += (nLBfirst - (float)Math.Floor(nLBfirst)) * LB.CastTime;
                 nLBfirst = (float)Math.Floor(nLBfirst);
-                timeWasted += (nLBfirst - (float)Math.Floor(nLBsecond)) * LB.CastTime;
+                timeWasted += (nLBsecond - (float)Math.Floor(nLBsecond)) * LB.CastTime;
                 nLBsecond = (float)Math.Floor(nLBsecond);
             }
             float castFractionLvB = LvB.CastTime / timeBetweenLvB; // LvB casting time per second
             float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
-            float castFractionLB = LB.CastTime * (nLBfirst + nLBsecond) / (2 * timeBetweenLvB);
+            float castFractionLB = LB.CastTime * (nLBfirst + nLBsecond) / (2 * timeBetweenLvB); // LB casting time per second
+            float castFractionNone = timeWasted / (2 * timeBetweenLvB); // Time wasted per second
             float mpsFromTS = calcOpts.UseThunderstorm ? TS.ManaCost / TS.CDRefreshTime : 0;
             float dpsFromLvB = LvB.HitChance * LvB.TotalDamage / timeBetweenLvB;
             float mpsFromLvB = LvB.ManaCost / timeBetweenLvB;
             float dpsFromLB = LB.HitChance * LB.DpCT * castFractionLB;
-            float mpsFromLB = castFractionLB * LB.ManaCost / LB.CastTime;
+            float mpsFromLB = LB.ManaCost / LB.CastTime * castFractionLB;
             float dpsFromFS = FS.HitChance * FS.TotalDamage / timeBetweenFS;
             if (!talents.GlyphofFlameShock)
             {
@@ -239,19 +244,26 @@ namespace Rawr.Elemental.Estimation
             float clearcastingFS = 0f, clearcastingLvB = 0f, clearcastingLB = 0f;
             if (talents.ElementalFocus > 0)
             {
+                // each CCchance describes the probability that at least one of the two casts is a crit, no special casting order.
+                // Elemental Oath is factored in through the buffs already.
+                // two LBs
                 float CCchance2LB = 1 - ((1 - critLB * LB.HitChance) * (1 - critLB * LB.HitChance));
+                // LvB with FS active and LB
                 float CCchanceLvBLB = 1 - ((1 - LvB.HitChance) * (1 - critLB * LB.HitChance));
+                // LvB with FS active and FS
                 float CCchanceLvBFS = 1 - ((1 - LvB.HitChance) * (1 - FS.CritChance * FS.HitChance));
+                // LB and FS
                 float CCchanceLBFS = 1 - ((1 - critLB * LB.HitChance) * (1 - FS.CritChance * FS.HitChance));
                 if (talents.GlyphofFlameShock)
                 {
                     clearcastingLvB = (CCchanceLBFS + CCchance2LB) / 2f;
                     clearcastingFS = CCchance2LB;
                     clearcastingLB = (
-                        Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB +
-                        Math.Min(2, nLBsecond + nLBfirst - 2) * CCchanceLvBLB +
-                        Math.Min(1, nLBsecond) * CCchanceLvBLB +
-                        Math.Min(1, nLBfirst) * CCchanceLvBFS
+                        Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB + //n3..nn + m3..mm
+                        Math.Min(1, Math.Max(0, nLBsecond - 1)) * CCchanceLBFS + //m2
+                        Math.Min(1, nLBsecond) * CCchanceLvBLB + //m1
+                        Math.Min(1, Math.Max(0, nLBsecond - 1)) * CCchanceLvBLB + //n2
+                        Math.Min(1, nLBfirst) * CCchanceLvBFS //n1 
                         ) / (nLBsecond + nLBfirst);
                 }
                 else
@@ -259,9 +271,9 @@ namespace Rawr.Elemental.Estimation
                     clearcastingLvB = CCchance2LB;
                     clearcastingFS = CCchanceLvBLB;
                     clearcastingLB = (
-                        Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB +
-                        Math.Min(2, nLBsecond + nLBfirst - 2) * CCchanceLvBLB +
-                        Math.Min(2, nLBsecond + nLBfirst) * CCchanceLvBFS
+                        Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB + //n3..nn + m3..mm
+                        Math.Min(2, Math.Max(0, nLBsecond + nLBfirst - 2)) * CCchanceLBFS + //n2 + m2
+                        Math.Min(2, nLBsecond + nLBfirst) * CCchanceLvBFS //n1 + m1
                         ) / (nLBsecond + nLBfirst);
                 }
                 mpsFromLB *= 1 - .4f * clearcastingLB;
@@ -323,7 +335,7 @@ namespace Rawr.Elemental.Estimation
              * Clearcasting (-40% mana cost next 2 spells)
              * Glyph of flame shock or not
              * Clearcasting (5/10% more total damage)
-             * Elemental Mastery (+20% crit chance, -20% mana cost, 30 sec/3 min cd)
+             * Elemental Mastery (+15% crit chance, 15 sec/3 min cd)
              * Trinkets
              * 
              * Assume LvB used on CD and FS either after LvB, on dot drop or before LvB
@@ -335,7 +347,7 @@ namespace Rawr.Elemental.Estimation
             #region Lightning Bolt Haste Trinket
             stats += new Stats
             {
-                HasteRating = stats.LightningBoltHasteProc_15_45 * 10f / 55f,
+                HasteRating = stats.LightningBoltHasteProc_15_45 * 10f / 35f, // ICD reduced from 55s to 30s
             };
             #endregion
 
@@ -357,16 +369,12 @@ namespace Rawr.Elemental.Estimation
 
             /* Regen variables: (divide by 5 for regen per second)
              * While casting: ManaRegInFSR
-             * While casting: ManaRegOutFSR (stop casting, but keep trinket effects)
-             * During regen: ManaRegOutFSRNoCasting */
+             * During regen: ManaRegOutFSR */
             #region Calculate Regen
-            float spiRegen = CalculateManaRegen(stats.Intellect, stats.Spirit);
-            float spiRegenMDF = CalculateManaRegen(stats.Intellect, stats.ExtraSpiritWhileCasting + stats.Spirit);
+            float spiRegen = StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
             float replenishRegen = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
-            float ManaRegInFSR = spiRegenMDF * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen;
-            float ManaRegOutFSR = spiRegenMDF + stats.Mp5 + replenishRegen;
-            float ratio_extraspi = 0.8f; // OK, lets assume a mana starved person keeps 80% of the extra spirit effect, because they will keep casting anyway
-            float ManaRegOutFSRNoCasting = (1 - ratio_extraspi) * spiRegen + ratio_extraspi * spiRegenMDF + stats.Mp5 + replenishRegen;
+            float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen;
+            float ManaRegOutFSR = spiRegen + stats.Mp5 + replenishRegen;
             float ManaRegen = ManaRegInFSR;
             #endregion
 
@@ -381,8 +389,8 @@ namespace Rawr.Elemental.Estimation
             if (calcOpts.UseThunderstorm)
             {
                 float procs;
-                SpecialEffect.EstimateUptime(0, 45f, 0, calcOpts.FightDuration, out procs);
-                rot.MPS -= .08f * stats.Mana * procs / calcOpts.FightDuration;
+                SpecialEffect.EstimateUptime(0, talents.GlyphofThunder ? 35f : 45f, 0, calcOpts.FightDuration, out procs);
+                rot.MPS -= (talents.GlyphofThunderstorm ? .1f : .08f) * stats.Mana * procs / calcOpts.FightDuration;
             }
             #endregion
 
@@ -402,10 +410,10 @@ namespace Rawr.Elemental.Estimation
             #endregion
 
             float TotalDamage = TimeUntilOOM * rot.DPS;
-            float TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / ManaRegOutFSRNoCasting;
+            float TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / ManaRegOutFSR;
             float TimeToBurnAll = calculatedStats.BasicStats.Mana / effectiveMPS;
             float CastFraction = 1f;
-            if (ManaRegOutFSRNoCasting > 0 && FightDuration > TimeUntilOOM)
+            if (ManaRegOutFSR > 0 && FightDuration > TimeUntilOOM)
             {
                 float timeLeft = FightDuration - TimeUntilOOM;
                 if (TimeToRegenFull + TimeToBurnAll == 0) CastFraction = 0;
@@ -465,12 +473,6 @@ namespace Rawr.Elemental.Estimation
                 Mp5 = result.Mp5,
                 SpellCombatManaRegeneration = result.SpellCombatManaRegeneration,
             };
-        }
-
-        private static float CalculateManaRegen(float intel, float spi)
-        {
-            float baseRegen = 0.005575f;
-            return (float)Math.Round(5f * (0.001f + (float)Math.Sqrt(intel) * spi * baseRegen));
         }
     }
 }

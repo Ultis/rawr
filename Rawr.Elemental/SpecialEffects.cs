@@ -270,7 +270,7 @@ namespace Rawr.Elemental
             if (stats.Mp5OnCastFor20SecOnUse2Min > 0) 
             {
                 // Pendant of the Violet Eye... old trinket.
-                float Speed = (1f + stats.SpellHaste) * (1f + stats.HasteRating * 0.000304971132f);
+                float Speed = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
                 float gcd = (float)Math.Round(1.5f / Speed, 4);
                 if (gcd < 1f) gcd = 1f;
                 float maxStack = 20 / gcd; // add 50% for the amount of mp5 from the "building the stack" time
