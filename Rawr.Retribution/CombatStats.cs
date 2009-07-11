@@ -35,7 +35,7 @@ namespace Rawr.Retribution
 
         public float AvengingWrathMulti = 1f;
         public float ArmorReduction = 1f;
-        public readonly float PartialResist = 0.953f;
+        public readonly float PartialResist = 0.94f;
 
         protected static readonly float[] DodgeChance = { 0.05f, 0.055f, 0.06f, 0.065f };
         protected static readonly float[] ParryChance = { 0.05f, 0.055f, 0.06f, 0.13f };
