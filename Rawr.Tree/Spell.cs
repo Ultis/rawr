@@ -529,7 +529,7 @@ namespace Rawr.Tree
             healingBonus = calculatedStats.SpellPower;
             critPercent = calculatedStats.SpellCrit;
 
-            if (calcOpts.patch3_2)
+            if (calcOpts.Patch3_2)
             {
                 minHeal = 776f;                             // Patch 3.2 nerfs bloom value
                 maxHeal = 776f;
@@ -863,7 +863,7 @@ namespace Rawr.Tree
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
 
-            if (calcOpts.patch3_2)
+            if (calcOpts.Patch3_2)
                 coefDH *= (1 + 0.1f * druidTalents.EmpoweredTouch);     // From 3.2 Empowered Touch also boosts Nourish
 
             if (druidTalents.GlyphOfNourish)

@@ -61,7 +61,13 @@ namespace Rawr.Tree
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
     public class CalculationsTree : CalculationsBase
     {
-        public static string[] predefRotations = {
+        private string[] _predefRotations = null;
+        public string[] PredefRotations
+        {
+            get
+            {
+                if (_predefRotations == null)
+                    _predefRotations = new string[] {
                         "Tank Nourish (plus RJ/RG/Roll LB)",
                         "Tank Nourish (plus RJ/RG/Slow 3xLB)",
                         "Tank Nourish (plus RJ/RG/Fast 3xLB)",
@@ -92,8 +98,11 @@ namespace Rawr.Tree
                         "Healing Touch spam",
                         "Regrowth spam on tank",
                         "Regrowth spam on raid",
-                        "Rejuvenation spam on raid",
-                    };
+                        "Rejuvenation spam on raid",					};
+                return _predefRotations;
+            }
+        }
+
 
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -198,6 +207,7 @@ namespace Rawr.Tree
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("HealBurst", System.Windows.Media.Colors.Red);
                     _subPointNameColors.Add("HealSustained", System.Windows.Media.Colors.Blue);
+                    _subPointNameColors.Add("Survival", System.Windows.Media.Colors.Green);
                 }
                 return _subPointNameColors;
             }
@@ -212,6 +222,7 @@ namespace Rawr.Tree
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("HealBurst", System.Drawing.Color.Red);
                     _subPointNameColors.Add("HealSustained", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Survival", System.Drawing.Color.Green);
                 }
                 return _subPointNameColors;
             }
@@ -229,6 +240,10 @@ namespace Rawr.Tree
                     _characterDisplayCalculationLabels = new string[] {
                         "Points:HealBurst",
                         "Points:HealSustained",
+                        @"Points:Survival*Survival Points represents the total raw physical damage 
+you can take before dying. Calculated based on Health
+and Armor damage reduction. (Survival multiplier is 
+applied and result is scaled down by 100)",
                         "Points:Overall",
 
                         "Basic Stats:Health",
@@ -242,6 +257,7 @@ namespace Rawr.Tree
                         "Basic Stats:Spell Haste",
                         "Basic Stats:Global CD",
                         "Basic Stats:Lifebloom Global CD",
+                        "Basic Stats:Armor",
 
                         "Simulation:Result",
                         "Simulation:Time until OOM",
@@ -478,7 +494,7 @@ namespace Rawr.Tree
             float primaryFrac;
             float lifebloomDuration = 0.0f;
 
-            #region Spells
+            #region Setup Spells
             int hots = 0;
             if (rotSettings.rejuvOnTank) hots++;
             if (rotSettings.rgOnTank) hots++;
@@ -670,7 +686,7 @@ namespace Rawr.Tree
             spiritRegen *= 5.0f;    // Change to MP5, since GetSpiritRegenSec works per sec 
             
             float replenishment;
-            if (calcOpts.patch3_2)
+            if (calcOpts.Patch3_2)
             {
                 replenishment = stats.Mana * 0.01f * (calcOpts.ReplenishmentUptime / 100f); // Now 1% every 5 sec
             }
@@ -755,6 +771,22 @@ namespace Rawr.Tree
                 primaryFrac = 0f;
 
                 unusedCastTimeFrac = tpsHealing;
+
+                // Need to calculate how much tank healing is penalised/reduced in order to not over value this setup
+                float reduceFactor = (effectiveManaBurnTankHots / (effectiveManaBurnTankHots - primaryHealMpsAvail));
+
+                // Try reducing everything equally as the simplest approach
+                hotsHPS *= reduceFactor;
+                trueHotsHPS *= reduceFactor;
+                hotsMPS *= reduceFactor;
+                hotsCastTime *= reduceFactor;
+                hotsCastsPerMinute *= reduceFactor;
+                hotsCritsPerMinute *= reduceFactor;
+                hotsHealsPerMinute *= reduceFactor;
+                castsPerMinute += reduceFactor;
+                critsPerMinute += reduceFactor;
+                healsPerMinute += reduceFactor;
+                rejuvTicksPerMinute *= reduceFactor;
 
             }
             else if (primaryHealMpsAvail > mpsHealing)
@@ -1296,26 +1328,33 @@ namespace Rawr.Tree
             calculatedStats.BurstPoints = rot.MaxHPS + ExtraHPS;
             calculatedStats.SustainedPoints = (rot.TotalHealing + ExtraHPS * rot.TotalTime) / rot.TotalTime;
 
+            #region Survival Points
+            float DamageReduction = StatConversion.GetArmorDamageReduction(83, combinedStats.Armor, 0, 0, 0);
+            calculatedStats.SurvivalPoints = combinedStats.Health / (1.0f - DamageReduction) / 100.0f * calcOpts.SurvValuePer100;
+            #endregion
+
+/*
             // Penalty
             if (rot.TimeToOOM < rot.TotalTime)
             {
                 float frac = rot.TimeToOOM / rot.TotalTime;
                 float mod = (float)Math.Pow(frac, 1 + 0.05f ) / frac;
                 calculatedStats.SustainedPoints *= mod;
-                if (calcOpts.PenalizeEverything)
+//                if (calcOpts.PenalizeEverything)
                 {
                     calculatedStats.BurstPoints *= mod;
                 }
             }
 
+ */
             // ADJUST POINT VALUE (BURST SUSTAINED RATIO)
             float bsRatio = .01f * calcOpts.BSRatio;
             calculatedStats.BurstPoints *= (1f-bsRatio) * 2;
             calculatedStats.SustainedPoints *= bsRatio * 2;
 
-            calculatedStats.OverallPoints = calculatedStats.BurstPoints + calculatedStats.SustainedPoints;
+            calculatedStats.OverallPoints = calculatedStats.BurstPoints + calculatedStats.SustainedPoints + calculatedStats.SurvivalPoints;
 
-            calcOpts.calculatedStats = calculatedStats;
+            //calcOpts.calculatedStats = calculatedStats;
             return calculatedStats;
         }
 
@@ -1355,6 +1394,7 @@ namespace Rawr.Tree
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
+            statsTotal.Armor = (float)Math.Floor((statsTotal.Armor) * (1 + 0.8f * character.DruidTalents.ImprovedTreeOfLife));
 
             // Removed, since proc effects added by GetCharacterCalculations
 //            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
@@ -1478,9 +1518,9 @@ namespace Rawr.Tree
                     List<ComparisonCalculationBase> comparisonsDPS = new List<ComparisonCalculationBase>();
 
 
-                    for (int i = 0; i < predefRotations.Length; i++)
+                    for (int i = 0; i < PredefRotations.Length; i++)
                     {
-                        comparisonsDPS.Add(getRotationData(character, i, predefRotations[i]));
+                        comparisonsDPS.Add(getRotationData(character, i, PredefRotations[i]));
                     }   
 
 
@@ -1664,6 +1704,8 @@ namespace Rawr.Tree
                 //Health = stats.Health,
                 Mana = stats.Mana,
                 Mp5 = stats.Mp5,
+                Armor = stats.Armor,
+                Stamina = stats.Stamina,
                 #endregion
                 #region Trinkets
                 BonusManaPotion = stats.BonusManaPotion,
@@ -1757,7 +1799,8 @@ namespace Rawr.Tree
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
                 stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
 //                stats.ManacostReduceWithin15OnHealingCast +
-                stats.HealingOmenProc + stats.SwiftmendBonus + stats.NourishCritBonus + stats.RejuvenationCrit
+                stats.HealingOmenProc + stats.SwiftmendBonus + stats.NourishCritBonus + stats.RejuvenationCrit +
+                stats.Armor + stats.Stamina
                 > 0)
                 return true;
 

@@ -32,7 +32,8 @@ namespace Rawr.Tree
                 "Darkmoon Card: Illusion\r\n"+
                 "\r\n"+
                 "HealBurst is the maximum HPS of your current rotation until you go out of mana (with 100% casting Primary healing spells outside keeping HoTs on the tanks).\r\n"+
-                "HealSustained is the HPS from your current rotation for the entire fight.";
+                "HealSustained is the HPS from your current rotation for the entire fight.\r\n" +
+                "Survival is scaled based on the physical damage you can take based on your health and armor.\r\n";
         }
 
         protected override void LoadCalculationOptions()
@@ -53,6 +54,9 @@ namespace Rawr.Tree
             int burst = 100 - tbBSRatio.Value;
             int sust = tbBSRatio.Value;
             lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
+
+            tbSurvMulti.Value = calcOpts.SurvValuePer100;
+            lblSurvMulti.Text = calcOpts.SurvValuePer100.ToString() + " points per 100 survival (effective) health";
 
             cbRotation.SelectedIndex = calcOpts.Rotation;
             lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
@@ -77,14 +81,13 @@ namespace Rawr.Tree
 
              */
              
-            cbPatch3_2.Checked = calcOpts.patch3_2;
+            cbPatch3_2.Checked = calcOpts.Patch3_2;
             cbInnervate.Checked = calcOpts.Innervates > 0;
             //tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
 
             tbSwiftmendPerMin.Value = calcOpts.SwiftmendPerMinute;
             lblSwiftMend.Text = "Swiftmends per Minute: " + tbSwiftmendPerMin.Value;
-            cbApplyMore.Checked = calcOpts.PenalizeEverything;
 
             loading = false;
 
@@ -97,33 +100,6 @@ namespace Rawr.Tree
             if (!loading)
             {
                 CalculationOptionsTree calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
-                calcOpts.glyphOfInnervate = chbGlyphInnervate.Checked;
-                calcOpts.glyphOfHealingTouch = chbGlyphHT.Checked;
-                calcOpts.glyphOfLifebloom = chbGlyphLifebloom.Checked;
-                calcOpts.glyphOfRegrowth = chbGlyphRegrowth.Checked;
-                calcOpts.glyphOfRejuvenation = chbGlyphRejuvenation.Checked;
-                calcOpts.glyphOfSwiftmend = chbGlyphSwiftmend.Checked;
-
-                //Disable Glyphcheckboxes to enable only X Glyphs (70 = 2, 80 = 3)
-                int maxGlyphs = 3;
-                if ((chbGlyphSwiftmend.Checked ? 1 : 0) + (chbGlyphRejuvenation.Checked ? 1 : 0) + (chbGlyphRegrowth.Checked ? 1 : 0) + (chbGlyphLifebloom.Checked ? 1 : 0) + (chbGlyphInnervate.Checked ? 1 : 0) + (chbGlyphHT.Checked ? 1 : 0) >= maxGlyphs)
-                {
-                    chbGlyphHT.Enabled = chbGlyphHT.Checked;
-                    chbGlyphInnervate.Enabled = chbGlyphInnervate.Checked;
-                    chbGlyphRegrowth.Enabled = chbGlyphRegrowth.Checked;
-                    chbGlyphRejuvenation.Enabled = chbGlyphRejuvenation.Checked;
-                    chbGlyphSwiftmend.Enabled = chbGlyphSwiftmend.Checked;
-                    chbGlyphLifebloom.Enabled = chbGlyphLifebloom.Checked;
-                }
-                else
-                {
-                    chbGlyphHT.Enabled = true;
-                    chbGlyphInnervate.Enabled = true;
-                    chbGlyphRegrowth.Enabled = true;
-                    chbGlyphRejuvenation.Enabled = true;
-                    chbGlyphSwiftmend.Enabled = true;
-                    chbGlyphLifebloom.Enabled = true;
-                }
 
                 Character.OnCalculationsInvalidated();
             }
@@ -205,11 +181,21 @@ namespace Rawr.Tree
             Character.OnCalculationsInvalidated();
         }
 
+        private void tbSurvMulti_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.SurvValuePer100 = tbSurvMulti.Value;
+            lblSurvMulti.Text = calcOpts.SurvValuePer100.ToString() + " points per 100 survival (effective) health";
+            Character.OnCalculationsInvalidated();
+        }
+
+
         private void cbPatch3_2_CheckedChanged(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.patch3_2 = cbPatch3_2.Checked;
+            calcOpts.Patch3_2 = cbPatch3_2.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -243,7 +229,7 @@ namespace Rawr.Tree
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.PenalizeEverything = cbApplyMore.Checked;
+//            calcOpts.PenalizeEverything = cbApplyMore.Checked;
             Character.OnCalculationsInvalidated();
         }
 

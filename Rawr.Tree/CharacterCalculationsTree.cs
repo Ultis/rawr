@@ -7,7 +7,7 @@ namespace Rawr.Tree
     {
         public Stats BasicStats { get; set; }
 
-        private float[] subPoints = new float[] { 0f, 0f };
+        private float[] subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return subPoints; }
@@ -25,6 +25,12 @@ namespace Rawr.Tree
             get { return subPoints[1]; }
             set { subPoints[1] = value; }
         }
+
+        public float SurvivalPoints
+        {
+            get { return subPoints[2]; }
+            set { subPoints[2] = value; }
+        } 
 
         public override float OverallPoints { get; set; }
 
@@ -95,6 +101,7 @@ namespace Rawr.Tree
 
             dictValues.Add("HealBurst", BurstPoints.ToString());
             dictValues.Add("HealSustained", SustainedPoints.ToString());
+            dictValues.Add("Survival", SurvivalPoints.ToString());
             dictValues.Add("Overall", OverallPoints.ToString());
 
             dictValues.Add("Health", BasicStats.Health.ToString());
@@ -117,6 +124,8 @@ namespace Rawr.Tree
             dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap");
             spell = new Lifebloom(this, BasicStats);
             dictValues.Add("Lifebloom Global CD", Math.Round(spell.CastTime, 2) + " sec*" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until Lifebloom (GotEM) gcd cap");
+
+            dictValues.Add("Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
 
             if (Simulation.TotalTime - Simulation.TimeToOOM > 1.0)
             {
@@ -164,7 +173,7 @@ namespace Rawr.Tree
                 "Base: " + Math.Round(spell.BaseMinHeal, 2) + " - " + Math.Round(spell.BaseMaxHeal, 2) + "\n" +
                 Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + 
                 Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + 
-                Math.Round(spell.CritPercent, 2) + "% Crit" + (((CalculationOptionsTree)LocalCharacter.CalculationOptions).glyphOfRegrowth ? "\nGlyphed" : ""));
+                Math.Round(spell.CritPercent, 2) + "% Crit" + ((LocalCharacter.DruidTalents.GlyphOfRegrowth) ? "\nGlyphed" : ""));
             dictValues.Add("RG Tick", Math.Round(spell.PeriodicTick, 2) + "*" + spell.Duration + "sec Duration\n" + Math.Round(spell.PeriodicTick * 6f, 2) + " - " + Math.Round(spell.PeriodicTick * 9f, 2) + " Swiftmend");
             dictValues.Add("RG HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + "sec Casttime");
             dictValues.Add("RG HPS (HoT)", Math.Round(spell.HPSHoT, 2).ToString());

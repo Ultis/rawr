@@ -30,6 +30,9 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblSurvMulti = new System.Windows.Forms.Label();
+            this.tbSurvMulti = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
@@ -81,6 +84,8 @@
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSurvMulti)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -113,6 +118,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -121,6 +127,37 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.lblSurvMulti);
+            this.groupBox1.Controls.Add(this.tbSurvMulti);
+            this.groupBox1.Location = new System.Drawing.Point(7, 99);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(276, 87);
+            this.groupBox1.TabIndex = 43;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Survival value";
+            // 
+            // lblSurvMulti
+            // 
+            this.lblSurvMulti.AutoSize = true;
+            this.lblSurvMulti.Location = new System.Drawing.Point(6, 20);
+            this.lblSurvMulti.Name = "lblSurvMulti";
+            this.lblSurvMulti.Size = new System.Drawing.Size(89, 13);
+            this.lblSurvMulti.TabIndex = 41;
+            this.lblSurvMulti.Text = "Survival Multiplier";
+            // 
+            // tbSurvMulti
+            // 
+            this.tbSurvMulti.BackColor = System.Drawing.SystemColors.Window;
+            this.tbSurvMulti.LargeChange = 1;
+            this.tbSurvMulti.Location = new System.Drawing.Point(9, 36);
+            this.tbSurvMulti.Name = "tbSurvMulti";
+            this.tbSurvMulti.Size = new System.Drawing.Size(262, 45);
+            this.tbSurvMulti.TabIndex = 40;
+            this.tbSurvMulti.Value = 1;
+            this.tbSurvMulti.Scroll += new System.EventHandler(this.tbSurvMulti_Scroll);
             // 
             // groupBox2
             // 
@@ -741,6 +778,9 @@
             this.Size = new System.Drawing.Size(303, 582);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSurvMulti)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
@@ -818,5 +858,8 @@
         private System.Windows.Forms.CheckBox chbGlyphWG;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
         private System.Windows.Forms.CheckBox chbGlyphNourish;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lblSurvMulti;
+        private System.Windows.Forms.TrackBar tbSurvMulti;
     }
 }
