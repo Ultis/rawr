@@ -9,6 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+
 
 namespace Rawr.Tree
 {
@@ -28,18 +30,36 @@ namespace Rawr.Tree
             get { return character; }
             set
             {
+//                character = value;
+//                LoadCalculationOptions();
+
+                if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsTree)
+                    ((CalculationOptionsTree)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+
                 character = value;
-                LoadCalculationOptions();
+                if (character.CalculationOptions == null)
+                    character.CalculationOptions = new CalculationOptionsTree();
+
+                CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
+                DataContext = calcOpts;
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
             }
         }
 
-        private bool _loadingCalculationOptions;
-        public void LoadCalculationOptions()
+//        private bool _loadingCalculationOptions;
+/*        public void LoadCalculationOptions()
         {
-            _loadingCalculationOptions = true;
+//            _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsTree();
 
-            _loadingCalculationOptions = false;
+//            _loadingCalculationOptions = false;
+        }
+        */
+
+        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Character.OnCalculationsInvalidated();
         }
     }
 }
