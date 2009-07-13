@@ -286,11 +286,11 @@ namespace Rawr.Elemental
             {
                 if (statsTotal.Spirit > statsTotal.Intellect)
                 {
-                    statsTotal.Spirit += (statsTotal.GreatnessProc * 15f / 50f) * (1 + statsTotal.BonusSpiritMultiplier);
+                    statsTotal.Spirit += (statsTotal.GreatnessProc * 15f / 50f);
                 }
                 else
                 {
-                    statsTotal.Intellect += (statsTotal.GreatnessProc * 15f / 50f) * (1 + statsTotal.BonusIntellectMultiplier);
+                    statsTotal.Intellect += (statsTotal.GreatnessProc * 15f / 50f);
                 }
             }
 

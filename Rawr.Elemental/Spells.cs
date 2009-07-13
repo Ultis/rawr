@@ -314,11 +314,6 @@ namespace Rawr.Elemental
             base.Initialize(stats, shamanTalents);
         }
 
-        public void increaseCritFromOverload(int ranks)
-        {
-            crit *= (1f + .11f * ranks);
-        }
-
         public static ChainLightning operator +(ChainLightning A, ChainLightning B)
         {
             ChainLightning C = (ChainLightning)A.MemberwiseClone();
@@ -402,7 +397,7 @@ namespace Rawr.Elemental
             //dotTick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
 
             totalCoef += .01f * shamanTalents.Concussion;
-            spCoef *= 1 + 0.1f * shamanTalents.BoomingEchoes;
+            spCoef *= 1 + .1f * shamanTalents.BoomingEchoes;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             dotBaseCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
             dotSpCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
@@ -495,7 +490,7 @@ namespace Rawr.Elemental
             #endregion
 
             totalCoef += .01f * shamanTalents.Concussion;
-            totalCoef *= 1f + .1f * shamanTalents.BoomingEchoes;
+            spCoef *= 1f + .1f * shamanTalents.BoomingEchoes;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
             cooldown -= .2f * shamanTalents.Reverberation;

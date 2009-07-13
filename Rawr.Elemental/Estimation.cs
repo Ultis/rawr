@@ -165,11 +165,11 @@ namespace Rawr.Elemental.Estimation
                 if (!talents.GlyphofFlameShock)
                 {
                     timeBetweenLvB += shift2;
-                    timeBetweenFS = Math.Max(timeBetweenLvB , FS.CDRefreshTime);
+                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
                 }
                 else
                 {
-                    timeBetweenLvB += (shift1 +shift2) / 2;
+                    timeBetweenLvB += (shift1 + shift2) / 2;
                     timeBetweenLvB = Math.Max(timeBetweenLvB, timeBetweenFS / 2);
                     timeBetweenFS = 2 * timeBetweenLvB;
                 }
@@ -200,7 +200,6 @@ namespace Rawr.Elemental.Estimation
                 nLBsecond = (float)Math.Floor(nLBsecond);
                 if (!talents.GlyphofFlameShock)
                 {
-                    timeBetweenLvB += shift;
                     timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
                 }
                 else
@@ -260,9 +259,8 @@ namespace Rawr.Elemental.Estimation
                     clearcastingFS = CCchance2LB;
                     clearcastingLB = (
                         Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB + //n3..nn + m3..mm
-                        Math.Min(1, Math.Max(0, nLBsecond - 1)) * CCchanceLBFS + //m2
                         Math.Min(1, nLBsecond) * CCchanceLvBLB + //m1
-                        Math.Min(1, Math.Max(0, nLBsecond - 1)) * CCchanceLvBLB + //n2
+                        Math.Min(2, Math.Max(0, nLBsecond + nLBfirst - 2)) * CCchanceLvBLB + //n2 + m2
                         Math.Min(1, nLBfirst) * CCchanceLvBFS //n1 
                         ) / (nLBsecond + nLBfirst);
                 }
@@ -279,9 +277,9 @@ namespace Rawr.Elemental.Estimation
                 mpsFromLB *= 1 - .4f * clearcastingLB;
                 mpsFromLvB *= 1 - .4f * clearcastingLvB;
                 mpsFromFS *= 1 - .4f * clearcastingFS;
-                dpsFromLB *= 1 + .05f * clearcastingLB * talents.ElementalOath;
-                dpsFromLvB *= 1 + .05f * clearcastingLvB * talents.ElementalOath;
-                dpsFromFS *= 1 + .05f * clearcastingFS * talents.ElementalOath;
+                dpsFromLB *= 1 + .05f * talents.ElementalOath * clearcastingLB;
+                dpsFromLvB *= 1 + .05f * talents.ElementalOath * clearcastingLvB;
+                dpsFromFS *= 1 + .05f * talents.ElementalOath * clearcastingFS;
             }
             #endregion
 
@@ -347,7 +345,7 @@ namespace Rawr.Elemental.Estimation
             #region Lightning Bolt Haste Trinket
             stats += new Stats
             {
-                HasteRating = stats.LightningBoltHasteProc_15_45 * 10f / 35f, // ICD reduced from 55s to 30s
+                HasteRating = stats.LightningBoltHasteProc_15_45 * 10f / 35f, // ICD reduced from 45s to 30s
             };
             #endregion
 
@@ -371,7 +369,7 @@ namespace Rawr.Elemental.Estimation
              * While casting: ManaRegInFSR
              * During regen: ManaRegOutFSR */
             #region Calculate Regen
-            float spiRegen = StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
+            float spiRegen = 5 * StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
             float replenishRegen = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
             float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen;
             float ManaRegOutFSR = spiRegen + stats.Mp5 + replenishRegen;
