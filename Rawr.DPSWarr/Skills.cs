@@ -529,8 +529,8 @@ namespace Rawr.DPSWarr {
                     DamageOH *= (1f - combatFactors.YwMissChance - combatFactors.OhDodgeChance - combatFactors.OhParryChance
                         + combatFactors.OhYellowCrit * combatFactors.BonusYellowCritDmg);
 
-                    float Damage = DamageMH + DamageOH;
-                    return (float)Math.Max(0f, Damage * Targets);
+                    float damage = DamageMH + DamageOH;
+                    return (float)Math.Max(0f, damage * Targets);
                 }
             }
         }
@@ -633,7 +633,6 @@ namespace Rawr.DPSWarr {
         }
         // Arms Abilities
         public class MortalStrike : Ability {
-            // Constructors
             /// <summary>
             /// A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
             /// the effectiveness of any healing by 50% for 10 sec.
@@ -653,7 +652,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 Targets += StatS.BonusTargets;
-                Cd = 6f - (Talents.ImprovedMortalStrike / 3.0f); // In Seconds
+                Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
                 RageCost = 30f - (Talents.FocusedRage * 1f);
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
@@ -750,39 +749,46 @@ namespace Rawr.DPSWarr {
             }
             public override float ActivatesOverride {
                 get {
+                    float acts = 0f;
                     float cd = Cd;
-                    
-                    if (combatFactors.MhDodgeChance + (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f) <= 0f && Talents.TasteForBlood == 0f) {
-                        // No TasteForBlood talent and no chance to activate otherwise
-                        cd = 0f;
-                    } else if (Talents.TasteForBlood == 0f) {
-                        // No TasteForBlood talent and but chance to activate via parry or dodge
-                        cd = 1f / (
-                            (combatFactors.MhDodgeChance + (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f)) * (1f / combatFactors.MainHandSpeed) +
-                            /*0.01f * GetLandedAtksPerSecNoSS() * combatFactors.MhExpertise * Talents.SwordSpecialization * 54f / 60f +
-                            0.03f * GCDPerc * GetLandedAtksPerSec() +*/
-                            // Removed this because it's causing stack overflow (try a fury spec in arms stance)
-                            1f / (5f / 1000f)//+
-                            //1f / /*AB49 Slam Proc GCD % 0.071227f*/ SL.GetActivates()
-                         );
-                    }// TODO: TasteForBlood talent AND chance to activate otherwise
-                    else if (Talents.TasteForBlood > 0f) {
-                        // TasteForBlood talent and NO chance to activate otherwise
-                        if(CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]){
-                            // With Rend we can use Taste For Blood
-                            cd = 6f / (1f / 3f * Talents.TasteForBlood);
-                        }else{
-                            // Without Rend, we cannot use Taste for Blood
-                            cd = 0f;
-                        }
+                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                    float Every = 0f;
+                    float GCDPerc = 0f;
+
+                    float dodge = combatFactors.MhDodgeChance;
+                    float parry = (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f);
+
+                    // Chance to activate: Dodges + (if glyphed) Parries
+                    if (dodge + parry > 0f) {
+                        cd = (float)Math.Max(Cd, 1f / (
+                            // White Attacks
+                            (dodge + parry) * (1f / combatFactors.MainHandSpeed) + // ToDo: Slam effect on swing timer & White Miss chance
+                            // Yellow Attacks
+                            (dodge + parry) * (1f / LatentGCD) // Lets just assume one yellow on each GCD, even tho that isn't right
+                         ));
+
+                        GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
+                        Every = LatentGCD / GCDPerc;
+                        acts += (float)Math.Max(0f, FightDuration / Every);
                     }
 
-                    if (cd != 0) {
-                        float LatentGCD = (1.5f + CalcOpts.GetLatency());
-                        float GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
-                        float Every = LatentGCD / GCDPerc * (1f - Whiteattacks.AvoidanceStreak);
-                        return (float)Math.Max(0f, FightDuration / Every);
-                    } else { return 0f; }
+                    // Chance to activate: Taste for Blood (Requires Rend)
+                    if (Talents.TasteForBlood > 0f && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]) {
+                        // Not more than once every 6 seconds
+                        cd  = 6f;
+                        // Percent chance to proc, if it's not at 3/3 then the cd grows
+                        switch (Talents.TasteForBlood) {
+                            case 1: { cd += 6f; break; }
+                            case 2: { cd += 3f; break; }
+                            case 3: { cd += 0f; break; }
+                        }
+                        
+                        GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
+                        Every = LatentGCD / GCDPerc;
+                        acts += (float)Math.Max(0f, FightDuration / Every);
+                    }
+
+                    return acts;
                 }
             }
         }
@@ -1208,11 +1214,8 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = StanceOkDef  = true;
                 mhActivates = ohActivates = 0f;
             }
-            // Variables
             private float mhActivates, ohActivates;
             public void SetAllAbilityActivates(float mh, float oh) { mhActivates = mh; ohActivates = oh; }
-            // Get/Set
-            // Functions
             public override float ActivatesOverride { get { return mhActivates + ohActivates; } }
             public override float TickSize {
                 get {
@@ -1244,16 +1247,22 @@ namespace Rawr.DPSWarr {
         #region BuffEffect Abilities
         public class BuffEffect : Ability {
             // Constructors
-            public BuffEffect(){}
+            public BuffEffect(){
+                EFFECT  = null;
+                EFFECT2 = null;
+            }
             // Variables
             private SpecialEffect EFFECT;
+            private SpecialEffect EFFECT2;
             // Get/Set
-            public SpecialEffect Effect { get { return EFFECT; } set { EFFECT = value; } }
+            public SpecialEffect Effect  { get { return EFFECT ; } set { EFFECT  = value; } }
+            public SpecialEffect Effect2 { get { return EFFECT2; } set { EFFECT2 = value; } }
             // Functions
             public virtual Stats AverageStats {
                 get {
                     if (!Validated) { return new Stats(); }
-                    Stats bonus = Effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, FightDuration);
+                    Stats bonus  = (Effect  == null) ? new Stats(){ AttackPower = 0f, } : Effect.GetAverageStats( 0f, 1f, combatFactors.MainHand.Speed, FightDuration);
+                          bonus += (Effect2 == null) ? new Stats(){ AttackPower = 0f, } : Effect2.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, FightDuration);
                     return bonus;
                 }
             }
@@ -1543,13 +1552,10 @@ namespace Rawr.DPSWarr {
             }
         }
         public class ShatteringThrow : BuffEffect {
-            // Constructors
             /// <summary>
             /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
             /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
             public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -1566,6 +1572,7 @@ namespace Rawr.DPSWarr {
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },
                     Duration, Cd);
+                DamageBase = 12f + StatS.AttackPower * 0.50f;
             }
         }
         public class DemoralizingShout : BuffEffect {
@@ -1584,10 +1591,10 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = false;
                 MaxRange = 10f; // In Yards 
                 Duration = 30f;
-                RageCost = 10f;
+                RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkFury = true;
                 Effect = new SpecialEffect(Trigger.Use,
-                    new Stats() { AttackPower = 411f, }, // needs to be boss debuff
+                    new Stats() { /*AttackPower = 411f,*/ }, // needs to be boss debuff
                     Duration, Duration);
             }
         }
@@ -1596,8 +1603,8 @@ namespace Rawr.DPSWarr {
             /// Instant, No cd, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
             /// Maims the enemy, reducing movement speed by 50% for 15 sec.
             /// </summary>
-            /// <TalentsAffecting></TalentsAffecting>
-            /// <GlyphsAffecting>Glyph of Hamstring [Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
+            /// <TalentsAffecting>Improved Hamstring [Gives a [5*Pts]% chance to immobilize the target for 5 sec.]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
             public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -1608,9 +1615,13 @@ namespace Rawr.DPSWarr {
                 Duration = 15f; // In Seconds
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkFury = StanceOkArms = true;
-                /*Effect = new SpecialEffect(Trigger.Use,
-                    new Stats() { ArmorPenetration = 0.00f, },
-                    Duration, Duration, 1f);*/
+                Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*/ },
+                    Duration, Duration);
+                float Chance = Talents.ImprovedHamstring * 0.05f + (Talents.GlyphOfHamstring ? 0.10f : 0.00f);
+                Effect2 = new SpecialEffect(Trigger.Use,
+                    new Stats() { AttackPower = 0f, /*TargetStunned = 0.50f,*/ },
+                    5f, Duration, Chance);
             }
         }
         #endregion

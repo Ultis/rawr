@@ -214,6 +214,9 @@ namespace Rawr.ProtWarr
                 case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
+                case "% Chance to be Dodged": return 6.5f - Expertise * 100.0f;
+                case "Hit %": return Hit * 100.0f;
+                case "Expertise %": return Expertise * 100.0f;
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;
                 case "Nature Survival": return NatureSurvivalPoints;

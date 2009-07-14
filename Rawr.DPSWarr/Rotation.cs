@@ -610,7 +610,7 @@ namespace Rawr.DPSWarr {
         public float _Demo_GCDs   = 0f;
         public float _Sunder_GCDs = 0f;
         public float _Ham_GCDs    = 0f;
-        public float _Shatt_GCDs  = 0f;
+        public float _Shatt_GCDs  = 0f; public float _Shatt_DPS    = 0f;
         public float _Death_GCDs  = 0f;
         public float _Reck_GCDs   = 0f;
         //
@@ -620,6 +620,59 @@ namespace Rawr.DPSWarr {
         public float RageGenWhite = 0f; public float RageGenOther  = 0f; public float RageNeeded = 0f;
         public string GCDUsage = "";
         #endregion
+        /// <summary>Adds an Ability alteration schtuff. Includes DPS.</summary>
+        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
+                              ref float _Abil_GCDs, ref float DPS_TTL,  ref float _Abil_DPS, Skills.Ability abil) {
+            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            _Abil_GCDs = Abil_GCDs;
+            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
+            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "\n";
+            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            _Abil_DPS = abil.GetDPS(Abil_GCDs);
+            DPS_TTL += _Abil_DPS;
+            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            availRage -= rageadd;
+            RageNeeded += rageadd;
+        }
+        /// <summary>Adds an Ability alteration schtuff. Includes DPS. Adds a GCD Multiplier.</summary>
+        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
+                              ref float _Abil_GCDs, ref float DPS_TTL,  ref float _Abil_DPS, Skills.Ability abil,
+                              float GCDMulti) {
+            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            _Abil_GCDs = Abil_GCDs;
+            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
+            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "x" + GCDMulti.ToString() + "\n";
+            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            _Abil_DPS = abil.GetDPS(Abil_GCDs);
+            DPS_TTL += _Abil_DPS;
+            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            availRage -= rageadd;
+            RageNeeded += rageadd;
+        }
+        /// <summary>Adds an Ability alteration schtuff. Does not include DPS.</summary>
+        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
+                              ref float _Abil_GCDs, Skills.Ability abil) {
+            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            _Abil_GCDs = Abil_GCDs;
+            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
+            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "\n";
+            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            availRage -= rageadd;
+            RageNeeded += rageadd;
+        }
+        /// <summary>Adds an Ability alteration schtuff. Not DPS but add rage instead of remove it</summary>
+        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
+                              ref float _Abil_GCDs, Skills.Ability abil,bool flag) {
+            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            _Abil_GCDs = Abil_GCDs;
+            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
+            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "\n";
+            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            RageGenOther += rageadd;
+            availRage += rageadd;
+        }
         public float MakeRotationandDoDPS_Arms() {
             // Starting Numbers
             float DPS_TTL = 0f;
@@ -634,14 +687,7 @@ namespace Rawr.DPSWarr {
 
             if (Char.MainHand == null) { return 0f; }
 
-            // Passive DPS (occurs regardless)
-            /*Ability DW = new DeepWounds(_character, _stats, _combatFactors, _whiteStats);
-            _DW_PerHit = DW.DamageOnUse;
-            _DW_DPS = DW.DPS;
-            DPS_TTL += _DW_DPS;
-            // DW is being handled in GetCharacterCalcs right now*/
-            
-            // Rage Generators
+            // ==== Rage Generation Priorities ========
             RageGenOther = RageGenAngerPerSec + RageGenWrathPerSec;
             if (StatS.DreadnaughtBonusRageProc != 0f) {
                 RageGenOther += 0.5f * (Talents.DeepWounds > 0f ? 1f : 0f);
@@ -649,168 +695,26 @@ namespace Rawr.DPSWarr {
             }
             availRage += RageGenOther;
 
-            // Enforcing a "Maintaining" argument
-            float Blood_GCDs = (float)Math.Min(availGCDs, BR.Activates);
-            _Blood_GCDs = Blood_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Blood_GCDs);
-            GCDUsage += BR.Name + ": " + Blood_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = BR.GetRageUsePerSecond(Blood_GCDs) + BR.AverageStats.BonusRageGen; // used per sec reverses the rage cost in this instance
-            RageGenOther += rageadd;
-            availRage += rageadd;
+            /*Bloodrage         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Blood_GCDs,  BR,false);
+            /*Berserker Rage    */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _ZRage_GCDs,  BZ,false);
 
-            // Enforcing a "Maintaining" argument
-            // Also, not using it unless it generates rage
-            // we don't have damage taking in place yet so we have to rely on the talent that provides rage
-            float ZRage_GCDs = (float)Math.Min(availGCDs, BZ.RageCost > 0 ? BZ.Activates : 0f);
-            _ZRage_GCDs = ZRage_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, ZRage_GCDs);
-            GCDUsage += BZ.Name + ": " + ZRage_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = BZ.GetRageUsePerSecond(ZRage_GCDs); // used per sec reverses the rage cost in this instance
-            RageGenOther += rageadd;
-            availRage += rageadd;
+            // ==== Maintenance Priorities ============
+            /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, Battle);
+            /*Demoralizing Shout*/AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Demo_GCDs,   DS);
+            /*Sunder Armor      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Sunder_GCDs, SN);
+            /*Thunder Clap      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Thunder_GCDs,ref DPS_TTL,ref _TH_DPS,TH);
+            /*Hamstring         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Ham_GCDs,    HMS);
+            /*Shattering Throw  */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Shatt_GCDs,  ref DPS_TTL,ref _Shatt_DPS,ST);
+            /*Sweeping Strikes  */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SW_GCDs,     SW);
+            /*Death Wish        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Death_GCDs,  Death);
 
-            // Periodic GCD eaters (DPS for these handled elsewhere)
-            // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-            float Shout_GCDs = (float)Math.Min(availGCDs, Battle.Activates);
-            _Battle_GCDs = Shout_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Shout_GCDs);
-            GCDUsage += Battle.Name + ": " + Shout_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = Battle.GetRageUsePerSecond(Shout_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-            float Demo_GCDs = (float)Math.Min(availGCDs, DS.Activates);
-            _Demo_GCDs = Demo_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Demo_GCDs);
-            GCDUsage += DS.Name + ": " + Demo_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = DS.GetRageUsePerSecond(Demo_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-            float Sunder_GCDs = (float)Math.Min(availGCDs, SN.Activates > 0f ? 4f + SN.Activates : 0f); // 4 to stack up the initial, 5th+ are just maintenance
-            _Sunder_GCDs = Sunder_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Sunder_GCDs);
-            GCDUsage += SN.Name + ": " + Sunder_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = SN.GetRageUsePerSecond(Sunder_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Enforcing a "Maintaining" argument so we know if we are the ones putting this up or not
-            float Thunder_GCDs = (float)Math.Min(availGCDs, TH.Activates);
-            _Thunder_GCDs = Thunder_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Thunder_GCDs);
-            GCDUsage += TH.Name + ": " + Thunder_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _TH_DPS = TH.GetDPS(Thunder_GCDs);
-            DPS_TTL += _TH_DPS;
-            rageadd = TH.GetRageUsePerSecond(Thunder_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            float Shatt_GCDs = (float)Math.Min(availGCDs, ST.Activates);
-            _Shatt_GCDs = Shatt_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Shatt_GCDs);
-            GCDUsage += ST.Name + ": " + Shatt_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = ST.GetRageUsePerSecond(Shatt_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            float Sweep_GCDs = (float)Math.Min(availGCDs, SW.Activates);
-            _SW_GCDs = Sweep_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Sweep_GCDs);
-            if (Sweep_GCDs > 0) { GCDUsage += SW.Name + ": " + Sweep_GCDs.ToString() + "\n"; }
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = SW.GetRageUsePerSecond(Sweep_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            float Death_GCDs = (float)Math.Min(availGCDs, Death.Activates);
-            _Death_GCDs = Death_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Death_GCDs);
-            GCDUsage += Death.Name + ": " + Death_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = Death.GetRageUsePerSecond(Death_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            float Reck_GCDs = (float)Math.Min(availGCDs, RK.Activates);
-            _Reck_GCDs = Reck_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Reck_GCDs);
-            GCDUsage += RK.Name + ": " + Reck_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            rageadd = RK.GetRageUsePerSecond(Reck_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Periodic DPS (run only once every few rotations)
-            float BLS_GCDs = (float)Math.Min(availGCDs, BLS.Activates);
-            _BLS_GCDs = BLS_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, BLS_GCDs * 4f); // the *4 is because it is channeled over 6 secs (4 GCD's consumed from 1 activate)
-            GCDUsage += BLS.Name + ": " + BLS_GCDs.ToString() + "x4\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _BLS_DPS = BLS.GetDPS(BLS_GCDs);
-            DPS_TTL += _BLS_DPS;
-            rageadd = BLS.GetRageUsePerSecond(BLS_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-        
-            // Priority 1 : Mortal Strike on every CD
-            float MS_GCDs = (float)Math.Min(availGCDs, MS.Activates);
-            _MS_GCDs = MS_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, MS_GCDs);
-            GCDUsage += MS.Name + ": " + MS_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _MS_DPS = MS.GetDPS(MS_GCDs);
-            DPS_TTL += _MS_DPS;
-            rageadd = MS.GetRageUsePerSecond(MS_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Priority 2 : Rend on every tick off
-            float RND_GCDs = (float)Math.Min(availGCDs, RD.Activates);
-            _RD_GCDs = RND_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, RND_GCDs);
-            GCDUsage += RD.Name + ": " + RND_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _RD_DPS = RD.GetDPS(RND_GCDs);
-            DPS_TTL += _RD_DPS;
-            rageadd = RD.GetRageUsePerSecond(RND_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Priority 3 : Taste for Blood Proc (Do Overpower) if available
-            float OP_GCDs = (float)Math.Min(availGCDs, OP.Activates);
-            _OP_GCDs = OP_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, OP_GCDs);
-            GCDUsage += OP.Name + ": " + OP_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _OP_DPS = OP.GetDPS(OP_GCDs);
-            DPS_TTL += _OP_DPS;
-            rageadd = OP.GetRageUsePerSecond(OP_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Priority 4 : Sudden Death Proc (Do Execute) if available
-            float SD_GCDs = (float)Math.Min(availGCDs, SD.Activates);
-            _SD_GCDs = SD_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, SD_GCDs);
-            GCDUsage += SD.Name + ": " + SD_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-            _SD_DPS = SD.GetDPS(SD_GCDs);
-            DPS_TTL += _SD_DPS;
-            rageadd = SD.GetRageUsePerSecond(SD_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-
-            // Priority 5 : Slam for remainder of GCDs
+            // ==== Standard Priorities ===============
+            /*Bladestorm        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _BLS_GCDs,    ref DPS_TTL,ref _BLS_DPS,BLS,4f);
+            /*Mortal Strike     */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _MS_GCDs,     ref DPS_TTL,ref _MS_DPS ,MS);
+            /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
+            /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _OP_GCDs,     ref DPS_TTL,ref _OP_DPS ,OP);
+            /*Sudden Death      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SD_GCDs,     ref DPS_TTL,ref _SD_DPS ,SD);
+            /*Slam for remainder of GCDs*/
             float SL_GCDs = SL.Validated ? availGCDs : 0f;
             _SL_GCDs = SL_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, SL_GCDs);
@@ -821,11 +725,9 @@ namespace Rawr.DPSWarr {
             rageadd = SL.GetRageUsePerSecond(SL_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
-
-            // Priority 6 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
+            // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
-
             Skills.OnAttack Which = null;
             bool ok = false;
             if (CalcOpts.MultipleTargets) {

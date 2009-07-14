@@ -99,8 +99,8 @@ namespace Rawr.DPSWarr {
     					"Base Stats:Health",
     					"Base Stats:Stamina",
                         "Base Stats:Armor",
-                        "Base Stats:Strength*1 STR = 2 AP x Kings Buff",
-                        "Base Stats:Attack Power*2 AP is just 2 AP, go for STR",
+                        "Base Stats:Strength",
+                        "Base Stats:Attack Power",
                         "Base Stats:Agility",
                         "Base Stats:Crit",
                         "Base Stats:Haste",
@@ -108,8 +108,7 @@ namespace Rawr.DPSWarr {
 1232-None
 1109-Arms(123)
 0924-Arms(123)+Mace(185)",
-                        //"Base Stats:Damage Reduction*Should be exact opposite of ArP in Percentage (%)",
-                        @"Base Stats:Hit Rating*8.00% chance to miss base for Yellow Attacks
+                        @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks
 Precision 0- 8%-0%=8%=262 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
 Precision 2- 8%-2%=6%=197 Rating soft cap
@@ -122,9 +121,8 @@ Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
 Don't forget your weapons used matched with races can affect these numbers.",
                         
                         @"DPS Breakdown (Fury):Description*1st Number is per second or per tick
-2nd Number is the normal damage (factoring mitigation and hit/miss and crits)
-3rd Number is rage used
-4th Number is number of times activated in a single rotation",
+2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
+3rd Number is number of times activated over fight duration",
                         "DPS Breakdown (Fury):Bloodsurge",
                         "DPS Breakdown (Fury):Bloodthirst",
                         "DPS Breakdown (Fury):Whirlwind",
@@ -132,21 +130,20 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Mortal Strike",
                         "DPS Breakdown (Arms):Rend",
                         "DPS Breakdown (Arms):Overpower",
-                        "DPS Breakdown (Arms):Sudden Death*If this number is zero, it most likely means that using the execute spamming isn't increasing your dps, so don't use it in your rotation.",
-                        "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that Your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
+                        "DPS Breakdown (Arms):Sudden Death",
+                        "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
                         "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
-                        "DPS Breakdown (Arms):Thunder Clap",
+
+                        "DPS Breakdown (Maintenance):Thunder Clap",
+                        "DPS Breakdown (Maintenance):Shattering Throw",
 
                         "DPS Breakdown (General):Deep Wounds",
                         "DPS Breakdown (General):Heroic Strike",
                         "DPS Breakdown (General):Cleave",
                         "DPS Breakdown (General):White DPS",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
-2nd number is total DMG over Rotation
-3rd number is total DMG over Duration",
+2nd number is total DMG over Duration",
                       
-                        //"Rage Details:Generated White DPS Rage",
-                        //"Rage Details:Generated Other Rage",
                         "Rage Details:Total Generated Rage",
                         "Rage Details:Needed Rage for Abilities",
                         "Rage Details:Available Free Rage",
@@ -361,169 +358,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return calculatedStats;
         }
 
-        #region Warrior Race Stats
-        //private static float[,] BaseWarriorRaceStats = new float[,] {
-        //                    //	Strength,	Agility,	Stamina
-        //    /*Human*/		{	174f,	    113f,	    159f,   },
-        //    /*Orc*/			{	178f,		110f,		162f,	},
-        //    /*Dwarf*/		{	176f,	    109f,	    162f,   },
-        //    /*Night Elf*/	{	142f,	    101f,	    132f,   },
-        //    /*Undead*/		{	174f,	    111f,	    160f,   },
-        //    /*Tauren*/		{	180f,		108f,		162f,	},
-        //    /*Gnome*/		{	170f,	    116f,	    159f,   },
-        //    /*Troll*/		{	175f,	    115f,	    160f,   },	
-        //    /*BloodElf*/	{	0f,		    0f,		    0f,	    },
-        //    /*Draenei*/		{	176f,		110f,		159f,	},
-        //};
-        //private Stats GetRaceStats(Character character)
-        //{
-        //    Stats statsRace;
-        //    switch (character.Race)
-        //    {
-        //        case Character.CharacterRace.Human:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[0, 0],
-        //                Agility = (float)BaseWarriorRaceStats[0, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[0, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Miss = 0.05f,
-        //                Parry = 5f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Orc:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[1, 0],
-        //                Agility = (float)BaseWarriorRaceStats[1, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[1, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Dwarf:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[2, 0],
-        //                Agility = (float)BaseWarriorRaceStats[2, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[2, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.NightElf:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[3, 0],
-        //                Agility = (float)BaseWarriorRaceStats[3, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[3, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Miss = 0.05f + 0.02f,
-        //                Parry = 5f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Undead:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[4, 0],
-        //                Agility = (float)BaseWarriorRaceStats[4, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[4, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Tauren:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 8338f,
-        //                Strength = (float)BaseWarriorRaceStats[5, 0],
-        //                Agility = (float)BaseWarriorRaceStats[5, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[5, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Gnome:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[6, 0],
-        //                Agility = (float)BaseWarriorRaceStats[6, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[6, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Troll:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[7, 0],
-        //                Agility = (float)BaseWarriorRaceStats[7, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[7, 2],
-
-        //                AttackPower = 220f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        case Character.CharacterRace.Draenei:
-        //            statsRace = new Stats()
-        //            {
-        //                Health = 7941f,
-        //                Strength = (float)BaseWarriorRaceStats[9, 0],
-        //                Agility = (float)BaseWarriorRaceStats[9, 1],
-        //                Stamina = (float)BaseWarriorRaceStats[9, 2],
-
-        //                AttackPower = 220f,
-        //                PhysicalHit = 1f,
-        //                Dodge = 3.4636f,
-        //                Parry = 5f,
-        //                Miss = 0.05f,
-        //                PhysicalCrit = 0.03186f,
-        //            };
-        //            break;
-        //        default:
-        //            statsRace = new Stats();
-        //            break;
-        //    }
-        //    return statsRace;
-        //}
-        #endregion
-
         public override Stats GetItemStats(Character character, Item additionalItem) {
             Stats statsItems = base.GetItemStats(character,additionalItem);
             return statsItems;
@@ -580,10 +414,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
 
             // Stamina
-            statsTotal.Stamina = (float)(int)statsTotal.Stamina;
+            statsTotal.Stamina  = (float)(int)statsTotal.Stamina;
             statsTotal.Stamina *= 1f + statsTotal.BonusStaminaMultiplier;
-            statsTotal.Stamina = (float)(int)statsTotal.Stamina;
-            statsTotal.Health += (float)(int)(statsTotal.Stamina * 10f);
+            statsTotal.Stamina  = (float)(int)statsTotal.Stamina;
+            statsTotal.Health  += (float)(int)(statsTotal.Stamina * 10f);
 
             // Strength
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
@@ -668,7 +502,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     }
                 }
                 statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors.OffHand.Speed, fightDuration);
-                
             }
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
@@ -704,13 +537,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 statsProcs += hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec, 1f, combatFactors.MainHand.Speed, fightDuration);
             }
             // Warrior Abilities as SpecialEffects
-            Stats avgstats;
-            Skills.DeathWish        Death = new Skills.DeathWish(       character, statsTotal, combatFactors, whiteAttacks); avgstats = Death.AverageStats; statsProcs += avgstats;
+            Stats avgstats = new Stats() { AttackPower = 0f, };
+            Skills.DeathWish       Death = new Skills.DeathWish(      character,statsTotal,combatFactors,whiteAttacks);avgstats += Death.AverageStats;
             //Recklessness is highly inaccurate right now
-            //Skills.Recklessness     Reck  = new Skills.Recklessness(    character, statsTotal, combatFactors, whiteAttacks); avgstats = Reck.AverageStats ; statsProcs += avgstats;
-            Skills.ShatteringThrow  Shatt = new Skills.ShatteringThrow( character, statsTotal, combatFactors, whiteAttacks); avgstats = Shatt.AverageStats; statsProcs += avgstats;
-            Skills.SweepingStrikes  Sweep = new Skills.SweepingStrikes( character, statsTotal, combatFactors, whiteAttacks); avgstats = Sweep.AverageStats; statsProcs += avgstats;
-            Skills.Bloodrage        Blood = new Skills.Bloodrage(       character, statsTotal, combatFactors, whiteAttacks); avgstats = Blood.AverageStats; statsProcs += avgstats;
+            //Skills.Recklessness    Reck  = new Skills.Recklessness(   character,statsTotal,combatFactors,whiteAttacks);avgstats += Reck.AverageStats ;
+            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character,statsTotal,combatFactors,whiteAttacks);avgstats += Shatt.AverageStats;
+            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character,statsTotal,combatFactors,whiteAttacks);avgstats += Sweep.AverageStats;
+            Skills.Bloodrage       Blood = new Skills.Bloodrage(      character,statsTotal,combatFactors,whiteAttacks);avgstats += Blood.AverageStats;
+            //Skills.Hamstring       Hammy = new Skills.Hamstring(      character,statsTotal,combatFactors,whiteAttacks);avgstats += Hammy.AverageStats;
+            statsProcs += avgstats;
 
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + statsTotal.BonusStrengthMultiplier));

@@ -107,8 +107,9 @@ namespace Rawr.DPSWarr {
             string format = "";
 
             // Base Stats
-            dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}",BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
-            dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}" ,BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}",
+                BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}",BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
@@ -116,46 +117,64 @@ namespace Rawr.DPSWarr {
                 Environment.NewLine+"Increases Crit by {1:0.00%}"+
                 Environment.NewLine+"Total Crit increase of {2:0.00%}"+
                 Environment.NewLine+"Increases Armor by {3:0}",
-                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + .03192f, StatConversion.GetArmorFromAgility(BasicStats.Agility)));
-            dictValues.Add("Haste",string.Format("{0:0.00%}*Haste Rating {1}", HastePercent, BasicStats.HasteRating));
-            dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1} (+{2:0.00%})" +
+                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f, StatConversion.GetArmorFromAgility(BasicStats.Agility)));
+            dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*From Rating {2:0.00%}" +
                 Environment.NewLine + "MH Crit {3:0.00%}" +
                 Environment.NewLine + "OH Crit {4:0.00%}" +
-                Environment.NewLine + "Boss level affects this" +
+                Environment.NewLine + "Target level affects this" +
                 Environment.NewLine + "LVL 80 will match tooltip in game" +
-                Environment.NewLine + "83 has a total of ~4.8% drop",
+                Environment.NewLine + "LVL 83 has a total of ~4.8% drop",
                 CritPercent, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating), MhCrit, OhCrit));
-            dictValues.Add("Armor Penetration",  string.Format("{0:0.00%}*Armor Penetration Rating {1}- {2:0.00%}" +
+            dictValues.Add("Haste", string.Format("{0:00.00%} : {1}", HastePercent, BasicStats.HasteRating));
+            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*From Rating- {2:0.00%}" +
                 Environment.NewLine + "Arms Stance- +{3:0.00%}" +
                 Environment.NewLine + "Mace Spec- +{4:0.00%}",
                                 ArmorPenetration,
                                 BasicStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
                                 ArmorPenetrationStance,
                                 ArmorPenetrationMaceSpec));
-            //dictValues.Add("Damage Reduction",string.Format("{0:0.00%}",damageReduc));
-            dictValues.Add("Hit Rating",
-                string.Format("{0}*{1:0.00%} Increased Chance to hit" +
-                                Environment.NewLine + "{2:0.00%} : From Other Bonuses" +
+            dictValues.Add("Hit",
+                string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
                                 Environment.NewLine + "{3:0.00%} : Total Hit % Bonus" +
-                                Environment.NewLine + Environment.NewLine + "You can free up {4:0} Rating",
-                                BasicStats.HitRating,
+                                Environment.NewLine + Environment.NewLine +
+                                (HitCanFree > 0 ? "You can free {4:0} Rating (from yellow cap)"
+                                                : "You need {4:0} more Rating (to yellow cap)"),
                                 StatConversion.GetHitFromRating(BasicStats.HitRating),
+                                BasicStats.HitRating,
                                 HitPercBonus,
                                 HitPercentTtl,
-                                HitCanFree));
+                                (HitCanFree > 0 ? HitCanFree : HitCanFree*-1 )));
+            float sec2lastNum = (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1;
+            float lastNum = StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Expertise",
-                string.Format("{0:0.00}*Expertise Rating {1}" +
-                                Environment.NewLine + "Num Displayed is Rating Converted + Strength of Arms" +
-                                Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}." +
+                string.Format("{0:00.00%} : {1:00.00} : {2}*" +
+                                "Num Displayed is Rating Converted + Strength of Arms" +
+                                //Environment.NewLine + "Reduces chance to be dodged or parried by ." +
                                 Environment.NewLine + "Main Hand Exp - {3:00.00} / {4:0.00%} [Includes Racial]" +
                                 Environment.NewLine + "Off Hand Exp    - {5:00.00} / {6:0.00%} [Includes Racial]" +
-                                Environment.NewLine + Environment.NewLine + "You can free up {7:0} Expertise ({8:0} Rating)",
+                                Environment.NewLine + Environment.NewLine +
+                                (lastNum > 0 ? "You can free {7:0} Expertise ({8:0} Rating)"
+                                             : "You need {7:0} more Expertise ({8:0} Rating)"),
+                                StatConversion.GetDodgeParryReducFromExpertise(Expertise),
                                 Expertise + BasicStats.Expertise,
-                                BasicStats.ExpertiseRating, StatConversion.GetDodgeParryReducFromExpertise(Expertise),
+                                BasicStats.ExpertiseRating,
                                 MhExpertise, StatConversion.GetDodgeParryReducFromExpertise(MhExpertise),
                                 OhExpertise, StatConversion.GetDodgeParryReducFromExpertise(OhExpertise),
-                                (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1,
-                                StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1)));
+                                (sec2lastNum > 0 ? sec2lastNum : sec2lastNum * -1),
+                                (lastNum > 0 ? lastNum : lastNum*-1)));
+            /*
+             * What is the breakdown of the things we want to know?
+             * 
+             * Ability:
+             * - Damage per Second
+             * - Damage per Hit (mitgated, etc)
+             * - Number of Times Activated over Duration
+             * - Percentage of DPS vs Total DPS
+             * - Breakdown of Main-hand vs Off-hand
+             * - Number of Targets hit
+             * - Notes regarding other hidden benefits (eg- MS anti-healing effect)
+            */
+
             // DPS Fury
             format = "{0:0000} : {1:0000} : {2:000.00}*{3:00.0%} of DPS";
             dictValues.Add("Description",       string.Format("DPS  : PerHit : #ActsD"));
@@ -169,22 +188,22 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.DamageOnUse ,Rot._OP_GCDs     ,Rot._OP_DPS /TotalDPS));
             dictValues.Add("Sudden Death",      string.Format(format,Rot._SD_DPS ,SD.DamageOnUse ,Rot._SD_GCDs     ,Rot._SD_DPS /TotalDPS));
             dictValues.Add("Slam",              string.Format(format,Rot._SL_DPS ,SL.DamageOnUse ,Rot._SL_GCDs     ,Rot._SL_DPS /TotalDPS));
-            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse,Rot._BLS_GCDs    ,Rot._BLS_DPS/TotalDPS));
+            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse/6,Rot._BLS_GCDs  ,Rot._BLS_DPS/TotalDPS));
+            // DPS Maintenance
             dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs,Rot._TH_DPS /TotalDPS));
+            dictValues.Add("Shattering Throw",  string.Format(format,Rot._Shatt_DPS,ST.DamageOnUse,Rot._Shatt_GCDs ,Rot._Shatt_DPS/TotalDPS));
             // DPS General
             dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
             dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS));
             dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS));
-            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00}*Main Hand-{3:0.00}" + 
-                                Environment.NewLine + "Off Hand- {4:0.00}" + 
-                                Environment.NewLine + "{5:00.0%} of DPS",
-                                WhiteDPS,WhiteDmg,WhiteRage,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
+            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}*Main Hand-{2:0.00}" + 
+                                Environment.NewLine + "Off Hand- {3:0.00}" + 
+                                Environment.NewLine + "{4:00.0%} of DPS",
+                                WhiteDPS,WhiteDmg,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
             dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:00.000}";
-            //dictValues.Add("Generated White DPS Rage",  string.Format(format,WhiteRage));
-            //dictValues.Add("Generated Other Rage",      string.Format(format,OtherRage));
-            dictValues.Add("Total Generated Rage",      string.Format("{0:00.000} = {1:00.000} + {2:00.000}",WhiteRage+OtherRage,WhiteRage,OtherRage));
+            dictValues.Add("Total Generated Rage",      string.Format("{0:00.000} = {1:0.000} + {2:0.000}",WhiteRage+OtherRage,WhiteRage,OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
             
