@@ -446,6 +446,10 @@ namespace Rawr.Mage
         public FrostWardTemplate(CharacterCalculationsMage calculations)
             : base("Frost Ward", false, true, false, 0, 0, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
         {
+            if (calculations.CalculationOptions.Mode32)
+            {
+                BaseCost = (int)(0.14 * BaseMana[calculations.CalculationOptions.PlayerLevel]);
+            }
             Calculate(calculations);
         }
     }
@@ -475,6 +479,10 @@ namespace Rawr.Mage
         public FrostNovaTemplate(CharacterCalculationsMage calculations)
             : base("Frost Nova", false, true, true, 0, 0, 25, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
+            if (calculations.CalculationOptions.Mode32)
+            {
+                BaseCost = (int)(0.07 * BaseMana[calculations.CalculationOptions.PlayerLevel]);
+            }
             Calculate(calculations);
         }
     }
@@ -540,6 +548,10 @@ namespace Rawr.Mage
         public FrostboltTemplate(CharacterCalculationsMage calculations)
             : base("Frostbolt", false, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
+            if (calculations.CalculationOptions.Mode32)
+            {
+                BaseCost = (int)(0.11 * BaseMana[calculations.CalculationOptions.PlayerLevel]);
+            }
             Calculate(calculations);
             if (calculations.MageTalents.GlyphOfFrostbolt)
             {
@@ -547,7 +559,15 @@ namespace Rawr.Mage
             }
             BaseCritRate += 0.01f * calculations.MageTalents.WintersChill;
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFrostbolt;
-            BaseCritRate += 0.02f * calculations.MageTalents.EmpoweredFrostbolt + 0.05f * calculations.BaseStats.Mage4T9;
+            if (calculations.CalculationOptions.Mode32)
+            {
+                BaseCastTime -= 0.1f * calculations.MageTalents.EmpoweredFrostbolt;
+            }
+            BaseCritRate += 0.05f * calculations.BaseStats.Mage4T9;
+            if (!calculations.CalculationOptions.Mode32)
+            {
+                BaseCritRate += 0.02f * calculations.MageTalents.EmpoweredFrostbolt;
+            }
             BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFrostbolt;
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier) * (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
@@ -843,6 +863,10 @@ namespace Rawr.Mage
         public ConeOfColdTemplate(CharacterCalculationsMage calculations)
             : base("Cone of Cold", false, true, true, 0, 0, 10, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
+            if (calculations.CalculationOptions.Mode32)
+            {
+                BaseCost = (int)(0.25 * BaseMana[calculations.CalculationOptions.PlayerLevel]);
+            }
             Calculate(calculations);
             Cooldown *= (1 - 0.07f * calculations.MageTalents.IceFloes + (calculations.MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
             AoeDamageCap = 37500;
@@ -896,6 +920,10 @@ namespace Rawr.Mage
         public IceLanceTemplate(CharacterCalculationsMage calculations)
             : base("Ice Lance", false, true, false, 30, 0, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
+            if (calculations.CalculationOptions.Mode32)
+            {
+                BaseCost = (int)(0.06 * BaseMana[calculations.CalculationOptions.PlayerLevel]);
+            }
             Calculate(calculations);
             BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact) * (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
         }

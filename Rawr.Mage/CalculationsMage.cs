@@ -797,6 +797,18 @@ namespace Rawr.Mage
                     break;
             }
 
+            if (calculationOptions.Mode32)
+            {
+                if (character.ActiveBuffs.Find(b => b.Name == "Frostfire Garb 2 Piece") != null)
+                {
+                    statsTotal.BonusManaGem -= 0.15f;
+                }
+                if (statsTotal.ManaRestoreFromMaxManaPerSecond == 0.0025f)
+                {
+                    statsTotal.ManaRestoreFromMaxManaPerSecond = 0.002f;
+                }
+            }
+
             if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;

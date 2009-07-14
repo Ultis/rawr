@@ -406,7 +406,7 @@ namespace Rawr.Mage
             if (CastingState.CalculationOptions.EffectDisableManaSources) return;
             dict["Intellect/Spirit"] += duration * (CastingState.SpiritRegen * CastingState.BaseStats.SpellCombatManaRegeneration + OO5SR * (CastingState.SpiritRegen - CastingState.SpiritRegen * CastingState.BaseStats.SpellCombatManaRegeneration));
             dict["MP5"] += duration * CastingState.BaseStats.Mp5 / 5f;
-            dict["Innervate"] += duration * ((CastingState.SpiritRegen * 4 * 20 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration) * (OO5SR) + (CastingState.SpiritRegen * (5 - CastingState.BaseStats.SpellCombatManaRegeneration) * 20 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration) * (1 - OO5SR));
+            dict["Innervate"] += duration * (15732 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration);
             dict["Mana Tide"] += duration * CastingState.CalculationOptions.ManaTide * 0.24f * CastingState.BaseStats.Mana / CastingState.CalculationOptions.FightDuration;
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
