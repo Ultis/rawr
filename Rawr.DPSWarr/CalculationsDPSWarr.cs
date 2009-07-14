@@ -706,7 +706,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Warrior Abilities as SpecialEffects
             Stats avgstats;
             Skills.DeathWish        Death = new Skills.DeathWish(       character, statsTotal, combatFactors, whiteAttacks); avgstats = Death.AverageStats; statsProcs += avgstats;
-            Skills.Recklessness     Reck  = new Skills.Recklessness(    character, statsTotal, combatFactors, whiteAttacks); avgstats = Reck.AverageStats ; statsProcs += avgstats;
+            //Recklessness is highly inaccurate right now
+            //Skills.Recklessness     Reck  = new Skills.Recklessness(    character, statsTotal, combatFactors, whiteAttacks); avgstats = Reck.AverageStats ; statsProcs += avgstats;
             Skills.ShatteringThrow  Shatt = new Skills.ShatteringThrow( character, statsTotal, combatFactors, whiteAttacks); avgstats = Shatt.AverageStats; statsProcs += avgstats;
             Skills.SweepingStrikes  Sweep = new Skills.SweepingStrikes( character, statsTotal, combatFactors, whiteAttacks); avgstats = Sweep.AverageStats; statsProcs += avgstats;
             Skills.Bloodrage        Blood = new Skills.Bloodrage(       character, statsTotal, combatFactors, whiteAttacks); avgstats = Blood.AverageStats; statsProcs += avgstats;

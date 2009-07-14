@@ -69,8 +69,17 @@ namespace Rawr.DPSWarr {
             }
             public float MhAvgSwingDmg {
                 get {
-                    float mhWhiteSwing = _combatFactors.AvgMhWeaponDmg * _combatFactors.ProbMhWhiteHit;// - _combatFactors.GlanceChance);
-                    mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.MhCrit * (1f + _combatFactors.BonusWhiteCritDmg);
+                    float mhWhiteSwing = 0f;
+                    float encroachValue = 0f;
+                    if (_combatFactors.ProbMhWhiteHit < _combatFactors.GlanceChance)
+                    {
+                        encroachValue = _combatFactors.GlanceChance - _combatFactors.ProbMhWhiteHit;
+                    }
+                    else
+                    {                        
+                        mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * (_combatFactors.ProbMhWhiteHit - _combatFactors.GlanceChance);
+                    }
+                    mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * (_combatFactors.MhCrit - encroachValue) * (1f + _combatFactors.BonusWhiteCritDmg);
                     mhWhiteSwing += _combatFactors.AvgMhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
 
                     mhWhiteSwing *= _combatFactors.DamageBonus;
@@ -81,8 +90,17 @@ namespace Rawr.DPSWarr {
             }
             public float OhAvgSwingDmg {
                 get {
-                    float ohWhiteSwing = _combatFactors.AvgOhWeaponDmg * _combatFactors.ProbOhWhiteHit;// - _combatFactors.GlanceChance);
-                    ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.OhCrit * (1f + _combatFactors.BonusWhiteCritDmg);
+                    float ohWhiteSwing = 0f;
+                    float encroachValue = 0f;
+                    if (_combatFactors.ProbOhWhiteHit < _combatFactors.GlanceChance)
+                    {
+                        encroachValue = _combatFactors.GlanceChance - _combatFactors.ProbOhWhiteHit;
+                    }
+                    else
+                    {
+                        ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * (_combatFactors.ProbOhWhiteHit - _combatFactors.GlanceChance);
+                    }
+                    ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * (_combatFactors.OhCrit - encroachValue) * (1f + _combatFactors.BonusWhiteCritDmg);
                     ohWhiteSwing += _combatFactors.AvgOhWeaponDmg * _combatFactors.GlanceChance * 0.7f;
 
                     ohWhiteSwing *= _combatFactors.DamageBonus;
@@ -132,6 +150,13 @@ namespace Rawr.DPSWarr {
                 }
             }
             // Rage generated per second
+            public float MHRageRatio {
+                get {
+                    float realMHRage = MHRageGenPerSec * (1f - Ovd_Freq);
+                    float realOverallRage = realMHRage + OHRageGenPerSec;
+                    return realMHRage / realOverallRage;
+                }
+            }
             public float whiteRageGenPerSec { get { return MHRageGenPerSec + OHRageGenPerSec; } }
             public float RageFormula(float d, float s, float f) {
                 /* R = Rage Generated
@@ -151,7 +176,7 @@ namespace Rawr.DPSWarr {
             }
             public float AvoidanceStreak {
                 get {
-                    float mhRagePercent = MHRageGenPerSec / whiteRageGenPerSec;
+                    float mhRagePercent = MHRageRatio;
                     float ohRagePercent = 1f - mhRagePercent;
                     float missChance = mhRagePercent * (_combatFactors.WhMissChance + _combatFactors.MhDodgeChance + _combatFactors.MhParryChance) +
                                              ohRagePercent * (_combatFactors.WhMissChance + _combatFactors.OhDodgeChance + _combatFactors.OhParryChance);
@@ -546,11 +571,13 @@ namespace Rawr.DPSWarr {
             private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance){
                 // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
                 float chanceWeDontProc = 1f;
-                chanceWeDontProc *= (1f - hsActivates           * procChance * chanceMHhit / 100f);
-                chanceWeDontProc *= (1f - Whirlwind.Activates   * procChance * chanceMHhit / 100f)
-                                 *  (1f - Whirlwind.Activates   * procChance * chanceOHhit / 100f);
-                chanceWeDontProc *= (1f - Bloodthirst.Activates * procChance * chanceMHhit / 100f);
-                return (1f - chanceWeDontProc) * FightDuration;
+                float actMod = 8f / FightDuration; // since we're assuming an 8sec rotation
+
+                chanceWeDontProc *= (1f - actMod * hsActivates           * procChance * chanceMHhit);
+                chanceWeDontProc *= (1f - actMod * Whirlwind.Activates   * procChance * chanceMHhit)
+                                 *  (1f - actMod * Whirlwind.Activates   * procChance * chanceOHhit);
+                chanceWeDontProc *= (1f - actMod * Bloodthirst.Activates * procChance * chanceMHhit);
+                return (1f - chanceWeDontProc) / actMod;
             }
             private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance) {
                 float hsPercent = (hsActivates) / (FightDuration / combatFactors.MainHandSpeed);

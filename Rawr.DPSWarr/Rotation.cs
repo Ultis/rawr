@@ -164,6 +164,7 @@ namespace Rawr.DPSWarr {
             BS.maintainActs = MaintainCDs;
             while (CalcOpts.FuryStance && Math.Abs(newHSActivates - oldActivates) > 0.01f) {
                 oldActivates = Which.Activates;
+                WhiteAtks.Ovd_Freq = (CombatFactors.MainHandSpeed * Which.OverridesPerSec);
                 BS.hsActivates = oldActivates;
                 _bloodsurgeRPS = Which.bloodsurgeRPS = Which.RageUsePerSecond;
                 Which.OverridesPerSec = GetOvdActivates(Which);
@@ -177,11 +178,14 @@ namespace Rawr.DPSWarr {
         }
 
         private float ContainCritValue(Skills.Ability abil, bool IsMH) {
-            float BaseCrit = IsMH ? CombatFactors.MhCrit : CombatFactors.OhCrit;
+            float BaseCrit = IsMH ? CombatFactors.MhYellowCrit : CombatFactors.OhYellowCrit;
             return (float)Math.Min(1f, Math.Max(0f, BaseCrit + abil.BonusCritChance));
         }
 
         private void calcDeepWounds() {
+            Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
+            float numWhichActivates = Which.OverridesPerSec * CalcOpts.Duration;
+            //if (CalcOpts.MultipleTargets) numWhichActivates *= 1f + (Which.Targets - 1f) * CalcOpts.MultipleTargetsPerc;
             // Main Hand
             float MHAbilityActivates =
                 // Arms
@@ -189,19 +193,21 @@ namespace Rawr.DPSWarr {
                 (_OP_GCDs * ContainCritValue(OP, true)) +
                 (_SD_GCDs * ContainCritValue(SD, true)) +
                 (_SL_GCDs * ContainCritValue(SL, true)) +
-                (_BLS_GCDs* ContainCritValue(BLS,true)) * 2f * 6f +
+                (_BLS_GCDs* ContainCritValue(BLS,true)) * 6f +
                 // Fury
                 (_BS_GCDs * ContainCritValue(BS, true)) +
                 (_BT_GCDs * ContainCritValue(BT, true)) +
-                (_WW_GCDs * ContainCritValue(WW, true)) * 2f;
+                (_WW_GCDs * ContainCritValue(WW, true)) +
+                // Both
+                (numWhichActivates * ContainCritValue(Which, true));
             float mhActivates =
                 /*Yellow*/MHAbilityActivates +
                 /*White */CalcOpts.Duration / CombatFactors.MainHandSpeed * CombatFactors.MhCrit;
 
             // Off Hand
             float OHAbilityActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
-                (_WW_GCDs * ContainCritValue(WW, false)) * 2f +
-                (_BLS_GCDs* ContainCritValue(BLS,false)) * 2f * 6f
+                (_WW_GCDs * ContainCritValue(WW, false)) +
+                (_BLS_GCDs* ContainCritValue(BLS,false)) * 6f
                 : 0f;
             float ohActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
                 /*Yellow*/OHAbilityActivates +
@@ -544,6 +550,8 @@ namespace Rawr.DPSWarr {
             // Alternate to Cleave is MultiTargs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
 
+            availRage += WhiteAtks.MHRageGenPerSec + WhiteAtks.OHRageGenPerSec;
+
             Skills.OnAttack Which = null;
             bool ok = false;
             if (CalcOpts.MultipleTargets) {
@@ -554,7 +562,7 @@ namespace Rawr.DPSWarr {
             
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
-                availRage += FightDuration / (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
+                //availRage += FightDuration / (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MainHandSpeed;

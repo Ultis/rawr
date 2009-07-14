@@ -173,8 +173,8 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs,Rot._TH_DPS /TotalDPS));
             // DPS General
             dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
-            dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.FullRageCost, HS.Activates, HS.DPS / TotalDPS));
-            dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.FullRageCost, CL.Activates, CL.DPS / TotalDPS));
+            dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS));
+            dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS));
             dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000} : {2:00.00}*Main Hand-{3:0.00}" + 
                                 Environment.NewLine + "Off Hand- {4:0.00}" + 
                                 Environment.NewLine + "{5:00.0%} of DPS",
