@@ -4,10 +4,14 @@
     xmlns:local="clr-namespace:Rawr.Silverlight"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
 	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	mc:Ignorable="d"
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
-	xmlns:System_Windows_Controls_Primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=System.Windows.Controls.Layout.Toolkit" xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm" x:Class="Rawr.Silverlight.MainPage" 
+	xmlns:System_Windows_Controls_Primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=System.Windows.Controls.Layout.Toolkit" 
+    xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
+    xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm" 
+    x:Class="Rawr.Silverlight.MainPage" 
     d:DesignWidth="912" d:DesignHeight="776" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 	<UserControl.DataContext>
 		<Rawr:Character/>
@@ -101,7 +105,7 @@
                 <ComboBoxItem Content="Donate"/>
             </ComboBox>
         </StackPanel>
-    	<controls:WrapPanel VerticalAlignment="Top" Margin="4,8,4,0" Grid.Row="1" Orientation="Vertical">
+    	<toolkit:WrapPanel VerticalAlignment="Top" Margin="4,8,4,0" Grid.Row="1" Orientation="Vertical">
     		<local:ItemButtonWithEnchant x:Name="HeadButton" d:LayoutOverrides="Height" Margin="4,0,0,4"/>
     		<local:ItemButton x:Name="NeckButton" d:LayoutOverrides="Height" Margin="4,0,0,4"/>
     		<local:ItemButtonWithEnchant x:Name="ShoulderButton" d:LayoutOverrides="Height" Margin="4,0,0,4"/>
@@ -111,8 +115,8 @@
     		<local:ItemButton x:Name="TabardButton" VerticalAlignment="Top" d:LayoutOverrides="Height" Margin="4,0,0,4"/>
     		<local:ItemButtonWithEnchant x:Name="WristButton" VerticalAlignment="Top" d:LayoutOverrides="Height" Margin="4,0,0,2"/>
     		<CheckBox x:Name="WristBSCheck" Height="Auto" VerticalAlignment="Top" Width="70" Content="BS Socket" FontSize="9" IsChecked="{Binding Mode=TwoWay, Path=WristBlacksmithingSocketEnabled}" Margin="4,0,0,4" HorizontalAlignment="Center"/>
-    	</controls:WrapPanel>
-    	<controls:WrapPanel Margin="2,8,2,0" VerticalAlignment="Top" Orientation="Vertical" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left">
+    	</toolkit:WrapPanel>
+    	<toolkit:WrapPanel Margin="2,8,2,0" VerticalAlignment="Top" Orientation="Vertical" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left">
     		<local:ItemButtonWithEnchant x:Name="HandButton" d:LayoutOverrides="Width, Height" VerticalAlignment="Top" Margin="2,0,2,2"/>
     		<CheckBox x:Name="HandBSCheck" Height="Auto" Width="70" FontSize="9" Content="BS Socket" IsChecked="{Binding Mode=TwoWay, Path=HandsBlacksmithingSocketEnabled}" VerticalAlignment="Top" Margin="2,0,2,4"/>
     		<local:ItemButton x:Name="BeltButton" d:LayoutOverrides="Width, Height" VerticalAlignment="Top" Margin="2,0,2,2"/>
@@ -123,15 +127,15 @@
     		<local:ItemButtonWithEnchant x:Name="Ring2Button" VerticalAlignment="Top" d:LayoutOverrides="Width, Height" Margin="2,0,2,4"/>
     		<local:ItemButton x:Name="Trinket1Button" VerticalAlignment="Top" d:LayoutOverrides="Width, Height" Margin="2,0,2,4"/>
     		<local:ItemButton x:Name="Trinket2Button" VerticalAlignment="Top" d:LayoutOverrides="Width, Height" Margin="2,0,2,4"/>
-    	</controls:WrapPanel>
+    	</toolkit:WrapPanel>
     	<local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="4,8,8,8" Grid.Row="1"/>
-    	<controls:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="4,8,4,8">
-    		<StackPanel controls:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,0,0">
+    	<toolkit:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="4,8,4,8">
+    		<StackPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,0,0">
     			<local:ItemButtonWithEnchant x:Name="MainHandButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0,8,0"/>
     			<local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" Width="70" HorizontalAlignment="Center" Margin="8,0,8,0"/>
     			<local:ItemButtonWithEnchant x:Name="RangedButton" HorizontalAlignment="Center" d:LayoutOverrides="Width, Height" Margin="8,0,8,0"/>
     		</StackPanel>
-    		<controls:TabControl controls:DockPanel.Dock="Top" VerticalAlignment="Stretch" Margin="0,0,0,4">
+    		<controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Stretch" Margin="0,0,0,4">
     			<controls:TabItem x:Name="StatsTab" Header="Stats">
     				<Grid>
     					<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Name:" TextWrapping="Wrap"/>
@@ -196,7 +200,7 @@
     				<ScrollViewer x:Name="OptionsView" Margin="0,0,0,0" BorderThickness="0,0,0,0" Padding="0,0,0,0" VerticalScrollBarVisibility="Auto"/>
     			</controls:TabItem>
     		</controls:TabControl>
-    	</controls:DockPanel>
+    	</toolkit:DockPanel>
     	<Button x:Name="OfflineInstallButton" HorizontalAlignment="Right" Content="Install Offline" Margin="0,4,8,4" Grid.Column="0" Click="InstallOffline" Grid.ColumnSpan="4"/>
         
     </Grid>

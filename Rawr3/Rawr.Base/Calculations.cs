@@ -44,6 +44,7 @@ namespace Rawr
                 RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
                 string[] displayName = type.Name.Split('|');
                 Models[modelInfos[0].Name] = type;
+				System.Windows.MessageBox.Show("Registered " + modelInfos[0].Name);
                 _modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
                 _modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
             }

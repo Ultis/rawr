@@ -104,8 +104,9 @@ namespace Rawr.Silverlight
                 catch { }
             }
 
-            ItemGrid.ItemsSource = items;
-            ItemGrid.GroupDescriptions.Add(new PropertyGroupDescription("Slot"));
+			PagedCollectionView itemsPCV = new PagedCollectionView(items);
+			itemsPCV.GroupDescriptions.Add(new PropertyGroupDescription("Slot"));
+            ItemGrid.ItemsSource = itemsPCV;
         }
 
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)

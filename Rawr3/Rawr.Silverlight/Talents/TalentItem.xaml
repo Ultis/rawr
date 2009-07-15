@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
 	x:Class="Rawr.Silverlight.TalentItem"
 	Height="65" Width="65" Visibility="Visible"
 	MouseLeftButtonUp="TalentClicked">

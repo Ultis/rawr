@@ -51,7 +51,6 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Silverlight, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
@@ -107,7 +106,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50983</DevelopmentServerPort>
+          <DevelopmentServerPort>55871</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

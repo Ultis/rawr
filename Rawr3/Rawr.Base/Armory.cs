@@ -854,6 +854,8 @@ namespace Rawr
                 Character.CharacterClass charClass = (Character.CharacterClass)int.Parse(characterElement.Attribute("classId").Value);
                 string name = characterElement.Attribute("name").Value;
                 string realm = characterElement.Attribute("realm").Value;
+				
+				StatusMessaging.UpdateStatus("Get Character From Armory", "A");
 
                 Dictionary<Character.CharacterSlot, string> items = new Dictionary<Character.CharacterSlot, string>();
                 foreach (XElement itemNode in characterInfo.Element("characterTab").Element("items").Elements("item"))
@@ -865,7 +867,11 @@ namespace Rawr
                         itemNode.Attribute("permanentenchant").Value);
                 }
 
+				StatusMessaging.UpdateStatus("Get Character From Armory", "B");
+
                 EnsureItemsLoaded(items.Values);
+
+				StatusMessaging.UpdateStatus("Get Character From Armory", "C");
 
                 Result = new Character(name, realm, Region, race,
                     items.ContainsKey(Character.CharacterSlot.Head) ? items[Character.CharacterSlot.Head] : null,
@@ -889,7 +895,10 @@ namespace Rawr
                     items.ContainsKey(Character.CharacterSlot.Ranged) ? items[Character.CharacterSlot.Ranged] : null,
                     items.ContainsKey(Character.CharacterSlot.Projectile) ? items[Character.CharacterSlot.Projectile] : null,
                     null);
-                Result.Class = charClass;
+				Result.Class = charClass;
+				if (ItemsToLoad == 0) InitializeAvailableItemList();
+
+				StatusMessaging.UpdateStatus("Get Character From Armory", "D");
 
                 StatusMessaging.UpdateStatus("Get Talent Tree From Armory", "Downloading Talent Tree");
                 StatusMessaging.UpdateStatusFinished("Get Character From Armory");
@@ -899,27 +908,27 @@ namespace Rawr
             }
             catch
             {
-                StatusMessaging.UpdateStatusFinished("Get Character From Armory");
-                StatusMessaging.UpdateStatusFinished("Get Talent Tree From Armory");
-                StatusMessaging.ReportError("Get Character From Armory", null, "No character returned from the Armory");
+                //StatusMessaging.UpdateStatusFinished("Get Character From Armory");
+                //StatusMessaging.UpdateStatusFinished("Get Talent Tree From Armory");
+                //StatusMessaging.ReportError("Get Character From Armory", null, "No character returned from the Armory");
                 Result = null;
                 TalentTree = null;
                 CharacterSheet = null;
-                Invoke();
+                //Invoke();
             }
         }
 
         private void EnsureItemsLoaded(IEnumerable<string> items)
         {
-            foreach (string item in items)
+			foreach (string item in items)
             {
-                string[] itemids = item.Split('.');
+				string[] itemids = item.Split('.');
                 for (int i = 0; i < 4; i++)
                 {
-                    int id = int.Parse(itemids[i]);
-                    if (id > 0 && !ItemCache.ContainsItemId(id))
+					int id = int.Parse(itemids[i]);
+					if (id > 0 && !ItemCache.ContainsItemId(id))
                     {
-                        ItemsToLoad++;
+						ItemsToLoad++;
                         TotalItemsToLoad++;
                         StatusMessaging.UpdateStatus("Get Items from Armory",
                             string.Format("{0} of {1} Loaded", TotalItemsToLoad - ItemsToLoad, TotalItemsToLoad));
@@ -927,8 +936,7 @@ namespace Rawr
                     }
                 }
             }
-            if (ItemsToLoad == 0) InitializeAvailableItemList();
-        }
+		}
 
         private void ItemLoaded(Item item)
         {
@@ -952,8 +960,8 @@ namespace Rawr
 
             XElement activeGroup = null;
             StatusMessaging.UpdateStatus("Get Talent Tree From Armory", "Processing Talent Tree");
-            foreach (XElement group in TalentTree.Element("page").Element("characterInfo")
-                .Element("talentGroups").Elements("talentGroup"))
+			foreach (XElement group in TalentTree.Element("page").Element("characterInfo")
+                .Element("talents").Elements("talentGroup"))
             {
                 if (group.Attribute("active") != null) activeGroup = group;
             }
@@ -1033,7 +1041,8 @@ namespace Rawr
                     pi.SetValue(talents, true, null);
                 }
             }
-            ApplyRacialandProfessionBuffs();
+			StatusMessaging.UpdateStatus("Get Talent Tree From Armory", Result.CurrentModel);
+			ApplyRacialandProfessionBuffs();
 
             StatusMessaging.UpdateStatusFinished("Get Talent Tree From Armory");
             TalentTree = null;
@@ -1051,23 +1060,23 @@ namespace Rawr
         /// will be updated so the user knows to save.
         /// </summary>
         /// <param name="currentChar"></param>
-        private void InitializeAvailableItemList()
-        {
-            for (Character.CharacterSlot slot = 0; slot < (Character.CharacterSlot)19; slot++)
-            {
-                ItemInstance item = Result[slot];
-                if ((object)item != null && item.Id != 0)
-                {
-                    if (!Result.AvailableItems.Contains(item.Id.ToString())) Result.AvailableItems.Add(item.Id.ToString());
-                    Enchant enchant = item.Enchant;
-                    if (enchant != null && enchant.Id != 0)
-                    {
-                        string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
-                        if (!Result.AvailableItems.Contains(enchantString)) Result.AvailableItems.Add(enchantString);
-                    }
-                }
-            }
-        }
+		private void InitializeAvailableItemList()
+		{
+			for (Character.CharacterSlot slot = 0; slot < (Character.CharacterSlot)19; slot++)
+			{
+				ItemInstance item = Result[slot];
+				if ((object)item != null && item.Id != 0)
+				{
+					if (!Result.AvailableItems.Contains(item.Id.ToString())) Result.AvailableItems.Add(item.Id.ToString());
+					Enchant enchant = item.Enchant;
+					if (enchant != null && enchant.Id != 0)
+					{
+						string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+						if (!Result.AvailableItems.Contains(enchantString)) Result.AvailableItems.Add(enchantString);
+					}
+				}
+			}
+		}
 
         private void ApplyRacialandProfessionBuffs()
         {
@@ -1087,7 +1096,8 @@ namespace Rawr
                 }
             }
 
-            Calculations.GetModel(Result.CurrentModel).SetDefaults(Result);
+			StatusMessaging.UpdateStatus("Get Talent Tree From Armory", Result.CurrentModel);
+			Calculations.GetModel(Result.CurrentModel).SetDefaults(Result);
         }
     }
 }

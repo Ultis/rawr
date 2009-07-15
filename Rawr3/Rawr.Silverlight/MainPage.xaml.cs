@@ -111,7 +111,7 @@ namespace Rawr.Silverlight
         {
             Instance = this;
             InitializeComponent();
-			if (Application.Current.RunningOffline) OfflineInstallButton.Visibility = Visibility.Collapsed;
+			if (Application.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
 
             Tooltip = ItemTooltip;
 
@@ -189,9 +189,9 @@ namespace Rawr.Silverlight
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (Application.Current.ExecutionState == ExecutionStates.RunningOnline)
+            if (Application.Current.InstallState == InstallState.NotInstalled)
             {
-                Application.Current.Detach();
+                Application.Current.Install();
             }
         }
 

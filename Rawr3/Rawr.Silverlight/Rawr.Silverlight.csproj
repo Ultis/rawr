@@ -28,6 +28,8 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <EnableOutOfBrowser>true</EnableOutOfBrowser>
+    <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,14 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.ComponentModel.DataAnnotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.ComponentModel.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.ComponentModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization.dll">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\Silverlight\v3.0\System.Runtime.Serialization.dll</HintPath>
       <Private>True</Private>
@@ -68,31 +63,17 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Controls.Data.DataForm.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.DataForm.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Data.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Controls.dll" />
-    <Reference Include="System.Windows.Controls.Input.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Input.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Input.Toolkit.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Input.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Layout.Toolkit.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Toolkit.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Data.DataForm.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Data.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Navigation, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -521,9 +502,16 @@
     <Resource Include="Images\temp.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\icon-16.png" />
-    <Content Include="Images\icon-32.png" />
-    <Content Include="Images\icon-64.png" />
+    <Content Include="Images\icon-16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icon-32.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icon-64.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\V3.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
