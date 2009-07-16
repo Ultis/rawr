@@ -1406,11 +1406,10 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.DeathWish;
-                MaxRange = 20f; // In Yards 
                 Cd = 3f * 60f * (1f - 1f/9f * Talents.IntensifyRage); // In Seconds
                 Duration = 30f;
                 RageCost = 10f;
-                StanceOkArms = true;
+                StanceOkArms = StanceOkFury = true;
                 Effect = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
                         Duration, Cd);
