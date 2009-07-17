@@ -277,6 +277,10 @@ namespace Rawr
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45f, .1f));
             }
+            else if ((match = new Regex(@"Your melee and ranged attacks have a chance to increase your critical strike rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45f, .15f));
+            }
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec."))
             {
                 // Pandora's Plea
