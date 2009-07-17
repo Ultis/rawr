@@ -130,9 +130,6 @@ namespace Rawr
 	[Serializable]
 	public class CalculationOptionsEnhance : ICalculationOptionBase
 	{
-        public bool BaseStatOption { get; set; }
-        public bool Magma { get; set; }
-       
         public string GetXml()
 		{
 			System.Xml.Serialization.XmlSerializer serializer = 
@@ -151,6 +148,7 @@ namespace Rawr
         public float FightLength = 6.0f;
         public int TargetFireResistance = 0;
         public int TargetNatureResistance = 0;
-        
+        public bool Magma = true;
+        public bool BaseStatOption = true;
     }
 }

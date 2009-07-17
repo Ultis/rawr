@@ -170,6 +170,8 @@
             // chbMagmaSearing
             // 
             this.chbMagmaSearing.AutoSize = true;
+            this.chbMagmaSearing.Checked = true;
+            this.chbMagmaSearing.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbMagmaSearing.Location = new System.Drawing.Point(10, 234);
             this.chbMagmaSearing.Name = "chbMagmaSearing";
             this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
@@ -181,6 +183,8 @@
             // chbBaseStatOption
             // 
             this.chbBaseStatOption.AutoSize = true;
+            this.chbBaseStatOption.Checked = true;
+            this.chbBaseStatOption.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbBaseStatOption.Location = new System.Drawing.Point(10, 211);
             this.chbBaseStatOption.Name = "chbBaseStatOption";
             this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
