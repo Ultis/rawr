@@ -218,6 +218,7 @@ namespace Rawr.Enhance
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
+            float shockBonus = stats.Enhance4T9 == 1f ? 1.25f : 1f;
             float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;
             float windfuryDamageBonus = 1f;
             switch (character.ShamanTalents.ElementalWeapons){
@@ -367,7 +368,7 @@ namespace Rawr.Enhance
             float shockdps = damageES / cs.AbilityCooldown("Earth Shock");
             float shockNormal = shockdps * cs.SpellHitModifier;
             float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-            float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance;
+            float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance * shockBonus;
 
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
@@ -739,6 +740,8 @@ namespace Rawr.Enhance
                     BonusFlurryHaste = stats.BonusFlurryHaste,
                     BonusMWFreq = stats.BonusMWFreq,
                     BonusLLSSDamage = stats.BonusLLSSDamage,
+                    Enhance2T9 = stats.Enhance2T9,
+                    Enhance4T9 = stats.Enhance4T9,
                     PhysicalHit = stats.PhysicalHit,
                     PhysicalHaste = stats.PhysicalHaste,
                     PhysicalCrit = stats.PhysicalCrit,
@@ -800,7 +803,7 @@ namespace Rawr.Enhance
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.GreatnessProc +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
-                stats.BonusWFAttackPower +
+                stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 +
                 stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0
 
                 &&

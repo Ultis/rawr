@@ -607,7 +607,10 @@ namespace Rawr
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
 					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Kirin'dor", "Kirin Tor");
                 // normalize alliance/horde set names
-                htmlTooltip = htmlTooltip.Replace("Sundtrider's Regalia", "Khadgar's Regalia");
+                htmlTooltip = htmlTooltip.Replace("Sunstrider's Regalia", "Khadgar's Regalia")   // Mage T9
+                                         .Replace("Nobundo's Battlegear", "Thrall's Battlegear") // Enhance T9
+                                         .Replace("Nobundo's Garb", "Thrall's Garb")             // RestoSham T9 
+                                         .Replace("Nobundo's Regalia", "Thrall's Regalia");      // Elemental T9
 				item.SetName = htmlTooltip;
 			}
 			//if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";

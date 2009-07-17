@@ -910,8 +910,10 @@ namespace Rawr
 					slot = Item.ItemSlot.Meta;
 
                 // normalize alliance/horde set names
-                setName = setName.Replace("Sunstrider's Regalia", "Khadgar's Regalia");
-
+                setName = setName.Replace("Sunstrider's Regalia", "Khadgar's Regalia")   // Mage T9
+                                 .Replace("Nobundo's Battlegear", "Thrall's Battlegear") // Enhance T9
+                                 .Replace("Nobundo's Garb", "Thrall's Garb")             // RestoSham T9 
+                                 .Replace("Nobundo's Regalia", "Thrall's Regalia");      // Elemental T9
                 Item item = new Item()
                 {
 					Id = id,

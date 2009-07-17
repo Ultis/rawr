@@ -2011,6 +2011,35 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Primalstrike 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { AttackPower = 40 },
+                SetName = "Primal Intent",
+                SetThreshold = 3
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Fel Leather 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DodgeRating = 20 },
+                SetName = "Fel Skin",
+                SetThreshold = 3
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Heavy Clefthoof 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Strength = 20 },
+                SetName = "Strength of the Clefthoof",
+                SetThreshold = 3
+            });
+
+
             #region Windhawk (epic leather caster) set
             defaultBuffs.Add(new Buff()
             {
@@ -2330,34 +2359,6 @@ namespace Rawr
             });
             #endregion
 
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Primalstrike 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { AttackPower = 40 },
-                SetName = "Primal Intent",
-                SetThreshold = 3
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Fel Leather 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DodgeRating = 20 },
-                SetName = "Fel Skin",
-                SetThreshold = 3
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Heavy Clefthoof 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Strength = 20 },
-                SetName = "Strength of the Clefthoof",
-                SetThreshold = 3
-            });
-
             #region Resto Shammy set bonuses: Removed BC sets as we push to Ulduar
             /*defaultBuffs.Add(new Buff()
             {
@@ -2546,6 +2547,27 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Battlegear",
                 Stats = { BonusMWFreq = 0.2f },
+                SetThreshold = 4
+            });
+
+            //Enhancement Shaman Tier 9 Set Bonuses
+
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Enhance T9 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance2T9 = 1 },
+                SetName = "Thrall's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Enhance T9 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance4T9 = 1 },
+                SetName = "Thrall's Battlegear",
                 SetThreshold = 4
             });
             #endregion

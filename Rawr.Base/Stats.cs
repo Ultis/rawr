@@ -239,6 +239,8 @@ namespace Rawr {
         BonusLSDamage,
         BonusLLSSDamage,
         BonusMWFreq,
+        Enhance2T9,
+        Enhance4T9,
         #endregion
         #region Added by Rawr.Elemental
         BonusCritChance,
@@ -880,7 +882,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         [DisplayName("Haste Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float HasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
@@ -3111,6 +3113,24 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusMWFreq]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusMWFreq] = value; }
+        }
+
+        [DisplayName("Enhance T9 2 Piece Bonus")]
+        [Category("Enhance")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Enhance2T9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T9] = value; }
+        }
+
+        [DisplayName("Enhance T9 4 Piece Bonus")]
+        [Category("Enhance")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Enhance4T9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T9] = value; }
         }
 
         #endregion

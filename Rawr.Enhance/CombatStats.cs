@@ -60,6 +60,7 @@ namespace Rawr.Enhance
         private float spellMissesPerSec = 0f;
 
         private float callOfThunder = 0f;
+        private float staticShocksPerSecond = 0f;
 
         private List<Ability> abilities = new List<Ability>();
 
@@ -111,7 +112,7 @@ namespace Rawr.Enhance
 
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
         public float BaseShockSpeed { get { return 6f - .2f * _character.ShamanTalents.Reverberation; } }
-        public float StaticShockProcsPerS { get { return (HitsPerSMH + HitsPerSOH) * .02f * _character.ShamanTalents.StaticShock; } }
+        public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
         public float StaticShockAvDuration 
         { get { 
             return StaticShockProcsPerS == 0 ? 600f : ((3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS); 
@@ -217,7 +218,7 @@ namespace Rawr.Enhance
             callOfThunder = .05f * _character.ShamanTalents.CallOfThunder;
             critMultiplierMelee = 2f * (1 + _stats.BonusCritMultiplier);
             critMultiplierSpell = (1.5f + .1f * _character.ShamanTalents.ElementalFury) * (1 + _stats.BonusSpellCritMultiplier);
-
+            
             // Melee
             float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + .02f * _talents.DualWieldSpecialization;
             expertiseBonus = 0.0025f * (_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
@@ -346,6 +347,8 @@ namespace Rawr.Enhance
             spellCastsPerSec = spellAttacksPerSec;
             spellMissesPerSec = spellAttacksPerSec * chanceSpellMiss;
             chanceMeleeHit = meleeAttacksPerSec / (swingsPerSMHMelee + swingsPerSOHMelee + 2f * wfProcsPerSecond + .25f + 1f/6f);
+            float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
+            staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
         }
 
         #region getters
