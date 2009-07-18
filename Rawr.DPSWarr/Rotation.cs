@@ -177,7 +177,7 @@ namespace Rawr.DPSWarr {
             }
         }
 
-        private float ContainCritValue(Skills.Ability abil, bool IsMH) {
+        public float ContainCritValue(Skills.Ability abil, bool IsMH) {
             float BaseCrit = IsMH ? CombatFactors.MhYellowCrit : CombatFactors.OhYellowCrit;
             return (float)Math.Min(1f, Math.Max(0f, BaseCrit + abil.BonusCritChance));
         }
@@ -713,6 +713,7 @@ namespace Rawr.DPSWarr {
             /*Mortal Strike     */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _MS_GCDs,     ref DPS_TTL,ref _MS_DPS ,MS);
             /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
             /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _OP_GCDs,     ref DPS_TTL,ref _OP_DPS ,OP);
+            SD.Slam_Freq = _SL_GCDs;
             /*Sudden Death      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SD_GCDs,     ref DPS_TTL,ref _SD_DPS ,SD);
             /*Slam for remainder of GCDs*/
             float SL_GCDs = SL.Validated ? availGCDs : 0f;
@@ -738,7 +739,8 @@ namespace Rawr.DPSWarr {
             
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
-                availRage += FightDuration / (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
+                float slamspeedadd = WhiteAtks.Slam_Freq == 0 ? 0 : ((1.5f - 0.5f * Talents.ImprovedSlam) / (WhiteAtks.Slam_Freq));
+                availRage += FightDuration / (CombatFactors.MainHandSpeed + slamspeedadd) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MainHandSpeed;

@@ -4,6 +4,22 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
+/* Things to add:
+ * 
+ * Full Boss Handling System
+ * Custom Rotation Priority
+ * Target Damage
+ * Target Attack Speed
+ * Threat Value/Weight
+ * Pot Usage (Needs to pull GCDs)
+ * Healing Recieved
+ * Max # of Targets
+ * Trinket Usage (Needs to pull GCDs) (Also be able to set the Cd length)
+ * % of fight with mob under 20% HP (activates Execute Spamming)
+ * Module Notes (How to deal with stuff)
+ * Vigilance Threat pulling
+ */
+
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
