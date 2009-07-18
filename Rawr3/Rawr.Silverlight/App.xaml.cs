@@ -23,11 +23,24 @@ namespace Rawr.Silverlight
             this.Startup += this.Application_Startup;
             this.Exit += this.Application_Exit;
             this.UnhandledException += this.Application_UnhandledException;
+			this.CheckAndDownloadUpdateCompleted += new CheckAndDownloadUpdateCompletedEventHandler(App_CheckAndDownloadUpdateCompleted);
 
-            InitializeComponent();
+			//_timerUpdates = new System.Threading.Timer(_timerUpdates_Tick, null, 0, 60 * 60 * 1000);
+			InitializeComponent();
         }
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+		//private System.Threading.Timer _timerUpdates;
+		//private void _timerUpdates_Tick(object state)
+		//{
+		//	Application.Current.RootVisual.Dispatcher.BeginInvoke(SayCheckingForUpdates);
+		//}
+
+		//private void SayCheckingForUpdates()
+		//{
+		//	MessageBox.Show("Checking for updates...");
+		//}
+
+		private void Application_Startup(object sender, StartupEventArgs e)
         {
             Properties.NetworkSettings.UseAspx = e.InitParams.ContainsKey("UseAspx");
             Grid g = new Grid();
@@ -42,9 +55,17 @@ namespace Rawr.Silverlight
             Grid g = RootVisual as Grid;
             g.Children.RemoveAt(0);
             g.Children.Add(new MainPage());
-        }
+		
+			this.CheckAndDownloadUpdateAsync();
+		}
 
-        private void Application_Exit(object sender, EventArgs e)
+		private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
+		{
+			if (e.UpdateAvailable)
+				MessageBox.Show("A new version of Rawr has automatically been downloaded and installed! Relaunch Rawr, at your leisure, to use it!", "New version installed", MessageBoxButton.OK);
+		}
+
+		private void Application_Exit(object sender, EventArgs e)
         {
             LoadScreen.SaveFiles();
         }
