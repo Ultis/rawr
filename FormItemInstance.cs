@@ -26,7 +26,7 @@ namespace Rawr
             InitializeComponent();
         }
 
-        public Character.CharacterSlot CharacterSlot
+        public CharacterSlot CharacterSlot
         {
             get
             {
@@ -106,67 +106,67 @@ namespace Rawr
                 Item item = ItemInstance.Item;
                 bool blacksmithingSocket = true;
                 Character character = FormItemSelection.Character;
-                if ((itemButtonWithEnchant.CharacterSlot == Character.CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (itemButtonWithEnchant.CharacterSlot == Character.CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (itemButtonWithEnchant.CharacterSlot == Character.CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled))
+                if ((itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled))
                 {
                     blacksmithingSocket = true;
                 }
-                Item.ItemSlot slot = item.SocketColor1;
-                if (slot == Item.ItemSlot.None && blacksmithingSocket)
+                ItemSlot slot = item.SocketColor1;
+                if (slot == ItemSlot.None && blacksmithingSocket)
                 {
-                    slot = Item.ItemSlot.Prismatic;
+                    slot = ItemSlot.Prismatic;
                     blacksmithingSocket = false;
                 }
                 SetSocketColor(gem1Button, slot);
                 slot = item.SocketColor2;
-                if (slot == Item.ItemSlot.None && blacksmithingSocket)
+                if (slot == ItemSlot.None && blacksmithingSocket)
                 {
-                    slot = Item.ItemSlot.Prismatic;
+                    slot = ItemSlot.Prismatic;
                     blacksmithingSocket = false;
                 }
                 SetSocketColor(gem2Button, slot);
                 slot = item.SocketColor3;
-                if (slot == Item.ItemSlot.None && blacksmithingSocket)
+                if (slot == ItemSlot.None && blacksmithingSocket)
                 {
-                    slot = Item.ItemSlot.Prismatic;
+                    slot = ItemSlot.Prismatic;
                     blacksmithingSocket = false;
                 }
                 SetSocketColor(gem3Button, slot);
             }
             else
             {
-                SetSocketColor(gem1Button, Item.ItemSlot.None);
-                SetSocketColor(gem2Button, Item.ItemSlot.None);
-                SetSocketColor(gem3Button, Item.ItemSlot.None);
+                SetSocketColor(gem1Button, ItemSlot.None);
+                SetSocketColor(gem2Button, ItemSlot.None);
+                SetSocketColor(gem3Button, ItemSlot.None);
             }
         }
 
-        private void SetSocketColor(ItemButton button, Item.ItemSlot slot)
+        private void SetSocketColor(ItemButton button, ItemSlot slot)
         {
             switch (slot)
             {
-                case Item.ItemSlot.Blue:
+                case ItemSlot.Blue:
                     button.BackColor = Color.FromKnownColor(KnownColor.Blue);
-                    button.CharacterSlot = Character.CharacterSlot.Gems;
+                    button.CharacterSlot = CharacterSlot.Gems;
                     break;
-                case Item.ItemSlot.Red:
+                case ItemSlot.Red:
                     button.BackColor = Color.FromKnownColor(KnownColor.Red);
-                    button.CharacterSlot = Character.CharacterSlot.Gems;
+                    button.CharacterSlot = CharacterSlot.Gems;
                     break;
-                case Item.ItemSlot.Yellow:
+                case ItemSlot.Yellow:
                     button.BackColor = Color.FromKnownColor(KnownColor.Yellow);
-                    button.CharacterSlot = Character.CharacterSlot.Gems;
+                    button.CharacterSlot = CharacterSlot.Gems;
                     break;
-                case Item.ItemSlot.Prismatic:
+                case ItemSlot.Prismatic:
                     button.BackColor = Color.FromKnownColor(KnownColor.Silver);
-                    button.CharacterSlot = Character.CharacterSlot.Gems;
+                    button.CharacterSlot = CharacterSlot.Gems;
                     break;
-                case Item.ItemSlot.Meta:
+                case ItemSlot.Meta:
                     button.BackColor = Color.FromKnownColor(KnownColor.Gray);
-                    button.CharacterSlot = Character.CharacterSlot.Metas;
+                    button.CharacterSlot = CharacterSlot.Metas;
                     break;
                 default:
                     button.BackColor = SystemColors.Control;
-                    button.CharacterSlot = Character.CharacterSlot.Gems;
+                    button.CharacterSlot = CharacterSlot.Gems;
                     break;
             }
         }

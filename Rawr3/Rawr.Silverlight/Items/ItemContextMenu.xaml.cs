@@ -15,7 +15,7 @@ namespace Rawr.Silverlight
 
         public bool IsShown { get { return ContextPopup.IsOpen; } }
 
-        public Character.CharacterSlot Slot { get; set; }
+        public CharacterSlot Slot { get; set; }
 
         private Character character;
         public Character Character

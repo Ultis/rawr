@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Rawr.Enhance
 {
-    [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", Character.CharacterClass.Shaman)]
+    [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
 	public class CalculationsEnhance : CalculationsBase
     {
         private string VERSION = "3.0.0.0";
@@ -178,7 +178,7 @@ namespace Rawr.Enhance
 			}
 		}
 #endif
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Shaman; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationEnhance(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsEnhance(); }
 
@@ -658,27 +658,27 @@ namespace Rawr.Enhance
         #endregion
 
         #region Relevant Stats
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (_relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-                        Item.ItemType.Cloth,
-						Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-						Item.ItemType.Totem,
-					//	Item.ItemType.Staff,
-					//	Item.ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
-                    //  Item.ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
-                        Item.ItemType.Dagger,
-                        Item.ItemType.OneHandAxe,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.FistWeapon
+						ItemType.None,
+                        ItemType.Cloth,
+						ItemType.Leather,
+                        ItemType.Mail,
+						ItemType.Totem,
+					//	ItemType.Staff,
+					//	ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
+                    //  ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
+                        ItemType.Dagger,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.FistWeapon
 					});
                 }
                 return _relevantItemTypes;
@@ -687,9 +687,9 @@ namespace Rawr.Enhance
 
         public override bool IsItemRelevant(Item item)
 		{
-			if ((item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Totem)) 
+			if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Totem)) 
 				return false;
-            if (item.Slot == Item.ItemSlot.OffHand && item.Type == Item.ItemType.None)
+            if (item.Slot == ItemSlot.OffHand && item.Type == ItemType.None)
                 return false;
 			return base.IsItemRelevant(item);
 		}

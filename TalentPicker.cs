@@ -116,7 +116,7 @@ namespace Rawr
 
 
         public SavedTalentSpec CustomSpec { get; set; }
-        public List<SavedTalentSpec> SpecsFor(Character.CharacterClass charClass)
+        public List<SavedTalentSpec> SpecsFor(CharacterClass charClass)
         {
             List<SavedTalentSpec> classTalents = new List<SavedTalentSpec>();
             foreach (SavedTalentSpec spec in _savedTalents)

@@ -12,7 +12,7 @@ namespace Rawr.ShadowPriest
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
-        public Character.CharacterRace Race { get; set; }
+        public CharacterRace Race { get; set; }
 
         public bool bHoly { get; set; }
 
@@ -114,7 +114,7 @@ namespace Rawr.ShadowPriest
             float BonusHit = BasicStats.SpellHit * 100f;
             float RacialHit = 0;
             string RacialText = "";
-            if (character.Race == Character.CharacterRace.Draenei)
+            if (character.Race == CharacterRace.Draenei)
             {
                 RacialHit = 1;
                 RacialText = "1% from Draenei Racial\r\n";

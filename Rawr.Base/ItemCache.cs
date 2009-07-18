@@ -304,7 +304,7 @@ namespace Rawr
 			{
 				//item.Stats.ConvertStatsToWotLKEquivalents();
                 //item.Sockets.Stats.ConvertStatsToWotLKEquivalents();
-				//if (item.Type == Item.ItemType.Leather) UpdateArmorFromWowhead(item);
+				//if (item.Type == ItemType.Leather) UpdateArmorFromWowhead(item);
 				AddItem(item, false);
 			}
 

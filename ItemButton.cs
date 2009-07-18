@@ -78,8 +78,8 @@ namespace Rawr
 			}
 		}
 
-		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.Head;
-		public Character.CharacterSlot CharacterSlot
+		private CharacterSlot _characterSlot = CharacterSlot.Head;
+		public CharacterSlot CharacterSlot
 		{
 			get { return _characterSlot; }
 			set
@@ -114,7 +114,7 @@ namespace Rawr
 		}
         private void UpdateDim()
         {
-            if (Character != null && CharacterSlot == Character.CharacterSlot.OffHand)
+            if (Character != null && CharacterSlot == CharacterSlot.OffHand)
             {
                 _dimIcon = !Calculations.IncludeOffHandInCalculations(Character);
             }

@@ -14,8 +14,8 @@ namespace Rawr.Silverlight
 	public partial class ItemButtonWithEnchant : UserControl
 	{
 
-        private Character.CharacterSlot slot;
-        public Character.CharacterSlot Slot
+        private CharacterSlot slot;
+        public CharacterSlot Slot
         {
             get { return slot; }
             set
@@ -67,7 +67,7 @@ namespace Rawr.Silverlight
 
                     Item eItem = new Item();
                     eItem.Name = item.Enchant.Name;
-                    eItem.Quality = Item.ItemQuality.Temp;
+                    eItem.Quality = ItemQuality.Temp;
                     eItem.Stats = item.Enchant.Stats;
                     enchant = eItem;
                 }

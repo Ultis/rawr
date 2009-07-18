@@ -249,7 +249,7 @@
             // itemButtonBack
             // 
             this.itemButtonBack.Character = null;
-            this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
+            this.itemButtonBack.CharacterSlot = Rawr.CharacterSlot.Back;
             this.itemButtonBack.FormItemSelection = null;
             this.itemButtonBack.ItemIcon = null;
             this.itemButtonBack.Location = new System.Drawing.Point(6, 245);
@@ -263,7 +263,7 @@
             // itemButtonChest
             // 
             this.itemButtonChest.Character = null;
-            this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
+            this.itemButtonChest.CharacterSlot = Rawr.CharacterSlot.Chest;
             this.itemButtonChest.FormItemSelection = null;
             this.itemButtonChest.ItemIcon = null;
             this.itemButtonChest.Location = new System.Drawing.Point(6, 330);
@@ -277,7 +277,7 @@
             // itemButtonFeet
             // 
             this.itemButtonFeet.Character = null;
-            this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
+            this.itemButtonFeet.CharacterSlot = Rawr.CharacterSlot.Feet;
             this.itemButtonFeet.FormItemSelection = null;
             this.itemButtonFeet.ItemIcon = null;
             this.itemButtonFeet.Location = new System.Drawing.Point(399, 277);
@@ -291,7 +291,7 @@
             // itemButtonFinger1
             // 
             this.itemButtonFinger1.Character = null;
-            this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
+            this.itemButtonFinger1.CharacterSlot = Rawr.CharacterSlot.Finger1;
             this.itemButtonFinger1.FormItemSelection = null;
             this.itemButtonFinger1.ItemIcon = null;
             this.itemButtonFinger1.Location = new System.Drawing.Point(399, 362);
@@ -305,7 +305,7 @@
             // itemButtonFinger2
             // 
             this.itemButtonFinger2.Character = null;
-            this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
+            this.itemButtonFinger2.CharacterSlot = Rawr.CharacterSlot.Finger2;
             this.itemButtonFinger2.FormItemSelection = null;
             this.itemButtonFinger2.ItemIcon = null;
             this.itemButtonFinger2.Location = new System.Drawing.Point(399, 447);
@@ -319,7 +319,7 @@
             // itemButtonHands
             // 
             this.itemButtonHands.Character = null;
-            this.itemButtonHands.CharacterSlot = Rawr.Character.CharacterSlot.Hands;
+            this.itemButtonHands.CharacterSlot = Rawr.CharacterSlot.Hands;
             this.itemButtonHands.FormItemSelection = null;
             this.itemButtonHands.ItemIcon = null;
             this.itemButtonHands.Location = new System.Drawing.Point(399, 3);
@@ -333,7 +333,7 @@
             // itemButtonHead
             // 
             this.itemButtonHead.Character = null;
-            this.itemButtonHead.CharacterSlot = Rawr.Character.CharacterSlot.Head;
+            this.itemButtonHead.CharacterSlot = Rawr.CharacterSlot.Head;
             this.itemButtonHead.FormItemSelection = null;
             this.itemButtonHead.ItemIcon = null;
             this.itemButtonHead.Location = new System.Drawing.Point(6, 3);
@@ -348,7 +348,7 @@
             // 
             this.itemButtonRanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.itemButtonRanged.Character = null;
-            this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
+            this.itemButtonRanged.CharacterSlot = Rawr.CharacterSlot.Ranged;
             this.itemButtonRanged.FormItemSelection = null;
             this.itemButtonRanged.ItemIcon = null;
             this.itemButtonRanged.Location = new System.Drawing.Point(259, 593);
@@ -362,7 +362,7 @@
             // itemButtonLegs
             // 
             this.itemButtonLegs.Character = null;
-            this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
+            this.itemButtonLegs.CharacterSlot = Rawr.CharacterSlot.Legs;
             this.itemButtonLegs.FormItemSelection = null;
             this.itemButtonLegs.ItemIcon = null;
             this.itemButtonLegs.Location = new System.Drawing.Point(399, 192);
@@ -376,7 +376,7 @@
             // itemButtonNeck
             // 
             this.itemButtonNeck.Character = null;
-            this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
+            this.itemButtonNeck.CharacterSlot = Rawr.CharacterSlot.Neck;
             this.itemButtonNeck.FormItemSelection = null;
             this.itemButtonNeck.ItemIcon = null;
             this.itemButtonNeck.Location = new System.Drawing.Point(6, 88);
@@ -394,7 +394,7 @@
             // 
             this.itemButtonProjectileBag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.itemButtonProjectileBag.Character = null;
-            this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
+            this.itemButtonProjectileBag.CharacterSlot = Rawr.CharacterSlot.ProjectileBag;
             this.itemButtonProjectileBag.FormItemSelection = null;
             this.itemButtonProjectileBag.ItemIcon = null;
             this.itemButtonProjectileBag.Location = new System.Drawing.Point(347, 641);
@@ -412,7 +412,7 @@
             // 
             this.itemButtonProjectile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.itemButtonProjectile.Character = null;
-            this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
+            this.itemButtonProjectile.CharacterSlot = Rawr.CharacterSlot.Projectile;
             this.itemButtonProjectile.FormItemSelection = null;
             this.itemButtonProjectile.ItemIcon = null;
             this.itemButtonProjectile.Location = new System.Drawing.Point(347, 600);
@@ -430,7 +430,7 @@
             // 
             this.itemButtonOffHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.itemButtonOffHand.Character = null;
-            this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
+            this.itemButtonOffHand.CharacterSlot = Rawr.CharacterSlot.OffHand;
             this.itemButtonOffHand.FormItemSelection = null;
             this.itemButtonOffHand.ItemIcon = null;
             this.itemButtonOffHand.Location = new System.Drawing.Point(172, 593);
@@ -444,7 +444,7 @@
             // itemButtonShirt
             // 
             this.itemButtonShirt.Character = null;
-            this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
+            this.itemButtonShirt.CharacterSlot = Rawr.CharacterSlot.Shirt;
             this.itemButtonShirt.FormItemSelection = null;
             this.itemButtonShirt.ItemIcon = null;
             this.itemButtonShirt.Location = new System.Drawing.Point(6, 416);
@@ -461,7 +461,7 @@
             // itemButtonShoulders
             // 
             this.itemButtonShoulders.Character = null;
-            this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
+            this.itemButtonShoulders.CharacterSlot = Rawr.CharacterSlot.Shoulders;
             this.itemButtonShoulders.FormItemSelection = null;
             this.itemButtonShoulders.ItemIcon = null;
             this.itemButtonShoulders.Location = new System.Drawing.Point(6, 160);
@@ -475,7 +475,7 @@
             // itemButtonTabard
             // 
             this.itemButtonTabard.Character = null;
-            this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
+            this.itemButtonTabard.CharacterSlot = Rawr.CharacterSlot.Tabard;
             this.itemButtonTabard.FormItemSelection = null;
             this.itemButtonTabard.ItemIcon = null;
             this.itemButtonTabard.Location = new System.Drawing.Point(6, 487);
@@ -492,7 +492,7 @@
             // itemButtonTrinket1
             // 
             this.itemButtonTrinket1.Character = null;
-            this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
+            this.itemButtonTrinket1.CharacterSlot = Rawr.CharacterSlot.Trinket1;
             this.itemButtonTrinket1.FormItemSelection = null;
             this.itemButtonTrinket1.ItemIcon = null;
             this.itemButtonTrinket1.Location = new System.Drawing.Point(399, 532);
@@ -509,7 +509,7 @@
             // itemButtonTrinket2
             // 
             this.itemButtonTrinket2.Character = null;
-            this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
+            this.itemButtonTrinket2.CharacterSlot = Rawr.CharacterSlot.Trinket2;
             this.itemButtonTrinket2.FormItemSelection = null;
             this.itemButtonTrinket2.ItemIcon = null;
             this.itemButtonTrinket2.Location = new System.Drawing.Point(399, 604);
@@ -526,7 +526,7 @@
             // itemButtonWaist
             // 
             this.itemButtonWaist.Character = null;
-            this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
+            this.itemButtonWaist.CharacterSlot = Rawr.CharacterSlot.Waist;
             this.itemButtonWaist.FormItemSelection = null;
             this.itemButtonWaist.ItemIcon = null;
             this.itemButtonWaist.Location = new System.Drawing.Point(399, 104);
@@ -544,7 +544,7 @@
             // 
             this.itemButtonMainHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.itemButtonMainHand.Character = null;
-            this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
+            this.itemButtonMainHand.CharacterSlot = Rawr.CharacterSlot.MainHand;
             this.itemButtonMainHand.FormItemSelection = null;
             this.itemButtonMainHand.ItemIcon = null;
             this.itemButtonMainHand.Location = new System.Drawing.Point(85, 593);
@@ -558,7 +558,7 @@
             // itemButtonWrist
             // 
             this.itemButtonWrist.Character = null;
-            this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
+            this.itemButtonWrist.CharacterSlot = Rawr.CharacterSlot.Wrist;
             this.itemButtonWrist.FormItemSelection = null;
             this.itemButtonWrist.ItemIcon = null;
             this.itemButtonWrist.Location = new System.Drawing.Point(6, 559);

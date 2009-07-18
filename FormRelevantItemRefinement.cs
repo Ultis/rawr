@@ -12,11 +12,11 @@ namespace Rawr
     {
         //_relevantItemTypes is used to carry info on which types
         // are utilized by the class period (as listed in instance.RelevantItemTypes)
-        static private List<Item.ItemType> _relevantItemTypes = null;
+        static private List<ItemType> _relevantItemTypes = null;
 
         //_RelevantItemTypes is a static piece of data which determines which item
         // types are being selected for use (have their boxes checked) Right Now. 
-        static private List<Item.ItemType> _RelevantItemTypes = null;
+        static private List<ItemType> _RelevantItemTypes = null;
 
         //lists all the checkboxes in the form (used to track the types of items)
         private List<System.Windows.Forms.CheckBox> checkBoxes = new List<CheckBox>();
@@ -75,15 +75,15 @@ namespace Rawr
             {
                 if (box.Equals(checkBoxRelic))
                 {
-                    box.Enabled = _relevantItemTypes.Contains(Item.ItemType.Libram) || _relevantItemTypes.Contains(Item.ItemType.Idol)
-                        || _relevantItemTypes.Contains(Item.ItemType.Totem) || _relevantItemTypes.Contains(Item.ItemType.Sigil);
-                    box.Checked = _RelevantItemTypes.Contains(Item.ItemType.Libram) || _RelevantItemTypes.Contains(Item.ItemType.Idol)
-                        || _RelevantItemTypes.Contains(Item.ItemType.Totem) || _RelevantItemTypes.Contains(Item.ItemType.Sigil);
+                    box.Enabled = _relevantItemTypes.Contains(ItemType.Libram) || _relevantItemTypes.Contains(ItemType.Idol)
+                        || _relevantItemTypes.Contains(ItemType.Totem) || _relevantItemTypes.Contains(ItemType.Sigil);
+                    box.Checked = _RelevantItemTypes.Contains(ItemType.Libram) || _RelevantItemTypes.Contains(ItemType.Idol)
+                        || _RelevantItemTypes.Contains(ItemType.Totem) || _RelevantItemTypes.Contains(ItemType.Sigil);
                 }
                 else
                 {
-                    box.Enabled = _relevantItemTypes.Contains((Item.ItemType)box.Tag);
-                    box.Checked = _RelevantItemTypes.Contains((Item.ItemType)box.Tag);
+                    box.Enabled = _relevantItemTypes.Contains((ItemType)box.Tag);
+                    box.Checked = _RelevantItemTypes.Contains((ItemType)box.Tag);
                 }
             }
         }
@@ -101,14 +101,14 @@ namespace Rawr
                 {
                     if (box.Equals(checkBoxRelic))
                     {
-                        if (_relevantItemTypes.Contains(Item.ItemType.Libram)) _RelevantItemTypes.Add(Item.ItemType.Libram);
-                        if (_relevantItemTypes.Contains(Item.ItemType.Totem)) _RelevantItemTypes.Add(Item.ItemType.Totem);
-                        if (_relevantItemTypes.Contains(Item.ItemType.Idol)) _RelevantItemTypes.Add(Item.ItemType.Idol);
-                        if (_relevantItemTypes.Contains(Item.ItemType.Sigil)) _RelevantItemTypes.Add(Item.ItemType.Sigil);
+                        if (_relevantItemTypes.Contains(ItemType.Libram)) _RelevantItemTypes.Add(ItemType.Libram);
+                        if (_relevantItemTypes.Contains(ItemType.Totem)) _RelevantItemTypes.Add(ItemType.Totem);
+                        if (_relevantItemTypes.Contains(ItemType.Idol)) _RelevantItemTypes.Add(ItemType.Idol);
+                        if (_relevantItemTypes.Contains(ItemType.Sigil)) _RelevantItemTypes.Add(ItemType.Sigil);
                     }
                     else
                     {
-                        _RelevantItemTypes.Add((Item.ItemType)box.Tag);
+                        _RelevantItemTypes.Add((ItemType)box.Tag);
                     }
                 }
             }

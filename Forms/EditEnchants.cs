@@ -17,7 +17,7 @@ namespace Rawr.Forms
             InitializeComponent();
             _Enchants = Rawr.Utilities.Clone<List<Enchant>>(enchants);
 			List<string> catNames = new List<string>();
-            foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+            foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
             {
 				catNames.Add(slot.ToString());    
             }

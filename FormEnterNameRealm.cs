@@ -21,9 +21,9 @@ namespace Rawr
             get { return textBoxRealm.Text; }
         }
 
-        public Character.CharacterRegion ArmoryRegion
+        public CharacterRegion ArmoryRegion
         {
-            get { return (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.Text); }
+            get { return (CharacterRegion)Enum.Parse(typeof(CharacterRegion), comboBoxRegion.Text); }
         }
 
         private void FormEnterNameRealm_Activated(object sender, System.EventArgs e)

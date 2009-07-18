@@ -73,11 +73,11 @@ namespace Rawr
 			else if (e.Button == MouseButtons.Right)
 			{
 				if (ItemCalculation.ItemInstance != null)
-					ItemContextualMenu.Instance.Show(Character, ItemCalculation.ItemInstance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+					ItemContextualMenu.Instance.Show(Character, ItemCalculation.ItemInstance, CharacterSlot.None, !ItemCalculation.Equipped);
 				else
 				{
 					ItemInstance instance = GemmingTemplate.CurrentTemplates[0].GetItemInstance(ItemCalculation.Item, null, false);
-					ItemContextualMenu.Instance.Show(Character, instance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+					ItemContextualMenu.Instance.Show(Character, instance, CharacterSlot.None, !ItemCalculation.Equipped);
 				}
 			}
 		}
@@ -276,9 +276,9 @@ namespace Rawr
 
 						if (!string.IsNullOrEmpty(_itemCalculation.Item.IconPath))
 							g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
-						int gemCount = (_itemCalculation.Item.SocketColor1 == Item.ItemSlot.None ? 0 : 1) +
-							(_itemCalculation.Item.SocketColor2 == Item.ItemSlot.None ? 0 : 1) +
-								(_itemCalculation.Item.SocketColor3 == Item.ItemSlot.None ? 0 : 1);
+						int gemCount = (_itemCalculation.Item.SocketColor1 == ItemSlot.None ? 0 : 1) +
+							(_itemCalculation.Item.SocketColor2 == ItemSlot.None ? 0 : 1) +
+								(_itemCalculation.Item.SocketColor3 == ItemSlot.None ? 0 : 1);
 						if (IsEnchant)
 							g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
 								new RectangleF(4, 0, Math.Max(0, this.Width - 14 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
@@ -286,20 +286,20 @@ namespace Rawr
 							g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
 								new RectangleF(41, 0, Math.Max(0, this.Width - 49 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
 
-						if (_itemCalculation.Item.SocketColor1 != Item.ItemSlot.None)
+						if (_itemCalculation.Item.SocketColor1 != ItemSlot.None)
 						{
 							switch (_itemCalculation.Item.SocketColor1)
 							{
-								case Item.ItemSlot.Meta:
+								case ItemSlot.Meta:
 									g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Red:
+								case ItemSlot.Red:
 									g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Yellow:
+								case ItemSlot.Yellow:
 									g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Blue:
+								case ItemSlot.Blue:
 									g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
 							}
@@ -309,20 +309,20 @@ namespace Rawr
 							gemCount--;
 						}
 
-						if (_itemCalculation.Item.SocketColor2 != Item.ItemSlot.None)
+						if (_itemCalculation.Item.SocketColor2 != ItemSlot.None)
 						{
 							switch (_itemCalculation.Item.SocketColor2)
 							{
-								case Item.ItemSlot.Meta:
+								case ItemSlot.Meta:
 									g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Red:
+								case ItemSlot.Red:
 									g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Yellow:
+								case ItemSlot.Yellow:
 									g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Blue:
+								case ItemSlot.Blue:
 									g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
 							}
@@ -332,20 +332,20 @@ namespace Rawr
 							gemCount--;
 						}
 
-						if (_itemCalculation.Item.SocketColor3 != Item.ItemSlot.None)
+						if (_itemCalculation.Item.SocketColor3 != ItemSlot.None)
 						{
 							switch (_itemCalculation.Item.SocketColor3)
 							{
-								case Item.ItemSlot.Meta:
+								case ItemSlot.Meta:
 									g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Red:
+								case ItemSlot.Red:
 									g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Yellow:
+								case ItemSlot.Yellow:
 									g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
-								case Item.ItemSlot.Blue:
+								case ItemSlot.Blue:
 									g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 									break;
 							}
@@ -403,8 +403,8 @@ namespace Rawr
 			set { _character = value; }
 		}
 
-		private Character.CharacterSlot _characterSlot;
-		public Character.CharacterSlot CharacterSlot
+		private CharacterSlot _characterSlot;
+		public CharacterSlot CharacterSlot
 		{
 			get { return _characterSlot; }
 			set { _characterSlot = value; }
@@ -431,46 +431,46 @@ namespace Rawr
 					//panelRight.Width = (item.Gem3 != null ? 98 : (item.Gem2 != null ? 67 : 36));
 					//switch (item.Sockets.Color1)
 					//{
-					//    case Item.ItemSlot.Meta:
+					//    case ItemSlot.Meta:
 					//        panelGem1.BackColor = Color.Silver;
 					//        break;
-					//    case Item.ItemSlot.Red:
+					//    case ItemSlot.Red:
 					//        panelGem1.BackColor = Color.Red;
 					//        break;
-					//    case Item.ItemSlot.Yellow:
+					//    case ItemSlot.Yellow:
 					//        panelGem1.BackColor = Color.Yellow;
 					//        break;
-					//    case Item.ItemSlot.Blue:
+					//    case ItemSlot.Blue:
 					//        panelGem1.BackColor = Color.Blue;
 					//        break;
 					//}
 					//switch (item.Sockets.Color2)
 					//{
-					//    case Item.ItemSlot.Meta:
+					//    case ItemSlot.Meta:
 					//        panelGem2.BackColor = Color.Silver;
 					//        break;
-					//    case Item.ItemSlot.Red:
+					//    case ItemSlot.Red:
 					//        panelGem2.BackColor = Color.Red;
 					//        break;
-					//    case Item.ItemSlot.Yellow:
+					//    case ItemSlot.Yellow:
 					//        panelGem2.BackColor = Color.Yellow;
 					//        break;
-					//    case Item.ItemSlot.Blue:
+					//    case ItemSlot.Blue:
 					//        panelGem2.BackColor = Color.Blue;
 					//        break;
 					//}
 					//switch (item.Sockets.Color3)
 					//{
-					//    case Item.ItemSlot.Meta:
+					//    case ItemSlot.Meta:
 					//        panelGem3.BackColor = Color.Silver;
 					//        break;
-					//    case Item.ItemSlot.Red:
+					//    case ItemSlot.Red:
 					//        panelGem3.BackColor = Color.Red;
 					//        break;
-					//    case Item.ItemSlot.Yellow:
+					//    case ItemSlot.Yellow:
 					//        panelGem3.BackColor = Color.Yellow;
 					//        break;
-					//    case Item.ItemSlot.Blue:
+					//    case ItemSlot.Blue:
 					//        panelGem3.BackColor = Color.Blue;
 					//        break;
 					//}

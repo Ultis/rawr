@@ -5,7 +5,7 @@ using Rawr;
 
 namespace Rawr.Warlock
 {
-    [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", Character.CharacterClass.Warlock)]
+    [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", CharacterClass.Warlock)]
     public class CalculationsWarlock : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -80,7 +80,7 @@ namespace Rawr.Warlock
             }
         }
 
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warlock; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.Warlock; } }
 
         private string _currentChartName = null;
         private float _currentChartTotal = 0;
@@ -202,18 +202,18 @@ namespace Rawr.Warlock
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationWarlock(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsWarlock(); }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get {
                 if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]{
-                        Item.ItemType.None,
-                        Item.ItemType.Cloth,
-                        Item.ItemType.Dagger,
-                        Item.ItemType.Wand,
-                        Item.ItemType.OneHandSword,
-                        Item.ItemType.Staff
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]{
+                        ItemType.None,
+                        ItemType.Cloth,
+                        ItemType.Dagger,
+                        ItemType.Wand,
+                        ItemType.OneHandSword,
+                        ItemType.Staff
                     });
                 }
                 return _relevantItemTypes;
@@ -356,7 +356,7 @@ namespace Rawr.Warlock
 //fix all. Undead should be correct
             switch (character.Race)
             {
-                case Character.CharacterRace.NightElf:
+                case CharacterRace.NightElf:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 66f;
@@ -370,7 +370,7 @@ namespace Rawr.Warlock
                         stats.Spirit = 151f;
                     }
                     break;
-                case Character.CharacterRace.Dwarf:
+                case CharacterRace.Dwarf:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 70f;
@@ -384,7 +384,7 @@ namespace Rawr.Warlock
                         stats.Spirit = 150f;
                     }
                     break;
-                case Character.CharacterRace.Draenei:
+                case CharacterRace.Draenei:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 66f;
@@ -398,7 +398,7 @@ namespace Rawr.Warlock
                         stats.Spirit = 153f;
                     }
                     break;
-                case Character.CharacterRace.Human:
+                case CharacterRace.Human:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 67f;
@@ -413,7 +413,7 @@ namespace Rawr.Warlock
                     }
                     stats.BonusSpiritMultiplier = 0.03f;
                     break;
-                case Character.CharacterRace.BloodElf:
+                case CharacterRace.BloodElf:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 65f;
@@ -427,7 +427,7 @@ namespace Rawr.Warlock
                         stats.Spirit = 150f;
                     }
                     break;
-                case Character.CharacterRace.Troll:
+                case CharacterRace.Troll:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 68f;
@@ -441,7 +441,7 @@ namespace Rawr.Warlock
                         stats.Spirit = 152f;
                     }
                     break;
-                case Character.CharacterRace.Undead:
+                case CharacterRace.Undead:
                     if (character.Level == 80)
                     {
                         stats.Stamina = 90f;
@@ -719,15 +719,15 @@ namespace Rawr.Warlock
             return calcOpts;
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
     }

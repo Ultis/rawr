@@ -135,7 +135,7 @@ namespace Rawr.TankDK
                 realDuration = calcOpts.m_Rotation.curRotationDuration;
                 realDuration += ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceDodged * (1.5f)) +
                     ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceMiss * (1.5f)) +
-                    ((calcOpts.m_Rotation.IcyTouch * spellResist * (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)))))); 
+                    ((calcOpts.m_Rotation.IcyTouch * spellResist * (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((1.5f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)))))); 
                 //still need to implement spellhaste here
             }
             #endregion
@@ -146,48 +146,48 @@ namespace Rawr.TankDK
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
 
-            if (character.Race == Character.CharacterRace.Dwarf)
+            if (character.Race == CharacterRace.Dwarf)
             {
                 if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
+                    (character.MainHand.Item.Type == ItemType.OneHandMace ||
+                     character.MainHand.Item.Type == ItemType.TwoHandMace))
                 {
                     MHExpertise += 5f;
                 }
 
-                if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandMace)
+                if (character.OffHand != null && character.OffHand.Item.Type == ItemType.OneHandMace)
                 {
                     OHExpertise += 5f;
                 }
             }
-            else if (character.Race == Character.CharacterRace.Orc)
+            else if (character.Race == CharacterRace.Orc)
             {
                 if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == Item.ItemType.OneHandAxe ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandAxe))
+                    (character.MainHand.Item.Type == ItemType.OneHandAxe ||
+                     character.MainHand.Item.Type == ItemType.TwoHandAxe))
                 {
                     MHExpertise += 5f;
                 }
 
-                if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandAxe)
+                if (character.OffHand != null && character.OffHand.Item.Type == ItemType.OneHandAxe)
                 {
                     OHExpertise += 5f;
                 }
             }
-            if (character.Race == Character.CharacterRace.Human)
+            if (character.Race == CharacterRace.Human)
             {
                 if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == Item.ItemType.OneHandSword ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandSword ||
-                     character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
+                    (character.MainHand.Item.Type == ItemType.OneHandSword ||
+                     character.MainHand.Item.Type == ItemType.TwoHandSword ||
+                     character.MainHand.Item.Type == ItemType.OneHandMace ||
+                     character.MainHand.Item.Type == ItemType.TwoHandMace))
                 {
                     MHExpertise += 3f;
                 }
 
                 if (character.OffHand != null &&
-                    (character.OffHand.Item.Type == Item.ItemType.OneHandSword ||
-                    character.OffHand.Item.Type == Item.ItemType.OneHandMace))
+                    (character.OffHand.Item.Type == ItemType.OneHandSword ||
+                    character.OffHand.Item.Type == ItemType.OneHandMace))
                 {
                     OHExpertise += 3f;
                 }
@@ -203,10 +203,10 @@ namespace Rawr.TankDK
                 calcs.MHAttackSpeed = MH.hastedSpeed;
                 calcs.MHWeaponDamage = MH.damage;
                 calcs.MHExpertise = MH.effectiveExpertise;
-                if (character.MainHand.Item.Type == Item.ItemType.TwoHandAxe
-                    || character.MainHand.Item.Type == Item.ItemType.TwoHandMace
-                    || character.MainHand.Item.Type == Item.ItemType.TwoHandSword
-                    || character.MainHand.Item.Type == Item.ItemType.Polearm)
+                if (character.MainHand.Item.Type == ItemType.TwoHandAxe
+                    || character.MainHand.Item.Type == ItemType.TwoHandMace
+                    || character.MainHand.Item.Type == ItemType.TwoHandSword
+                    || character.MainHand.Item.Type == ItemType.Polearm)
                 {
                     normalizationFactor = 3.3f;
                     MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
@@ -245,10 +245,10 @@ namespace Rawr.TankDK
         {
             bool DW = (character.MainHand != null
                         && character.OffHand != null
-                        && character.MainHand.Type != Item.ItemType.TwoHandAxe
-                        && character.MainHand.Type != Item.ItemType.TwoHandMace
-                        && character.MainHand.Type != Item.ItemType.TwoHandSword
-                        && character.MainHand.Type != Item.ItemType.Polearm);
+                        && character.MainHand.Type != ItemType.TwoHandAxe
+                        && character.MainHand.Type != ItemType.TwoHandMace
+                        && character.MainHand.Type != ItemType.TwoHandSword
+                        && character.MainHand.Type != ItemType.Polearm);
 
             //DPS Subgroups
             float fDamWhite = 0f;
@@ -425,7 +425,7 @@ namespace Rawr.TankDK
 
             #region racials
             {
-                if (character.Race == Character.CharacterRace.Orc)
+                if (character.Race == CharacterRace.Orc)
                 {
                     commandMult += .05f;
                 }

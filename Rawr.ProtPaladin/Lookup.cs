@@ -341,7 +341,7 @@ namespace Rawr.ProtPaladin
                 weaponMinDamage = character.MainHand.MinDamage;
                 weaponMaxDamage = character.MainHand.MaxDamage;
                 
-                if (character.MainHand.Type == Item.ItemType.Dagger)
+                if (character.MainHand.Type == ItemType.Dagger)
                     normalizedSpeed = 1.7f;
             }
             // Non-Normalized Hits

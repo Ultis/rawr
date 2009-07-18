@@ -35,20 +35,20 @@ namespace Rawr.Silverlight
                 QualityCombo.SelectedIndex = (int)CurrentItem.Quality;
                 DamageTypeComboBox.SelectedIndex = (int)CurrentItem.DamageType;
 
-                if (currentItem.SocketColor1 == Item.ItemSlot.Meta) Gem1Combo.SelectedIndex = 1;
-                else if (currentItem.SocketColor1 == Item.ItemSlot.Red) Gem1Combo.SelectedIndex = 2;
-                else if (currentItem.SocketColor1 == Item.ItemSlot.Yellow) Gem1Combo.SelectedIndex = 3;
-                else if (currentItem.SocketColor1 == Item.ItemSlot.Blue) Gem1Combo.SelectedIndex = 4;
+                if (currentItem.SocketColor1 == ItemSlot.Meta) Gem1Combo.SelectedIndex = 1;
+                else if (currentItem.SocketColor1 == ItemSlot.Red) Gem1Combo.SelectedIndex = 2;
+                else if (currentItem.SocketColor1 == ItemSlot.Yellow) Gem1Combo.SelectedIndex = 3;
+                else if (currentItem.SocketColor1 == ItemSlot.Blue) Gem1Combo.SelectedIndex = 4;
                 else Gem1Combo.SelectedIndex = 0;
-                if (currentItem.SocketColor2 == Item.ItemSlot.Meta) Gem2Combo.SelectedIndex = 1;
-                else if (currentItem.SocketColor2 == Item.ItemSlot.Red) Gem2Combo.SelectedIndex = 2;
-                else if (currentItem.SocketColor2 == Item.ItemSlot.Yellow) Gem2Combo.SelectedIndex = 3;
-                else if (currentItem.SocketColor2 == Item.ItemSlot.Blue) Gem2Combo.SelectedIndex = 4;
+                if (currentItem.SocketColor2 == ItemSlot.Meta) Gem2Combo.SelectedIndex = 1;
+                else if (currentItem.SocketColor2 == ItemSlot.Red) Gem2Combo.SelectedIndex = 2;
+                else if (currentItem.SocketColor2 == ItemSlot.Yellow) Gem2Combo.SelectedIndex = 3;
+                else if (currentItem.SocketColor2 == ItemSlot.Blue) Gem2Combo.SelectedIndex = 4;
                 else Gem2Combo.SelectedIndex = 0;
-                if (currentItem.SocketColor3 == Item.ItemSlot.Meta) Gem3Combo.SelectedIndex = 1;
-                else if (currentItem.SocketColor3 == Item.ItemSlot.Red) Gem3Combo.SelectedIndex = 2;
-                else if (currentItem.SocketColor3 == Item.ItemSlot.Yellow) Gem3Combo.SelectedIndex = 3;
-                else if (currentItem.SocketColor3 == Item.ItemSlot.Blue) Gem3Combo.SelectedIndex = 4;
+                if (currentItem.SocketColor3 == ItemSlot.Meta) Gem3Combo.SelectedIndex = 1;
+                else if (currentItem.SocketColor3 == ItemSlot.Red) Gem3Combo.SelectedIndex = 2;
+                else if (currentItem.SocketColor3 == ItemSlot.Yellow) Gem3Combo.SelectedIndex = 3;
+                else if (currentItem.SocketColor3 == ItemSlot.Blue) Gem3Combo.SelectedIndex = 4;
                 else Gem3Combo.SelectedIndex = 0;
                 
                 foreach (CheckBox cb in ClassCheckBoxes.Values) cb.IsChecked = false;
@@ -113,10 +113,10 @@ namespace Rawr.Silverlight
         {
             InitializeComponent();
 
-            TypeCombo.ItemsSource = EnumHelper.GetValues<Item.ItemType>().Select(e => e.ToString());
-            QualityCombo.ItemsSource = EnumHelper.GetValues<Item.ItemQuality>().Where(iq => iq != Item.ItemQuality.Temp).Select(e => e.ToString());
-            SlotCombo.ItemsSource = EnumHelper.GetValues<Item.ItemSlot>().Select(e => e.ToString());
-            DamageTypeComboBox.ItemsSource = EnumHelper.GetValues<Item.ItemDamageType>().Select(e => e.ToString());
+            TypeCombo.ItemsSource = EnumHelper.GetValues<ItemType>().Select(e => e.ToString());
+            QualityCombo.ItemsSource = EnumHelper.GetValues<ItemQuality>().Where(iq => iq != ItemQuality.Temp).Select(e => e.ToString());
+            SlotCombo.ItemsSource = EnumHelper.GetValues<ItemSlot>().Select(e => e.ToString());
+            DamageTypeComboBox.ItemsSource = EnumHelper.GetValues<ItemDamageType>().Select(e => e.ToString());
             BonusStat.ItemsSource = Stats.StatNames;
 
             ClassCheckBoxes = new Dictionary<string, CheckBox>();
@@ -147,26 +147,26 @@ namespace Rawr.Silverlight
                 CurrentItem.MaxDamage = (int)MaxDamageNum.Value;
                 CurrentItem.Speed = (float)SpeedNum.Value;
                 CurrentItem.Stats = clonedStats;
-                CurrentItem.Type = (Item.ItemType)TypeCombo.SelectedIndex;
-                CurrentItem.Slot = (Item.ItemSlot)SlotCombo.SelectedIndex;
-                CurrentItem.Quality = (Item.ItemQuality)QualityCombo.SelectedIndex;
-                CurrentItem.DamageType = (Item.ItemDamageType)DamageTypeComboBox.SelectedIndex;
+                CurrentItem.Type = (ItemType)TypeCombo.SelectedIndex;
+                CurrentItem.Slot = (ItemSlot)SlotCombo.SelectedIndex;
+                CurrentItem.Quality = (ItemQuality)QualityCombo.SelectedIndex;
+                CurrentItem.DamageType = (ItemDamageType)DamageTypeComboBox.SelectedIndex;
 
-                if (Gem1Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = Item.ItemSlot.Meta;
-                else if (Gem1Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = Item.ItemSlot.Red;
-                else if (Gem1Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = Item.ItemSlot.Yellow;
-                else if (Gem1Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = Item.ItemSlot.Blue;
-                else CurrentItem.SocketColor1 = Item.ItemSlot.None;
-                if (Gem2Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = Item.ItemSlot.Meta;
-                else if (Gem2Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = Item.ItemSlot.Red;
-                else if (Gem2Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = Item.ItemSlot.Yellow;
-                else if (Gem2Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = Item.ItemSlot.Blue;
-                else CurrentItem.SocketColor1 = Item.ItemSlot.None;
-                if (Gem3Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = Item.ItemSlot.Meta;
-                else if (Gem3Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = Item.ItemSlot.Red;
-                else if (Gem3Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = Item.ItemSlot.Yellow;
-                else if (Gem3Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = Item.ItemSlot.Blue;
-                else CurrentItem.SocketColor1 = Item.ItemSlot.None;
+                if (Gem1Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
+                else if (Gem1Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
+                else if (Gem1Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = ItemSlot.Yellow;
+                else if (Gem1Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
+                else CurrentItem.SocketColor1 = ItemSlot.None;
+                if (Gem2Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
+                else if (Gem2Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
+                else if (Gem2Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = ItemSlot.Yellow;
+                else if (Gem2Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
+                else CurrentItem.SocketColor1 = ItemSlot.None;
+                if (Gem3Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
+                else if (Gem3Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
+                else if (Gem3Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = ItemSlot.Yellow;
+                else if (Gem3Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
+                else CurrentItem.SocketColor1 = ItemSlot.None;
 
                 foreach (PropertyInfo info in Stats.PropertyInfoCache)
                 {

@@ -50,7 +50,7 @@
 			// itemButtonRed
 			// 
 			this.itemButtonRed.Character = null;
-			this.itemButtonRed.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonRed.CharacterSlot = Rawr.CharacterSlot.Gems;
 			this.itemButtonRed.ItemIcon = null;
 			this.itemButtonRed.Location = new System.Drawing.Point(88, 6);
 			this.itemButtonRed.Name = "itemButtonRed";
@@ -66,7 +66,7 @@
 			// itemButtonYellow
 			// 
 			this.itemButtonYellow.Character = null;
-			this.itemButtonYellow.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonYellow.CharacterSlot = Rawr.CharacterSlot.Gems;
 			this.itemButtonYellow.ItemIcon = null;
 			this.itemButtonYellow.Location = new System.Drawing.Point(130, 6);
 			this.itemButtonYellow.Name = "itemButtonYellow";
@@ -82,7 +82,7 @@
 			// itemButtonBlue
 			// 
 			this.itemButtonBlue.Character = null;
-			this.itemButtonBlue.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonBlue.CharacterSlot = Rawr.CharacterSlot.Gems;
 			this.itemButtonBlue.ItemIcon = null;
 			this.itemButtonBlue.Location = new System.Drawing.Point(172, 6);
 			this.itemButtonBlue.Name = "itemButtonBlue";
@@ -98,7 +98,7 @@
 			// itemButtonPrismatic
 			// 
 			this.itemButtonPrismatic.Character = null;
-			this.itemButtonPrismatic.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonPrismatic.CharacterSlot = Rawr.CharacterSlot.Gems;
 			this.itemButtonPrismatic.ItemIcon = null;
 			this.itemButtonPrismatic.Location = new System.Drawing.Point(214, 6);
 			this.itemButtonPrismatic.Name = "itemButtonPrismatic";
@@ -114,7 +114,7 @@
 			// itemButtonMeta
 			// 
 			this.itemButtonMeta.Character = null;
-			this.itemButtonMeta.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
+			this.itemButtonMeta.CharacterSlot = Rawr.CharacterSlot.Metas;
 			this.itemButtonMeta.ItemIcon = null;
 			this.itemButtonMeta.Location = new System.Drawing.Point(256, 6);
 			this.itemButtonMeta.Name = "itemButtonMeta";

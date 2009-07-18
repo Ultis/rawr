@@ -8,7 +8,7 @@ using Rawr;
 
 namespace Rawr.HolyPriest
 {
-	[Rawr.Calculations.RawrModelInfo("HolyPriest", "Spell_Holy_Renew", Character.CharacterClass.Priest)]
+	[Rawr.Calculations.RawrModelInfo("HolyPriest", "Spell_Holy_Renew", CharacterClass.Priest)]
 	public class CalculationsHolyPriest : CalculationsBase 
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -239,7 +239,7 @@ namespace Rawr.HolyPriest
             return _relevantGlyphs;
         }
 
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
 
         private string _currentChartName = null;
         private float _currentChartTotal = 0;
@@ -372,33 +372,33 @@ namespace Rawr.HolyPriest
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHolyPriest(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHolyPriest(); }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get {
                 if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]{
-                        Item.ItemType.None,
-                        Item.ItemType.Cloth,
-                        Item.ItemType.Dagger,
-                        Item.ItemType.Wand,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.Staff
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]{
+                        ItemType.None,
+                        ItemType.Cloth,
+                        ItemType.Dagger,
+                        ItemType.Wand,
+                        ItemType.OneHandMace,
+                        ItemType.Staff
                     });
                 }
                 return _relevantItemTypes;
             }
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 

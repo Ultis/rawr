@@ -73,7 +73,7 @@ namespace Rawr.DPSDK
                 // Crit: Base .65%
                 physCrits = .0065f;
                 physCrits += StatConversion.GetPhysicalCritFromRating(stats.CritRating);
-                physCrits += StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.DeathKnight);
+                physCrits += StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.DeathKnight);
                 physCrits += .01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer + talents.Annihilation);
                 physCrits += stats.PhysicalCrit;
                 calcs.CritChance = physCrits;
@@ -144,10 +144,10 @@ namespace Rawr.DPSDK
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
                 realDuration = calcOpts.rotation.curRotationDuration;
-                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)));
+                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)));
                 realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight)) + stats.SpellHaste)))))); //still need to implement spellhaste here
+                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)))))); //still need to implement spellhaste here
             }
             #endregion
         }
@@ -157,48 +157,48 @@ namespace Rawr.DPSDK
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
 
-            if (character.Race == Character.CharacterRace.Dwarf)
+            if (character.Race == CharacterRace.Dwarf)
             {
                 if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
+                    (character.MainHand.Item.Type == ItemType.OneHandMace ||
+                     character.MainHand.Item.Type == ItemType.TwoHandMace))
                 {
                     MHExpertise += 5f;
                 }
 
-                if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandMace)
+                if (character.OffHand != null && character.OffHand.Item.Type == ItemType.OneHandMace)
                 {
                     OHExpertise += 5f;
                 }
             }
-            else if (character.Race == Character.CharacterRace.Orc)
+            else if (character.Race == CharacterRace.Orc)
             {
                 if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == Item.ItemType.OneHandAxe ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandAxe))
+                    (character.MainHand.Item.Type == ItemType.OneHandAxe ||
+                     character.MainHand.Item.Type == ItemType.TwoHandAxe))
                 {
                     MHExpertise += 5f;
                 }
 
-                if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandAxe)
+                if (character.OffHand != null && character.OffHand.Item.Type == ItemType.OneHandAxe)
                 {
                     OHExpertise += 5f;
                 }
             }
-            if (character.Race == Character.CharacterRace.Human)
+            if (character.Race == CharacterRace.Human)
             {
                 if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == Item.ItemType.OneHandSword ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandSword ||
-                     character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
-                     character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
+                    (character.MainHand.Item.Type == ItemType.OneHandSword ||
+                     character.MainHand.Item.Type == ItemType.TwoHandSword ||
+                     character.MainHand.Item.Type == ItemType.OneHandMace ||
+                     character.MainHand.Item.Type == ItemType.TwoHandMace))
                 {
                     MHExpertise += 3f;
                 }
 
                 if (character.OffHand != null &&
-                    (character.OffHand.Item.Type == Item.ItemType.OneHandSword ||
-                    character.OffHand.Item.Type == Item.ItemType.OneHandMace))
+                    (character.OffHand.Item.Type == ItemType.OneHandSword ||
+                    character.OffHand.Item.Type == ItemType.OneHandMace))
                 {
                     OHExpertise += 3f;
                 }
@@ -209,7 +209,7 @@ namespace Rawr.DPSDK
             OH = new Weapon(null, null, null, 0f);
 
             DW = character.MainHand != null && character.OffHand != null &&
-                character.MainHand.Slot != Item.ItemSlot.TwoHand;
+                character.MainHand.Slot != ItemSlot.TwoHand;
 
             if (character.MainHand != null)
             {
@@ -234,10 +234,10 @@ namespace Rawr.DPSDK
             // MH-only
             if ((character.MainHand != null) && (! DW))
             {
-                if (character.MainHand.Item.Type == Item.ItemType.TwoHandAxe
-                    || character.MainHand.Item.Type == Item.ItemType.TwoHandMace
-                    || character.MainHand.Item.Type == Item.ItemType.TwoHandSword
-                    || character.MainHand.Item.Type == Item.ItemType.Polearm)
+                if (character.MainHand.Item.Type == ItemType.TwoHandAxe
+                    || character.MainHand.Item.Type == ItemType.TwoHandMace
+                    || character.MainHand.Item.Type == ItemType.TwoHandSword
+                    || character.MainHand.Item.Type == ItemType.Polearm)
                 {
                     normalizationFactor = 3.3f;
                     MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;

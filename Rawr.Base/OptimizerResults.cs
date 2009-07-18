@@ -28,7 +28,7 @@ namespace Rawr
 
         private void reportItemDifferences(StringBuilder sb)
         {
-            Enchant noEnchant = Enchant.FindEnchant(0, Item.ItemSlot.None, _before);
+            Enchant noEnchant = Enchant.FindEnchant(0, ItemSlot.None, _before);
             Item noItem = new Item();
             noItem.Name = "No item equipped";
             Item noGem = new Item();
@@ -38,13 +38,13 @@ namespace Rawr
             int changes = 0;
             for (int i = 1; i < Character.SlotCount; i++)
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)i;
-                if (slot != Character.CharacterSlot.Shirt && slot != Character.CharacterSlot.Tabard)
+                CharacterSlot slot = (CharacterSlot)i;
+                if (slot != CharacterSlot.Shirt && slot != CharacterSlot.Tabard)
                 {
                     ItemInstance before = beforeItems[i] ?? noItemInstance;
                     ItemInstance after = afterItems[i] ?? noItemInstance;
                     bool swappedRingTrinket = false;
-                    if (slot == Character.CharacterSlot.Finger1 || slot == Character.CharacterSlot.Trinket1)
+                    if (slot == CharacterSlot.Finger1 || slot == CharacterSlot.Trinket1)
                     {
                         ItemInstance after2 = afterItems[i+1] ?? noItemInstance;
                         if (before != noItemInstance && after2 != noItemInstance && before.Equals(after2))

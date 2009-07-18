@@ -46,7 +46,7 @@ namespace Rawr.Silverlight
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Item.ItemSlot gemType = Item.ItemSlot.None;
+            ItemSlot gemType = ItemSlot.None;
 
             if (value is Item)
             {
@@ -63,7 +63,7 @@ namespace Rawr.Silverlight
                 {
                     if (instance.Gem1Id > 0)
                     {
-                        if (item.SocketColor1 == Item.ItemSlot.None) gemType = Item.ItemSlot.Prismatic;
+                        if (item.SocketColor1 == ItemSlot.None) gemType = ItemSlot.Prismatic;
                         else gemType = item.SocketColor1;
                     }
                 }
@@ -71,7 +71,7 @@ namespace Rawr.Silverlight
                 {
                     if (instance.Gem2Id > 0)
                     {
-                        if (item.SocketColor2 == Item.ItemSlot.None) gemType = Item.ItemSlot.Prismatic;
+                        if (item.SocketColor2 == ItemSlot.None) gemType = ItemSlot.Prismatic;
                         else gemType = item.SocketColor2;
                     }
                 }
@@ -79,7 +79,7 @@ namespace Rawr.Silverlight
                 {
                     if (instance.Gem3Id > 0)
                     {
-                        if (item.SocketColor3 == Item.ItemSlot.None) gemType = Item.ItemSlot.Prismatic;
+                        if (item.SocketColor3 == ItemSlot.None) gemType = ItemSlot.Prismatic;
                         else gemType = item.SocketColor3;
                     }
                 }
@@ -87,21 +87,21 @@ namespace Rawr.Silverlight
             
             switch (gemType)
             {
-                case Item.ItemSlot.Red:
+                case ItemSlot.Red:
                     return new SolidColorBrush(Colors.Red);
-                case Item.ItemSlot.Yellow:
+                case ItemSlot.Yellow:
                     return new SolidColorBrush(Colors.Yellow);
-                case Item.ItemSlot.Blue:
+                case ItemSlot.Blue:
                     return new SolidColorBrush(Colors.Blue);
-                case Item.ItemSlot.Orange:
+                case ItemSlot.Orange:
                     return new SolidColorBrush(Colors.Orange);
-                case Item.ItemSlot.Purple:
+                case ItemSlot.Purple:
                     return new SolidColorBrush(Colors.Purple);
-                case Item.ItemSlot.Green:
+                case ItemSlot.Green:
                     return new SolidColorBrush(Colors.Green);
-                case Item.ItemSlot.Prismatic:
+                case ItemSlot.Prismatic:
                     return new SolidColorBrush(Colors.LightGray);
-                case Item.ItemSlot.Meta:
+                case ItemSlot.Meta:
                     return new SolidColorBrush(Colors.Gray);
                 default:
                     return new SolidColorBrush(Colors.Transparent);

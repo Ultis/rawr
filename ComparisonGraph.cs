@@ -446,28 +446,28 @@ namespace Rawr
                             if (item.Item != null)
                                 switch (item.Item.Slot)
                                 {
-                                    case Item.ItemSlot.Red:
+                                    case ItemSlot.Red:
                                         bgColor = Color.FromArgb(64, Color.Red);
                                         break;
-                                    case Item.ItemSlot.Orange:
+                                    case ItemSlot.Orange:
                                         bgColor = Color.FromArgb(64, Color.Orange);
                                         break;
-                                    case Item.ItemSlot.Yellow:
+                                    case ItemSlot.Yellow:
                                         bgColor = Color.FromArgb(64, Color.Yellow);
                                         break;
-                                    case Item.ItemSlot.Green:
+                                    case ItemSlot.Green:
                                         bgColor = Color.FromArgb(64, Color.Green);
                                         break;
-                                    case Item.ItemSlot.Blue:
+                                    case ItemSlot.Blue:
                                         bgColor = Color.FromArgb(64, Color.Blue);
                                         break;
-                                    case Item.ItemSlot.Purple:
+                                    case ItemSlot.Purple:
                                         bgColor = Color.FromArgb(64, Color.Purple);
                                         break;
-                                    case Item.ItemSlot.Meta:
+                                    case ItemSlot.Meta:
                                         bgColor = Color.FromArgb(64, Color.Silver);
                                         break;
-                                    case Item.ItemSlot.Prismatic:
+                                    case ItemSlot.Prismatic:
                                         bgColor = Color.FromArgb(64, Color.DarkGray);
                                         break;
                                 }
@@ -480,7 +480,7 @@ namespace Rawr
                             if (item.Item != null && item.Item.Id != 0)
                             {
                                 hasItemAvailabilty = true;
-                                Character.ItemAvailability itemAvailability;
+                                ItemAvailability itemAvailability;
                                 if (item.ItemInstance != null)
                                 {
                                     itemAvailability = Character.GetItemAvailability(item.ItemInstance);
@@ -491,19 +491,19 @@ namespace Rawr
                                 }
                                 switch (itemAvailability)
                                 {
-                                    case Character.ItemAvailability.RegemmingAllowed:
+                                    case ItemAvailability.RegemmingAllowed:
                                         g.DrawImageUnscaled(bmpDiamond, 0, 55 + (itemNumber * 36));
                                         break;
-                                    case Character.ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                                    case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
                                         g.DrawImageUnscaled(bmpDiamond3, 0, 55 + (itemNumber * 36));
                                         break;
-                                    case Character.ItemAvailability.Available:
+                                    case ItemAvailability.Available:
                                         g.DrawImageUnscaled(bmpDiamond2, 0, 55 + (itemNumber * 36));
                                         break;
-                                    case Character.ItemAvailability.AvailableWithEnchantRestrictions:
+                                    case ItemAvailability.AvailableWithEnchantRestrictions:
                                         g.DrawImageUnscaled(bmpDiamond4, 0, 55 + (itemNumber * 36));
                                         break;
-                                    case Character.ItemAvailability.NotAvailable:
+                                    case ItemAvailability.NotAvailable:
                                         g.DrawImageUnscaled(bmpDiamondOutline, 0, 55 + (itemNumber * 36));
                                         break;
                                 }
@@ -681,8 +681,8 @@ namespace Rawr
             e.Graphics.DrawImageUnscaled(PrerenderedGraph, 0, 0 - (_scrollBar != null ? _scrollBar.Value : 0));
         }
 
-        public Character.CharacterSlot EquipSlot = Character.CharacterSlot.None;
-        public SortedList<Item.ItemSlot, Character.CharacterSlot> SlotMap
+        public CharacterSlot EquipSlot = CharacterSlot.None;
+        public SortedList<ItemSlot, CharacterSlot> SlotMap
         {
             get;
             set;
@@ -726,9 +726,9 @@ namespace Rawr
                     }
                     else if (itemInstance != null && itemInstance.Id > 0)
                     {
-                        Character.CharacterSlot slot = EquipSlot;
+                        CharacterSlot slot = EquipSlot;
                         //ItemInstance showItem = ItemCalculations[itemIndex].ItemInstance;
-                        if (slot == Character.CharacterSlot.AutoSelect)
+                        if (slot == CharacterSlot.AutoSelect)
                         {
                             if (SlotMap != null && SlotMap.ContainsKey(itemInstance.Slot))
                             {

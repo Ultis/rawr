@@ -179,7 +179,7 @@
             // talentTree1
             // 
             this.talentTree1.AutoSize = true;
-            this.talentTree1.CharacterClass = Rawr.Character.CharacterClass.Paladin;
+            this.talentTree1.CharacterClass = Rawr.CharacterClass.Paladin;
             this.talentTree1.Location = new System.Drawing.Point(0, 0);
             this.talentTree1.Name = "talentTree1";
             this.talentTree1.Size = new System.Drawing.Size(270, 717);
@@ -189,7 +189,7 @@
             // talentTree2
             // 
             this.talentTree2.AutoSize = true;
-            this.talentTree2.CharacterClass = Rawr.Character.CharacterClass.Paladin;
+            this.talentTree2.CharacterClass = Rawr.CharacterClass.Paladin;
             this.talentTree2.Location = new System.Drawing.Point(0, 0);
             this.talentTree2.Name = "talentTree2";
             this.talentTree2.Size = new System.Drawing.Size(269, 717);
@@ -199,7 +199,7 @@
             // talentTree3
             // 
             this.talentTree3.AutoSize = true;
-            this.talentTree3.CharacterClass = Rawr.Character.CharacterClass.Paladin;
+            this.talentTree3.CharacterClass = Rawr.CharacterClass.Paladin;
             this.talentTree3.Location = new System.Drawing.Point(0, 0);
             this.talentTree3.Name = "talentTree3";
             this.talentTree3.Size = new System.Drawing.Size(269, 717);

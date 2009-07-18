@@ -348,7 +348,7 @@ namespace Rawr.Optimizer
         private void ComputeUpgradesThreadStart(int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 upgrades = PrivateComputeUpgrades(thoroughness, singleItemUpgrades, out error);
@@ -454,14 +454,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(int thoroughness, Item singleItemUpgrades)
+        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(thoroughness, singleItemUpgrades, out error);
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -470,7 +470,7 @@ namespace Rawr.Optimizer
         private int itemProgressPercentage = 0;
         private string currentItem = "";
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -479,17 +479,17 @@ namespace Rawr.Optimizer
             _thoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 // make equipped gear/enchant valid
                 //MarkEquippedItemsAsValid(_character);
 
-                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
+                upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                 Item[] items = ItemCache.GetRelevantItems(modelList[0]);
-                Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
-                foreach (Character.CharacterSlot slot in slots)
+                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
+                foreach (CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 slotItems[itemList.Count].Clear();
@@ -551,7 +551,7 @@ namespace Rawr.Optimizer
                             //itemCalc.SubPoints = subPoints;
                             itemCalc.OverallPoints = best - baseValue;
 
-                            foreach (Character.CharacterSlot slot in slots)
+                            foreach (CharacterSlot slot in slots)
                             {
                                 if (item.FitsInSlot(slot, batchList[0]))
                                 {
@@ -641,7 +641,7 @@ namespace Rawr.Optimizer
             slotItems[itemList.Count] = upgradeItems.ConvertAll(itemInstance => (object)itemInstance);
             for (int i = 0; i < characterSlots; i++)
             {
-                if (item.FitsInSlot((Character.CharacterSlot)i, batchList[0]))
+                if (item.FitsInSlot((CharacterSlot)i, batchList[0]))
                 {
                     for (int c = 0; c < batchList.Count; c++)
                     {
@@ -657,7 +657,7 @@ namespace Rawr.Optimizer
             slotItems[itemList.Count].Clear();
             for (int i = 0; i < characterSlots; i++)
             {
-                if (item.FitsInSlot((Character.CharacterSlot)i, batchList[0]))
+                if (item.FitsInSlot((CharacterSlot)i, batchList[0]))
                 {
                     for (int c = 0; c < batchList.Count; c++)
                     {
@@ -723,9 +723,9 @@ namespace Rawr.Optimizer
             for (int c = 0; c < batchList.Count; c++)
             {
                 int offset = itemList.Count + 1 + c * characterSlots;
-                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)Character.CharacterSlot.Finger1, EndSlot = offset + (int)Character.CharacterSlot.Finger2 });
-                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)Character.CharacterSlot.Trinket1, EndSlot = offset + (int)Character.CharacterSlot.Trinket2 });
-                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)Character.CharacterSlot.MainHand, EndSlot = offset + (int)Character.CharacterSlot.OffHand });
+                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)CharacterSlot.Finger1, EndSlot = offset + (int)CharacterSlot.Finger2 });
+                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)CharacterSlot.Trinket1, EndSlot = offset + (int)CharacterSlot.Trinket2 });
+                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)CharacterSlot.MainHand, EndSlot = offset + (int)CharacterSlot.OffHand });
             }
 
             object[] items = new object[slotCount];
@@ -848,7 +848,7 @@ namespace Rawr.Optimizer
             public int Slot;
             public int Index;
             public Item Gem;
-            public Item.ItemSlot Socket;
+            public ItemSlot Socket;
         }
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
@@ -884,7 +884,7 @@ namespace Rawr.Optimizer
                         for (int i = 1; i <= 3; i++)
                         {
                             Item gem = character._item[slot].GetGem(i);
-                            if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = slot, Index = i, Gem = gem, Socket = character._item[slot].Item.GetSocketColor(i) });
+                            if (gem != null && gem.Slot != ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = slot, Index = i, Gem = gem, Socket = character._item[slot].Item.GetSocketColor(i) });
                         }
                     }
                 }
@@ -1140,7 +1140,7 @@ namespace Rawr.Optimizer
                 {
                     return false;
                 }
-                if (gem != null && gem.Slot != Item.ItemSlot.Meta && !gem.IsJewelersGem)
+                if (gem != null && gem.Slot != ItemSlot.Meta && !gem.IsJewelersGem)
                 {
                     ok = true;
                 }

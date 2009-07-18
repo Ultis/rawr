@@ -176,7 +176,7 @@ namespace Rawr.Warlock
             lag = CalculationOptions.Delay / 1000f;
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
-            if (character.Race == Character.CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
+            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
                 HitChance += 1;
 
             ManaSources = new List<ManaSource>();
@@ -641,7 +641,7 @@ namespace Rawr.Warlock
                 Rotation += String.Format("\r\n\nNumber of Life Taps: {0}", numberOfTaps);
             }
 
-/*            if (MPS > regen && character.Race == Character.CharacterRace.BloodElf)
+/*            if (MPS > regen && character.Race == CharacterRace.BloodElf)
             {   // Arcane Torrent is 6% max mana every 2 minutes.
                 tmpregen = simStats.Mana * 0.06f / 120f;
                 ManaSources.Add(new ManaSource("Arcane Torrent", tmpregen));

@@ -67,7 +67,7 @@ namespace Rawr.Hunter
             petStats.PhysicalHit += (float)(calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100f;
             petStats.PhysicalHit += character.HunterTalents.FocusedAim * 0.01f;
             petStats.PhysicalHit -= (options.TargetLevel - 80) / 100;
-            if (character.Race == Character.CharacterRace.Draenei)
+            if (character.Race == CharacterRace.Draenei)
             {
                 petStats.PhysicalHit += 0.01f;
             }

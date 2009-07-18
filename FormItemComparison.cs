@@ -134,7 +134,7 @@ namespace Rawr
             {
                 Item item = new Item();
                 item.Name = "Comparison Set #" + ++i;
-                item.Quality = Item.ItemQuality.Temp;
+                item.Quality = ItemQuality.Temp;
                 item.Stats = Calculations.GetItemStats(csc.CompositeCharacter, null) - Calculations.GetItemStats(Character, null);
                 
                 ComparisonCalculationBase comp = Calculations.GetCharacterComparisonCalculations(CurrentCalculations, csc.CurrentCalculations, item.Name, false);

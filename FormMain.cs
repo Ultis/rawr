@@ -303,7 +303,7 @@ namespace Rawr
 			if (string.IsNullOrEmpty(oldModel)) oldModel = ConfigModel;
 			comboBoxModel.Items.Clear();
 			List<string> items = new List<string>();
-			foreach (KeyValuePair<string, Character.CharacterClass> kvp in Calculations.ModelClasses)
+			foreach (KeyValuePair<string, CharacterClass> kvp in Calculations.ModelClasses)
 			{
 				if (kvp.Value == _character.Class)
 				{
@@ -425,7 +425,7 @@ namespace Rawr
             }			
             _unsavedChanges = true;
 
-			//itemButtonOffHand.Enabled = _character.MainHand == null || _character.MainHand.Slot != Item.ItemSlot.TwoHand;
+			//itemButtonOffHand.Enabled = _character.MainHand == null || _character.MainHand.Slot != ItemSlot.TwoHand;
 			if (!_loadingCharacter)
 			{
 				itemButtonBack.UpdateSelectedItem(); itemButtonChest.UpdateSelectedItem(); itemButtonFeet.UpdateSelectedItem();
@@ -961,7 +961,7 @@ namespace Rawr
         {
             string[] args = e.Argument as string[];
             //just accessing the UI elements from off thread is ok, its changing them thats bad.
-            Character.CharacterRegion region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion),args[2]);
+            CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion),args[2]);
             e.Result = this.GetCharacterFromArmory(args[1], args[0], region);
             _characterPath = "";  
         }
@@ -985,7 +985,7 @@ namespace Rawr
 
         private void reloadCurrentCharacterFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			Character.CharacterRegion region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.SelectedItem.ToString());
+			CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), comboBoxRegion.SelectedItem.ToString());
             if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
             {
                 MessageBox.Show("A valid character has not been loaded, unable to reload.","No Character Loaded",MessageBoxButtons.OK,MessageBoxIcon.Error);
@@ -1127,7 +1127,7 @@ namespace Rawr
 		{
 			if (!_loadingCharacter)
 			{
-				Character.Race = (Character.CharacterRace)Enum.Parse(typeof(Character.CharacterRace), comboBoxRace.Text);
+				Character.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), comboBoxRace.Text);
                 SetDraeneiHitBuff();
 				Character.OnCalculationsInvalidated();
 			}
@@ -1137,7 +1137,7 @@ namespace Rawr
 		{
 			if (!_loadingCharacter)
 			{
-				Character.Region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.Text);
+				Character.Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), comboBoxRegion.Text);
 				Character.OnCalculationsInvalidated();
 			}
 		}
@@ -1163,9 +1163,9 @@ namespace Rawr
 		private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			StringBuilder sb = new StringBuilder();
-            foreach (int slotNum in Enum.GetValues(typeof(Character.CharacterSlot)))
+            foreach (int slotNum in Enum.GetValues(typeof(CharacterSlot)))
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)(slotNum);
+                CharacterSlot slot = (CharacterSlot)(slotNum);
                 ItemInstance item = Character[slot];
                 if (item != null)
                 {
@@ -1319,11 +1319,11 @@ namespace Rawr
 			{
 				case "Gear":
 				case "Gems":
-					itemComparison1.LoadGearBySlot((Character.CharacterSlot)Enum.Parse(typeof(Character.CharacterSlot), tag[1]));
+					itemComparison1.LoadGearBySlot((CharacterSlot)Enum.Parse(typeof(CharacterSlot), tag[1]));
 					break;
 
 				case "Enchants":
-					itemComparison1.LoadEnchantsBySlot((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), tag[1]), _calculatedStats);
+					itemComparison1.LoadEnchantsBySlot((ItemSlot)Enum.Parse(typeof(ItemSlot), tag[1]), _calculatedStats);
 					break;
 
 				case "Buffs":
@@ -1425,9 +1425,9 @@ namespace Rawr
         {
             // TODO this is prone for exceptions and the way it is called is completely inappropriate
             // should rework this completely
-            if (Character.Race == Character.CharacterRace.Draenei)
+            if (Character.Race == CharacterRace.Draenei)
                 Character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
-            else if (Character.Faction == Character.CharacterFaction.Horde)
+            else if (Character.Faction == CharacterFaction.Horde)
                 Character.ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
             OnRaceChanged();
         }
@@ -1632,7 +1632,7 @@ namespace Rawr
             character.AssignAllTalentsFromCharacter(reload, false);
         }
 
-		public Character GetCharacterFromArmory(string realm, string name, Character.CharacterRegion region)
+		public Character GetCharacterFromArmory(string realm, string name, CharacterRegion region)
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
 			StatusMessaging.UpdateStatus("Get Character From Armory", " Downloading Character Definition");
@@ -1779,7 +1779,7 @@ namespace Rawr
 			if (!_loadingCharacter && _character != null)
 			{
                 this.Cursor = Cursors.WaitCursor;
-                Character.Class = (Character.CharacterClass)Enum.Parse(typeof(Character.CharacterClass), comboBoxClass.Text);
+                Character.Class = (CharacterClass)Enum.Parse(typeof(CharacterClass), comboBoxClass.Text);
                 this.Cursor = Cursors.Default;
 			}
 		}
@@ -1847,7 +1847,7 @@ namespace Rawr
 
         private void reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Character.CharacterRegion region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.SelectedItem.ToString());
+            CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), comboBoxRegion.SelectedItem.ToString());
             if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
             {
                 MessageBox.Show("A valid character has not been loaded, unable to reload.", "No Character Loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);

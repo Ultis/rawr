@@ -13,8 +13,8 @@ namespace Rawr
         public FormItemFilter()
         {
             InitializeComponent();
-            comboBoxMinItemQuality.DataSource = Enum.GetValues(typeof(Item.ItemQuality));
-            comboBoxMaxItemQuality.DataSource = Enum.GetValues(typeof(Item.ItemQuality));
+            comboBoxMinItemQuality.DataSource = Enum.GetValues(typeof(ItemQuality));
+            comboBoxMaxItemQuality.DataSource = Enum.GetValues(typeof(ItemQuality));
         }
 
         private void itemFilterTreeView_AfterSelect(object sender, TreeViewEventArgs e)

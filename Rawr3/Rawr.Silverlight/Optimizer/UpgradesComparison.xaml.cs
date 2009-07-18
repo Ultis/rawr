@@ -20,8 +20,8 @@ namespace Rawr.Silverlight
         private Dictionary<string, ComparisonCalculationUpgrades[]> itemCalculations;
         private string[] customSubpoints;
 
-        private Character.CharacterSlot slot;
-        public Character.CharacterSlot Slot
+        private CharacterSlot slot;
+        public CharacterSlot Slot
         {
             get { return slot; }
             set
@@ -59,7 +59,7 @@ namespace Rawr.Silverlight
             finally { reader.Dispose(); }
         }
 
-        public UpgradesComparison(Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades, string[] customSubpoints)
+        public UpgradesComparison(Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades, string[] customSubpoints)
         {
             InitializeComponent();
             Graph.Mode = ComparisonGraph.DisplayMode.Overall;
@@ -69,7 +69,7 @@ namespace Rawr.Silverlight
 
             itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
             List<ComparisonCalculationUpgrades> all = new List<ComparisonCalculationUpgrades>();
-            foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in upgrades)
+            foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in upgrades)
             {
                 all.AddRange(kvp.Value);
                 itemCalculations["Gear." + kvp.Key.ToString()] = kvp.Value.ToArray();
@@ -94,14 +94,14 @@ namespace Rawr.Silverlight
 
         public void UpdateGraph()
         {
-            if (Slot == Character.CharacterSlot.AutoSelect) Graph.DisplayCalcs(itemCalculations["Gear.All"]);
+            if (Slot == CharacterSlot.AutoSelect) Graph.DisplayCalcs(itemCalculations["Gear.All"]);
             else Graph.DisplayCalcs(itemCalculations["Gear." + Slot.ToString()]);
         }
 
         private void SlotChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SlotCombo.SelectedIndex == 0) Slot = Character.CharacterSlot.AutoSelect;
-            else Slot = (Character.CharacterSlot)SlotCombo.SelectedIndex;
+            if (SlotCombo.SelectedIndex == 0) Slot = CharacterSlot.AutoSelect;
+            else Slot = (CharacterSlot)SlotCombo.SelectedIndex;
         }
 
         private void SortChanged(object sender, SelectionChangedEventArgs e)

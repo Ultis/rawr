@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rawr.RestoSham
 {
-    [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", Character.CharacterClass.Shaman)]
+    [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", CharacterClass.Shaman)]
     class CalculationsRestoSham : CalculationsBase
     {
         #region Gemming Template Area
@@ -215,9 +215,9 @@ namespace Rawr.RestoSham
             }
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
@@ -237,25 +237,25 @@ namespace Rawr.RestoSham
 
         #endregion
         #region Item types we're interested in.
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (_relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[] {
-                         Item.ItemType.None,
-                         Item.ItemType.Cloth,
-                         Item.ItemType.Leather,
-                         Item.ItemType.Mail,
-                         Item.ItemType.Totem,
-                         Item.ItemType.OneHandMace,
-                         Item.ItemType.OneHandAxe,
-                         Item.ItemType.Shield,
-                         Item.ItemType.Staff,
-                         Item.ItemType.FistWeapon,
-                         Item.ItemType.Dagger });
+                    _relevantItemTypes = new List<ItemType>(new ItemType[] {
+                         ItemType.None,
+                         ItemType.Cloth,
+                         ItemType.Leather,
+                         ItemType.Mail,
+                         ItemType.Totem,
+                         ItemType.OneHandMace,
+                         ItemType.OneHandAxe,
+                         ItemType.Shield,
+                         ItemType.Staff,
+                         ItemType.FistWeapon,
+                         ItemType.Dagger });
                 }
                 return _relevantItemTypes;
             }
@@ -265,9 +265,9 @@ namespace Rawr.RestoSham
         //
         // This model is for shammies!
         //
-        public override Character.CharacterClass TargetClass
+        public override CharacterClass TargetClass
         {
-            get { return Character.CharacterClass.Shaman; }
+            get { return CharacterClass.Shaman; }
         }
 
 
@@ -588,20 +588,20 @@ namespace Rawr.RestoSham
             Stats statsRace;
             switch (character.Race)
             {
-                case Character.CharacterRace.Draenei:
+                case CharacterRace.Draenei:
                     statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 135, Intellect = 141, Spirit = 145 };
                     break;
 
-                case Character.CharacterRace.Tauren:
+                case CharacterRace.Tauren:
                     statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 138, Intellect = 135, Spirit = 145 };
                     statsRace.BonusHealthMultiplier = 0.05f;
                     break;
 
-                case Character.CharacterRace.Orc:
+                case CharacterRace.Orc:
                     statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 138, Intellect = 137, Spirit = 146 };
                     break;
 
-                case Character.CharacterRace.Troll:
+                case CharacterRace.Troll:
                     statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 137, Intellect = 124, Spirit = 144 };
                     break;
 

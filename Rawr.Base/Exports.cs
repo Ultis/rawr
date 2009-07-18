@@ -31,29 +31,29 @@ namespace Rawr
 			catch { }
         }
 
-        private static string getLootRankClassAndArmour(Character.CharacterClass className)
+        private static string getLootRankClassAndArmour(CharacterClass className)
         {
             switch (className)
             {
-                case Character.CharacterClass.DeathKnight :
+                case CharacterClass.DeathKnight :
                     return "Cla=2048&Art=1&";
-                case Character.CharacterClass.Druid :
+                case CharacterClass.Druid :
                     return "Cla=1024&Art=4&";
-                case Character.CharacterClass.Hunter :
+                case CharacterClass.Hunter :
                     return "Cla=4&Art=2&";
-                case Character.CharacterClass.Mage :
+                case CharacterClass.Mage :
                     return "Cla=128&Art=8&";
-                case Character.CharacterClass.Paladin :
+                case CharacterClass.Paladin :
                     return "Cla=2&Art=1&";
-                case Character.CharacterClass.Priest :
+                case CharacterClass.Priest :
                     return "Cla=16&Art=8&";
-                case Character.CharacterClass.Rogue :
+                case CharacterClass.Rogue :
                     return "Cla=8&Art=4&";
-                case Character.CharacterClass.Shaman :
+                case CharacterClass.Shaman :
                     return "Cla=64&Art=2&";
-                case Character.CharacterClass.Warlock :
+                case CharacterClass.Warlock :
                     return "Cla=256&Art=8&";
-                case Character.CharacterClass.Warrior :
+                case CharacterClass.Warrior :
                     return "Cla=1&Art=1&";
             }
             return string.Empty;

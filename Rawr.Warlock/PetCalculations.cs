@@ -186,7 +186,7 @@ namespace Rawr.Warlock
             #region Hit
             petHit = solver.HitChance;
 
-            if (character.Race == Character.CharacterRace.Draenei)
+            if (character.Race == CharacterRace.Draenei)
                 petHit += 0.01;
             /*if (options.TargetLevel == 73) // TODO: Level80
             {

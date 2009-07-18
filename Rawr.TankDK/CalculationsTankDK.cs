@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.TankDK
 {
-    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", Character.CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", CharacterClass.DeathKnight)]
     class CalculationsTankDK : CalculationsBase
     {
         enum Quality
@@ -266,42 +266,42 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         }
 
 
-        private List<Item.ItemType> _relevantItemTypes = null;
+        private List<ItemType> _relevantItemTypes = null;
         /// <summary>
-        /// List<Item.ItemType> containing all of the ItemTypes relevant to this model. Typically this
+        /// List<ItemType> containing all of the ItemTypes relevant to this model. Typically this
         /// means all types of armor/weapons that the intended class is able to use, but may also
-        /// be trimmed down further if some aren't typically used. Item.ItemType.None should almost
+        /// be trimmed down further if some aren't typically used. ItemType.None should almost
         /// always be included, because that type includes items with no proficiancy requirement, such
         /// as rings, necklaces, cloaks, held in off hand items, etc.
         /// 
         /// EXAMPLE:
-        /// relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+        /// relevantItemTypes = new List<ItemType>(new ItemType[]
         /// {
-        ///     Item.ItemType.None,
-        ///     Item.ItemType.Leather,
-        ///     Item.ItemType.Idol,
-        ///     Item.ItemType.Staff,
-        ///     Item.ItemType.TwoHandMace
+        ///     ItemType.None,
+        ///     ItemType.Leather,
+        ///     ItemType.Idol,
+        ///     ItemType.Staff,
+        ///     ItemType.TwoHandMace
         /// });
         /// </summary>
-        public override List<Item.ItemType> RelevantItemTypes
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-                        Item.ItemType.Plate,
-                        Item.ItemType.Sigil,
-                        Item.ItemType.Polearm,
-                        Item.ItemType.TwoHandAxe,
-                        Item.ItemType.TwoHandMace,
-                        Item.ItemType.TwoHandSword,
-                        Item.ItemType.OneHandAxe,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.OneHandSword
+						ItemType.None,
+                        ItemType.Leather,
+                        ItemType.Mail,
+                        ItemType.Plate,
+                        ItemType.Sigil,
+                        ItemType.Polearm,
+                        ItemType.TwoHandAxe,
+                        ItemType.TwoHandMace,
+                        ItemType.TwoHandSword,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword
 					}));
             }
         }
@@ -310,7 +310,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <summary>
         /// Character class that this model is for.
         /// </summary>
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.DeathKnight; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
 
         /// <summary>
         /// Method to get a new instance of the model's custom ComparisonCalculation class.
@@ -479,7 +479,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.MainHand != null)
             {
                 // 2-hander weapon specialization.
-                if (character.MainHand.Slot == Item.ItemSlot.TwoHand)
+                if (character.MainHand.Slot == ItemSlot.TwoHand)
                 {
                     f2hWeaponDamageMultiplier = (.02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
                 }
@@ -518,19 +518,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 calcs.TargetParry = chanceParry;
 
                 calcs.Expertise = stats.Expertise + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating);
-                if (character.Race == Character.CharacterRace.Dwarf &&
-                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace))
+                if (character.Race == CharacterRace.Dwarf &&
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace))
                 {
                     calcs.Expertise += 5;
                 }
-                if (character.Race == Character.CharacterRace.Human &&
-                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace ||
-                    character.MainHand.Type == Item.ItemType.TwoHandSword || character.MainHand.Type == Item.ItemType.OneHandSword))
+                if (character.Race == CharacterRace.Human &&
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace ||
+                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword))
                 {
                     calcs.Expertise += 3;
                 }
-                if (character.Race == Character.CharacterRace.Orc &&
-                    (character.MainHand.Type == Item.ItemType.TwoHandAxe || character.MainHand.Type == Item.ItemType.OneHandAxe))
+                if (character.Race == CharacterRace.Orc &&
+                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe))
                 {
                     calcs.Expertise += 5;
                 }
@@ -1023,7 +1023,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
         public override bool IsItemRelevant(Item item)
         {
-            if (item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Sigil)
+            if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil)
                 return false;
             return base.IsItemRelevant(item);
         }

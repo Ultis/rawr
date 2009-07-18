@@ -94,15 +94,15 @@ namespace Rawr
             }
 		}
 
-		private Character.CharacterSlot _currentSlot = Character.CharacterSlot.None;
-		private Character.CharacterSlot CurrentSlot
+		private CharacterSlot _currentSlot = CharacterSlot.None;
+		private CharacterSlot CurrentSlot
 		{
 			get { return _currentSlot; }
 			set
 			{
 				if (resetItem)
 				{
-					_currentSlot = Character.CharacterSlot.None;
+					_currentSlot = CharacterSlot.None;
 					resetItem = false;
 				}
 				if (_currentSlot != value)
@@ -176,9 +176,9 @@ namespace Rawr
                     {
                         if (_currentItem != null)
                         {
-                            bool hasSockets = _currentItem.SocketColor1 != Item.ItemSlot.None ||
-                                              _currentItem.SocketColor2 != Item.ItemSlot.None ||
-                                              _currentItem.SocketColor3 != Item.ItemSlot.None;
+                            bool hasSockets = _currentItem.SocketColor1 != ItemSlot.None ||
+                                              _currentItem.SocketColor2 != ItemSlot.None ||
+                                              _currentItem.SocketColor3 != ItemSlot.None;
                             if (_currentItemInstance != null && (_currentItemInstance.Gem1 != null || _currentItemInstance.Gem2 != null || _currentItemInstance.Gem3 != null))
                             {
                                 hasSockets = true;
@@ -364,27 +364,27 @@ namespace Rawr
                                 Brush nameBrush = null;
                                 switch (_currentItem.Quality)
                                 {
-                                    case Item.ItemQuality.Common:
-                                    case Item.ItemQuality.Temp:
+                                    case ItemQuality.Common:
+                                    case ItemQuality.Temp:
                                         nameBrush = SystemBrushes.InfoText;
                                         break;
-                                    case Item.ItemQuality.Epic:
+                                    case ItemQuality.Epic:
                                         nameBrush = Brushes.Purple;
                                         break;
-                                    case Item.ItemQuality.Legendary:
+                                    case ItemQuality.Legendary:
                                         nameBrush = Brushes.Orange;
                                         break;
-                                    case Item.ItemQuality.Heirloom:
-                                    case Item.ItemQuality.Artifact:
+                                    case ItemQuality.Heirloom:
+                                    case ItemQuality.Artifact:
                                         nameBrush = Brushes.Gold;
                                         break;
-                                    case Item.ItemQuality.Poor:
+                                    case ItemQuality.Poor:
                                         nameBrush = Brushes.Gray;
                                         break;
-                                    case Item.ItemQuality.Rare:
+                                    case ItemQuality.Rare:
                                         nameBrush = Brushes.Blue;
                                         break;
-                                    case Item.ItemQuality.Uncommon:
+                                    case ItemQuality.Uncommon:
                                         nameBrush = Brushes.Green;
                                         break;
                                 }
@@ -439,30 +439,30 @@ namespace Rawr
                                 int gemNameHeight = 0;
                                 for (int i = 0; i < 3; i++)
                                 {
-                                    Item.ItemSlot slotColor = (i == 0
+                                    ItemSlot slotColor = (i == 0
                                                                    ? _currentItem.SocketColor1
                                                                    :
                                                                (i == 1 ? _currentItem.SocketColor2 : _currentItem.SocketColor3));
-                                    if (slotColor == Item.ItemSlot.None && _currentItemInstance != null && _currentItemInstance.GetGem(i + 1) != null)
+                                    if (slotColor == ItemSlot.None && _currentItemInstance != null && _currentItemInstance.GetGem(i + 1) != null)
                                     {
-                                        slotColor = Item.ItemSlot.Prismatic;
+                                        slotColor = ItemSlot.Prismatic;
                                     }
-                                    if (slotColor != Item.ItemSlot.None)
+                                    if (slotColor != ItemSlot.None)
                                     {
                                         Rectangle rectGemBorder = new Rectangle(3 + (103 * (i)), 25 + statHeight, 35, 35);
                                         Brush brushGemBorder = Brushes.Silver;
                                         switch (slotColor)
                                         {
-                                            case Item.ItemSlot.Red:
+                                            case ItemSlot.Red:
                                                 brushGemBorder = Brushes.Red;
                                                 break;
-                                            case Item.ItemSlot.Yellow:
+                                            case ItemSlot.Yellow:
                                                 brushGemBorder = Brushes.Yellow;
                                                 break;
-                                            case Item.ItemSlot.Blue:
+                                            case ItemSlot.Blue:
                                                 brushGemBorder = Brushes.Blue;
                                                 break;
-                                            case Item.ItemSlot.Prismatic:
+                                            case ItemSlot.Prismatic:
                                                 brushGemBorder = Brushes.Silver;
                                                 break;
                                         }
@@ -490,8 +490,8 @@ namespace Rawr
                                                 }
                                                 else
                                                 {
-                                                    Character.CharacterSlot slotToEquip = CurrentSlot;
-                                                    if (slotToEquip == Character.CharacterSlot.None)
+                                                    CharacterSlot slotToEquip = CurrentSlot;
+                                                    if (slotToEquip == CharacterSlot.None)
                                                         slotToEquip = Character.GetCharacterSlotByItemSlot(CurrentItemInstance.Slot);
                                                     Character characterWithItemEquipped = Character.Clone();
                                                     characterWithItemEquipped[slotToEquip] = CurrentItemInstance;
@@ -572,13 +572,13 @@ namespace Rawr
                             {
                                 // create a string that gives us some information about the gem
                                 string colors = "Matches: ";
-                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Meta))
+                                if (Item.GemMatchesSlot(CurrentItem, ItemSlot.Meta))
                                     colors += "Meta ";
-                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Red))
+                                if (Item.GemMatchesSlot(CurrentItem, ItemSlot.Red))
                                     colors += "Red ";
-                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Yellow))
+                                if (Item.GemMatchesSlot(CurrentItem, ItemSlot.Yellow))
                                     colors += "Yellow ";
-                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Blue))
+                                if (Item.GemMatchesSlot(CurrentItem, ItemSlot.Blue))
                                     colors += "Blue ";
                                 // put the info on the tooltip
                                 Brush gemBrush = new SolidBrush(Color.Gray);
@@ -589,7 +589,7 @@ namespace Rawr
                                 yPos += (int)gem_info_size.Height;
                             }
 
-                            if (_currentItem.Quality != Item.ItemQuality.Temp)
+                            if (_currentItem.Quality != ItemQuality.Temp)
                             {
                                 PointF draw_pos = new PointF(2, yPos);
                                 //Rectangle textRec = new Rectangle(2, (hasSockets ? 76 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, (int)locationSize.Height + extraLocation);
@@ -643,23 +643,23 @@ namespace Rawr
                                             Brush nameBrush = null;
                                             switch (tinyItem.Item.Quality)
                                             {
-                                                case Item.ItemQuality.Common:
-                                                case Item.ItemQuality.Temp:
+                                                case ItemQuality.Common:
+                                                case ItemQuality.Temp:
                                                     nameBrush = SystemBrushes.InfoText;
                                                     break;
-                                                case Item.ItemQuality.Epic:
+                                                case ItemQuality.Epic:
                                                     nameBrush = Brushes.Purple;
                                                     break;
-                                                case Item.ItemQuality.Legendary:
+                                                case ItemQuality.Legendary:
                                                     nameBrush = Brushes.Orange;
                                                     break;
-                                                case Item.ItemQuality.Poor:
+                                                case ItemQuality.Poor:
                                                     nameBrush = Brushes.Gray;
                                                     break;
-                                                case Item.ItemQuality.Rare:
+                                                case ItemQuality.Rare:
                                                     nameBrush = Brushes.Blue;
                                                     break;
-                                                case Item.ItemQuality.Uncommon:
+                                                case ItemQuality.Uncommon:
                                                     nameBrush = Brushes.Gray;
                                                     break;
                                             }
@@ -689,10 +689,10 @@ namespace Rawr
 
         public void Show(Character character, Item item, IWin32Window window, Point point)
         {
-            Show(character, item, null, Character.CharacterSlot.None, window, point);
+            Show(character, item, null, CharacterSlot.None, window, point);
         }
 
-        public void Show(Character character, Item item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
+        public void Show(Character character, Item item, ItemInstance[] characterItems, CharacterSlot slot, IWin32Window window, Point point)
 		{
             Character = character;
 			CurrentItem = item;
@@ -706,10 +706,10 @@ namespace Rawr
 
         public void Show(Character character, ItemInstance item, IWin32Window window, Point point)
         {
-            Show(character, item, null, Character.CharacterSlot.None, window, point);
+            Show(character, item, null, CharacterSlot.None, window, point);
         }
 
-        public void Show(Character character, ItemInstance item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
+        public void Show(Character character, ItemInstance item, ItemInstance[] characterItems, CharacterSlot slot, IWin32Window window, Point point)
         {
             Character = character;
             CurrentItemInstance = item;

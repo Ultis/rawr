@@ -60,24 +60,24 @@ namespace Rawr.Silverlight
             if (Character != null && ((ItemInstance != null && ItemInstance.Id > 0) || (OtherItem != null && OtherItem.Id != 0)))
             {
                 AvailableImage.Visibility = Visibility.Visible;
-                Character.ItemAvailability itemAvailability;
+                ItemAvailability itemAvailability;
                 if (ItemInstance != null) itemAvailability = Character.GetItemAvailability(ItemInstance);
                 else itemAvailability = Character.GetItemAvailability(OtherItem);
                 switch (itemAvailability)
                 {
-                    case Character.ItemAvailability.RegemmingAllowed:
+                    case ItemAvailability.RegemmingAllowed:
                         AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond.png", UriKind.Relative));
                         break;
-                    case Character.ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                    case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
                         AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond3.png", UriKind.Relative));
                         break;
-                    case Character.ItemAvailability.Available:
+                    case ItemAvailability.Available:
                         AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond2.png", UriKind.Relative));
                         break;
-                    case Character.ItemAvailability.AvailableWithEnchantRestrictions:
+                    case ItemAvailability.AvailableWithEnchantRestrictions:
                         AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond4.png", UriKind.Relative));
                         break;
-                    case Character.ItemAvailability.NotAvailable:
+                    case ItemAvailability.NotAvailable:
                         AvailableImage.Source = new BitmapImage(new Uri("../Images/DiamondOutline.png", UriKind.Relative));
                         break;
                 }

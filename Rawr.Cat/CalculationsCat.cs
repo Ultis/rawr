@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Cat
 {
-	[Rawr.Calculations.RawrModelInfo("Cat", "Ability_Druid_CatForm", Character.CharacterClass.Druid)]
+	[Rawr.Calculations.RawrModelInfo("Cat", "Ability_Druid_CatForm", CharacterClass.Druid)]
 	public class CalculationsCat : CalculationsBase
 	{
 		//my insides all turned to ash / so slow
@@ -176,28 +176,28 @@ namespace Rawr.Cat
 			}
 		}
 
-		private List<Item.ItemType> _relevantItemTypes = null;
-		public override List<Item.ItemType> RelevantItemTypes
+		private List<ItemType> _relevantItemTypes = null;
+		public override List<ItemType> RelevantItemTypes
 		{
 			get
 			{
 				if (_relevantItemTypes == null)
 				{
-					_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-						Item.ItemType.Leather,
-						Item.ItemType.Idol,
-						Item.ItemType.Staff,
-						Item.ItemType.TwoHandMace,
-						Item.ItemType.Polearm
+						ItemType.None,
+						ItemType.Leather,
+						ItemType.Idol,
+						ItemType.Staff,
+						ItemType.TwoHandMace,
+						ItemType.Polearm
 					});
 				}
 				return _relevantItemTypes;
 			}
 		}
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationCat(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsCat(); }
 
@@ -236,7 +236,7 @@ namespace Rawr.Cat
 
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
-			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
@@ -255,7 +255,7 @@ namespace Rawr.Cat
 			float chanceAvoided = chanceMiss + chanceDodge;
 			float chanceGlance = 0.24f;
 			float chanceCrit = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit + 
-				StatConversion.GetCritFromAgility(stats.Agility, Character.CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
+				StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
 				- (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
@@ -384,7 +384,7 @@ namespace Rawr.Cat
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 
-			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
+			Stats statsRace = character.Race == CharacterRace.NightElf ?
 				new Stats() {
 					Health = 7417f,
 					Strength = 86f,
@@ -483,11 +483,11 @@ namespace Rawr.Cat
 				statsTotal.AttackPower += statsTotal.TerrorProc * terrorUptime * (1f + statsTotal.BonusAgilityMultiplier) * (1f + statsTotal.BonusAttackPowerMultiplier);
 			}
             
-			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / 3.5f);
 			float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit +
-				StatConversion.GetCritFromAgility(statsTotal.Agility, Character.CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
+				StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
 				- (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 
 			Stats statsProcs = new Stats();
@@ -782,8 +782,8 @@ namespace Rawr.Cat
 
 		public override bool IsItemRelevant(Item item)
 		{
-			if (item.Slot == Item.ItemSlot.OffHand || 
-				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol)) 
+			if (item.Slot == ItemSlot.OffHand || 
+				(item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol)) 
 				return false;
 			return base.IsItemRelevant(item);
 		}

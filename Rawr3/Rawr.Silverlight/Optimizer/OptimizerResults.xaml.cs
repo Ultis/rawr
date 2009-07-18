@@ -27,26 +27,26 @@ namespace Rawr.Silverlight
             int rows = 0;
             for (int i = 0; i < Character.OptimizableSlotCount; i++)
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)i;
+                CharacterSlot slot = (CharacterSlot)i;
                 if ((oldCharacter[slot] == null && newCharacter[slot] != null) ||
                     (oldCharacter[slot] != null  && !oldCharacter[slot].Equals(newCharacter[slot])))
                 {
                     //Testing if the ring/trinket items were just swapped and not actually different
-                    if (slot == Character.CharacterSlot.Finger1 || slot == Character.CharacterSlot.Finger2)
+                    if (slot == CharacterSlot.Finger1 || slot == CharacterSlot.Finger2)
                     {
-                        ItemInstance old1 = oldCharacter[Character.CharacterSlot.Finger1];
-                        ItemInstance old2 = oldCharacter[Character.CharacterSlot.Finger2];
-                        ItemInstance new1 = newCharacter[Character.CharacterSlot.Finger1];
-                        ItemInstance new2 = newCharacter[Character.CharacterSlot.Finger2];
+                        ItemInstance old1 = oldCharacter[CharacterSlot.Finger1];
+                        ItemInstance old2 = oldCharacter[CharacterSlot.Finger2];
+                        ItemInstance new1 = newCharacter[CharacterSlot.Finger1];
+                        ItemInstance new2 = newCharacter[CharacterSlot.Finger2];
                         if (((old1 == null && new2 == null) || (old1 != null && old1.Equals(new2)))
                             && ((old2 == null && new1 == null) || (old2 != null && old2.Equals(new1)))) continue;
                     }
-                    else if (slot == Character.CharacterSlot.Trinket1 || slot == Character.CharacterSlot.Trinket2)
+                    else if (slot == CharacterSlot.Trinket1 || slot == CharacterSlot.Trinket2)
                     {
-                        ItemInstance old1 = oldCharacter[Character.CharacterSlot.Trinket1];
-                        ItemInstance old2 = oldCharacter[Character.CharacterSlot.Trinket2];
-                        ItemInstance new1 = newCharacter[Character.CharacterSlot.Trinket1];
-                        ItemInstance new2 = newCharacter[Character.CharacterSlot.Trinket2];
+                        ItemInstance old1 = oldCharacter[CharacterSlot.Trinket1];
+                        ItemInstance old2 = oldCharacter[CharacterSlot.Trinket2];
+                        ItemInstance new1 = newCharacter[CharacterSlot.Trinket1];
+                        ItemInstance new2 = newCharacter[CharacterSlot.Trinket2];
                         if (((old1 == null && new2 == null) || (old1 != null && old1.Equals(new2)))
                             && ((old2 == null && new1 == null) || (old2 != null && old2.Equals(new1)))) continue;
                     }

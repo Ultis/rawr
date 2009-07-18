@@ -20,7 +20,7 @@ namespace Rawr.Hunter
     /// 2) If their worked is passed on to a third party they must also give proper credit and
     ///    follow condition 1.
 	/// </summary>
-	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", Character.CharacterClass.Hunter)]
+	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
 
 	public class CalculationsHunter : CalculationsBase
 
@@ -95,7 +95,7 @@ namespace Rawr.Hunter
 #endif
         private string[] characterDisplayCalculationLabels = null;
         private string[] customChartNames = null;
-        private List<Item.ItemType> relevantItemTypes = null;
+        private List<ItemType> relevantItemTypes = null;
 #if SILVERLIGHT
         private Dictionary<string, System.Windows.Media.Color> subPointNameColors = null;
 #else
@@ -146,26 +146,26 @@ namespace Rawr.Hunter
 
             customChartNames = new string[] { "Relative Stat Values" };
 
-			relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+			relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-						Item.ItemType.AmmoPouch,
-                        Item.ItemType.Arrow,
-                        Item.ItemType.Bow,
-                        Item.ItemType.Bullet,
-                        Item.ItemType.Crossbow,
-                        Item.ItemType.Dagger,
-						Item.ItemType.FistWeapon,
-                        Item.ItemType.Gun,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-                        Item.ItemType.OneHandAxe,                        
-                        Item.ItemType.OneHandSword,
-                        Item.ItemType.Polearm,
-                        Item.ItemType.Quiver,
-                        Item.ItemType.Staff,                    
-                        Item.ItemType.TwoHandAxe,
-                        Item.ItemType.TwoHandSword
+						ItemType.None,
+						ItemType.AmmoPouch,
+                        ItemType.Arrow,
+                        ItemType.Bow,
+                        ItemType.Bullet,
+                        ItemType.Crossbow,
+                        ItemType.Dagger,
+						ItemType.FistWeapon,
+                        ItemType.Gun,
+                        ItemType.Leather,
+                        ItemType.Mail,
+                        ItemType.OneHandAxe,                        
+                        ItemType.OneHandSword,
+                        ItemType.Polearm,
+                        ItemType.Quiver,
+                        ItemType.Staff,                    
+                        ItemType.TwoHandAxe,
+                        ItemType.TwoHandSword
 					});
 
 #if SILVERLIGHT
@@ -377,7 +377,7 @@ namespace Rawr.Hunter
             stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
        
-        public override List<Item.ItemType> RelevantItemTypes
+        public override List<ItemType> RelevantItemTypes
         {
             get { return relevantItemTypes; }
         }
@@ -391,9 +391,9 @@ namespace Rawr.Hunter
             get { return subPointNameColors; }
         }
  
-        public override Character.CharacterClass TargetClass
+        public override CharacterClass TargetClass
         {
-            get { return Character.CharacterClass.Hunter; }
+            get { return CharacterClass.Hunter; }
         }
 
 		public override bool CanUseAmmo
@@ -404,12 +404,12 @@ namespace Rawr.Hunter
 		public override bool IsItemRelevant(Item item)
 		{
 			bool returnValue;
-			if (item.Slot == Item.ItemSlot.Ranged && item.Type == Item.ItemType.Idol)
+			if (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Idol)
 			{
 				returnValue = false;
 			}
-			else if (item.Slot == Item.ItemSlot.Projectile || 
-				(item.Slot == Item.ItemSlot.Ranged && (item.Type == Item.ItemType.Gun || item.Type == Item.ItemType.Bow || item.Type == Item.ItemType.Crossbow)))
+			else if (item.Slot == ItemSlot.Projectile || 
+				(item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Gun || item.Type == ItemType.Bow || item.Type == ItemType.Crossbow)))
 			{
 				returnValue = true;
 			}
@@ -431,8 +431,8 @@ namespace Rawr.Hunter
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
 			calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 			calculatedStats.PetStats = GetPetStats(options, calculatedStats, character);
-			if (character.Ranged == null || (character.Ranged.Item.Type != Item.ItemType.Bow && character.Ranged.Item.Type != Item.ItemType.Gun
-											&& character.Ranged.Item.Type != Item.ItemType.Crossbow))
+			if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow && character.Ranged.Item.Type != ItemType.Gun
+											&& character.Ranged.Item.Type != ItemType.Crossbow))
 			{
 				//skip all the calculations if there is no ranged weapon
 				return calculatedStats;
@@ -444,7 +444,7 @@ namespace Rawr.Hunter
 			#region May 2009 Haste Calcs
 			
 			double hasteFromRacial = 1;
-			if(character.Race == Character.CharacterRace.Troll)
+			if(character.Race == CharacterRace.Troll)
 			{
 				hasteFromRacial += 0.1 * CalcUptime ( 10, (3 * 60), options.duration);
 			}
@@ -634,7 +634,7 @@ namespace Rawr.Hunter
 			double apFromGear = 0 + calculatedStats.BasicStats.AttackPower;
 			//double apFromBuffs = 0 + character.ActiveBuffs.
 			double apFromBloodFury = 0;
-			if(character.Race == Character.CharacterRace.Orc)
+			if(character.Race == CharacterRace.Orc)
 			{
 				apFromBloodFury = (4 * HunterRatings.CHAR_LEVEL) + 2;
 				apFromBloodFury *= CalcUptime(15, 120, options.duration);
@@ -1255,7 +1255,7 @@ namespace Rawr.Hunter
         Stats statsBuffs = new Stats();
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            Stats statsRace = BaseStats.GetBaseStats(80, Character.CharacterClass.Hunter, character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(80, CharacterClass.Hunter, character.Race);
 			statsBaseGear = GetItemStats(character, additionalItem);
 			statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			Stats statsTalents = GetBaseTalentStats(character.HunterTalents);
@@ -1322,7 +1322,7 @@ namespace Rawr.Hunter
 			statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * (statsTotal.Intellect-10) + statsGearEnchantsBuffs.Mana);
 
             // TODO: Implement new racials
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - 10.0f) * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - 10.0f) * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
 
 			statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
 
@@ -1335,8 +1335,8 @@ namespace Rawr.Hunter
             statsTotal.PhysicalHit = 1.0f - chanceMiss;
 
  			if (character.Ranged != null &&
-				((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Item.Type == Item.ItemType.Gun) ||
-				(character.Race == Character.CharacterRace.Troll && character.Ranged.Item.Type == Item.ItemType.Bow)))
+				((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
+				(character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow)))
 			{
                 statsTotal.CritRating += (float)Math.Floor(HunterRatings.CRIT_RATING_PER_PERCENT);
 			}

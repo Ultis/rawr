@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.ProtPaladin
 {
-    [Rawr.Calculations.RawrModelInfo("ProtPaladin", "Ability_Paladin_JudgementsOfTheJust", Character.CharacterClass.Paladin)]
+    [Rawr.Calculations.RawrModelInfo("ProtPaladin", "Ability_Paladin_JudgementsOfTheJust", CharacterClass.Paladin)]
     public class CalculationsProtPaladin : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -260,29 +260,29 @@ focus on Survival Points.",
             }
         }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (_relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
                     {
-                        Item.ItemType.Plate,
-                        Item.ItemType.None,
-                        Item.ItemType.Shield,
-                        Item.ItemType.Libram,
-                        Item.ItemType.OneHandAxe,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.OneHandSword,
+                        ItemType.Plate,
+                        ItemType.None,
+                        ItemType.Shield,
+                        ItemType.Libram,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword,
                     });
                 }
                 return _relevantItemTypes;
             }
         }
 
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtPaladin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtPaladin(); }
 
@@ -587,7 +587,7 @@ focus on Survival Points.",
             statsBase.Spirit     = ClassStats[3, 4] + LevelStats[3, 4];
             switch (character.Race)
                 {
-                case Character.CharacterRace.Human:
+                case CharacterRace.Human:
 
                     statsBase.Strength  += RaceStats[0, 0];
                     statsBase.Agility   += RaceStats[0, 1];
@@ -598,13 +598,13 @@ focus on Survival Points.",
                     //The Human Spirit: Spirit increased by 3%.
                     statsBase.BonusSpiritMultiplier *= 1.0f + 0.03f;//TODO: need to research if wowwiki race spirit value already includes this. (20*1.03 = 21)
                     if ((character.MainHand != null) &&
-                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
+                        ((character.MainHand.Item.Type == ItemType.OneHandSword) ||
+                         (character.MainHand.Item.Type == ItemType.OneHandMace)))
                     {
                         statsBase.Expertise += 3f;
                     }
                     break;
-                case Character.CharacterRace.Orc:
+                case CharacterRace.Orc:
 
                     statsBase.Strength  += RaceStats[1, 0];
                     statsBase.Agility   += RaceStats[1, 1];
@@ -615,12 +615,12 @@ focus on Survival Points.",
                     //Command : Damage done by Death Knight, Hunter and Warlock pets increased by 5%
                     //Axe Specialization : Expertise with One- and Two-handed Axes increased by 5.
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == Item.ItemType.OneHandAxe))
+                        (character.MainHand.Item.Type == ItemType.OneHandAxe))
                     {
                         statsBase.Expertise += 5f;
                     }
                     break;
-                case Character.CharacterRace.Dwarf:
+                case CharacterRace.Dwarf:
 
                     statsBase.Strength  += RaceStats[2, 0];
                     statsBase.Agility   += RaceStats[2, 1];
@@ -633,12 +633,12 @@ focus on Survival Points.",
                     //Stoneform : Activate to gain immunity to poison, disease, and bleed (will also remove these types of debuffs); 
                     //            +10% Armor; Lasts 8 seconds. 3 minute cooldown.
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == Item.ItemType.OneHandMace))
+                        (character.MainHand.Item.Type == ItemType.OneHandMace))
                     {
                         statsBase.Expertise += 5f;
                     }
                     break;
-                case Character.CharacterRace.NightElf:
+                case CharacterRace.NightElf:
 
                     statsBase.Strength  += RaceStats[3, 0];
                     statsBase.Agility   += RaceStats[3, 1];
@@ -650,7 +650,7 @@ focus on Survival Points.",
                     statsBase.Miss += 0.02f;
                     //Nature Resistance : Reduces the chance you will be hit by Nature spells by 2%.
                     break;
-                case Character.CharacterRace.Undead:
+                case CharacterRace.Undead:
 
                     statsBase.Strength  += RaceStats[4, 0];
                     statsBase.Agility   += RaceStats[4, 1];
@@ -660,7 +660,7 @@ focus on Survival Points.",
 
                     //Shadow Resistance : Reduces the chance you will be hit by Shadow spells by 2%.
                     break;
-                case Character.CharacterRace.Tauren:
+                case CharacterRace.Tauren:
 
                     statsBase.Strength  += RaceStats[5, 0];
                     statsBase.Agility   += RaceStats[5, 1];
@@ -672,7 +672,7 @@ focus on Survival Points.",
                     statsBase.Health = (float)Math.Floor(statsBase.Health * 1.05f);// = 7280f
                     //Nature Resistance : Reduces the chance you will be hit by Nature spells by 2%.
                     break;
-                case Character.CharacterRace.Gnome:
+                case CharacterRace.Gnome:
 
                     statsBase.Strength  += RaceStats[6, 0];
                     statsBase.Agility   += RaceStats[6, 1];
@@ -684,7 +684,7 @@ focus on Survival Points.",
                     statsBase.BonusIntellectMultiplier *= 1f + 0.05f;
                     //Arcane Resistance : Reduces the chance you will be hit by Arcane spells by 2%
                     break;
-                case Character.CharacterRace.Troll:
+                case CharacterRace.Troll:
 
                     statsBase.Strength  += RaceStats[7, 0];
                     statsBase.Agility   += RaceStats[7, 1];
@@ -697,7 +697,7 @@ focus on Survival Points.",
                     //Throwing Specialization : Increases chance to critically hit with Throwing Weapon by 1%. 
                     //Bow Specialization : Increase Bow critical strike chance by 1%.
                     break;
-                case Character.CharacterRace.Draenei:
+                case CharacterRace.Draenei:
 
                     statsBase.Strength  += RaceStats[8, 0];
                     statsBase.Agility   += RaceStats[8, 1];
@@ -710,7 +710,7 @@ focus on Survival Points.",
                     statsBase.PhysicalHit = 0.01f;
                     statsBase.SpellHit = 0.01f;
                     break;
-                case Character.CharacterRace.BloodElf:
+                case CharacterRace.BloodElf:
 
                     statsBase.Strength  += RaceStats[9, 0];
                     statsBase.Agility   += RaceStats[9, 1];
@@ -827,11 +827,11 @@ focus on Survival Points.",
             if (calcOpts.TargetLevel < 83) chanceMissPhysical = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonusPhysical);
             float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
             float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
-                                        StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, Character.CharacterClass.Paladin) +
+                                        StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Paladin) +
                                         statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + 
                                         (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
             float chanceCritSpell = StatConversion.GetSpellCritFromRating(statsTotal.CritRating) +
-                                        StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect, Character.CharacterClass.Paladin) +
+                                        StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect, CharacterClass.Paladin) +
                                         statsTotal.SpellCrit - (0.006f * (calcOpts.TargetLevel - character.Level) +
                                         (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
             float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
@@ -918,7 +918,7 @@ focus on Survival Points.",
             }
 
             
-            if ((calcOpts.UseHolyShield)&&character.OffHand != null &&(character.OffHand.Type == Item.ItemType.Shield))
+            if ((calcOpts.UseHolyShield)&&character.OffHand != null &&(character.OffHand.Type == ItemType.Shield))
             {
                 statsTotal.JudgementBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
                 statsTotal.JudgementBlockValue = (float)Math.Floor(statsTotal.JudgementBlockValue);
@@ -1280,20 +1280,20 @@ focus on Survival Points.",
         }
 
         #region Relevancy Methods
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             // Filters out Non-Shield Offhand Enchants and Ranged Enchants
-            if ((slot == Item.ItemSlot.OffHand && enchant.Slot != Item.ItemSlot.OffHand) || slot == Item.ItemSlot.Ranged) return false;
+            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
             // Filters out Death Knight and Two-Hander Enchants
-            if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == Item.ItemSlot.TwoHand) return false;
+            if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == ItemSlot.TwoHand) return false;
             // Warrior ZG enchant
-            if (enchant.Name.Contains("Presence of Might") && (enchant.Slot == Item.ItemSlot.Legs || enchant.Slot == Item.ItemSlot.Head)) return false;
+            if (enchant.Name.Contains("Presence of Might") && (enchant.Slot == ItemSlot.Legs || enchant.Slot == ItemSlot.Head)) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && (item.Slot == Item.ItemSlot.OneHand || item.Type == Item.ItemType.None)) return false;
+            if (slot == CharacterSlot.OffHand && (item.Slot == ItemSlot.OneHand || item.Type == ItemType.None)) return false;
             
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
@@ -1389,8 +1389,8 @@ focus on Survival Points.",
             {
                 bool relevant = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString())) &&
                     (RelevantItemTypes.Contains(item.Type)) && (HasRelevantStats(item.Stats) ||
-                    (((item.Slot == Item.ItemSlot.Trinket) || (item.IsGem)) && (hasRelevantTrinketGemStats(item.Stats)))) ||
-                    (item.Slot == Item.ItemSlot.Ranged) && (item.Type == Item.ItemType.Libram);
+                    (((item.Slot == ItemSlot.Trinket) || (item.IsGem)) && (hasRelevantTrinketGemStats(item.Stats)))) ||
+                    (item.Slot == ItemSlot.Ranged) && (item.Type == ItemType.Libram);
                 return relevant;
             }
             catch (Exception)

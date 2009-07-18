@@ -231,12 +231,12 @@ namespace Rawr
             Item gem3 = null;
 			switch (item.SocketColor1)
 			{
-				case Item.ItemSlot.Meta: gem1 = MetaGem; break;
-                case Item.ItemSlot.Red: gem1 = RedGem; break;
-				case Item.ItemSlot.Yellow: gem1 = YellowGem; break;
-				case Item.ItemSlot.Blue: gem1 = BlueGem; break;
-				case Item.ItemSlot.Prismatic: gem1 = PrismaticGem; break;
-                case Item.ItemSlot.None: 
+				case ItemSlot.Meta: gem1 = MetaGem; break;
+                case ItemSlot.Red: gem1 = RedGem; break;
+				case ItemSlot.Yellow: gem1 = YellowGem; break;
+				case ItemSlot.Blue: gem1 = BlueGem; break;
+				case ItemSlot.Prismatic: gem1 = PrismaticGem; break;
+                case ItemSlot.None: 
                     if (blacksmithingSocket)
                     {
                         gem1 = PrismaticGem;
@@ -246,12 +246,12 @@ namespace Rawr
 			}
 			switch (item.SocketColor2)
 			{
-				case Item.ItemSlot.Meta: gem2 = MetaGem; break;
-				case Item.ItemSlot.Red: gem2 = RedGem; break;
-				case Item.ItemSlot.Yellow: gem2 = YellowGem; break;
-				case Item.ItemSlot.Blue: gem2 = BlueGem; break;
-				case Item.ItemSlot.Prismatic: gem2 = PrismaticGem; break;
-                case Item.ItemSlot.None:
+				case ItemSlot.Meta: gem2 = MetaGem; break;
+				case ItemSlot.Red: gem2 = RedGem; break;
+				case ItemSlot.Yellow: gem2 = YellowGem; break;
+				case ItemSlot.Blue: gem2 = BlueGem; break;
+				case ItemSlot.Prismatic: gem2 = PrismaticGem; break;
+                case ItemSlot.None:
                     if (blacksmithingSocket)
                     {
                         gem2 = PrismaticGem;
@@ -261,12 +261,12 @@ namespace Rawr
             }
 			switch (item.SocketColor3)
 			{
-				case Item.ItemSlot.Meta: gem3 = MetaGem; break;
-				case Item.ItemSlot.Red: gem3 = RedGem; break;
-				case Item.ItemSlot.Yellow: gem3 = YellowGem; break;
-				case Item.ItemSlot.Blue: gem3 = BlueGem; break;
-				case Item.ItemSlot.Prismatic: gem3 = PrismaticGem; break;
-                case Item.ItemSlot.None:
+				case ItemSlot.Meta: gem3 = MetaGem; break;
+				case ItemSlot.Red: gem3 = RedGem; break;
+				case ItemSlot.Yellow: gem3 = YellowGem; break;
+				case ItemSlot.Blue: gem3 = BlueGem; break;
+				case ItemSlot.Prismatic: gem3 = PrismaticGem; break;
+                case ItemSlot.None:
                     if (blacksmithingSocket)
                     {
                         gem3 = PrismaticGem;

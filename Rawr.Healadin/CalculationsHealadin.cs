@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rawr.Healadin
 {
-	[Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", Character.CharacterClass.Paladin)]
+	[Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", CharacterClass.Paladin)]
 	public class CalculationsHealadin : CalculationsBase
     {
 
@@ -222,47 +222,47 @@ namespace Rawr.Healadin
         }
 #endif
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (_relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-                        Item.ItemType.Plate,
-                        Item.ItemType.Mail,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Cloth,
-                        Item.ItemType.None,
-						Item.ItemType.Shield,
-						Item.ItemType.Libram,
-						Item.ItemType.OneHandAxe,
-						Item.ItemType.OneHandMace,
-						Item.ItemType.OneHandSword,
-						Item.ItemType.TwoHandAxe,
-						Item.ItemType.TwoHandMace,
-						Item.ItemType.TwoHandSword
+                        ItemType.Plate,
+                        ItemType.Mail,
+                        ItemType.Leather,
+                        ItemType.Cloth,
+                        ItemType.None,
+						ItemType.Shield,
+						ItemType.Libram,
+						ItemType.OneHandAxe,
+						ItemType.OneHandMace,
+						ItemType.OneHandSword,
+						ItemType.TwoHandAxe,
+						ItemType.TwoHandMace,
+						ItemType.TwoHandSword
 					});
                 }
                 return _relevantItemTypes;
             }
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if ((slot == Item.ItemSlot.OffHand && enchant.Slot != Item.ItemSlot.OffHand) || slot == Item.ItemSlot.Ranged) return false;
+            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
 
@@ -316,7 +316,7 @@ namespace Rawr.Healadin
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             float fightLength = calcOpts.Length * 60;
 
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, Character.CharacterClass.Paladin, character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             statsRace.Health -= 180f;
             statsRace.Mana -= 280f;
 

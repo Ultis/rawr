@@ -30,11 +30,11 @@ namespace Rawr.Silverlight
             
             GemmingsShownNum.Value = Properties.GeneralSettings.Default.CountGemmingsShown;
 
-            ComparisonGemList.Slot = Character.CharacterSlot.Gems;
+            ComparisonGemList.Slot = CharacterSlot.Gems;
             ComparisonGemList.Character = c;
             ComparisonGemList.SelectedItemChanged += new EventHandler(ComparisonGemList_SelectedItemChanged);
             
-            ComparisonMetaList.Slot = Character.CharacterSlot.Metas;
+            ComparisonMetaList.Slot = CharacterSlot.Metas;
             ComparisonMetaList.Character = c;
             ComparisonMetaList.SelectedItemChanged += new EventHandler(ComparisonMetaList_SelectedItemChanged);
 

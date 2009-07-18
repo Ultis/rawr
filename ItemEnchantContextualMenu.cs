@@ -53,25 +53,25 @@ namespace Rawr
 		{
 			_item = item;
 			_menuItemName.Text = item.Item.Name;
-            Character.ItemAvailability availability = Character.GetItemAvailability(_item);
+            ItemAvailability availability = Character.GetItemAvailability(_item);
             string gemmedId = string.Empty;
             bool allEnabled = false;
             switch (availability)
             {
-                case Character.ItemAvailability.Available:
+                case ItemAvailability.Available:
                     gemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
                     allEnabled = true;
                     break;
-                case Character.ItemAvailability.AvailableWithEnchantRestrictions:
+                case ItemAvailability.AvailableWithEnchantRestrictions:
                     gemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
                     break;
-                case Character.ItemAvailability.RegemmingAllowed:
+                case ItemAvailability.RegemmingAllowed:
                     allEnabled = true;
                     break;
-                case Character.ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
                     gemmedId = item.Id.ToString() + ".*.*.*";
                     break;
-                case Character.ItemAvailability.NotAvailable:
+                case ItemAvailability.NotAvailable:
                     gemmedId = item.Id.ToString() + ".*.*.*";
                     break;
             }

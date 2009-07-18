@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", Character.CharacterClass.Druid)]
+	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", CharacterClass.Druid)]
 	public class CalculationsMoonkin : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -141,15 +141,15 @@ namespace Rawr.Moonkin
 				};
             }
         }
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
@@ -303,31 +303,31 @@ namespace Rawr.Moonkin
             }
         }
 
-        private List<Item.ItemType> relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (relevantItemTypes == null)
                 {
-                    relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                    relevantItemTypes = new List<ItemType>(new ItemType[]
                         {
-                            Item.ItemType.None,
-                            Item.ItemType.Cloth,
-                            Item.ItemType.Leather,
-                            Item.ItemType.Dagger,
-                            Item.ItemType.Staff,
-                            Item.ItemType.FistWeapon,
-                            Item.ItemType.OneHandMace,
-                            Item.ItemType.TwoHandMace,
-                            Item.ItemType.Idol,
+                            ItemType.None,
+                            ItemType.Cloth,
+                            ItemType.Leather,
+                            ItemType.Dagger,
+                            ItemType.Staff,
+                            ItemType.FistWeapon,
+                            ItemType.OneHandMace,
+                            ItemType.TwoHandMace,
+                            ItemType.Idol,
                         });
                 }
                 return relevantItemTypes;
             }
         }
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationMoonkin();
@@ -388,7 +388,7 @@ namespace Rawr.Moonkin
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Start off with a slightly modified form of druid base character stats calculations
-            Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
+            Stats statsRace = character.Race == CharacterRace.NightElf ?
                 new Stats()
                 {
                     Health = 7416f,
@@ -493,7 +493,7 @@ namespace Rawr.Moonkin
             }*/
 
             // Derived stats: Health, mana pool, armor
-            statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
+            statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
 			if (character.DruidTalents.MoonkinForm > 0)
 			{

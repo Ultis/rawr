@@ -115,25 +115,25 @@ namespace Rawr.Silverlight
 
             Tooltip = ItemTooltip;
 
-            HeadButton.Slot = Character.CharacterSlot.Head;
-            NeckButton.Slot = Character.CharacterSlot.Neck;
-            ShoulderButton.Slot = Character.CharacterSlot.Shoulders;
-            BackButton.Slot = Character.CharacterSlot.Back;
-            ChestButton.Slot = Character.CharacterSlot.Chest;
-            ShirtButton.Slot = Character.CharacterSlot.Shirt;
-            TabardButton.Slot = Character.CharacterSlot.Tabard;
-            WristButton.Slot = Character.CharacterSlot.Wrist;
-            HandButton.Slot = Character.CharacterSlot.Hands;
-            BeltButton.Slot = Character.CharacterSlot.Waist;
-            LegButton.Slot = Character.CharacterSlot.Legs;
-            FeetButton.Slot = Character.CharacterSlot.Feet;
-            Ring1Button.Slot = Character.CharacterSlot.Finger1;
-            Ring2Button.Slot = Character.CharacterSlot.Finger2;
-            Trinket1Button.Slot = Character.CharacterSlot.Trinket1;
-            Trinket2Button.Slot = Character.CharacterSlot.Trinket2;
-            MainHandButton.Slot = Character.CharacterSlot.MainHand;
-            OffHandButton.Slot = Character.CharacterSlot.OffHand;
-            RangedButton.Slot = Character.CharacterSlot.Ranged;
+            HeadButton.Slot = CharacterSlot.Head;
+            NeckButton.Slot = CharacterSlot.Neck;
+            ShoulderButton.Slot = CharacterSlot.Shoulders;
+            BackButton.Slot = CharacterSlot.Back;
+            ChestButton.Slot = CharacterSlot.Chest;
+            ShirtButton.Slot = CharacterSlot.Shirt;
+            TabardButton.Slot = CharacterSlot.Tabard;
+            WristButton.Slot = CharacterSlot.Wrist;
+            HandButton.Slot = CharacterSlot.Hands;
+            BeltButton.Slot = CharacterSlot.Waist;
+            LegButton.Slot = CharacterSlot.Legs;
+            FeetButton.Slot = CharacterSlot.Feet;
+            Ring1Button.Slot = CharacterSlot.Finger1;
+            Ring2Button.Slot = CharacterSlot.Finger2;
+            Trinket1Button.Slot = CharacterSlot.Trinket1;
+            Trinket2Button.Slot = CharacterSlot.Trinket2;
+            MainHandButton.Slot = CharacterSlot.MainHand;
+            OffHandButton.Slot = CharacterSlot.OffHand;
+            RangedButton.Slot = CharacterSlot.Ranged;
 
             ModelCombo.ItemsSource = Calculations.Models.Keys;
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);

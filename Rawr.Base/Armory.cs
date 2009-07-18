@@ -11,13 +11,13 @@ namespace Rawr
 {
 	public static class Armory
 	{
-        public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
+        public static Character GetCharacter(CharacterRegion region, string realm, string name)
         {
             string[] ignore;
             return GetCharacter(region, realm, name,out ignore);
         }
 
-		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
+		public static Character GetCharacter(CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
 		{
 			XmlDocument docCharacter = null;
             //XmlDocument docTalents = null;
@@ -31,45 +31,45 @@ namespace Rawr
                     itemsOnCharacter = null;
                     return null;
                 }
-                Character.CharacterRace race = (Character.CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
-                Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
+                CharacterRace race = (CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
+                CharacterClass charClass = (CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
 
-				Dictionary<Character.CharacterSlot, string> items = new Dictionary<Character.CharacterSlot, string>();
-				//Dictionary<Character.CharacterSlot, int> enchants = new Dictionary<Character.CharacterSlot, int>();
+				Dictionary<CharacterSlot, string> items = new Dictionary<CharacterSlot, string>();
+				//Dictionary<CharacterSlot, int> enchants = new Dictionary<CharacterSlot, int>();
 
 				foreach (XmlNode itemNode in docCharacter.SelectNodes("page/characterInfo/characterTab/items/item"))
 				{
 					int slot = int.Parse(itemNode.Attributes["slot"].Value) + 1;
-                    Character.CharacterSlot cslot = Character.GetCharacterSlotFromId(slot);
+                    CharacterSlot cslot = Character.GetCharacterSlotFromId(slot);
 					items[cslot] = string.Format("{0}.{1}.{2}.{3}.{4}", itemNode.Attributes["id"].Value,
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value, itemNode.Attributes["permanentenchant"].Value);
 					//enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
 				}
 
-				/*if (items.ContainsKey(Character.CharacterSlot.Wrist))
+				/*if (items.ContainsKey(CharacterSlot.Wrist))
 				{
-					string[] wristIds = items[Character.CharacterSlot.Wrist].Split('.');
+					string[] wristIds = items[CharacterSlot.Wrist].Split('.');
 					Item wristItemRaw = ItemCache.FindItemById(int.Parse(wristIds[0]));
 					wristItemRaw = wristItemRaw ?? GetItem(wristIds[0] + ".0.0.0", "Loading Character from Armory");
-					if (wristItemRaw.Sockets.Color1 == Item.ItemSlot.None && wristIds[1] != "0")
+					if (wristItemRaw.Sockets.Color1 == ItemSlot.None && wristIds[1] != "0")
 					{
-						items[Character.CharacterSlot.Wrist] = string.Format("{0}.0.0.0", wristIds[0]);
-						items[Character.CharacterSlot.ExtraWristSocket] = wristIds[1] + ".0.0.0";
+						items[CharacterSlot.Wrist] = string.Format("{0}.0.0.0", wristIds[0]);
+						items[CharacterSlot.ExtraWristSocket] = wristIds[1] + ".0.0.0";
 					}
-					else if (wristItemRaw.Sockets.Color2 == Item.ItemSlot.None && wristIds[2] != "0")
+					else if (wristItemRaw.Sockets.Color2 == ItemSlot.None && wristIds[2] != "0")
 					{
-						items[Character.CharacterSlot.Wrist] = string.Format("{0}.{1}.0.0", wristIds[0], wristIds[1]);
-						items[Character.CharacterSlot.ExtraWristSocket] = wristIds[2] + ".0.0.0";
+						items[CharacterSlot.Wrist] = string.Format("{0}.{1}.0.0", wristIds[0], wristIds[1]);
+						items[CharacterSlot.ExtraWristSocket] = wristIds[2] + ".0.0.0";
 					}
-					else if (wristItemRaw.Sockets.Color3 == Item.ItemSlot.None && wristIds[3] != "0")
+					else if (wristItemRaw.Sockets.Color3 == ItemSlot.None && wristIds[3] != "0")
 					{
-						items[Character.CharacterSlot.Wrist] = string.Format("{0}.{1}.{2}.0", wristIds[0], wristIds[1], wristIds[2]);
-						items[Character.CharacterSlot.ExtraWristSocket] = wristIds[3] + ".0.0.0";
+						items[CharacterSlot.Wrist] = string.Format("{0}.{1}.{2}.0", wristIds[0], wristIds[1], wristIds[2]);
+						items[CharacterSlot.ExtraWristSocket] = wristIds[3] + ".0.0.0";
 					}
 				}
-				if (items.ContainsKey(Character.CharacterSlot.Hands))
+				if (items.ContainsKey(CharacterSlot.Hands))
 				{
-					string[] handsIds = items[Character.CharacterSlot.Hands].Split('.');
+					string[] handsIds = items[CharacterSlot.Hands].Split('.');
 					Item handsItemRaw = null;
 					string keyStartsWith = handsIds[0] + ".";
 					foreach (string key in ItemCache.Items.Keys)
@@ -79,25 +79,25 @@ namespace Rawr
 							break;
 						}
 					handsItemRaw = handsItemRaw ?? GetItem(handsIds[0] + ".0.0.0", "Loading Character from Armory");
-					if (handsItemRaw.Sockets.Color1 == Item.ItemSlot.None && handsIds[1] != "0")
+					if (handsItemRaw.Sockets.Color1 == ItemSlot.None && handsIds[1] != "0")
 					{
-						items[Character.CharacterSlot.Hands] = string.Format("{0}.0.0.0", handsIds[0]);
-						items[Character.CharacterSlot.ExtraHandsSocket] = handsIds[1] + ".0.0.0";
+						items[CharacterSlot.Hands] = string.Format("{0}.0.0.0", handsIds[0]);
+						items[CharacterSlot.ExtraHandsSocket] = handsIds[1] + ".0.0.0";
 					}
-					else if (handsItemRaw.Sockets.Color2 == Item.ItemSlot.None && handsIds[2] != "0")
+					else if (handsItemRaw.Sockets.Color2 == ItemSlot.None && handsIds[2] != "0")
 					{
-						items[Character.CharacterSlot.Hands] = string.Format("{0}.{1}.0.0", handsIds[0], handsIds[1]);
-						items[Character.CharacterSlot.ExtraHandsSocket] = handsIds[2] + ".0.0.0";
+						items[CharacterSlot.Hands] = string.Format("{0}.{1}.0.0", handsIds[0], handsIds[1]);
+						items[CharacterSlot.ExtraHandsSocket] = handsIds[2] + ".0.0.0";
 					}
-					else if (handsItemRaw.Sockets.Color3 == Item.ItemSlot.None && handsIds[3] != "0")
+					else if (handsItemRaw.Sockets.Color3 == ItemSlot.None && handsIds[3] != "0")
 					{
-						items[Character.CharacterSlot.Hands] = string.Format("{0}.{1}.{2}.0", handsIds[0], handsIds[1], handsIds[2]);
-						items[Character.CharacterSlot.ExtraHandsSocket] = handsIds[3] + ".0.0.0";
+						items[CharacterSlot.Hands] = string.Format("{0}.{1}.{2}.0", handsIds[0], handsIds[1], handsIds[2]);
+						items[CharacterSlot.ExtraHandsSocket] = handsIds[3] + ".0.0.0";
 					}
 				}
-				if (items.ContainsKey(Character.CharacterSlot.Waist))
+				if (items.ContainsKey(CharacterSlot.Waist))
 				{
-					string[] waistIds = items[Character.CharacterSlot.Waist].Split('.');
+					string[] waistIds = items[CharacterSlot.Waist].Split('.');
 					Item waistItemRaw = null;
 					string keyStartsWith = waistIds[0] + ".";
 					foreach (string key in ItemCache.Items.Keys)
@@ -107,63 +107,63 @@ namespace Rawr
 							break;
 						}
 					waistItemRaw = waistItemRaw ?? GetItem(waistIds[0] + ".0.0.0", "Loading Character from Armory");
-					if (waistItemRaw.Sockets.Color1 == Item.ItemSlot.None && waistIds[1] != "0")
+					if (waistItemRaw.Sockets.Color1 == ItemSlot.None && waistIds[1] != "0")
 					{
-						items[Character.CharacterSlot.Waist] = string.Format("{0}.0.0.0", waistIds[0]);
-						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[1] + ".0.0.0";
+						items[CharacterSlot.Waist] = string.Format("{0}.0.0.0", waistIds[0]);
+						items[CharacterSlot.ExtraWaistSocket] = waistIds[1] + ".0.0.0";
 					}
-					else if (waistItemRaw.Sockets.Color2 == Item.ItemSlot.None && waistIds[2] != "0")
+					else if (waistItemRaw.Sockets.Color2 == ItemSlot.None && waistIds[2] != "0")
 					{
-						items[Character.CharacterSlot.Waist] = string.Format("{0}.{1}.0.0", waistIds[0], waistIds[1]);
-						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[2] + ".0.0.0";
+						items[CharacterSlot.Waist] = string.Format("{0}.{1}.0.0", waistIds[0], waistIds[1]);
+						items[CharacterSlot.ExtraWaistSocket] = waistIds[2] + ".0.0.0";
 					}
-					else if (waistItemRaw.Sockets.Color3 == Item.ItemSlot.None && waistIds[3] != "0")
+					else if (waistItemRaw.Sockets.Color3 == ItemSlot.None && waistIds[3] != "0")
 					{
-						items[Character.CharacterSlot.Waist] = string.Format("{0}.{1}.{2}.0", waistIds[0], waistIds[1], waistIds[2]);
-						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[3] + ".0.0.0";
+						items[CharacterSlot.Waist] = string.Format("{0}.{1}.{2}.0", waistIds[0], waistIds[1], waistIds[2]);
+						items[CharacterSlot.ExtraWaistSocket] = waistIds[3] + ".0.0.0";
 					}
 				}*/
 
                 itemsOnCharacter = new string[items.Values.Count];
                 items.Values.CopyTo(itemsOnCharacter, 0);
 				Character character = new Character(name, realm, region, race,
-					items.ContainsKey(Character.CharacterSlot.Head) ? items[Character.CharacterSlot.Head] : null,
-					items.ContainsKey(Character.CharacterSlot.Neck) ? items[Character.CharacterSlot.Neck] : null,
-					items.ContainsKey(Character.CharacterSlot.Shoulders) ? items[Character.CharacterSlot.Shoulders] : null,
-					items.ContainsKey(Character.CharacterSlot.Back) ? items[Character.CharacterSlot.Back] : null,
-					items.ContainsKey(Character.CharacterSlot.Chest) ? items[Character.CharacterSlot.Chest] : null,
-					items.ContainsKey(Character.CharacterSlot.Shirt) ? items[Character.CharacterSlot.Shirt] : null,
-					items.ContainsKey(Character.CharacterSlot.Tabard) ? items[Character.CharacterSlot.Tabard] : null,
-					items.ContainsKey(Character.CharacterSlot.Wrist) ? items[Character.CharacterSlot.Wrist] : null,
-					items.ContainsKey(Character.CharacterSlot.Hands) ? items[Character.CharacterSlot.Hands] : null,
-					items.ContainsKey(Character.CharacterSlot.Waist) ? items[Character.CharacterSlot.Waist] : null,
-					items.ContainsKey(Character.CharacterSlot.Legs) ? items[Character.CharacterSlot.Legs] : null,
-					items.ContainsKey(Character.CharacterSlot.Feet) ? items[Character.CharacterSlot.Feet] : null,
-					items.ContainsKey(Character.CharacterSlot.Finger1) ? items[Character.CharacterSlot.Finger1] : null,
-					items.ContainsKey(Character.CharacterSlot.Finger2) ? items[Character.CharacterSlot.Finger2] : null,
-					items.ContainsKey(Character.CharacterSlot.Trinket1) ? items[Character.CharacterSlot.Trinket1] : null,
-					items.ContainsKey(Character.CharacterSlot.Trinket2) ? items[Character.CharacterSlot.Trinket2] : null,
-					items.ContainsKey(Character.CharacterSlot.MainHand) ? items[Character.CharacterSlot.MainHand] : null,
-					items.ContainsKey(Character.CharacterSlot.OffHand) ? items[Character.CharacterSlot.OffHand] : null,
-					items.ContainsKey(Character.CharacterSlot.Ranged) ? items[Character.CharacterSlot.Ranged] : null,
-					items.ContainsKey(Character.CharacterSlot.Projectile) ? items[Character.CharacterSlot.Projectile] : null,
+					items.ContainsKey(CharacterSlot.Head) ? items[CharacterSlot.Head] : null,
+					items.ContainsKey(CharacterSlot.Neck) ? items[CharacterSlot.Neck] : null,
+					items.ContainsKey(CharacterSlot.Shoulders) ? items[CharacterSlot.Shoulders] : null,
+					items.ContainsKey(CharacterSlot.Back) ? items[CharacterSlot.Back] : null,
+					items.ContainsKey(CharacterSlot.Chest) ? items[CharacterSlot.Chest] : null,
+					items.ContainsKey(CharacterSlot.Shirt) ? items[CharacterSlot.Shirt] : null,
+					items.ContainsKey(CharacterSlot.Tabard) ? items[CharacterSlot.Tabard] : null,
+					items.ContainsKey(CharacterSlot.Wrist) ? items[CharacterSlot.Wrist] : null,
+					items.ContainsKey(CharacterSlot.Hands) ? items[CharacterSlot.Hands] : null,
+					items.ContainsKey(CharacterSlot.Waist) ? items[CharacterSlot.Waist] : null,
+					items.ContainsKey(CharacterSlot.Legs) ? items[CharacterSlot.Legs] : null,
+					items.ContainsKey(CharacterSlot.Feet) ? items[CharacterSlot.Feet] : null,
+					items.ContainsKey(CharacterSlot.Finger1) ? items[CharacterSlot.Finger1] : null,
+					items.ContainsKey(CharacterSlot.Finger2) ? items[CharacterSlot.Finger2] : null,
+					items.ContainsKey(CharacterSlot.Trinket1) ? items[CharacterSlot.Trinket1] : null,
+					items.ContainsKey(CharacterSlot.Trinket2) ? items[CharacterSlot.Trinket2] : null,
+					items.ContainsKey(CharacterSlot.MainHand) ? items[CharacterSlot.MainHand] : null,
+					items.ContainsKey(CharacterSlot.OffHand) ? items[CharacterSlot.OffHand] : null,
+					items.ContainsKey(CharacterSlot.Ranged) ? items[CharacterSlot.Ranged] : null,
+					items.ContainsKey(CharacterSlot.Projectile) ? items[CharacterSlot.Projectile] : null,
 					null
-                    //items.ContainsKey(Character.CharacterSlot.ExtraWristSocket) ? items[Character.CharacterSlot.ExtraWristSocket] : null,
-                    //items.ContainsKey(Character.CharacterSlot.ExtraHandsSocket) ? items[Character.CharacterSlot.ExtraHandsSocket] : null,
-                    //items.ContainsKey(Character.CharacterSlot.ExtraWaistSocket) ? items[Character.CharacterSlot.ExtraWaistSocket] : null,
-                    //enchants.ContainsKey(Character.CharacterSlot.Head) ? enchants[Character.CharacterSlot.Head] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Shoulders) ? enchants[Character.CharacterSlot.Shoulders] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Back) ? enchants[Character.CharacterSlot.Back] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Chest) ? enchants[Character.CharacterSlot.Chest] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Wrist) ? enchants[Character.CharacterSlot.Wrist] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Hands) ? enchants[Character.CharacterSlot.Hands] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Legs) ? enchants[Character.CharacterSlot.Legs] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Feet) ? enchants[Character.CharacterSlot.Feet] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Finger1) ? enchants[Character.CharacterSlot.Finger1] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Finger2) ? enchants[Character.CharacterSlot.Finger2] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.MainHand) ? enchants[Character.CharacterSlot.MainHand] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.OffHand) ? enchants[Character.CharacterSlot.OffHand] : 0,
-                    //enchants.ContainsKey(Character.CharacterSlot.Ranged) ? enchants[Character.CharacterSlot.Ranged] : 0
+                    //items.ContainsKey(CharacterSlot.ExtraWristSocket) ? items[CharacterSlot.ExtraWristSocket] : null,
+                    //items.ContainsKey(CharacterSlot.ExtraHandsSocket) ? items[CharacterSlot.ExtraHandsSocket] : null,
+                    //items.ContainsKey(CharacterSlot.ExtraWaistSocket) ? items[CharacterSlot.ExtraWaistSocket] : null,
+                    //enchants.ContainsKey(CharacterSlot.Head) ? enchants[CharacterSlot.Head] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Shoulders) ? enchants[CharacterSlot.Shoulders] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Back) ? enchants[CharacterSlot.Back] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Chest) ? enchants[CharacterSlot.Chest] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Wrist) ? enchants[CharacterSlot.Wrist] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Hands) ? enchants[CharacterSlot.Hands] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Legs) ? enchants[CharacterSlot.Legs] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Feet) ? enchants[CharacterSlot.Feet] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Finger1) ? enchants[CharacterSlot.Finger1] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Finger2) ? enchants[CharacterSlot.Finger2] : 0,
+                    //enchants.ContainsKey(CharacterSlot.MainHand) ? enchants[CharacterSlot.MainHand] : 0,
+                    //enchants.ContainsKey(CharacterSlot.OffHand) ? enchants[CharacterSlot.OffHand] : 0,
+                    //enchants.ContainsKey(CharacterSlot.Ranged) ? enchants[CharacterSlot.Ranged] : 0
 					);
                 
                 character.Class = charClass;
@@ -173,52 +173,52 @@ namespace Rawr
                 string talentCode = activeTalentGroup.SelectSingleNode("talentSpec").Attributes["value"].Value;
 				switch (charClass)
 				{
-					case Character.CharacterClass.Warrior:
+					case CharacterClass.Warrior:
 						character.WarriorTalents = new WarriorTalents(talentCode);
 						if (character.WarriorTalents.Devastate > 0) character.CurrentModel = "ProtWarr";
 						else character.CurrentModel = "DPSWarr";
 						break;
-					case Character.CharacterClass.Paladin:
+					case CharacterClass.Paladin:
 						character.PaladinTalents = new PaladinTalents(talentCode);
 						if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "ProtPaladin";
 						else if (character.PaladinTalents.CrusaderStrike > 0) character.CurrentModel = "Retribution";
 						else character.CurrentModel = "Healadin";
 						break;
-					case Character.CharacterClass.Hunter:
+					case CharacterClass.Hunter:
 						character.HunterTalents = new HunterTalents(talentCode);
 						character.CurrentModel = "Hunter";
 						break;
-					case Character.CharacterClass.Rogue:
+					case CharacterClass.Rogue:
 						character.RogueTalents = new RogueTalents(talentCode);
 				        character.CurrentModel = "Rogue";
 						break;
-					case Character.CharacterClass.Priest:
+					case CharacterClass.Priest:
 						character.PriestTalents = new PriestTalents(talentCode);
 						if (character.PriestTalents.Shadowform > 0) character.CurrentModel = "ShadowPriest";
 						else character.CurrentModel = "HolyPriest";
 						break;
-					case Character.CharacterClass.Shaman:
+					case CharacterClass.Shaman:
 						character.ShamanTalents = new ShamanTalents(talentCode);
 						if (character.ShamanTalents.ElementalMastery > 0) character.CurrentModel = "Elemental";
 						else if (character.ShamanTalents.Stormstrike > 0) character.CurrentModel = "Enhance";
 						else character.CurrentModel = "RestoSham";
 						break;
-					case Character.CharacterClass.Mage:
+					case CharacterClass.Mage:
 						character.MageTalents = new MageTalents(talentCode);
 						character.CurrentModel = "Mage";
 						break;
-					case Character.CharacterClass.Warlock:
+					case CharacterClass.Warlock:
 						character.WarlockTalents = new WarlockTalents(talentCode);
 						character.CurrentModel = "Warlock";
 						break;
-					case Character.CharacterClass.Druid:
+					case CharacterClass.Druid:
 						character.DruidTalents = new DruidTalents(talentCode);
 						if (character.DruidTalents.ProtectorOfThePack > 0) character.CurrentModel = "Bear";
 						else if (character.DruidTalents.LeaderOfThePack > 0) character.CurrentModel = "Cat";
 						else if (character.DruidTalents.MoonkinForm > 0) character.CurrentModel = "Moonkin";
 						else character.CurrentModel = "Tree";
 						break;
-					case Character.CharacterClass.DeathKnight:
+					case CharacterClass.DeathKnight:
 						character.DeathKnightTalents = new DeathKnightTalents(talentCode);
 						if (character.DeathKnightTalents.Anticipation > 0) character.CurrentModel = "TankDK";
 						else character.CurrentModel = "DPSDK";
@@ -312,7 +312,7 @@ namespace Rawr
 					currentChar.AvailableItems.Add(itemId);
 				}
 			}*/
-            for (Character.CharacterSlot slot = 0; slot < (Character.CharacterSlot)19; slot++)
+            for (CharacterSlot slot = 0; slot < (CharacterSlot)19; slot++)
             {
                 ItemInstance item = currentChar[slot];
                 if ((object)item != null && item.Id != 0)
@@ -330,7 +330,7 @@ namespace Rawr
 
         private static void ApplyRacialandProfessionBuffs(XmlDocument doc, Character character)
         {
-            if (character.Race == Character.CharacterRace.Draenei)
+            if (character.Race == CharacterRace.Draenei)
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
 
             foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))
@@ -403,23 +403,23 @@ namespace Rawr
                     StatusMessaging.ReportError("Get Item", null, "No item returned from Armory for " + id);
                     return null;
                 }
-				Item.ItemQuality quality = Item.ItemQuality.Common;
-				Item.ItemType type = Item.ItemType.None;
-                Item.ItemSlot socketColor1 = Item.ItemSlot.None;
-                Item.ItemSlot socketColor2 = Item.ItemSlot.None;
-                Item.ItemSlot socketColor3 = Item.ItemSlot.None;
+				ItemQuality quality = ItemQuality.Common;
+				ItemType type = ItemType.None;
+                ItemSlot socketColor1 = ItemSlot.None;
+                ItemSlot socketColor2 = ItemSlot.None;
+                ItemSlot socketColor3 = ItemSlot.None;
                 Stats socketStats = new Stats();
                 string name = string.Empty;
 				string iconPath = string.Empty;
 				string setName = string.Empty;
-				Item.ItemSlot slot = Item.ItemSlot.None;
+				ItemSlot slot = ItemSlot.None;
 				Stats stats = new Stats();
 				int inventoryType = -1;
 				int classId = -1;
 				string subclassName = string.Empty;
 				int minDamage = 0;
 				int maxDamage = 0;
-                Item.ItemDamageType damageType = Item.ItemDamageType.Physical;
+                ItemDamageType damageType = ItemDamageType.Physical;
 				float speed = 0f;
 				List<string> requiredClasses = new List<string>();
                 bool unique = false;
@@ -428,13 +428,13 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (Item.ItemQuality)Enum.Parse(typeof(Item.ItemQuality), node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (ItemQuality)Enum.Parse(typeof(ItemQuality), node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/classId")) { classId = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { inventoryType = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/subclassName")) { subclassName = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/min")) { minDamage = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (Item.ItemDamageType)Enum.Parse(typeof(Item.ItemDamageType), node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (ItemDamageType)Enum.Parse(typeof(ItemDamageType), node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/allowableClasses/class")) { requiredClasses.Add(node.InnerText); }
@@ -512,38 +512,38 @@ namespace Rawr
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
 
-				if (slot == Item.ItemSlot.Finger ||
-					slot == Item.ItemSlot.MainHand ||
-					slot == Item.ItemSlot.Neck ||
-					(slot == Item.ItemSlot.OffHand && type != Item.ItemType.Shield) ||
-					slot == Item.ItemSlot.OneHand ||
-					slot == Item.ItemSlot.Trinket ||
-					slot == Item.ItemSlot.TwoHand)
+				if (slot == ItemSlot.Finger ||
+					slot == ItemSlot.MainHand ||
+					slot == ItemSlot.Neck ||
+					(slot == ItemSlot.OffHand && type != ItemType.Shield) ||
+					slot == ItemSlot.OneHand ||
+					slot == ItemSlot.Trinket ||
+					slot == ItemSlot.TwoHand)
 				{
 					stats.BonusArmor += stats.Armor;
 					stats.Armor = 0f;
 				}
 
-				if (slot == Item.ItemSlot.Back)
+				if (slot == ItemSlot.Back)
 				{
 					float baseArmor = 0;
 					switch (quality)
 					{     
-						case Item.ItemQuality.Temp:
-						case Item.ItemQuality.Poor:
-						case Item.ItemQuality.Common:
-						case Item.ItemQuality.Uncommon:
+						case ItemQuality.Temp:
+						case ItemQuality.Poor:
+						case ItemQuality.Common:
+						case ItemQuality.Uncommon:
 							baseArmor = (float)itemLevel * 1.19f + 5.1f;
 							break;
 
-						case Item.ItemQuality.Rare:
+						case ItemQuality.Rare:
 							baseArmor = ((float)itemLevel + 26.6f) * 16f / 25f;
 							break;
 
-						case Item.ItemQuality.Epic:
-						case Item.ItemQuality.Legendary:
-						case Item.ItemQuality.Artifact:
-						case Item.ItemQuality.Heirloom:
+						case ItemQuality.Epic:
+						case ItemQuality.Legendary:
+						case ItemQuality.Artifact:
+						case ItemQuality.Heirloom:
 							baseArmor = ((float)itemLevel + 358f) * 7f / 26f;
 							break;
 					}
@@ -575,9 +575,9 @@ namespace Rawr
 				}
 
 				XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
-                if (socketNodes.Count > 0) socketColor1 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), socketNodes[0].Attributes["color"].Value);
-                if (socketNodes.Count > 1) socketColor2 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), socketNodes[1].Attributes["color"].Value);
-                if (socketNodes.Count > 2) socketColor3 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), socketNodes[2].Attributes["color"].Value);
+                if (socketNodes.Count > 0) socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[0].Attributes["color"].Value);
+                if (socketNodes.Count > 1) socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[1].Attributes["color"].Value);
+                if (socketNodes.Count > 2) socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[2].Attributes["color"].Value);
 				string socketBonusesString = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonusesString = node.InnerText.Trim('+'); }
 				if (!string.IsNullOrEmpty(socketBonusesString))
@@ -890,24 +890,24 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText.ToLower(); }
                 if (desc.Contains("matches any socket"))
                 {
-                    slot = Item.ItemSlot.Prismatic;
+                    slot = ItemSlot.Prismatic;
                 }
                 else if (desc.Contains("matches a "))
 				{
 					bool red = desc.Contains("red");
 					bool blue = desc.Contains("blue");
 					bool yellow = desc.Contains("yellow");
-					slot = red && blue && yellow ? Item.ItemSlot.Prismatic :
-						red && blue ? Item.ItemSlot.Purple :
-						blue && yellow ? Item.ItemSlot.Green :
-						red && yellow ? Item.ItemSlot.Orange :
-						red ? Item.ItemSlot.Red :
-						blue ? Item.ItemSlot.Blue :
-						yellow ? Item.ItemSlot.Yellow :
-						Item.ItemSlot.None;
+					slot = red && blue && yellow ? ItemSlot.Prismatic :
+						red && blue ? ItemSlot.Purple :
+						blue && yellow ? ItemSlot.Green :
+						red && yellow ? ItemSlot.Orange :
+						red ? ItemSlot.Red :
+						blue ? ItemSlot.Blue :
+						yellow ? ItemSlot.Yellow :
+						ItemSlot.None;
 				}
 				else if (desc.Contains("meta gem slot"))
-					slot = Item.ItemSlot.Meta;
+					slot = ItemSlot.Meta;
 
                 // normalize alliance/horde set names
                 setName = setName.Replace("Sunstrider's Regalia", "Khadgar's Regalia")   // Mage T9
@@ -966,183 +966,183 @@ namespace Rawr
 			}
 		}
 
-		private static Item.ItemType GetItemType(string subclassName, int inventoryType, int classId)
+		private static ItemType GetItemType(string subclassName, int inventoryType, int classId)
 		{
 			switch (subclassName)
 			{
 				case "Cloth":
-					return Item.ItemType.Cloth;
+					return ItemType.Cloth;
 
 				case "Leather":
-					return Item.ItemType.Leather;
+					return ItemType.Leather;
 
 				case "Mail":
-					return Item.ItemType.Mail;
+					return ItemType.Mail;
 
 				case "Plate":
-					return Item.ItemType.Plate;
+					return ItemType.Plate;
 
 				case "Dagger":
-					return Item.ItemType.Dagger;
+					return ItemType.Dagger;
 
 				case "Fist Weapon":
-					return Item.ItemType.FistWeapon;
+					return ItemType.FistWeapon;
 
 				case "Axe":
 					if (inventoryType == 17)
-						return Item.ItemType.TwoHandAxe;
+						return ItemType.TwoHandAxe;
 					else
-						return Item.ItemType.OneHandAxe;
+						return ItemType.OneHandAxe;
 
 				case "Mace":
 					if (inventoryType == 17)
-						return Item.ItemType.TwoHandMace;
+						return ItemType.TwoHandMace;
 					else
-						return Item.ItemType.OneHandMace;
+						return ItemType.OneHandMace;
 
 				case "Sword":
 					if (inventoryType == 17)
-						return Item.ItemType.TwoHandSword;
+						return ItemType.TwoHandSword;
 					else
-						return Item.ItemType.OneHandSword;
+						return ItemType.OneHandSword;
 
 				case "Polearm":
-					return Item.ItemType.Polearm;
+					return ItemType.Polearm;
 
 				case "Staff":
-					return Item.ItemType.Staff;
+					return ItemType.Staff;
 
 				case "Shield":
-					return Item.ItemType.Shield;
+					return ItemType.Shield;
 
 				case "Bow":
-					return Item.ItemType.Bow;
+					return ItemType.Bow;
 
 				case "Crossbow":
-					return Item.ItemType.Crossbow;
+					return ItemType.Crossbow;
 
 				case "Gun":
-					return Item.ItemType.Gun;
+					return ItemType.Gun;
 
 				case "Wand":
-					return Item.ItemType.Wand;
+					return ItemType.Wand;
 
 				case "Thrown":
-					return Item.ItemType.Thrown;
+					return ItemType.Thrown;
 
 				case "Idol":
-					return Item.ItemType.Idol;
+					return ItemType.Idol;
 
 				case "Libram":
-					return Item.ItemType.Libram;
+					return ItemType.Libram;
 
 				case "Totem":
-					return Item.ItemType.Totem;
+					return ItemType.Totem;
 
 				case "Arrow":
-					return Item.ItemType.Arrow;
+					return ItemType.Arrow;
 
 				case "Bullet":
-					return Item.ItemType.Bullet;
+					return ItemType.Bullet;
 
 				case "Quiver":
-					return Item.ItemType.Quiver;
+					return ItemType.Quiver;
 
 				case "Ammo Pouch":
-					return Item.ItemType.AmmoPouch;
+					return ItemType.AmmoPouch;
 
 				case "Sigil":
-					return Item.ItemType.Sigil;
+					return ItemType.Sigil;
 
 				default:
-					return Item.ItemType.None;
+					return ItemType.None;
 			}
 		}
 
-		private static Item.ItemSlot GetItemSlot(int inventoryType, int classId)
+		private static ItemSlot GetItemSlot(int inventoryType, int classId)
 		{
 			switch (classId)
 			{
 				case 6:
-					return Item.ItemSlot.Projectile;
+					return ItemSlot.Projectile;
 
 				case 11:
-					return Item.ItemSlot.ProjectileBag;
+					return ItemSlot.ProjectileBag;
 			}
 					
 			switch (inventoryType)
 			{
 				case 1:
-					return Item.ItemSlot.Head;
+					return ItemSlot.Head;
 
 				case 2:
-					return Item.ItemSlot.Neck;
+					return ItemSlot.Neck;
 
 				case 3:
-					return Item.ItemSlot.Shoulders;
+					return ItemSlot.Shoulders;
 
 				case 16:
-					return Item.ItemSlot.Back;
+					return ItemSlot.Back;
 
 				case 5:
 				case 20:
-					return Item.ItemSlot.Chest;
+					return ItemSlot.Chest;
 
 				case 4:
-					return Item.ItemSlot.Shirt;
+					return ItemSlot.Shirt;
 
 				case 19:
-					return Item.ItemSlot.Tabard;
+					return ItemSlot.Tabard;
 
 				case 9:
-					return Item.ItemSlot.Wrist;
+					return ItemSlot.Wrist;
 
 				case 10:
-					return Item.ItemSlot.Hands;
+					return ItemSlot.Hands;
 
 				case 6:
-					return Item.ItemSlot.Waist;
+					return ItemSlot.Waist;
 
 				case 7:
-					return Item.ItemSlot.Legs;
+					return ItemSlot.Legs;
 
 				case 8:
-					return Item.ItemSlot.Feet;
+					return ItemSlot.Feet;
 
 				case 11:
-					return Item.ItemSlot.Finger;
+					return ItemSlot.Finger;
 
 				case 12:
-					return Item.ItemSlot.Trinket;
+					return ItemSlot.Trinket;
 
 				case 13:
-					return Item.ItemSlot.OneHand;
+					return ItemSlot.OneHand;
 
 				case 17:
-					return Item.ItemSlot.TwoHand;
+					return ItemSlot.TwoHand;
 
 				case 21:
-					return Item.ItemSlot.MainHand;
+					return ItemSlot.MainHand;
 
 				case 14:
 				case 22:
 				case 23:
-					return Item.ItemSlot.OffHand;
+					return ItemSlot.OffHand;
 
 				case 15:
 				case 25:
 				case 26:
 				case 28:
-					return Item.ItemSlot.Ranged;
+					return ItemSlot.Ranged;
 
 				case 24:
-					return Item.ItemSlot.Projectile;
+					return ItemSlot.Projectile;
 
 				case 27:
-					return Item.ItemSlot.ProjectileBag;
+					return ItemSlot.ProjectileBag;
 				
 				default:
-					return Item.ItemSlot.None;
+					return ItemSlot.None;
 			}
 		}
 
@@ -1154,70 +1154,70 @@ namespace Rawr
 				List<ComparisonCalculationBase> gemCalculations = new List<ComparisonCalculationBase>();
 				foreach (Item item in ItemCache.AllItems)
 				{
-					if (item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Meta
-						 || item.Slot == Item.ItemSlot.Orange || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Purple
-						 || item.Slot == Item.ItemSlot.Red || item.Slot == Item.ItemSlot.Yellow)
+					if (item.Slot == ItemSlot.Blue || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Meta
+						 || item.Slot == ItemSlot.Orange || item.Slot == ItemSlot.Prismatic || item.Slot == ItemSlot.Purple
+						 || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Yellow)
 					{
-						gemCalculations.Add(Calculations.GetItemCalculations(item, character, item.Slot == Item.ItemSlot.Meta ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems));
+						gemCalculations.Add(Calculations.GetItemCalculations(item, character, item.Slot == ItemSlot.Meta ? CharacterSlot.Metas : CharacterSlot.Gems));
 					}
 				}
 
 				ComparisonCalculationBase idealRed = null, idealBlue = null, idealYellow = null, idealMeta = null;
 				foreach (ComparisonCalculationBase calc in gemCalculations)
 				{
-					if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Meta) && (idealMeta == null || idealMeta.OverallPoints < calc.OverallPoints))
+					if (Item.GemMatchesSlot(calc.Item, ItemSlot.Meta) && (idealMeta == null || idealMeta.OverallPoints < calc.OverallPoints))
 						idealMeta = calc;
-					if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Red) && (idealRed == null || idealRed.OverallPoints < calc.OverallPoints))
+					if (Item.GemMatchesSlot(calc.Item, ItemSlot.Red) && (idealRed == null || idealRed.OverallPoints < calc.OverallPoints))
 						idealRed = calc;
-					if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Blue) && (idealBlue == null || idealBlue.OverallPoints < calc.OverallPoints))
+					if (Item.GemMatchesSlot(calc.Item, ItemSlot.Blue) && (idealBlue == null || idealBlue.OverallPoints < calc.OverallPoints))
 						idealBlue = calc;
-					if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Yellow) && (idealYellow == null || idealYellow.OverallPoints < calc.OverallPoints))
+					if (Item.GemMatchesSlot(calc.Item, ItemSlot.Yellow) && (idealYellow == null || idealYellow.OverallPoints < calc.OverallPoints))
 						idealYellow = calc;
 				}
-				Dictionary<Item.ItemSlot, int> idealGems = new Dictionary<Item.ItemSlot, int>();
-				idealGems.Add(Item.ItemSlot.Meta, idealMeta == null ? 0 : idealMeta.Item.Id);
-				idealGems.Add(Item.ItemSlot.Red, idealRed == null ? 0 : idealRed.Item.Id);
-				idealGems.Add(Item.ItemSlot.Blue, idealBlue == null ? 0 : idealBlue.Item.Id);
-				idealGems.Add(Item.ItemSlot.Yellow, idealYellow == null ? 0 : idealYellow.Item.Id);
-				idealGems.Add(Item.ItemSlot.None, 0);
+				Dictionary<ItemSlot, int> idealGems = new Dictionary<ItemSlot, int>();
+				idealGems.Add(ItemSlot.Meta, idealMeta == null ? 0 : idealMeta.Item.Id);
+				idealGems.Add(ItemSlot.Red, idealRed == null ? 0 : idealRed.Item.Id);
+				idealGems.Add(ItemSlot.Blue, idealBlue == null ? 0 : idealBlue.Item.Id);
+				idealGems.Add(ItemSlot.Yellow, idealYellow == null ? 0 : idealYellow.Item.Id);
+				idealGems.Add(ItemSlot.None, 0);
 
 				#region status queuing
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Head.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Neck.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Shoulders.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Back.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Chest.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Wrist.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Hands.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Waist.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Legs.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Feet.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Finger1.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Finger2.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Trinket1.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Trinket2.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.MainHand.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.OffHand.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(Character.CharacterSlot.Ranged.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Head.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Neck.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Shoulders.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Back.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Chest.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Wrist.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Hands.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Waist.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Legs.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Feet.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Finger1.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Finger2.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Trinket1.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Trinket2.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.MainHand.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.OffHand.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(CharacterSlot.Ranged.ToString(), "Queued");
 				#endregion
 				
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Head, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Neck, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Shoulders, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Back, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Chest, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Wrist, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Hands, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Waist, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Legs, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Feet, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Finger1, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Finger2, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Trinket1, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Trinket2, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.MainHand, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.OffHand, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Ranged, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems);
+				LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems);
 			}
 			else
 			{
@@ -1225,7 +1225,7 @@ namespace Rawr
 			}
 		}
 
-		private static void LoadUpgradesForSlot(Character character, Character.CharacterSlot slot, Dictionary<Item.ItemSlot, int> idealGems)
+		private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems)
 		{
 			XmlDocument docUpgradeSearch = null;
 			try

@@ -18,12 +18,12 @@ namespace Rawr
             else return new BitmapImage(new Uri(string.Format("http://www.wowarmory.com/wow-icons/_images/64x64/{0}.jpg", name.ToLower())));
         }
 
-        public static BitmapImage TreeBackground(Character.CharacterClass charClass, string talentTree)
+        public static BitmapImage TreeBackground(CharacterClass charClass, string talentTree)
         {
             return TalentIcon(charClass, talentTree, "background", true);
         }
 
-        public static BitmapImage TalentIcon(Character.CharacterClass charClass, string talentTree, string talentName, bool on)
+        public static BitmapImage TalentIcon(CharacterClass charClass, string talentTree, string talentName, bool on)
         {
             talentTree = talentTree.Replace(" ", "");
             talentName = talentName.Replace(" ", "");

@@ -42,25 +42,25 @@ namespace Rawr.Silverlight
         {
             Item item = value as Item;
             if (item == null) return new SolidColorBrush(Colors.Black);
-            Item.ItemQuality quality = item.Quality;
+            ItemQuality quality = item.Quality;
             switch (quality)
             {
-                case Item.ItemQuality.Artifact:
-                case Item.ItemQuality.Heirloom:
+                case ItemQuality.Artifact:
+                case ItemQuality.Heirloom:
                     return new SolidColorBrush(Colors.Yellow);
-                case Item.ItemQuality.Legendary:
+                case ItemQuality.Legendary:
                     return new SolidColorBrush(Colors.Orange);
-                case Item.ItemQuality.Epic:
+                case ItemQuality.Epic:
                     return new SolidColorBrush(Colors.Purple);
-                case Item.ItemQuality.Rare:
+                case ItemQuality.Rare:
                     return new SolidColorBrush(Colors.Blue);
-                case Item.ItemQuality.Uncommon:
+                case ItemQuality.Uncommon:
                     return new SolidColorBrush(Colors.Green);
-                case Item.ItemQuality.Common:
+                case ItemQuality.Common:
                     return new SolidColorBrush(Colors.Gray);
-                case Item.ItemQuality.Poor:
+                case ItemQuality.Poor:
                     return new SolidColorBrush(Colors.DarkGray);
-                case Item.ItemQuality.Temp:
+                case ItemQuality.Temp:
                 default:
                     return new SolidColorBrush(Colors.Black);
             }

@@ -49,27 +49,27 @@ namespace Rawr
             if (DocumentReady != null) DocumentReady.Invoke(this, EventArgs.Empty);
         }
 
-        public void GetCharacterSheetDocument(string characterName, string realm, Character.CharacterRegion region)
+        public void GetCharacterSheetDocument(string characterName, string realm, CharacterRegion region)
         {
             DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.CharacterSheetURI,
                 _domains[region], realm, characterName), UriKind.Relative));
         }
 
-        public void GetTalentTreeDocument(string characterName, string realm, Character.CharacterRegion region)
+        public void GetTalentTreeDocument(string characterName, string realm, CharacterRegion region)
         {
             DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.CharacterTalentURI,
                 _domains[region], realm, characterName), UriKind.Relative));
         }
 
-        private static Dictionary<Character.CharacterRegion, string> _domains;
+        private static Dictionary<CharacterRegion, string> _domains;
         static NetworkUtils()
         {
-            _domains = new Dictionary<Character.CharacterRegion, string>();
-            _domains.Add(Character.CharacterRegion.US, "www");
-            _domains.Add(Character.CharacterRegion.EU, "eu");
-            _domains.Add(Character.CharacterRegion.KR, "kr");
-            _domains.Add(Character.CharacterRegion.TW, "tw");
-            _domains.Add(Character.CharacterRegion.CN, "cn");
+            _domains = new Dictionary<CharacterRegion, string>();
+            _domains.Add(CharacterRegion.US, "www");
+            _domains.Add(CharacterRegion.EU, "eu");
+            _domains.Add(CharacterRegion.KR, "kr");
+            _domains.Add(CharacterRegion.TW, "tw");
+            _domains.Add(CharacterRegion.CN, "cn");
         }
 
         internal void DownloadItemToolTipSheet(int id)

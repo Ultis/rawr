@@ -74,7 +74,7 @@ namespace Rawr.zzTestzz
         [TestMethod()]
         public void TargetClassTest()
         {
-            Character.CharacterClass actual;
+            CharacterClass actual;
             actual = Calculations.TargetClass;
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
@@ -140,7 +140,7 @@ namespace Rawr.zzTestzz
         [TestMethod()]
         public void ModelClassesTest()
         {
-            Dictionary<string, Character.CharacterClass> actual;
+            Dictionary<string, CharacterClass> actual;
             actual = Calculations.ModelClasses;
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
@@ -296,7 +296,7 @@ namespace Rawr.zzTestzz
         {
             Item item = null; // TODO: Initialize to an appropriate value
             Character character = null; // TODO: Initialize to an appropriate value
-            Character.CharacterSlot slot = new Character.CharacterSlot(); // TODO: Initialize to an appropriate value
+            CharacterSlot slot = new CharacterSlot(); // TODO: Initialize to an appropriate value
             bool expected = false; // TODO: Initialize to an appropriate value
             bool actual;
             actual = Calculations.ItemFitsInSlot(item, character, slot);
@@ -439,7 +439,7 @@ namespace Rawr.zzTestzz
         {
             ItemInstance item = null; // TODO: Initialize to an appropriate value
             Character character = null; // TODO: Initialize to an appropriate value
-            Character.CharacterSlot slot = new Character.CharacterSlot(); // TODO: Initialize to an appropriate value
+            CharacterSlot slot = new CharacterSlot(); // TODO: Initialize to an appropriate value
             ComparisonCalculationBase expected = null; // TODO: Initialize to an appropriate value
             ComparisonCalculationBase actual;
             actual = Calculations.GetItemCalculations(item, character, slot);
@@ -455,7 +455,7 @@ namespace Rawr.zzTestzz
         {
             Item item = null; // TODO: Initialize to an appropriate value
             Character character = null; // TODO: Initialize to an appropriate value
-            Character.CharacterSlot slot = new Character.CharacterSlot(); // TODO: Initialize to an appropriate value
+            CharacterSlot slot = new CharacterSlot(); // TODO: Initialize to an appropriate value
             ComparisonCalculationBase expected = null; // TODO: Initialize to an appropriate value
             ComparisonCalculationBase actual;
             actual = Calculations.GetItemCalculations(item, character, slot);
@@ -469,7 +469,7 @@ namespace Rawr.zzTestzz
         [TestMethod()]
         public void GetEnchantCalculationsTest()
         {
-            Item.ItemSlot slot = new Item.ItemSlot(); // TODO: Initialize to an appropriate value
+            ItemSlot slot = new ItemSlot(); // TODO: Initialize to an appropriate value
             Character character = null; // TODO: Initialize to an appropriate value
             CharacterCalculationsBase currentCalcs = null; // TODO: Initialize to an appropriate value
             List<ComparisonCalculationBase> expected = null; // TODO: Initialize to an appropriate value
@@ -657,7 +657,7 @@ namespace Rawr.zzTestzz
         {
             Enchant item = null; // TODO: Initialize to an appropriate value
             Character character = null; // TODO: Initialize to an appropriate value
-            Item.ItemSlot slot = new Item.ItemSlot(); // TODO: Initialize to an appropriate value
+            ItemSlot slot = new ItemSlot(); // TODO: Initialize to an appropriate value
             bool expected = false; // TODO: Initialize to an appropriate value
             bool actual;
             actual = Calculations.EnchantFitsInSlot(item, character, slot);

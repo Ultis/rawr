@@ -58,12 +58,12 @@ namespace Rawr
                 }
             }
         }
-        Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>> upgradeList;
+        Dictionary<CharacterSlot, Dictionary<string, UpgradeEntry>> upgradeList;
         IEnumerator<UpgradeEntry> upgradeListEnumerator;
 
         IEnumerator<UpgradeEntry> GetUpgradeListEnumerator()
         {
-            foreach (KeyValuePair<Character.CharacterSlot, Dictionary<string, UpgradeEntry>> kvp in upgradeList)
+            foreach (KeyValuePair<CharacterSlot, Dictionary<string, UpgradeEntry>> kvp in upgradeList)
             {
                 foreach (UpgradeEntry entry in kvp.Value.Values)
                 {
@@ -331,7 +331,7 @@ namespace Rawr
                     }
                     if (upgradeListPhase == 0)
                     {
-                        foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
+                        foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
                         {
                             Dictionary<string, UpgradeEntry> map;
                             if (!upgradeList.TryGetValue(kvp.Key, out map))
@@ -390,7 +390,7 @@ namespace Rawr
                         break;
                     }
                     bool foundUpgrade = false;
-                    foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
+                    foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
                     {
                         Dictionary<string, UpgradeEntry> map;
                         if (!upgradeList.TryGetValue(kvp.Key, out map))
@@ -426,10 +426,10 @@ namespace Rawr
                         // if we're evaluating an item that was already marked available then we must restrict to that version
                         // if it was used in this character
                         Item item = itemList[itemIndex];
-                        Character.CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Slot);
+                        CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Slot);
                         if (upgradeListPhase == 0)
                         {
-                            foreach (Character.CharacterSlot s in Character.CharacterSlots)
+                            foreach (CharacterSlot s in Character.CharacterSlots)
                             {
                                 ItemInstance itemInstance = workingCharacter[s];
                                 if ((object)itemInstance != null && itemInstance.Id == item.Id)
@@ -528,7 +528,7 @@ namespace Rawr
                 }
             }
 
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
             foreach (var kvp in upgradeList)
             {
@@ -614,7 +614,7 @@ namespace Rawr
                                 }
                             }
 
-                            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
+                            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                             foreach (var kvp in upgradeList)
                             {
@@ -663,7 +663,7 @@ namespace Rawr
                         statusProgressBar.Value = 0;
                         break;
                     }
-                    Character.CharacterSlot slot = Character.GetCharacterSlotByItemSlot(optimizedItemInstance.Slot);
+                    CharacterSlot slot = Character.GetCharacterSlotByItemSlot(optimizedItemInstance.Slot);
                     Dictionary<string, UpgradeEntry> map;
                     if (!upgradeList.TryGetValue(slot, out map))
                     {
@@ -1004,7 +1004,7 @@ namespace Rawr
                 {
                     for (int slot = 0; slot < 19; slot++)
                     {
-                        ItemInstance item = character.Character[(Character.CharacterSlot)slot];
+                        ItemInstance item = character.Character[(CharacterSlot)slot];
                         if (item != null)
                         {
                             string id = item.Id.ToString();
@@ -1027,7 +1027,7 @@ namespace Rawr
                                 {
                                     // have to replace enchant
                                     string s = sublist[0];
-                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot, character.Character));
+                                    character.Character.SetEnchantBySlot((CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot, character.Character));
                                     character.UnsavedChanges = true;
                                 }
                             }
@@ -1045,7 +1045,7 @@ namespace Rawr
                                 {
                                     // have to replace enchant
                                     string s = sublist[0];
-                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot, character.Character));
+                                    character.Character.SetEnchantBySlot((CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot, character.Character));
                                     character.UnsavedChanges = true;
                                 }
                             }
@@ -1053,7 +1053,7 @@ namespace Rawr
                             {
                                 string s = list[0];
                                 item = new ItemInstance(s);
-                                character.Character[(Character.CharacterSlot)slot] = item;
+                                character.Character[(CharacterSlot)slot] = item;
                                 character.UnsavedChanges = true;
                             }
                             else
@@ -1064,9 +1064,9 @@ namespace Rawr
                                     {
                                         item = item.Clone();
                                         item.Id = int.Parse(s);
-                                        if (item.Item.SocketColor1 == Item.ItemSlot.None) item.Gem1 = null;
-                                        if (item.Item.SocketColor2 == Item.ItemSlot.None) item.Gem2 = null;
-                                        if (item.Item.SocketColor3 == Item.ItemSlot.None) item.Gem3 = null;
+                                        if (item.Item.SocketColor1 == ItemSlot.None) item.Gem1 = null;
+                                        if (item.Item.SocketColor2 == ItemSlot.None) item.Gem2 = null;
+                                        if (item.Item.SocketColor3 == ItemSlot.None) item.Gem3 = null;
                                     }
                                     else
                                     {
@@ -1075,9 +1075,9 @@ namespace Rawr
                                         {
                                             item = item.Clone();
                                             item.Id = int.Parse(slist[0]);
-                                            if (item.Item.SocketColor1 == Item.ItemSlot.None) item.Gem1 = null;
-                                            if (item.Item.SocketColor2 == Item.ItemSlot.None) item.Gem2 = null;
-                                            if (item.Item.SocketColor3 == Item.ItemSlot.None) item.Gem3 = null;
+                                            if (item.Item.SocketColor1 == ItemSlot.None) item.Gem1 = null;
+                                            if (item.Item.SocketColor2 == ItemSlot.None) item.Gem2 = null;
+                                            if (item.Item.SocketColor3 == ItemSlot.None) item.Gem3 = null;
                                         }
                                         else
                                         {
@@ -1088,13 +1088,13 @@ namespace Rawr
                                             item.Gem3Id = int.Parse(slist[3]);
                                         }
                                     }
-                                    if (item != null && item.Item.FitsInSlot((Character.CharacterSlot)slot, character.Character))
+                                    if (item != null && item.Item.FitsInSlot((CharacterSlot)slot, character.Character))
                                     {
-                                        character.Character[(Character.CharacterSlot)slot] = item;
+                                        character.Character[(CharacterSlot)slot] = item;
                                         string se = s.Substring(s.LastIndexOf('.') + 1);
                                         if (se != "*")
                                         {
-                                            character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot, character.Character));
+                                            character.Character.SetEnchantBySlot((CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot, character.Character));
                                         }
                                         character.UnsavedChanges = true;
                                         break;
@@ -1195,7 +1195,7 @@ namespace Rawr
 
             batchIndex = 0;
             upgradeListPhase = 0;
-            upgradeList = new Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>>();
+            upgradeList = new Dictionary<CharacterSlot, Dictionary<string, UpgradeEntry>>();
             ComputeUpgradesCurrentBatchCharacter();
         }
 
@@ -1410,7 +1410,7 @@ namespace Rawr
             CreateBatchItemGenerator();
             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
             itemIndex = 0;
-            upgradeList = new Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>>();
+            upgradeList = new Dictionary<CharacterSlot, Dictionary<string, UpgradeEntry>>();
             workingCharacter = character;
             optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, itemList[itemIndex]);
         }

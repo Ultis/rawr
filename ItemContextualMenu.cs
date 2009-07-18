@@ -29,7 +29,7 @@ namespace Rawr
 
 		private ItemInstance _item;
         private ItemInstance[] _characterItems;
-		private Character.CharacterSlot _equipSlot;
+		private CharacterSlot _equipSlot;
 		private ToolStripMenuItem _menuItemName;
 		private ToolStripMenuItem _menuItemEdit;
 		private ToolStripMenuItem _menuItemWowhead;
@@ -135,7 +135,7 @@ namespace Rawr
             optimize.Dispose();
         }
 
-        public void Show(Character character, ItemInstance item, Character.CharacterSlot equipSlot, bool allowDelete)
+        public void Show(Character character, ItemInstance item, CharacterSlot equipSlot, bool allowDelete)
         {
             // TankConcrete 09.01.09 - Added a check to make sure the item being displayed
             // is really an item we can show a context menu for. Enchants, etc., won't work
@@ -147,7 +147,7 @@ namespace Rawr
             }
         }
 
-		public void Show(Character character, ItemInstance item, Character.CharacterSlot equipSlot, ItemInstance[] characterItems, bool allowDelete)
+		public void Show(Character character, ItemInstance item, CharacterSlot equipSlot, ItemInstance[] characterItems, bool allowDelete)
 		{
             Character = character;
 			_item = item;
@@ -155,7 +155,7 @@ namespace Rawr
             _menuItemEquipAll.Visible = (_characterItems != null);
 			_equipSlot = equipSlot;
 			_menuItemEquip.Enabled = (Character[equipSlot] != item);
-            _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = _menuItemEquipCustomizedItem.Visible = equipSlot != Character.CharacterSlot.None;
+            _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = _menuItemEquipCustomizedItem.Visible = equipSlot != CharacterSlot.None;
 			_menuItemDelete.Enabled = allowDelete && _menuItemEquip.Enabled && Character.CustomItemInstances.Contains(item);
 			_menuItemDeleteDuplicates.Enabled = allowDelete;
 			_menuItemName.Text = item.Item.Name;
@@ -195,33 +195,33 @@ namespace Rawr
 			string gemmedSocketAgi = _item.Id.ToString();
 			string gemmedSocketStam = _item.Id.ToString();
 			string gemmedStam = _item.Id.ToString();
-			foreach(Item.ItemSlot color in new Item.ItemSlot[]
+			foreach(ItemSlot color in new ItemSlot[]
 				{_item.Item.SocketColor1, _item.Item.SocketColor2, _item.Item.SocketColor3})
 			{
 				switch (color)
 				{
-					case Item.ItemSlot.Red:
+					case ItemSlot.Red:
 						gemmedAgi += ".32194";
 						gemmedSocketAgi += ".32194";
 						gemmedSocketStam += ".32212";
 						gemmedStam += ".32200";
 						break;
 
-					case Item.ItemSlot.Yellow:
+					case ItemSlot.Yellow:
 						gemmedAgi += ".32194";
 						gemmedSocketAgi += ".30585";
 						gemmedSocketStam += ".32223";
 						gemmedStam += ".32200";
 						break;
 						
-					case Item.ItemSlot.Blue:
+					case ItemSlot.Blue:
 						gemmedAgi += ".32194";
 						gemmedSocketAgi += ".32212";
 						gemmedSocketStam += ".32200";
 						gemmedStam += ".32200";
 						break;
 
-					case Item.ItemSlot.Meta:
+					case ItemSlot.Meta:
 						gemmedAgi += ".32409";
 						gemmedSocketAgi += ".32409";
 						gemmedSocketStam += ".25896";
@@ -247,26 +247,26 @@ namespace Rawr
 		{
 			string gemmedAgi = _item.Id.ToString();
 			string gemmedSocketAgi = _item.Id.ToString();
-			foreach (Item.ItemSlot color in new Item.ItemSlot[] { _item.Item.SocketColor1, _item.Item.SocketColor2, _item.Item.SocketColor3 })
+			foreach (ItemSlot color in new ItemSlot[] { _item.Item.SocketColor1, _item.Item.SocketColor2, _item.Item.SocketColor3 })
 			{
 				switch (color)
 				{
-					case Item.ItemSlot.Red:
+					case ItemSlot.Red:
 						gemmedAgi += ".32194";
 						gemmedSocketAgi += ".32194";
 						break;
 
-					case Item.ItemSlot.Yellow:
+					case ItemSlot.Yellow:
 						gemmedAgi += ".32194";
 						gemmedSocketAgi += ".32220";
 						break;
 
-					case Item.ItemSlot.Blue:
+					case ItemSlot.Blue:
 						gemmedAgi += ".32194";
 						gemmedSocketAgi += ".32212";
 						break;
 
-					case Item.ItemSlot.Meta:
+					case ItemSlot.Meta:
 						gemmedAgi += ".32409";
 						gemmedSocketAgi += ".32409";
 						break;

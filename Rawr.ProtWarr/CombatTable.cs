@@ -59,7 +59,7 @@ namespace Rawr.ProtWarr
             Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry));
             tableSize += Parry;
             // Block
-            if (Character.OffHand != null && Character.OffHand.Type == Item.ItemType.Shield)
+            if (Character.OffHand != null && Character.OffHand.Type == ItemType.Shield)
             {
                 Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block));
                 tableSize += Block;

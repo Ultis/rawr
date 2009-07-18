@@ -223,7 +223,7 @@ namespace Rawr
 
         #region Functions for Plain Rating Conversions
 
-        public static float GetArmorFromAgility(float Rating, Character.CharacterClass Class) { return GetArmorFromAgility(Rating); }
+        public static float GetArmorFromAgility(float Rating, CharacterClass Class) { return GetArmorFromAgility(Rating); }
         /// <summary>
         /// Returns a Value (2 = 2 extra Armor)
         /// </summary>
@@ -233,7 +233,7 @@ namespace Rawr
             return Rating * RATING_PER_ARMOR;
         }
 
-        public static float GetHealthFromStamina(float Rating, Character.CharacterClass Class) { return GetHealthFromStamina(Rating); }
+        public static float GetHealthFromStamina(float Rating, CharacterClass Class) { return GetHealthFromStamina(Rating); }
         /// <summary>
         /// Returns a Value (1000 = 1000 extra Health)
         /// </summary>
@@ -243,7 +243,7 @@ namespace Rawr
             return Rating <= 20 ? Rating : (Rating - 20) * RATING_PER_HEALTH + 20; // first 20 stamina is 1 health
         }
 
-        public static float GetManaFromIntellect(float Rating, Character.CharacterClass Class) { return GetManaFromIntellect(Rating); }
+        public static float GetManaFromIntellect(float Rating, CharacterClass Class) { return GetManaFromIntellect(Rating); }
         /// <summary>
         /// Returns a Value (1000 = 1000 extra Mana)
         /// </summary>
@@ -254,7 +254,7 @@ namespace Rawr
             return Rating <= 20 ? Rating : (Rating - 20) * RATING_PER_MANA + 20; // first 20 intellect is 1 mana
         }
 
-        public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
+        public static float GetArmorPenetrationFromRating(float Rating, CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% Armor Ignored)
         /// </summary>
@@ -264,7 +264,7 @@ namespace Rawr
             return Rating / RATING_PER_ARMORPENETRATION;
         }
 
-        public static float GetBlockFromRating(float Rating, Character.CharacterClass Class) { return GetBlockFromRating(Rating); }
+        public static float GetBlockFromRating(float Rating, CharacterClass Class) { return GetBlockFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% added chance to Block)
         /// </summary>
@@ -275,7 +275,7 @@ namespace Rawr
             return Rating / RATING_PER_BLOCK;
         }
 
-        public static float GetDefenseFromRating(float Rating, Character.CharacterClass Class) { return GetDefenseFromRating(Rating); }
+        public static float GetDefenseFromRating(float Rating, CharacterClass Class) { return GetDefenseFromRating(Rating); }
         /// <summary>
         /// Returns a Value (5.4 = 5 extra Defense)
         /// </summary>
@@ -286,7 +286,7 @@ namespace Rawr
             return (float)Math.Round(Rating / RATING_PER_DEFENSE);
         }
 
-        public static float GetDodgeFromRating(float Rating, Character.CharacterClass Class) { return GetDodgeFromRating(Rating); }
+        public static float GetDodgeFromRating(float Rating, CharacterClass Class) { return GetDodgeFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Dodge)
         /// </summary>
@@ -297,14 +297,14 @@ namespace Rawr
             return Rating / RATING_PER_DODGE;
         }
 
-        public static float GetExpertiseFromRating(float Rating, Character.CharacterClass Class) { return GetExpertiseFromRating(Rating); }
+        public static float GetExpertiseFromRating(float Rating, CharacterClass Class) { return GetExpertiseFromRating(Rating); }
         /// <summary>
         /// Returns a Value (6.34 = 6.34 extra Expertise)
         /// </summary>
         /// <param name="Rating">Expertise Rating</param>
         /// <returns>A Value (6.34 = 6.34 extra Expertise)</returns>
         public static float GetExpertiseFromRating(float Rating) { return Rating / RATING_PER_EXPERTISE; }
-        public static float GetRatingFromExpertise(float value, Character.CharacterClass Class) { return GetRatingFromExpertise(value); }
+        public static float GetRatingFromExpertise(float value, CharacterClass Class) { return GetRatingFromExpertise(value); }
         /// <summary>
         /// Returns a Value (6.34 = 6.34 extra Expertise)
         /// </summary>
@@ -312,14 +312,14 @@ namespace Rawr
         /// <returns>A Value (6.34 = 6.34 extra Expertise)</returns>
         public static float GetRatingFromExpertise(float value) { return value * RATING_PER_EXPERTISE; }
 
-        public static float GetDodgeParryReducFromExpertise(float Rating, Character.CharacterClass Class) { return GetDodgeParryReducFromExpertise(Rating); }
+        public static float GetDodgeParryReducFromExpertise(float Rating, CharacterClass Class) { return GetDodgeParryReducFromExpertise(Rating); }
         /// <summary>
         /// Returns a Percentage (1.00 = 1% extra Dodge/Parry Reduction)
         /// </summary>
         /// <param name="Rating">Expertise</param>
         /// <returns>A Percentage (1.00 = 1% extra Dodge/Parry Reduction)</returns>
         public static float GetDodgeParryReducFromExpertise(float Rating) { return Rating * RATING_PER_DODGEPARRYREDUC; }
-        public static float GetExpertiseFromDodgeParryReduc(float value, Character.CharacterClass Class) { return GetExpertiseFromDodgeParryReduc(value); }
+        public static float GetExpertiseFromDodgeParryReduc(float value, CharacterClass Class) { return GetExpertiseFromDodgeParryReduc(value); }
         /// <summary>
         /// Returns a Value (1 = 1 extra Expertise)
         /// </summary>
@@ -327,7 +327,7 @@ namespace Rawr
         /// <returns>A Value (1 = 1 extra Expertise)</returns>
         public static float GetExpertiseFromDodgeParryReduc(float value) { return value / RATING_PER_DODGEPARRYREDUC; }
 
-        public static float GetParryFromRating(float Rating, Character.CharacterClass Class) { return GetParryFromRating(Rating); }
+        public static float GetParryFromRating(float Rating, CharacterClass Class) { return GetParryFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Parry)
         /// </summary>
@@ -335,9 +335,9 @@ namespace Rawr
         /// <returns>A Percentage (0.05 = 5% extra Parry)</returns>
         public static float GetParryFromRating(float Rating) { return Rating / RATING_PER_PARRY; }
 
-        public static float GetCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
+        public static float GetCritFromRating(float Rating, CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
         public static float GetCritFromRating(float Rating) { return GetPhysicalCritFromRating(Rating); }
-        public static float GetPhysicalCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
+        public static float GetPhysicalCritFromRating(float Rating, CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra chance to Crit)
         /// </summary>
@@ -346,32 +346,32 @@ namespace Rawr
         public static float GetPhysicalCritFromRating(float Rating) { return Rating / RATING_PER_PHYSICALCRIT; }
 
         // Returns a Percentage
-        public static float GetHasteFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHasteFromRating(Rating, Class); }
+        public static float GetHasteFromRating(float Rating, CharacterClass Class) { return GetPhysicalHasteFromRating(Rating, Class); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Haste)
         /// </summary>
         /// <param name="Rating">Haste Rating</param>
-        /// <param name="Class">Character.CharacterClass</param>
+        /// <param name="Class">CharacterClass</param>
         /// <returns>A Percentage (0.05 = 5% extra Haste)</returns>
-        public static float GetPhysicalHasteFromRating(float Rating, Character.CharacterClass Class) {
-            if (Class == Character.CharacterClass.DeathKnight
-                || Class == Character.CharacterClass.Druid
-                || Class == Character.CharacterClass.Paladin
-                || Class == Character.CharacterClass.Shaman)
+        public static float GetPhysicalHasteFromRating(float Rating, CharacterClass Class) {
+            if (Class == CharacterClass.DeathKnight
+                || Class == CharacterClass.Druid
+                || Class == CharacterClass.Paladin
+                || Class == CharacterClass.Shaman)
                 return Rating / RATING_PER_PHYSICALHASTE * 1.3f;    // Patch 3.1: Hybrids gain 30% more Phyiscal Haste from Haste Rating.
             return Rating / RATING_PER_PHYSICALHASTE;
         }
 
-        public static float GetHitFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
+        public static float GetHitFromRating(float Rating, CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
         public static float GetHitFromRating(float Rating) { return GetPhysicalHitFromRating(Rating); }
-        public static float GetPhysicalHitFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
+        public static float GetPhysicalHitFromRating(float Rating, CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Hit)
         /// </summary>
         /// <param name="Rating">Hit Rating</param>
         /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
         public static float GetPhysicalHitFromRating(float Rating){return Rating / RATING_PER_PHYSICALHIT;}
-        public static float GetRatingFromHit(float value, Character.CharacterClass Class) { return GetRatingFromHit(value); }
+        public static float GetRatingFromHit(float value, CharacterClass Class) { return GetRatingFromHit(value); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Hit)
         /// </summary>
@@ -381,8 +381,8 @@ namespace Rawr
 
         // Returns a Percentage
         public static float GetResilienceCritReduction(float Rating) { return GetResilienceFromRating(Rating); }
-        public static float GetResilienceCritReduction(float Rating, Character.CharacterClass Class) { return GetResilienceFromRating(Rating); }
-        public static float GetResilienceFromRating(float Rating, Character.CharacterClass Class) { return GetResilienceFromRating(Rating); }
+        public static float GetResilienceCritReduction(float Rating, CharacterClass Class) { return GetResilienceFromRating(Rating); }
+        public static float GetResilienceFromRating(float Rating, CharacterClass Class) { return GetResilienceFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Resilience)
         /// </summary>
@@ -393,7 +393,7 @@ namespace Rawr
             return Rating / RATING_PER_RESILIENCE;
         }
 
-        public static float GetSpellCritFromRating(float Rating, Character.CharacterClass Class) { return GetSpellCritFromRating(Rating); }
+        public static float GetSpellCritFromRating(float Rating, CharacterClass Class) { return GetSpellCritFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra chance to Crit)
         /// </summary>
@@ -404,7 +404,7 @@ namespace Rawr
             return Rating / RATING_PER_SPELLCRIT;
         }
 
-        public static float GetSpellHasteFromRating(float Rating, Character.CharacterClass Class) { return GetSpellHasteFromRating(Rating); }
+        public static float GetSpellHasteFromRating(float Rating, CharacterClass Class) { return GetSpellHasteFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Haste)
         /// </summary>
@@ -415,7 +415,7 @@ namespace Rawr
             return Rating / RATING_PER_SPELLHASTE;
         }
 
-        public static float GetSpellHitFromRating(float Rating, Character.CharacterClass Class) { return GetSpellHitFromRating(Rating); }
+        public static float GetSpellHitFromRating(float Rating, CharacterClass Class) { return GetSpellHitFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra chance to Hit)
         /// </summary>
@@ -426,7 +426,7 @@ namespace Rawr
             return Rating / RATING_PER_SPELLHIT;
         }
 
-        public static float GetSpellCritFromIntellect(float Intellect, Character.CharacterClass Class) { return GetSpellCritFromIntellect(Intellect); }
+        public static float GetSpellCritFromIntellect(float Intellect, CharacterClass Class) { return GetSpellCritFromIntellect(Intellect); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra chance to Crit)
         /// </summary>
@@ -437,14 +437,14 @@ namespace Rawr
             return Intellect / INT_PER_SPELLCRIT * 0.01f;
         }
 
-        public static float GetCritFromAgility(float Agility, Character.CharacterClass Class) { return GetPhysicalCritFromAgility(Agility, Class); }
+        public static float GetCritFromAgility(float Agility, CharacterClass Class) { return GetPhysicalCritFromAgility(Agility, Class); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra chance to Crit)
         /// </summary>
         /// <param name="Agility">Agility</param>
-        /// <param name="Class">Character.CharacterClass</param>
+        /// <param name="Class">CharacterClass</param>
         /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
-        public static float GetPhysicalCritFromAgility(float Agility, Character.CharacterClass Class)
+        public static float GetPhysicalCritFromAgility(float Agility, CharacterClass Class)
         {
             return Agility / AGI_PER_PHYSICALCRIT[(int)Class] * 0.01f;
         }
@@ -453,14 +453,14 @@ namespace Rawr
         /// Returns a Percentage (0.05 = 5% extra Dodge)
         /// </summary>
         /// <param name="Agility">Agility</param>
-        /// <param name="Class">Character.CharacterClass</param>
+        /// <param name="Class">CharacterClass</param>
         /// <returns>A Percentage (0.05 = 5% extra Dodge)</returns>
-        public static float GetDodgeFromAgility(float Agility, Character.CharacterClass Class)
+        public static float GetDodgeFromAgility(float Agility, CharacterClass Class)
         {
             return Agility / AGI_PER_DODGE[(int)Class] * 0.01f;
         }
 
-        public static float GetSpiritRegenSec(float Spirit, float Intellect, Character.CharacterClass Class) { return GetSpiritRegenSec(Spirit, Intellect); }
+        public static float GetSpiritRegenSec(float Spirit, float Intellect, CharacterClass Class) { return GetSpiritRegenSec(Spirit, Intellect); }
         /// <summary>
         /// Returns a Number, How much mana is gained each Second. (Multiply by 5 to get MP5)
         /// </summary>
@@ -941,7 +941,7 @@ namespace Rawr
 
             switch (_character.Class)
             {
-                case Character.CharacterClass.DeathKnight:
+                case CharacterClass.DeathKnight:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.258700f, 0.226400f, 0.226400f, 0.226400f, 0.226400f, 0.201200f, 0.201200f, 0.201200f, 0.201200f, 0.201200f, // 01-10
                             0.181100f, 0.181100f, 0.164600f, 0.164600f, 0.150900f, 0.150900f, 0.150900f, 0.139300f, 0.139300f, 0.129300f, // 11-20
@@ -963,7 +963,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Druid:
+                case CharacterClass.Druid:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.126200f, 0.126200f, 0.120200f, 0.120200f, 0.114800f, 0.114800f, 0.109800f, 0.109800f, 0.105200f, 0.097100f, // 01-10
                             0.093500f, 0.093500f, 0.090200f, 0.090200f, 0.084200f, 0.084200f, 0.081400f, 0.078900f, 0.078900f, 0.070100f, // 11-20
@@ -985,7 +985,7 @@ namespace Rawr
                             0.047222f, 0.044444f, 0.041667f, 0.038889f, 0.036111f, 0.033333f, 0.030556f, 0.027778f, 0.025000f, 0.022222f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Hunter:
+                case CharacterClass.Hunter:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.284000f, 0.283400f, 0.271100f, 0.253000f, 0.243000f, 0.233700f, 0.225100f, 0.217100f, 0.205100f, 0.198400f, // 01-10
                             0.184800f, 0.167000f, 0.154700f, 0.144100f, 0.133000f, 0.126700f, 0.119400f, 0.111700f, 0.106000f, 0.099800f, // 11-20
@@ -1007,7 +1007,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Mage:
+                case CharacterClass.Mage:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.077300f, 0.077300f, 0.077300f, 0.073600f, 0.073600f, 0.073600f, 0.073600f, 0.073600f, 0.073600f, 0.070300f, // 01-10
                             0.070300f, 0.070300f, 0.070300f, 0.070300f, 0.067200f, 0.067200f, 0.067200f, 0.067200f, 0.067200f, 0.064400f, // 11-20
@@ -1029,7 +1029,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Paladin:
+                case CharacterClass.Paladin:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.216400f, 0.216400f, 0.216400f, 0.192400f, 0.192400f, 0.192400f, 0.192400f, 0.173200f, 0.173200f, 0.173200f, // 01-10
                             0.173200f, 0.173200f, 0.157400f, 0.157400f, 0.144300f, 0.144300f, 0.144300f, 0.133200f, 0.133200f, 0.123700f, // 11-20
@@ -1052,7 +1052,7 @@ namespace Rawr
                             .000372f, .000345f, .000322f, .000298f, .000277f, .000257f, .000239f, .000223f, .0002207f, .000192f // 71-80
                         };
                     break;
-                case Character.CharacterClass.Priest:
+                case CharacterClass.Priest:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.091200f, 0.091200f, 0.091200f, 0.086800f, 0.086800f, 0.086800f, 0.086800f, 0.082900f, 0.082900f, 0.082900f, // 01-10
                             0.082900f, 0.079300f, 0.079300f, 0.079300f, 0.079300f, 0.076000f, 0.076000f, 0.076000f, 0.072900f, 0.072900f, // 11-20
@@ -1074,7 +1074,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Rogue:
+                case CharacterClass.Rogue:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.447600f, 0.429000f, 0.411800f, 0.381300f, 0.367700f, 0.355000f, 0.332100f, 0.321700f, 0.312000f, 0.294100f, // 01-10
                             0.264000f, 0.239400f, 0.214500f, 0.198000f, 0.177500f, 0.166000f, 0.156000f, 0.145000f, 0.135500f, 0.127100f, // 11-20
@@ -1096,7 +1096,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Shaman:
+                case CharacterClass.Shaman:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.103900f, 0.103900f, 0.099000f, 0.099000f, 0.094500f, 0.094500f, 0.094500f, 0.090300f, 0.090300f, 0.086600f, // 01-10
                             0.086600f, 0.083100f, 0.083100f, 0.079900f, 0.077000f, 0.074200f, 0.074200f, 0.071700f, 0.071700f, 0.067000f, // 11-20
@@ -1118,7 +1118,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Warlock:
+                case CharacterClass.Warlock:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.118900f, 0.118900f, 0.113200f, 0.113200f, 0.113200f, 0.108100f, 0.108100f, 0.108100f, 0.103400f, 0.103400f, // 01-10
                             0.099100f, 0.099100f, 0.099100f, 0.095900f, 0.094400f, 0.092800f, 0.091400f, 0.089900f, 0.088500f, 0.087100f, // 11-20
@@ -1140,7 +1140,7 @@ namespace Rawr
                             0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 71-80
                         };
                     break;
-                case Character.CharacterClass.Warrior:
+                case CharacterClass.Warrior:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
                             0.258700f, 0.226400f, 0.226400f, 0.226400f, 0.226400f, 0.201200f, 0.201200f, 0.201200f, 0.201200f, 0.201200f, // 01-10
                             0.181100f, 0.181100f, 0.164600f, 0.164600f, 0.150900f, 0.150900f, 0.150900f, 0.139300f, 0.139300f, 0.129300f, // 11-20

@@ -265,17 +265,17 @@ namespace Rawr
 
             if (colorReq.Equals((KnownColor)KnownColor.Gray))
             {            
-                newButton.CharacterSlot = Character.CharacterSlot.Metas;
+                newButton.CharacterSlot = CharacterSlot.Metas;
                 newButton.Text = "Meta";
             }
             else if (colorReq.Equals((KnownColor)KnownColor.Silver))
             {
-                newButton.CharacterSlot = Character.CharacterSlot.Gems;
+                newButton.CharacterSlot = CharacterSlot.Gems;
                 newButton.Text = "Prismatic";
             }
             else
             {            
-                newButton.CharacterSlot = Character.CharacterSlot.Gems;
+                newButton.CharacterSlot = CharacterSlot.Gems;
                 newButton.Text = colorReq.ToString();            
             }
 
@@ -567,34 +567,34 @@ namespace Rawr
         
 //            int[] gemID = { 0, 0, 0 };
 
-//            if (itemToBeGemmed.Sockets.Color1 != Item.ItemSlot.None)
+//            if (itemToBeGemmed.Sockets.Color1 != ItemSlot.None)
 //            {
 
 //                switch (itemToBeGemmed.Sockets.Color1)
 //                {
 
-//                    case Item.ItemSlot.Red:
+//                    case ItemSlot.Red:
 //                        if (gemRed == null)
 //                            gemID[0] = -1;
 //                        else
 //                            gemID[0] = gemRed.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Blue:
+//                    case ItemSlot.Blue:
 //                        if (gemBlue == null)
 //                            gemID[0] = -1;
 //                        else
 //                            gemID[0] = gemBlue.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Yellow:
+//                    case ItemSlot.Yellow:
 //                        if (gemYellow == null)
 //                            gemID[0] = -1;
 //                        else
 //                            gemID[0] = gemYellow.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Meta:
+//                    case ItemSlot.Meta:
 //                        if (gemMeta == null)
 //                            gemID[0] = -1;
 //                        else
@@ -605,32 +605,32 @@ namespace Rawr
 //            else
 //                gemID[0] = -1;
             
-//            if (itemToBeGemmed.Sockets.Color2 != Item.ItemSlot.None) {
+//            if (itemToBeGemmed.Sockets.Color2 != ItemSlot.None) {
            
 //                switch (itemToBeGemmed.Sockets.Color2){
                 
-//                    case Item.ItemSlot.Red:
+//                    case ItemSlot.Red:
 //                        if (gemRed == null)
 //                            gemID[1] = -1;
 //                        else
 //                            gemID[1] = gemRed.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Blue:
+//                    case ItemSlot.Blue:
 //                        if (gemBlue == null)
 //                            gemID[1] = -1;
 //                        else
 //                            gemID[1] = gemBlue.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Yellow:
+//                    case ItemSlot.Yellow:
 //                        if (gemYellow == null)
 //                            gemID[1] = -1;
 //                        else
 //                            gemID[1] = gemYellow.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Meta:
+//                    case ItemSlot.Meta:
 //                        if (gemMeta == null)
 //                            gemID[1] = -1;
 //                        else
@@ -642,32 +642,32 @@ namespace Rawr
 //            }
 //             else
 //                gemID[1] = -1;
-//                if (itemToBeGemmed.Sockets.Color3 != Item.ItemSlot.None){
+//                if (itemToBeGemmed.Sockets.Color3 != ItemSlot.None){
             
 //                switch (itemToBeGemmed.Sockets.Color3){
                 
-//                    case Item.ItemSlot.Red:
+//                    case ItemSlot.Red:
 //                        if (gemRed == null)
 //                            gemID[2] = -1;
 //                        else
 //                            gemID[2] = gemRed.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Blue:
+//                    case ItemSlot.Blue:
 //                        if (gemBlue == null)
 //                            gemID[2] = -1;
 //                        else
 //                            gemID[2] = gemBlue.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Yellow:
+//                    case ItemSlot.Yellow:
 //                        if (gemYellow == null)
 //                            gemID[2] = -1;
 //                        else
 //                            gemID[2] = gemYellow.Id;
 //                        break;
 
-//                    case Item.ItemSlot.Meta:
+//                    case ItemSlot.Meta:
 //                        if (gemMeta == null)
 //                            gemID[2] = -1;
 //                        else
@@ -710,32 +710,32 @@ namespace Rawr
 //            string gem2ID = "0";
 //            string gem3ID = "0";
 
-//            if (item.Sockets.Color1 != Item.ItemSlot.None){
+//            if (item.Sockets.Color1 != ItemSlot.None){
             
 //                switch (item.Sockets.Color1){
                 
-//                    case Item.ItemSlot.Red:
+//                    case ItemSlot.Red:
 //                        if (this.gemRed == null)
 //                            gem1ID = "0";
 //                        else
 //                            gem1ID = this.gemRed.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Blue:
+//                    case ItemSlot.Blue:
 //                        if (this.gemBlue == null)
 //                            gem1ID = "0";
 //                        else
 //                            gem1ID = this.gemBlue.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Yellow:
+//                    case ItemSlot.Yellow:
 //                        if (this.gemYellow == null)
 //                            gem1ID = "0";
 //                        else
 //                            gem1ID = this.gemYellow.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Meta:
+//                    case ItemSlot.Meta:
 //                        if (this.gemMeta == null)
 //                            gem1ID = "0";
 //                        else
@@ -743,32 +743,32 @@ namespace Rawr
 //                        break;
 //                }
 //            }
-//            if (item.Sockets.Color2 != Item.ItemSlot.None){
+//            if (item.Sockets.Color2 != ItemSlot.None){
             
 //                switch (item.Sockets.Color2){
                 
-//                    case Item.ItemSlot.Red:
+//                    case ItemSlot.Red:
 //                        if (this.gemRed == null)
 //                            gem2ID = "0";
 //                        else
 //                            gem2ID = this.gemRed.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Blue:
+//                    case ItemSlot.Blue:
 //                        if (this.gemBlue == null)
 //                            gem2ID = "0";
 //                        else
 //                            gem2ID = this.gemBlue.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Yellow:
+//                    case ItemSlot.Yellow:
 //                        if (this.gemYellow == null)
 //                            gem2ID = "0";
 //                        else
 //                            gem2ID = this.gemYellow.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Meta:
+//                    case ItemSlot.Meta:
 //                        if (this.gemMeta == null)
 //                            gem2ID = "0";
 //                        else
@@ -776,32 +776,32 @@ namespace Rawr
 //                        break;
 //                }
 //            }
-//            if (item.Sockets.Color3 != Item.ItemSlot.None){
+//            if (item.Sockets.Color3 != ItemSlot.None){
             
 //                switch (item.Sockets.Color3){
                 
-//                    case Item.ItemSlot.Red:
+//                    case ItemSlot.Red:
 //                        if (this.gemRed == null)
 //                            gem3ID = "0";
 //                        else
 //                            gem3ID = this.gemRed.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Blue:
+//                    case ItemSlot.Blue:
 //                        if (this.gemBlue == null)
 //                            gem3ID = "0";
 //                        else
 //                            gem3ID = this.gemBlue.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Yellow:
+//                    case ItemSlot.Yellow:
 //                        if (this.gemYellow == null)
 //                            gem3ID = "0";
 //                        else
 //                            gem3ID = this.gemYellow.Id.ToString();
 //                        break;
 
-//                    case Item.ItemSlot.Meta:
+//                    case ItemSlot.Meta:
 //                        if (this.gemMeta == null)
 //                            gem3ID = "0";
 //                        else

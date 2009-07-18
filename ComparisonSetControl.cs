@@ -83,7 +83,7 @@ namespace Rawr
                     if (BaseCharacter != null)
                     {
                         _compositeCharacter = BaseCharacter.Clone();
-                        foreach (Character.CharacterSlot cs in Character.CharacterSlots)
+                        foreach (CharacterSlot cs in Character.CharacterSlots)
                         {
                             if (_deltaCharacter[cs] != null)
                             {

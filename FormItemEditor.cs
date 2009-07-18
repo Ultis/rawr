@@ -41,9 +41,9 @@ namespace Rawr
 					_selectedItem.Text = oldItem.Name;
 					//oldItem.IdsChanged -= new EventHandler(Item_IdsChanged);
 					string slot = oldItem.Slot.ToString();
-					if (oldItem.Slot == Item.ItemSlot.Red || oldItem.Slot == Item.ItemSlot.Orange || oldItem.Slot == Item.ItemSlot.Yellow
-						 || oldItem.Slot == Item.ItemSlot.Green || oldItem.Slot == Item.ItemSlot.Blue || oldItem.Slot == Item.ItemSlot.Purple
-						 || oldItem.Slot == Item.ItemSlot.Prismatic || oldItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
+					if (oldItem.Slot == ItemSlot.Red || oldItem.Slot == ItemSlot.Orange || oldItem.Slot == ItemSlot.Yellow
+						 || oldItem.Slot == ItemSlot.Green || oldItem.Slot == ItemSlot.Blue || oldItem.Slot == ItemSlot.Purple
+						 || oldItem.Slot == ItemSlot.Prismatic || oldItem.Slot == ItemSlot.Meta) slot = "Gems";
 					_selectedItem.Group = listViewItems.Groups["listViewGroup" + slot];
 					//_selectedItem.ImageKey = oldItem.IconPath;
 					listViewItems.Sort();
@@ -157,11 +157,11 @@ namespace Rawr
         //void Item_IdsChanged(object sender, EventArgs e)
         //{
         //    Item item = (sender as Item);
-        //    foreach (Character.CharacterSlot slot in _equippedSlots)
+        //    foreach (CharacterSlot slot in _equippedSlots)
         //        _character[slot] = item;
         //}
 
-		//private Character.CharacterSlot[] _equippedSlots;
+		//private CharacterSlot[] _equippedSlots;
 
 		private Character _character;
         public Character Character
@@ -259,9 +259,9 @@ namespace Rawr
 
 		void comboBoxSocket_TextChanged(object sender, EventArgs e)
 		{
-			//itemButtonGem1.CharacterSlot = comboBoxSocket1.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
-			//itemButtonGem2.CharacterSlot = comboBoxSocket2.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
-			//itemButtonGem3.CharacterSlot = comboBoxSocket3.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
+			//itemButtonGem1.CharacterSlot = comboBoxSocket1.Text == ItemSlot.Meta.ToString() ? CharacterSlot.Metas : CharacterSlot.Gems;
+			//itemButtonGem2.CharacterSlot = comboBoxSocket2.Text == ItemSlot.Meta.ToString() ? CharacterSlot.Metas : CharacterSlot.Gems;
+			//itemButtonGem3.CharacterSlot = comboBoxSocket3.Text == ItemSlot.Meta.ToString() ? CharacterSlot.Metas : CharacterSlot.Gems;
 		}
 
 		private void LoadItems() { LoadItems(ItemCache.AllItems); }
@@ -274,9 +274,9 @@ namespace Rawr
 				if (string.IsNullOrEmpty(textBoxFilter.Text) || item.Name.ToLower().Contains(textBoxFilter.Text.ToLower()))
 				{
 					string slot = item.Slot.ToString();
-					if (item.Slot == Item.ItemSlot.Red || item.Slot == Item.ItemSlot.Orange || item.Slot == Item.ItemSlot.Yellow
-						 || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Purple
-						 || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Meta) slot = "Gems";
+					if (item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange || item.Slot == ItemSlot.Yellow
+						 || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue || item.Slot == ItemSlot.Purple
+						 || item.Slot == ItemSlot.Prismatic || item.Slot == ItemSlot.Meta) slot = "Gems";
 					ListViewItem lvi = new ListViewItem(item.Name, listViewItems.Groups["listViewGroup" + slot]);
 					lvi.Tag = item;
 					//lvi.ImageKey = EnsureIconPath(item.IconPath);
@@ -425,7 +425,7 @@ namespace Rawr
                 {
 					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
-						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
+						newItem = new Item("New Item", ItemQuality.Epic, ItemType.None, id, "temp", ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0f, string.Empty);
 						ItemCache.AddItem(newItem);
 					}
                 }
@@ -444,9 +444,9 @@ namespace Rawr
                 newLvi.Tag = newItem;
                 //newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
                 string slot = newItem.Slot.ToString();
-                if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
-                     || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
-                     || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
+                if (newItem.Slot == ItemSlot.Red || newItem.Slot == ItemSlot.Orange || newItem.Slot == ItemSlot.Yellow
+                     || newItem.Slot == ItemSlot.Green || newItem.Slot == ItemSlot.Blue || newItem.Slot == ItemSlot.Purple
+                     || newItem.Slot == ItemSlot.Prismatic || newItem.Slot == ItemSlot.Meta) slot = "Gems";
                 newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
 
                 listViewItems.Items.Add(newLvi);
@@ -486,65 +486,65 @@ namespace Rawr
 			{
 				foreach (Item item in ItemCache.AllItems)
 				{
-					if (item.SocketColor1 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem1Id == 0))
+					if (item.SocketColor1 != ItemSlot.None && (!form.FillEmptySockets || item.Gem1Id == 0))
 					{
 						switch (item.SocketColor1)
 						{
-							case Item.ItemSlot.Red:
+							case ItemSlot.Red:
 								item.Gem1 = form.GemRed;
 								break;
 
-							case Item.ItemSlot.Blue:
+							case ItemSlot.Blue:
 								item.Gem1 = form.GemBlue;
 								break;
 
-							case Item.ItemSlot.Yellow:
+							case ItemSlot.Yellow:
 								item.Gem1 = form.GemYellow;
 								break;
 
-							case Item.ItemSlot.Meta:
+							case ItemSlot.Meta:
 								item.Gem1 = form.GemMeta;
 								break;
 						}
 					}
-					if (item.Sockets.Color2 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem2Id == 0))
+					if (item.Sockets.Color2 != ItemSlot.None && (!form.FillEmptySockets || item.Gem2Id == 0))
 					{
 						switch (item.Sockets.Color2)
 						{
-							case Item.ItemSlot.Red:
+							case ItemSlot.Red:
 								item.Gem2 = form.GemRed;
 								break;
 
-							case Item.ItemSlot.Blue:
+							case ItemSlot.Blue:
 								item.Gem2 = form.GemBlue;
 								break;
 
-							case Item.ItemSlot.Yellow:
+							case ItemSlot.Yellow:
 								item.Gem2 = form.GemYellow;
 								break;
 
-							case Item.ItemSlot.Meta:
+							case ItemSlot.Meta:
 								item.Gem2 = form.GemMeta;
 								break;
 						}
 					}
-					if (item.Sockets.Color3 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem3Id == 0))
+					if (item.Sockets.Color3 != ItemSlot.None && (!form.FillEmptySockets || item.Gem3Id == 0))
 					{
 						switch (item.Sockets.Color3)
 						{
-							case Item.ItemSlot.Red:
+							case ItemSlot.Red:
 								item.Gem3 = form.GemRed;
 								break;
 
-							case Item.ItemSlot.Blue:
+							case ItemSlot.Blue:
 								item.Gem3 = form.GemBlue;
 								break;
 
-							case Item.ItemSlot.Yellow:
+							case ItemSlot.Yellow:
 								item.Gem3 = form.GemYellow;
 								break;
 
-							case Item.ItemSlot.Meta:
+							case ItemSlot.Meta:
 								item.Gem3 = form.GemMeta;
 								break;
 						}
@@ -567,9 +567,9 @@ namespace Rawr
 			newLvi.Tag = copy;
 			//newLvi.ImageKey = EnsureIconPath(copy.IconPath);
 			string slot = copy.Slot.ToString();
-			if (copy.Slot == Item.ItemSlot.Red || copy.Slot == Item.ItemSlot.Orange || copy.Slot == Item.ItemSlot.Yellow
-				 || copy.Slot == Item.ItemSlot.Green || copy.Slot == Item.ItemSlot.Blue || copy.Slot == Item.ItemSlot.Purple
-				 || copy.Slot == Item.ItemSlot.Prismatic || copy.Slot == Item.ItemSlot.Meta) slot = "Gems";
+			if (copy.Slot == ItemSlot.Red || copy.Slot == ItemSlot.Orange || copy.Slot == ItemSlot.Yellow
+				 || copy.Slot == ItemSlot.Green || copy.Slot == ItemSlot.Blue || copy.Slot == ItemSlot.Purple
+				 || copy.Slot == ItemSlot.Prismatic || copy.Slot == ItemSlot.Meta) slot = "Gems";
 			newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
 
 			listViewItems.Items.Add(newLvi);

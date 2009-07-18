@@ -49,37 +49,37 @@ namespace Rawr.Silverlight
 
             if (QualityList.SelectedItems.Count > 0)
             {
-                List<Item.ItemQuality> qualities = new List<Item.ItemQuality>();
+                List<ItemQuality> qualities = new List<ItemQuality>();
                 foreach (ListBoxItem lbi in QualityList.SelectedItems)
                 {
-                    qualities.Add((Item.ItemQuality)Enum.Parse(typeof(Item.ItemQuality), lbi.Content.ToString(), false));
+                    qualities.Add((ItemQuality)Enum.Parse(typeof(ItemQuality), lbi.Content.ToString(), false));
                     items = items.Where(i => qualities.Contains(i.Quality));
                 }
             }
 
             if (TypeList.SelectedItems.Count > 0)
             {
-                List<Item.ItemType> types = new List<Item.ItemType>();
+                List<ItemType> types = new List<ItemType>();
                 foreach (ListBoxItem lbi in TypeList.SelectedItems)
                 {
-                    types.Add((Item.ItemType)Enum.Parse(typeof(Item.ItemType), lbi.Content.ToString(), false));
+                    types.Add((ItemType)Enum.Parse(typeof(ItemType), lbi.Content.ToString(), false));
                     items = items.Where(i => types.Contains(i.Type));
                 }
             }
 
             if (SlotList.SelectedItems.Count > 0)
             {
-                List<Item.ItemSlot> slots = new List<Item.ItemSlot>();
+                List<ItemSlot> slots = new List<ItemSlot>();
                 foreach (ListBoxItem lbi in SlotList.SelectedItems)
                 {
-                    slots.Add((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), lbi.Content.ToString().Replace(" ", ""), false));
+                    slots.Add((ItemSlot)Enum.Parse(typeof(ItemSlot), lbi.Content.ToString().Replace(" ", ""), false));
                     items = items.Where(i => slots.Contains(i.Slot));
                 }
             }
 
             if (ClassCombo.SelectedIndex > 0)
             {
-                string reqClass = ((Character.CharacterClass)ClassCombo.SelectedIndex).ToString();
+                string reqClass = ((CharacterClass)ClassCombo.SelectedIndex).ToString();
                 items = items.Where(i => string.IsNullOrEmpty(i.RequiredClasses)
                     || i.RequiredClasses.Split('|').Contains(reqClass));
             }

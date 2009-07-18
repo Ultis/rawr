@@ -31,7 +31,7 @@ namespace Rawr
         }
 
 		public override string Text { get { return itemButtonItem.Text; } set { itemButtonItem.Text = value; } }
-		public Character.CharacterSlot CharacterSlot { get { return itemButtonItem.CharacterSlot; } set { itemButtonItem.CharacterSlot = value; } }
+		public CharacterSlot CharacterSlot { get { return itemButtonItem.CharacterSlot; } set { itemButtonItem.CharacterSlot = value; } }
         public ItemInstance SelectedItem { get { return itemButtonItem.SelectedItemInstance; } set { itemButtonItem.SelectedItemInstance = value; UpdateSelectedItem(); } }
 		public int SelectedItemId { get { return itemButtonItem.SelectedItemId; } set { itemButtonItem.SelectedItemId = value; } }
 		public Image ItemIcon { get { return itemButtonItem.ItemIcon; } set { itemButtonItem.ItemIcon = value; } }
@@ -127,9 +127,9 @@ namespace Rawr
             if (SelectedEnchant != null)
 			{
 				int tipX = this.Width;
-				Item itemEnchant = new Item(SelectedEnchant.Name, Item.ItemQuality.Temp, Item.ItemType.None,
-					-1 * (SelectedEnchant.Id + (10000 * (int)SelectedEnchant.Slot)), null, Item.ItemSlot.None, null, false, SelectedEnchant.Stats, null, Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None, 0, 0,
-					Item.ItemDamageType.Physical, 0, null);
+				Item itemEnchant = new Item(SelectedEnchant.Name, ItemQuality.Temp, ItemType.None,
+					-1 * (SelectedEnchant.Id + (10000 * (int)SelectedEnchant.Slot)), null, ItemSlot.None, null, false, SelectedEnchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0,
+					ItemDamageType.Physical, 0, null);
 				
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;

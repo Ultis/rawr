@@ -16,8 +16,8 @@ namespace Rawr.Silverlight
 	public partial class ComparisonGraph : UserControl
 	{
 
-        private Character.CharacterSlot slot;
-        public Character.CharacterSlot Slot
+        private CharacterSlot slot;
+        public CharacterSlot Slot
         {
             get { return slot; }
             set

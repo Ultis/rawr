@@ -82,10 +82,10 @@ namespace Rawr.UnitTests
         public void GetDRAvoidanceChanceTest_DK_TestFromForums()
         {
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestDK", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "TankDK"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestDK", "Malygos", CharacterRegion.US, CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "TankDK"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
-            toon.Class = Character.CharacterClass.DeathKnight;
+            toon.Class = CharacterClass.DeathKnight;
 
             Stats stats = new Stats();
             stats += BaseStats.GetBaseStats(toon);
@@ -120,10 +120,10 @@ namespace Rawr.UnitTests
         {
             const float testValue = 689f;
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestWarrior", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
-            toon.Class = Character.CharacterClass.DeathKnight;
+            toon.Class = CharacterClass.DeathKnight;
 
             Stats stats = new Stats();
             stats += BaseStats.GetBaseStats(toon);
@@ -156,10 +156,10 @@ namespace Rawr.UnitTests
         {
             const float testValue = 10000f;
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestWarrior", "Malygos", Character.CharacterRegion.US, Character.CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
-            toon.Class = Character.CharacterClass.DeathKnight;
+            toon.Class = CharacterClass.DeathKnight;
 
             Stats stats = new Stats();
             stats += BaseStats.GetBaseStats(toon);
@@ -240,7 +240,7 @@ namespace Rawr.UnitTests
         {
             float Spirit = 0F; // TODO: Initialize to an appropriate value
             float Intellect = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetSpiritRegenSec(Spirit, Intellect, Class);
@@ -299,7 +299,7 @@ namespace Rawr.UnitTests
         public void GetSpellHitFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetSpellHitFromRating(Rating, Class);
@@ -314,7 +314,7 @@ namespace Rawr.UnitTests
         public void GetSpellHasteFromRatingTest1()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetSpellHasteFromRating(Rating, Class);
@@ -343,7 +343,7 @@ namespace Rawr.UnitTests
         public void GetSpellCritFromRatingTest1()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetSpellCritFromRating(Rating, Class);
@@ -386,7 +386,7 @@ namespace Rawr.UnitTests
         public void GetSpellCritFromIntellectTest()
         {
             float Intellect = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetSpellCritFromIntellect(Intellect, Class);
@@ -435,7 +435,7 @@ namespace Rawr.UnitTests
         public void GetResilienceFromRatingTest1()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetResilienceFromRating(Rating, Class);
@@ -478,7 +478,7 @@ namespace Rawr.UnitTests
         public void GetPhysicalHitFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetPhysicalHitFromRating(Rating, Class);
@@ -493,7 +493,7 @@ namespace Rawr.UnitTests
         public void GetPhysicalHasteFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetPhysicalHasteFromRating(Rating, Class);
@@ -522,7 +522,7 @@ namespace Rawr.UnitTests
         public void GetPhysicalCritFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetPhysicalCritFromRating(Rating, Class);
@@ -537,7 +537,7 @@ namespace Rawr.UnitTests
         public void GetPhysicalCritFromAgilityTest()
         {
             float Agility = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetPhysicalCritFromAgility(Agility, Class);
@@ -566,7 +566,7 @@ namespace Rawr.UnitTests
         public void GetParryFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetParryFromRating(Rating, Class);
@@ -598,7 +598,7 @@ namespace Rawr.UnitTests
         public void GetHitFromRatingTest1()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetHitFromRating(Rating, Class);
@@ -627,7 +627,7 @@ namespace Rawr.UnitTests
         public void GetHasteFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetHasteFromRating(Rating, Class);
@@ -656,7 +656,7 @@ namespace Rawr.UnitTests
         public void GetExpertiseFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetExpertiseFromRating(Rating, Class);
@@ -685,7 +685,7 @@ namespace Rawr.UnitTests
         public void GetDodgeFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetDodgeFromRating(Rating, Class);
@@ -700,7 +700,7 @@ namespace Rawr.UnitTests
         public void GetDodgeFromAgilityTest()
         {
             float Agility = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetDodgeFromAgility(Agility, Class);
@@ -729,7 +729,7 @@ namespace Rawr.UnitTests
         public void GetCritFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetCritFromRating(Rating, Class);
@@ -744,7 +744,7 @@ namespace Rawr.UnitTests
         public void GetCritFromAgilityTest()
         {
             float Agility = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetCritFromAgility(Agility, Class);
@@ -787,7 +787,7 @@ namespace Rawr.UnitTests
         public void GetBlockFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetBlockFromRating(Rating, Class);
@@ -833,7 +833,7 @@ namespace Rawr.UnitTests
         public void GetArmorPenetrationFromRatingTest()
         {
             float Rating = 0F; // TODO: Initialize to an appropriate value
-            Character.CharacterClass Class = new Character.CharacterClass(); // TODO: Initialize to an appropriate value
+            CharacterClass Class = new CharacterClass(); // TODO: Initialize to an appropriate value
             float expected = 0F; // TODO: Initialize to an appropriate value
             float actual;
             actual = StatConversion.GetArmorPenetrationFromRating(Rating, Class);

@@ -16,7 +16,7 @@ using Rawr.Rogue.SpecialAbilities;
 
 namespace Rawr.Rogue
 {
-    [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", Character.CharacterClass.Rogue)]
+    [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", CharacterClass.Rogue)]
     public class CalculationsRogue : CalculationsBase
     {
         public CalculationsRogue(){}
@@ -55,14 +55,14 @@ namespace Rawr.Rogue
             get { return _customChartNames; }
         }
 
-        public override List<Item.ItemType> RelevantItemTypes
+        public override List<ItemType> RelevantItemTypes
         {
             get { return RelevantItems.List; }
         }
 
-        public override Character.CharacterClass TargetClass
+        public override CharacterClass TargetClass
         {
-            get { return Character.CharacterClass.Rogue; }
+            get { return CharacterClass.Rogue; }
         }
 
         public override ComparisonCalculationBase CreateNewComparisonCalculation()

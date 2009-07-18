@@ -60,7 +60,7 @@ namespace Rawr
             // gem3Button
             // 
             this.gem3Button.Character = null;
-            this.gem3Button.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.gem3Button.CharacterSlot = Rawr.CharacterSlot.Gems;
             this.gem3Button.ItemIcon = null;
             this.gem3Button.Location = new System.Drawing.Point(240, 43);
             this.gem3Button.Name = "gem3Button";
@@ -75,7 +75,7 @@ namespace Rawr
             // gem2Button
             // 
             this.gem2Button.Character = null;
-            this.gem2Button.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.gem2Button.CharacterSlot = Rawr.CharacterSlot.Gems;
             this.gem2Button.ItemIcon = null;
             this.gem2Button.Location = new System.Drawing.Point(164, 43);
             this.gem2Button.Name = "gem2Button";
@@ -90,7 +90,7 @@ namespace Rawr
             // gem1Button
             // 
             this.gem1Button.Character = null;
-            this.gem1Button.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.gem1Button.CharacterSlot = Rawr.CharacterSlot.Gems;
             this.gem1Button.ItemIcon = null;
             this.gem1Button.Location = new System.Drawing.Point(88, 43);
             this.gem1Button.Name = "gem1Button";
@@ -113,7 +113,7 @@ namespace Rawr
             // itemButtonWithEnchant
             // 
             this.itemButtonWithEnchant.Character = null;
-            this.itemButtonWithEnchant.CharacterSlot = Rawr.Character.CharacterSlot.Head;
+            this.itemButtonWithEnchant.CharacterSlot = Rawr.CharacterSlot.Head;
             this.itemButtonWithEnchant.ItemIcon = null;
             this.itemButtonWithEnchant.Location = new System.Drawing.Point(13, 43);
             this.itemButtonWithEnchant.Name = "itemButtonWithEnchant";

@@ -144,7 +144,7 @@ namespace Rawr.ShadowPriest
             HitChance = playerStats.SpellHit * 100f + CalculationOptions.TargetHit;
             if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
                 HitChance += character.PriestTalents.Misery * 1f;
-            if (character.Race == Character.CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
+            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
                 HitChance += 1;
             HitChance = (float)Math.Min(100f, HitChance);
 
@@ -609,7 +609,7 @@ namespace Rawr.ShadowPriest
                 }
             }
 
-            if (MPS > regen && character.Race == Character.CharacterRace.BloodElf)
+            if (MPS > regen && character.Race == CharacterRace.BloodElf)
             {   // Arcane Torrent is 6% max mana every 2 minutes.
                 tmpregen = simStats.Mana * 0.06f / 120f;
                 ManaSources.Add(new ManaSource("Arcane Torrent", tmpregen));

@@ -26,7 +26,7 @@ namespace Rawr.Silverlight
 
         public EventHandler TalentsChanged;
 
-        public Character.CharacterClass Class { get; set; }
+        public CharacterClass Class { get; set; }
 
         private TalentsBase talents;
         public TalentsBase Talents

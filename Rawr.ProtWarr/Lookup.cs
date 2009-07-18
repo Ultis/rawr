@@ -177,7 +177,7 @@ namespace Rawr.ProtWarr
                 float weaponMinDamage = character.MainHand.MinDamage;
                 float weaponMaxDamage = character.MainHand.MaxDamage;
                 float normalizedSpeed = 1.0f;
-                if (character.MainHand.Type == Item.ItemType.Dagger)
+                if (character.MainHand.Type == ItemType.Dagger)
                     normalizedSpeed = 1.7f;
                 else
                     normalizedSpeed = 2.4f;

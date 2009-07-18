@@ -136,7 +136,7 @@ namespace Rawr
                 // only add Draenei Heroic Presence buff if Alliance
                 if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
                 {
-                    if(FormMain.Instance.Character.Faction == Character.CharacterFaction.Alliance)
+                    if(FormMain.Instance.Character.Faction == CharacterFaction.Alliance)
                         CheckBoxes.Add(buff, checkBox);
                     else
                         checkBox.Enabled=false;

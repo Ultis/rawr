@@ -22,7 +22,7 @@ namespace Rawr
                     _character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
                 }
                 _character = value;
-                _characterSlot = Character.CharacterSlot.None;
+                _characterSlot = CharacterSlot.None;
                 if (_character != null)
                 {
                     _character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
@@ -94,7 +94,7 @@ namespace Rawr
 
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
-			_characterSlot = Character.CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
 
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			toolStripDropDownButtonSort.DropDownItems.Clear();
@@ -112,14 +112,14 @@ namespace Rawr
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-			Character.CharacterSlot characterSlot = _characterSlot;
-			_characterSlot = Character.CharacterSlot.None;
+			CharacterSlot characterSlot = _characterSlot;
+			_characterSlot = CharacterSlot.None;
 			LoadItemsBySlot(characterSlot);
 		}
 
         void _character_ItemsChanged(object sender, EventArgs e)
         {
-            _characterSlot = Character.CharacterSlot.None;
+            _characterSlot = CharacterSlot.None;
         }
         
         void FormItemSelection_Activated(object sender, EventArgs e)
@@ -147,12 +147,12 @@ namespace Rawr
 			this.timerForceActivate.Enabled = true;
 		}
 
-		public void Show(ItemButton button, Character.CharacterSlot slot)
+		public void Show(ItemButton button, CharacterSlot slot)
 		{
 			_button = button;
 			if (_buttonEnchant != null)
 			{
-				_characterSlot = Character.CharacterSlot.None;
+				_characterSlot = CharacterSlot.None;
 				_buttonEnchant = null;
 			}
 			this.SetAutoLocation(button);
@@ -160,12 +160,12 @@ namespace Rawr
 			base.Show();
 		}
 
-		public void Show(ItemButtonWithEnchant button, Character.CharacterSlot slot)
+		public void Show(ItemButtonWithEnchant button, CharacterSlot slot)
 		{
 			_buttonEnchant = button;
 			if (_button != null)
 			{
-				_characterSlot = Character.CharacterSlot.None;
+				_characterSlot = CharacterSlot.None;
 				_button = null;
 			}
 			this.SetAutoLocation(button);
@@ -209,10 +209,10 @@ namespace Rawr
 			this.Cursor = Cursors.Default;
 		}
 
-		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.None;
+		private CharacterSlot _characterSlot = CharacterSlot.None;
 		private ItemButton _button;
 		private ItemButtonWithEnchant _buttonEnchant;
-		public void LoadItemsBySlot(Character.CharacterSlot slot)
+		public void LoadItemsBySlot(CharacterSlot slot)
 		{
 			if (_characterSlot != slot)
 			{
@@ -303,7 +303,7 @@ namespace Rawr
 			}
 		}
 
-		private void LoadEnchantsBySlot(Character.CharacterSlot slot)
+		private void LoadEnchantsBySlot(CharacterSlot slot)
 		{
 			if (_characterSlot != slot)
 			{
@@ -416,7 +416,7 @@ namespace Rawr
             //    copy.EnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
             //    _buttonEnchant.SelectedItem = copy;
             //}
-			_characterSlot = Character.CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
 			ItemToolTip.Instance.Hide(this);
 			this.Hide();
 		}
@@ -434,7 +434,7 @@ namespace Rawr
                     _buttonEnchant.SelectedItem = copy;
                 }
             }
-            _characterSlot = Character.CharacterSlot.None;
+            _characterSlot = CharacterSlot.None;
             ItemToolTip.Instance.Hide(this);
             this.Hide();
         }

@@ -101,13 +101,13 @@ namespace Rawr.Silverlight
 			}
 		}
 
-		private Brush GetBrushForSlot(Item.ItemSlot slot)
+		private Brush GetBrushForSlot(ItemSlot slot)
 		{
 			switch (slot)
 			{
-				case Item.ItemSlot.Red: return new SolidColorBrush(Colors.Red);
-				case Item.ItemSlot.Yellow: return new SolidColorBrush(Colors.Yellow);
-				case Item.ItemSlot.Blue: return new SolidColorBrush(Colors.Blue);
+				case ItemSlot.Red: return new SolidColorBrush(Colors.Red);
+				case ItemSlot.Yellow: return new SolidColorBrush(Colors.Yellow);
+				case ItemSlot.Blue: return new SolidColorBrush(Colors.Blue);
 				default: return new SolidColorBrush(Colors.Gray);
 			}
 		}

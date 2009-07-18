@@ -257,7 +257,7 @@ namespace Rawr
 		}
 
 		/*
-		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,
+		public Character(string name, string realm, CharacterRegion region, CharacterRace race,
 		 * string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
 				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2,
 		 * string mainHand, string offHand, string ranged, string projectile, string projectileBag,
@@ -274,11 +274,11 @@ namespace Rawr
 			m_sRace = (string)characterInfo["Race"];
 			m_sClass = (string)characterInfo["Class"];
 
-			Character.CharacterRace race = (Character.CharacterRace)(characterInfo["RaceId"] as long?);
-			Character.CharacterClass charClass = (Character.CharacterClass)(characterInfo["ClassId"] as long?);
+			CharacterRace race = (CharacterRace)(characterInfo["RaceId"] as long?);
+			CharacterClass charClass = (CharacterClass)(characterInfo["ClassId"] as long?);
 
 			// it might be possible to get this from the Locale field, but I'd need data from the other regions
-			Character.CharacterRegion charRegion = Character.CharacterRegion.US;
+			CharacterRegion charRegion = CharacterRegion.US;
 
 			m_character = new Character(sName, sRealm,
 			charRegion,
@@ -331,34 +331,34 @@ namespace Rawr
 				// create an empty talent tree
 				switch (charClass)
 				{
-					case Character.CharacterClass.Warrior:
+					case CharacterClass.Warrior:
 						m_character.WarriorTalents = new WarriorTalents();
 						break;
-					case Character.CharacterClass.Paladin:
+					case CharacterClass.Paladin:
 						m_character.PaladinTalents = new PaladinTalents();
 						break;
-					case Character.CharacterClass.Hunter:
+					case CharacterClass.Hunter:
 						m_character.HunterTalents = new HunterTalents();
 						break;
-					case Character.CharacterClass.Rogue:
+					case CharacterClass.Rogue:
 						m_character.RogueTalents = new RogueTalents();
 						break;
-					case Character.CharacterClass.Priest:
+					case CharacterClass.Priest:
 						m_character.PriestTalents = new PriestTalents();
 						break;
-					case Character.CharacterClass.Shaman:
+					case CharacterClass.Shaman:
 						m_character.ShamanTalents = new ShamanTalents();
 						break;
-					case Character.CharacterClass.Mage:
+					case CharacterClass.Mage:
 						m_character.MageTalents = new MageTalents();
 						break;
-					case Character.CharacterClass.Warlock:
+					case CharacterClass.Warlock:
 						m_character.WarlockTalents = new WarlockTalents();
 						break;
-					case Character.CharacterClass.Druid:
+					case CharacterClass.Druid:
 						m_character.DruidTalents = new DruidTalents();
 						break;
-					case Character.CharacterClass.DeathKnight:
+					case CharacterClass.DeathKnight:
 						m_character.DeathKnightTalents = new DeathKnightTalents();
 						break;
 					default:

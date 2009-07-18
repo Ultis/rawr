@@ -391,174 +391,36 @@ namespace Rawr
             set { _localizedName = value; }
         }
 
-        public enum ItemDamageType
-		{
-			Physical = 0,
-			Holy,
-			Fire,
-			Nature,
-			Frost,
-			Shadow,
-			Arcane
-		}
-
-		public enum ItemQuality
-		{
-			Temp = -1,
-			Poor = 0,
-			Common,
-			Uncommon,
-			Rare,
-			Epic,
-			Legendary,
-			Artifact,
-			Heirloom
-		}
-
-		public enum ItemType
-		{
-			None,
-
-			Cloth,
-			Leather,
-			Mail,
-			Plate,
-
-			Dagger,
-			FistWeapon,
-			OneHandAxe,
-			TwoHandAxe,
-			OneHandMace,
-			TwoHandMace,
-			OneHandSword,
-			TwoHandSword,
-			Polearm,
-			Staff,
-			Shield,
-
-			Bow,
-			Crossbow,
-			Gun,
-			Wand,
-			Thrown,
-
-			Idol,
-			Libram,
-			Totem,
-			Sigil,
-
-			Arrow,
-			Bullet,
-			Quiver,
-			AmmoPouch
-		}
-
-		public enum ItemSlot
-		{
-			None,
-
-			Head,
-			Neck,
-			Shoulders,
-			Back,
-			Chest,
-			Shirt,
-			Tabard,
-			Wrist,
-			Hands,
-			Waist,
-			Legs,
-			Feet,
-			Finger,
-			Trinket,
-			OneHand,
-			TwoHand,
-			MainHand,
-			OffHand,
-			Ranged,
-			Projectile,
-			ProjectileBag,
-
-			Meta,
-			Red,
-			Orange,
-			Yellow,
-			Green,
-			Blue,
-			Purple,
-			Prismatic
-
-			//None = 0,
-			//Head = 1,
-			//Neck = 2,
-			//Shoulders = 3,
-			//Shirt = 4,
-			//Chest = 5,
-			//Waist = 6,
-			//Legs = 7,
-			//Feet = 8,
-			//Wrist = 9,
-			//Hands = 10,
-			//Finger = 11,
-			//Trinket = 12,
-			//OneHand = 13,
-			//OffHand = 14,
-			//Ranged = 15,
-			//Back = 16,
-			//TwoHand = 17,
-
-			//Tabard = 19,
-			//Robe = 20,
-			//MainHand = 21,
-			//OffHandB = 22,
-
-
-			//Thrown = 25,
-			//Wand = 26,
-			//Relic = 28,
-
-			//Weapon = 97,
-
-			//Meta = 101,
-			//Red = 102,
-			//Orange = 103,
-			//Yellow = 104,
-			//Green = 105,
-			//Prismatic = 106,
-			//Purple = 107,
-			//Blue = 108
-		}
-
-		public static Item.ItemSlot GetItemSlotByCharacterSlot(Character.CharacterSlot slot)
+		public static ItemSlot GetItemSlotByCharacterSlot(CharacterSlot slot)
 		{
 			switch (slot)
 			{
-				case Character.CharacterSlot.Projectile: return ItemSlot.Projectile;
-				case Character.CharacterSlot.Head: return ItemSlot.Head;
-				case Character.CharacterSlot.Neck: return ItemSlot.Neck;
-				case Character.CharacterSlot.Shoulders: return ItemSlot.Shoulders;
-				case Character.CharacterSlot.Chest: return ItemSlot.Chest;
-				case Character.CharacterSlot.Waist: return ItemSlot.Waist;
-				case Character.CharacterSlot.Legs: return ItemSlot.Legs;
-				case Character.CharacterSlot.Feet: return ItemSlot.Feet;
-				case Character.CharacterSlot.Wrist: return ItemSlot.Wrist;
-				case Character.CharacterSlot.Hands: return ItemSlot.Hands;
-				case Character.CharacterSlot.Finger1: return ItemSlot.Finger;
-				case Character.CharacterSlot.Finger2: return ItemSlot.Finger;
-				case Character.CharacterSlot.Trinket1: return ItemSlot.Trinket;
-				case Character.CharacterSlot.Trinket2: return ItemSlot.Trinket;
-				case Character.CharacterSlot.Back: return ItemSlot.Back;
-				case Character.CharacterSlot.MainHand: return ItemSlot.MainHand;
-				case Character.CharacterSlot.OffHand: return ItemSlot.OffHand;
-				case Character.CharacterSlot.Ranged: return ItemSlot.Ranged;
-				case Character.CharacterSlot.ProjectileBag: return ItemSlot.ProjectileBag;
-                //case Character.CharacterSlot.ExtraWristSocket: return ItemSlot.Prismatic;
-                //case Character.CharacterSlot.ExtraHandsSocket: return ItemSlot.Prismatic;
-                //case Character.CharacterSlot.ExtraWaistSocket: return ItemSlot.Prismatic;
-				case Character.CharacterSlot.Tabard: return ItemSlot.Tabard;
-				case Character.CharacterSlot.Shirt: return ItemSlot.Shirt;
-				case Character.CharacterSlot.Gems: return ItemSlot.Prismatic;
-				case Character.CharacterSlot.Metas: return ItemSlot.Meta;
+				case CharacterSlot.Projectile: return ItemSlot.Projectile;
+				case CharacterSlot.Head: return ItemSlot.Head;
+				case CharacterSlot.Neck: return ItemSlot.Neck;
+				case CharacterSlot.Shoulders: return ItemSlot.Shoulders;
+				case CharacterSlot.Chest: return ItemSlot.Chest;
+				case CharacterSlot.Waist: return ItemSlot.Waist;
+				case CharacterSlot.Legs: return ItemSlot.Legs;
+				case CharacterSlot.Feet: return ItemSlot.Feet;
+				case CharacterSlot.Wrist: return ItemSlot.Wrist;
+				case CharacterSlot.Hands: return ItemSlot.Hands;
+				case CharacterSlot.Finger1: return ItemSlot.Finger;
+				case CharacterSlot.Finger2: return ItemSlot.Finger;
+				case CharacterSlot.Trinket1: return ItemSlot.Trinket;
+				case CharacterSlot.Trinket2: return ItemSlot.Trinket;
+				case CharacterSlot.Back: return ItemSlot.Back;
+				case CharacterSlot.MainHand: return ItemSlot.MainHand;
+				case CharacterSlot.OffHand: return ItemSlot.OffHand;
+				case CharacterSlot.Ranged: return ItemSlot.Ranged;
+				case CharacterSlot.ProjectileBag: return ItemSlot.ProjectileBag;
+                //case CharacterSlot.ExtraWristSocket: return ItemSlot.Prismatic;
+                //case CharacterSlot.ExtraHandsSocket: return ItemSlot.Prismatic;
+                //case CharacterSlot.ExtraWaistSocket: return ItemSlot.Prismatic;
+				case CharacterSlot.Tabard: return ItemSlot.Tabard;
+				case CharacterSlot.Shirt: return ItemSlot.Shirt;
+				case CharacterSlot.Gems: return ItemSlot.Prismatic;
+				case CharacterSlot.Metas: return ItemSlot.Meta;
 				default: return ItemSlot.None;
 			}
 		}
@@ -630,9 +492,9 @@ namespace Rawr
             _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
             _isStormjewel = _isGem && _name.EndsWith("Stormjewel");
             _isJewelersGem = Slot == ItemSlot.Prismatic && (Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157);
-            _isRedGem = _isGem && Item.GemMatchesSlot(this, Item.ItemSlot.Red);
-            _isYellowGem = _isGem && Item.GemMatchesSlot(this, Item.ItemSlot.Yellow);
-            _isBlueGem = _isGem && Item.GemMatchesSlot(this, Item.ItemSlot.Blue);
+            _isRedGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Red);
+            _isYellowGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Yellow);
+            _isBlueGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Blue);
         }
 
 		public Item() { }
@@ -708,42 +570,42 @@ namespace Rawr
 		}
 
 #if SILVERLIGHT
-		public static Dictionary<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap { get; private set; }
+		public static Dictionary<ItemSlot, CharacterSlot> DefaultSlotMap { get; private set; }
 		static Item()
 		{
-            Dictionary<Item.ItemSlot, Character.CharacterSlot> list = new Dictionary<Item.ItemSlot, Character.CharacterSlot>();
+            Dictionary<ItemSlot, CharacterSlot> list = new Dictionary<ItemSlot, CharacterSlot>();
 #else
 
-		public static SortedList<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap { get; private set; }
+		public static SortedList<ItemSlot, CharacterSlot> DefaultSlotMap { get; private set; }
 		static Item()
 		{
-            SortedList<Item.ItemSlot, Character.CharacterSlot> list = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
+            SortedList<ItemSlot, CharacterSlot> list = new SortedList<ItemSlot, CharacterSlot>();
 #endif
-            foreach (Item.ItemSlot iSlot in EnumHelper.GetValues(typeof(Item.ItemSlot)))
+            foreach (ItemSlot iSlot in EnumHelper.GetValues(typeof(ItemSlot)))
 			{
-				list[iSlot] = Character.CharacterSlot.None;
+				list[iSlot] = CharacterSlot.None;
 			}
-			list[Item.ItemSlot.Head] = Character.CharacterSlot.Head;
-			list[Item.ItemSlot.Neck] = Character.CharacterSlot.Neck;
-			list[Item.ItemSlot.Shoulders] = Character.CharacterSlot.Shoulders;
-			list[Item.ItemSlot.Back] = Character.CharacterSlot.Back;
-			list[Item.ItemSlot.Chest] = Character.CharacterSlot.Chest;
-			list[Item.ItemSlot.Shirt] = Character.CharacterSlot.Shirt;
-			list[Item.ItemSlot.Tabard] = Character.CharacterSlot.Tabard;
-			list[Item.ItemSlot.Wrist] = Character.CharacterSlot.Wrist;
-			list[Item.ItemSlot.Hands] = Character.CharacterSlot.Hands;
-			list[Item.ItemSlot.Waist] = Character.CharacterSlot.Waist;
-			list[Item.ItemSlot.Legs] = Character.CharacterSlot.Legs;
-			list[Item.ItemSlot.Feet] = Character.CharacterSlot.Feet;
-			list[Item.ItemSlot.Finger] = Character.CharacterSlot.Finger1;
-			list[Item.ItemSlot.Trinket] = Character.CharacterSlot.Trinket1;
-			list[Item.ItemSlot.OneHand] = Character.CharacterSlot.MainHand;
-			list[Item.ItemSlot.TwoHand] = Character.CharacterSlot.MainHand;
-			list[Item.ItemSlot.MainHand] = Character.CharacterSlot.MainHand;
-			list[Item.ItemSlot.OffHand] = Character.CharacterSlot.OffHand;
-			list[Item.ItemSlot.Ranged] = Character.CharacterSlot.Ranged;
-			list[Item.ItemSlot.Projectile] = Character.CharacterSlot.Projectile;
-			list[Item.ItemSlot.ProjectileBag] = Character.CharacterSlot.ProjectileBag;
+			list[ItemSlot.Head] = CharacterSlot.Head;
+			list[ItemSlot.Neck] = CharacterSlot.Neck;
+			list[ItemSlot.Shoulders] = CharacterSlot.Shoulders;
+			list[ItemSlot.Back] = CharacterSlot.Back;
+			list[ItemSlot.Chest] = CharacterSlot.Chest;
+			list[ItemSlot.Shirt] = CharacterSlot.Shirt;
+			list[ItemSlot.Tabard] = CharacterSlot.Tabard;
+			list[ItemSlot.Wrist] = CharacterSlot.Wrist;
+			list[ItemSlot.Hands] = CharacterSlot.Hands;
+			list[ItemSlot.Waist] = CharacterSlot.Waist;
+			list[ItemSlot.Legs] = CharacterSlot.Legs;
+			list[ItemSlot.Feet] = CharacterSlot.Feet;
+			list[ItemSlot.Finger] = CharacterSlot.Finger1;
+			list[ItemSlot.Trinket] = CharacterSlot.Trinket1;
+			list[ItemSlot.OneHand] = CharacterSlot.MainHand;
+			list[ItemSlot.TwoHand] = CharacterSlot.MainHand;
+			list[ItemSlot.MainHand] = CharacterSlot.MainHand;
+			list[ItemSlot.OffHand] = CharacterSlot.OffHand;
+			list[ItemSlot.Ranged] = CharacterSlot.Ranged;
+			list[ItemSlot.Projectile] = CharacterSlot.Projectile;
+			list[ItemSlot.ProjectileBag] = CharacterSlot.ProjectileBag;
 #if SILVERLIGHT
             list.OrderBy(kvp => (int)kvp.Key);
 #else
@@ -752,59 +614,59 @@ namespace Rawr
 			DefaultSlotMap = list;
 		}
 
-		public bool FitsInSlot(Character.CharacterSlot charSlot)
+		public bool FitsInSlot(CharacterSlot charSlot)
 		{
 			//And if I fell with all the strength I held inside...
 			switch (charSlot)
 			{
-				case Character.CharacterSlot.Head:
+				case CharacterSlot.Head:
 					return this.Slot == ItemSlot.Head;
-				case Character.CharacterSlot.Neck:
+				case CharacterSlot.Neck:
 					return this.Slot == ItemSlot.Neck;
-				case Character.CharacterSlot.Shoulders:
+				case CharacterSlot.Shoulders:
 					return this.Slot == ItemSlot.Shoulders;
-				case Character.CharacterSlot.Back:
+				case CharacterSlot.Back:
 					return this.Slot == ItemSlot.Back;
-				case Character.CharacterSlot.Chest:
+				case CharacterSlot.Chest:
 					return this.Slot == ItemSlot.Chest;
-				case Character.CharacterSlot.Shirt:
+				case CharacterSlot.Shirt:
 					return this.Slot == ItemSlot.Shirt;
-				case Character.CharacterSlot.Tabard:
+				case CharacterSlot.Tabard:
 					return this.Slot == ItemSlot.Tabard;
-				case Character.CharacterSlot.Wrist:
+				case CharacterSlot.Wrist:
 					return this.Slot == ItemSlot.Wrist;
-				case Character.CharacterSlot.Hands:
+				case CharacterSlot.Hands:
 					return this.Slot == ItemSlot.Hands;
-				case Character.CharacterSlot.Waist:
+				case CharacterSlot.Waist:
 					return this.Slot == ItemSlot.Waist;
-				case Character.CharacterSlot.Legs:
+				case CharacterSlot.Legs:
 					return this.Slot == ItemSlot.Legs;
-				case Character.CharacterSlot.Feet:
+				case CharacterSlot.Feet:
 					return this.Slot == ItemSlot.Feet;
-				case Character.CharacterSlot.Finger1:
-				case Character.CharacterSlot.Finger2:
+				case CharacterSlot.Finger1:
+				case CharacterSlot.Finger2:
 					return this.Slot == ItemSlot.Finger;
-				case Character.CharacterSlot.Trinket1:
-				case Character.CharacterSlot.Trinket2:
+				case CharacterSlot.Trinket1:
+				case CharacterSlot.Trinket2:
 					return this.Slot == ItemSlot.Trinket;
-				case Character.CharacterSlot.MainHand:
+				case CharacterSlot.MainHand:
 					return this.Slot == ItemSlot.TwoHand || this.Slot == ItemSlot.OneHand || this.Slot == ItemSlot.MainHand;
-				case Character.CharacterSlot.OffHand:
+				case CharacterSlot.OffHand:
 					return this.Slot == ItemSlot.OneHand || this.Slot == ItemSlot.OffHand;
-				case Character.CharacterSlot.Ranged:
+				case CharacterSlot.Ranged:
 					return this.Slot == ItemSlot.Ranged;
-				case Character.CharacterSlot.Projectile:
+				case CharacterSlot.Projectile:
 					return this.Slot == ItemSlot.Projectile;
-				case Character.CharacterSlot.ProjectileBag:
+				case CharacterSlot.ProjectileBag:
 					return this.Slot == ItemSlot.ProjectileBag;
-                //case Character.CharacterSlot.ExtraWristSocket:
-                //case Character.CharacterSlot.ExtraHandsSocket:
-                //case Character.CharacterSlot.ExtraWaistSocket:
-				case Character.CharacterSlot.Gems:
+                //case CharacterSlot.ExtraWristSocket:
+                //case CharacterSlot.ExtraHandsSocket:
+                //case CharacterSlot.ExtraWaistSocket:
+				case CharacterSlot.Gems:
 					return this.Slot == ItemSlot.Red || this.Slot == ItemSlot.Blue || this.Slot == ItemSlot.Yellow
 						|| this.Slot == ItemSlot.Purple || this.Slot == ItemSlot.Green || this.Slot == ItemSlot.Orange
 						|| this.Slot == ItemSlot.Prismatic;
-				case Character.CharacterSlot.Metas:
+				case CharacterSlot.Metas:
 					return this.Slot == ItemSlot.Meta;
 				default:
 					return false;
@@ -812,12 +674,12 @@ namespace Rawr
 			//I wouldn't be out here... alone tonight
 		}
 
-        public bool FitsInSlot(Character.CharacterSlot charSlot, Character character)
+        public bool FitsInSlot(CharacterSlot charSlot, Character character)
         {
             return Calculations.ItemFitsInSlot(this, character, charSlot, false);
         }
 
-		public bool FitsInSlot(Character.CharacterSlot charSlot, Character character, bool ignoreUnique)
+		public bool FitsInSlot(CharacterSlot charSlot, Character character, bool ignoreUnique)
 		{
 			return Calculations.ItemFitsInSlot(this, character, charSlot, ignoreUnique);
 		}
@@ -1270,7 +1132,7 @@ namespace Rawr
 		    {
 		        if (_enchantCached == null || _enchantCached.Id != EnchantId)
 		        {
-		            _enchantCached = Enchant.FindEnchant(EnchantId, Item != null ? Item.Slot : Item.ItemSlot.None, null);
+		            _enchantCached = Enchant.FindEnchant(EnchantId, Item != null ? Item.Slot : ItemSlot.None, null);
 		        }
 		        return _enchantCached;
 		    }
@@ -1392,9 +1254,9 @@ namespace Rawr
 			//summary += Sockets.ToString();
 			if (summary.EndsWith(", ")) summary = summary.Substring(0, summary.Length - 2);
 
-			if ((Item.SocketColor1 != Item.ItemSlot.None && Gem1Id == 0) ||
-				(Item.SocketColor2 != Item.ItemSlot.None && Gem2Id == 0) ||
-				(Item.SocketColor3 != Item.ItemSlot.None && Gem3Id == 0))
+			if ((Item.SocketColor1 != ItemSlot.None && Gem1Id == 0) ||
+				(Item.SocketColor2 != ItemSlot.None && Gem2Id == 0) ||
+				(Item.SocketColor3 != ItemSlot.None && Gem3Id == 0))
 				summary += " [EMPTY SOCKETS]";
 
 			return summary;
@@ -1450,18 +1312,18 @@ namespace Rawr
                 if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(Gem3.Stats, true);
                 if (eligibleForSocketBonus) unsafeStatsAccumulator.AccumulateUnsafe(Item.SocketBonus, true);
                 bool eligibleForEnchant = false;
-                if (Enchant.Slot == Item.ItemSlot.OneHand)
+                if (Enchant.Slot == ItemSlot.OneHand)
                 {
-                    eligibleForEnchant = (this.Slot == Item.ItemSlot.OneHand ||
-                                        (this.Slot == Item.ItemSlot.OffHand &&
-                                            this.Type != Item.ItemType.Shield &&
-                                            this.Type != Item.ItemType.None) ||
-                                        this.Slot == Item.ItemSlot.MainHand ||
-                                        this.Slot == Item.ItemSlot.TwoHand);
+                    eligibleForEnchant = (this.Slot == ItemSlot.OneHand ||
+                                        (this.Slot == ItemSlot.OffHand &&
+                                            this.Type != ItemType.Shield &&
+                                            this.Type != ItemType.None) ||
+                                        this.Slot == ItemSlot.MainHand ||
+                                        this.Slot == ItemSlot.TwoHand);
                 }
-                else if (Enchant.Slot == Item.ItemSlot.OffHand)
+                else if (Enchant.Slot == ItemSlot.OffHand)
                 {
-                    eligibleForEnchant = this.Type == Item.ItemType.Shield;
+                    eligibleForEnchant = this.Type == ItemType.Shield;
                 }
                 else
                 {
@@ -1484,18 +1346,18 @@ namespace Rawr
                     if (gem3) totalItemStats.AccumulateUnsafe(Gem3.Stats, true);
                     if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Item.SocketBonus, true);
                     bool eligibleForEnchant = false;
-                    if (Enchant.Slot == Item.ItemSlot.OneHand)
+                    if (Enchant.Slot == ItemSlot.OneHand)
                     {
-                        eligibleForEnchant = (this.Slot == Item.ItemSlot.OneHand ||
-                                            (this.Slot == Item.ItemSlot.OffHand &&
-                                                this.Type != Item.ItemType.Shield &&
-                                                this.Type != Item.ItemType.None) ||
-                                            this.Slot == Item.ItemSlot.MainHand ||
-                                            this.Slot == Item.ItemSlot.TwoHand);
+                        eligibleForEnchant = (this.Slot == ItemSlot.OneHand ||
+                                            (this.Slot == ItemSlot.OffHand &&
+                                                this.Type != ItemType.Shield &&
+                                                this.Type != ItemType.None) ||
+                                            this.Slot == ItemSlot.MainHand ||
+                                            this.Slot == ItemSlot.TwoHand);
                     }
-                    else if (Enchant.Slot == Item.ItemSlot.OffHand)
+                    else if (Enchant.Slot == ItemSlot.OffHand)
                     {
-                        eligibleForEnchant = this.Type == Item.ItemType.Shield;
+                        eligibleForEnchant = this.Type == ItemType.Shield;
                     }
                     else
                     {
@@ -1538,28 +1400,28 @@ namespace Rawr
 
 		#endregion
 
-        public bool FitsInSlot(Character.CharacterSlot characterSlot)
+        public bool FitsInSlot(CharacterSlot characterSlot)
         {
             return Item.FitsInSlot(characterSlot);
         }
 
         // helper functions to minimize fixing of models
         [XmlIgnore]
-        public Item.ItemSlot Slot
+        public ItemSlot Slot
         {
             get
             {
-                if (Item == null) return Item.ItemSlot.None;
+                if (Item == null) return ItemSlot.None;
                 return Item.Slot;
             }
         }
 
         [XmlIgnore]
-        public Item.ItemType Type
+        public ItemType Type
         {
             get
             {
-                if (Item == null) return Item.ItemType.None;
+                if (Item == null) return ItemType.None;
                 return Item.Type;
             }
         }
@@ -1585,11 +1447,11 @@ namespace Rawr
         }
 
         [XmlIgnore]
-        public Item.ItemDamageType DamageType
+        public ItemDamageType DamageType
         {
             get
             {
-                if (Item == null) return Item.ItemDamageType.Physical;
+                if (Item == null) return ItemDamageType.Physical;
                 return Item.DamageType;
             }
         }

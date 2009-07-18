@@ -232,17 +232,17 @@ namespace Rawr.Optimizer
         public int GetItemGemCount(Item item)
         {
             int gemCount = 0;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
             switch (item.SocketColor1)
             {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
+                case ItemSlot.Meta:
+                case ItemSlot.Red:
+                case ItemSlot.Orange:
+                case ItemSlot.Yellow:
+                case ItemSlot.Green:
+                case ItemSlot.Blue:
+                case ItemSlot.Purple:
+                case ItemSlot.Prismatic:
                     gemCount++;
                     break;
                 default:
@@ -255,14 +255,14 @@ namespace Rawr.Optimizer
             }
             switch (item.SocketColor2)
             {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
+                case ItemSlot.Meta:
+                case ItemSlot.Red:
+                case ItemSlot.Orange:
+                case ItemSlot.Yellow:
+                case ItemSlot.Green:
+                case ItemSlot.Blue:
+                case ItemSlot.Purple:
+                case ItemSlot.Prismatic:
                     gemCount++;
                     break;
                 default:
@@ -275,14 +275,14 @@ namespace Rawr.Optimizer
             }
             switch (item.SocketColor3)
             {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
+                case ItemSlot.Meta:
+                case ItemSlot.Red:
+                case ItemSlot.Orange:
+                case ItemSlot.Yellow:
+                case ItemSlot.Green:
+                case ItemSlot.Blue:
+                case ItemSlot.Purple:
+                case ItemSlot.Prismatic:
                     gemCount++;
                     break;
                 default:
@@ -334,17 +334,17 @@ namespace Rawr.Optimizer
                     {
                         switch (availableItem.Slot)
                         {
-                            case Item.ItemSlot.Meta:
+                            case ItemSlot.Meta:
                                 metaGemItemList.Add(availableItem);
                                 removeIds.Add(xid);
                                 break;
-                            case Item.ItemSlot.Red:
-                            case Item.ItemSlot.Orange:
-                            case Item.ItemSlot.Yellow:
-                            case Item.ItemSlot.Green:
-                            case Item.ItemSlot.Blue:
-                            case Item.ItemSlot.Purple:
-                            case Item.ItemSlot.Prismatic:
+                            case ItemSlot.Red:
+                            case ItemSlot.Orange:
+                            case ItemSlot.Yellow:
+                            case ItemSlot.Green:
+                            case ItemSlot.Blue:
+                            case ItemSlot.Purple:
+                            case ItemSlot.Prismatic:
                                 gemItemList.Add(availableItem);
                                 removeIds.Add(xid);
                                 break;
@@ -365,18 +365,18 @@ namespace Rawr.Optimizer
                 slotRawItems[i] = new List<Item>();
             }
 
-            slotAvailableEnchants[(int)Character.CharacterSlot.Back] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Back, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Chest] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Chest, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Feet] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Feet, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Finger1] = slotAvailableEnchants[(int)Character.CharacterSlot.Finger2] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Finger, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Hands] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Hands, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Head] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Head, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Legs] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Legs, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Shoulders] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Shoulders, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.MainHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.MainHand, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.OffHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.OffHand, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Ranged] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Ranged, characters, availableItems, models));
-            slotAvailableEnchants[(int)Character.CharacterSlot.Wrist] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Wrist, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Back] = FilterList(Enchant.FindEnchants(ItemSlot.Back, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Chest] = FilterList(Enchant.FindEnchants(ItemSlot.Chest, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Feet] = FilterList(Enchant.FindEnchants(ItemSlot.Feet, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Finger1] = slotAvailableEnchants[(int)CharacterSlot.Finger2] = FilterList(Enchant.FindEnchants(ItemSlot.Finger, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Hands] = FilterList(Enchant.FindEnchants(ItemSlot.Hands, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Head] = FilterList(Enchant.FindEnchants(ItemSlot.Head, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Legs] = FilterList(Enchant.FindEnchants(ItemSlot.Legs, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Shoulders] = FilterList(Enchant.FindEnchants(ItemSlot.Shoulders, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.MainHand] = FilterList(Enchant.FindEnchants(ItemSlot.MainHand, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.OffHand] = FilterList(Enchant.FindEnchants(ItemSlot.OffHand, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Ranged] = FilterList(Enchant.FindEnchants(ItemSlot.Ranged, characters, availableItems, models));
+            slotAvailableEnchants[(int)CharacterSlot.Wrist] = FilterList(Enchant.FindEnchants(ItemSlot.Wrist, characters, availableItems, models));
 
             Item item = null;
             List<ItemInstance> possibleGemmedItems = null;
@@ -465,7 +465,7 @@ namespace Rawr.Optimizer
                         bool fits = false;
                         foreach (Character character in characters)
                         {
-                            if (item.FitsInSlot((Character.CharacterSlot)i, character, true))
+                            if (item.FitsInSlot((CharacterSlot)i, character, true))
                             {
                                 fits = true;
                                 break;
@@ -488,8 +488,8 @@ namespace Rawr.Optimizer
 
             for (int i = 0; i < slotCount; i++)
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)i;
-                if (slot == Character.CharacterSlot.Finger1 || slot == Character.CharacterSlot.Finger2 || slot == Character.CharacterSlot.Trinket1 || slot == Character.CharacterSlot.Trinket2 || slot == Character.CharacterSlot.MainHand || slot == Character.CharacterSlot.OffHand || slotItems[i].Count == 0)
+                CharacterSlot slot = (CharacterSlot)i;
+                if (slot == CharacterSlot.Finger1 || slot == CharacterSlot.Finger2 || slot == CharacterSlot.Trinket1 || slot == CharacterSlot.Trinket2 || slot == CharacterSlot.MainHand || slot == CharacterSlot.OffHand || slotItems[i].Count == 0)
                 {
                     slotItems[i].Add(null);
                 }
@@ -499,8 +499,8 @@ namespace Rawr.Optimizer
             {
                 for (int i = 0; i < slotCount; i++)
                 {
-                    Character.CharacterSlot slot = (Character.CharacterSlot)i;
-                    if (slot != Character.CharacterSlot.Finger1 && slot != Character.CharacterSlot.Finger2 && slot != Character.CharacterSlot.Trinket1 && slot != Character.CharacterSlot.Trinket2)
+                    CharacterSlot slot = (CharacterSlot)i;
+                    if (slot != CharacterSlot.Finger1 && slot != CharacterSlot.Finger2 && slot != CharacterSlot.Trinket1 && slot != CharacterSlot.Trinket2)
                     {
                         slotItems[i] = FilterList(slotItems[i], true);
                     }
@@ -519,22 +519,22 @@ namespace Rawr.Optimizer
             string[] ids = gemmedId.Split('.');
             Item[] possibleGem1s, possibleGem2s, possibleGem3s = null;
             Enchant[] possibleEnchants = null;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
 
             if (ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*"))
             {
                 switch (item.SocketColor1)
                 {
-                    case Item.ItemSlot.Meta:
+                    case ItemSlot.Meta:
                         possibleGem1s = metaGemItems;
                         break;
-                    case Item.ItemSlot.Red:
-                    case Item.ItemSlot.Orange:
-                    case Item.ItemSlot.Yellow:
-                    case Item.ItemSlot.Green:
-                    case Item.ItemSlot.Blue:
-                    case Item.ItemSlot.Purple:
-                    case Item.ItemSlot.Prismatic:
+                    case ItemSlot.Red:
+                    case ItemSlot.Orange:
+                    case ItemSlot.Yellow:
+                    case ItemSlot.Green:
+                    case ItemSlot.Blue:
+                    case ItemSlot.Purple:
+                    case ItemSlot.Prismatic:
                         possibleGem1s = gemItems;
                         break;
                     default:
@@ -559,16 +559,16 @@ namespace Rawr.Optimizer
             {
                 switch (item.SocketColor2)
                 {
-                    case Item.ItemSlot.Meta:
+                    case ItemSlot.Meta:
                         possibleGem2s = metaGemItems;
                         break;
-                    case Item.ItemSlot.Red:
-                    case Item.ItemSlot.Orange:
-                    case Item.ItemSlot.Yellow:
-                    case Item.ItemSlot.Green:
-                    case Item.ItemSlot.Blue:
-                    case Item.ItemSlot.Purple:
-                    case Item.ItemSlot.Prismatic:
+                    case ItemSlot.Red:
+                    case ItemSlot.Orange:
+                    case ItemSlot.Yellow:
+                    case ItemSlot.Green:
+                    case ItemSlot.Blue:
+                    case ItemSlot.Purple:
+                    case ItemSlot.Prismatic:
                         possibleGem2s = gemItems;
                         break;
                     default:
@@ -593,16 +593,16 @@ namespace Rawr.Optimizer
             {
                 switch (item.SocketColor3)
                 {
-                    case Item.ItemSlot.Meta:
+                    case ItemSlot.Meta:
                         possibleGem3s = metaGemItems;
                         break;
-                    case Item.ItemSlot.Red:
-                    case Item.ItemSlot.Orange:
-                    case Item.ItemSlot.Yellow:
-                    case Item.ItemSlot.Green:
-                    case Item.ItemSlot.Blue:
-                    case Item.ItemSlot.Purple:
-                    case Item.ItemSlot.Prismatic:
+                    case ItemSlot.Red:
+                    case ItemSlot.Orange:
+                    case ItemSlot.Yellow:
+                    case ItemSlot.Green:
+                    case ItemSlot.Blue:
+                    case ItemSlot.Purple:
+                    case ItemSlot.Prismatic:
                         possibleGem3s = gemItems;
                         break;
                     default:
@@ -676,9 +676,9 @@ namespace Rawr.Optimizer
                                 if (generative)
                                 {
                                     List<int> gemOrder = new List<int>();
-                                    if (gem1 != null && gem1.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem1.Id);
-                                    if (gem2 != null && gem2.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem2.Id);
-                                    if (gem3 != null && gem3.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem3.Id);
+                                    if (gem1 != null && gem1.Slot != ItemSlot.Meta) gemOrder.Add(gem1.Id);
+                                    if (gem2 != null && gem2.Slot != ItemSlot.Meta) gemOrder.Add(gem2.Id);
+                                    if (gem3 != null && gem3.Slot != ItemSlot.Meta) gemOrder.Add(gem3.Id);
                                     for (int i = 0; i < gemOrder.Count - 1; i++)
                                     {
                                         if (gemOrder[i] > gemOrder[i + 1])
@@ -962,14 +962,14 @@ namespace Rawr.Optimizer
                     {
                         switch (gem.Slot)
                         {
-                            case Item.ItemSlot.Meta: meta++; break;
-                            case Item.ItemSlot.Red: red++; break;
-                            case Item.ItemSlot.Orange: red++; yellow++; break;
-                            case Item.ItemSlot.Yellow: yellow++; break;
-                            case Item.ItemSlot.Green: yellow++; blue++; break;
-                            case Item.ItemSlot.Blue: blue++; break;
-                            case Item.ItemSlot.Purple: blue++; red++; break;
-                            case Item.ItemSlot.Prismatic: red++; yellow++; blue++; break;
+                            case ItemSlot.Meta: meta++; break;
+                            case ItemSlot.Red: red++; break;
+                            case ItemSlot.Orange: red++; yellow++; break;
+                            case ItemSlot.Yellow: yellow++; break;
+                            case ItemSlot.Green: yellow++; blue++; break;
+                            case ItemSlot.Blue: blue++; break;
+                            case ItemSlot.Purple: blue++; red++; break;
+                            case ItemSlot.Prismatic: red++; yellow++; blue++; break;
                         }
                         if (gem.IsJewelersGem)
                         {
@@ -1087,13 +1087,13 @@ namespace Rawr.Optimizer
                 haveLessThan |= compareResult == ArrayUtils.CompareResult.LessThan;
                 haveGreaterThan |= compareResult == ArrayUtils.CompareResult.GreaterThan;
 
-                if (Item != null && (Item.Slot == Item.ItemSlot.MainHand || Item.Slot == Item.ItemSlot.OneHand || Item.Slot == Item.ItemSlot.TwoHand))
+                if (Item != null && (Item.Slot == ItemSlot.MainHand || Item.Slot == ItemSlot.OneHand || Item.Slot == ItemSlot.TwoHand))
                 {
-                    if (Item.Slot == Item.ItemSlot.TwoHand && other.Item.Slot != Item.ItemSlot.TwoHand && haveGreaterThan)
+                    if (Item.Slot == ItemSlot.TwoHand && other.Item.Slot != ItemSlot.TwoHand && haveGreaterThan)
                     {
                         return ArrayUtils.CompareResult.Unequal;
                     }
-                    if (Item.Slot != Item.ItemSlot.TwoHand && other.Item.Slot == Item.ItemSlot.TwoHand && haveLessThan)
+                    if (Item.Slot != ItemSlot.TwoHand && other.Item.Slot == ItemSlot.TwoHand && haveLessThan)
                     {
                         return ArrayUtils.CompareResult.Unequal;
                     }

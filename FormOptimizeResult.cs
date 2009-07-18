@@ -22,7 +22,7 @@ namespace Rawr
 
         private void RemoveUnchangedItems()
         {
-            Enchant noEnchant = Enchant.FindEnchant(0, Item.ItemSlot.None, paperDollBefore.Character);
+            Enchant noEnchant = Enchant.FindEnchant(0, ItemSlot.None, paperDollBefore.Character);
             paperDollBefore.ShirtHidden = true;
             paperDollBefore.TabardHidden = true;
             paperDollAfter.ShirtHidden = true;

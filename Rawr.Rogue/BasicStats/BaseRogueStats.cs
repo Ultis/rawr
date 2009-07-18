@@ -6,9 +6,9 @@ namespace Rawr.Rogue.BasicStats
 {
     public class BaseRogueStats : Stats
     {
-        public BaseRogueStats(Character.CharacterRace race)
+        public BaseRogueStats(CharacterRace race)
         {
-            if (race == Character.CharacterRace.Tauren || race == Character.CharacterRace.Draenei)
+            if (race == CharacterRace.Tauren || race == CharacterRace.Draenei)
                 return;
 
 
@@ -25,19 +25,19 @@ namespace Rawr.Rogue.BasicStats
 
         }
 
-        private static readonly Dictionary<Character.CharacterRace, float[]> _raceStats = new Dictionary<Character.CharacterRace, float[]>
+        private static readonly Dictionary<CharacterRace, float[]> _raceStats = new Dictionary<CharacterRace, float[]>
                                                                   {
                                                                     // Agility,Strength,Stamina
-                                                                    { Character.CharacterRace.Human, new [] {158f, 95f, 89f}},
-                                                                    { Character.CharacterRace.Orc, new [] {155f, 98f, 91f}},
-                                                                    { Character.CharacterRace.Dwarf, new [] {154f, 97f, 92f,}},
-                                                                    { Character.CharacterRace.NightElf, new [] {194f, 110f, 104f}},
-                                                                    { Character.CharacterRace.Undead, new [] {156f, 94f, 90f}},
-                                                                    { Character.CharacterRace.Tauren, new [] {0f, 0f, 0f}},
-                                                                    { Character.CharacterRace.Gnome, new [] {161f, 90f, 88f}},
-                                                                    { Character.CharacterRace.Troll, new [] {160f, 96f, 90f}},
-                                                                    { Character.CharacterRace.BloodElf, new [] {160f, 92f, 87f}},
-                                                                    { Character.CharacterRace.Draenei, new [] {0f, 0f, 0f}}
+                                                                    { CharacterRace.Human, new [] {158f, 95f, 89f}},
+                                                                    { CharacterRace.Orc, new [] {155f, 98f, 91f}},
+                                                                    { CharacterRace.Dwarf, new [] {154f, 97f, 92f,}},
+                                                                    { CharacterRace.NightElf, new [] {194f, 110f, 104f}},
+                                                                    { CharacterRace.Undead, new [] {156f, 94f, 90f}},
+                                                                    { CharacterRace.Tauren, new [] {0f, 0f, 0f}},
+                                                                    { CharacterRace.Gnome, new [] {161f, 90f, 88f}},
+                                                                    { CharacterRace.Troll, new [] {160f, 96f, 90f}},
+                                                                    { CharacterRace.BloodElf, new [] {160f, 92f, 87f}},
+                                                                    { CharacterRace.Draenei, new [] {0f, 0f, 0f}}
                                                                   };
     }
 }

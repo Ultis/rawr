@@ -35,11 +35,11 @@ namespace Rawr.Silverlight
         public bool IsEnchantList { get; set; }
         private bool IsGemList
         {
-            get { return Slot == Character.CharacterSlot.Gems || Slot == Character.CharacterSlot.Metas; }
+            get { return Slot == CharacterSlot.Gems || Slot == CharacterSlot.Metas; }
         }
 
-		private Character.CharacterSlot _slot;
-		public Character.CharacterSlot Slot
+		private CharacterSlot _slot;
+		public CharacterSlot Slot
 		{
 			get { return _slot; }
 			set

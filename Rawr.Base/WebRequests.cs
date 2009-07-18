@@ -42,7 +42,7 @@ namespace Rawr
         
 		
 		private static Exception _fatalError = null;
-		private Dictionary<Character.CharacterRegion, string> _domains = new Dictionary<Character.CharacterRegion,string>();
+		private Dictionary<CharacterRegion, string> _domains = new Dictionary<CharacterRegion,string>();
 
         public interface INetworkSettingsProvider
         {
@@ -262,11 +262,11 @@ namespace Rawr
             _proxyUserName = NetworkSettingsProvider.ProxyUserName;
             _proxyPassword = NetworkSettingsProvider.ProxyPassword;
             _proxyDomain = NetworkSettingsProvider.ProxyDomain;
-			_domains.Add(Character.CharacterRegion.US, "www");
-			_domains.Add(Character.CharacterRegion.EU, "eu");
-			_domains.Add(Character.CharacterRegion.KR, "kr");
-			_domains.Add(Character.CharacterRegion.TW, "tw");
-			_domains.Add(Character.CharacterRegion.CN, "cn");
+			_domains.Add(CharacterRegion.US, "www");
+			_domains.Add(CharacterRegion.EU, "eu");
+			_domains.Add(CharacterRegion.KR, "kr");
+			_domains.Add(CharacterRegion.TW, "tw");
+			_domains.Add(CharacterRegion.CN, "cn");
 		}
 
 		public string GetLatestVersionString()
@@ -319,13 +319,13 @@ namespace Rawr
 			return html;
 		}
 
-		public string DownloadClassTalentTree(Character.CharacterClass characterClass)
+		public string DownloadClassTalentTree(CharacterClass characterClass)
 		{
 			//http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js
             return DownloadText(string.Format(NetworkSettingsProvider.ClassTalentURI, characterClass.ToString().ToLower()));
 		}
 
-		public XmlDocument DownloadCharacterTalentTree(string characterName, Character.CharacterRegion region, string realm)
+		public XmlDocument DownloadCharacterTalentTree(string characterName, CharacterRegion region, string realm)
 		{
 			//http://{0}.wowarmory.com/character-talents.xml?r={1}&cn={2}
 			string domain = _domains[region];
@@ -338,7 +338,7 @@ namespace Rawr
 			return doc;
 		}
 
-		public XmlDocument DownloadCharacterSheet(string characterName, Character.CharacterRegion region, string realm)
+		public XmlDocument DownloadCharacterSheet(string characterName, CharacterRegion region, string realm)
 		{
 			//http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}
 			string domain = _domains[region];
@@ -351,7 +351,7 @@ namespace Rawr
 			return doc;
 		}
 
-		public XmlDocument DownloadUpgrades(string characterName, Character.CharacterRegion region, string realm, int itemId)
+		public XmlDocument DownloadUpgrades(string characterName, CharacterRegion region, string realm, int itemId)
 		{
 			//http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}
 			string domain = _domains[region];
@@ -466,8 +466,8 @@ namespace Rawr
 		/// <param name="talentTree">name of the talent tree</param>
 		/// <param name="talentName">name of the talent</param>
 		/// <returns>The full path to the downloaded icon.  Null is returned if no icon could be downloaded</returns>
-		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree) { return DownloadTalentIcon(charClass, talentTree, "background", null); }
-		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName, string icon)
+		public string DownloadTalentIcon(CharacterClass charClass, string talentTree) { return DownloadTalentIcon(charClass, talentTree, "background", null); }
+		public string DownloadTalentIcon(CharacterClass charClass, string talentTree, string talentName, string icon)
 		{
 			//foreach (string illegalCharacter in new string[] { " ", "'" })
 			talentTree = talentTree.Replace(" ", "");

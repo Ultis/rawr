@@ -28,8 +28,8 @@ namespace Rawr
             Enabled = true;
             MinItemLevel = 0;
             MaxItemLevel = 1000;
-            MinItemQuality = Item.ItemQuality.Temp;
-            MaxItemQuality = Item.ItemQuality.Heirloom;
+            MinItemQuality = ItemQuality.Temp;
+            MaxItemQuality = ItemQuality.Heirloom;
             AdditiveFilter = true;
             AppliesToItems = true;
             AppliesToGems = true;
@@ -54,8 +54,8 @@ namespace Rawr
 
         public int MinItemLevel { get; set; }
         public int MaxItemLevel { get; set; }
-        public Item.ItemQuality MinItemQuality { get; set; }
-        public Item.ItemQuality MaxItemQuality { get; set; }
+        public ItemQuality MinItemQuality { get; set; }
+        public ItemQuality MaxItemQuality { get; set; }
         public bool AdditiveFilter { get; set; }
         public bool AppliesToItems { get; set; }
         public bool AppliesToGems { get; set; }
@@ -136,10 +136,10 @@ namespace Rawr
     }
 
     
-    public class ItemTypeList : List<Item.ItemType>
+    public class ItemTypeList : List<ItemType>
     {
         public ItemTypeList() : base() { }
-        public ItemTypeList(IEnumerable<Item.ItemType> collection) : base(collection) { }
+        public ItemTypeList(IEnumerable<ItemType> collection) : base(collection) { }
     }
 
     
@@ -158,7 +158,7 @@ namespace Rawr
         /// Returns a list that can be used to set relevant item types list. Call ItemCache.OnItemsChanged()
         /// when you finish making changes to the list.
         /// </summary>
-        public static List<Item.ItemType> GetRelevantItemTypesList(CalculationsBase model)
+        public static List<ItemType> GetRelevantItemTypesList(CalculationsBase model)
         {
             ItemTypeList list;
             if (!data.RelevantItemTypes.TryGetValue(model.Name, out list))

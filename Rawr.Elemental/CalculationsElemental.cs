@@ -5,7 +5,7 @@ using Rawr.Elemental.Estimation;
 
 namespace Rawr.Elemental
 {
-	[Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", Character.CharacterClass.Shaman)]
+	[Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", CharacterClass.Shaman)]
 	public class CalculationsElemental : CalculationsBase
 	{
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
@@ -174,35 +174,35 @@ namespace Rawr.Elemental
 			}
 		}
 
-		private List<Item.ItemType> _relevantItemTypes = null;
-		public override List<Item.ItemType> RelevantItemTypes
+		private List<ItemType> _relevantItemTypes = null;
+		public override List<ItemType> RelevantItemTypes
 		{
 			get
 			{
 				if (_relevantItemTypes == null)
 				{
-					_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-						Item.ItemType.Cloth,						
-                        Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-						Item.ItemType.Dagger,
-                        Item.ItemType.FistWeapon,
-						Item.ItemType.OneHandAxe,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.Shield,
-                        Item.ItemType.Staff,
-                        Item.ItemType.Totem,
-                        Item.ItemType.TwoHandAxe,
-						Item.ItemType.TwoHandMace
+						ItemType.None,
+						ItemType.Cloth,						
+                        ItemType.Leather,
+                        ItemType.Mail,
+						ItemType.Dagger,
+                        ItemType.FistWeapon,
+						ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.Shield,
+                        ItemType.Staff,
+                        ItemType.Totem,
+                        ItemType.TwoHandAxe,
+						ItemType.TwoHandMace
 					});
 				}
 				return _relevantItemTypes;
 			}
 		}
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Shaman; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
 
@@ -334,7 +334,7 @@ namespace Rawr.Elemental
 
 		public override bool IsItemRelevant(Item item)
 		{
-            if ((item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Totem))
+            if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Totem))
                 return false;
             return base.IsItemRelevant(item);
 		}

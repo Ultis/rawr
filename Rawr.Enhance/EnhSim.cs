@@ -57,7 +57,7 @@ namespace Rawr.Enhance
             sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("ap                              " + stats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
-            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.Shaman) * 100f;
+            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Shaman) * 100f;
             sb.AppendLine("melee_haste                     " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
             float armourPenBonus = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating) * 100f;
             sb.AppendLine("armor_penetration               " + armourPenBonus.ToString("F2", CultureInfo.InvariantCulture));
@@ -82,9 +82,9 @@ namespace Rawr.Enhance
             String weaponType = "-";
             if (character.MainHand != null)
             {
-                if (character.MainHand.Type == Item.ItemType.OneHandAxe)
+                if (character.MainHand.Type == ItemType.OneHandAxe)
                     weaponType = "axe";
-                else if (character.MainHand.Type == Item.ItemType.TwoHandAxe)
+                else if (character.MainHand.Type == ItemType.TwoHandAxe)
                     weaponType = "axe";
             }
             sb.AppendLine("mh_weapon                       " + weaponType);
@@ -92,7 +92,7 @@ namespace Rawr.Enhance
             weaponType = "-";
             if (character.OffHand != null)
             {
-                if (character.OffHand.Type == Item.ItemType.OneHandAxe)
+                if (character.OffHand.Type == ItemType.OneHandAxe)
                     weaponType = "axe";
             }
             sb.AppendLine("oh_weapon                       " + weaponType);

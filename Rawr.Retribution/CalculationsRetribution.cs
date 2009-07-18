@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", Character.CharacterClass.Paladin)]
+    [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin)]
     public class CalculationsRetribution : CalculationsBase
     {
 
@@ -288,27 +288,27 @@ namespace Rawr.Retribution
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRetribution()); }
         }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
                 {
-                    Item.ItemType.None,
-                    Item.ItemType.Leather,
-                    Item.ItemType.Mail,
-                    Item.ItemType.Plate,
-                    Item.ItemType.Libram,
-                    Item.ItemType.Polearm,
-                    Item.ItemType.TwoHandAxe,
-                    Item.ItemType.TwoHandMace,
-                    Item.ItemType.TwoHandSword
+                    ItemType.None,
+                    ItemType.Leather,
+                    ItemType.Mail,
+                    ItemType.Plate,
+                    ItemType.Libram,
+                    ItemType.Polearm,
+                    ItemType.TwoHandAxe,
+                    ItemType.TwoHandMace,
+                    ItemType.TwoHandSword
                 }));
             }
         }
 
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationRetribution();
@@ -402,15 +402,15 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
 
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, Character.CharacterClass.Paladin, character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            if (character.Race == Character.CharacterRace.Dwarf && character.MainHand != null &&
-                    character.MainHand.Type == Item.ItemType.TwoHandMace)
+            if (character.Race == CharacterRace.Dwarf && character.MainHand != null &&
+                    character.MainHand.Type == ItemType.TwoHandMace)
                 statsRace.Expertise += 5f;
-            if (character.Race == Character.CharacterRace.Human && character.MainHand != null &&
-                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
+            if (character.Race == CharacterRace.Human && character.MainHand != null &&
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.TwoHandSword))
                 statsRace.Expertise += 3f;
             statsRace.Health -= 180f;
             statsRace.Mana -= 280f;
@@ -629,8 +629,8 @@ namespace Rawr.Retribution
 
         public override bool IsItemRelevant(Item item)
         {
-            if (item.Slot == Item.ItemSlot.OffHand ||
-            (item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Libram))
+            if (item.Slot == ItemSlot.OffHand ||
+            (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Libram))
                 return false;
             return base.IsItemRelevant(item);
         }

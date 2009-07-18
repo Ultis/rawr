@@ -235,7 +235,7 @@ namespace Rawr.DPSWarr {
 
                 case "Expertise Rating": return BasicStats.ExpertiseRating;
                 case "Expertise": return BasicStats.Expertise;
-                case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, Character.CharacterClass.Warrior);
+                case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, CharacterClass.Warrior);
                 case "Dodge %": return combatFactors.MhDodgeChance;
                 case "Parry %": return combatFactors.MhParryChance;
 

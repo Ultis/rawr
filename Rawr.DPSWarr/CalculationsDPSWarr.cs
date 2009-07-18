@@ -10,7 +10,7 @@ using System.Drawing;
 #endif
 
 namespace Rawr.DPSWarr {
-    [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
+    [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase {
         private static SpecialEffect bersEffect = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates {
@@ -221,38 +221,38 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
         }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (_relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<Item.ItemType>(new[] {
-                        Item.ItemType.None,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-                        Item.ItemType.Plate,
-                        Item.ItemType.Bow,
-                        Item.ItemType.Crossbow,
-                        Item.ItemType.Gun,
-                        Item.ItemType.Thrown,
-                        Item.ItemType.Dagger,
-                        Item.ItemType.FistWeapon,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.OneHandSword,
-                        Item.ItemType.OneHandAxe,
-                        Item.ItemType.Polearm,
-                        Item.ItemType.TwoHandMace,
-                        Item.ItemType.TwoHandSword,
-                        Item.ItemType.TwoHandAxe
+                    _relevantItemTypes = new List<ItemType>(new[] {
+                        ItemType.None,
+                        ItemType.Leather,
+                        ItemType.Mail,
+                        ItemType.Plate,
+                        ItemType.Bow,
+                        ItemType.Crossbow,
+                        ItemType.Gun,
+                        ItemType.Thrown,
+                        ItemType.Dagger,
+                        ItemType.FistWeapon,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword,
+                        ItemType.OneHandAxe,
+                        ItemType.Polearm,
+                        ItemType.TwoHandMace,
+                        ItemType.TwoHandSword,
+                        ItemType.TwoHandAxe
                     });
                 }
                 return _relevantItemTypes;
             }
         }
 
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warrior; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsDPSWarr(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
 
@@ -312,7 +312,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
             teethbonus /= 180.0f;
             calculatedStats.TeethBonus = (int)teethbonus;
-            calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
+            calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && character.MainHand.Type == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
             calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
             calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
             calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
@@ -320,7 +320,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 + calculatedStats.ArmorPenetrationStance
                 + calculatedStats.ArmorPenetrationRating2Perc;
             calculatedStats.HasteRating = stats.HasteRating;
-            calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.Warrior);
+            calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
             // DPS
 
             Rot.Initialize(calculatedStats);
@@ -384,21 +384,21 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 //Block = talents.ShieldSpecialization * 1.0f,
                 //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
                 BonusDamageMultiplier = /*(character.MainHand != null &&
-                                         (character.MainHand.Type == Item.ItemType.OneHandAxe ||
-                                         character.MainHand.Type == Item.ItemType.OneHandMace ||
-                                         character.MainHand.Type == Item.ItemType.OneHandSword ||
-                                         character.MainHand.Type == Item.ItemType.Dagger ||
-                                         character.MainHand.Type == Item.ItemType.FistWeapon)
+                                         (character.MainHand.Type == ItemType.OneHandAxe ||
+                                         character.MainHand.Type == ItemType.OneHandMace ||
+                                         character.MainHand.Type == ItemType.OneHandSword ||
+                                         character.MainHand.Type == ItemType.Dagger ||
+                                         character.MainHand.Type == ItemType.FistWeapon)
                                          ? talents.OneHandedWeaponSpecialization * 0.02f: 0f)
                                          +*/ 
                                         1f *
                                         (character.MainHand != null &&
-                                        (character.MainHand.Slot == Item.ItemSlot.TwoHand)
+                                        (character.MainHand.Slot == ItemSlot.TwoHand)
                                          ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
                                          *
                                          ((talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
-                                        (character.OffHand.Slot  == Item.ItemSlot.TwoHand ||
-                                         character.MainHand.Slot == Item.ItemSlot.TwoHand)
+                                        (character.OffHand.Slot  == ItemSlot.TwoHand ||
+                                         character.MainHand.Slot == ItemSlot.TwoHand)
                                          ? 0.90f : 1f)) -
                                          1f,
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
@@ -407,7 +407,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
                 // Removing this line, and instead adding it to CombatFactors as a buff, since statsTotal.ArmorPenetration includes arp from debuffs and not buffs, and they need to be separate
-                //ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
+                //ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
                 PhysicalHit = talents.Precision * 0.01f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -461,7 +461,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //}
 
             //statsTotal.HasteRating += haste2PT8Bonus;
-            float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Warrior);
+            float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
             float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
             if (calcOpts.FuryStance) {
@@ -573,12 +573,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot) {
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
             //Hide the ranged weapon enchants. None of them apply to melee damage at all.
             if (character != null && (character.WarriorTalents != null && enchant != null)) {
-                return enchant.Slot == Item.ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant,character,slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
+                return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant,character,slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == ItemSlot.TwoHand && slot == ItemSlot.OffHand);
             }
-            return enchant.Slot == Item.ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
+            return enchant.Slot == ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -671,16 +671,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return relevant;
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique) {
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
             if (item == null || character == null) {
                 return false;
-            } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == Item.ItemType.Polearm) {
+            } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == ItemType.Polearm) {
                 return false;
-            } else if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1) {
+            } else if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1) {
                 return true;
-            } else if (slot == Character.CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == Item.ItemSlot.TwoHand) {
+            } else if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) {
                 return false;
-            } else if (item.Type == Item.ItemType.Polearm && slot == Character.CharacterSlot.MainHand) {
+            } else if (item.Type == ItemType.Polearm && slot == CharacterSlot.MainHand) {
                 return true;
             } else {
                 return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
@@ -692,7 +692,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
                 if (talents.TitansGrip > 0) {
                     return true;
-                } else {// if (character.MainHand.Slot != Item.ItemSlot.TwoHand)
+                } else {// if (character.MainHand.Slot != ItemSlot.TwoHand)
                     return base.IncludeOffHandInCalculations(character);
                 }
             }

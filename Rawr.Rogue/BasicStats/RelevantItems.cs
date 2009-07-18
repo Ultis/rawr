@@ -2,24 +2,24 @@
 
 namespace Rawr.Rogue.BasicStats
 {
-    public class RelevantItems : List<Item.ItemType>
+    public class RelevantItems : List<ItemType>
     {
-        public static readonly List<Item.ItemType> List;
+        public static readonly List<ItemType> List;
 
         static RelevantItems()
         {
-            List = new List<Item.ItemType>(new[]
+            List = new List<ItemType>(new[]
                                                {
-                                                   Item.ItemType.None,
-                                                   Item.ItemType.Leather,
-                                                   Item.ItemType.Bow,
-                                                   Item.ItemType.Crossbow,
-                                                   Item.ItemType.Gun,
-                                                   Item.ItemType.Thrown,
-                                                   Item.ItemType.Dagger,
-                                                   Item.ItemType.FistWeapon,
-                                                   Item.ItemType.OneHandMace,
-                                                   Item.ItemType.OneHandSword
+                                                   ItemType.None,
+                                                   ItemType.Leather,
+                                                   ItemType.Bow,
+                                                   ItemType.Crossbow,
+                                                   ItemType.Gun,
+                                                   ItemType.Thrown,
+                                                   ItemType.Dagger,
+                                                   ItemType.FistWeapon,
+                                                   ItemType.OneHandMace,
+                                                   ItemType.OneHandSword
                                                });             
         }
     }

@@ -12,7 +12,7 @@ namespace Rawr.HolyPriest
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
-        public Character.CharacterRace Race { get; set; }
+        public CharacterRace Race { get; set; }
 
         public Character Character
         {
@@ -185,7 +185,7 @@ namespace Rawr.HolyPriest
             else
                 dictValues.Add("Penance", "- *No required talents");
             
-            if(Race == Character.CharacterRace.Draenei)
+            if(Race == CharacterRace.Draenei)
                 dictValues.Add("Gift of the Naaru", new GiftOfTheNaaru(BasicStats, character).ToString());
             else
                 dictValues.Add("Gift of the Naaru", "-");

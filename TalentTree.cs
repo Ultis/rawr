@@ -13,8 +13,8 @@ namespace Rawr
         private TalentItem[,] _talents = new TalentItem[11, 4];
         private Image _background;
 
-        private Character.CharacterClass _characterClass;
-        public Character.CharacterClass CharacterClass
+        private CharacterClass _characterClass;
+        public CharacterClass CharacterClass
         {
             get { return _characterClass; }
             set { _characterClass = value; }
@@ -38,9 +38,9 @@ namespace Rawr
             return retval;
         }
 
-        public TalentTree() : this(Character.CharacterClass.Paladin, "Holy") { }
+        public TalentTree() : this(CharacterClass.Paladin, "Holy") { }
 
-        public TalentTree(Character.CharacterClass characterClass, string treeName)
+        public TalentTree(CharacterClass characterClass, string treeName)
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);

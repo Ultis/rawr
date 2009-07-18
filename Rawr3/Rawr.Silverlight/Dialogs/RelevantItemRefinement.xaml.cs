@@ -15,8 +15,8 @@ namespace Rawr.Silverlight
     public partial class RelevantItemRefinement : ChildWindow
     {
 
-        private List<Item.ItemType> modelRelevant;
-        private List<Item.ItemType> userRelevant;
+        private List<ItemType> modelRelevant;
+        private List<ItemType> userRelevant;
 
         private List<CheckBox> checkBoxes;
 
@@ -63,15 +63,15 @@ namespace Rawr.Silverlight
             {
                 if (box == CheckBoxRelic)
                 {
-                    box.IsEnabled = modelRelevant.Contains(Item.ItemType.Libram) || modelRelevant.Contains(Item.ItemType.Idol)
-                      || modelRelevant.Contains(Item.ItemType.Totem) || modelRelevant.Contains(Item.ItemType.Sigil);
-                    box.IsChecked = userRelevant.Contains(Item.ItemType.Libram) || userRelevant.Contains(Item.ItemType.Idol)
-                        || userRelevant.Contains(Item.ItemType.Totem) || userRelevant.Contains(Item.ItemType.Sigil);
+                    box.IsEnabled = modelRelevant.Contains(ItemType.Libram) || modelRelevant.Contains(ItemType.Idol)
+                      || modelRelevant.Contains(ItemType.Totem) || modelRelevant.Contains(ItemType.Sigil);
+                    box.IsChecked = userRelevant.Contains(ItemType.Libram) || userRelevant.Contains(ItemType.Idol)
+                        || userRelevant.Contains(ItemType.Totem) || userRelevant.Contains(ItemType.Sigil);
                 }
                 else
                 {
-                    box.IsEnabled = modelRelevant.Contains((Item.ItemType)Enum.Parse(typeof(Item.ItemType), (string)box.Tag, true));
-                    box.IsChecked = userRelevant.Contains((Item.ItemType)Enum.Parse(typeof(Item.ItemType), (string)box.Tag, true));
+                    box.IsEnabled = modelRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
+                    box.IsChecked = userRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
                 }
             }
         }
@@ -86,14 +86,14 @@ namespace Rawr.Silverlight
                 {
                     if (box == CheckBoxRelic)
                     {
-                        if (modelRelevant.Contains(Item.ItemType.Libram)) userRelevant.Add(Item.ItemType.Libram);
-                        if (modelRelevant.Contains(Item.ItemType.Totem)) userRelevant.Add(Item.ItemType.Totem);
-                        if (modelRelevant.Contains(Item.ItemType.Idol)) userRelevant.Add(Item.ItemType.Idol);
-                        if (modelRelevant.Contains(Item.ItemType.Sigil)) userRelevant.Add(Item.ItemType.Sigil);
+                        if (modelRelevant.Contains(ItemType.Libram)) userRelevant.Add(ItemType.Libram);
+                        if (modelRelevant.Contains(ItemType.Totem)) userRelevant.Add(ItemType.Totem);
+                        if (modelRelevant.Contains(ItemType.Idol)) userRelevant.Add(ItemType.Idol);
+                        if (modelRelevant.Contains(ItemType.Sigil)) userRelevant.Add(ItemType.Sigil);
                     }
                     else
                     {
-                        userRelevant.Add((Item.ItemType)Enum.Parse(typeof(Item.ItemType), (string)box.Tag, true));
+                        userRelevant.Add((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
                     }
                 }
             }

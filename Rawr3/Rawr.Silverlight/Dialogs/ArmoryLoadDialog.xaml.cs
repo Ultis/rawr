@@ -17,7 +17,7 @@ namespace Rawr.Silverlight
 
         public string CharacterName { get; private set; }
         public string Realm { get; private set; }
-        public Character.CharacterRegion Region { get; private set; }
+        public CharacterRegion Region { get; private set; }
 
         public ArmoryLoadDialog()
         {
@@ -28,7 +28,7 @@ namespace Rawr.Silverlight
         {
             CharacterName = NameText.Text;
             Realm = RealmText.Text;
-            Region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion),
+            Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion),
                 ((ComboBoxItem)RegionCombo.SelectedItem).Content.ToString(), false);
 
             this.DialogResult = true;

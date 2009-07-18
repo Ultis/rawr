@@ -162,7 +162,7 @@ namespace Rawr.TankDK
                 fHR = 0f;
                 fPH = 0f;
             }
-            float fPercHaste = StatConversion.GetHasteFromRating(fHR, Character.CharacterClass.DeathKnight) + fPH;
+            float fPercHaste = StatConversion.GetHasteFromRating(fHR, CharacterClass.DeathKnight) + fPH;
             float fHastedGCD = Math.Max( 1f, fNormalGCD/(1f + fPercHaste) );
             return fHastedGCD;
         }

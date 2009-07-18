@@ -44,8 +44,8 @@ namespace Rawr.DPSWarr {
             public float MhWhiteDPS {
                 get {
                     float wepSpeed = _combatFactors.MainHandSpeed;
-                    if (_combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand &&
-                        (_character.OffHand != null && _combatFactors.OffHand.Slot == Item.ItemSlot.TwoHand) &&
+                    if (_combatFactors.MainHand.Slot == ItemSlot.TwoHand &&
+                        (_character.OffHand != null && _combatFactors.OffHand.Slot == ItemSlot.TwoHand) &&
                         _talents.TitansGrip != 1f)
                     {
                         wepSpeed += (1.5f - (0.5f * _talents.ImprovedSlam)) / SLAM_FREQ;
@@ -61,7 +61,7 @@ namespace Rawr.DPSWarr {
                     float ohWhiteDPS = OhAvgSwingDmg;
                     ohWhiteDPS /= _combatFactors.OffHandSpeed;
                     if (_combatFactors.OffHand != null && _combatFactors.OffHand.DPS > 0 &&
-                        (_combatFactors.MainHand.Slot != Item.ItemSlot.TwoHand || _talents.TitansGrip == 1))
+                        (_combatFactors.MainHand.Slot != ItemSlot.TwoHand || _talents.TitansGrip == 1))
                     {
                         return (float)Math.Max(0f, ohWhiteDPS);
                     } else { return 0f; }
@@ -860,9 +860,9 @@ namespace Rawr.DPSWarr {
             // Functions
             public override float ActivatesOverride {
                 get {
-                    if (combatFactors.MainHand.Type != Item.ItemType.TwoHandSword) { return 0.0f; }
+                    if (combatFactors.MainHand.Type != ItemType.TwoHandSword) { return 0.0f; }
                     float wepSpeed = combatFactors.MainHandSpeed;
-                    if (combatFactors.MainHand.Slot == Item.ItemSlot.TwoHand && Talents.TitansGrip != 1) {
+                    if (combatFactors.MainHand.Slot == ItemSlot.TwoHand && Talents.TitansGrip != 1) {
                         wepSpeed += (1.5f - (0.5f * Talents.ImprovedSlam)) / 5f;
                     }
                     float whiteHits = (1f / wepSpeed);

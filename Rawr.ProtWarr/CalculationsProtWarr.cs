@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.ProtWarr
 {
-	[Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", Character.CharacterClass.Warrior)]
+	[Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", CharacterClass.Warrior)]
 	public class CalculationsProtWarr : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -232,29 +232,29 @@ threat and limited threat scaled by the threat scale.",
 			}
 		}
 
-		private List<Item.ItemType> _relevantItemTypes = null;
-		public override List<Item.ItemType> RelevantItemTypes
+		private List<ItemType> _relevantItemTypes = null;
+		public override List<ItemType> RelevantItemTypes
 		{
 			get
 			{
 				if (_relevantItemTypes == null)
 				{
-					_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-                        Item.ItemType.Plate,
-                        Item.ItemType.Bow,
-                        Item.ItemType.Crossbow,
-                        Item.ItemType.Gun,
-                        Item.ItemType.Thrown,
-                        Item.ItemType.Arrow,
-                        Item.ItemType.Bullet,
-                        Item.ItemType.FistWeapon,
-                        Item.ItemType.Dagger,
-                        Item.ItemType.OneHandAxe,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.OneHandSword,
-                        Item.ItemType.Shield
+						ItemType.None,
+                        ItemType.Plate,
+                        ItemType.Bow,
+                        ItemType.Crossbow,
+                        ItemType.Gun,
+                        ItemType.Thrown,
+                        ItemType.Arrow,
+                        ItemType.Bullet,
+                        ItemType.FistWeapon,
+                        ItemType.Dagger,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword,
+                        ItemType.Shield
 					});
 				}
 				return _relevantItemTypes;
@@ -293,7 +293,7 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
         }
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warrior; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtWarr(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtWarr(); }
 
@@ -437,7 +437,7 @@ threat and limited threat scaled by the threat scale.",
             Stats statsRace;
             switch (character.Race)
             {
-                case Character.CharacterRace.Human:
+                case CharacterRace.Human:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -452,13 +452,13 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     if ((character.MainHand != null) &&
-                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
+                        ((character.MainHand.Item.Type == ItemType.OneHandSword) ||
+                         (character.MainHand.Item.Type == ItemType.OneHandMace)))
                     {
                         statsRace.Expertise += 3f;
                     }
                     break;
-                case Character.CharacterRace.Orc:
+                case CharacterRace.Orc:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -474,12 +474,12 @@ threat and limited threat scaled by the threat scale.",
                     };
 
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == Item.ItemType.OneHandAxe))
+                        (character.MainHand.Item.Type == ItemType.OneHandAxe))
                     {
                         statsRace.Expertise += 5f;
                     }
                     break;
-                case Character.CharacterRace.Dwarf:
+                case CharacterRace.Dwarf:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -494,12 +494,12 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == Item.ItemType.OneHandMace))
+                        (character.MainHand.Item.Type == ItemType.OneHandMace))
                     {
                         statsRace.Expertise += 5f;
                     }
                     break;
-                case Character.CharacterRace.NightElf:
+                case CharacterRace.NightElf:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -514,7 +514,7 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     break;
-                case Character.CharacterRace.Undead:
+                case CharacterRace.Undead:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -529,7 +529,7 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     break;
-                case Character.CharacterRace.Tauren:
+                case CharacterRace.Tauren:
                     statsRace = new Stats()
                     {
                         Health = 8338f,
@@ -544,7 +544,7 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     break;
-                case Character.CharacterRace.Gnome:
+                case CharacterRace.Gnome:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -559,7 +559,7 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     break;
-                case Character.CharacterRace.Troll:
+                case CharacterRace.Troll:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -574,7 +574,7 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     break;
-                case Character.CharacterRace.Draenei:
+                case CharacterRace.Draenei:
                     statsRace = new Stats()
                     {
                         Health = 7941f,
@@ -714,13 +714,13 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandMace))
+            if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandMace))
             {
                 statsTotal.ArmorPenetration += talents.MaceSpecialization * 0.03f;
             }
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.BonusCritMultiplier = statsRace.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
-            if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandAxe))
+            if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
             {
                 statsTotal.PhysicalCrit += talents.PoleaxeSpecialization * 0.01f;
                 statsTotal.BonusCritMultiplier += talents.PoleaxeSpecialization * 0.01f;
@@ -1002,9 +1002,9 @@ threat and limited threat scaled by the threat scale.",
 			}
 		}
         //Hide the ranged weapon enchants. None of them apply to melee damage at all.
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            return enchant.Slot == Item.ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
+            return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
         }
 
         public override bool IsItemRelevant(Item item)

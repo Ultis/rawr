@@ -1115,7 +1115,7 @@ namespace Rawr.Mage
                 }
                 #endregion
                 #region Wand
-                if (character.Ranged != null && character.Ranged.Item.Type == Item.ItemType.Wand)
+                if (character.Ranged != null && character.Ranged.Item.Type == ItemType.Wand)
                 {
                     int wandSegments = (restrictManaUse) ? segmentList.Count : 1;
                     Spell w = new WandTemplate(calculationResult, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed).GetSpell(calculationResult.BaseState);

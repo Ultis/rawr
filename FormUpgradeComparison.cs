@@ -86,7 +86,7 @@ namespace Rawr
                         data = (SerializationData)serializer.Deserialize(reader);
                         reader.Close();
                     }
-                    comparisonGraph1.EquipSlot = Character.CharacterSlot.AutoSelect;
+                    comparisonGraph1.EquipSlot = CharacterSlot.AutoSelect;
                     comparisonGraph1.Character = FormMain.Instance.Character;
                     SetCustomSubpoints(data.CustomSubpoints);
 
@@ -133,15 +133,15 @@ namespace Rawr
 			}
         }
 
-        public void LoadData(Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> calculations, string[] customSubpoints)
+        public void LoadData(Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> calculations, string[] customSubpoints)
         {
-            comparisonGraph1.EquipSlot = Character.CharacterSlot.AutoSelect;
+            comparisonGraph1.EquipSlot = CharacterSlot.AutoSelect;
             comparisonGraph1.Character = FormMain.Instance.Character;
             SetCustomSubpoints(customSubpoints);
 
             itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
             List<ComparisonCalculationUpgrades> all = new List<ComparisonCalculationUpgrades>();
-            foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in calculations)
+            foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in calculations)
             {
                 all.AddRange(kvp.Value);
                 itemCalculations["Gear." + kvp.Key.ToString()] = kvp.Value.ToArray();

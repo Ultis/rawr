@@ -17,7 +17,7 @@ namespace Rawr
     {
 
         public string Name { get; set; }
-        public Character.CharacterClass Class { get; set; }
+        public CharacterClass Class { get; set; }
         public string Spec { get; set; }
 
         public int Tree1 { get; set; }
@@ -50,7 +50,7 @@ namespace Rawr
             writer.Close();
         }
 
-        public static SavedTalentSpecList SpecsFor(Character.CharacterClass charClass)
+        public static SavedTalentSpecList SpecsFor(CharacterClass charClass)
         {
             SavedTalentSpecList ret = new SavedTalentSpecList();
             foreach (SavedTalentSpec sts in AllSpecs)
@@ -77,15 +77,15 @@ namespace Rawr
         {
             if (Spec == null) return null;
             TalentsBase spec;
-            if (Class == Character.CharacterClass.DeathKnight) spec = new DeathKnightTalents(Spec);
-            else if (Class == Character.CharacterClass.Warrior) spec = new WarriorTalents(Spec);
-            else if (Class == Character.CharacterClass.Paladin) spec = new PaladinTalents(Spec);
-            else if (Class == Character.CharacterClass.Shaman) spec = new ShamanTalents(Spec);
-            else if (Class == Character.CharacterClass.Hunter) spec = new HunterTalents(Spec);
-            else if (Class == Character.CharacterClass.Rogue) spec = new RogueTalents(Spec);
-            else if (Class == Character.CharacterClass.Druid) spec = new DruidTalents(Spec);
-            else if (Class == Character.CharacterClass.Warlock) spec = new WarlockTalents(Spec);
-            else if (Class == Character.CharacterClass.Priest) spec = new PriestTalents(Spec);
+            if (Class == CharacterClass.DeathKnight) spec = new DeathKnightTalents(Spec);
+            else if (Class == CharacterClass.Warrior) spec = new WarriorTalents(Spec);
+            else if (Class == CharacterClass.Paladin) spec = new PaladinTalents(Spec);
+            else if (Class == CharacterClass.Shaman) spec = new ShamanTalents(Spec);
+            else if (Class == CharacterClass.Hunter) spec = new HunterTalents(Spec);
+            else if (Class == CharacterClass.Rogue) spec = new RogueTalents(Spec);
+            else if (Class == CharacterClass.Druid) spec = new DruidTalents(Spec);
+            else if (Class == CharacterClass.Warlock) spec = new WarlockTalents(Spec);
+            else if (Class == CharacterClass.Priest) spec = new PriestTalents(Spec);
             else spec = new MageTalents(Spec);
             return spec;
         }

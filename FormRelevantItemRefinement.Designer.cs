@@ -85,7 +85,7 @@
             this.checkBoxPlateArmor.Name = "checkBoxPlateArmor";
             this.checkBoxPlateArmor.Size = new System.Drawing.Size(50, 17);
             this.checkBoxPlateArmor.TabIndex = 3;
-            this.checkBoxPlateArmor.Tag = Rawr.Item.ItemType.Plate;
+            this.checkBoxPlateArmor.Tag = Rawr.ItemType.Plate;
             this.checkBoxPlateArmor.Text = "Plate";
             this.checkBoxPlateArmor.UseVisualStyleBackColor = true;
             // 
@@ -97,7 +97,7 @@
             this.checkBoxMailArmor.Name = "checkBoxMailArmor";
             this.checkBoxMailArmor.Size = new System.Drawing.Size(45, 17);
             this.checkBoxMailArmor.TabIndex = 2;
-            this.checkBoxMailArmor.Tag = Rawr.Item.ItemType.Mail;
+            this.checkBoxMailArmor.Tag = Rawr.ItemType.Mail;
             this.checkBoxMailArmor.Text = "Mail";
             this.checkBoxMailArmor.UseVisualStyleBackColor = true;
             // 
@@ -109,7 +109,7 @@
             this.checkBoxLeatherArmor.Name = "checkBoxLeatherArmor";
             this.checkBoxLeatherArmor.Size = new System.Drawing.Size(62, 17);
             this.checkBoxLeatherArmor.TabIndex = 1;
-            this.checkBoxLeatherArmor.Tag = Rawr.Item.ItemType.Leather;
+            this.checkBoxLeatherArmor.Tag = Rawr.ItemType.Leather;
             this.checkBoxLeatherArmor.Text = "Leather";
             this.checkBoxLeatherArmor.UseVisualStyleBackColor = true;
             // 
@@ -121,7 +121,7 @@
             this.checkBoxClothArmor.Name = "checkBoxClothArmor";
             this.checkBoxClothArmor.Size = new System.Drawing.Size(50, 17);
             this.checkBoxClothArmor.TabIndex = 0;
-            this.checkBoxClothArmor.Tag = Rawr.Item.ItemType.Cloth;
+            this.checkBoxClothArmor.Tag = Rawr.ItemType.Cloth;
             this.checkBoxClothArmor.Text = "Cloth";
             this.checkBoxClothArmor.UseVisualStyleBackColor = true;
             // 
@@ -158,7 +158,7 @@
             this.checkBoxBow.Name = "checkBoxBow";
             this.checkBoxBow.Size = new System.Drawing.Size(47, 17);
             this.checkBoxBow.TabIndex = 10;
-            this.checkBoxBow.Tag = Rawr.Item.ItemType.Bow;
+            this.checkBoxBow.Tag = Rawr.ItemType.Bow;
             this.checkBoxBow.Text = "Bow";
             this.checkBoxBow.UseVisualStyleBackColor = true;
             // 
@@ -169,7 +169,7 @@
             this.checkBoxCrossbow.Name = "checkBoxCrossbow";
             this.checkBoxCrossbow.Size = new System.Drawing.Size(72, 17);
             this.checkBoxCrossbow.TabIndex = 11;
-            this.checkBoxCrossbow.Tag = Rawr.Item.ItemType.Crossbow;
+            this.checkBoxCrossbow.Tag = Rawr.ItemType.Crossbow;
             this.checkBoxCrossbow.Text = "Crossbow";
             this.checkBoxCrossbow.UseVisualStyleBackColor = true;
             // 
@@ -180,7 +180,7 @@
             this.checkBoxThrown.Name = "checkBoxThrown";
             this.checkBoxThrown.Size = new System.Drawing.Size(62, 17);
             this.checkBoxThrown.TabIndex = 14;
-            this.checkBoxThrown.Tag = Rawr.Item.ItemType.Thrown;
+            this.checkBoxThrown.Tag = Rawr.ItemType.Thrown;
             this.checkBoxThrown.Text = "Thrown";
             this.checkBoxThrown.UseVisualStyleBackColor = true;
             // 
@@ -191,7 +191,7 @@
             this.checkBoxWand.Name = "checkBoxWand";
             this.checkBoxWand.Size = new System.Drawing.Size(55, 17);
             this.checkBoxWand.TabIndex = 13;
-            this.checkBoxWand.Tag = Rawr.Item.ItemType.Wand;
+            this.checkBoxWand.Tag = Rawr.ItemType.Wand;
             this.checkBoxWand.Text = "Wand";
             this.checkBoxWand.UseVisualStyleBackColor = true;
             // 
@@ -202,7 +202,7 @@
             this.checkBoxGun.Name = "checkBoxGun";
             this.checkBoxGun.Size = new System.Drawing.Size(46, 17);
             this.checkBoxGun.TabIndex = 12;
-            this.checkBoxGun.Tag = Rawr.Item.ItemType.Gun;
+            this.checkBoxGun.Tag = Rawr.ItemType.Gun;
             this.checkBoxGun.Text = "Gun";
             this.checkBoxGun.UseVisualStyleBackColor = true;
             // 
@@ -227,7 +227,7 @@
             this.checkBoxTwoHandedSword.Name = "checkBoxTwoHandedSword";
             this.checkBoxTwoHandedSword.Size = new System.Drawing.Size(106, 17);
             this.checkBoxTwoHandedSword.TabIndex = 7;
-            this.checkBoxTwoHandedSword.Tag = Rawr.Item.ItemType.TwoHandSword;
+            this.checkBoxTwoHandedSword.Tag = Rawr.ItemType.TwoHandSword;
             this.checkBoxTwoHandedSword.Text = "2 Handed Sword";
             this.checkBoxTwoHandedSword.UseVisualStyleBackColor = true;
             // 
@@ -238,7 +238,7 @@
             this.checkBoxTwoHandedAxe.Name = "checkBoxTwoHandedAxe";
             this.checkBoxTwoHandedAxe.Size = new System.Drawing.Size(94, 17);
             this.checkBoxTwoHandedAxe.TabIndex = 5;
-            this.checkBoxTwoHandedAxe.Tag = Rawr.Item.ItemType.TwoHandAxe;
+            this.checkBoxTwoHandedAxe.Tag = Rawr.ItemType.TwoHandAxe;
             this.checkBoxTwoHandedAxe.Text = "2 Handed Axe";
             this.checkBoxTwoHandedAxe.UseVisualStyleBackColor = true;
             // 
@@ -249,7 +249,7 @@
             this.checkBoxTwoHandedMace.Name = "checkBoxTwoHandedMace";
             this.checkBoxTwoHandedMace.Size = new System.Drawing.Size(103, 17);
             this.checkBoxTwoHandedMace.TabIndex = 6;
-            this.checkBoxTwoHandedMace.Tag = Rawr.Item.ItemType.TwoHandMace;
+            this.checkBoxTwoHandedMace.Tag = Rawr.ItemType.TwoHandMace;
             this.checkBoxTwoHandedMace.Text = "2 Handed Mace";
             this.checkBoxTwoHandedMace.UseVisualStyleBackColor = true;
             // 
@@ -260,7 +260,7 @@
             this.checkBoxStaff.Name = "checkBoxStaff";
             this.checkBoxStaff.Size = new System.Drawing.Size(48, 17);
             this.checkBoxStaff.TabIndex = 8;
-            this.checkBoxStaff.Tag = Rawr.Item.ItemType.Staff;
+            this.checkBoxStaff.Tag = Rawr.ItemType.Staff;
             this.checkBoxStaff.Text = "Staff";
             this.checkBoxStaff.UseVisualStyleBackColor = true;
             // 
@@ -271,7 +271,7 @@
             this.checkBoxPolearm.Name = "checkBoxPolearm";
             this.checkBoxPolearm.Size = new System.Drawing.Size(64, 17);
             this.checkBoxPolearm.TabIndex = 9;
-            this.checkBoxPolearm.Tag = Rawr.Item.ItemType.Polearm;
+            this.checkBoxPolearm.Tag = Rawr.ItemType.Polearm;
             this.checkBoxPolearm.Text = "Polearm";
             this.checkBoxPolearm.UseVisualStyleBackColor = true;
             // 
@@ -296,7 +296,7 @@
             this.checkBoxDagger.Name = "checkBoxDagger";
             this.checkBoxDagger.Size = new System.Drawing.Size(61, 17);
             this.checkBoxDagger.TabIndex = 0;
-            this.checkBoxDagger.Tag = Rawr.Item.ItemType.Dagger;
+            this.checkBoxDagger.Tag = Rawr.ItemType.Dagger;
             this.checkBoxDagger.Text = "Dagger";
             this.checkBoxDagger.UseVisualStyleBackColor = true;
             // 
@@ -307,7 +307,7 @@
             this.checkBoxFistWeapon.Name = "checkBoxFistWeapon";
             this.checkBoxFistWeapon.Size = new System.Drawing.Size(86, 17);
             this.checkBoxFistWeapon.TabIndex = 1;
-            this.checkBoxFistWeapon.Tag = Rawr.Item.ItemType.FistWeapon;
+            this.checkBoxFistWeapon.Tag = Rawr.ItemType.FistWeapon;
             this.checkBoxFistWeapon.Text = "Fist Weapon";
             this.checkBoxFistWeapon.UseVisualStyleBackColor = true;
             // 
@@ -318,7 +318,7 @@
             this.checkBoxOneHandedAxe.Name = "checkBoxOneHandedAxe";
             this.checkBoxOneHandedAxe.Size = new System.Drawing.Size(94, 17);
             this.checkBoxOneHandedAxe.TabIndex = 2;
-            this.checkBoxOneHandedAxe.Tag = Rawr.Item.ItemType.OneHandAxe;
+            this.checkBoxOneHandedAxe.Tag = Rawr.ItemType.OneHandAxe;
             this.checkBoxOneHandedAxe.Text = "1 Handed Axe";
             this.checkBoxOneHandedAxe.UseVisualStyleBackColor = true;
             // 
@@ -329,7 +329,7 @@
             this.checkBoxOneHandedMace.Name = "checkBoxOneHandedMace";
             this.checkBoxOneHandedMace.Size = new System.Drawing.Size(103, 17);
             this.checkBoxOneHandedMace.TabIndex = 3;
-            this.checkBoxOneHandedMace.Tag = Rawr.Item.ItemType.OneHandMace;
+            this.checkBoxOneHandedMace.Tag = Rawr.ItemType.OneHandMace;
             this.checkBoxOneHandedMace.Text = "1 Handed Mace";
             this.checkBoxOneHandedMace.UseVisualStyleBackColor = true;
             // 
@@ -340,7 +340,7 @@
             this.checkBoxOneHandedSword.Name = "checkBoxOneHandedSword";
             this.checkBoxOneHandedSword.Size = new System.Drawing.Size(106, 17);
             this.checkBoxOneHandedSword.TabIndex = 4;
-            this.checkBoxOneHandedSword.Tag = Rawr.Item.ItemType.OneHandSword;
+            this.checkBoxOneHandedSword.Tag = Rawr.ItemType.OneHandSword;
             this.checkBoxOneHandedSword.Text = "1 Handed Sword";
             this.checkBoxOneHandedSword.UseVisualStyleBackColor = true;
             // 
@@ -373,7 +373,7 @@
             this.checkBoxMisc.Name = "checkBoxMisc";
             this.checkBoxMisc.Size = new System.Drawing.Size(51, 17);
             this.checkBoxMisc.TabIndex = 1;
-            this.checkBoxMisc.Tag = Rawr.Item.ItemType.None;
+            this.checkBoxMisc.Tag = Rawr.ItemType.None;
             this.checkBoxMisc.Text = "Misc.";
             this.checkBoxMisc.UseVisualStyleBackColor = true;
             // 
@@ -384,7 +384,7 @@
             this.checkBoxShield.Name = "checkBoxShield";
             this.checkBoxShield.Size = new System.Drawing.Size(55, 17);
             this.checkBoxShield.TabIndex = 0;
-            this.checkBoxShield.Tag = Rawr.Item.ItemType.Shield;
+            this.checkBoxShield.Tag = Rawr.ItemType.Shield;
             this.checkBoxShield.Text = "Shield";
             this.checkBoxShield.UseVisualStyleBackColor = true;
             // 

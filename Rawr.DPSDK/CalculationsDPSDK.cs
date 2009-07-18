@@ -10,8 +10,8 @@ using System.Drawing;
 
 namespace Rawr.DPSDK
 {
-    //[Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", Character.CharacterClass.Paladin)]  wont work until wotlk goes live on wowhead
-    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
+    //[Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.Paladin)]  wont work until wotlk goes live on wowhead
+    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -207,30 +207,30 @@ namespace Rawr.DPSDK
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSDK()); }
         }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Mail,
-                        Item.ItemType.Plate,
-                        Item.ItemType.Sigil,
-                        Item.ItemType.Polearm,
-                        Item.ItemType.TwoHandAxe,
-                        Item.ItemType.TwoHandMace,
-                        Item.ItemType.TwoHandSword,
-                        Item.ItemType.OneHandAxe,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.OneHandSword
+						ItemType.None,
+                        ItemType.Leather,
+                        ItemType.Mail,
+                        ItemType.Plate,
+                        ItemType.Sigil,
+                        ItemType.Polearm,
+                        ItemType.TwoHandAxe,
+                        ItemType.TwoHandMace,
+                        ItemType.TwoHandSword,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword
 					}));
             }
         }
 
-        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.DeathKnight; } }
+        public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationDPSDK();
@@ -291,9 +291,9 @@ namespace Rawr.DPSDK
 #if SILVERLIGHT
             if (character != null && character.MainHand != null && character.MainHand.Item == null)
             {
-                character.MainHand.Item = new Item("Test Weapon", Item.ItemQuality.Artifact, Item.ItemType.TwoHandAxe, 12345, "",
-                   Item.ItemSlot.TwoHand, "", false, new Stats() { Strength = 100f }, new Stats() { }, Item.ItemSlot.None, Item.ItemSlot.None,
-                   Item.ItemSlot.None, 500, 1500, Item.ItemDamageType.Physical, 3.6f, "");
+                character.MainHand.Item = new Item("Test Weapon", ItemQuality.Artifact, ItemType.TwoHandAxe, 12345, "",
+                   ItemSlot.TwoHand, "", false, new Stats() { Strength = 100f }, new Stats() { }, ItemSlot.None, ItemSlot.None,
+                   ItemSlot.None, 500, 1500, ItemDamageType.Physical, 3.6f, "");
             }
 #endif
 
@@ -399,7 +399,7 @@ namespace Rawr.DPSDK
 
                 #region racials
                 {
-                    if (character.Race == Character.CharacterRace.Orc)
+                    if (character.Race == CharacterRace.Orc)
                     {
                         commandMult += .05f;
                     }
@@ -408,7 +408,7 @@ namespace Rawr.DPSDK
 
                 #region Killing Machine
                 {
-                    float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight))); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
+                    float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                     float addHastePercent = 1f;
 
 
@@ -445,7 +445,7 @@ namespace Rawr.DPSDK
 
                 #region Cinderglacier
                 {
-                    /*    if (character.GetEnchantBySlot(Character.CharacterSlot.MainHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.MainHand).Id == 3369)
+                    /*    if (character.GetEnchantBySlot(CharacterSlot.MainHand) != null && character.GetEnchantBySlot(CharacterSlot.MainHand).Id == 3369)
                         {
                             float shadowFrostAbilitiesPerSecond = (calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
                                 calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) / combatTable.realDuration;
@@ -453,7 +453,7 @@ namespace Rawr.DPSDK
                             float avgPPS = temp.GetAverageUptime(combatTable.MH.hastedSpeed, 1f - calcs.AvoidedAttacks, combatTable.MH.baseSpeed, calcOpts.FightLength * 60f)/60;
                             CinderglacierMultiplier *= 1f + (avgPPS * 2) / shadowFrostAbilitiesPerSecond;
                         }
-                        if (character.GetEnchantBySlot(Character.CharacterSlot.OffHand) != null && character.GetEnchantBySlot(Character.CharacterSlot.OffHand).Id == 3369)
+                        if (character.GetEnchantBySlot(CharacterSlot.OffHand) != null && character.GetEnchantBySlot(CharacterSlot.OffHand).Id == 3369)
                         {
                             float shadowFrostAbilitiesPerSecond = (calcOpts.rotation.DeathCoil + calcOpts.rotation.FrostStrike +
                                 calcOpts.rotation.ScourgeStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast) / combatTable.realDuration;
@@ -1249,7 +1249,7 @@ namespace Rawr.DPSDK
 
                 #region racials
                 {
-                    if (character.Race == Character.CharacterRace.Orc)
+                    if (character.Race == CharacterRace.Orc)
                     {
                         commandMult += .05f;
                     }
@@ -1258,7 +1258,7 @@ namespace Rawr.DPSDK
 
                 #region Killing Machine
                 {
-                    float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.DeathKnight))) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
+                    float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                     float addHastePercent = 1f;
 
                     addHastePercent += stats.PhysicalHaste;
@@ -2089,34 +2089,34 @@ namespace Rawr.DPSDK
             Stats statsRace;
             switch (character.Race)
             {
-                case Character.CharacterRace.Human:
+                case CharacterRace.Human:
                     statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 146f, Health = 2169f };
                     break;
-                case Character.CharacterRace.Dwarf:
+                case CharacterRace.Dwarf:
                     statsRace = new Stats() { Strength = 110f, Agility = 69f, Stamina = 102f, Intellect = 28f, Spirit = 41f, Armor = 138f, Health = 2199f };
                     break;
-                case Character.CharacterRace.NightElf:
+                case CharacterRace.NightElf:
                     statsRace = new Stats() { Strength = 105f, Agility = 78f, Stamina = 98f, Intellect = 29f, Spirit = 42f, Armor = 156f, Health = 2159f };
                     break;
-                case Character.CharacterRace.Gnome:
+                case CharacterRace.Gnome:
                     statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 152f, Health = 2159f };
                     break;
-                case Character.CharacterRace.Draenei:
+                case CharacterRace.Draenei:
                     statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 140f, Health = 2159f };
                     break;
-                case Character.CharacterRace.Orc:
+                case CharacterRace.Orc:
                     statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 140f, Health = 2189f };
                     break;
-                case Character.CharacterRace.Troll:
+                case CharacterRace.Troll:
                     statsRace = new Stats() { Strength = 109f, Agility = 75f, Stamina = 100f, Intellect = 25f, Spirit = 43f, Armor = 150f, Health = 2179f };
                     break;
-                case Character.CharacterRace.Undead:
+                case CharacterRace.Undead:
                     statsRace = new Stats() { Strength = 107f, Agility = 71f, Stamina = 100f, Intellect = 27f, Spirit = 47f, Armor = 142f, Health = 2179f };
                     break;
-                case Character.CharacterRace.BloodElf:
+                case CharacterRace.BloodElf:
                     statsRace = new Stats() { Strength = 105f, Agility = 75f, Stamina = 97f, Intellect = 33f, Spirit = 41f, Armor = 150f, Health = 2149f };
                     break;
-                case Character.CharacterRace.Tauren:
+                case CharacterRace.Tauren:
                     statsRace = new Stats() { Strength = 113f, Agility = 68f, Stamina = 101f, Intellect = 24f, Spirit = 34f, Armor = 136f, Health = 2298f };
                     break;
 
@@ -2302,8 +2302,8 @@ namespace Rawr.DPSDK
 
         public override bool IsItemRelevant(Item item)
         {
-            if (item.Slot == Item.ItemSlot.OffHand /*  ||
-                (item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Sigil) */
+            if (item.Slot == ItemSlot.OffHand /*  ||
+                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) */
                                                                                           )
                 return false;
             return base.IsItemRelevant(item);

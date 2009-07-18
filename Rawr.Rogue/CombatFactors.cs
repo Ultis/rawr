@@ -32,12 +32,12 @@ namespace Rawr.Rogue
 
         public float MhNormalizedAttackSpeed
         {
-            get { return MainHand.Type == Item.ItemType.Dagger ? 1.7f : 2.4f; }
+            get { return MainHand.Type == ItemType.Dagger ? 1.7f : 2.4f; }
         }
 
         public float OhNormalizedAttackSpeed
         {
-            get { return OffHand.Type == Item.ItemType.Dagger ? 1.7f : 2.4f; }
+            get { return OffHand.Type == ItemType.Dagger ? 1.7f : 2.4f; }
         }
 
         public float DamageReduction
@@ -238,7 +238,7 @@ namespace Rawr.Rogue
         private float CalcCrit(Item weapon)
         {
             var crit = _stats.PhysicalCrit + CritFromCritRating;
-            if (weapon.Type == Item.ItemType.Dagger || weapon.Type == Item.ItemType.FistWeapon)
+            if (weapon.Type == ItemType.Dagger || weapon.Type == ItemType.FistWeapon)
             {
                 crit += Talents.CloseQuartersCombat.Bonus;
             }
@@ -249,9 +249,9 @@ namespace Rawr.Rogue
         {
             var baseExpertise = BaseExpertise;
 
-            if (_character.Race == Character.CharacterRace.Human)
+            if (_character.Race == CharacterRace.Human)
             {
-                if (weapon != null && (weapon.Type == Item.ItemType.OneHandSword || weapon.Type == Item.ItemType.OneHandMace))
+                if (weapon != null && (weapon.Type == ItemType.OneHandSword || weapon.Type == ItemType.OneHandMace))
                     baseExpertise += 5f;
             }
 

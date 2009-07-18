@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace Rawr.Mage
 {
-	[Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", Character.CharacterClass.Mage)]
+	[Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", CharacterClass.Mage)]
     public sealed class CalculationsMage : CalculationsBase
     {
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
@@ -234,21 +234,21 @@ namespace Rawr.Mage
             }
         }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
                 if (_relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-						Item.ItemType.Cloth,
-						Item.ItemType.Dagger,
-						Item.ItemType.OneHandSword,
-						Item.ItemType.Staff,
-						Item.ItemType.Wand,
+						ItemType.None,
+						ItemType.Cloth,
+						ItemType.Dagger,
+						ItemType.OneHandSword,
+						ItemType.Staff,
+						ItemType.Wand,
 					});
                 }
                 return _relevantItemTypes;
@@ -314,7 +314,7 @@ namespace Rawr.Mage
 			return sb.ToString();
         }
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Mage; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Mage; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 
@@ -465,9 +465,9 @@ namespace Rawr.Mage
                     stats.Accumulate(effect.Stats, effect.MaxStack);
                 }                
             }
-            for (Character.CharacterSlot i = 0; i < (Character.CharacterSlot)Character.OptimizableSlotCount; i++)
+            for (CharacterSlot i = 0; i < (CharacterSlot)Character.OptimizableSlotCount; i++)
             {
-                if (i != Character.CharacterSlot.Trinket1 && i != Character.CharacterSlot.Trinket2)
+                if (i != CharacterSlot.Trinket1 && i != CharacterSlot.Trinket2)
                 {
                     ItemInstance item = character[i];
                     if (item != null)
@@ -525,42 +525,42 @@ namespace Rawr.Mage
                     statsRaceMana = 1961f;
                     switch (character.Race)
                     {
-                        case Character.CharacterRace.BloodElf:
+                        case CharacterRace.BloodElf:
                             statsRaceStrength = 28f;
                             statsRaceAgility = 42f;
                             statsRaceStamina = 49f;
                             statsRaceIntellect = 149f;
                             statsRaceSpirit = 144;
                             break;
-                        case Character.CharacterRace.Draenei:
+                        case CharacterRace.Draenei:
                             statsRaceStrength = 28f;
                             statsRaceAgility = 42f;
                             statsRaceStamina = 50f;
                             statsRaceIntellect = 152f;
                             statsRaceSpirit = 147;
                             break;
-                        case Character.CharacterRace.Human:
+                        case CharacterRace.Human:
                             statsRaceStrength = 28f;
                             statsRaceAgility = 42f;
                             statsRaceStamina = 51f;
                             statsRaceIntellect = 151f;
                             statsRaceSpirit = 145;
                             break;
-                        case Character.CharacterRace.Troll:
+                        case CharacterRace.Troll:
                             statsRaceStrength = 28f;
                             statsRaceAgility = 42f;
                             statsRaceStamina = 52f;
                             statsRaceIntellect = 147f;
                             statsRaceSpirit = 146;
                             break;
-                        case Character.CharacterRace.Undead:
+                        case CharacterRace.Undead:
                             statsRaceStrength = 28f;
                             statsRaceAgility = 42f;
                             statsRaceStamina = 52f;
                             statsRaceIntellect = 149f;
                             statsRaceSpirit = 150;
                             break;
-                        case Character.CharacterRace.Gnome:
+                        case CharacterRace.Gnome:
                         default:
                             statsRaceStrength = 28f;
                             statsRaceAgility = 42f;
@@ -657,42 +657,42 @@ namespace Rawr.Mage
                     statsRaceMana = 2988f;
                     switch (character.Race)
                     {
-                        case Character.CharacterRace.BloodElf:
+                        case CharacterRace.BloodElf:
                             statsRaceStrength = 33f;
                             statsRaceAgility = 45f;
                             statsRaceStamina = 57f;
                             statsRaceIntellect = 185f;
                             statsRaceSpirit = 173f;
                             break;
-                        case Character.CharacterRace.Draenei:
+                        case CharacterRace.Draenei:
                             statsRaceStrength = 37f;
                             statsRaceAgility = 40f;
                             statsRaceStamina = 58f;
                             statsRaceIntellect = 182f;
                             statsRaceSpirit = 176f;
                             break;
-                        case Character.CharacterRace.Human:
+                        case CharacterRace.Human:
                             statsRaceStrength = 36f;
                             statsRaceAgility = 43f;
                             statsRaceStamina = 59f;
                             statsRaceIntellect = 181f;
                             statsRaceSpirit = 174f;
                             break;
-                        case Character.CharacterRace.Troll:
+                        case CharacterRace.Troll:
                             statsRaceStrength = 37f;
                             statsRaceAgility = 45f;
                             statsRaceStamina = 60f;
                             statsRaceIntellect = 177f;
                             statsRaceSpirit = 175f;
                             break;
-                        case Character.CharacterRace.Undead:
+                        case CharacterRace.Undead:
                             statsRaceStrength = 35f;
                             statsRaceAgility = 41f;
                             statsRaceStamina = 60f;
                             statsRaceIntellect = 179f;
                             statsRaceSpirit = 179f;
                             break;
-                        case Character.CharacterRace.Gnome:
+                        case CharacterRace.Gnome:
                         default:
                             statsRaceStrength = 31f;
                             statsRaceAgility = 46f;
@@ -704,13 +704,13 @@ namespace Rawr.Mage
                     break;
             }
             float statsRaceBonusIntellectMultiplier = 0.0f;
-            if (character.Race == Character.CharacterRace.Gnome)
+            if (character.Race == CharacterRace.Gnome)
             {
                 statsRaceBonusIntellectMultiplier = 0.05f;
             }
             float statsTalentBonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind;
             float statsRaceBonusSpiritMultiplier = 0.0f;
-            if (character.Race == Character.CharacterRace.Human)
+            if (character.Race == CharacterRace.Human)
             {
                 statsRaceBonusSpiritMultiplier = 0.03f;
             }
@@ -736,11 +736,11 @@ namespace Rawr.Mage
             statsTotal.Stamina = (float)Math.Round((statsRaceStamina + statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier) - 0.00001);
             statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + Math.Floor(statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier)) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
-            statsTotal.Health = (float)Math.Round(((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Health = (float)Math.Round(((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect);
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
 
-            if (character.Race == Character.CharacterRace.BloodElf)
+            if (character.Race == CharacterRace.BloodElf)
             {
                 statsTotal.Mp5 += 5 * 0.06f * statsTotal.Mana / 120;
             }
@@ -2184,15 +2184,15 @@ namespace Rawr.Mage
             return (mageStats || (commonStats > 0 && ignoreStats == 0.0f));
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
     }

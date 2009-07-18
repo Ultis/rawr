@@ -42,8 +42,8 @@ namespace Rawr.Silverlight
             }
         }
 
-        private Character.CharacterSlot gear;
-        public Character.CharacterSlot Gear
+        private CharacterSlot gear;
+        public CharacterSlot Gear
         {
             get { return gear; }
             set
@@ -54,8 +54,8 @@ namespace Rawr.Silverlight
             }
         }
 
-        private Item.ItemSlot enchant;
-        public Item.ItemSlot Enchant
+        private ItemSlot enchant;
+        public ItemSlot Enchant
         {
             get { return enchant; }
             set
@@ -65,8 +65,8 @@ namespace Rawr.Silverlight
             }
         }
 
-        private Character.CharacterSlot gem;
-        public Character.CharacterSlot Gem
+        private CharacterSlot gem;
+        public CharacterSlot Gem
         {
             get { return gem; }
             set
@@ -131,8 +131,8 @@ namespace Rawr.Silverlight
             // Required to initialize variables
             InitializeComponent();
             GraphCombo.SelectedIndex = (int)Graph.RelativeStatValue;
-            GearCombo.SelectedIndex = (int)Character.CharacterSlot.Head;
-            EnchantCombo.SelectedIndex = (int)Character.CharacterSlot.Head;
+            GearCombo.SelectedIndex = (int)CharacterSlot.Head;
+            EnchantCombo.SelectedIndex = (int)CharacterSlot.Head;
             GemCombo.SelectedIndex = 0;
             BuffCombo.SelectedIndex = 0;
             CustomCombo.SelectedIndex = -1;
@@ -348,17 +348,17 @@ namespace Rawr.Silverlight
 
         private void GearChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            Gear = (Character.CharacterSlot)GearCombo.SelectedIndex;
+            Gear = (CharacterSlot)GearCombo.SelectedIndex;
         }
 
         private void EnchantChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            Enchant = (Item.ItemSlot)EnchantCombo.SelectedIndex;
+            Enchant = (ItemSlot)EnchantCombo.SelectedIndex;
         }
 
         private void GemChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            Gem = GemCombo.SelectedIndex == 0 ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
+            Gem = GemCombo.SelectedIndex == 0 ? CharacterSlot.Metas : CharacterSlot.Gems;
         }
 
         private void BuffChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

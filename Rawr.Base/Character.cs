@@ -16,7 +16,7 @@ namespace Rawr //O O . .
         [XmlElement("Realm")]
         public string _realm;
         [XmlElement("Region")]
-		public Character.CharacterRegion _region = CharacterRegion.US;
+		public CharacterRegion _region = CharacterRegion.US;
         [XmlElement("Race")]
         public CharacterRace _race = CharacterRace.NightElf;
         [XmlElement("Faction")]
@@ -294,7 +294,7 @@ namespace Rawr //O O . .
             set { _realm = value; }
         }
         [XmlIgnore]
-		public Character.CharacterRegion Region
+		public CharacterRegion Region
         {
             get { return _region; }
             set { _region = value; }
@@ -328,12 +328,12 @@ namespace Rawr //O O . .
         }
 
         [XmlIgnore]
-        public Character.CharacterFaction Faction
+        public CharacterFaction Faction
         {
             get { return _faction; }
         }
         [XmlIgnore]
-        public Character.CharacterClass Class
+        public CharacterClass Class
         {
             get { return _class; }
 			set
@@ -512,7 +512,7 @@ namespace Rawr //O O . .
             }
         }
 
-        public void InvalidateItemInstances(Character.CharacterSlot slot)
+        public void InvalidateItemInstances(CharacterSlot slot)
         {
             _relevantItemInstances.Remove(slot);
             int i = (int)slot;
@@ -540,12 +540,12 @@ namespace Rawr //O O . .
         public bool WristBlacksmithingSocketEnabled { get; set; }
 
         [XmlIgnore]
-        private Dictionary<Character.CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<Character.CharacterSlot, List<ItemInstance>>();
+        private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
 
         [XmlIgnore]
-        private Dictionary<Character.CharacterSlot, List<Item>> _relevantItems = new Dictionary<Character.CharacterSlot, List<Item>>();
+        private Dictionary<CharacterSlot, List<Item>> _relevantItems = new Dictionary<CharacterSlot, List<Item>>();
 
-        public List<ItemInstance> GetRelevantItemInstances(Character.CharacterSlot slot)
+        public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot)
         {
             bool blacksmithingSocket = false;
             if ((slot == CharacterSlot.Waist && WaistBlacksmithingSocketEnabled) || (slot == CharacterSlot.Hands && HandsBlacksmithingSocketEnabled) || (slot == CharacterSlot.Wrist && WristBlacksmithingSocketEnabled))
@@ -660,7 +660,7 @@ namespace Rawr //O O . .
             return items;
         }
 
-        public List<Item> GetRelevantItems(Character.CharacterSlot slot)
+        public List<Item> GetRelevantItems(CharacterSlot slot)
         {
             List<Item> items;
             if (!_relevantItems.TryGetValue(slot, out items))
@@ -735,9 +735,9 @@ namespace Rawr //O O . .
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
             if (slot == CharacterSlot.Finger1)
                 return IsEquipped(itemToBeChecked, CharacterSlot.Finger1) || IsEquipped(itemToBeChecked, CharacterSlot.Finger2);
-			else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand)
+			else if (itemToBeChecked.Slot == Rawr.ItemSlot.OneHand)
 				return IsEquipped(itemToBeChecked, CharacterSlot.MainHand) || IsEquipped(itemToBeChecked, CharacterSlot.OffHand);
-			else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.Trinket)
+			else if (itemToBeChecked.Slot == Rawr.ItemSlot.Trinket)
 				return IsEquipped(itemToBeChecked, CharacterSlot.Trinket1) || IsEquipped(itemToBeChecked, CharacterSlot.Trinket2);
 			else
 				return IsEquipped(itemToBeChecked, slot);
@@ -752,9 +752,9 @@ namespace Rawr //O O . .
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
             if (slot == CharacterSlot.Finger1)
                 return IsEquipped(itemToBeChecked, CharacterSlot.Finger1) || IsEquipped(itemToBeChecked, CharacterSlot.Finger2);
-            else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand)
+            else if (itemToBeChecked.Slot == Rawr.ItemSlot.OneHand)
                 return IsEquipped(itemToBeChecked, CharacterSlot.MainHand) || IsEquipped(itemToBeChecked, CharacterSlot.OffHand);
-            else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.Trinket)
+            else if (itemToBeChecked.Slot == Rawr.ItemSlot.Trinket)
                 return IsEquipped(itemToBeChecked, CharacterSlot.Trinket1) || IsEquipped(itemToBeChecked, CharacterSlot.Trinket2);
             else
                 return IsEquipped(itemToBeChecked, slot);
@@ -765,7 +765,7 @@ namespace Rawr //O O . .
             return (object)this[slot] != null && itemToBeChecked.Id == this[slot].Id;
         }
 
-        public static Character.CharacterSlot GetCharacterSlotByItemSlot(Item.ItemSlot slot)
+        public static CharacterSlot GetCharacterSlotByItemSlot(ItemSlot slot)
         {
             
             //note: When converting ItemSlot.Finger and ItemSlot.Trinket, this will ALWAYS
@@ -775,32 +775,32 @@ namespace Rawr //O O . .
             switch (slot)
             {
                
-                case Rawr.Item.ItemSlot.Projectile: return Character.CharacterSlot.Projectile;
-                case Rawr.Item.ItemSlot.Head: return Character.CharacterSlot.Head;
-                case Rawr.Item.ItemSlot.Neck: return Character.CharacterSlot.Neck;
-                case Rawr.Item.ItemSlot.Shoulders: return Character.CharacterSlot.Shoulders;
-                case Rawr.Item.ItemSlot.Chest: return Character.CharacterSlot.Chest;
-                case Rawr.Item.ItemSlot.Waist: return Character.CharacterSlot.Waist;
-                case Rawr.Item.ItemSlot.Legs: return Character.CharacterSlot.Legs;
-                case Rawr.Item.ItemSlot.Feet: return Character.CharacterSlot.Feet;
-                case Rawr.Item.ItemSlot.Wrist: return Character.CharacterSlot.Wrist;
-                case Rawr.Item.ItemSlot.Hands: return Character.CharacterSlot.Hands;
-                case Rawr.Item.ItemSlot.Finger: return Character.CharacterSlot.Finger1;
-				//case Rawr.Item.ItemSlot.Finger: return Character.CharacterSlot.Finger2;
-                case Rawr.Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket1;
-				//case Rawr.Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket2;
-                case Rawr.Item.ItemSlot.Back: return Character.CharacterSlot.Back;
-                case Rawr.Item.ItemSlot.OneHand: return Character.CharacterSlot.MainHand;
-                case Rawr.Item.ItemSlot.TwoHand: return Character.CharacterSlot.MainHand;
-                case Rawr.Item.ItemSlot.MainHand: return Character.CharacterSlot.MainHand;
-                case Rawr.Item.ItemSlot.OffHand: return Character.CharacterSlot.OffHand;
-                case Rawr.Item.ItemSlot.Ranged: return Character.CharacterSlot.Ranged;
-                case Rawr.Item.ItemSlot.ProjectileBag: return Character.CharacterSlot.ProjectileBag;
-                case Rawr.Item.ItemSlot.Tabard: return Character.CharacterSlot.Tabard;
-                case Rawr.Item.ItemSlot.Shirt: return Character.CharacterSlot.Shirt;
-                case Rawr.Item.ItemSlot.Prismatic: return Character.CharacterSlot.Gems;
-                case Rawr.Item.ItemSlot.Meta: return Character.CharacterSlot.Metas;
-                default: return Character.CharacterSlot.None;
+                case Rawr.ItemSlot.Projectile: return CharacterSlot.Projectile;
+                case Rawr.ItemSlot.Head: return CharacterSlot.Head;
+                case Rawr.ItemSlot.Neck: return CharacterSlot.Neck;
+                case Rawr.ItemSlot.Shoulders: return CharacterSlot.Shoulders;
+                case Rawr.ItemSlot.Chest: return CharacterSlot.Chest;
+                case Rawr.ItemSlot.Waist: return CharacterSlot.Waist;
+                case Rawr.ItemSlot.Legs: return CharacterSlot.Legs;
+                case Rawr.ItemSlot.Feet: return CharacterSlot.Feet;
+                case Rawr.ItemSlot.Wrist: return CharacterSlot.Wrist;
+                case Rawr.ItemSlot.Hands: return CharacterSlot.Hands;
+                case Rawr.ItemSlot.Finger: return CharacterSlot.Finger1;
+				//case Rawr.ItemSlot.Finger: return CharacterSlot.Finger2;
+                case Rawr.ItemSlot.Trinket: return CharacterSlot.Trinket1;
+				//case Rawr.ItemSlot.Trinket: return CharacterSlot.Trinket2;
+                case Rawr.ItemSlot.Back: return CharacterSlot.Back;
+                case Rawr.ItemSlot.OneHand: return CharacterSlot.MainHand;
+                case Rawr.ItemSlot.TwoHand: return CharacterSlot.MainHand;
+                case Rawr.ItemSlot.MainHand: return CharacterSlot.MainHand;
+                case Rawr.ItemSlot.OffHand: return CharacterSlot.OffHand;
+                case Rawr.ItemSlot.Ranged: return CharacterSlot.Ranged;
+                case Rawr.ItemSlot.ProjectileBag: return CharacterSlot.ProjectileBag;
+                case Rawr.ItemSlot.Tabard: return CharacterSlot.Tabard;
+                case Rawr.ItemSlot.Shirt: return CharacterSlot.Shirt;
+                case Rawr.ItemSlot.Prismatic: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Meta: return CharacterSlot.Metas;
+                default: return CharacterSlot.None;
             }
         }
 
@@ -991,142 +991,142 @@ namespace Rawr //O O . .
 				_serializedCalculationOptions[CurrentModel] = CalculationOptions.GetXml();
 		}
 
-		public Enchant GetEnchantBySlot(Item.ItemSlot slot)
+		public Enchant GetEnchantBySlot(ItemSlot slot)
 		{
 			switch (slot)
 			{
-				case Rawr.Item.ItemSlot.Head:
+				case Rawr.ItemSlot.Head:
 					return HeadEnchant;
-				case Rawr.Item.ItemSlot.Shoulders:
+				case Rawr.ItemSlot.Shoulders:
 					return ShouldersEnchant;
-				case Rawr.Item.ItemSlot.Back:
+				case Rawr.ItemSlot.Back:
 					return BackEnchant;
-				case Rawr.Item.ItemSlot.Chest:
+				case Rawr.ItemSlot.Chest:
 					return ChestEnchant;
-				case Rawr.Item.ItemSlot.Wrist:
+				case Rawr.ItemSlot.Wrist:
 					return WristEnchant;
-				case Rawr.Item.ItemSlot.Hands:
+				case Rawr.ItemSlot.Hands:
 					return HandsEnchant;
-				case Rawr.Item.ItemSlot.Legs:
+				case Rawr.ItemSlot.Legs:
 					return LegsEnchant;
-				case Rawr.Item.ItemSlot.Feet:
+				case Rawr.ItemSlot.Feet:
 					return FeetEnchant;
-				case Rawr.Item.ItemSlot.Finger:
+				case Rawr.ItemSlot.Finger:
 					return Finger1Enchant;
-				case Rawr.Item.ItemSlot.MainHand:
-				case Rawr.Item.ItemSlot.OneHand:
-				case Rawr.Item.ItemSlot.TwoHand:
+				case Rawr.ItemSlot.MainHand:
+				case Rawr.ItemSlot.OneHand:
+				case Rawr.ItemSlot.TwoHand:
 					return MainHandEnchant;
-				case Rawr.Item.ItemSlot.OffHand:
+				case Rawr.ItemSlot.OffHand:
 					return OffHandEnchant;
-				case Rawr.Item.ItemSlot.Ranged:
+				case Rawr.ItemSlot.Ranged:
 					return RangedEnchant;
 				default:
 					return null;
 			}
 		}
 
-        //private static Item.ItemSlot[] characterSlot2ItemSlot = new Item.ItemSlot[] { Item.ItemSlot.Projectile, Item.ItemSlot.Head, Item.ItemSlot.Neck, Item.ItemSlot.Shoulders, Item.ItemSlot.Chest, Item.ItemSlot.Waist, Item.ItemSlot.Legs, Item.ItemSlot.Feet, Item.ItemSlot.Wrist, Item.ItemSlot.Hands, Item.ItemSlot.Finger, Item.ItemSlot.Finger, Item.ItemSlot.Trinket, Item.ItemSlot.Trinket, Item.ItemSlot.Back, Item.ItemSlot.MainHand, Item.ItemSlot.OffHand, Item.ItemSlot.Ranged, Item.ItemSlot.ProjectileBag, Item.ItemSlot.Tabard, Item.ItemSlot.Shirt };
-        public Enchant GetEnchantBySlot(Character.CharacterSlot slot)
+        //private static ItemSlot[] characterSlot2ItemSlot = new ItemSlot[] { ItemSlot.Projectile, ItemSlot.Head, ItemSlot.Neck, ItemSlot.Shoulders, ItemSlot.Chest, ItemSlot.Waist, ItemSlot.Legs, ItemSlot.Feet, ItemSlot.Wrist, ItemSlot.Hands, ItemSlot.Finger, ItemSlot.Finger, ItemSlot.Trinket, ItemSlot.Trinket, ItemSlot.Back, ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.ProjectileBag, ItemSlot.Tabard, ItemSlot.Shirt };
+        public Enchant GetEnchantBySlot(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
             if ((object)item == null) return null;
             return item.Enchant;
         }
 
-        public bool IsEnchantable(Character.CharacterSlot slot)
+        public bool IsEnchantable(CharacterSlot slot)
         {
             switch (slot)
             {
-                case Character.CharacterSlot.Head:
-                case Character.CharacterSlot.Shoulders:
-                case Character.CharacterSlot.Back:
-                case Character.CharacterSlot.Chest:
-                case Character.CharacterSlot.Wrist:
-                case Character.CharacterSlot.Hands:
-                case Character.CharacterSlot.Legs:
-                case Character.CharacterSlot.Feet:
-                case Character.CharacterSlot.Finger1:
-                case Character.CharacterSlot.Finger2:
-                case Character.CharacterSlot.MainHand:
-                case Character.CharacterSlot.OffHand:
-                case Character.CharacterSlot.Ranged:
+                case CharacterSlot.Head:
+                case CharacterSlot.Shoulders:
+                case CharacterSlot.Back:
+                case CharacterSlot.Chest:
+                case CharacterSlot.Wrist:
+                case CharacterSlot.Hands:
+                case CharacterSlot.Legs:
+                case CharacterSlot.Feet:
+                case CharacterSlot.Finger1:
+                case CharacterSlot.Finger2:
+                case CharacterSlot.MainHand:
+                case CharacterSlot.OffHand:
+                case CharacterSlot.Ranged:
                     return true;
                 default:
                     return false;
             }
         }
 
-        public bool IsEnchantable(Item.ItemSlot slot)
+        public bool IsEnchantable(ItemSlot slot)
         {
             switch (slot)
             {
-                case Rawr.Item.ItemSlot.Head:
-                case Rawr.Item.ItemSlot.Shoulders:
-                case Rawr.Item.ItemSlot.Back:
-                case Rawr.Item.ItemSlot.Chest:
-                case Rawr.Item.ItemSlot.Wrist:
-                case Rawr.Item.ItemSlot.Hands:
-                case Rawr.Item.ItemSlot.Legs:
-                case Rawr.Item.ItemSlot.Feet:
-                case Rawr.Item.ItemSlot.Finger:
-                case Rawr.Item.ItemSlot.TwoHand:
-                case Rawr.Item.ItemSlot.MainHand:
-                case Rawr.Item.ItemSlot.OneHand:
-                case Rawr.Item.ItemSlot.OffHand:
-                case Rawr.Item.ItemSlot.Ranged:
+                case Rawr.ItemSlot.Head:
+                case Rawr.ItemSlot.Shoulders:
+                case Rawr.ItemSlot.Back:
+                case Rawr.ItemSlot.Chest:
+                case Rawr.ItemSlot.Wrist:
+                case Rawr.ItemSlot.Hands:
+                case Rawr.ItemSlot.Legs:
+                case Rawr.ItemSlot.Feet:
+                case Rawr.ItemSlot.Finger:
+                case Rawr.ItemSlot.TwoHand:
+                case Rawr.ItemSlot.MainHand:
+                case Rawr.ItemSlot.OneHand:
+                case Rawr.ItemSlot.OffHand:
+                case Rawr.ItemSlot.Ranged:
                     return true;
                 default:
                     return false;
             }
         }
 
-		public void SetEnchantBySlot(Item.ItemSlot slot, Enchant enchant)
+		public void SetEnchantBySlot(ItemSlot slot, Enchant enchant)
 		{
 			switch (slot)
 			{
-				case Rawr.Item.ItemSlot.Head:
+				case Rawr.ItemSlot.Head:
 					HeadEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Shoulders:
+				case Rawr.ItemSlot.Shoulders:
 					ShouldersEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Back:
+				case Rawr.ItemSlot.Back:
 					BackEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Chest:
+				case Rawr.ItemSlot.Chest:
 					ChestEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Wrist:
+				case Rawr.ItemSlot.Wrist:
 					WristEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Hands:
+				case Rawr.ItemSlot.Hands:
 					HandsEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Legs:
+				case Rawr.ItemSlot.Legs:
 					LegsEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Feet:
+				case Rawr.ItemSlot.Feet:
 					FeetEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Finger:
+				case Rawr.ItemSlot.Finger:
 					Finger1Enchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.MainHand:
-				case Rawr.Item.ItemSlot.OneHand:
-				case Rawr.Item.ItemSlot.TwoHand:
+				case Rawr.ItemSlot.MainHand:
+				case Rawr.ItemSlot.OneHand:
+				case Rawr.ItemSlot.TwoHand:
 					MainHandEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.OffHand:
+				case Rawr.ItemSlot.OffHand:
 					OffHandEnchant = enchant;
 					break;
-				case Rawr.Item.ItemSlot.Ranged:
+				case Rawr.ItemSlot.Ranged:
 					RangedEnchant = enchant;
 					break;
 			}
 		}
 
-        public void SetEnchantBySlot(Character.CharacterSlot slot, Enchant enchant)
+        public void SetEnchantBySlot(CharacterSlot slot, Enchant enchant)
         {
             int i = (int)slot;
             if (i < 0 || i >= SlotCount) return;
@@ -1462,120 +1462,76 @@ namespace Rawr //O O . .
 			return listSlots.ToArray();
 		}
 
-		public enum CharacterRegion { US, EU, KR, TW, CN }
-		public enum CharacterRace
-        {
-            Human = 1,
-            Orc = 2,
-            Dwarf = 3,
-            NightElf = 4,
-            Undead = 5,
-            Tauren = 6,
-            Gnome = 7,
-            Troll = 8,
-            BloodElf = 10,
-            Draenei = 11
-        }
-        public enum CharacterSlot
-        {
-			None = -1,
-            Projectile = 0,
-            Head = 1,
-            Neck = 2,
-            Shoulders = 3,
-            Chest = 4,
-            Waist = 5,
-            Legs = 6,
-            Feet = 7,
-            Wrist = 8,
-            Hands = 9,
-            Finger1 = 10,
-            Finger2 = 11,
-            Trinket1 = 12,
-            Trinket2 = 13,
-            Back = 14,
-            MainHand = 15,
-			OffHand = 16,
-            Ranged = 17,
-            ProjectileBag = 18,
-            Tabard = 19,
-            Shirt = 20,
-			
-			Gems = 100,
-			Metas = 101,
-            AutoSelect = 1000,
-        }
-
 		public static CharacterSlot GetCharacterSlotFromId(int slotId)
         {
-            Character.CharacterSlot cslot = CharacterSlot.None;
+            CharacterSlot cslot = CharacterSlot.None;
             switch (slotId)
             {
                 case -1:
-                    cslot = Character.CharacterSlot.None;
+                    cslot = CharacterSlot.None;
                     break;
                 case 1:
-                    cslot = Character.CharacterSlot.Head;
+                    cslot = CharacterSlot.Head;
                     break;
                 case 2:
-                    cslot = Character.CharacterSlot.Neck;
+                    cslot = CharacterSlot.Neck;
                     break;
                 case 3:
-                    cslot = Character.CharacterSlot.Shoulders;
+                    cslot = CharacterSlot.Shoulders;
                     break;
                 case 15:
-                    cslot = Character.CharacterSlot.Back;
+                    cslot = CharacterSlot.Back;
                     break;
                 case 5:
-                    cslot = Character.CharacterSlot.Chest;
+                    cslot = CharacterSlot.Chest;
                     break;
                 case 4:
-                    cslot = Character.CharacterSlot.Shirt;
+                    cslot = CharacterSlot.Shirt;
                     break;
                 case 19:
-                    cslot = Character.CharacterSlot.Tabard;
+                    cslot = CharacterSlot.Tabard;
                     break;
                 case 9:
-                    cslot = Character.CharacterSlot.Wrist;
+                    cslot = CharacterSlot.Wrist;
                     break;
                 case 10:
-                    cslot = Character.CharacterSlot.Hands;
+                    cslot = CharacterSlot.Hands;
                     break;
                 case 6:
-                    cslot = Character.CharacterSlot.Waist;
+                    cslot = CharacterSlot.Waist;
                     break;
                 case 7:
-                    cslot = Character.CharacterSlot.Legs;
+                    cslot = CharacterSlot.Legs;
                     break;
                 case 8:
-                    cslot = Character.CharacterSlot.Feet;
+                    cslot = CharacterSlot.Feet;
                     break;
                 case 11:
-                    cslot = Character.CharacterSlot.Finger1;
+                    cslot = CharacterSlot.Finger1;
                     break;
                 case 12:
-                    cslot = Character.CharacterSlot.Finger2;
+                    cslot = CharacterSlot.Finger2;
                     break;
                 case 13:
-                    cslot = Character.CharacterSlot.Trinket1;
+                    cslot = CharacterSlot.Trinket1;
                     break;
                 case 14:
-                    cslot = Character.CharacterSlot.Trinket2;
+                    cslot = CharacterSlot.Trinket2;
                     break;
                 case 16:
-                    cslot = Character.CharacterSlot.MainHand;
+                    cslot = CharacterSlot.MainHand;
                     break;
                 case 17:
-                    cslot = Character.CharacterSlot.OffHand;
+                    cslot = CharacterSlot.OffHand;
                     break;
                 case 18:
-                    cslot = Character.CharacterSlot.Ranged;
+                    cslot = CharacterSlot.Ranged;
                     break;
                 case 0:
-                    cslot = Character.CharacterSlot.Projectile;
+                    cslot = CharacterSlot.Projectile;
                     break;
                 case 102:
-                    cslot = Character.CharacterSlot.ProjectileBag;
+                    cslot = CharacterSlot.ProjectileBag;
                     break;
             }
             return cslot;
@@ -1589,38 +1545,9 @@ namespace Rawr //O O . .
                 _faction = CharacterFaction.Horde;
         }
 
-        public enum CharacterClass
-        {
-            Warrior = 1,
-            Paladin = 2,
-            Hunter = 3,
-            Rogue = 4,
-            Priest = 5,
-            DeathKnight = 6,
-            Shaman = 7,
-            Mage = 8,
-            Warlock = 9,
-            Druid = 11,
-        }
-
-        public enum CharacterFaction
-        {
-            Alliance = 1,
-            Horde = 2,
-        }
-
-        public enum ItemAvailability
-        {
-            NotAvailable,
-            Available,
-            AvailableWithEnchantRestrictions,
-            RegemmingAllowed,
-            RegemmingAllowedWithEnchantRestrictions
-        }
-
         public Character() { }
 
-		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
+		public Character(string name, string realm, CharacterRegion region, CharacterRace race, 
 			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
 				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
 			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
@@ -1662,7 +1589,7 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race,
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2,
             ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -1706,7 +1633,7 @@ namespace Rawr //O O . .
         }
 
         // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, 
 			ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2, 
 			ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -1745,7 +1672,7 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, object[] items, int count, List<Buff> activeBuffs, string model)
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, object[] items, int count, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;
             _name = name;
@@ -1761,7 +1688,7 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,  ItemInstance[] items, List<Buff> activeBuffs, string model)
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race,  ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;
             _name = name;

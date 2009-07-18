@@ -40,7 +40,7 @@
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.itemButtonItem.Character = null;
-			this.itemButtonItem.CharacterSlot = Rawr.Character.CharacterSlot.Head;
+			this.itemButtonItem.CharacterSlot = Rawr.CharacterSlot.Head;
 			this.itemButtonItem.ItemIcon = null;
 			this.itemButtonItem.Location = new System.Drawing.Point(0, 0);
 			this.itemButtonItem.Name = "itemButtonItem";

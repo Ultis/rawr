@@ -50,51 +50,51 @@ namespace Rawr.Silverlight
             }
         }
 
-        private static Color ColorForGem(Item.ItemSlot gemType)
+        private static Color ColorForGem(ItemSlot gemType)
         {
             switch (gemType)
             {
-                case Item.ItemSlot.Red:
+                case ItemSlot.Red:
                     return Colors.Red;
-                case Item.ItemSlot.Yellow:
+                case ItemSlot.Yellow:
                     return Colors.Yellow;
-                case Item.ItemSlot.Blue:
+                case ItemSlot.Blue:
                     return Colors.Blue;
-                case Item.ItemSlot.Orange:
+                case ItemSlot.Orange:
                     return Colors.Orange;
-                case Item.ItemSlot.Purple:
+                case ItemSlot.Purple:
                     return Colors.Purple;
-                case Item.ItemSlot.Green:
+                case ItemSlot.Green:
                     return Colors.Green;
-                case Item.ItemSlot.Prismatic:
+                case ItemSlot.Prismatic:
                     return Colors.LightGray;
-                case Item.ItemSlot.Meta:
+                case ItemSlot.Meta:
                     return Colors.Gray;
                 default:
                     return Colors.Transparent;
             }
         }
 
-        private static Color ColorForQuality(Item.ItemQuality quality)
+        private static Color ColorForQuality(ItemQuality quality)
         {
             switch (quality)
             {
-                case Item.ItemQuality.Artifact:
-                case Item.ItemQuality.Heirloom:
+                case ItemQuality.Artifact:
+                case ItemQuality.Heirloom:
                     return Colors.Yellow;
-                case Item.ItemQuality.Legendary:
+                case ItemQuality.Legendary:
                     return Colors.Orange;
-                case Item.ItemQuality.Epic:
+                case ItemQuality.Epic:
                     return Colors.Purple;
-                case Item.ItemQuality.Rare:
+                case ItemQuality.Rare:
                     return Colors.Blue;
-                case Item.ItemQuality.Uncommon:
+                case ItemQuality.Uncommon:
                     return Colors.Green;
-                case Item.ItemQuality.Common:
+                case ItemQuality.Common:
                     return Colors.Gray;
-                case Item.ItemQuality.Poor:
+                case ItemQuality.Poor:
                     return Colors.DarkGray;
-                case Item.ItemQuality.Temp:
+                case ItemQuality.Temp:
                 default:
                     return Colors.Black;
             }
@@ -168,7 +168,7 @@ namespace Rawr.Silverlight
 
             #region Setting Up Gems
             bool hasGems = false;
-            if (actualItem.SocketColor1 == Item.ItemSlot.None)
+            if (actualItem.SocketColor1 == ItemSlot.None)
             {
                 GemColor1.Visibility = Visibility.Collapsed;
                 GemImage1.Visibility = Visibility.Collapsed;
@@ -186,7 +186,7 @@ namespace Rawr.Silverlight
                 GemStat1.Children.Clear();
                 hasGems = true;
             }
-            if (actualItem.SocketColor2 == Item.ItemSlot.None)
+            if (actualItem.SocketColor2 == ItemSlot.None)
             {
                 GemColor2.Visibility = Visibility.Collapsed;
                 GemImage2.Visibility = Visibility.Collapsed;
@@ -204,7 +204,7 @@ namespace Rawr.Silverlight
                 GemStat2.Children.Clear();
                 hasGems = true;
             }
-            if (actualItem.SocketColor3 == Item.ItemSlot.None)
+            if (actualItem.SocketColor3 == ItemSlot.None)
             {
                 GemColor3.Visibility = Visibility.Collapsed;
                 GemImage3.Visibility = Visibility.Collapsed;
@@ -242,10 +242,10 @@ namespace Rawr.Silverlight
                 }
                 if (ItemInstance.Gem1 != null)
                 {
-                    if (actualItem.SocketColor1 == Item.ItemSlot.None)
+                    if (actualItem.SocketColor1 == ItemSlot.None)
                     {
                         GemColor1.Visibility = Visibility.Visible;
-                        GemColor1.Background = new SolidColorBrush(ColorForGem(Item.ItemSlot.Prismatic));
+                        GemColor1.Background = new SolidColorBrush(ColorForGem(ItemSlot.Prismatic));
                         GemImage1.Visibility = Visibility.Visible;
                         GemImage1.Source = null;
                         GemStat1.Visibility = Visibility.Visible;
@@ -262,10 +262,10 @@ namespace Rawr.Silverlight
                 }
                 if (ItemInstance.Gem2 != null)
                 {
-                    if (actualItem.SocketColor2 == Item.ItemSlot.None)
+                    if (actualItem.SocketColor2 == ItemSlot.None)
                     {
                         GemColor2.Visibility = Visibility.Visible;
-                        GemColor2.Background = new SolidColorBrush(ColorForGem(Item.ItemSlot.Prismatic));
+                        GemColor2.Background = new SolidColorBrush(ColorForGem(ItemSlot.Prismatic));
                         GemImage2.Visibility = Visibility.Visible;
                         GemImage2.Source = null;
                         GemStat2.Visibility = Visibility.Visible;
@@ -282,10 +282,10 @@ namespace Rawr.Silverlight
                 }
                 if (ItemInstance.Gem3 != null)
                 {
-                    if (actualItem.SocketColor3 == Item.ItemSlot.None)
+                    if (actualItem.SocketColor3 == ItemSlot.None)
                     {
                         GemColor3.Visibility = Visibility.Visible;
-                        GemColor3.Background = new SolidColorBrush(ColorForGem(Item.ItemSlot.Prismatic));
+                        GemColor3.Background = new SolidColorBrush(ColorForGem(ItemSlot.Prismatic));
                         GemImage3.Visibility = Visibility.Visible;
                         GemImage3.Source = null;
                         GemStat3.Visibility = Visibility.Visible;

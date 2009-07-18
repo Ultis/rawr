@@ -209,7 +209,7 @@ namespace Rawr
             return returnImage;
         }
 
-		public static Image GetTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName, string icon)
+		public static Image GetTalentIcon(CharacterClass charClass, string talentTree, string talentName, string icon)
 		{
 			Image returnImage = null;
 			string key = string.Format("{0}-{1}-{2}", charClass, talentTree, talentName);
@@ -283,7 +283,7 @@ namespace Rawr
 			return returnImage;
 		}
 
-		public static Image GetTalentTreeBackground(Character.CharacterClass charClass, string talentTree)
+		public static Image GetTalentTreeBackground(CharacterClass charClass, string talentTree)
 		{
 			Image returnImage = null;
 			string key = string.Format("{0}-{1}", charClass, talentTree);

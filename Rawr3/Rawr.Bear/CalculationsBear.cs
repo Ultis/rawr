@@ -27,7 +27,7 @@ namespace Rawr.Bear
 	/// <summary>
 	/// Core class representing the Rawr.Bear model
 	/// </summary>
-	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", Character.CharacterClass.Druid)]
+	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", CharacterClass.Druid)]
 	public class CalculationsBear : CalculationsBase
 	{
 		#region Basic Model Properties and Methods
@@ -288,24 +288,24 @@ the Threat Scale defined on the Options tab.",
 			}
 		}
 
-		private List<Item.ItemType> _relevantItemTypes = null;
+		private List<ItemType> _relevantItemTypes = null;
 		/// <summary>
 		/// ItemTypes that are relevant to Rawr.Bear
 		/// </summary>
-		public override List<Item.ItemType> RelevantItemTypes
+		public override List<ItemType> RelevantItemTypes
 		{
 			get
 			{
 				if (_relevantItemTypes == null)
 				{
-					_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
-						Item.ItemType.None,
-						Item.ItemType.Leather,
-						Item.ItemType.Idol,
-						Item.ItemType.Staff,
-						Item.ItemType.TwoHandMace,
-						Item.ItemType.Polearm
+						ItemType.None,
+						ItemType.Leather,
+						ItemType.Idol,
+						ItemType.Staff,
+						ItemType.TwoHandMace,
+						ItemType.Polearm
 					});
 				}
 				return _relevantItemTypes;
@@ -315,7 +315,7 @@ the Threat Scale defined on the Options tab.",
 		/// <summary>
 		/// The class that Rawr.Bear is designed for (Druid)
 		/// </summary>
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
+		public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
 		/// <summary>
 		/// Creates a new ComparisonCalculationBear instance
 		/// </summary>
@@ -361,7 +361,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
 
-			float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 
 			float hitBonus = StatConversion.GetPhysicalHitFromRating(stats.HitRating) + stats.PhysicalHit;//stats.HitRating / 32.78998947f / 100f;
@@ -387,19 +387,19 @@ the Threat Scale defined on the Options tab.",
 			//    stats.PhysicalHaste *= 1f + (0.02f * mongooseUptime);
 			//}
 			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(stats.CritRating) +
-				StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+				StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				stats.PhysicalCrit - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceCritBleed = (character.DruidTalents.PrimalGore > 0 ? rawChanceCrit : 0f);
 			attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 
-			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 77;
+			float baseAgi = character.Race == CharacterRace.NightElf ? 87 : 77;
 
 			//Calculate avoidance, considering diminishing returns
 			float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating)); //stats.DefenseRating / 4.918498039f);
-			float dodgeNonDR = stats.Dodge - levelDifference + StatConversion.GetDodgeFromAgility(baseAgi, Character.CharacterClass.Druid); //stats.Dodge * 100f - levelDifference + baseAgi * 0.024f; //TODO: Find correct Agi->Dodge ratio
+			float dodgeNonDR = stats.Dodge - levelDifference + StatConversion.GetDodgeFromAgility(baseAgi, CharacterClass.Druid); //stats.Dodge * 100f - levelDifference + baseAgi * 0.024f; //TODO: Find correct Agi->Dodge ratio
 			float missNonDR = stats.Miss - levelDifference;
-			float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseAgi, Character.CharacterClass.Druid) +
+			float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseAgi, CharacterClass.Druid) +
 				StatConversion.GetDodgeFromRating(stats.DodgeRating) + defSkill * 0.0004f;
 			//(stats.Agility + (stats.TerrorProc * 0.55f) - baseAgi) * 0.024f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
 			float missPreDR = (defSkill * 0.0004f);
@@ -513,7 +513,7 @@ the Threat Scale defined on the Options tab.",
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
 
-			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			float attackSpeed = (2.5f) / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
@@ -533,7 +533,7 @@ the Threat Scale defined on the Options tab.",
 			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
 			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(stats.CritRating) +
-				StatConversion.GetPhysicalCritFromAgility(stats.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+				StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				stats.PhysicalCrit - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
@@ -715,7 +715,7 @@ the Threat Scale defined on the Options tab.",
 		/// <returns>The total stats for the Character</returns>
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
+			Stats statsRace = character.Race == CharacterRace.NightElf ?
 				new Stats()
 				{
 					Health = 7417f,
@@ -848,7 +848,7 @@ the Threat Scale defined on the Options tab.",
 			//statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10f / 45f;
 
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
-			float hasteBonus = StatConversion.GetHasteFromRating(statsTotal.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
 			float meleeHitInterval = 1f / (1f / attackSpeed + 1f / 1.5f);
 
@@ -860,7 +860,7 @@ the Threat Scale defined on the Options tab.",
 			if (calcOpts.TargetLevel < 83) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonus);
 			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
-				StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, Character.CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+				StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 
@@ -1263,8 +1263,8 @@ the Threat Scale defined on the Options tab.",
 		#region Relevancy Methods
 		public override bool IsItemRelevant(Item item)
 		{
-			if (item.Slot == Item.ItemSlot.OffHand ||
-				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol))
+			if (item.Slot == ItemSlot.OffHand ||
+				(item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol))
 				return false;
 			return base.IsItemRelevant(item);
 		}

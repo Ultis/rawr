@@ -13,7 +13,7 @@ namespace Rawr
 {
     public partial class ItemComparison : UserControl
     {
-		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.None;
+		private CharacterSlot _characterSlot = CharacterSlot.None;
         public ComparisonGraph.ComparisonSort Sort
         {
             get
@@ -23,7 +23,7 @@ namespace Rawr
             set
             {
                 comparisonGraph1.Sort = value;
-				if (_characterSlot != Character.CharacterSlot.None)
+				if (_characterSlot != CharacterSlot.None)
 					LoadGearBySlot(_characterSlot);
             }
         }
@@ -52,7 +52,7 @@ namespace Rawr
 		private int _calculationCount = 0;
 		private ComparisonCalculationBase[] _itemCalculations = null;
 		private AutoResetEvent _autoResetEvent = null;
-        public void LoadGearBySlot(Character.CharacterSlot slot)
+        public void LoadGearBySlot(CharacterSlot slot)
 		{
 			Calculations.ClearCache();
             //_itemCalculations = new List<ComparisonCalculationBase>();
@@ -139,8 +139,8 @@ namespace Rawr
 				comparisonGraph1.LoadItemCalculationsPreSorted(_itemCalculations);
 			else
 				comparisonGraph1.ItemCalculations = _itemCalculations;
-            comparisonGraph1.EquipSlot = slot == Character.CharacterSlot.Gems || slot == Character.CharacterSlot.Metas ?
-				Character.CharacterSlot.None : slot;
+            comparisonGraph1.EquipSlot = slot == CharacterSlot.Gems || slot == CharacterSlot.Metas ?
+				CharacterSlot.None : slot;
         }
 
 
@@ -162,15 +162,15 @@ namespace Rawr
 			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
 		}
 
-        public void LoadEnchantsBySlot(Item.ItemSlot slot, CharacterCalculationsBase currentCalculations)
+        public void LoadEnchantsBySlot(ItemSlot slot, CharacterCalculationsBase currentCalculations)
         {
             if (Character != null)
             {
                 comparisonGraph1.RoundValues = true;
                 comparisonGraph1.CustomRendered = false;
                 comparisonGraph1.ItemCalculations = Calculations.GetEnchantCalculations(slot, Character, currentCalculations).ToArray();
-				comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-				_characterSlot = Character.CharacterSlot.None;
+				comparisonGraph1.EquipSlot = CharacterSlot.None;
+				_characterSlot = CharacterSlot.None;
             }
         }
 
@@ -181,56 +181,56 @@ namespace Rawr
                 comparisonGraph1.RoundValues = true;
                 comparisonGraph1.CustomRendered = false;
                 comparisonGraph1.ItemCalculations = Calculations.GetBuffCalculations(Character, currentCalculations, activeOnly).ToArray();
-				comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-				_characterSlot = Character.CharacterSlot.None;
+				comparisonGraph1.EquipSlot = CharacterSlot.None;
+				_characterSlot = CharacterSlot.None;
             }
         }
 
         public void LoadAvailableGear(CharacterCalculationsBase currentCalculations)
         {
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-            SortedList<Item.ItemSlot, Character.CharacterSlot> slotMap = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
+            SortedList<ItemSlot, CharacterSlot> slotMap = new SortedList<ItemSlot, CharacterSlot>();
             if (Character != null)
             {
                 SortedList<string, ItemInstance> items = new SortedList<string, ItemInstance>();
 
-                float Finger1 = (Character[Character.CharacterSlot.Finger1] == null ? 0 : Calculations.GetItemCalculations(
-                    Character[Character.CharacterSlot.Finger1], Character, Character.CharacterSlot.Finger1).OverallPoints);
-                float Finger2 = (Character[Character.CharacterSlot.Finger2] == null ? 0 : Calculations.GetItemCalculations(
-                    Character[Character.CharacterSlot.Finger2], Character, Character.CharacterSlot.Finger2).OverallPoints);
+                float Finger1 = (Character[CharacterSlot.Finger1] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Finger1], Character, CharacterSlot.Finger1).OverallPoints);
+                float Finger2 = (Character[CharacterSlot.Finger2] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Finger2], Character, CharacterSlot.Finger2).OverallPoints);
 
-                float Trinket1 = (Character[Character.CharacterSlot.Trinket1] == null ? 0 : Calculations.GetItemCalculations(
-                    Character[Character.CharacterSlot.Trinket1], Character, Character.CharacterSlot.Trinket1).OverallPoints);
-                float Trinket2 = (Character[Character.CharacterSlot.Trinket2] == null ? 0 : Calculations.GetItemCalculations(
-                    Character[Character.CharacterSlot.Trinket2], Character, Character.CharacterSlot.Trinket2).OverallPoints);
+                float Trinket1 = (Character[CharacterSlot.Trinket1] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Trinket1], Character, CharacterSlot.Trinket1).OverallPoints);
+                float Trinket2 = (Character[CharacterSlot.Trinket2] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Trinket2], Character, CharacterSlot.Trinket2).OverallPoints);
 
                 if (Finger2 < Finger1)
                 {
-                    slotMap[Item.ItemSlot.Finger] = Character.CharacterSlot.Finger2;
+                    slotMap[ItemSlot.Finger] = CharacterSlot.Finger2;
                 }
 
                 if (Trinket2 < Trinket1)
                 {
-                    slotMap[Item.ItemSlot.Trinket] = Character.CharacterSlot.Trinket2;
+                    slotMap[ItemSlot.Trinket] = CharacterSlot.Trinket2;
                 }
 
-                float MainHand = (Character[Character.CharacterSlot.MainHand] == null ? 0 : Calculations.GetItemCalculations(
-                    Character[Character.CharacterSlot.MainHand], Character, Character.CharacterSlot.MainHand).OverallPoints);
-                float OffHand = (Character[Character.CharacterSlot.OffHand] == null ? 0 : Calculations.GetItemCalculations(
-                    Character[Character.CharacterSlot.OffHand], Character, Character.CharacterSlot.OffHand).OverallPoints);
+                float MainHand = (Character[CharacterSlot.MainHand] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.MainHand], Character, CharacterSlot.MainHand).OverallPoints);
+                float OffHand = (Character[CharacterSlot.OffHand] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.OffHand], Character, CharacterSlot.OffHand).OverallPoints);
 
                 if (MainHand > OffHand)
                 {
-                    slotMap[Item.ItemSlot.OneHand] = Character.CharacterSlot.OffHand;
+                    slotMap[ItemSlot.OneHand] = CharacterSlot.OffHand;
 
                 }
 
-                foreach (KeyValuePair<Item.ItemSlot, Character.CharacterSlot> kvp in Item.DefaultSlotMap)
+                foreach (KeyValuePair<ItemSlot, CharacterSlot> kvp in Item.DefaultSlotMap)
                 {
                     try
                     {
-                        Item.ItemSlot iSlot = kvp.Key;
-                        Character.CharacterSlot slot;
+                        ItemSlot iSlot = kvp.Key;
+                        CharacterSlot slot;
 
                         if (slotMap.ContainsKey(iSlot))
                         {
@@ -240,7 +240,7 @@ namespace Rawr
                         {
                             slot = kvp.Value;
                         }
-                        if (slot != Character.CharacterSlot.None)
+                        if (slot != CharacterSlot.None)
                         {
                             ComparisonCalculationBase slotCalc;
 							ItemInstance currentItem = Character[slot];
@@ -255,29 +255,29 @@ namespace Rawr
                                 {
 									if (currentItem != null && currentItem.Item.Unique)
                                     {
-                                        Character.CharacterSlot otherSlot = Character.CharacterSlot.None;
+                                        CharacterSlot otherSlot = CharacterSlot.None;
                                         switch (slot)
                                         {
-                                            case Character.CharacterSlot.Finger1:
-                                                otherSlot = Character.CharacterSlot.Finger2;
+                                            case CharacterSlot.Finger1:
+                                                otherSlot = CharacterSlot.Finger2;
                                                 break;
-                                            case Character.CharacterSlot.Finger2:
-                                                otherSlot = Character.CharacterSlot.Finger1;
+                                            case CharacterSlot.Finger2:
+                                                otherSlot = CharacterSlot.Finger1;
                                                 break;
-                                            case Character.CharacterSlot.Trinket1:
-                                                otherSlot = Character.CharacterSlot.Trinket2;
+                                            case CharacterSlot.Trinket1:
+                                                otherSlot = CharacterSlot.Trinket2;
                                                 break;
-                                            case Character.CharacterSlot.Trinket2:
-                                                otherSlot = Character.CharacterSlot.Trinket1;
+                                            case CharacterSlot.Trinket2:
+                                                otherSlot = CharacterSlot.Trinket1;
                                                 break;
-                                            case Character.CharacterSlot.MainHand:
-                                                otherSlot = Character.CharacterSlot.OffHand;
+                                            case CharacterSlot.MainHand:
+                                                otherSlot = CharacterSlot.OffHand;
                                                 break;
-                                            case Character.CharacterSlot.OffHand:
-                                                otherSlot = Character.CharacterSlot.MainHand;
+                                            case CharacterSlot.OffHand:
+                                                otherSlot = CharacterSlot.MainHand;
                                                 break;
                                         }
-										if (otherSlot != Character.CharacterSlot.None && Character[otherSlot] != null && Character[otherSlot].Id == item.Id)
+										if (otherSlot != CharacterSlot.None && Character[otherSlot] != null && Character[otherSlot].Id == item.Id)
                                         {
                                             continue;
                                         }
@@ -323,9 +323,9 @@ namespace Rawr
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.DisplayMode = ComparisonGraph.GraphDisplayMode.Overall;
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
-            comparisonGraph1.EquipSlot = Character.CharacterSlot.AutoSelect;
+            comparisonGraph1.EquipSlot = CharacterSlot.AutoSelect;
 			comparisonGraph1.SlotMap = slotMap;
-			_characterSlot = Character.CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 
         public ComparisonGraph.GraphDisplayMode DisplayMode
@@ -339,11 +339,11 @@ namespace Rawr
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
             if (Character != null)
             {
-                foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+                foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
                     if (Character[slot] != null)
                         itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
 
-                foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(Item.ItemSlot.None, Character, currentCalculations))
+                foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(ItemSlot.None, Character, currentCalculations))
                     if (calc.Equipped)
                         itemCalculations.Add(calc);
 
@@ -354,8 +354,8 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
-			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_characterSlot = Character.CharacterSlot.None;
+			comparisonGraph1.EquipSlot = CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 
         public void LoadTalents()
@@ -396,8 +396,8 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
-			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_characterSlot = Character.CharacterSlot.None;
+			comparisonGraph1.EquipSlot = CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 
         public void LoadGlyphs()
@@ -442,8 +442,8 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = glyphCalculations.ToArray();
-            comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-            _characterSlot = Character.CharacterSlot.None;
+            comparisonGraph1.EquipSlot = CharacterSlot.None;
+            _characterSlot = CharacterSlot.None;
         }
 
         public void LoadTalentSpecs(TalentPicker picker)
@@ -454,16 +454,16 @@ namespace Rawr
                 Character baseChar = Character.Clone();
                 switch (baseChar.Class)
                 {
-                    case Character.CharacterClass.Warrior: baseChar.WarriorTalents = new WarriorTalents(); break;
-                    case Character.CharacterClass.Paladin: baseChar.PaladinTalents = new PaladinTalents(); break;
-                    case Character.CharacterClass.Hunter: baseChar.HunterTalents = new HunterTalents(); break;
-                    case Character.CharacterClass.Rogue: baseChar.RogueTalents = new RogueTalents(); break;
-                    case Character.CharacterClass.Priest: baseChar.PriestTalents = new PriestTalents(); break;
-                    case Character.CharacterClass.Shaman: baseChar.ShamanTalents = new ShamanTalents(); break;
-                    case Character.CharacterClass.Mage: baseChar.MageTalents = new MageTalents(); break;
-                    case Character.CharacterClass.Warlock: baseChar.WarlockTalents = new WarlockTalents(); break;
-                    case Character.CharacterClass.Druid: baseChar.DruidTalents = new DruidTalents(); break;
-                    case Character.CharacterClass.DeathKnight: baseChar.DeathKnightTalents = new DeathKnightTalents(); break;
+                    case CharacterClass.Warrior: baseChar.WarriorTalents = new WarriorTalents(); break;
+                    case CharacterClass.Paladin: baseChar.PaladinTalents = new PaladinTalents(); break;
+                    case CharacterClass.Hunter: baseChar.HunterTalents = new HunterTalents(); break;
+                    case CharacterClass.Rogue: baseChar.RogueTalents = new RogueTalents(); break;
+                    case CharacterClass.Priest: baseChar.PriestTalents = new PriestTalents(); break;
+                    case CharacterClass.Shaman: baseChar.ShamanTalents = new ShamanTalents(); break;
+                    case CharacterClass.Mage: baseChar.MageTalents = new MageTalents(); break;
+                    case CharacterClass.Warlock: baseChar.WarlockTalents = new WarlockTalents(); break;
+                    case CharacterClass.Druid: baseChar.DruidTalents = new DruidTalents(); break;
+                    case CharacterClass.DeathKnight: baseChar.DeathKnightTalents = new DeathKnightTalents(); break;
                     default: baseChar.DruidTalents = new DruidTalents(); break;
                 }
                 CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
@@ -483,8 +483,8 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
-			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_characterSlot = Character.CharacterSlot.None;
+			comparisonGraph1.EquipSlot = CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 
         public void LoadRelativeStatValues()
@@ -492,8 +492,8 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = CalculationsBase.GetRelativeStatValues(Character);
-			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_characterSlot = Character.CharacterSlot.None;
+			comparisonGraph1.EquipSlot = CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 
         public void LoadCustomChart(string chartName)
@@ -501,8 +501,8 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = Calculations.GetCustomChartData(Character, chartName);
-			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_characterSlot = Character.CharacterSlot.None;
+			comparisonGraph1.EquipSlot = CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 
         public void LoadCustomRenderedChart(string chartName)
@@ -511,8 +511,8 @@ namespace Rawr
             comparisonGraph1.CustomRendered = true;
             comparisonGraph1.CustomRenderedChartName = chartName;
             comparisonGraph1.ItemCalculations = null;
-			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_characterSlot = Character.CharacterSlot.None;
+			comparisonGraph1.EquipSlot = CharacterSlot.None;
+			_characterSlot = CharacterSlot.None;
         }
 	}
 }

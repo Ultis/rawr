@@ -58,7 +58,7 @@ namespace Rawr.Tree
         public int SwiftmendPerMin, WildGrowthPerMinute;
     }
 
-    [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
+    [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", CharacterClass.Druid)]
     public class CalculationsTree : CalculationsBase
     {
         private string[] _predefRotations = null;
@@ -397,8 +397,8 @@ applied and result is scaled down by 100)",
             }
         }
 
-        private List<Item.ItemType> _relevantItemTypes = null;
-        public override List<Item.ItemType> RelevantItemTypes
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
             get
             {
@@ -406,25 +406,25 @@ applied and result is scaled down by 100)",
                 {
                     // I don't know of a fist weapon or two hand mace with healing stats, so...
                     // I don't know either .. but i know there are a few with spell power
-                    _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]{
-                        Item.ItemType.None,
-                        Item.ItemType.Cloth,
-                        Item.ItemType.Leather,
-                        Item.ItemType.Dagger,
-                        Item.ItemType.FistWeapon,
-                        Item.ItemType.Idol,
-                        Item.ItemType.OneHandMace,
-                        Item.ItemType.TwoHandMace,
-                        Item.ItemType.Staff
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]{
+                        ItemType.None,
+                        ItemType.Cloth,
+                        ItemType.Leather,
+                        ItemType.Dagger,
+                        ItemType.FistWeapon,
+                        ItemType.Idol,
+                        ItemType.OneHandMace,
+                        ItemType.TwoHandMace,
+                        ItemType.Staff
                     });
                 }
                 return _relevantItemTypes;
             }
         }
 
-        public override Character.CharacterClass TargetClass
+        public override CharacterClass TargetClass
         {
-            get { return Character.CharacterClass.Druid; }
+            get { return CharacterClass.Druid; }
         }
 
         public override ComparisonCalculationBase CreateNewComparisonCalculation()
@@ -1466,12 +1466,12 @@ applied and result is scaled down by 100)",
         }
 
         /* Removed, since we rather use BaseStats
-        private static Stats GetRacialBaseStats(Character.CharacterRace race)
+        private static Stats GetRacialBaseStats(CharacterRace race)
         {
             Stats statsRace = new Stats();
             statsRace.Mana = TreeConstants.BaseMana; 
 
-            if (race == Character.CharacterRace.NightElf)
+            if (race == CharacterRace.NightElf)
             {
                 statsRace.Health = 7417;
                 statsRace.Strength = 86f;
@@ -1817,9 +1817,9 @@ applied and result is scaled down by 100)",
         }
 
         /* Wildebees 20090407 : Overload base function to disable all enchants on OffHand for tree druids */
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == Item.ItemSlot.OffHand) 
+            if (slot == ItemSlot.OffHand) 
                 return false;
 
             return base.EnchantFitsInSlot(enchant, character, slot);

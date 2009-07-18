@@ -155,15 +155,15 @@ namespace Rawr.Optimizer
 
     public class ComputeUpgradesCompletedEventArgs : AsyncCompletedEventArgs
     {
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades;
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades;
 
-        public ComputeUpgradesCompletedEventArgs(Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades, Exception error, bool cancelled)
+        public ComputeUpgradesCompletedEventArgs(Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades, Exception error, bool cancelled)
             : base(error, cancelled, null)
         {
             this.upgrades = upgrades;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> Upgrades
+        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> Upgrades
         {
             get
             {
@@ -314,9 +314,9 @@ namespace Rawr.Optimizer
             slotCount = characterSlots;
             slotItems = new List<object>[characterSlots + 4];
             validators = new List<OptimizerRangeValidatorBase<object>>() {
-                new UniqueItemValidator() { StartSlot = (int)Character.CharacterSlot.Finger1, EndSlot = (int)Character.CharacterSlot.Finger2 },
-                new UniqueItemValidator() { StartSlot = (int)Character.CharacterSlot.Trinket1, EndSlot = (int)Character.CharacterSlot.Trinket2 },
-                new UniqueItemValidator() { StartSlot = (int)Character.CharacterSlot.MainHand, EndSlot = (int)Character.CharacterSlot.OffHand },
+                new UniqueItemValidator() { StartSlot = (int)CharacterSlot.Finger1, EndSlot = (int)CharacterSlot.Finger2 },
+                new UniqueItemValidator() { StartSlot = (int)CharacterSlot.Trinket1, EndSlot = (int)CharacterSlot.Trinket2 },
+                new UniqueItemValidator() { StartSlot = (int)CharacterSlot.MainHand, EndSlot = (int)CharacterSlot.OffHand },
             };
             optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterProgressChanged);
             optimizeCharacterCompletedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterCompleted);
@@ -459,7 +459,7 @@ namespace Rawr.Optimizer
                     {
                         for (int i = 0; i < slotCount; i++)
                         {
-                            if (item.FitsInSlot((Character.CharacterSlot)i, _character)) slotItems[i].Add(gemmedItem);
+                            if (item.FitsInSlot((CharacterSlot)i, _character)) slotItems[i].Add(gemmedItem);
                         }
                     }
                 }
@@ -467,8 +467,8 @@ namespace Rawr.Optimizer
 
             for (int i = 0; i < slotCount; i++)
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)i;
-                if (slot == Character.CharacterSlot.Finger1 || slot == Character.CharacterSlot.Finger2 || slot == Character.CharacterSlot.Trinket1 || slot == Character.CharacterSlot.Trinket2 || slot == Character.CharacterSlot.MainHand || slot == Character.CharacterSlot.OffHand || slotItems[i].Count == 0)
+                CharacterSlot slot = (CharacterSlot)i;
+                if (slot == CharacterSlot.Finger1 || slot == CharacterSlot.Finger2 || slot == CharacterSlot.Trinket1 || slot == CharacterSlot.Trinket2 || slot == CharacterSlot.MainHand || slot == CharacterSlot.OffHand || slotItems[i].Count == 0)
                 {
                     slotItems[i].Add(null);
                 }
@@ -476,8 +476,8 @@ namespace Rawr.Optimizer
 
             for (int i = 0; i < slotCount; i++)
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)i;
-                if (slot != Character.CharacterSlot.Finger1 && slot != Character.CharacterSlot.Finger2 && slot != Character.CharacterSlot.Trinket1 && slot != Character.CharacterSlot.Trinket2)
+                CharacterSlot slot = (CharacterSlot)i;
+                if (slot != CharacterSlot.Finger1 && slot != CharacterSlot.Finger2 && slot != CharacterSlot.Trinket1 && slot != CharacterSlot.Trinket2)
                 {
                     slotItems[i] = AvailableItemGenerator.FilterList(slotItems[i], false);
                 }
@@ -519,25 +519,25 @@ namespace Rawr.Optimizer
             }
 
             pairSlotMap = new int[slotCount];
-            pairSlotMap[(int)Character.CharacterSlot.Back] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Chest] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Feet] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Finger1] = (int)Character.CharacterSlot.Finger2;
-            pairSlotMap[(int)Character.CharacterSlot.Finger2] = (int)Character.CharacterSlot.Finger1;
-            pairSlotMap[(int)Character.CharacterSlot.Hands] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Head] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Legs] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.MainHand] = (int)Character.CharacterSlot.OffHand;
-            pairSlotMap[(int)Character.CharacterSlot.OffHand] = (int)Character.CharacterSlot.MainHand;
-            pairSlotMap[(int)Character.CharacterSlot.Neck] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Projectile] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.ProjectileBag] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Ranged] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Shoulders] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Trinket1] = (int)Character.CharacterSlot.Trinket2;
-            pairSlotMap[(int)Character.CharacterSlot.Trinket2] = (int)Character.CharacterSlot.Trinket1;
-            pairSlotMap[(int)Character.CharacterSlot.Waist] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Wrist] = -1;
+            pairSlotMap[(int)CharacterSlot.Back] = -1;
+            pairSlotMap[(int)CharacterSlot.Chest] = -1;
+            pairSlotMap[(int)CharacterSlot.Feet] = -1;
+            pairSlotMap[(int)CharacterSlot.Finger1] = (int)CharacterSlot.Finger2;
+            pairSlotMap[(int)CharacterSlot.Finger2] = (int)CharacterSlot.Finger1;
+            pairSlotMap[(int)CharacterSlot.Hands] = -1;
+            pairSlotMap[(int)CharacterSlot.Head] = -1;
+            pairSlotMap[(int)CharacterSlot.Legs] = -1;
+            pairSlotMap[(int)CharacterSlot.MainHand] = (int)CharacterSlot.OffHand;
+            pairSlotMap[(int)CharacterSlot.OffHand] = (int)CharacterSlot.MainHand;
+            pairSlotMap[(int)CharacterSlot.Neck] = -1;
+            pairSlotMap[(int)CharacterSlot.Projectile] = -1;
+            pairSlotMap[(int)CharacterSlot.ProjectileBag] = -1;
+            pairSlotMap[(int)CharacterSlot.Ranged] = -1;
+            pairSlotMap[(int)CharacterSlot.Shoulders] = -1;
+            pairSlotMap[(int)CharacterSlot.Trinket1] = (int)CharacterSlot.Trinket2;
+            pairSlotMap[(int)CharacterSlot.Trinket2] = (int)CharacterSlot.Trinket1;
+            pairSlotMap[(int)CharacterSlot.Waist] = -1;
+            pairSlotMap[(int)CharacterSlot.Wrist] = -1;
 
             itemCacheInitialized = true;
         }
@@ -803,7 +803,7 @@ namespace Rawr.Optimizer
         {
             ComputeUpgradesState state = o as ComputeUpgradesState;
             Exception error = null;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 upgrades = PrivateComputeUpgrades(state.Character, state.CalculationToOptimize,
@@ -820,7 +820,7 @@ namespace Rawr.Optimizer
         private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
@@ -948,7 +948,7 @@ namespace Rawr.Optimizer
             Character optimizedCharacter = null;
             float bestValue = 0.0f;
             injected = false;
-            lockedSlot = Character.CharacterSlot.None;
+            lockedSlot = CharacterSlot.None;
 
             try
             {
@@ -978,14 +978,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -998,7 +998,7 @@ namespace Rawr.Optimizer
         {
             for (int i = 0; i < characterSlots; i++)
             {
-                ItemInstance item = character[(Character.CharacterSlot)i];
+                ItemInstance item = character[(CharacterSlot)i];
                 if ((object)item != null && item.Id != 0 && !slotItems[i].Contains(item))
                 {
                     slotItems[i].Add(item);
@@ -1022,7 +1022,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -1033,17 +1033,17 @@ namespace Rawr.Optimizer
             _thoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 // make equipped gear/enchant valid
                 MarkEquippedItemsAsValid(_character);
 
-                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
+                upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                 Item[] items = ItemCache.GetRelevantItems(model);
-                Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
-                foreach (Character.CharacterSlot slot in slots)
+                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
+                foreach (CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
@@ -1075,7 +1075,7 @@ namespace Rawr.Optimizer
                         return null;
                     }
                     ReportProgress(0, 0);
-                    foreach (Character.CharacterSlot slot in slots)
+                    foreach (CharacterSlot slot in slots)
                     {
                         if (item.FitsInSlot(slot, _character))
                         {
@@ -1084,24 +1084,24 @@ namespace Rawr.Optimizer
                             lockedSlot = slot;
                             List<object> savedItems = slotItems[(int)lockedSlot];
                             slotItems[(int)lockedSlot] = lockedItems;
-                            if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
                             {
-                                lockedSlot = Character.CharacterSlot.Finger2;
+                                lockedSlot = CharacterSlot.Finger2;
                             }
-                            if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                             {
-                                lockedSlot = Character.CharacterSlot.Trinket2;
+                                lockedSlot = CharacterSlot.Trinket2;
                             }
                             __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
-                            if (lockedSlot == Character.CharacterSlot.MainHand && item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.MainHand && item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
                             {
                                 // can't dual wield unique items, so make the other slot empty
-                                __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.OffHand, null);
+                                __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
                             }
-                            if (lockedSlot == Character.CharacterSlot.OffHand && item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.OffHand && item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
                             {
                                 // can't dual wield unique items, so make the other slot empty
-                                __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.MainHand, null);
+                                __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
                             }
                             // instead of just putting in the first gemming on the list select the best one
                             float best = -10000000f;
@@ -1188,39 +1188,39 @@ namespace Rawr.Optimizer
                 // this is currently only called after calculate upgrades already marks items as valid, but we might have to do this here also if things change
                 // MarkEquippedItemsAsValid(_character);
 
-                Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
+                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetOptimizationValue(_character, baseCalculations);
 
                 OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, optimizeFood, optimizeElixirs, optimizeTalents);
                 OptimizerCharacter __character;
                 ItemInstance item = upgrade;
-                foreach (Character.CharacterSlot slot in slots)
+                foreach (CharacterSlot slot in slots)
                 {
                     if (item.Item.FitsInSlot(slot, _character))
                     {
                         lockedItems = new List<object>() { item };
                         lockedSlot = slot;
-                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
                         {
-                            lockedSlot = Character.CharacterSlot.Finger2;
+                            lockedSlot = CharacterSlot.Finger2;
                         }
-                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                         {
-                            lockedSlot = Character.CharacterSlot.Trinket2;
+                            lockedSlot = CharacterSlot.Trinket2;
                         }
                         List<object> savedItems = slotItems[(int)lockedSlot];
                         slotItems[(int)lockedSlot] = lockedItems;
                         __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, upgrade);
-                        if (lockedSlot == Character.CharacterSlot.MainHand && item.Item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.MainHand && item.Item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
                         {
                             // can't dual wield unique items, so make the other slot empty
-                            __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.OffHand, null);
+                            __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
                         }
-                        if (lockedSlot == Character.CharacterSlot.OffHand && item.Item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.OffHand && item.Item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
                         {
                             // can't dual wield unique items, so make the other slot empty
-                            __character = BuildSingleItemSwapIndividual(__character, (int)Character.CharacterSlot.MainHand, null);
+                            __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
                         }
                         float best;
                         CharacterCalculationsBase bestCalculations;
@@ -1266,7 +1266,7 @@ namespace Rawr.Optimizer
 
         private bool itemCacheInitialized;
 
-        int[] pairSlotList = new int[] { (int)Character.CharacterSlot.Finger1, (int)Character.CharacterSlot.MainHand, (int)Character.CharacterSlot.Trinket1 };
+        int[] pairSlotList = new int[] { (int)CharacterSlot.Finger1, (int)CharacterSlot.MainHand, (int)CharacterSlot.Trinket1 };
         int[] pairSlotMap;
         Dictionary<string, bool> itemAvailable = new Dictionary<string, bool>();
         private class KeyedList<T> : List<T>
@@ -1276,7 +1276,7 @@ namespace Rawr.Optimizer
         List<KeyedList<KeyedList<ItemInstance>>>[] slotItemsRandom;
         int[] minJeweler;
         List<object> lockedItems;
-        Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
+        CharacterSlot lockedSlot = CharacterSlot.None;
         AvailableItemGenerator itemGenerator;
 
         private void PopulateLockedItems(Item item)
@@ -1338,25 +1338,25 @@ namespace Rawr.Optimizer
             }
 
             pairSlotMap = new int[characterSlots];
-            pairSlotMap[(int)Character.CharacterSlot.Back] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Chest] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Feet] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Finger1] = (int)Character.CharacterSlot.Finger2;
-            pairSlotMap[(int)Character.CharacterSlot.Finger2] = (int)Character.CharacterSlot.Finger1;
-            pairSlotMap[(int)Character.CharacterSlot.Hands] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Head] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Legs] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.MainHand] = (int)Character.CharacterSlot.OffHand;
-            pairSlotMap[(int)Character.CharacterSlot.OffHand] = (int)Character.CharacterSlot.MainHand;
-            pairSlotMap[(int)Character.CharacterSlot.Neck] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Projectile] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.ProjectileBag] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Ranged] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Shoulders] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Trinket1] = (int)Character.CharacterSlot.Trinket2;
-            pairSlotMap[(int)Character.CharacterSlot.Trinket2] = (int)Character.CharacterSlot.Trinket1;
-            pairSlotMap[(int)Character.CharacterSlot.Waist] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Wrist] = -1;
+            pairSlotMap[(int)CharacterSlot.Back] = -1;
+            pairSlotMap[(int)CharacterSlot.Chest] = -1;
+            pairSlotMap[(int)CharacterSlot.Feet] = -1;
+            pairSlotMap[(int)CharacterSlot.Finger1] = (int)CharacterSlot.Finger2;
+            pairSlotMap[(int)CharacterSlot.Finger2] = (int)CharacterSlot.Finger1;
+            pairSlotMap[(int)CharacterSlot.Hands] = -1;
+            pairSlotMap[(int)CharacterSlot.Head] = -1;
+            pairSlotMap[(int)CharacterSlot.Legs] = -1;
+            pairSlotMap[(int)CharacterSlot.MainHand] = (int)CharacterSlot.OffHand;
+            pairSlotMap[(int)CharacterSlot.OffHand] = (int)CharacterSlot.MainHand;
+            pairSlotMap[(int)CharacterSlot.Neck] = -1;
+            pairSlotMap[(int)CharacterSlot.Projectile] = -1;
+            pairSlotMap[(int)CharacterSlot.ProjectileBag] = -1;
+            pairSlotMap[(int)CharacterSlot.Ranged] = -1;
+            pairSlotMap[(int)CharacterSlot.Shoulders] = -1;
+            pairSlotMap[(int)CharacterSlot.Trinket1] = (int)CharacterSlot.Trinket2;
+            pairSlotMap[(int)CharacterSlot.Trinket2] = (int)CharacterSlot.Trinket1;
+            pairSlotMap[(int)CharacterSlot.Waist] = -1;
+            pairSlotMap[(int)CharacterSlot.Wrist] = -1;
 
             itemCacheInitialized = true;
         }
@@ -1373,23 +1373,23 @@ namespace Rawr.Optimizer
             CalculateWarnings(itemGenerator.GemItems, "Gems", emptyList, tooManyList, gemLimit);
             CalculateWarnings(itemGenerator.MetaGemItems, "Meta Gems", emptyList, tooManyList, gemLimit);
 
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Head], "Head Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Neck], "Neck Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Shoulders], "Shoulder Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Back], "Back Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Chest], "Chest Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Wrist], "Wrist Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Hands], "Hands Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Waist], "Waist Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Legs], "Legs Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Feet], "Feet Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Finger1], "Finger Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Trinket1], "Trinket Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.MainHand], "Main Hand Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.OffHand], "Offhand Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Ranged], "Ranged Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.Projectile], "Projectile Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotItems[(int)Character.CharacterSlot.ProjectileBag], "Projectile Bag Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Head], "Head Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Neck], "Neck Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Shoulders], "Shoulder Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Back], "Back Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Chest], "Chest Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Wrist], "Wrist Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Hands], "Hands Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Waist], "Waist Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Legs], "Legs Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Feet], "Feet Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Finger1], "Finger Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Trinket1], "Trinket Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.MainHand], "Main Hand Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.OffHand], "Offhand Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Ranged], "Ranged Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.Projectile], "Projectile Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotItems[(int)CharacterSlot.ProjectileBag], "Projectile Bag Items", null, tooManyList, itemLimit);
 
             //CalculateWarnings(backEnchants, "Back Enchants", emptyList, tooManyList, enchantLimit);
             //CalculateWarnings(chestEnchants, "Chest Enchants", emptyList, tooManyList, enchantLimit);
@@ -1639,7 +1639,7 @@ namespace Rawr.Optimizer
                 if (slot < characterSlots)
                 {
                     ignoreIdForJeweler = 0;
-                    if (slot == (int)Character.CharacterSlot.Finger2 || slot == (int)Character.CharacterSlot.Trinket2 || slot == (int)Character.CharacterSlot.OffHand)
+                    if (slot == (int)CharacterSlot.Finger2 || slot == (int)CharacterSlot.Trinket2 || slot == (int)CharacterSlot.OffHand)
                     {
                         if ((object)nonJewelerItems[slot - 1] != null && nonJewelerItems[slot - 1].Item.Unique)
                         {
@@ -1962,7 +1962,7 @@ namespace Rawr.Optimizer
                     Enchant bestEnchant = null;
                     float bestOneHandEnchantValue = float.NegativeInfinity;
                     Enchant bestOneHandEnchant = null;
-                    if (slot == (int)Character.CharacterSlot.Head)
+                    if (slot == (int)CharacterSlot.Head)
                     {
                         foreach (Item gem in itemGenerator.MetaGemItems)
                         {
@@ -1983,17 +1983,17 @@ namespace Rawr.Optimizer
                         CharacterCalculationsBase valuation;
                         float nonJewelerValue;
                         value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
-                        if (Item.GemMatchesSlot(gem, Item.ItemSlot.Blue) && !gem.IsLimitedGem && value > bestBlueValue)
+                        if (Item.GemMatchesSlot(gem, ItemSlot.Blue) && !gem.IsLimitedGem && value > bestBlueValue)
                         {
                             bestBlueValue = value;
                             bestBlueGem = gem;
                         }
-                        if (Item.GemMatchesSlot(gem, Item.ItemSlot.Red) && !gem.IsLimitedGem && value > bestRedValue)
+                        if (Item.GemMatchesSlot(gem, ItemSlot.Red) && !gem.IsLimitedGem && value > bestRedValue)
                         {
                             bestRedValue = value;
                             bestRedGem = gem;
                         }
-                        if (Item.GemMatchesSlot(gem, Item.ItemSlot.Yellow) && !gem.IsLimitedGem && value > bestYellowValue)
+                        if (Item.GemMatchesSlot(gem, ItemSlot.Yellow) && !gem.IsLimitedGem && value > bestYellowValue)
                         {
                             bestYellowValue = value;
                             bestYellowGem = gem;
@@ -2022,7 +2022,7 @@ namespace Rawr.Optimizer
                                 bestEnchantValue = value;
                                 bestEnchant = enchant;
                             }
-                            if (enchant.Slot == Item.ItemSlot.OneHand && value > bestOneHandEnchantValue)
+                            if (enchant.Slot == ItemSlot.OneHand && value > bestOneHandEnchantValue)
                             {
                                 bestOneHandEnchantValue = value;
                                 bestOneHandEnchant = enchant;
@@ -2043,16 +2043,16 @@ namespace Rawr.Optimizer
                             Enchant enchant = bestEnchant;
                             if (enchant != null)
                             {
-                                if (enchant.Slot == Item.ItemSlot.OffHand)
+                                if (enchant.Slot == ItemSlot.OffHand)
                                 {
-                                    if (item.Type != Item.ItemType.Shield)
+                                    if (item.Type != ItemType.Shield)
                                     {
                                         enchant = bestOneHandEnchant;
                                     }
                                 }
-                                else if (enchant.Slot == Item.ItemSlot.TwoHand)
+                                else if (enchant.Slot == ItemSlot.TwoHand)
                                 {
-                                    if (item.Slot != Item.ItemSlot.TwoHand)
+                                    if (item.Slot != ItemSlot.TwoHand)
                                     {
                                         enchant = bestOneHandEnchant;
                                     }
@@ -2065,7 +2065,7 @@ namespace Rawr.Optimizer
                             bool matches = true;
                             for (int g = 1; g <= gemCount; g++)
                             {
-                                if (item.GetSocketColor(g) == Item.ItemSlot.Meta)
+                                if (item.GetSocketColor(g) == ItemSlot.Meta)
                                 {
                                     gems[g] = bestMetaGem;
                                 }
@@ -2087,7 +2087,7 @@ namespace Rawr.Optimizer
                                 int bestg = 0;
                                 for (int g = 1; g <= gemCount; g++)
                                 {
-                                    if (item.GetSocketColor(g) != Item.ItemSlot.Meta && !gems[g].IsJewelersGem && bestJewelerValue > bestNonLimitedValue)
+                                    if (item.GetSocketColor(g) != ItemSlot.Meta && !gems[g].IsJewelersGem && bestJewelerValue > bestNonLimitedValue)
                                     {
                                         if (Item.GemMatchesSlot(gems[g], item.GetSocketColor(g)))
                                         {
@@ -2126,23 +2126,23 @@ namespace Rawr.Optimizer
                                 {
                                     switch (item.GetSocketColor(g))
                                     {
-                                        case Item.ItemSlot.Meta:
+                                        case ItemSlot.Meta:
                                             gems[g] = bestMetaGem;
                                             values[g] = bestMetaValue;
                                             break;
-                                        case Item.ItemSlot.Red:
+                                        case ItemSlot.Red:
                                             gems[g] = bestRedGem;
                                             values[g] = bestRedValue;
                                             break;
-                                        case Item.ItemSlot.Yellow:
+                                        case ItemSlot.Yellow:
                                             gems[g] = bestYellowGem;
                                             values[g] = bestYellowValue;
                                             break;
-                                        case Item.ItemSlot.Blue:
+                                        case ItemSlot.Blue:
                                             gems[g] = bestBlueGem;
                                             values[g] = bestBlueValue;
                                             break;
-                                        case Item.ItemSlot.Prismatic:
+                                        case ItemSlot.Prismatic:
                                             gems[g] = bestNonLimitedGem;
                                             values[g] = bestNonLimitedValue;
                                             break;
@@ -2157,7 +2157,7 @@ namespace Rawr.Optimizer
                                     int bestg = 0;
                                     for (int g = 1; g <= gemCount; g++)
                                     {
-                                        if (item.GetSocketColor(g) != Item.ItemSlot.Meta && !gems[g].IsJewelersGem && bestJewelerValue > values[g])
+                                        if (item.GetSocketColor(g) != ItemSlot.Meta && !gems[g].IsJewelersGem && bestJewelerValue > values[g])
                                         {
                                             float newScore = bestJewelerValue - values[g];
                                             if (newScore > score)
@@ -2286,7 +2286,7 @@ namespace Rawr.Optimizer
             {
                 return base.GetRandomItem(slot, items);
             }
-            else if (lockedSlot == (Character.CharacterSlot)slot)
+            else if (lockedSlot == (CharacterSlot)slot)
             {
                 return lockedItems[rand.Next(lockedItems.Count)];
             }
@@ -2401,10 +2401,10 @@ namespace Rawr.Optimizer
 
         private struct GemInformation
         {
-            public Character.CharacterSlot Slot;
+            public CharacterSlot Slot;
             public int Index;
             public Item Gem;
-            public Item.ItemSlot Socket;
+            public ItemSlot Socket;
         }
 
         private OptimizerCharacter BuildReplaceGemMutantCharacter(OptimizerCharacter parent, out bool successful)
@@ -2424,7 +2424,7 @@ namespace Rawr.Optimizer
                     for (int i = 1; i <= 3; i++)
                     {
                         Item gem = ((ItemInstance)items[slot]).GetGem(i);
-                        if (gem != null) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = ((ItemInstance)items[slot]).Item.GetSocketColor(i) });
+                        if (gem != null) locationList.Add(new GemInformation() { Slot = (CharacterSlot)slot, Index = i, Gem = gem, Socket = ((ItemInstance)items[slot]).Item.GetSocketColor(i) });
                     }
                 }
             }
@@ -2440,7 +2440,7 @@ namespace Rawr.Optimizer
                     // mutate
                     GemInformation mutation = locationList[mutationIndex];
                     Item newGem;
-                    if (mutation.Socket == Item.ItemSlot.Meta)
+                    if (mutation.Socket == ItemSlot.Meta)
                     {
                         newGem = itemGenerator.MetaGemItems[rand.Next(itemGenerator.MetaGemItems.Length)];
                     }
@@ -2491,7 +2491,7 @@ namespace Rawr.Optimizer
                     for (int i = 1; i <= 3; i++)
                     {
                         Item gem = ((ItemInstance)items[slot]).GetGem(i);
-                        if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = ((ItemInstance)items[slot]).Item.GetSocketColor(i) });
+                        if (gem != null && gem.Slot != ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = (CharacterSlot)slot, Index = i, Gem = gem, Socket = ((ItemInstance)items[slot]).Item.GetSocketColor(i) });
                     }
                 }
             }
@@ -2768,28 +2768,28 @@ namespace Rawr.Optimizer
             slotCount = characterSlots * 5;
             slotItems = new List<object>[slotCount];
             validators = new List<OptimizerRangeValidatorBase<object>>() {
-                new UniqueItemValidator() { StartSlot = 5 * (int)Character.CharacterSlot.Finger1, EndSlot = 5 * (int)Character.CharacterSlot.Finger2 },
-                new UniqueItemValidator() { StartSlot = 5 * (int)Character.CharacterSlot.Trinket1, EndSlot = 5 * (int)Character.CharacterSlot.Trinket2 },
-                new UniqueItemValidator() { StartSlot = 5 * (int)Character.CharacterSlot.MainHand, EndSlot = 5 * (int)Character.CharacterSlot.OffHand },
-                new ItemAvailableValidator(false, 5 * (int)Character.CharacterSlot.Projectile),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Head),
-                new ItemAvailableValidator(false, 5 * (int)Character.CharacterSlot.Neck),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Shoulders),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Chest),
-                new ItemAvailableValidator(false, 5 * (int)Character.CharacterSlot.Waist),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Legs),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Feet),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Wrist),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Hands),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Finger1),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Finger2),
-                new ItemAvailableValidator(false, 5 * (int)Character.CharacterSlot.Trinket1),
-                new ItemAvailableValidator(false, 5 * (int)Character.CharacterSlot.Trinket2),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Back),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.MainHand),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.OffHand),
-                new ItemAvailableValidator(true, 5 * (int)Character.CharacterSlot.Ranged),
-                new ItemAvailableValidator(false, 5 * (int)Character.CharacterSlot.ProjectileBag),
+                new UniqueItemValidator() { StartSlot = 5 * (int)CharacterSlot.Finger1, EndSlot = 5 * (int)CharacterSlot.Finger2 },
+                new UniqueItemValidator() { StartSlot = 5 * (int)CharacterSlot.Trinket1, EndSlot = 5 * (int)CharacterSlot.Trinket2 },
+                new UniqueItemValidator() { StartSlot = 5 * (int)CharacterSlot.MainHand, EndSlot = 5 * (int)CharacterSlot.OffHand },
+                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Projectile),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Head),
+                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Neck),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Shoulders),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Chest),
+                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Waist),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Legs),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Feet),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Wrist),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Hands),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Finger1),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Finger2),
+                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Trinket1),
+                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Trinket2),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Back),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.MainHand),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.OffHand),
+                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Ranged),
+                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.ProjectileBag),
             };
             optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterProgressChanged);
             optimizeCharacterCompletedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterCompleted);
@@ -2988,7 +2988,7 @@ namespace Rawr.Optimizer
         private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
@@ -3072,7 +3072,7 @@ namespace Rawr.Optimizer
             Character optimizedCharacter = null;
             float bestValue = 0.0f;
             injected = false;
-            lockedSlot = Character.CharacterSlot.None;
+            lockedSlot = CharacterSlot.None;
 
             try
             {
@@ -3102,14 +3102,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -3122,7 +3122,7 @@ namespace Rawr.Optimizer
         {
             for (int i = 0; i < slotCount; i++)
             {
-                ItemInstance item = character[(Character.CharacterSlot)i];
+                ItemInstance item = character[(CharacterSlot)i];
                 if ((object)item != null && item.Id != 0)
                 {
                     if (!slotItems[5 * i].Contains(item.Item))
@@ -3146,7 +3146,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -3158,17 +3158,17 @@ namespace Rawr.Optimizer
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
             Character saveCharacter = _character;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 // make equipped gear/enchant valid
                 MarkEquippedItemsAsValid(_character);
 
-                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
+                upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                 Item[] items = ItemCache.GetRelevantItems(model);
-                Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
-                foreach (Character.CharacterSlot slot in slots)
+                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
+                foreach (CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
@@ -3198,20 +3198,20 @@ namespace Rawr.Optimizer
                         return null;
                     }
                     ReportProgress(0, 0);
-                    foreach (Character.CharacterSlot slot in slots)
+                    foreach (CharacterSlot slot in slots)
                     {
                         if (item.FitsInSlot(slot, _character))
                         {
                             List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
                             lockedSlot = slot;
-                            if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
                             {
-                                lockedSlot = Character.CharacterSlot.Finger2;
+                                lockedSlot = CharacterSlot.Finger2;
                             }
-                            if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                             {
-                                lockedSlot = Character.CharacterSlot.Trinket2;
+                                lockedSlot = CharacterSlot.Trinket2;
                             }
                             _character = BuildSingleItemSwapIndividual(_character, (int)lockedSlot, lockedItems[0]);
                             // instead of just putting in the first gemming on the list select the best one
@@ -3303,24 +3303,24 @@ namespace Rawr.Optimizer
                 // this is currently only called after calculate upgrades already marks items as valid, but we might have to do this here also if things change
                 // MarkEquippedItemsAsValid(_character);
 
-                Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
+                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetOptimizationValue(_character, baseCalculations);
 
                 ItemInstance item = upgrade;
-                foreach (Character.CharacterSlot slot in slots)
+                foreach (CharacterSlot slot in slots)
                 {
                     if (item.Item.FitsInSlot(slot, _character))
                     {
                         lockedItems = new List<ItemInstance>() { item };
                         lockedSlot = slot;
-                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
                         {
-                            lockedSlot = Character.CharacterSlot.Finger2;
+                            lockedSlot = CharacterSlot.Finger2;
                         }
-                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                         {
-                            lockedSlot = Character.CharacterSlot.Trinket2;
+                            lockedSlot = CharacterSlot.Trinket2;
                         }
                         _character = BuildSingleItemSwapIndividual(_character, (int)lockedSlot, upgrade);
                         float best;
@@ -3363,11 +3363,11 @@ namespace Rawr.Optimizer
 
         private bool itemCacheInitialized;
 
-        int[] pairSlotList = new int[] { (int)Character.CharacterSlot.Finger1, (int)Character.CharacterSlot.MainHand, (int)Character.CharacterSlot.Trinket1 };
+        int[] pairSlotList = new int[] { (int)CharacterSlot.Finger1, (int)CharacterSlot.MainHand, (int)CharacterSlot.Trinket1 };
         int[] pairSlotMap;
         List<ItemInstance>[] slotList;
         List<ItemInstance> lockedItems;
-        Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
+        CharacterSlot lockedSlot = CharacterSlot.None;
         AvailableItemGenerator itemGenerator;
 
         private void PopulateLockedItems(Item item)
@@ -3400,25 +3400,25 @@ namespace Rawr.Optimizer
             }
 
             pairSlotMap = new int[slotCount];
-            pairSlotMap[(int)Character.CharacterSlot.Back] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Chest] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Feet] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Finger1] = (int)Character.CharacterSlot.Finger2;
-            pairSlotMap[(int)Character.CharacterSlot.Finger2] = (int)Character.CharacterSlot.Finger1;
-            pairSlotMap[(int)Character.CharacterSlot.Hands] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Head] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Legs] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.MainHand] = (int)Character.CharacterSlot.OffHand;
-            pairSlotMap[(int)Character.CharacterSlot.OffHand] = (int)Character.CharacterSlot.MainHand;
-            pairSlotMap[(int)Character.CharacterSlot.Neck] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Projectile] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.ProjectileBag] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Ranged] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Shoulders] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Trinket1] = (int)Character.CharacterSlot.Trinket2;
-            pairSlotMap[(int)Character.CharacterSlot.Trinket2] = (int)Character.CharacterSlot.Trinket1;
-            pairSlotMap[(int)Character.CharacterSlot.Waist] = -1;
-            pairSlotMap[(int)Character.CharacterSlot.Wrist] = -1;
+            pairSlotMap[(int)CharacterSlot.Back] = -1;
+            pairSlotMap[(int)CharacterSlot.Chest] = -1;
+            pairSlotMap[(int)CharacterSlot.Feet] = -1;
+            pairSlotMap[(int)CharacterSlot.Finger1] = (int)CharacterSlot.Finger2;
+            pairSlotMap[(int)CharacterSlot.Finger2] = (int)CharacterSlot.Finger1;
+            pairSlotMap[(int)CharacterSlot.Hands] = -1;
+            pairSlotMap[(int)CharacterSlot.Head] = -1;
+            pairSlotMap[(int)CharacterSlot.Legs] = -1;
+            pairSlotMap[(int)CharacterSlot.MainHand] = (int)CharacterSlot.OffHand;
+            pairSlotMap[(int)CharacterSlot.OffHand] = (int)CharacterSlot.MainHand;
+            pairSlotMap[(int)CharacterSlot.Neck] = -1;
+            pairSlotMap[(int)CharacterSlot.Projectile] = -1;
+            pairSlotMap[(int)CharacterSlot.ProjectileBag] = -1;
+            pairSlotMap[(int)CharacterSlot.Ranged] = -1;
+            pairSlotMap[(int)CharacterSlot.Shoulders] = -1;
+            pairSlotMap[(int)CharacterSlot.Trinket1] = (int)CharacterSlot.Trinket2;
+            pairSlotMap[(int)CharacterSlot.Trinket2] = (int)CharacterSlot.Trinket1;
+            pairSlotMap[(int)CharacterSlot.Waist] = -1;
+            pairSlotMap[(int)CharacterSlot.Wrist] = -1;
 
             itemCacheInitialized = true;
         }
@@ -3435,23 +3435,23 @@ namespace Rawr.Optimizer
             CalculateWarnings(itemGenerator.GemItems, "Gems", emptyList, tooManyList, gemLimit);
             CalculateWarnings(itemGenerator.MetaGemItems, "Meta Gems", emptyList, tooManyList, gemLimit);
 
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Head], "Head Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Neck], "Neck Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Shoulders], "Shoulder Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Back], "Back Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Chest], "Chest Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Wrist], "Wrist Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Hands], "Hands Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Waist], "Waist Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Legs], "Legs Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Feet], "Feet Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Finger1], "Finger Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Trinket1], "Trinket Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.MainHand], "Main Hand Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.OffHand], "Offhand Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Ranged], "Ranged Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.Projectile], "Projectile Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)Character.CharacterSlot.ProjectileBag], "Projectile Bag Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Head], "Head Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Neck], "Neck Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Shoulders], "Shoulder Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Back], "Back Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Chest], "Chest Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Wrist], "Wrist Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Hands], "Hands Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Waist], "Waist Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Legs], "Legs Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Feet], "Feet Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Finger1], "Finger Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Trinket1], "Trinket Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.MainHand], "Main Hand Items", emptyList, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.OffHand], "Offhand Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Ranged], "Ranged Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.Projectile], "Projectile Items", null, tooManyList, itemLimit);
+            CalculateWarnings(slotList[(int)CharacterSlot.ProjectileBag], "Projectile Bag Items", null, tooManyList, itemLimit);
 
             //CalculateWarnings(backEnchants, "Back Enchants", emptyList, tooManyList, enchantLimit);
             //CalculateWarnings(chestEnchants, "Chest Enchants", emptyList, tooManyList, enchantLimit);
@@ -3529,7 +3529,7 @@ namespace Rawr.Optimizer
         protected override object GetItem(Character individual, int slot)
         {
             int characterSlot = slot / 5;
-            ItemInstance itemInstance = individual[(Character.CharacterSlot)characterSlot];
+            ItemInstance itemInstance = individual[(CharacterSlot)characterSlot];
             if (itemInstance == null) return null;
             switch (slot % 5)
             {
@@ -3552,7 +3552,7 @@ namespace Rawr.Optimizer
             object[] items = new object[slotCount];
             for (int i = 0; i < characterSlots; i++)
             {
-                ItemInstance itemInstance = individual[(Character.CharacterSlot)i];
+                ItemInstance itemInstance = individual[(CharacterSlot)i];
                 if (itemInstance != null)
                 {
                     items[i * 5] = itemInstance.Item;
@@ -3629,7 +3629,7 @@ namespace Rawr.Optimizer
         protected override object GetRandomItem(int slot, object[] items)
         {
             int characterSlot = slot / 5;
-            if (lockedSlot == (Character.CharacterSlot)characterSlot)
+            if (lockedSlot == (CharacterSlot)characterSlot)
             {
                 ItemInstance itemInstance = lockedItems[rand.Next(lockedItems.Count)];
                 switch (slot % 5)
@@ -3711,10 +3711,10 @@ namespace Rawr.Optimizer
                 return new KeyValuePair<float, Character>(float.NegativeInfinity, null);
             }
             int characterSlot = slot / 5;
-            return LookForDirectItemUpgrades(slotList[characterSlot], (Character.CharacterSlot)characterSlot, best, bestIndividual, out bestValuation);
+            return LookForDirectItemUpgrades(slotList[characterSlot], (CharacterSlot)characterSlot, best, bestIndividual, out bestValuation);
         }
 
-        private KeyValuePair<float, Character> LookForDirectItemUpgrades(List<ItemInstance> items, Character.CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
+        private KeyValuePair<float, Character> LookForDirectItemUpgrades(List<ItemInstance> items, CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
         {
             Character charSwap;
             bestCalculations = null;
@@ -3725,7 +3725,7 @@ namespace Rawr.Optimizer
             foreach (ItemInstance item in items)
             {
                 int pairSlot = pairSlotMap[(int)slot];
-                if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
+                if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(CharacterSlot)pairSlot] != null && bestCharacter[(CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
                 {
                     itemList[(int)slot] = item;
                     charSwap = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, itemList,

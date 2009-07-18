@@ -98,6 +98,9 @@
     <Compile Include="..\..\Rawr.Base\EnumHelper.cs">
       <Link>EnumHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Item.cs">
       <Link>Item.cs</Link>
     </Compile>

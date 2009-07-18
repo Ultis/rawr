@@ -58,7 +58,7 @@
 
             switch (character.Race)
             {
-                case Character.CharacterRace.Draenei:
+                case CharacterRace.Draenei:
                     statsRace.Health = 6305f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 71f;
@@ -67,7 +67,7 @@
                     statsRace.Spirit = 145f;
                     break;
 
-                case Character.CharacterRace.Tauren:
+                case CharacterRace.Tauren:
                     statsRace.Health = 6313f;
                     statsRace.BonusStaminaMultiplier = .05f;
                     statsRace.Strength = 125f;
@@ -77,7 +77,7 @@
                     statsRace.Spirit = 145f;
                     break;
 
-                case Character.CharacterRace.Orc:
+                case CharacterRace.Orc:
                     statsRace.Health = 6305f;
                     statsRace.Strength = 123f;
                     statsRace.Agility = 71f;
@@ -86,7 +86,7 @@
                     statsRace.Spirit = 146f;
                     break;
 
-                case Character.CharacterRace.Troll:
+                case CharacterRace.Troll:
                     statsRace.Health = 6305f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 76f;

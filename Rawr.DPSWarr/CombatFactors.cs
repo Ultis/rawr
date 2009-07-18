@@ -17,7 +17,7 @@ namespace Rawr.DPSWarr {
         private Item _offHand;
         private WarriorTalents _talents;
         private CalculationOptionsDPSWarr _calcOpts;
-        private Character.CharacterRace _characterRace;
+        private CharacterRace _characterRace;
         private Character _character;
         
         public Item MainHand { get { return _mainHand; } }
@@ -38,7 +38,7 @@ namespace Rawr.DPSWarr {
             get {
                 float armorReduction;
                 float arpenBuffs =
-                    ((_character.MainHand != null && _character.MainHand.Type == Item.ItemType.TwoHandMace) ? _talents.MaceSpecialization * 0.03f : 0.00f) +
+                    ((_character.MainHand != null && _character.MainHand.Type == ItemType.TwoHandMace) ? _talents.MaceSpecialization * 0.03f : 0.00f) +
                     (!_calcOpts.FuryStance ? 0.1f : 0.0f);
                 if(_calcOpts==null){
                     // you're supposed to pass the character level, not the target level.  GC misspoke.
@@ -82,7 +82,7 @@ namespace Rawr.DPSWarr {
         public float BonusWhiteCritDmg {
             get {
                 float baseCritDmg = (2f * (1f + _stats.BonusCritMultiplier) - 1f);
-                baseCritDmg *= 1f + ((MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f);
+                baseCritDmg *= 1f + ((MainHand.Type == ItemType.TwoHandAxe || MainHand.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f);
                 return baseCritDmg;
             }
         }
@@ -106,7 +106,7 @@ namespace Rawr.DPSWarr {
         public float TotalHaste {
             get {
                 float totalHaste = 1f + _stats.PhysicalHaste; // BloodFrenzy is handled in GetCharacterStats
-                totalHaste      *= 1f + StatConversion.GetHasteFromRating(_stats.HasteRating,Character.CharacterClass.Warrior); // Multiplicative
+                totalHaste      *= 1f + StatConversion.GetHasteFromRating(_stats.HasteRating,CharacterClass.Warrior); // Multiplicative
                 totalHaste      *= 1f + _talents.Flurry * 0.05f * CalcFlurryUptime(_stats);
                 return totalHaste;
             }
@@ -117,23 +117,23 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Attack Table
         #region Hit Rating
-        public float HitPerc { get { return StatConversion.GetHitFromRating(_stats.HitRating, Character.CharacterClass.Warrior); } }
+        public float HitPerc { get { return StatConversion.GetHitFromRating(_stats.HitRating, CharacterClass.Warrior); } }
         #endregion
         #region Expertise Rating
-        public float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, Character.CharacterClass.Warrior);}
-        public static float GetRacialExpertiseFromWeapon(Character.CharacterRace r, Item weapon) {
+        public float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Warrior);}
+        public static float GetRacialExpertiseFromWeapon(CharacterRace r, Item weapon) {
             if(weapon != null){
-                if      (r == Character.CharacterRace.Human) {
-                    if (weapon.Type == Item.ItemType.OneHandSword || weapon.Type == Item.ItemType.OneHandMace
-                        || weapon.Type == Item.ItemType.TwoHandSword || weapon.Type == Item.ItemType.TwoHandMace) {
+                if      (r == CharacterRace.Human) {
+                    if (weapon.Type == ItemType.OneHandSword || weapon.Type == ItemType.OneHandMace
+                        || weapon.Type == ItemType.TwoHandSword || weapon.Type == ItemType.TwoHandMace) {
                         return 3f;
                     }
-                }else if(r == Character.CharacterRace.Dwarf) {
-                    if (weapon.Type == Item.ItemType.OneHandMace || weapon.Type == Item.ItemType.TwoHandMace) {
+                }else if(r == CharacterRace.Dwarf) {
+                    if (weapon.Type == ItemType.OneHandMace || weapon.Type == ItemType.TwoHandMace) {
                         return 5f;
                     }
-                }else if(r == Character.CharacterRace.Orc) {
-                    if (weapon.Type == Item.ItemType.OneHandAxe || weapon.Type == Item.ItemType.TwoHandAxe) {
+                }else if(r == CharacterRace.Orc) {
+                    if (weapon.Type == ItemType.OneHandAxe || weapon.Type == ItemType.TwoHandAxe) {
                         return 5f;
                     }
                 }
@@ -163,8 +163,8 @@ namespace Rawr.DPSWarr {
                 float missChance =
                     // Determine which cap to use
                     (_talents.TitansGrip == 1f && OffHand != null
-                        && MainHand.Slot == Item.ItemSlot.TwoHand
-                        && OffHand.Slot == Item.ItemSlot.TwoHand ?
+                        && MainHand.Slot == ItemSlot.TwoHand
+                        && OffHand.Slot == ItemSlot.TwoHand ?
                        StatConversion.WHITE_MISS_CHANCE_CAP_DW : StatConversion.WHITE_MISS_CHANCE_CAP)
                     // Reduce the Perc by dees much
                        - MissPrevBonuses;
@@ -205,14 +205,14 @@ namespace Rawr.DPSWarr {
         /*public float CalcCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
             float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-            crit += (weapon.Type == Item.ItemType.TwoHandAxe || weapon.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+            crit += (weapon.Type == ItemType.TwoHandAxe || weapon.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
             return crit;
         }*/
         /* Commenting this out, because yellow uses 2-roll attack
          * private float CalcYellowCrit(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
             float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-            crit += (weapon.Type == Item.ItemType.TwoHandAxe || weapon.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+            crit += (weapon.Type == ItemType.TwoHandAxe || weapon.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
             crit *= (1f - YwMissChance - MhDodgeChance);
             return crit;
         }*/
@@ -222,7 +222,7 @@ namespace Rawr.DPSWarr {
             {
                 if (MainHand == null || MainHand.MaxDamage == 0f) { return 0f; }
                 float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-                crit += (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                crit += (MainHand.Type == ItemType.TwoHandAxe || MainHand.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
                 return crit;
                 //return CalcCrit(MainHand); 
             }
@@ -233,7 +233,7 @@ namespace Rawr.DPSWarr {
             {
                 if (MainHand == null || MainHand.MaxDamage == 0f) { return 0f; }
                 float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-                crit += (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                crit += (MainHand.Type == ItemType.TwoHandAxe || MainHand.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
                 crit *= (1f - YwMissChance - MhDodgeChance);
                 return crit;
                 //return CalcYellowCrit(MainHand);
@@ -245,7 +245,7 @@ namespace Rawr.DPSWarr {
             {
                 if (OffHand == null || OffHand.MaxDamage == 0f) { return 0f; }
                 float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-                crit += (OffHand.Type == Item.ItemType.TwoHandAxe || OffHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                crit += (OffHand.Type == ItemType.TwoHandAxe || OffHand.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
                 return crit;
                 //return CalcCrit(OffHand);
             }
@@ -256,7 +256,7 @@ namespace Rawr.DPSWarr {
             {
                 if (OffHand == null || OffHand.MaxDamage == 0f) { return 0f; }
                 float crit = _stats.PhysicalCrit + StatConversion.GetCritFromRating(_stats.CritRating);
-                crit += (OffHand.Type == Item.ItemType.TwoHandAxe || OffHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
+                crit += (OffHand.Type == ItemType.TwoHandAxe || OffHand.Type == ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0f;
                 crit *= (1f - YwMissChance - OhDodgeChance);
                 return crit;
                 //return CalcYellowCrit(OffHand);
@@ -282,7 +282,7 @@ namespace Rawr.DPSWarr {
             float mhpercent = weaponDiff/(1f+weaponDiff);
             float ohpercent = 1f - mhpercent;
             float consumeRate = (1f + _talents.Flurry * 0.05f)
-                              * (1f + StatConversion.GetHasteFromRating(_stats.HasteRating,Character.CharacterClass.Warrior))
+                              * (1f + StatConversion.GetHasteFromRating(_stats.HasteRating,CharacterClass.Warrior))
                               * (1f + _stats.PhysicalHaste)
                               * (1f / MainHand.Speed + 1f / OHSpeed);
 

@@ -24,8 +24,8 @@ namespace Rawr
 			}
 		}
 
-		private static Dictionary<string, Character.CharacterClass> _modelClasses = null;
-		public static Dictionary<string, Character.CharacterClass> ModelClasses
+		private static Dictionary<string, CharacterClass> _modelClasses = null;
+		public static Dictionary<string, CharacterClass> ModelClasses
 		{
 			get
 			{
@@ -59,7 +59,7 @@ namespace Rawr
 				{
                     _models = new Dictionary<string, Type>();
 					_modelIcons = new Dictionary<string, string>();
-					_modelClasses = new Dictionary<string, Character.CharacterClass>();
+					_modelClasses = new Dictionary<string, CharacterClass>();
 				}
 				return _models;
 			}
@@ -110,7 +110,7 @@ namespace Rawr
 		[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 		public sealed class RawrModelInfoAttribute : Attribute
 		{
-			public RawrModelInfoAttribute(string name, string iconPath, Character.CharacterClass targetClass)
+			public RawrModelInfoAttribute(string name, string iconPath, CharacterClass targetClass)
 			{
 				_name = name;
 				_iconPath = iconPath;
@@ -119,11 +119,11 @@ namespace Rawr
 
 			private readonly string _name;
 			private readonly string _iconPath;
-			private readonly Character.CharacterClass _targetClass;
+			private readonly CharacterClass _targetClass;
 
 			public string Name { get { return _name; } }
 			public string IconPath { get { return _iconPath; } }
-			public Character.CharacterClass TargetClass { get { return _targetClass; } }
+			public CharacterClass TargetClass { get { return _targetClass; } }
 		}
 
 		private static CalculationsBase _instance;
@@ -169,7 +169,7 @@ namespace Rawr
 		{
 			get { return Instance.CalculationOptionsPanel; }
 		}
-		public static Character.CharacterClass TargetClass
+		public static CharacterClass TargetClass
 		{
 			get { return Instance.TargetClass; }
 		}
@@ -191,15 +191,15 @@ namespace Rawr
 		{
 			Instance.ClearCache();
 		}
-		public static ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, Character.CharacterSlot slot)
+		public static ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, CharacterSlot slot)
 		{
 			return Instance.GetItemCalculations(item, character, slot);
 		}
-        public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, Character.CharacterSlot slot)
+        public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, CharacterSlot slot)
         {
             return Instance.GetItemCalculations(item, character, slot);
         }
-        public static List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+        public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
 		{
 			return Instance.GetEnchantCalculations(slot, character, currentCalcs);
 		}
@@ -285,13 +285,13 @@ namespace Rawr
 				return Instance.IsEnchantRelevant(enchant);
 			return false;
 		}
-		public static bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+		public static bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
 		{
 			if (Instance != null)
 				return Instance.ItemFitsInSlot(item, character, slot, ignoreUnique);
 			return false;
 		}
-		public static bool EnchantFitsInSlot(Enchant item, Character character, Item.ItemSlot slot)
+		public static bool EnchantFitsInSlot(Enchant item, Character character, ItemSlot slot)
 		{
 			if (Instance != null)
 				return Instance.EnchantFitsInSlot(item, character, slot);
@@ -345,7 +345,7 @@ namespace Rawr
 		public virtual bool SupportsMultithreading { get { return true; } }
 
 		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
-		protected Character.CharacterSlot _cachedSlot = Character.CharacterSlot.Shirt;
+		protected CharacterSlot _cachedSlot = CharacterSlot.Shirt;
 		protected Character _cachedCharacter = null;
 		public virtual Character CachedCharacter { get { return _cachedCharacter; } }
 		
@@ -403,30 +403,30 @@ namespace Rawr
 		public abstract ICalculationOptionsPanel CalculationOptionsPanel { get; }
 
 		/// <summary>
-        /// List&lt;Item.ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
+        /// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
 		/// means all types of armor/weapons that the intended class is able to use, but may also
-		/// be trimmed down further if some aren't typically used. Item.ItemType.None should almost
+		/// be trimmed down further if some aren't typically used. ItemType.None should almost
 		/// always be included, because that type includes items with no proficiancy requirement, such
 		/// as rings, necklaces, cloaks, held in off hand items, etc.
 		/// </summary>
 		/// <example>
         /// <![CDATA[
-		/// relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+		/// relevantItemTypes = new List<ItemType>(new ItemType[]
 		/// {
-		///     Item.ItemType.None,
-		///     Item.ItemType.Leather,
-		///     Item.ItemType.Idol,
-		///     Item.ItemType.Staff,
-		///     Item.ItemType.TwoHandMace
+		///     ItemType.None,
+		///     ItemType.Leather,
+		///     ItemType.Idol,
+		///     ItemType.Staff,
+		///     ItemType.TwoHandMace
 		/// });
         /// ]]>
         /// </example>
-		public abstract List<Item.ItemType> RelevantItemTypes { get; }
+		public abstract List<ItemType> RelevantItemTypes { get; }
 
 		/// <summary>
 		/// Character class that this model is for.
 		/// </summary>
-		public abstract Character.CharacterClass TargetClass { get; }
+		public abstract CharacterClass TargetClass { get; }
 		
 		/// <summary>
 		/// Method to get a new instance of the model's custom ComparisonCalculation class.
@@ -577,10 +577,10 @@ namespace Rawr
 		{
 			_cachedCharacterStatsWithSlotEmpty = null;
 			_cachedCharacter = null;
-			_cachedSlot = Character.CharacterSlot.Shirt;
+			_cachedSlot = CharacterSlot.Shirt;
 		}
 
-		public virtual ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, Character.CharacterSlot slot)
+		public virtual ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, CharacterSlot slot)
 		{
 			bool useCache = character == _cachedCharacter && slot == _cachedSlot;
 			Character characterWithSlotEmpty = null;
@@ -589,7 +589,7 @@ namespace Rawr
 				characterWithSlotEmpty = character.Clone();
 			Character characterWithNewItem = character.Clone();
 
-			if (slot != Character.CharacterSlot.Metas && slot != Character.CharacterSlot.Gems)
+			if (slot != CharacterSlot.Metas && slot != CharacterSlot.Gems)
 			{
 				if (!useCache) characterWithSlotEmpty[slot] = null;
 				characterWithNewItem[slot] = item;
@@ -626,7 +626,7 @@ namespace Rawr
 			return itemCalc;
 		}
 
-        public virtual ComparisonCalculationBase GetItemCalculations(Item additionalItem, Character character, Character.CharacterSlot slot)
+        public virtual ComparisonCalculationBase GetItemCalculations(Item additionalItem, Character character, CharacterSlot slot)
         {
             bool useCache = character == _cachedCharacter && slot == _cachedSlot;
             Character characterWithSlotEmpty = null;
@@ -665,7 +665,7 @@ namespace Rawr
             return itemCalc;
         }
 
-		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
 		{
 			ClearCache();
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
@@ -694,10 +694,10 @@ namespace Rawr
 				}
 				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
 				enchantCalc.Name = enchant.Name;
-				enchantCalc.Item = new Item(enchant.Name, Item.ItemQuality.Temp, Item.ItemType.None, 
-					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, Item.ItemSlot.None, null, 
-                    false, enchant.Stats, null, Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None,
-                    0, 0, Item.ItemDamageType.Physical, 0, null);
+				enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None, 
+					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null, 
+                    false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                    0, 0, ItemDamageType.Physical, 0, null);
 				enchantCalc.Item.Name = enchant.Name;
 				enchantCalc.Item.Stats = enchant.Stats;
 				enchantCalc.Equipped = isEquipped;
@@ -813,7 +813,7 @@ namespace Rawr
 
 					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
 					buffCalc.Name = buff.Name;
-                    buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = Item.ItemQuality.Temp };
+                    buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = ItemQuality.Temp };
                     buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff);
 					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
 					float[] subPoints = new float[calcsEquipped.SubPoints.Length];
@@ -885,7 +885,7 @@ namespace Rawr
 
             for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
             {
-                if (slot != (int)Character.CharacterSlot.OffHand || IncludeOffHandInCalculations(character))
+                if (slot != (int)CharacterSlot.OffHand || IncludeOffHandInCalculations(character))
                 {
                     ItemInstance item = character._item[slot];
                     if ((object)item != null)
@@ -994,46 +994,46 @@ namespace Rawr
 			}
 		}
 
-		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot, bool ignoreUnique)
+		public virtual bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
 		{
             if (item != null && item.Unique && !ignoreUnique)
             {
-                if (slot == Character.CharacterSlot.Finger1)
+                if (slot == CharacterSlot.Finger1)
                 {
-                    if (character[Character.CharacterSlot.Finger2] != null && item.Id == character[Character.CharacterSlot.Finger2].Item.Id) return false;
+                    if (character[CharacterSlot.Finger2] != null && item.Id == character[CharacterSlot.Finger2].Item.Id) return false;
                 }
-                else if (slot == Character.CharacterSlot.Finger2)
+                else if (slot == CharacterSlot.Finger2)
                 {
-                    if (character[Character.CharacterSlot.Finger1] != null && item.Id == character[Character.CharacterSlot.Finger1].Item.Id) return false;
+                    if (character[CharacterSlot.Finger1] != null && item.Id == character[CharacterSlot.Finger1].Item.Id) return false;
                 }
-                else if (slot == Character.CharacterSlot.Trinket1)
+                else if (slot == CharacterSlot.Trinket1)
                 {
-                    if (character[Character.CharacterSlot.Trinket2] != null && item.Id == character[Character.CharacterSlot.Trinket2].Item.Id) return false;
+                    if (character[CharacterSlot.Trinket2] != null && item.Id == character[CharacterSlot.Trinket2].Item.Id) return false;
                 }
-                else if (slot == Character.CharacterSlot.Trinket2)
+                else if (slot == CharacterSlot.Trinket2)
                 {
-                    if (character[Character.CharacterSlot.Trinket1] != null && item.Id == character[Character.CharacterSlot.Trinket1].Item.Id) return false;
+                    if (character[CharacterSlot.Trinket1] != null && item.Id == character[CharacterSlot.Trinket1].Item.Id) return false;
                 }
-                else if (slot == Character.CharacterSlot.MainHand)
+                else if (slot == CharacterSlot.MainHand)
                 {
-                    if (character[Character.CharacterSlot.OffHand] != null && item.Id == character[Character.CharacterSlot.OffHand].Item.Id) return false;
+                    if (character[CharacterSlot.OffHand] != null && item.Id == character[CharacterSlot.OffHand].Item.Id) return false;
                 }
-                else if (slot == Character.CharacterSlot.OffHand)
+                else if (slot == CharacterSlot.OffHand)
                 {
-                    if (character[Character.CharacterSlot.MainHand] != null && item.Id == character[Character.CharacterSlot.MainHand].Item.Id) return false;
+                    if (character[CharacterSlot.MainHand] != null && item.Id == character[CharacterSlot.MainHand].Item.Id) return false;
                 }
             }
 			return item.FitsInSlot(slot);
 		}
 
-		public virtual bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+		public virtual bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
 		{
 			return enchant.FitsInSlot(slot);
 		}
 
 		public virtual bool IncludeOffHandInCalculations(Character character)
 		{
-			return (object)character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand;
+			return (object)character.MainHand == null || character.MainHand.Slot != ItemSlot.TwoHand;
 		}
 
         public virtual bool CanUseAmmo
