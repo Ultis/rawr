@@ -1,13 +1,17 @@
-Rawr v2.2.9.0
+Rawr v2.2.10.0
 ------------
-Welcome to Rawr 2.2.9.0.
+Welcome to Rawr 2.2.10.0.
    
 Recent Changes:
- - Now supports the new armory data format Blizz just posted. Also fixed several Armory parsing errors
- - Rawr.Mage: Fix for procs affecting per-spell damage. Split ignite damage into its own line in the spell damage breakdown.
- - Rawr.DPSWarr: Fixed bug in Maintaining Debuffs and added Furry support. Many improvements to Arms calculations
- - Rawr.Healadin: Fix for Judgement GCD time.
- 
+ - Rawr.Tree: Added Survival as a 3rd rating
+ - Rawr.Retribution: Slight fix to partial resist calculations
+ - Rawr.Elemental: Fixed haste, damage, and talent calculations, implemented glyphs
+ - Rawr.DPSWarr: Fixed broken Arms, Overpower, Deep Wounds, and Latency calculations, and fixed a crash. Now uses a Priority Queue for all specs. Improved stat display. 
+ - Rawr.RestoSham: Improvements to calculations
+ - Rawr.Healadin: Minor fix for crit rate calculations
+ - Rawr.Rogue: Fixed several talent calculations
+ - Rawr.DPSDK: Fixed crash, and minor calculation improvements
+ - Rawr.Mage: Fixed special effect bonus haste/crit multipliers, and for Innervate
  
 TEASER: We're working on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel.
  
@@ -78,6 +82,12 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.9.0
+ - Now supports the new armory data format Blizz just posted. Also fixed several Armory parsing errors
+ - Rawr.Mage: Fix for procs affecting per-spell damage. Split ignite damage into its own line in the spell damage breakdown.
+ - Rawr.DPSWarr: Fixed bug in Maintaining Debuffs and added Furry support. Many improvements to Arms calculations
+ - Rawr.Healadin: Fix for Judgement GCD time.
+
 v2.2.8.0
  - Improvements for handling locale-specific item names
  - Reenabled loading possible upgrades from Wowhead PTR
