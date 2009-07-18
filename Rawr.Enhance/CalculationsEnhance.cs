@@ -8,8 +8,9 @@ namespace Rawr.Enhance
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
 	public class CalculationsEnhance : CalculationsBase
     {
+#if SILVERLIGHT
         private string VERSION = "3.0.0.0";
-
+#endif
         #region Gemming Template
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -313,8 +314,8 @@ namespace Rawr.Enhance
             float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifier;
             float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
 
-            float meleeMultipliers = weaponMastery * cs.DamageReduction * cs.ChanceWhiteHit * bonusPhysicalDamage;
-            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
+            float meleeMultipliers = weaponMastery * cs.DamageReduction * bonusPhysicalDamage;
+            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * cs.ChanceWhiteHitMH * meleeMultipliers;
 
             if (character.ShamanTalents.DualWield == 1 && cs.HastedOHSpeed != 0)
             {
@@ -322,7 +323,7 @@ namespace Rawr.Enhance
                 float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifier;
                 float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitModifier;
                 float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitModifier;
-                dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
+                dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * cs.ChanceWhiteHitOH * meleeMultipliers;
             }
 
             float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
@@ -337,9 +338,10 @@ namespace Rawr.Enhance
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1)
             {
-                float swingDPS = (damageMHSwing + bonusSSDamage) * cs.HitsPerSMHSS + (damageOHSwing + bonusSSDamage) * cs.HitsPerSOHSS;
-                float SSnormal = swingDPS * cs.YellowHitModifier;
-                float SScrit = swingDPS * cs.YellowCritModifier * cs.CritMultiplierMelee;
+                float swingDPSMH = (damageMHSwing + bonusSSDamage) * cs.HitsPerSMHSS;
+                float swingDPSOH = (damageOHSwing + bonusSSDamage) * cs.HitsPerSOHSS;
+                float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
+                float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
                 dpsSS = (SSnormal + SScrit) * cs.DamageReduction * weaponMastery * bonusNatureDamage * bonusLLSSDamage * bossNatureResistance;
             }
 
@@ -348,8 +350,8 @@ namespace Rawr.Enhance
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
             {
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
-                float LLnormal = lavalashDPS * cs.YellowHitModifier;
-                float LLcrit = lavalashDPS * cs.YellowCritModifier * cs.CritMultiplierMelee;
+                float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
+                float LLcrit = lavalashDPS * cs.YellowCritModifierOH * cs.CritMultiplierMelee;
                 dpsLL = (LLnormal + LLcrit) * bonusFireDamage * bonusLLSSDamage * bossFireResistance; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {  // 25% bonus dmg if FT imbue in OH
@@ -388,8 +390,8 @@ namespace Rawr.Enhance
             {
                 float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * cs.UnhastedMHSpeed);
                 float WFdps = damageWFHit * cs.HitsPerSWF;
-                float WFnormal = WFdps * cs.YellowHitModifier;
-                float WFcrit = WFdps * cs.YellowCritModifier * cs.CritMultiplierMelee;
+                float WFnormal = WFdps * cs.YellowHitModifierMH;
+                float WFcrit = WFdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
                 dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.DamageReduction * bonusPhysicalDamage * windfuryDamageBonus;
             }
 
@@ -471,13 +473,13 @@ namespace Rawr.Enhance
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsSTMT + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
-			calculatedStats.AvoidedAttacks = (1 - cs.ChanceWhiteHit) * 100f;
-			calculatedStats.DodgedAttacks = cs.ChanceDodge * 100f;
+			calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
+			calculatedStats.DodgedAttacks = cs.AverageDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks + calculatedStats.DodgedAttacks;
-            calculatedStats.YellowHit = (float)Math.Floor((float)(cs.ChanceYellowHit * 10000f)) / 100f;
+            calculatedStats.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHit * 10000f)) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
             calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.ChanceWhiteHit * 10000f)) / 100f; 
+            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHit * 10000f)) / 100f; 
             calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.DisplayMeleeCrit)) * 10000f) / 100f;
             calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
@@ -490,16 +492,16 @@ namespace Rawr.Enhance
             calculatedStats.URUptime = cs.URUptime  * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
-            calculatedStats.TotalExpertise = (float) Math.Floor((float)(cs.ExpertiseBonus * 400f));
+            calculatedStats.TotalExpertise = (float) Math.Floor((float)(cs.AverageExpertise * 400f));
 
-            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.ChanceWhiteHit, cs.ChanceDodge, cs.GlancingRate, cs.ChanceWhiteCrit);
-            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
-            calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
+            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHit, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCrit);
+            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit);
+            calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH);
             calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
-            calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHit, cs.ChanceDodge, -1, cs.ChanceYellowCrit);
+            calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH);
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1);
-            calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.ChanceYellowHit, -1, -1, cs.ChanceYellowCrit);
+            calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.AverageYellowHit, -1, -1, cs.AverageYellowCrit);
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
             
 #if SILVERLIGHT

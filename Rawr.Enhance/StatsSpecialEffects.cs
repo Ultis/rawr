@@ -35,10 +35,11 @@ namespace Rawr.Enhance
                         case Trigger.MeleeCrit :
                         case Trigger.PhysicalCrit :
                             trigger = 1f / cs.GetMeleeCritsPerSec();
-                            chance = cs.ChanceWhiteCrit;
+                            chance = cs.ChanceMeleeCrit;
                             unhastedAttackSpeed = cs.UnhastedMHSpeed;
                             break;
-                        case Trigger.MeleeHit :
+                        case Trigger.DamageDone:
+                        case Trigger.MeleeHit:
                         case Trigger.PhysicalHit :
                             trigger = 1f / cs.GetMeleeAttacksPerSec();
                             chance = cs.ChanceMeleeHit;
