@@ -14,9 +14,7 @@ using System.Xml;
  * Pot Usage (Needs to pull GCDs)
  * Healing Recieved
  * Max # of Targets
- * Trinket Usage (Needs to pull GCDs) (Also be able to set the Cd length)
  * % of fight with mob under 20% HP (activates Execute Spamming)
- * Module Notes (How to deal with stuff)
  * Vigilance Threat pulling
  */
 

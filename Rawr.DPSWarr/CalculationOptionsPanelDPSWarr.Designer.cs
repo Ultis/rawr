@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelDPSWarr));
             this.CB_TargLvl = new System.Windows.Forms.ComboBox();
             this.LB_TargLvl = new System.Windows.Forms.Label();
             this.LB_TargArmor = new System.Windows.Forms.Label();
@@ -52,9 +53,19 @@
             this.RB_StanceArms = new System.Windows.Forms.RadioButton();
             this.RB_StanceFury = new System.Windows.Forms.RadioButton();
             this.Tabs = new System.Windows.Forms.TabControl();
-            this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
+            this.Page_00_Instructions = new System.Windows.Forms.TabPage();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
             this.Page_01_Situational = new System.Windows.Forms.TabPage();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
+            this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).BeginInit();
@@ -64,9 +75,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
             this.Tabs.SuspendLayout();
-            this.Page_02_Maintenance.SuspendLayout();
+            this.Page_00_Instructions.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.Page_01_Situational.SuspendLayout();
             this.Page_03_FightInfo.SuspendLayout();
+            this.Page_02_Maintenance.SuspendLayout();
             this.SuspendLayout();
             // 
             // CB_TargLvl
@@ -78,9 +95,9 @@
             "82",
             "81",
             "80"});
-            this.CB_TargLvl.Location = new System.Drawing.Point(128, 6);
+            this.CB_TargLvl.Location = new System.Drawing.Point(137, 6);
             this.CB_TargLvl.Name = "CB_TargLvl";
-            this.CB_TargLvl.Size = new System.Drawing.Size(125, 21);
+            this.CB_TargLvl.Size = new System.Drawing.Size(148, 21);
             this.CB_TargLvl.TabIndex = 1;
             this.CB_TargLvl.SelectedIndexChanged += new System.EventHandler(this.CB_TargetLevel_SelectedIndexChanged);
             // 
@@ -113,15 +130,15 @@
             "10900",
             "12000",
             "13083"});
-            this.CB_TargArmor.Location = new System.Drawing.Point(128, 33);
+            this.CB_TargArmor.Location = new System.Drawing.Point(137, 33);
             this.CB_TargArmor.Name = "CB_TargArmor";
-            this.CB_TargArmor.Size = new System.Drawing.Size(125, 21);
+            this.CB_TargArmor.Size = new System.Drawing.Size(148, 21);
             this.CB_TargArmor.TabIndex = 3;
             this.CB_TargArmor.SelectedIndexChanged += new System.EventHandler(this.CB_ArmorBosses_SelectedIndexChanged);
             // 
             // CB_Duration
             // 
-            this.CB_Duration.Location = new System.Drawing.Point(128, 60);
+            this.CB_Duration.Location = new System.Drawing.Point(137, 60);
             this.CB_Duration.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -133,7 +150,7 @@
             0,
             0});
             this.CB_Duration.Name = "CB_Duration";
-            this.CB_Duration.Size = new System.Drawing.Size(125, 20);
+            this.CB_Duration.Size = new System.Drawing.Size(148, 20);
             this.CB_Duration.TabIndex = 9;
             this.CB_Duration.ThousandsSeparator = true;
             this.CB_Duration.Value = new decimal(new int[] {
@@ -149,7 +166,7 @@
             this.LB_Duration.Location = new System.Drawing.Point(6, 62);
             this.LB_Duration.Name = "LB_Duration";
             this.LB_Duration.Size = new System.Drawing.Size(76, 13);
-            this.LB_Duration.TabIndex = 8;
+            this.LB_Duration.TabIndex = 4;
             this.LB_Duration.Text = "Duration (sec):";
             this.LB_Duration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -186,25 +203,25 @@
             this.CLB_Maints.Location = new System.Drawing.Point(3, 3);
             this.CLB_Maints.MultiColumn = true;
             this.CLB_Maints.Name = "CLB_Maints";
-            this.CLB_Maints.Size = new System.Drawing.Size(247, 364);
-            this.CLB_Maints.TabIndex = 20;
+            this.CLB_Maints.Size = new System.Drawing.Size(285, 364);
+            this.CLB_Maints.TabIndex = 0;
             this.CLB_Maints.SelectedValueChanged += new System.EventHandler(this.CLB_Maints_SelectedValueChanged);
             // 
             // LB_Perc5
             // 
             this.LB_Perc5.AutoSize = true;
-            this.LB_Perc5.Location = new System.Drawing.Point(234, 111);
+            this.LB_Perc5.Location = new System.Drawing.Point(266, 111);
             this.LB_Perc5.Name = "LB_Perc5";
             this.LB_Perc5.Size = new System.Drawing.Size(15, 13);
-            this.LB_Perc5.TabIndex = 17;
+            this.LB_Perc5.TabIndex = 14;
             this.LB_Perc5.Text = "%";
             // 
             // CB_InBackPerc
             // 
-            this.CB_InBackPerc.Location = new System.Drawing.Point(129, 109);
+            this.CB_InBackPerc.Location = new System.Drawing.Point(161, 109);
             this.CB_InBackPerc.Name = "CB_InBackPerc";
             this.CB_InBackPerc.Size = new System.Drawing.Size(103, 20);
-            this.CB_InBackPerc.TabIndex = 16;
+            this.CB_InBackPerc.TabIndex = 13;
             this.CB_InBackPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.CB_InBackPerc.Value = new decimal(new int[] {
             100,
@@ -221,7 +238,7 @@
             this.CK_InBack.Location = new System.Drawing.Point(6, 110);
             this.CK_InBack.Name = "CK_InBack";
             this.CK_InBack.Size = new System.Drawing.Size(107, 17);
-            this.CK_InBack.TabIndex = 15;
+            this.CK_InBack.TabIndex = 12;
             this.CK_InBack.Text = "Standing in Back";
             this.CK_InBack.UseVisualStyleBackColor = true;
             this.CK_InBack.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
@@ -229,19 +246,19 @@
             // LB_Perc4
             // 
             this.LB_Perc4.AutoSize = true;
-            this.LB_Perc4.Location = new System.Drawing.Point(234, 85);
+            this.LB_Perc4.Location = new System.Drawing.Point(266, 85);
             this.LB_Perc4.Name = "LB_Perc4";
             this.LB_Perc4.Size = new System.Drawing.Size(15, 13);
-            this.LB_Perc4.TabIndex = 12;
+            this.LB_Perc4.TabIndex = 11;
             this.LB_Perc4.Text = "%";
             // 
             // CB_DisarmingTargsPerc
             // 
             this.CB_DisarmingTargsPerc.Enabled = false;
-            this.CB_DisarmingTargsPerc.Location = new System.Drawing.Point(129, 83);
+            this.CB_DisarmingTargsPerc.Location = new System.Drawing.Point(161, 83);
             this.CB_DisarmingTargsPerc.Name = "CB_DisarmingTargsPerc";
             this.CB_DisarmingTargsPerc.Size = new System.Drawing.Size(103, 20);
-            this.CB_DisarmingTargsPerc.TabIndex = 11;
+            this.CB_DisarmingTargsPerc.TabIndex = 10;
             this.CB_DisarmingTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.CB_DisarmingTargsPerc.Value = new decimal(new int[] {
             100,
@@ -256,7 +273,7 @@
             this.CK_DisarmTargs.Location = new System.Drawing.Point(6, 84);
             this.CK_DisarmTargs.Name = "CK_DisarmTargs";
             this.CK_DisarmTargs.Size = new System.Drawing.Size(111, 17);
-            this.CK_DisarmTargs.TabIndex = 10;
+            this.CK_DisarmTargs.TabIndex = 9;
             this.CK_DisarmTargs.Text = "Disarming Targets";
             this.CK_DisarmTargs.UseVisualStyleBackColor = true;
             this.CK_DisarmTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
@@ -264,19 +281,19 @@
             // LB_Perc3
             // 
             this.LB_Perc3.AutoSize = true;
-            this.LB_Perc3.Location = new System.Drawing.Point(234, 59);
+            this.LB_Perc3.Location = new System.Drawing.Point(266, 59);
             this.LB_Perc3.Name = "LB_Perc3";
             this.LB_Perc3.Size = new System.Drawing.Size(15, 13);
-            this.LB_Perc3.TabIndex = 9;
+            this.LB_Perc3.TabIndex = 8;
             this.LB_Perc3.Text = "%";
             // 
             // CB_StunningTargsPerc
             // 
             this.CB_StunningTargsPerc.Enabled = false;
-            this.CB_StunningTargsPerc.Location = new System.Drawing.Point(129, 57);
+            this.CB_StunningTargsPerc.Location = new System.Drawing.Point(161, 57);
             this.CB_StunningTargsPerc.Name = "CB_StunningTargsPerc";
             this.CB_StunningTargsPerc.Size = new System.Drawing.Size(103, 20);
-            this.CB_StunningTargsPerc.TabIndex = 8;
+            this.CB_StunningTargsPerc.TabIndex = 7;
             this.CB_StunningTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.CB_StunningTargsPerc.Value = new decimal(new int[] {
             100,
@@ -291,7 +308,7 @@
             this.CK_StunningTargs.Location = new System.Drawing.Point(6, 58);
             this.CK_StunningTargs.Name = "CK_StunningTargs";
             this.CK_StunningTargs.Size = new System.Drawing.Size(107, 17);
-            this.CK_StunningTargs.TabIndex = 7;
+            this.CK_StunningTargs.TabIndex = 6;
             this.CK_StunningTargs.Text = "Stunning Targets";
             this.CK_StunningTargs.UseVisualStyleBackColor = true;
             this.CK_StunningTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
@@ -299,25 +316,25 @@
             // LB_Perc2
             // 
             this.LB_Perc2.AutoSize = true;
-            this.LB_Perc2.Location = new System.Drawing.Point(234, 33);
+            this.LB_Perc2.Location = new System.Drawing.Point(266, 33);
             this.LB_Perc2.Name = "LB_Perc2";
             this.LB_Perc2.Size = new System.Drawing.Size(15, 13);
-            this.LB_Perc2.TabIndex = 6;
+            this.LB_Perc2.TabIndex = 5;
             this.LB_Perc2.Text = "%";
             // 
             // LB_Perc1
             // 
             this.LB_Perc1.AutoSize = true;
-            this.LB_Perc1.Location = new System.Drawing.Point(234, 7);
+            this.LB_Perc1.Location = new System.Drawing.Point(266, 7);
             this.LB_Perc1.Name = "LB_Perc1";
             this.LB_Perc1.Size = new System.Drawing.Size(15, 13);
-            this.LB_Perc1.TabIndex = 5;
+            this.LB_Perc1.TabIndex = 2;
             this.LB_Perc1.Text = "%";
             // 
             // CB_MoveTargsPerc
             // 
             this.CB_MoveTargsPerc.Enabled = false;
-            this.CB_MoveTargsPerc.Location = new System.Drawing.Point(129, 31);
+            this.CB_MoveTargsPerc.Location = new System.Drawing.Point(161, 31);
             this.CB_MoveTargsPerc.Name = "CB_MoveTargsPerc";
             this.CB_MoveTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_MoveTargsPerc.TabIndex = 4;
@@ -332,10 +349,10 @@
             // CB_MultiTargsPerc
             // 
             this.CB_MultiTargsPerc.Enabled = false;
-            this.CB_MultiTargsPerc.Location = new System.Drawing.Point(129, 5);
+            this.CB_MultiTargsPerc.Location = new System.Drawing.Point(161, 5);
             this.CB_MultiTargsPerc.Name = "CB_MultiTargsPerc";
             this.CB_MultiTargsPerc.Size = new System.Drawing.Size(103, 20);
-            this.CB_MultiTargsPerc.TabIndex = 3;
+            this.CB_MultiTargsPerc.TabIndex = 1;
             this.CB_MultiTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.CB_MultiTargsPerc.Value = new decimal(new int[] {
             100,
@@ -350,7 +367,7 @@
             this.CK_MovingTargs.Location = new System.Drawing.Point(6, 32);
             this.CK_MovingTargs.Name = "CK_MovingTargs";
             this.CK_MovingTargs.Size = new System.Drawing.Size(100, 17);
-            this.CK_MovingTargs.TabIndex = 2;
+            this.CK_MovingTargs.TabIndex = 3;
             this.CK_MovingTargs.Text = "Moving Targets";
             this.CK_MovingTargs.UseVisualStyleBackColor = true;
             this.CK_MovingTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
@@ -361,7 +378,7 @@
             this.CK_MultiTargs.Location = new System.Drawing.Point(6, 6);
             this.CK_MultiTargs.Name = "CK_MultiTargs";
             this.CK_MultiTargs.Size = new System.Drawing.Size(101, 17);
-            this.CK_MultiTargs.TabIndex = 1;
+            this.CK_MultiTargs.TabIndex = 0;
             this.CK_MultiTargs.Text = "Multiple Targets";
             this.CK_MultiTargs.UseVisualStyleBackColor = true;
             this.CK_MultiTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
@@ -373,46 +390,46 @@
             this.LB_Lag.AutoSize = true;
             this.LB_Lag.Location = new System.Drawing.Point(6, 88);
             this.LB_Lag.Name = "LB_Lag";
-            this.LB_Lag.Size = new System.Drawing.Size(25, 13);
-            this.LB_Lag.TabIndex = 1;
-            this.LB_Lag.Text = "Lag";
+            this.LB_Lag.Size = new System.Drawing.Size(70, 13);
+            this.LB_Lag.TabIndex = 5;
+            this.LB_Lag.Text = "Lag (millisec):";
             // 
             // CB_Lag
             // 
-            this.CB_Lag.Location = new System.Drawing.Point(71, 86);
+            this.CB_Lag.Location = new System.Drawing.Point(137, 86);
             this.CB_Lag.Maximum = new decimal(new int[] {
             999,
             0,
             0,
             0});
             this.CB_Lag.Name = "CB_Lag";
-            this.CB_Lag.Size = new System.Drawing.Size(48, 20);
-            this.CB_Lag.TabIndex = 0;
+            this.CB_Lag.Size = new System.Drawing.Size(148, 20);
+            this.CB_Lag.TabIndex = 6;
             this.CB_Lag.ValueChanged += new System.EventHandler(this.CB_Latency_ValueChanged);
             // 
             // LB_React
             // 
             this.LB_React.AutoSize = true;
-            this.LB_React.Location = new System.Drawing.Point(125, 88);
+            this.LB_React.Location = new System.Drawing.Point(6, 114);
             this.LB_React.Name = "LB_React";
-            this.LB_React.Size = new System.Drawing.Size(36, 13);
-            this.LB_React.TabIndex = 1;
-            this.LB_React.Text = "React";
+            this.LB_React.Size = new System.Drawing.Size(81, 13);
+            this.LB_React.TabIndex = 7;
+            this.LB_React.Text = "React (millisec):";
             // 
             // CB_React
             // 
             this.CB_React.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_React.Location = new System.Drawing.Point(205, 86);
+            this.CB_React.Location = new System.Drawing.Point(137, 112);
             this.CB_React.Maximum = new decimal(new int[] {
             500,
             0,
             0,
             0});
             this.CB_React.Name = "CB_React";
-            this.CB_React.Size = new System.Drawing.Size(42, 20);
-            this.CB_React.TabIndex = 0;
+            this.CB_React.Size = new System.Drawing.Size(148, 20);
+            this.CB_React.TabIndex = 8;
             this.CB_React.Value = new decimal(new int[] {
             220,
             0,
@@ -426,7 +443,7 @@
             this.RB_StanceArms.Location = new System.Drawing.Point(54, 3);
             this.RB_StanceArms.Name = "RB_StanceArms";
             this.RB_StanceArms.Size = new System.Drawing.Size(48, 17);
-            this.RB_StanceArms.TabIndex = 7;
+            this.RB_StanceArms.TabIndex = 1;
             this.RB_StanceArms.Text = "Arms";
             this.RB_StanceArms.UseVisualStyleBackColor = true;
             this.RB_StanceArms.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
@@ -438,7 +455,7 @@
             this.RB_StanceFury.Location = new System.Drawing.Point(3, 3);
             this.RB_StanceFury.Name = "RB_StanceFury";
             this.RB_StanceFury.Size = new System.Drawing.Size(45, 17);
-            this.RB_StanceFury.TabIndex = 6;
+            this.RB_StanceFury.TabIndex = 0;
             this.RB_StanceFury.TabStop = true;
             this.RB_StanceFury.Text = "Fury";
             this.RB_StanceFury.UseVisualStyleBackColor = true;
@@ -449,25 +466,122 @@
             this.Tabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.Tabs.Controls.Add(this.Page_00_Instructions);
             this.Tabs.Controls.Add(this.Page_01_Situational);
-            this.Tabs.Controls.Add(this.Page_02_Maintenance);
             this.Tabs.Controls.Add(this.Page_03_FightInfo);
+            this.Tabs.Controls.Add(this.Page_02_Maintenance);
             this.Tabs.Location = new System.Drawing.Point(3, 26);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(261, 397);
-            this.Tabs.TabIndex = 0;
+            this.Tabs.Size = new System.Drawing.Size(299, 397);
+            this.Tabs.TabIndex = 2;
             // 
-            // Page_02_Maintenance
+            // Page_00_Instructions
             // 
-            this.Page_02_Maintenance.Controls.Add(this.CLB_Maints);
-            this.Page_02_Maintenance.Location = new System.Drawing.Point(4, 22);
-            this.Page_02_Maintenance.Name = "Page_02_Maintenance";
-            this.Page_02_Maintenance.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_02_Maintenance.Size = new System.Drawing.Size(253, 371);
-            this.Page_02_Maintenance.TabIndex = 1;
-            this.Page_02_Maintenance.Text = "Ability Maintenance";
-            this.Page_02_Maintenance.UseVisualStyleBackColor = true;
+            this.Page_00_Instructions.Controls.Add(this.tabControl1);
+            this.Page_00_Instructions.Location = new System.Drawing.Point(4, 22);
+            this.Page_00_Instructions.Name = "Page_00_Instructions";
+            this.Page_00_Instructions.Size = new System.Drawing.Size(291, 371);
+            this.Page_00_Instructions.TabIndex = 3;
+            this.Page_00_Instructions.Text = "Instructions";
+            this.Page_00_Instructions.UseVisualStyleBackColor = true;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(291, 371);
+            this.tabControl1.TabIndex = 1;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.richTextBox1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(283, 345);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Basics";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(277, 339);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.richTextBox2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(283, 345);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Advanced";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox2.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(277, 339);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = resources.GetString("richTextBox2.Text");
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.richTextBox3);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(283, 345);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "F.A.Q.";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox3
+            // 
+            this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox3.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox3.Name = "richTextBox3";
+            this.richTextBox3.ReadOnly = true;
+            this.richTextBox3.Size = new System.Drawing.Size(277, 339);
+            this.richTextBox3.TabIndex = 2;
+            this.richTextBox3.Text = resources.GetString("richTextBox3.Text");
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.richTextBox4);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(283, 345);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Version Notes";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox4
+            // 
+            this.richTextBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox4.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox4.Name = "richTextBox4";
+            this.richTextBox4.ReadOnly = true;
+            this.richTextBox4.Size = new System.Drawing.Size(277, 339);
+            this.richTextBox4.TabIndex = 2;
+            this.richTextBox4.Text = resources.GetString("richTextBox4.Text");
             // 
             // Page_01_Situational
             // 
@@ -489,7 +603,7 @@
             this.Page_01_Situational.Location = new System.Drawing.Point(4, 22);
             this.Page_01_Situational.Name = "Page_01_Situational";
             this.Page_01_Situational.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_01_Situational.Size = new System.Drawing.Size(253, 371);
+            this.Page_01_Situational.Size = new System.Drawing.Size(291, 371);
             this.Page_01_Situational.TabIndex = 0;
             this.Page_01_Situational.Text = "Situational";
             this.Page_01_Situational.UseVisualStyleBackColor = true;
@@ -509,10 +623,21 @@
             this.Page_03_FightInfo.Location = new System.Drawing.Point(4, 22);
             this.Page_03_FightInfo.Name = "Page_03_FightInfo";
             this.Page_03_FightInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_03_FightInfo.Size = new System.Drawing.Size(253, 371);
+            this.Page_03_FightInfo.Size = new System.Drawing.Size(291, 371);
             this.Page_03_FightInfo.TabIndex = 2;
             this.Page_03_FightInfo.Text = "Fight Info";
             this.Page_03_FightInfo.UseVisualStyleBackColor = true;
+            // 
+            // Page_02_Maintenance
+            // 
+            this.Page_02_Maintenance.Controls.Add(this.CLB_Maints);
+            this.Page_02_Maintenance.Location = new System.Drawing.Point(4, 22);
+            this.Page_02_Maintenance.Name = "Page_02_Maintenance";
+            this.Page_02_Maintenance.Padding = new System.Windows.Forms.Padding(3);
+            this.Page_02_Maintenance.Size = new System.Drawing.Size(291, 371);
+            this.Page_02_Maintenance.TabIndex = 1;
+            this.Page_02_Maintenance.Text = "Ability Maintenance";
+            this.Page_02_Maintenance.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelDPSWarr
             // 
@@ -523,7 +648,7 @@
             this.Controls.Add(this.RB_StanceFury);
             this.Controls.Add(this.RB_StanceArms);
             this.Name = "CalculationOptionsPanelDPSWarr";
-            this.Size = new System.Drawing.Size(267, 423);
+            this.Size = new System.Drawing.Size(304, 423);
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).EndInit();
@@ -533,11 +658,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).EndInit();
             this.Tabs.ResumeLayout(false);
-            this.Page_02_Maintenance.ResumeLayout(false);
+            this.Page_00_Instructions.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.Page_01_Situational.ResumeLayout(false);
             this.Page_01_Situational.PerformLayout();
             this.Page_03_FightInfo.ResumeLayout(false);
             this.Page_03_FightInfo.PerformLayout();
+            this.Page_02_Maintenance.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -577,5 +708,15 @@
         private System.Windows.Forms.TabPage Page_02_Maintenance;
         private System.Windows.Forms.TabPage Page_01_Situational;
         private System.Windows.Forms.TabPage Page_03_FightInfo;
+        private System.Windows.Forms.TabPage Page_00_Instructions;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.RichTextBox richTextBox3;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.RichTextBox richTextBox4;
     }
 }
