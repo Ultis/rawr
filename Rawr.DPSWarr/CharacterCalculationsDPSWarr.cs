@@ -107,9 +107,10 @@ namespace Rawr.DPSWarr {
             string format = "";
 
             // Base Stats
-            dictValues.Add("Health",string.Format("{0}*Base {1} + Stam Bonus {2}",
-                BasicStats.Health, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
-            dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}",BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
+                                        Environment.NewLine + "{3:00,000} : Stam Bonus",
+                BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            //dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}",BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
@@ -118,17 +119,19 @@ namespace Rawr.DPSWarr {
                 Environment.NewLine+"Total Crit increase of {2:0.00%}"+
                 Environment.NewLine+"Increases Armor by {3:0}",
                 BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f, StatConversion.GetArmorFromAgility(BasicStats.Agility)));
-            dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*From Rating {2:0.00%}" +
-                Environment.NewLine + "MH Crit {3:0.00%}" +
-                Environment.NewLine + "OH Crit {4:0.00%}" +
+            dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*" +
+                                      "{2:00.00%} : Rating " +
+                Environment.NewLine + "{3:00.00%} : MH Crit" +
+                Environment.NewLine + "{4:00.00%} : OH Crit" +
                 Environment.NewLine + "Target level affects this" +
                 Environment.NewLine + "LVL 80 will match tooltip in game" +
                 Environment.NewLine + "LVL 83 has a total of ~4.8% drop",
                 CritPercent, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating), MhCrit, OhCrit));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1}", HastePercent, BasicStats.HasteRating));
-            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*From Rating- {2:0.00%}" +
-                Environment.NewLine + "Arms Stance- +{3:0.00%}" +
-                Environment.NewLine + "Mace Spec- +{4:0.00%}",
+            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*" +
+                                                      "{2:0.00%} : Rating" +
+                                Environment.NewLine + "{3:0.00%} : Arms Stance" +
+                                Environment.NewLine + "{4:0.00%} : Mace Spec",
                                 ArmorPenetration,
                                 BasicStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
                                 ArmorPenetrationStance,
@@ -149,17 +152,16 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Expertise",
                 string.Format("{0:00.00%} : {1:00.00} : {2}*" +
                                 "Num Displayed is Rating Converted + Strength of Arms" +
-                                //Environment.NewLine + "Reduces chance to be dodged or parried by ." +
-                                Environment.NewLine + "Main Hand Exp - {3:00.00} / {4:0.00%} [Includes Racial]" +
-                                Environment.NewLine + "Off Hand Exp    - {5:00.00} / {6:0.00%} [Includes Racial]" +
+                                Environment.NewLine + "{3:00.00%} : {4:00.00} : MH Exp [Includes Racial]" +
+                                Environment.NewLine + "{5:00.00%} : {6:00.00} : OH Exp [Includes Racial]" +
                                 Environment.NewLine + Environment.NewLine +
                                 (lastNum > 0 ? "You can free {7:0} Expertise ({8:0} Rating)"
                                              : "You need {7:0} more Expertise ({8:0} Rating)"),
                                 StatConversion.GetDodgeParryReducFromExpertise(Expertise),
                                 Expertise + BasicStats.Expertise,
                                 BasicStats.ExpertiseRating,
-                                MhExpertise, StatConversion.GetDodgeParryReducFromExpertise(MhExpertise),
-                                OhExpertise, StatConversion.GetDodgeParryReducFromExpertise(OhExpertise),
+                                StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
+                                StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
                                 (sec2lastNum > 0 ? sec2lastNum : sec2lastNum * -1),
                                 (lastNum > 0 ? lastNum : lastNum*-1)));
             /*
@@ -193,7 +195,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs,Rot._TH_DPS /TotalDPS));
             dictValues.Add("Shattering Throw",  string.Format(format,Rot._Shatt_DPS,ST.DamageOnUse,Rot._Shatt_GCDs ,Rot._Shatt_DPS/TotalDPS));
             // DPS General
-            dictValues.Add("Deep Wounds",       string.Format("{0:0000} : {1:0000}*{2:00.0%} of DPS",Rot._DW_DPS, Rot._DW_PerHit,Rot._DW_DPS/TotalDPS));
+            dictValues.Add("Deep Wounds",       string.Format("{0:0000}*{1:00.0%} of DPS",Rot._DW_DPS     ,Rot._DW_DPS/TotalDPS));
             dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS));
             dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS));
             dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}*Main Hand-{2:0.00}" + 

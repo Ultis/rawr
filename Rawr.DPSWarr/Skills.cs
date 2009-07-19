@@ -1179,15 +1179,6 @@ namespace Rawr.DPSWarr {
                 DamageBase = 380f;
                 DamageBonus = (1f + 0.10f * Talents.ImprovedRend) * (1f + 0.15f * Talents.Trauma);
             }
-            /*public override float Activates {
-                get {
-                    if (!Validated) { return 0f; }
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float Rend_GCDPerc = LatentGCD / (TTLTickingTime + CalcOpts.GetLatency());
-                    float Rend_every = LatentGCD / Rend_GCDPerc;
-                    return FightDuration / Rend_every;
-                }
-            }*/
             public override float TickSize {
                 get {
                     if (!Validated) { return 0f; }
@@ -1391,13 +1382,20 @@ namespace Rawr.DPSWarr {
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
                 MaxRange = 20f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
-                Duration = (2f+(Talents.GlyphOfBattle?1f:0f))*60f * (1f + Talents.BoomingVoice * 0.25f);
+                Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
                 RageCost = 10f;
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 Effect = new SpecialEffect(Trigger.Use,
-                    new Stats() { AttackPower = (528f*(1f+Talents.CommandingPresence*0.05f)), },
-                    Duration, Duration);
+                    new Stats() { AttackPower = (548f*(1f+Talents.CommandingPresence*0.05f)), },
+                    Duration, Cd);
+            }
+            public override Stats AverageStats {
+                get {
+                    if (!Validated) { return new Stats(); }
+                    Stats bonus = Effect.GetAverageStats(1f /*Duration/*, 1f, combatFactors.MainHand.Speed, FightDuration*/);
+                    return bonus;
+                }
             }
         }
         public class DeathWish : BuffEffect {

@@ -96,8 +96,8 @@ namespace Rawr.DPSWarr {
             {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
-    					"Base Stats:Health",
-    					"Base Stats:Stamina",
+    					"Base Stats:Health and Stamina",
+    					//"Base Stats:Stamina",
                         "Base Stats:Armor",
                         "Base Stats:Strength",
                         "Base Stats:Attack Power",
@@ -368,7 +368,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             WarriorTalents talents = character.WarriorTalents;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);// GetRaceStats(character);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats() {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
@@ -414,18 +414,22 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
 
             // Stamina
+            float totalBSTAM = statsTotal.BonusStaminaMultiplier;
+            float staBase   = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina             );
+            float staBonus  = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
+            statsTotal.Stamina = staBase + staBonus;
+            /*
             statsTotal.Stamina  = (float)(int)statsTotal.Stamina;
             statsTotal.Stamina *= 1f + statsTotal.BonusStaminaMultiplier;
             statsTotal.Stamina  = (float)(int)statsTotal.Stamina;
-            statsTotal.Health  += (float)(int)(statsTotal.Stamina * 10f);
+            */
+            statsTotal.Health  += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
 
             // Strength
-            float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
-            //statsTotal.Strength = (float)(int)statsTotal.Strength;
-            //statsTotal.Strength *= 1f + statsTotal.BonusStrengthMultiplier;
-            //statsTotal.Strength = (float)(int)statsTotal.Strength;
+            float totalBSM = statsTotal.BonusStrengthMultiplier;
+            float strBase  = (float)Math.Floor((1f + totalBSM) * statsRace.Strength             );
+            float strBonus = (float)Math.Floor((1f + totalBSM) * statsGearEnchantsBuffs.Strength);
+            statsTotal.Strength = strBase + strBonus;
 
             // Agility
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
@@ -435,9 +439,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.Armor += statsTotal.Agility * 2f;
 
             // Attack Power
-            statsTotal.AttackPower = (statsTotal.Strength * 2f + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
-            statsTotal.AttackPower += (statsTotal.Armor / 180f) * talents.ArmoredToTheTeeth;
-            statsTotal.AttackPower += statsTotal.AttackPower * statsTotal.BonusAttackPowerMultiplier;
+            float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
+            float apBase        = (float)Math.Floor((1f + totalBAPM) * (statsRace.AttackPower                                ));
+            float apBonusSTR    = (float)Math.Floor((1f + totalBAPM) * (statsTotal.Strength * 2f                             ));
+            float apBonusAttT   = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / 180f) * talents.ArmoredToTheTeeth));
+            float apBonusOther  = (float)Math.Floor((1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower                   ));
+            statsTotal.AttackPower = apBase + apBonusSTR + apBonusAttT + apBonusOther;
 
             // Crit
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
@@ -538,13 +545,21 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             // Warrior Abilities as SpecialEffects
             Stats avgstats = new Stats() { AttackPower = 0f, };
-            Skills.DeathWish       Death = new Skills.DeathWish(      character,statsTotal,combatFactors,whiteAttacks);avgstats += Death.AverageStats;
+            Skills.DeathWish       Death = new Skills.DeathWish(      character,statsTotal,combatFactors,whiteAttacks);
+            avgstats += Death.AverageStats;
             //Recklessness is highly inaccurate right now
-            //Skills.Recklessness    Reck  = new Skills.Recklessness(   character,statsTotal,combatFactors,whiteAttacks);avgstats += Reck.AverageStats ;
-            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character,statsTotal,combatFactors,whiteAttacks);avgstats += Shatt.AverageStats;
-            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character,statsTotal,combatFactors,whiteAttacks);avgstats += Sweep.AverageStats;
-            Skills.Bloodrage       Blood = new Skills.Bloodrage(      character,statsTotal,combatFactors,whiteAttacks);avgstats += Blood.AverageStats;
-            //Skills.Hamstring       Hammy = new Skills.Hamstring(      character,statsTotal,combatFactors,whiteAttacks);avgstats += Hammy.AverageStats;
+            //Skills.Recklessness  Reck  = new Skills.Recklessness(   character,statsTotal,combatFactors,whiteAttacks);
+            //avgstats += Reck.AverageStats ;
+            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character,statsTotal,combatFactors,whiteAttacks);
+            avgstats += Shatt.AverageStats;
+            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character,statsTotal,combatFactors,whiteAttacks);
+            avgstats += Sweep.AverageStats;
+            Skills.Bloodrage       Blood = new Skills.Bloodrage(      character,statsTotal,combatFactors,whiteAttacks);
+            avgstats += Blood.AverageStats;
+            //Skills.Hamstring     Hammy = new Skills.Hamstring(      character,statsTotal,combatFactors,whiteAttacks);
+            //avgstats += Hammy.AverageStats;
+            Skills.BattleShout     Battle = new Skills.BattleShout(   character,statsTotal,combatFactors,whiteAttacks);
+            avgstats += Battle.AverageStats;
             statsProcs += avgstats;
 
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + statsTotal.BonusStaminaMultiplier));
@@ -700,8 +715,63 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
         
         public Stats GetBuffsStats(Character character) {
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
 
+            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blessing of Might (+Improved)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
+                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
+                                        character.WarriorTalents.CommandingPresence;
+                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
+                Buff b = Buff.GetBuffByName("Battle Shout");
+                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
+                Buff d = Buff.GetBuffByName("Blessing of Might");
+                if(hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
+                }
+            }
+
+            // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            {
+                float hasRelevantBuff = character.WarriorTalents.Trauma;
+                Buff a = Buff.GetBuffByName("Trauma");
+                Buff b = Buff.GetBuffByName("Mangle");
+                if(hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                }
+            }
+
+            // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            {
+                float hasRelevantBuff = character.WarriorTalents.BloodFrenzy;
+                Buff a = Buff.GetBuffByName("Blood Frenzy");
+                Buff b = Buff.GetBuffByName("Savage Combat");
+                if (hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                }
+            }
+
+            // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            {
+                float hasRelevantBuff = character.WarriorTalents.Rampage;
+                Buff a = Buff.GetBuffByName("Rampage");
+                Buff b = Buff.GetBuffByName("Leader of the Pack");
+                if (hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                }
+            }
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             return statsBuffs;
         }
         public override void SetDefaults(Character character) {
@@ -712,53 +782,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
             bool doit = false;
             bool removeother = false;
-            // === BATTLE SHOUT ===   // Jothay: deactivated until better control can be put on it
-            /*bool hasBoM = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blessing of Might"));
-            bool hasBoMImp = hasBoM && character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Blessing of Might"));
-            if (hasBoMImp) {
-                // Do Nothing, don't add Battle Shout as Imp BoM is a better buff (by ~2 AP)
-                doit = false;
-                removeother = false;
-            }if(hasBoM){
-                // BoM but not Improved
-                if(talents.CommandingPresence > 0){
-                    // Comm Presence is the only reason to override
-                    doit = true;
-                    removeother = true;
-                }else{
-                    // dont override as reg BoM is still better
-                    doit = false;
-                    removeother = false;
-                }
-            }else{
-                // No BoM (imp or otherwise) is in the way so just do it
-                doit = true;
-                removeother = true;
-            }
-            if (removeother) {
-                if (hasBoMImp) { character.ActiveBuffs.Remove(Buff.GetBuffByName("Improved Blessing of Might")); }
-                if (hasBoM) { character.ActiveBuffs.Remove(Buff.GetBuffByName("Blessing of Might")); }
-            }
-            if (doit) {// but dont add it if we already have it
-                if(!character.ActiveBuffs.Contains(Buff.GetBuffByName("Battle Shout"))){
-                    character.ActiveBuffs.Add(Buff.GetBuffByName("Battle Shout"));
-                }
-                if (talents.CommandingPresence == 5 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Commanding Presence (Attack Power)"))) {
-                    character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Attack Power)"));
-                }
-            }*/
-            // == TRAUMA ==
-            // The benefits from both Trauma and Mangle are identical
-            // So we should always apply Trauma if we have the talent
-            // but dont add it if we already have it
-            doit = talents.Trauma > 0 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Trauma"));
-            removeother = doit;
-            if (removeother) {
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Mangle"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Mangle"));
-                }
-            }
-            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma")); }
+            
             // == SUNDER ARMOR ==
             // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
             // But the other buffs don't stay up like Sunder
@@ -786,18 +810,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Rampage")); }
-            // == BLOOD FRENZY ==
-            // The benefits from both Blood Frenzy and Savage Combat are identical
-            // So we should always apply Blood Frenzy if we have the talent
-            // but dont add it if we already have it
-            doit = talents.BloodFrenzy > 0 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy"));
-            removeother = doit;
-            if (removeother) {
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Savage Combat"));
-                }
-            }
-            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Blood Frenzy")); }
         }
 
         public void GetTalents(Character character) {

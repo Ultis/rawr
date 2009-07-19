@@ -603,15 +603,15 @@ namespace Rawr
                 #region Warrior
                 case CharacterClass.Warrior:
                     // Draenei, Dwarf, Gnome, Human, Night Elf, Orc, Tauren, Troll, Undead
-                    S.Mana = 0;
-                    S.Health = 8121;
-                    S.Armor = 0;
-                    S.AttackPower = 220;
+                    S.Mana = 0f;
+                    S.Health = 8121f;
+                    S.Armor = 0f;
+                    S.AttackPower = 220f;
                     S.PhysicalCrit = 0.03192f;
                     S.Dodge = 0.034636f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
-                    S.SpellPower = 0;
+                    S.SpellPower = 0f;
                     S.SpellCrit = 0.0f;
                     switch (characterRace)
                     {
@@ -637,11 +637,11 @@ namespace Rawr
                             S.Spirit = 59;
                             break;
                         case CharacterRace.Human:
-                            S.Strength = 184;
-                            S.Agility = 113;
-                            S.Stamina = 161;
-                            S.Intellect = 36;
-                            S.Spirit = 58;  // 60/1.03 = 58.25 ~58
+                            S.Strength = 174f;
+                            S.Agility = 113f;
+                            S.Stamina = 161f;
+                            S.Intellect = 36f;
+                            S.Spirit = 58f;  // 60/1.03 = 58.25 ~58
                             break;
                         case CharacterRace.NightElf:
                             S.Strength = 177;
