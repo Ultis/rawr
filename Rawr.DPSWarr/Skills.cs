@@ -1691,6 +1691,50 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
         }
+        public class Trinket1 : Ability {
+            public Trinket1(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Trinket 1";
+                bool check = Char.Trinket1 != null && Char.Trinket1.Item.Stats._rawSpecialEffectData != null;
+                Effect = check ? Char.Trinket1.Item.Stats._rawSpecialEffectData[0] : null;
+                Cd = check && Effect.Trigger == Trigger.Use ? Effect.Cooldown : -1f;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+            }
+            private SpecialEffect Effect { get; set; }
+            public override float Activates {
+                get {
+                    if (Char.Trinket1 == null || Effect == null) { return 0f; }
+                    //
+                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
+                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
+                    float Every = LatentGCD / GCDPerc;
+                    return (float)Math.Max(0f, FightDuration / Every);
+                }
+            }
+        }
+        public class Trinket2 : Ability {
+            public Trinket2(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Trinket 2";
+                bool check = Char.Trinket2 != null && Char.Trinket2.Item.Stats._rawSpecialEffectData != null;
+                Effect = check ? Char.Trinket2.Item.Stats._rawSpecialEffectData[0] : null;
+                Cd = check && Effect.Trigger == Trigger.Use ? Effect.Cooldown : -1f;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+            }
+            private SpecialEffect Effect { get; set; }
+            public override float Activates {
+                get {
+                    if (Char.Trinket2 == null || Effect == null) { return 0f; }
+                    //
+                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
+                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
+                    float Every = LatentGCD / GCDPerc;
+                    return (float)Math.Max(0f, FightDuration / Every);
+                }
+            }
+        }
         #endregion
     }
 }
