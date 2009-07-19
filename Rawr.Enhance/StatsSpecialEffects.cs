@@ -32,13 +32,17 @@ namespace Rawr.Enhance
                     float unhastedAttackSpeed = 3f;
                     switch (effect.Trigger)
                     {
-                        case Trigger.MeleeCrit :
+                        case Trigger.DamageDone:
+                            trigger = 1f / (cs.GetMeleeAttacksPerSec() + cs.GetSpellAttacksPerSec());
+                            chance = (float) Math.Min(1.0f, cs.ChanceMeleeHit + cs.ChanceSpellHit); // limit to 100% chance
+                            unhastedAttackSpeed = cs.UnhastedMHSpeed;
+                            break;
+                        case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit :
                             trigger = 1f / cs.GetMeleeCritsPerSec();
                             chance = cs.ChanceMeleeCrit;
                             unhastedAttackSpeed = cs.UnhastedMHSpeed;
                             break;
-                        case Trigger.DamageDone:
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit :
                             trigger = 1f / cs.GetMeleeAttacksPerSec();
