@@ -203,7 +203,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * 1.5f
-                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure * .03f + (Talents.GlyphOfJudgement ? 0.1f : 0f));
+                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure + (Talents.GlyphOfJudgement ? 0.1f : 0f));
         }
 
         public override float AbilityCritChance()
