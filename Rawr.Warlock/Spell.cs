@@ -486,9 +486,17 @@ namespace Rawr.Warlock
 
         public override void Calculate(Stats stats, Character character)
         {
+            if (character.WarlockTalents.GlyphCoA)
+            {
+                DebuffDuration += 4; //2 extra ticks
+                DamageCoef += .2f; //SP coefficient for extra ticks
+                BaseDotDamage += 580; //Additional ticks
+            }
+
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                       * (1 + (character.WarlockTalents.ImprovedCurseOfAgony * 0.05f + character.WarlockTalents.ShadowMastery * 0.02f + character.WarlockTalents.Contagion * 0.01f))
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
+
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
@@ -685,7 +693,7 @@ namespace Rawr.Warlock
         };
 
         public DrainSoul(Stats stats, Character character)
-            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f, 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f / (1 + stats.SpellHaste), 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
         {
             Calculate(stats, character);
         }
