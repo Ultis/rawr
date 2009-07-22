@@ -69,7 +69,7 @@ namespace Rawr.Warlock
             petStats.AttackPower += (charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.57f;
             petStats.AttackPower *= 1 + charStats.BonusAttackPowerMultiplier;
             if (Pet == "Felguard") petStats.AttackPower *= 1 + ((0.05f + (character.WarlockTalents.DemonicBrutality > 0 ? character.WarlockTalents.DemonicBrutality * 0.01f : 0)) * 10);
-            if (Pet == "Felguard" && CalculationOptions.GlyphFelguard) petStats.AttackPower *= 1.2f;
+            if (Pet == "Felguard" && character.WarlockTalents.GlyphFelguard) petStats.AttackPower *= 1.2f;
             //SpellPower
             petStats.SpellPower = (charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.1495f;
             petStats.SpellPower *= 1 + charStats.BonusSpellPowerMultiplier;
@@ -120,7 +120,7 @@ namespace Rawr.Warlock
                     specialHit *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
                 if (character.WarlockTalents.EmpoweredImp > 0)
                     specialHit *= 1 + character.WarlockTalents.EmpoweredImp * 0.05f;
-                if (CalculationOptions.GlyphImp)
+                if (character.WarlockTalents.GlyphImp)
                     specialHit *= 1.2f;
             }
             else if (Pet == "Felhunter")
@@ -210,8 +210,6 @@ namespace Rawr.Warlock
 
             double availableMana = petStats.Mana;
             availableMana += petStats.Mp5 / 5f * solver.time;
-            if (CalculationOptions.FSRRatio < 100)
-                availableMana += Math.Floor(StatConversion.GetSpiritRegenSec(petStats.Spirit, petStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * solver.time;
             if (CalculationOptions.Replenishment > 0)
                 availableMana += petStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * solver.time;
             availableMana += solver.petManaGain;
