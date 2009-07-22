@@ -29,8 +29,6 @@ namespace Rawr.Warlock
             trkFightLength.Value = (int)calcOpts.FightLength;
             lblFightLength.Text = trkFightLength.Value + " minute fight.";
 
-            trkFSR.Value = (int)calcOpts.FSRRatio;
-            lblFSR.Text = trkFSR.Value + "% time spent in FSR";
 
             trkDelay.Value = (int)calcOpts.Delay;
             lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
@@ -54,21 +52,6 @@ namespace Rawr.Warlock
 
             chbUseInfernal.Checked = calcOpts.UseInfernal;
             chbImmoAura.Checked = calcOpts.UseImmoAura;
-            chbGlyphChaosBolt.Checked = calcOpts.GlyphChaosBolt;
-            chbGlyphConflag.Checked = calcOpts.GlyphConflag;
-            chbGlyphCorruption.Checked = calcOpts.GlyphCorruption;
-            chbGlyphCoA.Checked = calcOpts.GlyphCoA;
-            chbGlyphFelguard.Checked = calcOpts.GlyphFelguard;
-            chbGlyphHaunt.Checked = calcOpts.GlyphHaunt;
-            chbGlyphImmolate.Checked = calcOpts.GlyphImmolate;
-            chbGlyphImp.Checked = calcOpts.GlyphImp;
-            chbGlyphIncinerate.Checked = calcOpts.GlyphIncinerate;
-            chbGlyphLifeTap.Checked = calcOpts.GlyphLifeTap;
-            chbGlyphMetamorphosis.Checked = calcOpts.GlyphMetamorphosis;
-            chbGlyphSearingPain.Checked = calcOpts.GlyphSearingPain;
-            chbGlyphSB.Checked = calcOpts.GlyphSB;
-            chbGlyphShadowburn.Checked = calcOpts.GlyphShadowburn;
-            chbGlyphUA.Checked = calcOpts.GlyphUA;
 
             loading = false;
         }
@@ -111,16 +94,6 @@ namespace Rawr.Warlock
             }
         }
 
-        private void trkFSR_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.FSRRatio = trkFSR.Value;
-                lblFSR.Text = trkFSR.Value + "% time spent in FSR";
-                Character.OnCalculationsInvalidated();
-            }
-        }
 
         private void trkDelay_Scroll(object sender, EventArgs e)
         {
@@ -192,152 +165,7 @@ namespace Rawr.Warlock
                     e.Handled = true;
         }
 
-        private void chbGlyphConflag_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphConflag = chbGlyphConflag.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphCorruption_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-            calcOpts.GlyphCorruption = chbGlyphCorruption.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void chbGlyphCoA_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphCoA = chbGlyphCoA.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphFelguard_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphFelguard = chbGlyphFelguard.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphImmolate_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphImmolate = chbGlyphImmolate.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphImp_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphImp = chbGlyphImp.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphSearingPain_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphSearingPain = chbGlyphSearingPain.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphSB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphSB = chbGlyphSB.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphUA_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphUA = chbGlyphUA.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphChaosBolt_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphChaosBolt = chbGlyphChaosBolt.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphLifeTap_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphLifeTap = chbGlyphLifeTap.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphMetamorphosis_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphMetamorphosis = chbGlyphMetamorphosis.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphHaunt_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphHaunt = chbGlyphHaunt.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphIncinerate_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphIncinerate = chbGlyphIncinerate.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbGlyphShadowburn_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphShadowburn = chbGlyphShadowburn.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
+        
 
         private void chbImmoAura_CheckedChanged(object sender, EventArgs e)
         {
@@ -378,7 +206,6 @@ namespace Rawr.Warlock
         public int TargetLevel { get; set; }
         public int AffEffectsNumber { get; set; }
         public float FightLength { get; set; }
-        public float FSRRatio { get; set; }
         public float Delay { get; set; }
         public float Replenishment { get; set; }
         public float JoW { get; set; }
@@ -386,22 +213,7 @@ namespace Rawr.Warlock
         public String Pet { get; set; }
         public bool UseInfernal { get; set; }
         public bool UseImmoAura { get; set; }
-        public bool GlyphChaosBolt { get; set; }
-        public bool GlyphConflag { get; set; }
-        public bool GlyphCorruption { get; set; }
-        public bool GlyphCoA { get; set; }
-        public bool GlyphFelguard { get; set; }
-        public bool GlyphHaunt { get; set; }
-        public bool GlyphImmolate { get; set; }
-        public bool GlyphImp { get; set; }
-        public bool GlyphIncinerate { get; set; }
-        public bool GlyphLifeTap { get; set; }
-        public bool GlyphMetamorphosis { get; set; }
-        public bool GlyphSearingPain { get; set; }
-        public bool GlyphSB { get; set; }
-        public bool GlyphShadowburn { get; set; }
-        public bool GlyphSiphonLife { get; set; }
-        public bool GlyphUA { get; set; }
+        
 
         public List<string> SpellPriority { get; set; }
 
@@ -416,7 +228,7 @@ namespace Rawr.Warlock
         {
             TargetLevel = 3;
             FightLength = 5f;
-            FSRRatio = 100f;
+           
             Delay = 100f;
             Replenishment = 100f;
             JoW = 100f;
