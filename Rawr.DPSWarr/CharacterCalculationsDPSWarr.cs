@@ -71,6 +71,7 @@ namespace Rawr.DPSWarr {
         public Skills.MortalStrike MS { get; set; }
         public Skills.OnAttack Which { get; set; }
         public Skills.OverPower OP { get; set; }
+        public Skills.TasteForBlood TB { get; set; }
         public Skills.Recklessness RK { get; set; }
         public Skills.Rend RD { get; set; }
         public Skills.ShatteringThrow ST { get; set; }
@@ -121,13 +122,15 @@ namespace Rawr.DPSWarr {
                 Environment.NewLine+"Increases Armor by {3:0}",
                 BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f, StatConversion.GetArmorFromAgility(BasicStats.Agility)));
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*" +
-                                      "{2:00.00%} : Rating " +
-                Environment.NewLine + "{3:00.00%} : MH Crit" +
-                Environment.NewLine + "{4:00.00%} : OH Crit" +
-                Environment.NewLine + "Target level affects this" +
-                Environment.NewLine + "LVL 80 will match tooltip in game" +
-                Environment.NewLine + "LVL 83 has a total of ~4.8% drop",
-                CritPercent, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating), MhCrit, OhCrit));
+                                                      "{2:00.00%} : Rating " +
+                                Environment.NewLine + "{3:00.00%} : MH Crit" +
+                                Environment.NewLine + "{4:00.00%} : OH Crit" +
+                                Environment.NewLine + "Target level affects this" +
+                                Environment.NewLine + "LVL 80 will match tooltip in game" +
+                                Environment.NewLine + "LVL 83 has a total of ~4.8% drop",
+                                CritPercent, BasicStats.CritRating,
+                                StatConversion.GetCritFromRating(BasicStats.CritRating),
+                                MhCrit, OhCrit));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1}", HastePercent, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*" +
                                                       "{2:0.00%} : Rating" +
@@ -152,15 +155,15 @@ namespace Rawr.DPSWarr {
             float lastNum = StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Expertise",
                 string.Format("{0:00.00%} : {1:00.00} : {2}*" +
-                                "Num Displayed is Rating Converted + Strength of Arms" +
-                                Environment.NewLine + "{3:00.00%} : {4:00.00} : MH Exp [Includes Racial]" +
-                                Environment.NewLine + "{5:00.00%} : {6:00.00} : OH Exp [Includes Racial]" +
+                                                      "Following includes Racial bonus and Strength of Arms" +
+                                Environment.NewLine + "{3:00.00%} : {4:00.00} : MH" +
+                                Environment.NewLine + "{5:00.00%} : {6:00.00} : OH" +
                                 Environment.NewLine + "{7:00.00%} Weapon Mastery (Dodge Only)" +
                                 Environment.NewLine + Environment.NewLine +
                                 (lastNum > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
                                              : "You need {8:0} more Expertise ({9:0} Rating)"),
                                 StatConversion.GetDodgeParryReducFromExpertise(Expertise),
-                                Expertise + BasicStats.Expertise,
+                                Expertise,
                                 BasicStats.ExpertiseRating,
                                 StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
                                 StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
@@ -191,6 +194,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Mortal Strike",     string.Format(format,Rot._MS_DPS ,MS.DamageOnUse ,Rot._MS_GCDs     ,Rot._MS_DPS /TotalDPS));
             dictValues.Add("Rend",              string.Format(format,Rot._RD_DPS ,RD.TickSize    ,Rot._RD_GCDs     ,Rot._RD_DPS /TotalDPS));
             dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.DamageOnUse ,Rot._OP_GCDs     ,Rot._OP_DPS /TotalDPS));
+            dictValues.Add("Taste for Blood",   string.Format(format,Rot._TB_DPS ,TB.DamageOnUse ,Rot._TB_GCDs     ,Rot._TB_DPS /TotalDPS));
             dictValues.Add("Sudden Death",      string.Format(format,Rot._SD_DPS ,SD.DamageOnUse ,Rot._SD_GCDs     ,Rot._SD_DPS /TotalDPS));
             dictValues.Add("Slam",              string.Format(format,Rot._SL_DPS ,SL.DamageOnUse ,Rot._SL_GCDs     ,Rot._SL_DPS /TotalDPS));
             dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse/6,Rot._BLS_GCDs  ,Rot._BLS_DPS/TotalDPS));

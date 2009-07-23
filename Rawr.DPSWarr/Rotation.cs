@@ -34,6 +34,7 @@ namespace Rawr.DPSWarr {
         public Skills.HeroicStrike HS;
         public Skills.MortalStrike MS;
         public Skills.OverPower OP;
+        public Skills.TasteForBlood TB;
         public Skills.Recklessness RK;
         public Skills.Rend RD;
         public Skills.ShatteringThrow ST;
@@ -93,6 +94,7 @@ namespace Rawr.DPSWarr {
             calcs.HS = HS;
             calcs.MS = MS;
             calcs.OP = OP;
+            calcs.TB = TB;
             calcs.RK = RK;
             calcs.RD = RD;
             calcs.ST = ST;
@@ -119,6 +121,7 @@ namespace Rawr.DPSWarr {
             RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             MS = new Skills.MortalStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BLS= new Skills.Bladestorm(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -157,13 +160,6 @@ namespace Rawr.DPSWarr {
         private void doIterations() {
             Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
 
-            // Arms Iteration
-            /*float oldSDActivates = 0.0f, newSDActivates = SD.Activates;
-            while (!CalcOpts.FuryStance && Math.Abs(newSDActivates - oldSDActivates) > 0.01f) {
-                oldSDActivates = SD.Activates;
-                SD.LandedAtksPerSec = GetLandedAtksPerSec();
-                newSDActivates = SD.Activates;
-            }*/
             // Fury Iteration
             Which.OverridesPerSec = GetOvdActivates(Which);
             float oldActivates = 0.0f, newHSActivates = Which.Activates;
@@ -197,6 +193,7 @@ namespace Rawr.DPSWarr {
                 // Arms
                 (_MS_GCDs * ContainCritValue(MS, true)) +
                 (_OP_GCDs * ContainCritValue(OP, true)) +
+                (_TB_GCDs * ContainCritValue(TB, true)) +
                 (_SD_GCDs * ContainCritValue(SD, true)) +
                 (_SL_GCDs * ContainCritValue(SL, true)) +
                 (_BLS_GCDs* ContainCritValue(BLS,true)) * 6f +
@@ -238,11 +235,12 @@ namespace Rawr.DPSWarr {
 
             float MS_Acts = _MS_GCDs      !=0?_MS_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_     ] ? MS.Activates  : 0f;
             float OP_Acts = _OP_GCDs      !=0?_OP_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_        ] ? OP.Activates  : 0f;
+            float TB_Acts = _TB_GCDs      !=0?_TB_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_        ] ? OP.Activates  : 0f;
             float SD_Acts = _SD_GCDs      !=0?_SD_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_      ] ? SD.Activates  : 0f;
             float SL_Acts = _SL_GCDs      !=0?_SL_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_             ] ?
 
             float Dable = (BLS_Acts * 6f * 2f) + TH_Acts + (ST_Acts/2f) + MS_Acts + SD_Acts + SL_Acts;
-            float nonDable = OP_Acts;
+            float nonDable = OP_Acts + TB_Acts;
 
             Dable    /= 1.5f;
             nonDable /= 1.5f;
@@ -270,6 +268,7 @@ namespace Rawr.DPSWarr {
                     Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
                     float MS_Acts = MS.Activates;
                     float OP_Acts = OP.Activates;
+                    float TB_Acts = TB.Activates;
                     float SD_Acts = SD.Activates;
                     float HS_Acts = Which.Activates;
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
@@ -347,6 +346,7 @@ namespace Rawr.DPSWarr {
                 float MSRage         = _MS_GCDs     != 0 ? MS.GetRageUsePerSecond( _MS_GCDs    ) : 0f;
                 float RendRage       = _RD_GCDs     != 0 ? RD.GetRageUsePerSecond( _RD_GCDs    ) : 0f;
                 float OPRage         = _OP_GCDs     != 0 ? OP.GetRageUsePerSecond( _OP_GCDs    ) : 0f;
+                float TBRage         = _TB_GCDs     != 0 ? TB.GetRageUsePerSecond( _TB_GCDs    ) : 0f;
                 float SDRage         = _SD_GCDs     != 0 ? SD.GetRageUsePerSecond( _SD_GCDs    ) : 0f;
                 float SlamRage       = _SL_GCDs     != 0 ? SL.GetRageUsePerSecond( _SL_GCDs    ) : 0f;
                 // Maintenance
@@ -356,7 +356,7 @@ namespace Rawr.DPSWarr {
                 float HamstringRage  = _Ham_GCDs    != 0 ? HMS.GetRageUsePerSecond(_Ham_GCDs   ) : 0f;
                 float BattleRage     = _Battle_GCDs != 0 ? BTS.GetRageUsePerSecond(_Battle_GCDs) : 0f;
                 // Total
-                float rage = BTRage + WWRage + MSRage + OPRage + SDRage + SlamRage +
+                float rage = BTRage + WWRage + MSRage + OPRage + TBRage + SDRage + SlamRage +
                     BloodSurgeRage + SweepingRage + BladestormRage + RendRage +
                     ThunderRage + SunderRage + DemoRage + HamstringRage + BattleRage;
                 return rage;
@@ -522,6 +522,7 @@ namespace Rawr.DPSWarr {
         public float _MS_DPS      = 0f; public float _MS_GCDs      = 0f;
         public float _RD_DPS      = 0f; public float _RD_GCDs      = 0f;
         public float _OP_DPS      = 0f; public float _OP_GCDs      = 0f;
+        public float _TB_DPS      = 0f; public float _TB_GCDs      = 0f;
         public float _SD_DPS      = 0f; public float _SD_GCDs      = 0f;
         public float _SL_DPS      = 0f; public float _SL_GCDs      = 0f;
         public float _BLS_DPS     = 0f; public float _BLS_GCDs     = 0f;
@@ -554,7 +555,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "\n";
+            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -569,7 +570,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
-            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "x" + GCDMulti.ToString() + "\n";
+            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "x" + GCDMulti.ToString() + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -583,7 +584,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "\n";
+            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
             availRage -= rageadd;
@@ -595,7 +596,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += abil.Name + ": " + Abil_GCDs.ToString() + "\n";
+            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
             RageGenOther += rageadd;
@@ -644,7 +645,8 @@ namespace Rawr.DPSWarr {
             /*Bladestorm        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _BLS_GCDs,    ref DPS_TTL,ref _BLS_DPS,BLS,4f);
             /*Mortal Strike     */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _MS_GCDs,     ref DPS_TTL,ref _MS_DPS ,MS);
             /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
-            /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _OP_GCDs,     ref DPS_TTL,ref _OP_DPS ,OP);
+            /*Overpower         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _OP_GCDs,     ref DPS_TTL,ref _OP_DPS ,OP,2f);
+            /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _TB_GCDs,     ref DPS_TTL,ref _TB_DPS ,TB);
             SD.Slam_Freq = _SL_GCDs;
             /*Sudden Death      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SD_GCDs,     ref DPS_TTL,ref _SD_DPS ,SD);
             /*Slam for remainder of GCDs*/

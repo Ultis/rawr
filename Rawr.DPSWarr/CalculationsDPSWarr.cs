@@ -130,7 +130,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Mortal Strike",
                         "DPS Breakdown (Arms):Rend",
                         "DPS Breakdown (Arms):Overpower",
-                        "DPS Breakdown (Arms):Sudden Death",
+                        "DPS Breakdown (Arms):Taste for Blood*Does an Overpower",
+                        "DPS Breakdown (Arms):Sudden Death*Does a limited Execute",
                         "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
                         "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
 
@@ -300,7 +301,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, character.Class);
                 calculatedStats.MhExpertise = combatFactors.MhExpertise;
                 calculatedStats.OhExpertise = combatFactors.OhExpertise;
-                calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery;
+                calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
                 calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
                 calculatedStats.CritRating = stats.CritRating;
                 calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;

@@ -678,7 +678,7 @@ namespace Rawr.DPSWarr {
             public Suddendeath(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
-                Name = "SuddenDeath";
+                Name = "Sudden Death";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
                 Execute = new Execute(c, s, cf, wa);
                 RageCost = Execute.RageCost;
@@ -781,6 +781,44 @@ namespace Rawr.DPSWarr {
                         Every = LatentGCD / GCDPerc;
                         acts += (float)Math.Max(0f, (/*dodgespersec < Every ? (FightDuration/Every) :*/ dodgespersec));
                     }
+
+                    return acts;
+                }
+            }
+        }
+        public class TasteForBlood : Ability {
+            // Constructors
+            /// <summary>
+            /// Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage.
+            /// The Overpower cannot be blocked, dodged or parried.
+            /// </summary>
+            /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
+            /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public TasteForBlood(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Taste for Blood";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                CanBeDodged = false;
+                CanBeParried = false;
+                Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
+                RageCost = 5f - (Talents.FocusedRage * 1f);
+                Targets += StatS.BonusTargets;
+                StanceOkArms = true;
+                DamageBase = combatFactors.NormalizedMhWeaponDmg;
+                DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
+                BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+            }
+            public override float ActivatesOverride {
+                get {
+                    float acts = 0f;
+                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                    float cd = (float)Math.Max(Cd, LatentGCD);
+                    float Every = 0f;
+                    float GCDPerc = 0f;
 
                     // Chance to activate: Taste for Blood (Requires Rend)
                     if (Talents.TasteForBlood > 0f && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]) {
