@@ -208,6 +208,13 @@ v2.2.11 (Unreleased)
 - - Advanced: Information about advanced tweaking that can be done to the module
 - - F.A.Q.: A Frequently Asked Questions tab to help alleviate some of those head-scratchers
 - - Version Notes: The Raw patch notes for DPSWarr commits
+- Added Weapon Master Dodge Percentage line to the Expertise Tooltip
+- Fixed -x DPS value for defensive talents when Rampage Buff is selected
+- Changed the Overpower activates from dodges formula, should be technically more accurate than it was.
+- Split Overpower from Taste for Blood procs to two separate display lines (and activate as two separate abilities)
+- Changed the Expertise Tooltip to better display the values and corrected an issue where panel was showing SoA in one spot and not another
+- Changed the Total DPS Tooltip to show only the GCDs used, not abilities that use 0 (the list was getting too big to keep up at all times)
+- Changed the GCD usage of Overpower to absorb 2 GCDs instead of 1 to sim the attack that was used to activate it being dodged and doing no damage and then having to use another GCD to activate OP and do damage.
 
 v2.2.10.0 (Jul 17, 2009 22:27)
 

@@ -229,7 +229,7 @@ namespace Rawr.DPSWarr {
 
                 case "Agility": return BasicStats.Agility;
                 case "Crit Rating": return BasicStats.CritRating;
-                case "Crit %": return combatFactors.MhCrit;
+                case "Crit %": return combatFactors.MhYwCritChance;
 
                 case "Haste Rating": return BasicStats.HasteRating;
                 case "Haste %": return combatFactors.TotalHaste;

@@ -69,14 +69,14 @@ namespace Rawr.DPSWarr {
             Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; }
 
             if (CalcOpts.FuryStance) {
-                WHITEATTACKS.Ovd_Freq = Which.Activates * COMBATFACTORS.MainHandSpeed / CalcOpts.Duration;
+                WHITEATTACKS.Ovd_Freq = Which.Activates * COMBATFACTORS.MHSpeed / CalcOpts.Duration;
             }else{
-                WHITEATTACKS.Ovd_Freq = Which.Activates * COMBATFACTORS.MainHandSpeed / CalcOpts.Duration;
+                WHITEATTACKS.Ovd_Freq = Which.Activates * COMBATFACTORS.MHSpeed / CalcOpts.Duration;
             }
-            calcs.WhiteDPSMH = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhWhiteDPS);
-            calcs.WhiteDPSOH = (CHARACTER.OffHand == null ? 0f : WHITEATTACKS.OhWhiteDPS);
+            calcs.WhiteDPSMH = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDPS); // MhWhiteDPS
+            calcs.WhiteDPSOH = (CHARACTER.OffHand == null ? 0f : WHITEATTACKS.OhDPS);
             calcs.WhiteDPS = calcs.WhiteDPSMH + calcs.WhiteDPSOH;
-            calcs.WhiteDmg = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhAvgSwingDmg);
+            calcs.WhiteDmg = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDamageOnUse); //MhAvgSwingDmg
             WHITEATTACKS.Ovd_Freq = 0;
 
             //calcDeepWounds();
@@ -166,7 +166,7 @@ namespace Rawr.DPSWarr {
             BS.maintainActs = MaintainCDs;
             while (CalcOpts.FuryStance && Math.Abs(newHSActivates - oldActivates) > 0.01f) {
                 oldActivates = Which.Activates;
-                WhiteAtks.Ovd_Freq = (CombatFactors.MainHandSpeed * Which.OverridesPerSec);
+                WhiteAtks.Ovd_Freq = (CombatFactors.MHSpeed * Which.OverridesPerSec);
                 BS.hsActivates = oldActivates;
                 _bloodsurgeRPS = Which.bloodsurgeRPS = Which.RageUsePerSecond;
                 Which.OverridesPerSec = GetOvdActivates(Which);
@@ -180,7 +180,7 @@ namespace Rawr.DPSWarr {
         }
 
         public float ContainCritValue(Skills.Ability abil, bool IsMH) {
-            float BaseCrit = IsMH ? CombatFactors.MhYellowCrit : CombatFactors.OhYellowCrit;
+            float BaseCrit = IsMH ? CombatFactors.MhYwCritChance : CombatFactors.OhYwCritChance;
             return (float)Math.Min(1f, Math.Max(0f, BaseCrit + abil.BonusCritChance));
         }
 
@@ -205,7 +205,7 @@ namespace Rawr.DPSWarr {
                 (numWhichActivates * ContainCritValue(Which, true));
             float mhActivates =
                 /*Yellow*/MHAbilityActivates +
-                /*White */CalcOpts.Duration / CombatFactors.MainHandSpeed * CombatFactors.MhCrit;
+                /*White */CalcOpts.Duration / CombatFactors.MHSpeed * CombatFactors.MhWhCritChance;
 
             // Off Hand
             float OHAbilityActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
@@ -214,7 +214,7 @@ namespace Rawr.DPSWarr {
                 : 0f;
             float ohActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
                 /*Yellow*/OHAbilityActivates +
-                /*White */CalcOpts.Duration / CombatFactors.OffHandSpeed * CombatFactors.OhCrit
+                /*White */CalcOpts.Duration / CombatFactors.OHSpeed * CombatFactors.OhWhCritChance
                 : 0f;
 
             // Push to the Ability
@@ -245,8 +245,8 @@ namespace Rawr.DPSWarr {
             Dable    /= 1.5f;
             nonDable /= 1.5f;
 
-            float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS.MhCrit)
-                * (COMBATFACTORS.MainHand.Speed / COMBATFACTORS.TotalHaste);
+            float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS.MhWhCritChance)
+                * (COMBATFACTORS.MH.Speed / COMBATFACTORS.TotalHaste);
 
             float ProbYellowHit   = (1f - COMBATFACTORS.YwMissChance - COMBATFACTORS.MhDodgeChance);
             float ProbYellowHitOP = (1f - COMBATFACTORS.YwMissChance);
@@ -261,8 +261,8 @@ namespace Rawr.DPSWarr {
         public float CritHsSlamPerSec {
             get {
                 if (CalcOpts.FuryStance) {
-                    float critsPerRot = HS.Activates * (CombatFactors.MhYellowCrit + HS.BonusCritChance) + 
-                                        SL.Activates * (CombatFactors.MhYellowCrit + SL.BonusCritChance);
+                    float critsPerRot = HS.Activates * (CombatFactors.MhYwCritChance + HS.BonusCritChance) +
+                                        SL.Activates * (CombatFactors.MhYwCritChance + SL.BonusCritChance);
                     return critsPerRot / CalcOpts.Duration;
                 }else{
                     Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
@@ -274,8 +274,8 @@ namespace Rawr.DPSWarr {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
                     float SL_Acts = Math.Max(0f, CalcOpts.Duration / LatentGCD - MS_Acts - OP_Acts - SD_Acts);
 
-                    float result = (SL.BonusCritChance + CombatFactors.MhYellowCrit) * (SL_Acts / CalcOpts.Duration) +
-                                   (HS.BonusCritChance + CombatFactors.MhYellowCrit) * (HS_Acts / CalcOpts.Duration);
+                    float result = (SL.BonusCritChance + CombatFactors.MhYwCritChance) * (SL_Acts / CalcOpts.Duration) +
+                                   (HS.BonusCritChance + CombatFactors.MhYwCritChance) * (HS_Acts / CalcOpts.Duration);
 
                     return result;
                 }
@@ -420,18 +420,16 @@ namespace Rawr.DPSWarr {
             /*Sweeping Strikes  */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SW_GCDs,     SW);
             /*Death Wish        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Death_GCDs,  Death);
 
-            float Reck_GCDs = (float)Math.Min(availGCDs, RK.Activates);
+            /*float Reck_GCDs = (float)Math.Min(availGCDs, RK.Activates);
             _Reck_GCDs = Reck_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Reck_GCDs);
             GCDUsage += RK.Name + ": " + Reck_GCDs.ToString() + "\n";
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             rageadd = RK.GetRageUsePerSecond(Reck_GCDs);
             availRage -= rageadd;
-            RageNeeded += rageadd;
+            RageNeeded += rageadd;*/
 
             doIterations();
-
-            /*Bladestorm        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _BLS_GCDs,    ref DPS_TTL,ref _BLS_DPS,BLS,4f);
 
             // Priority 1 : Whirlwind on every CD
             float WW_GCDs = (float)Math.Min(availGCDs, WW.Activates);
@@ -487,13 +485,13 @@ namespace Rawr.DPSWarr {
             
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
-                //availRage += FightDuration / (CombatFactors.MainHandSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
+                //availRage += FightDuration / (CombatFactors.MHSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MainHandSpeed;
-                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MHSpeed;
+                _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
-                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _OVD_DPS = Which.DPS;
                 _OVD_PerHit = Which.DamageOnUse;
                 DPS_TTL += _WhiteDPS;
@@ -502,9 +500,9 @@ namespace Rawr.DPSWarr {
                 RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
                 availRage += RageGenWhite;
                 WhiteAtks.Ovd_Freq = 0f;
-                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
-                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _OVD_DPS = 0f;
                 _OVD_PerHit = 0f;
                 DPS_TTL += _WhiteDPS;
@@ -674,13 +672,13 @@ namespace Rawr.DPSWarr {
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
                 float slamspeedadd = WhiteAtks.Slam_Freq == 0 ? 0 : ((1.5f - 0.5f * Talents.ImprovedSlam) / (WhiteAtks.Slam_Freq));
-                availRage += FightDuration / (CombatFactors.MainHandSpeed + slamspeedadd) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
+                availRage += FightDuration / (CombatFactors.MHSpeed + slamspeedadd) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MainHandSpeed;
-                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MHSpeed;
+                _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
-                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _OVD_DPS = Which.DPS;
                 _OVD_PerHit = Which.DamageOnUse;
                 DPS_TTL += _WhiteDPS;
@@ -689,9 +687,9 @@ namespace Rawr.DPSWarr {
                 RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
                 availRage += RageGenWhite;
                 WhiteAtks.Ovd_Freq = 0f;
-                _WhiteDPSMH = WhiteAtks.MhWhiteDPS;
+                _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
-                _WhitePerHit = WhiteAtks.MhAvgSwingDmg;
+                _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _OVD_DPS = 0f;
                 _OVD_PerHit = 0f;
                 DPS_TTL += _WhiteDPS;

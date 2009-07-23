@@ -306,8 +306,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.CritRating = stats.CritRating;
                 calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
                 //- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
-                calculatedStats.MhCrit = combatFactors.MhCrit;
-                calculatedStats.OhCrit = combatFactors.OhCrit;
+                calculatedStats.MhCrit = combatFactors.MhYwCritChance;
+                calculatedStats.OhCrit = combatFactors.OhYwCritChance;
             }
             // Offensive
             float teethbonus = stats.Armor;
@@ -479,8 +479,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 mhHitsPerSecond = (bt.Activates + ww.Activates) / fightDuration * (1f - combatFactors.YwMissChance);
                 ohHitsPerSecond = (ww.Activates) / fightDuration * (1f - combatFactors.YwMissChance);
             }else{mhHitsPerSecond = 1f / 1.5f;}
-            if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / combatFactors.MainHandSpeed) * (1f - combatFactors.WhMissChance); }
-            if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / combatFactors.OffHandSpeed) * (1f - combatFactors.WhMissChance); }
+            if(character.MainHand != null && character.MainHand.Speed > 0f) { mhHitsPerSecond += (1f / combatFactors.MHSpeed) * (1f - combatFactors.WhMissChance); }
+            if(character.OffHand  != null && character.OffHand.Speed  > 0f) { ohHitsPerSecond += (1f / combatFactors.OHSpeed) * (1f - combatFactors.WhMissChance); }
             
             float mhHitInterval    = 1f /  mhHitsPerSecond;
             float ohHitInterval    = 1f /  ohHitsPerSecond;
@@ -500,7 +500,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         bersEffect = bersEffectEnum.Current;
                     }
                 }
-                statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration);
+                statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors.MH.Speed, fightDuration);
             }
             if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
                 bersStats = character.OffHandEnchant.Stats;
@@ -510,7 +510,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         bersEffect = bersEffectEnum.Current;
                     }
                 }
-                statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors.OffHand.Speed, fightDuration);
+                statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors.OH.Speed, fightDuration);
             }
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
@@ -518,21 +518,21 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     switch (effect.Trigger)
                     {
                         case Trigger.Use: 
-                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors.MainHand.Speed, fightDuration); 
+                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors.MH.Speed, fightDuration); 
                             break;
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit: 
-                            statsProcs += effect.GetAverageStats(bothHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration);
+                            statsProcs += effect.GetAverageStats(bothHitInterval, 1f, combatFactors.MH.Speed, fightDuration);
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
-                            statsProcs += effect.GetAverageStats(bothHitInterval, combatFactors.MhCrit, combatFactors.MainHand.Speed, fightDuration);
+                            statsProcs += effect.GetAverageStats(bothHitInterval, combatFactors.MhYwCritChance, combatFactors.MH.Speed, fightDuration);
                             break;
                         case Trigger.DoTTick:
-                            statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors.MainHand.Speed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                            statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors.MH.Speed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
                             break;
                         case Trigger.DamageDone: // physical and dots
-                            statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors.MainHand.Speed, fightDuration); 
+                            statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors.MH.Speed, fightDuration); 
                             break;
                     }
                 }
@@ -543,7 +543,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     5f, // duration
                     0f // cooldown
                 );
-                statsProcs += hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec, 1f, combatFactors.MainHand.Speed, fightDuration);
+                statsProcs += hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec, 1f, combatFactors.MH.Speed, fightDuration);
             }
             // Warrior Abilities as SpecialEffects
             Stats avgstats = new Stats() { AttackPower = 0f, };
