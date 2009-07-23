@@ -380,7 +380,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return CalcOpts.Mode32
-                ? (Combats.WeaponDamage * 0.33f)
+                ? (Combats.WeaponDamage * 0.33f) * (1f + Talents.SealsOfThePure * .03f)
                 : 0f;
         }
 
