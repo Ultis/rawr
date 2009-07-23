@@ -758,8 +758,8 @@ namespace Rawr.DPSWarr {
             public override float ActivatesOverride {
                 get {
                     float acts = 0f;
-                    float cd = Cd;
                     float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                    float cd = (float)Math.Max(Cd, LatentGCD);
                     float Every = 0f;
                     float GCDPerc = 0f;
 
@@ -768,16 +768,18 @@ namespace Rawr.DPSWarr {
 
                     // Chance to activate: Dodges + (if glyphed) Parries
                     if (dodge + parry > 0f) {
-                        cd = (float)Math.Max(Cd, 1f / (
-                            // White Attacks
-                            (dodge + parry) * (1f / combatFactors.MainHandSpeed) + // ToDo: Slam effect on swing timer & White Miss chance
-                            // Yellow Attacks
-                            (dodge + parry) * (1f / LatentGCD) // Lets just assume one yellow on each GCD, even tho that isn't right
-                         ));
+                        float slamspeedadd = Whiteattacks.Slam_Freq == 0 ? 0 : ((1.5f - 0.5f * Talents.ImprovedSlam) / (Whiteattacks.Slam_Freq));
+
+                        float whitepersec = FightDuration / (combatFactors.MainHandSpeed + slamspeedadd); // hitspersec
+                        float yellowpersec = FightDuration / LatentGCD * 0.75f; //0.75 is an arbitrary number, will make this work off actual results of GCDs used to hit vs not hit later
+
+                        float dodgespersec = (whitepersec + yellowpersec) * (dodge + parry);
+
+                        //acts += (float)Math.Max(0f, dodgespersec);
 
                         GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
                         Every = LatentGCD / GCDPerc;
-                        acts += (float)Math.Max(0f, FightDuration / Every);
+                        acts += (float)Math.Max(0f, (/*dodgespersec < Every ? (FightDuration/Every) :*/ dodgespersec));
                     }
 
                     // Chance to activate: Taste for Blood (Requires Rend)
@@ -1640,6 +1642,13 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
+            public EveryManForHimself(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                if(c.Race != CharacterRace.Human){return;}
+                Cd = 2f * 60f;
+                StanceOkArms = StanceOkFury = StanceOkDef = true;
+            }
         }
         #endregion
         #region Movement Abilities
@@ -1657,6 +1666,19 @@ namespace Rawr.DPSWarr {
             /// Glyph of Rapid Charge [-20% Cd]
             /// Glyph of Charge [+5 yds MaxRange]
             /// </GlyphsAffecting>
+            public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                MaxRange = 25f + (Talents.GlyphOfCharge ? 5f: 0f); // In Yards 
+                Cd = 20f * (1f - (Talents.GlyphOfRapidCharge ? 0.20f : 0f)); // In Seconds
+                Duration = 1.5f;
+                RageCost = 25f + (Talents.ImprovedCharge * 5f);
+                if (Talents.Warbringer == 1) {
+                    StanceOkArms = StanceOkFury = StanceOkDef = true;
+                } else if (Talents.Juggernaut == 1) {
+                    StanceOkArms = true;
+                }
+            }
         }
         public class Intercept : Ability {
             /// <summary>
@@ -1665,8 +1687,19 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>
             /// Warbringer [Usable in any stance]
+            /// Improved Intercept [-[5*Pts] sec Cd]
             /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
+            public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                MaxRange = 25f; // In Yards 
+                Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+                Duration = 3f;
+                RageCost = 10f - Talents.Precision * 1f;
+                StanceOkFury = true;StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);
+                DamageBase = 380f;
+            }
         }
         public class Intervene : Ability {
             /// <summary>
@@ -1679,6 +1712,14 @@ namespace Rawr.DPSWarr {
             /// <GlyphsAffecting>
             /// Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]
             /// </GlyphsAffecting>
+            public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                MaxRange = 25f; // In Yards 
+                Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+                RageCost = 10f;
+                StanceOkDef = true;StanceOkArms = StanceOkFury = (Talents.Warbringer == 1);
+            }
         }
         #endregion
         #region Other Abilities
@@ -1690,10 +1731,22 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
+            public Retaliation(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Retaliation";
+                StanceOkArms = true;
+                ReqMeleeRange = true;
+                ReqMeleeWeap = true;
+                Cd = 5f*60f - Talents.ImprovedDisciplines * 30f;
+                Duration = 12f;
+                StackCap = 20f;
+            }
+            public float StackCap;
         }
         public class Trinket1 : Ability {
             public Trinket1(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Trinket 1";
                 bool check = Char.Trinket1 != null && Char.Trinket1.Item.Stats._rawSpecialEffectData != null;

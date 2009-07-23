@@ -30,6 +30,7 @@ namespace Rawr.DPSWarr {
         public float Expertise { get; set; }
         public float MhExpertise { get; set; }
         public float OhExpertise { get; set; }
+        public float WeapMastPerc { get; set; }
         public float AgilityCritBonus { get; set; }
         public float CritRating { get; set; }
         public float CritPercent { get; set; }
@@ -154,14 +155,16 @@ namespace Rawr.DPSWarr {
                                 "Num Displayed is Rating Converted + Strength of Arms" +
                                 Environment.NewLine + "{3:00.00%} : {4:00.00} : MH Exp [Includes Racial]" +
                                 Environment.NewLine + "{5:00.00%} : {6:00.00} : OH Exp [Includes Racial]" +
+                                Environment.NewLine + "{7:00.00%} Weapon Mastery (Dodge Only)" +
                                 Environment.NewLine + Environment.NewLine +
-                                (lastNum > 0 ? "You can free {7:0} Expertise ({8:0} Rating)"
-                                             : "You need {7:0} more Expertise ({8:0} Rating)"),
+                                (lastNum > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
+                                             : "You need {8:0} more Expertise ({9:0} Rating)"),
                                 StatConversion.GetDodgeParryReducFromExpertise(Expertise),
                                 Expertise + BasicStats.Expertise,
                                 BasicStats.ExpertiseRating,
                                 StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
                                 StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
+                                WeapMastPerc,
                                 (sec2lastNum > 0 ? sec2lastNum : sec2lastNum * -1),
                                 (lastNum > 0 ? lastNum : lastNum*-1)));
             /*

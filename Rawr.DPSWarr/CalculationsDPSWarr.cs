@@ -300,6 +300,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, character.Class);
                 calculatedStats.MhExpertise = combatFactors.MhExpertise;
                 calculatedStats.OhExpertise = combatFactors.OhExpertise;
+                calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery;
                 calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
                 calculatedStats.CritRating = stats.CritRating;
                 calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
@@ -761,11 +762,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            {
+            if(calcOpts.FuryStance){
                 float hasRelevantBuff = character.WarriorTalents.Rampage;
                 Buff a = Buff.GetBuffByName("Rampage");
                 Buff b = Buff.GetBuffByName("Leader of the Pack");
-                if (hasRelevantBuff > 0) {
+                if (hasRelevantBuff == 1) {
                     if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
                     if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
                 }
@@ -775,19 +776,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return statsBuffs;
         }
         public override void SetDefaults(Character character) {
-            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-            WarriorTalents  talents = character.WarriorTalents;
+            //CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+            //WarriorTalents  talents = character.WarriorTalents;
 
-            if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
-            calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
-            bool doit = false;
-            bool removeother = false;
+            //if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
+            //calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
+            //bool doit = false;
+            //bool removeother = false;
             
             // == SUNDER ARMOR ==
             // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
             // But the other buffs don't stay up like Sunder
             // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
-            doit = calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
+            /*doit = calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
             removeother = doit;
             if (removeother) {
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {
@@ -797,19 +798,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     character.ActiveBuffs.Remove(Buff.GetBuffByName("Expose Armor"));
                 }
             }
-            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }
-            // == RAMPAGE ==
-            // The benefits from both Rampage and Leader of the Pack are identical
-            // So we should always apply Rampage if we have the talent
-            // but dont add it if we already have it
-            doit = talents.Rampage > 0 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Rampage"));
-            removeother = doit;
-            if (removeother) {
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Leader of the Pack"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Leader of the Pack"));
-                }
-            }
-            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Rampage")); }
+            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }*/
         }
 
         public void GetTalents(Character character) {
