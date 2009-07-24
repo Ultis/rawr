@@ -444,7 +444,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
             float apBase        = (float)Math.Floor((1f + totalBAPM) * (statsRace.AttackPower                                ));
             float apBonusSTR    = (float)Math.Floor((1f + totalBAPM) * (statsTotal.Strength * 2f                             ));
-            float apBonusAttT   = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / 180f) * talents.ArmoredToTheTeeth));
+            float apBonusAttT   = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / (calcOpts._3pt2Mode ? 108f : 180f)) * talents.ArmoredToTheTeeth));
             float apBonusOther  = (float)Math.Floor((1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower                   ));
             statsTotal.AttackPower = apBase + apBonusSTR + apBonusAttT + apBonusOther;
 
@@ -646,6 +646,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
         public override bool HasRelevantStats(Stats stats) {
             bool relevant = (
                 stats.Stamina +
+                stats.Health +
                 stats.Agility +
                 stats.Strength +
                 stats.BonusAgilityMultiplier +

@@ -55,17 +55,18 @@
             this.Tabs = new System.Windows.Forms.TabControl();
             this.Page_00_Instructions = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
+            this.Tab_Welcome = new System.Windows.Forms.TabPage();
+            this.RTB_Welcome = new System.Windows.Forms.RichTextBox();
+            this.Tab_Advanced = new System.Windows.Forms.TabPage();
+            this.RTB_Advanced = new System.Windows.Forms.RichTextBox();
+            this.Tab_FAQ = new System.Windows.Forms.TabPage();
+            this.RTB_FAQ = new System.Windows.Forms.RichTextBox();
+            this.Tab_Version = new System.Windows.Forms.TabPage();
+            this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_01_Situational = new System.Windows.Forms.TabPage();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
             this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
+            this.CK_3pt2Mode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).BeginInit();
@@ -77,10 +78,10 @@
             this.Tabs.SuspendLayout();
             this.Page_00_Instructions.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.Tab_Welcome.SuspendLayout();
+            this.Tab_Advanced.SuspendLayout();
+            this.Tab_FAQ.SuspendLayout();
+            this.Tab_Version.SuspendLayout();
             this.Page_01_Situational.SuspendLayout();
             this.Page_03_FightInfo.SuspendLayout();
             this.Page_02_Maintenance.SuspendLayout();
@@ -474,7 +475,7 @@
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
             this.Tabs.Size = new System.Drawing.Size(299, 397);
-            this.Tabs.TabIndex = 2;
+            this.Tabs.TabIndex = 3;
             // 
             // Page_00_Instructions
             // 
@@ -488,10 +489,10 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.Tab_Welcome);
+            this.tabControl1.Controls.Add(this.Tab_Advanced);
+            this.tabControl1.Controls.Add(this.Tab_FAQ);
+            this.tabControl1.Controls.Add(this.Tab_Version);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -499,89 +500,89 @@
             this.tabControl1.Size = new System.Drawing.Size(291, 371);
             this.tabControl1.TabIndex = 1;
             // 
-            // tabPage1
+            // Tab_Welcome
             // 
-            this.tabPage1.Controls.Add(this.richTextBox1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(283, 345);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Basics";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.Tab_Welcome.Controls.Add(this.RTB_Welcome);
+            this.Tab_Welcome.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Welcome.Name = "Tab_Welcome";
+            this.Tab_Welcome.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Welcome.Size = new System.Drawing.Size(283, 345);
+            this.Tab_Welcome.TabIndex = 0;
+            this.Tab_Welcome.Text = "Basics";
+            this.Tab_Welcome.UseVisualStyleBackColor = true;
             // 
-            // richTextBox1
+            // RTB_Welcome
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(277, 339);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+            this.RTB_Welcome.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_Welcome.Location = new System.Drawing.Point(3, 3);
+            this.RTB_Welcome.Name = "RTB_Welcome";
+            this.RTB_Welcome.ReadOnly = true;
+            this.RTB_Welcome.Size = new System.Drawing.Size(277, 339);
+            this.RTB_Welcome.TabIndex = 0;
+            this.RTB_Welcome.Text = resources.GetString("RTB_Welcome.Text");
             // 
-            // tabPage2
+            // Tab_Advanced
             // 
-            this.tabPage2.Controls.Add(this.richTextBox2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(283, 345);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Advanced";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.Tab_Advanced.Controls.Add(this.RTB_Advanced);
+            this.Tab_Advanced.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Advanced.Name = "Tab_Advanced";
+            this.Tab_Advanced.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Advanced.Size = new System.Drawing.Size(283, 345);
+            this.Tab_Advanced.TabIndex = 1;
+            this.Tab_Advanced.Text = "Advanced";
+            this.Tab_Advanced.UseVisualStyleBackColor = true;
             // 
-            // richTextBox2
+            // RTB_Advanced
             // 
-            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox2.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(277, 339);
-            this.richTextBox2.TabIndex = 1;
-            this.richTextBox2.Text = resources.GetString("richTextBox2.Text");
+            this.RTB_Advanced.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_Advanced.Location = new System.Drawing.Point(3, 3);
+            this.RTB_Advanced.Name = "RTB_Advanced";
+            this.RTB_Advanced.ReadOnly = true;
+            this.RTB_Advanced.Size = new System.Drawing.Size(277, 339);
+            this.RTB_Advanced.TabIndex = 1;
+            this.RTB_Advanced.Text = resources.GetString("RTB_Advanced.Text");
             // 
-            // tabPage4
+            // Tab_FAQ
             // 
-            this.tabPage4.Controls.Add(this.richTextBox3);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(283, 345);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "F.A.Q.";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.Tab_FAQ.Controls.Add(this.RTB_FAQ);
+            this.Tab_FAQ.Location = new System.Drawing.Point(4, 22);
+            this.Tab_FAQ.Name = "Tab_FAQ";
+            this.Tab_FAQ.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_FAQ.Size = new System.Drawing.Size(283, 345);
+            this.Tab_FAQ.TabIndex = 3;
+            this.Tab_FAQ.Text = "F.A.Q.";
+            this.Tab_FAQ.UseVisualStyleBackColor = true;
             // 
-            // richTextBox3
+            // RTB_FAQ
             // 
-            this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox3.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.ReadOnly = true;
-            this.richTextBox3.Size = new System.Drawing.Size(277, 339);
-            this.richTextBox3.TabIndex = 2;
-            this.richTextBox3.Text = resources.GetString("richTextBox3.Text");
+            this.RTB_FAQ.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_FAQ.Location = new System.Drawing.Point(3, 3);
+            this.RTB_FAQ.Name = "RTB_FAQ";
+            this.RTB_FAQ.ReadOnly = true;
+            this.RTB_FAQ.Size = new System.Drawing.Size(277, 339);
+            this.RTB_FAQ.TabIndex = 2;
+            this.RTB_FAQ.Text = resources.GetString("RTB_FAQ.Text");
             // 
-            // tabPage3
+            // Tab_Version
             // 
-            this.tabPage3.Controls.Add(this.richTextBox4);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(283, 345);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Version Notes";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.Tab_Version.Controls.Add(this.RTB_Version);
+            this.Tab_Version.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Version.Name = "Tab_Version";
+            this.Tab_Version.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Version.Size = new System.Drawing.Size(283, 345);
+            this.Tab_Version.TabIndex = 2;
+            this.Tab_Version.Text = "Version Notes";
+            this.Tab_Version.UseVisualStyleBackColor = true;
             // 
-            // richTextBox4
+            // RTB_Version
             // 
-            this.richTextBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox4.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox4.Name = "richTextBox4";
-            this.richTextBox4.ReadOnly = true;
-            this.richTextBox4.Size = new System.Drawing.Size(277, 339);
-            this.richTextBox4.TabIndex = 2;
-            this.richTextBox4.Text = resources.GetString("richTextBox4.Text");
+            this.RTB_Version.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_Version.Location = new System.Drawing.Point(3, 3);
+            this.RTB_Version.Name = "RTB_Version";
+            this.RTB_Version.ReadOnly = true;
+            this.RTB_Version.Size = new System.Drawing.Size(277, 339);
+            this.RTB_Version.TabIndex = 2;
+            this.RTB_Version.Text = resources.GetString("RTB_Version.Text");
             // 
             // Page_01_Situational
             // 
@@ -639,11 +640,23 @@
             this.Page_02_Maintenance.Text = "Ability Maintenance";
             this.Page_02_Maintenance.UseVisualStyleBackColor = true;
             // 
+            // CK_3pt2Mode
+            // 
+            this.CK_3pt2Mode.AutoSize = true;
+            this.CK_3pt2Mode.Location = new System.Drawing.Point(192, 4);
+            this.CK_3pt2Mode.Name = "CK_3pt2Mode";
+            this.CK_3pt2Mode.Size = new System.Drawing.Size(71, 17);
+            this.CK_3pt2Mode.TabIndex = 2;
+            this.CK_3pt2Mode.Text = "3.2 Mode";
+            this.CK_3pt2Mode.UseVisualStyleBackColor = true;
+            this.CK_3pt2Mode.CheckedChanged += new System.EventHandler(this.CK_3pt2Mode_CheckedChanged);
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.CK_3pt2Mode);
             this.Controls.Add(this.Tabs);
             this.Controls.Add(this.RB_StanceFury);
             this.Controls.Add(this.RB_StanceArms);
@@ -660,10 +673,10 @@
             this.Tabs.ResumeLayout(false);
             this.Page_00_Instructions.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
+            this.Tab_Welcome.ResumeLayout(false);
+            this.Tab_Advanced.ResumeLayout(false);
+            this.Tab_FAQ.ResumeLayout(false);
+            this.Tab_Version.ResumeLayout(false);
             this.Page_01_Situational.ResumeLayout(false);
             this.Page_01_Situational.PerformLayout();
             this.Page_03_FightInfo.ResumeLayout(false);
@@ -709,14 +722,15 @@
         private System.Windows.Forms.TabPage Page_01_Situational;
         private System.Windows.Forms.TabPage Page_03_FightInfo;
         private System.Windows.Forms.TabPage Page_00_Instructions;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox RTB_Welcome;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.RichTextBox richTextBox3;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.RichTextBox richTextBox4;
+        private System.Windows.Forms.TabPage Tab_Welcome;
+        private System.Windows.Forms.TabPage Tab_Advanced;
+        private System.Windows.Forms.RichTextBox RTB_Advanced;
+        private System.Windows.Forms.TabPage Tab_FAQ;
+        private System.Windows.Forms.RichTextBox RTB_FAQ;
+        private System.Windows.Forms.TabPage Tab_Version;
+        private System.Windows.Forms.RichTextBox RTB_Version;
+        private System.Windows.Forms.CheckBox CK_3pt2Mode;
     }
 }

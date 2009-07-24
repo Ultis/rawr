@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="richTextBox1.Text" xml:space="preserve">
+  <data name="RTB_Welcome.Text" xml:space="preserve">
     <value>Welcome to Rawr.DPSWarr!
 
 This module is designed for Warriors hoping to fulfill the DPS role in a raid, either as Fury or Arms Specialized.
@@ -145,7 +145,7 @@ Finally, if you are Arms Spec, go to Ability Maintenance and choose the abilitie
 - Slam
 - Heroic Strike</value>
   </data>
-  <data name="richTextBox2.Text" xml:space="preserve">
+  <data name="RTB_Advanced.Text" xml:space="preserve">
     <value>This section is for advanced users only, most players do not need to concern themselves with these settings.
 
 Since you have gotten your feet wet, looked at your gear, maybe even run an optimization or two, now you must be hungry for more. Fear not, there's plenty more you can tweak with your character.
@@ -168,7 +168,7 @@ The Ability Maintenance Tab
 
 Select additional abilities to watch how they affect your dps. Thunder clap appies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.</value>
   </data>
-  <data name="richTextBox3.Text" xml:space="preserve">
+  <data name="RTB_FAQ.Text" xml:space="preserve">
     <value>Got a question about Rawr.DPSWarr? The answer may be here...
 
 == CONTENTS ==
@@ -190,7 +190,7 @@ Select additional abilities to watch how they affect your dps. Thunder clap appi
 04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
 04A.  The optimizer, when run without any requirements, will attempt to fing the highest possible Total DPS number. In many cases, this does not include being hit/expertise capped. This is an unfortunate calculational error that has been persistent throughhout Rawr.DPSWarr's history. We have made great strides to correct this issue but a few points are still off. To ensure these caps are enforced, add the 'Chance to be Avoided % &lt;= 0' requirement before optimizing.</value>
   </data>
-  <data name="richTextBox4.Text" xml:space="preserve">
+  <data name="RTB_Version.Text" xml:space="preserve">
     <value>Below are the raw patch notes for each build.
 
 v2.2.11 (Unreleased)
@@ -215,6 +215,11 @@ v2.2.11 (Unreleased)
 - Changed the Expertise Tooltip to better display the values and corrected an issue where panel was showing SoA in one spot and not another
 - Changed the Total DPS Tooltip to show only the GCDs used, not abilities that use 0 (the list was getting too big to keep up at all times)
 - Changed the GCD usage of Overpower to absorb 2 GCDs instead of 1 to sim the attack that was used to activate it being dodged and doing no damage and then having to use another GCD to activate OP and do damage.
+- Cleaned up CombatFactors to newer naming convention
+- Cleaned up the Attack table for White attacks and reworked WhiteDPS to operate more like the yellow abilities do (in file and function structure, still uses all the white factors)
+- Fixed Overpower so it's no longer Block-able (as it should be)
+- Implemented a 3.2 Mode
+- Added Health as a Relevant Stat so you can select Commanding Shout as a Buff
 
 v2.2.10.0 (Jul 17, 2009 22:27)
 

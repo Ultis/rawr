@@ -16,6 +16,7 @@ namespace Rawr.DPSWarr {
         public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
         public float Duration = 300f;
         public bool FuryStance = true;
+        public bool _3pt2Mode = false;
         // Rotational Changes
         public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
         public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;

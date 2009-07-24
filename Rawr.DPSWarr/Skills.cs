@@ -974,7 +974,7 @@ namespace Rawr.DPSWarr {
                     return 0.0f; // No Free Rage = 0 damage
                 }
                 float executeRage = freerage * FightDuration;
-                if (Override && executeRage > 30f) { executeRage = 30f; }
+                if ((Override||CalcOpts._3pt2Mode) && executeRage > 30f) { executeRage = 30f; }
                 executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
                 executeRage -= RageCost;
 
@@ -1419,7 +1419,7 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
                 Cd = 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
                 Duration = 10f; // In Seconds
-                RageCost = 10f * (1f + Talents.ImprovedBloodrage * 0.25f); // This is actually reversed in the rotation
+                RageCost = (CalcOpts._3pt2Mode ? 20f : 10f) * (1f + Talents.ImprovedBloodrage * 0.25f); // This is actually reversed in the rotation
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
@@ -1441,7 +1441,7 @@ namespace Rawr.DPSWarr {
                 //
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
-                MaxRange = 20f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
+                MaxRange = (CalcOpts._3pt2Mode ? 30f : 20f) * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
                 Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
                 RageCost = 10f;
@@ -1454,6 +1454,38 @@ namespace Rawr.DPSWarr {
                 get {
                     if (!Validated) { return new Stats(); }
                     Stats bonus = Effect.GetAverageStats(1f /*Duration/*, 1f, combatFactors.MainHand.Speed, FightDuration*/);
+                    return bonus;
+                }
+            }
+        }
+        public class CommandingShout : BuffEffect {
+            // Constructors
+            /// <summary>
+            /// The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.
+            /// </summary>
+            /// <TalentsAffecting>
+            /// Booming Voice [+(25*Pts)% AoE and Duration],
+            /// Commanding Presence [+(5*Pts)% to the Health Bonus]
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public CommandingShout(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Battle Shout";
+                //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
+                MaxRange = (CalcOpts._3pt2Mode ? 30f : 20f) * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
+                Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
+                Cd = Duration;
+                RageCost = 10f;
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { Health = (2255f*(1f+Talents.CommandingPresence*0.05f)), },
+                    Duration, Cd);
+            }
+            public override Stats AverageStats {
+                get {
+                    if (!Validated) { return new Stats(); }
+                    Stats bonus = Effect.GetAverageStats(1f);
                     return bonus;
                 }
             }
