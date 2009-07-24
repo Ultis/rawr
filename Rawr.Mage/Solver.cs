@@ -575,7 +575,7 @@ namespace Rawr.Mage
             calculationResult.ArcaneThreatMultiplier = threatFactor * (1 - character.MageTalents.ArcaneSubtlety * 0.2f);
             calculationResult.FireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f);
             calculationResult.FrostThreatMultiplier = threatFactor * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
-            calculationResult.FrostFireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f) * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
+            calculationResult.FrostFireThreatMultiplier = threatFactor * Math.Min(1 - character.MageTalents.BurningSoul * 0.05f, 1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
             calculationResult.NatureThreatMultiplier = threatFactor;
             calculationResult.ShadowThreatMultiplier = threatFactor;
             calculationResult.HolyThreatMultiplier = threatFactor;
