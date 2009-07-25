@@ -1052,6 +1052,10 @@ namespace Rawr
                             else if (list.Count > 0)
                             {
                                 string s = list[0];
+                                if (s.EndsWith("*"))
+                                {
+                                    s = s.TrimEnd('*') + item.EnchantId;
+                                }
                                 item = new ItemInstance(s);
                                 character.Character[(CharacterSlot)slot] = item;
                                 character.UnsavedChanges = true;
