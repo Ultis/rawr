@@ -229,7 +229,7 @@ namespace Rawr.DPSWarr {
 
                 case "Agility": return BasicStats.Agility;
                 case "Crit Rating": return BasicStats.CritRating;
-                case "Crit %": return combatFactors.MhYwCritChance;
+                case "Crit %": return combatFactors._c_mhycrit;
 
                 case "Haste Rating": return BasicStats.HasteRating;
                 case "Haste %": return combatFactors.TotalHaste;
@@ -239,16 +239,16 @@ namespace Rawr.DPSWarr {
 
                 case "Hit Rating": return BasicStats.HitRating;
                 case "Hit %": return combatFactors.HitPerc;
-                case "White Miss %": return combatFactors.WhMissChance;
-                case "Yellow Miss %": return combatFactors.YwMissChance;
+                case "White Miss %": return combatFactors._c_wmiss;
+                case "Yellow Miss %": return combatFactors._c_ymiss;
 
                 case "Expertise Rating": return BasicStats.ExpertiseRating;
                 case "Expertise": return BasicStats.Expertise;
                 case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, CharacterClass.Warrior);
-                case "Dodge %": return combatFactors.MhDodgeChance;
+                case "Dodge %": return combatFactors._c_mhdodge;
                 case "Parry %": return combatFactors.MhParryChance;
 
-                case "Chance to be Avoided %": return combatFactors.YwMissChance + combatFactors.MhDodgeChance;
+                case "Chance to be Avoided %": return combatFactors._c_ymiss + combatFactors._c_mhdodge;
 
                 //case "Threat Reduction": return ThreatReduction;
                 //case "Threat Per Second": return ThreatPerSecond;*/

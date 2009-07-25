@@ -9,6 +9,25 @@ namespace Rawr.DPSWarr {
             Talents = character.WarriorTalents;
             CalcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             Char = character;
+            
+            // Optimizations
+            _c_mhItemType = MH.Type;
+            _c_ohItemType = (OH==null?ItemType.None:OH.Type);
+            _c_mhItemSpeed = MH.Speed;
+            _c_ohItemSpeed = (OH == null ? 0.0f : OH.Speed);
+            _c_mhRacialExpertise = GetRacialExpertiseFromWeaponType(_c_mhItemType);
+            _c_ohRacialExpertise = GetRacialExpertiseFromWeaponType(_c_ohItemType);
+            _c_mhdodge = MhDodgeChance;
+            _c_ohdodge = OhDodgeChance;
+            _c_mhparry = MhParryChance;
+            _c_ohparry = OhParryChance;
+            _c_mhycrit = MhYwCritChance;
+            _c_mhwcrit = MhWhCritChance;
+            _c_ohycrit = OhYwCritChance;
+            _c_ohwcrit = OhWhCritChance;
+            _c_ymiss = YwMissChance;
+            _c_wmiss = WhMissChance;
+            
         }
         #region Global Variables
         private Stats StatS;
@@ -17,6 +36,19 @@ namespace Rawr.DPSWarr {
         private Character Char;
         public Item MH;
         public Item OH;
+        // Optimizations
+        public readonly ItemType _c_mhItemType;
+        public readonly ItemType _c_ohItemType;
+        public readonly float _c_mhItemSpeed;
+        public readonly float _c_ohItemSpeed;
+        public readonly float _c_mhRacialExpertise, _c_ohRacialExpertise;
+
+        public readonly float _c_mhdodge, _c_mhparry;
+        public readonly float _c_ohdodge, _c_ohparry;
+        public readonly float _c_mhwcrit, _c_mhycrit;
+        public readonly float _c_ohwcrit, _c_ohycrit;
+        public readonly float _c_ymiss, _c_wmiss;
+
         #endregion
 
         #region Weapon Damage Calcs
@@ -33,7 +65,7 @@ namespace Rawr.DPSWarr {
             get {
                 float armorReduction;
                 float arpenBuffs =
-                    ((Char.MainHand != null && Char.MainHand.Type == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
+                    ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
                     (!CalcOpts.FuryStance ? 0.1f : 0.0f);
                 if(CalcOpts==null){
                     // you're supposed to pass the character level, not the target level.  GC misspoke.
@@ -62,8 +94,9 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Average Weapon Damage
-        public float AvgMhWeaponDmg { get { return CalcAverageWeaponDamage(MH, true); } }
-        public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OH, false); } }
+        public float AvgMhWeaponDmg { get { return (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed; } }
+        public float AvgOhWeaponDmg { get { return (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed * (0.5f + Talents.DualWieldSpecialization * 0.025f); } }
+        /* optimizations ...
         public float AvgWeaponDmg(Item i, bool isMH) { return CalcAverageWeaponDamage(i, isMH); }
         private float CalcAverageWeaponDamage(Item weapon, bool isMH) {
             if(weapon==null){return 0f;}
@@ -71,13 +104,13 @@ namespace Rawr.DPSWarr {
             // only at the absolute end of calculations to prevent this
             return ((StatS.AttackPower / 14f + weapon.DPS) * weapon.Speed)
                 * (!isMH ? 0.5f + Talents.DualWieldSpecialization * 0.025f : 1f);
-        }
+        }*/
         #endregion
         #region Weapon Crit Damage
         public float BonusWhiteCritDmg {
             get {
                 float baseCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f);
-                baseCritDmg *= 1f + ((MH.Type == ItemType.TwoHandAxe || MH.Type == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+                baseCritDmg *= 1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
                 return baseCritDmg;
             }
         }
@@ -105,7 +138,7 @@ namespace Rawr.DPSWarr {
             get {
                 float totalHaste = 1f + StatS.PhysicalHaste; // BloodFrenzy is handled in GetCharacterStats
                 totalHaste      *= 1f + StatConversion.GetHasteFromRating(StatS.HasteRating,CharacterClass.Warrior); // Multiplicative
-                totalHaste      *= 1f + Talents.Flurry * 0.05f * CalcFlurryUptime(StatS);
+                totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
                 return totalHaste;
             }
         }
@@ -119,34 +152,58 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Expertise Rating
         public float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Warrior);}
-        public static float GetRacialExpertiseFromWeapon(CharacterRace r, Item weapon) {
-            if(weapon != null){
-                if      (r == CharacterRace.Human) {
-                    if (weapon.Type == ItemType.OneHandSword || weapon.Type == ItemType.OneHandMace
-                        || weapon.Type == ItemType.TwoHandSword || weapon.Type == ItemType.TwoHandMace) {
+        public float GetRacialExpertiseFromWeaponType(ItemType weapon)
+        {
+            CharacterRace r = Char.Race;
+            if (weapon != ItemType.None)
+            {
+                if (r == CharacterRace.Human)
+                {
+                    if (weapon == ItemType.OneHandSword || weapon == ItemType.OneHandMace
+                        || weapon == ItemType.TwoHandSword || weapon == ItemType.TwoHandMace)
+                    {
                         return 3f;
                     }
-                }else if(r == CharacterRace.Dwarf) {
-                    if (weapon.Type == ItemType.OneHandMace || weapon.Type == ItemType.TwoHandMace) {
+                }
+                else if (r == CharacterRace.Dwarf)
+                {
+                    if (weapon == ItemType.OneHandMace || weapon == ItemType.TwoHandMace)
+                    {
                         return 5f;
                     }
-                }else if(r == CharacterRace.Orc) {
-                    if (weapon.Type == ItemType.OneHandAxe || weapon.Type == ItemType.TwoHandAxe) {
+                }
+                else if (r == CharacterRace.Orc)
+                {
+                    if (weapon == ItemType.OneHandAxe || weapon == ItemType.TwoHandAxe)
+                    {
                         return 5f;
                     }
                 }
             }
             return 0f;
         }
-        private float CalcExpertise(Item weapon) {
+        
+        /*private float CalcExpertise(Item weapon) {
             if (weapon == null || weapon.MaxDamage == 0f) { return 0f; }
             float baseExpertise = StatS.Expertise;
             baseExpertise += StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating);
             baseExpertise += GetRacialExpertiseFromWeapon(Char.Race,weapon);
             return baseExpertise;
+        }*/
+        public float MhExpertise
+        {
+            get
+            {
+                return StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_mhRacialExpertise;
+            }
         }
-        public float MhExpertise { get { return CalcExpertise(MH); } }
-        public float OhExpertise { get { return CalcExpertise(OH ); } }
+        public float OhExpertise
+        {
+            get
+            {
+                return StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_ohRacialExpertise;
+            }
+        }
         #endregion
 
         #region Miss
@@ -172,39 +229,56 @@ namespace Rawr.DPSWarr {
         public float YwMissChance { get { return (float)Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP - MissPrevBonuses); } }
         #endregion
         #region Dodge
-        public float MhDodgeChance  { get { return CalcDodgeChance(MhExpertise); } }
-        public float OhDodgeChance  { get { return CalcDodgeChance(OhExpertise); } }
+        public float MhDodgeChance  { get { return StatConversion.WHITE_DODGE_CHANCE_CAP - GetDPRfromExp(MhExpertise) - Talents.WeaponMastery * 0.01f; } }
+        public float OhDodgeChance  { get { return StatConversion.WHITE_DODGE_CHANCE_CAP - GetDPRfromExp(OhExpertise) - Talents.WeaponMastery * 0.01f; } }
+        /* optimized
         public float CalcDodgeChance(float Expertise) {
             float DodgeChance = StatConversion.WHITE_DODGE_CHANCE_CAP - GetDPRfromExp(Expertise);
             DodgeChance -= Talents.WeaponMastery / 100f;
             return (float)Math.Max(0f,DodgeChance);
-        }
+        }*/
         #endregion
         #region Parry
-        public float MhParryChance  { get { return CalcParryChance(MhExpertise); } }
-        public float OhParryChance  { get { return CalcParryChance(OhExpertise); } }
+        public float MhParryChance
+        {
+            get
+            {
+                float ParryChance = StatConversion.WHITE_PARRY_CHANCE_CAP - GetDPRfromExp(MhExpertise);
+                return (float)Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
+            }
+        }
+        public float OhParryChance
+        {
+            get
+            {
+                float ParryChance = StatConversion.WHITE_PARRY_CHANCE_CAP - GetDPRfromExp(OhExpertise);
+                return (float)Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
+            }
+        }
+        /* optimized
         public float CalcParryChance(float Expertise) {
             float ParryChance = StatConversion.WHITE_PARRY_CHANCE_CAP - GetDPRfromExp(Expertise);
             return (float)Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc/100f) : ParryChance);
-        }
+        }*/
         #endregion
         #region Glance
         public float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP; } }
         #endregion
         #region Block
-        public float MhBlockChance  { get { return CalcBlockChance(); } }
-        public float OhBlockChance  { get { return CalcBlockChance(); } }
-        public float CalcBlockChance() {
+        public float MhBlockChance { get { return (float)Math.Max(0f, CalcOpts.InBack ? StatConversion.WHITE_BLOCK_CHANCE_CAP * (1f - CalcOpts.InBackPerc / 100f) : StatConversion.WHITE_BLOCK_CHANCE_CAP); } }
+        public float OhBlockChance { get { return (float)Math.Max(0f, CalcOpts.InBack ? StatConversion.WHITE_BLOCK_CHANCE_CAP * (1f - CalcOpts.InBackPerc / 100f) : StatConversion.WHITE_BLOCK_CHANCE_CAP); } }
+        /* optimizations...
+         * public float CalcBlockChance() {
             float BlockChance = StatConversion.WHITE_BLOCK_CHANCE_CAP;
             return (float)Math.Max(0f, CalcOpts.InBack ? BlockChance * (1f - CalcOpts.InBackPerc / 100f) : BlockChance);
-        }
+        }*/
         #endregion
         #region Crit
         public float MhWhCritChance {
             get {
                 if (MH == null || MH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (MH.Type == ItemType.TwoHandAxe || MH.Type == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 return crit;
             }
         }
@@ -212,8 +286,8 @@ namespace Rawr.DPSWarr {
             get {
                 if (MH == null || MH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (MH.Type == ItemType.TwoHandAxe || MH.Type == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
-                crit *= (1f - YwMissChance - MhDodgeChance);
+                crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit *= (1f - _c_ymiss - _c_mhdodge);
                 return crit;
             }
         }
@@ -221,7 +295,7 @@ namespace Rawr.DPSWarr {
             get {
                 if (OH == null || OH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (OH.Type == ItemType.TwoHandAxe || OH.Type == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 return crit;
             }
         }
@@ -229,8 +303,8 @@ namespace Rawr.DPSWarr {
             get {
                 if (OH == null || OH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (OH.Type == ItemType.TwoHandAxe || OH.Type == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
-                crit *= (1f - YwMissChance - OhDodgeChance);
+                crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit *= (1f - _c_ymiss - _c_ohdodge);
                 return crit;
             }
         }
@@ -238,40 +312,51 @@ namespace Rawr.DPSWarr {
         #region Chance of Hitting (be it Ordinary, Glance or Blocked, but not Crit)
         // White
         //public float ProbWhiteHit(Item i)  { float exp = CalcExpertise(i); return 1f - WhMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
-        public float ProbMhWhiteHit  { get { return 1f - WhMissChance - MhWhCritChance - MhDodgeChance - MhParryChance; } }
-        public float ProbOhWhiteHit  { get { return 1f - WhMissChance - OhWhCritChance - OhDodgeChance - OhParryChance; } }
+        public float ProbMhWhiteHit  { get { return 1f - _c_wmiss - _c_mhwcrit - _c_mhdodge - _c_mhparry; } }
+        public float ProbOhWhiteHit  { get { return 1f - _c_wmiss - _c_ohwcrit - _c_ohdodge - _c_ohparry; } }
         // Yellow (Doesn't Glance and has different MissChance Cap)
-        //public float ProbYellowHit(Item i) { float exp = CalcExpertise(i); return 1f - YwMissChance - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
-        public float ProbMhYellowHit { get { return 1f - YwMissChance - MhYwCritChance - MhDodgeChance - MhParryChance - MhBlockChance; } }
-        public float ProbOhYellowHit { get { return 1f - YwMissChance - OhYwCritChance - OhDodgeChance - OhParryChance - OhBlockChance; } }
+        //public float ProbYellowHit(Item i) { float exp = CalcExpertise(i); return 1f - _c_ymiss - CalcCrit(i) - CalcDodgeChance(exp) - CalcParryChance(exp); }
+        public float ProbMhYellowHit { get { return 1f - _c_ymiss - _c_mhycrit - _c_mhdodge - _c_mhparry - MhBlockChance; } }
+        public float ProbOhYellowHit { get { return 1f - _c_ymiss - _c_ohycrit - _c_ohdodge - _c_ohparry - OhBlockChance; } }
         #endregion
         #endregion
         #region Other
-        private float CalcFlurryUptime(Stats stats) {
-            float uptime = 1f;
-            float OHSpeed = (OH == null ? 1f : OH.Speed);
-            float weaponDiff = OHSpeed / MH.Speed;
-            float mhpercent = weaponDiff/(1f+weaponDiff);
-            float ohpercent = 1f - mhpercent;
-            float consumeRate = (1f + Talents.Flurry * 0.05f)
-                              * (1f + StatConversion.GetHasteFromRating(StatS.HasteRating,CharacterClass.Warrior))
-                              * (1f + StatS.PhysicalHaste)
-                              * (1f / MH.Speed + 1f / OHSpeed);
+        private float FlurryUptime
+        {
+            get
+            {
+                //float uptime = 1f - (float)Math.Pow(1f - _c_mhycrit, 3f);
+                float uptime = 1f - (1f - _c_mhycrit) * (1f - _c_mhycrit) * (1f - _c_mhycrit);
+                return uptime;
 
-            float BTperSec = 0.1875f;
-            float WWperSec = 0.1250f;
+                /*float uptime = 1f;
+                float OHSpeed = (OH == null ? 1f : OH.Speed);
+                float weaponDiff = OHSpeed / MH.Speed;
+                float mhpercent = weaponDiff / (1f + weaponDiff);
+                float ohpercent = 1f - mhpercent;
+                float consumeRate = (1f + Talents.Flurry * 0.05f)
+                                  * (1f + StatConversion.GetHasteFromRating(StatS.HasteRating, CharacterClass.Warrior))
+                                  * (1f + StatS.PhysicalHaste)
+                                  * (1f / MH.Speed + 1f / OHSpeed);
 
-            uptime  = (float)System.Math.Pow(1f - MhWhCritChance, 1f * mhpercent * 3f);
-            uptime *= (float)System.Math.Pow(1f - MhWhCritChance, 0f * mhpercent * 3f);
+                float mhCritChance = MhWhCritChance;
+                float ohCritChance = OhWhCritChance;
 
-            uptime *= (float)System.Math.Pow(1f - OhWhCritChance, ohpercent * 3f);
+                float BTperSec = 0.1875f;
+                float WWperSec = 0.1250f;
 
-            uptime *= (float)System.Math.Pow(1f - MhWhCritChance, 3f / consumeRate * (BTperSec * (1f + MhWhCritChance) + WWperSec));
-            uptime *= (float)System.Math.Pow(1f - OhWhCritChance, 3f / consumeRate * WWperSec);
+                uptime = (float)System.Math.Pow(1f - mhCritChance, 1f * mhpercent * 3f);
+                uptime *= (float)System.Math.Pow(1f - mhCritChance, 0f * mhpercent * 3f);
 
-            uptime  = 1f - uptime;
+                uptime *= (float)System.Math.Pow(1f - ohCritChance, ohpercent * 3f);
 
-            return uptime;
+                uptime *= (float)System.Math.Pow(1f - mhCritChance, 3f / consumeRate * (BTperSec * (1f + mhCritChance) + WWperSec));
+                uptime *= (float)System.Math.Pow(1f - ohCritChance, 3f / consumeRate * WWperSec);
+
+                uptime = 1f - uptime;
+
+                return uptime;*/
+            }
         }
         #endregion
         public class Knuckles : Item {

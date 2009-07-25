@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{55A0C445-3E1A-4BB4-A0ED-9056366C8333}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -96,6 +96,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RotationViewer.resx">
       <DependentUpon>RotationViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

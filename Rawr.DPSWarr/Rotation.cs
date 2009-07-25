@@ -180,7 +180,7 @@ namespace Rawr.DPSWarr {
         }
 
         public float ContainCritValue(Skills.Ability abil, bool IsMH) {
-            float BaseCrit = IsMH ? CombatFactors.MhYwCritChance : CombatFactors.OhYwCritChance;
+            float BaseCrit = IsMH ? CombatFactors._c_mhycrit : CombatFactors._c_ohycrit;
             return (float)Math.Min(1f, Math.Max(0f, BaseCrit + abil.BonusCritChance));
         }
 
@@ -205,7 +205,7 @@ namespace Rawr.DPSWarr {
                 (numWhichActivates * ContainCritValue(Which, true));
             float mhActivates =
                 /*Yellow*/MHAbilityActivates +
-                /*White */CalcOpts.Duration / CombatFactors.MHSpeed * CombatFactors.MhWhCritChance;
+                /*White */CalcOpts.Duration / CombatFactors.MHSpeed * CombatFactors._c_mhwcrit;
 
             // Off Hand
             float OHAbilityActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
@@ -214,7 +214,7 @@ namespace Rawr.DPSWarr {
                 : 0f;
             float ohActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
                 /*Yellow*/OHAbilityActivates +
-                /*White */CalcOpts.Duration / CombatFactors.OHSpeed * CombatFactors.OhWhCritChance
+                /*White */CalcOpts.Duration / CombatFactors.OHSpeed * CombatFactors._c_ohwcrit
                 : 0f;
 
             // Push to the Ability
@@ -245,11 +245,11 @@ namespace Rawr.DPSWarr {
             Dable    /= 1.5f;
             nonDable /= 1.5f;
 
-            float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS.MhWhCritChance)
+            float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS._c_mhwcrit)
                 * (COMBATFACTORS.MH.Speed / COMBATFACTORS.TotalHaste);
 
-            float ProbYellowHit   = (1f - COMBATFACTORS.YwMissChance - COMBATFACTORS.MhDodgeChance);
-            float ProbYellowHitOP = (1f - COMBATFACTORS.YwMissChance);
+            float ProbYellowHit   = (1f - COMBATFACTORS._c_ymiss - COMBATFACTORS._c_mhdodge);
+            float ProbYellowHitOP = (1f - COMBATFACTORS._c_ymiss);
 
             float result = white
                 + (Dable    * ProbYellowHit  )
@@ -261,8 +261,8 @@ namespace Rawr.DPSWarr {
         public float CritHsSlamPerSec {
             get {
                 if (CalcOpts.FuryStance) {
-                    float critsPerRot = HS.Activates * (CombatFactors.MhYwCritChance + HS.BonusCritChance) +
-                                        SL.Activates * (CombatFactors.MhYwCritChance + SL.BonusCritChance);
+                    float critsPerRot = HS.Activates * (CombatFactors._c_mhycrit + HS.BonusCritChance) +
+                                        SL.Activates * (CombatFactors._c_mhycrit + SL.BonusCritChance);
                     return critsPerRot / CalcOpts.Duration;
                 }else{
                     Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
@@ -274,8 +274,8 @@ namespace Rawr.DPSWarr {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
                     float SL_Acts = Math.Max(0f, CalcOpts.Duration / LatentGCD - MS_Acts - OP_Acts - SD_Acts);
 
-                    float result = (SL.BonusCritChance + CombatFactors.MhYwCritChance) * (SL_Acts / CalcOpts.Duration) +
-                                   (HS.BonusCritChance + CombatFactors.MhYwCritChance) * (HS_Acts / CalcOpts.Duration);
+                    float result = (SL.BonusCritChance + CombatFactors._c_mhycrit) * (SL_Acts / CalcOpts.Duration) +
+                                   (HS.BonusCritChance + CombatFactors._c_mhycrit) * (HS_Acts / CalcOpts.Duration);
 
                     return result;
                 }
@@ -672,7 +672,7 @@ namespace Rawr.DPSWarr {
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
                 float slamspeedadd = WhiteAtks.Slam_Freq == 0 ? 0 : ((1.5f - 0.5f * Talents.ImprovedSlam) / (WhiteAtks.Slam_Freq));
-                availRage += FightDuration / (CombatFactors.MHSpeed + slamspeedadd) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
+                availRage += FightDuration / (CombatFactors.MHSpeed + slamspeedadd) * WhiteAtks.MHSwingRage / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MHSpeed;

@@ -59,16 +59,16 @@ namespace Rawr.DPSWarr {
 
                     // Work the Attack Table
                     float dmgDrop = (1f
-                        - combatFactors.WhMissChance    //no damage when being missed
-                        - combatFactors.MhDodgeChance   //no damage when being dodged
+                        - combatFactors._c_wmiss    //no damage when being missed
+                        - combatFactors._c_mhdodge   //no damage when being dodged
                         - combatFactors.MhParryChance   //no damage when being parried
                         - combatFactors.GlanceChance    //handled below
                         - combatFactors.MhBlockChance   //handled below
-                        - combatFactors.MhWhCritChance);//handled below
+                        - combatFactors._c_mhwcrit);//handled below
 
                     float dmgGlance = dmg * combatFactors.GlanceChance   * 0.7f;// combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing
                     float dmgBlock  = dmg * combatFactors.MhBlockChance  * 0.7f;// combatFactors.ReducWhBlockedDmg;//Partial damage when blocked
-                    float dmgCrit   = dmg * combatFactors.MhWhCritChance * (1f+combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
+                    float dmgCrit   = dmg * combatFactors._c_mhwcrit * (1f+combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
 
                     dmg *= dmgDrop;
 
@@ -102,16 +102,16 @@ namespace Rawr.DPSWarr {
 
                     // Work the Attack Table
                     float dmgDrop = (1f
-                        - combatFactors.WhMissChance    //no damage when being missed
-                        - combatFactors.OhDodgeChance   //no damage when being dodged
+                        - combatFactors._c_wmiss    //no damage when being missed
+                        - combatFactors._c_ohdodge   //no damage when being dodged
                         - combatFactors.OhParryChance   //no damage when being parried
                         - combatFactors.GlanceChance    //handled below
                         - combatFactors.OhBlockChance   //handled below
-                        - combatFactors.OhWhCritChance);//handled below
+                        - combatFactors._c_ohwcrit);//handled below
 
                     float dmgGlance = dmg * combatFactors.GlanceChance   * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing
                     float dmgBlock  = dmg * combatFactors.OhBlockChance  * combatFactors.ReducWhBlockedDmg;//Partial damage when blocked
-                    float dmgCrit   = dmg * combatFactors.OhWhCritChance * (1f+combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
+                    float dmgCrit   = dmg * combatFactors._c_ohwcrit * (1f+combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
 
                     dmg *= dmgDrop;
 
@@ -130,43 +130,81 @@ namespace Rawr.DPSWarr {
             }
             public float OhDPS { get { return AvgOhDamageOnUse / CalcOpts.Duration; } }
             // Rage Calcs
-            public float GetSwingRage(Item i, bool isMH) {
-                // d = damage amt
-                // s = weapon speed
-                // f = hit factor
-                float d, s, f, rage;
+            public float MHSwingRage
+            {
+                get
+                {
+                    // d = damage amount
+                    // s = weapon speed
+                    // f = hit factor
+                    float d, s, f, rage;
+                    float based;
 
-                rage = 0.0f;
-                s = i.Speed;
+                    rage = 0.0f;
+                    s = combatFactors._c_mhItemSpeed;
+                    based = combatFactors.AvgMhWeaponDmg * combatFactors.DamageBonus * combatFactors.DamageReduction;
 
-                // regular hit
-                d = combatFactors.AvgWeaponDmg(i, isMH) * combatFactors.DamageReduction;
-                f = (isMH ? 3.5f : 1.75f);
-                rage += RageFormula(d, s, f) * (isMH ? combatFactors.ProbMhWhiteHit : combatFactors.ProbOhWhiteHit);
+                    // regular hit
+                    d = based;
+                    f = 3.5f;
+                    rage += RageFormula(d, s, f) * combatFactors.ProbMhWhiteHit;
 
-                // crit
-                d *= (1f + combatFactors.BonusWhiteCritDmg);
-                f = (isMH ? 7.0f : 3.5f);
-                rage += RageFormula(d, s, f) * (isMH ? combatFactors.MhWhCritChance : combatFactors.OhWhCritChance);// _combatFactors.CalcCrit(i);
+                    // glance
+                    d = based * combatFactors.ReducWhGlancedDmg;
+                    rage += RageFormula(d, s, f) * combatFactors.GlanceChance;
 
-                // glance
-                d = d / (1f + combatFactors.BonusWhiteCritDmg) * 0.75f;
-                f = (isMH ? 3.5f : 1.75f);
-                rage += RageFormula(d, s, f) * combatFactors.GlanceChance;
+                    // crit
+                    d = based * (1f + combatFactors.BonusWhiteCritDmg);
+                    f = 7.0f;
+                    rage += RageFormula(d, s, f) * combatFactors._c_mhwcrit;
 
-                // UW rage per swing
-                rage += (combatFactors.MH.Speed * (3f * Talents.UnbridledWrath) / 60.0f) * (1.0f - combatFactors.WhMissChance);
-                return rage;
+                    rage += s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - combatFactors._c_wmiss);
+
+                    return rage;
+                }
+            }
+            public float OHSwingRage
+            {
+                get
+                {
+                    // d = damage amount
+                    // s = weapon speed
+                    // f = hit factor
+                    float d, s, f, rage;
+                    float based;
+
+                    rage = 0.0f;
+                    s = combatFactors._c_ohItemSpeed;
+                    based = combatFactors.AvgOhWeaponDmg * combatFactors.DamageBonus * combatFactors.DamageReduction;
+
+                    // regular hit
+                    d = based;
+                    f = 1.75f;
+                    rage += RageFormula(d, s, f) * combatFactors.ProbOhWhiteHit;
+
+                    // glance
+                    d = based * combatFactors.ReducWhGlancedDmg;
+                    rage += RageFormula(d, s, f) * combatFactors.GlanceChance;
+
+                    // crit
+                    d = based * (1f + combatFactors.BonusWhiteCritDmg);
+                    f = 3.5f;
+                    rage += RageFormula(d, s, f) * combatFactors._c_ohwcrit;
+
+                    rage += s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - combatFactors._c_wmiss);
+                    
+                    return rage;
+                }
             }
             public float MHRageGenPerSec {
                 get {
-                    return (Char.MainHand != null && Char.MainHand.MaxDamage > 0 ? GetSwingRage(Char.MainHand.Item, true) / combatFactors.MHSpeed : 0f);
+                    return (Char.MainHand != null && Char.MainHand.MaxDamage > 0 ? MHSwingRage / combatFactors.MHSpeed : 0f);
                 }
             }
             public float OHRageGenPerSec {
                 get {
                     if (Char.OffHand == null) { return 0; }
-                    return (Char.OffHand.MaxDamage > 0 ? GetSwingRage(Char.OffHand.Item, false) / combatFactors.OHSpeed : 0f);
+                    return (Char.OffHand.MaxDamage > 0 ? OHSwingRage / combatFactors.OHSpeed : 0f);
                 }
             }
             // Rage generated per second
@@ -198,8 +236,8 @@ namespace Rawr.DPSWarr {
                 get {
                     float mhRagePercent = MHRageRatio;
                     float ohRagePercent = 1f - mhRagePercent;
-                    float missChance = mhRagePercent * (combatFactors.WhMissChance + combatFactors.MhDodgeChance + combatFactors.MhParryChance) +
-                                             ohRagePercent * (combatFactors.WhMissChance + combatFactors.OhDodgeChance + combatFactors.OhParryChance);
+                    float missChance = mhRagePercent * (combatFactors._c_wmiss + combatFactors._c_mhdodge + combatFactors.MhParryChance) +
+                                             ohRagePercent * (combatFactors._c_wmiss + combatFactors._c_ohdodge + combatFactors.OhParryChance);
                     float doubleChance = missChance * missChance;
                     float tripleChance = doubleChance * missChance;
                     float quadChance = doubleChance * doubleChance;
@@ -320,7 +358,7 @@ namespace Rawr.DPSWarr {
                     if(CHARACTER != null){
                         Talents = CHARACTER.WarriorTalents;
                         //StatS = CalculationsDPSWarr.GetCharacterStats(CHARACTER, null);
-                        combatFactors = new CombatFactors(CHARACTER, StatS);
+                        //combatFactors = new CombatFactors(CHARACTER, StatS);
                         //Whiteattacks = Whiteattacks;
                         CalcOpts = CHARACTER.CalculationOptions as CalculationOptionsDPSWarr;
                     }else{
@@ -394,8 +432,8 @@ namespace Rawr.DPSWarr {
 
                     // Work the Attack Table
                     dmg *= (1f
-                        - combatFactors.YwMissChance                        /* Missed so no damage at all */
-                        - (CanBeDodged  ? combatFactors.MhDodgeChance : 0f) /* If it can be dodged,  then no damage when being dodged  */
+                        - combatFactors._c_ymiss                        /* Missed so no damage at all */
+                        - (CanBeDodged  ? combatFactors._c_mhdodge : 0f) /* If it can be dodged,  then no damage when being dodged  */
                         - (CanBeParried ? combatFactors.MhParryChance : 0f) /* If it can be parried, then no damage when being parried */
                         /* Yellows don't glance */
                         - (CanBeBlocked ? combatFactors.MhBlockChance * combatFactors.ReducYwBlockedDmg : 0f) /* If it can be blocked, then partial damage when blocked */
@@ -423,7 +461,7 @@ namespace Rawr.DPSWarr {
                 return adou / FightDuration;
             }
             public virtual float ContainCritValue(bool IsMH) {
-                float BaseCrit = IsMH ? combatFactors.MhYwCritChance : combatFactors.OhYwCritChance;
+                float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
                 return (float)Math.Min(1f, Math.Max(0f, BaseCrit + BonusCritChance));
             }
             #endregion
@@ -527,13 +565,13 @@ namespace Rawr.DPSWarr {
                     float DamageMH = GetDamage(false,false); // Base Damage
                     DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
                     DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
-                    DamageMH *= (1f - combatFactors.YwMissChance - combatFactors.MhDodgeChance - combatFactors.MhParryChance
-                        + combatFactors.MhYwCritChance * combatFactors.BonusYellowCritDmg); // Attack Table
+                    DamageMH *= (1f - combatFactors._c_ymiss - combatFactors._c_mhdodge - combatFactors.MhParryChance
+                        + combatFactors._c_mhycrit * combatFactors.BonusYellowCritDmg); // Attack Table
                     float DamageOH = GetDamage(false, true);
                     DamageOH *= combatFactors.DamageBonus;
                     DamageOH *= combatFactors.DamageReduction;
-                    DamageOH *= (1f - combatFactors.YwMissChance - combatFactors.OhDodgeChance - combatFactors.OhParryChance
-                        + combatFactors.OhYwCritChance * combatFactors.BonusYellowCritDmg);
+                    DamageOH *= (1f - combatFactors._c_ymiss - combatFactors._c_ohdodge - combatFactors.OhParryChance
+                        + combatFactors._c_ohycrit * combatFactors.BonusYellowCritDmg);
 
                     float Damage = DamageMH + DamageOH;
                     return (float)Math.Max(0f, Damage * Targets);
@@ -544,13 +582,13 @@ namespace Rawr.DPSWarr {
                     float DamageMH = GetDamage(true,false); // Base Damage
                     DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
                     DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
-                    DamageMH *= (1f - combatFactors.YwMissChance - combatFactors.MhDodgeChance - combatFactors.MhParryChance
-                        + combatFactors.MhYwCritChance * combatFactors.BonusYellowCritDmg); // Attack Table
+                    DamageMH *= (1f - combatFactors._c_ymiss - combatFactors._c_mhdodge - combatFactors.MhParryChance
+                        + combatFactors._c_mhycrit * combatFactors.BonusYellowCritDmg); // Attack Table
                     float DamageOH = GetDamage(true, true);
                     DamageOH *= combatFactors.DamageBonus;
                     DamageOH *= combatFactors.DamageReduction;
-                    DamageOH *= (1f - combatFactors.YwMissChance - combatFactors.OhDodgeChance - combatFactors.OhParryChance
-                        + combatFactors.OhYwCritChance * combatFactors.BonusYellowCritDmg);
+                    DamageOH *= (1f - combatFactors._c_ymiss - combatFactors._c_ohdodge - combatFactors.OhParryChance
+                        + combatFactors._c_ohycrit * combatFactors.BonusYellowCritDmg);
 
                     float damage = DamageMH + DamageOH;
                     return (float)Math.Max(0f, damage * Targets);
@@ -641,8 +679,8 @@ namespace Rawr.DPSWarr {
             public override float ActivatesOverride {
                 get {
                     float chance = Talents.Bloodsurge * 0.20f / 3f;
-                    float chanceMhHitLands = (1f - combatFactors.YwMissChance - combatFactors.MhDodgeChance);
-                    float chanceOhHitLands = (1f - combatFactors.YwMissChance - combatFactors.OhDodgeChance);
+                    float chanceMhHitLands = (1f - combatFactors._c_ymiss - combatFactors._c_mhdodge);
+                    float chanceOhHitLands = (1f - combatFactors._c_ymiss - combatFactors._c_ohdodge);
 
                     float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
 
@@ -729,8 +767,8 @@ namespace Rawr.DPSWarr {
                     float GCDHitsPerSecond = 1f / LatentGCD;
                     float WhtHitsPerSecond = 1f / (combatFactors.MHSpeed + slamspeedadd);
 
-                    GCDHitsPerSecond *= (1f - combatFactors.YwMissChance - combatFactors.MhDodgeChance);
-                    WhtHitsPerSecond *= (combatFactors.ProbMhWhiteHit + combatFactors.MhYwCritChance) * (1f - Whiteattacks.AvoidanceStreak);
+                    GCDHitsPerSecond *= (1f - combatFactors._c_ymiss - combatFactors._c_mhdodge);
+                    WhtHitsPerSecond *= (combatFactors.ProbMhWhiteHit + combatFactors._c_mhycrit) * (1f - Whiteattacks.AvoidanceStreak);
 
                     float Landedatkspersec = GCDHitsPerSecond + WhtHitsPerSecond;
 
@@ -782,7 +820,7 @@ namespace Rawr.DPSWarr {
                     float Every = 0f;
                     float GCDPerc = 0f;
 
-                    float dodge = combatFactors.MhDodgeChance;
+                    float dodge = combatFactors._c_mhdodge;
                     float parry = (Talents.GlyphOfOverpower ? combatFactors.MhParryChance : 0f);
 
                     // Chance to activate: Dodges + (if glyphed) Parries
@@ -928,7 +966,7 @@ namespace Rawr.DPSWarr {
             // Functions
             public override float ActivatesOverride {
                 get {
-                    if (combatFactors.MH.Type != ItemType.TwoHandSword) { return 0.0f; }
+                    if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
                     float wepSpeed = combatFactors.MHSpeed;
                     if (combatFactors.MH.Slot == ItemSlot.TwoHand && Talents.TitansGrip != 1) {
                         wepSpeed += (1.5f - (0.5f * Talents.ImprovedSlam)) / 5f;
@@ -1118,7 +1156,7 @@ namespace Rawr.DPSWarr {
             private float OVERRIDESPERSEC;
             // Get/Set
             public float OverridesPerSec { get { return OVERRIDESPERSEC; } set { OVERRIDESPERSEC = value; } }
-            public virtual float FullRageCost { get { return RageCost + Whiteattacks.GetSwingRage(combatFactors.MH, true); } }
+            public virtual float FullRageCost { get { return RageCost + Whiteattacks.MHSwingRage; } }
             // Functions
             public override float Activates {
                 get {
@@ -1158,7 +1196,7 @@ namespace Rawr.DPSWarr {
             // Functions
             public override float FullRageCost {
                 get {
-                    float swingrage = Whiteattacks.GetSwingRage(combatFactors.MH, true);
+                    float swingrage = Whiteattacks.MHSwingRage;
                     float glyphback = (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
                     return RageCost + swingrage - glyphback;
                 }
@@ -1356,7 +1394,7 @@ namespace Rawr.DPSWarr {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
                     Cd = LatentGCD;
                     float GCDPerc = LatentGCD / (Cd + CalcOpts.GetLatency());
-                    return (float)Math.Max(0f, FightDuration / LatentGCD * combatFactors.MhYwCritChance);
+                    return (float)Math.Max(0f, FightDuration / LatentGCD * combatFactors._c_mhycrit);
                     // Jothay (a note to self): This is so very, very wrong... redo this you moron
                 }
             }
@@ -1578,7 +1616,7 @@ namespace Rawr.DPSWarr {
                     if (!Validated) { return new Stats(); }
                     Stats bonus = Effect.GetAverageStats(
                         0f,
-                        1f - combatFactors.YwMissChance - combatFactors.MhDodgeChance, // The additional hit also has the attack table to deal with
+                        1f - combatFactors._c_ymiss - combatFactors._c_mhdodge, // The additional hit also has the attack table to deal with
                         combatFactors.MH.Speed,
                         CalcOpts.Duration);
                     return bonus;
