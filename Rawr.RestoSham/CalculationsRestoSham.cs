@@ -161,7 +161,7 @@ namespace Rawr.RestoSham
                           "Healing Style Breakdowns:RT+HW HPS",
                           "Healing Style Breakdowns:RT+LHW HPS",
                           "Healing Style Breakdowns:RT+CH HPS",
-                          "Healing Style Breakdowns:RT+LHW+CH+LHW HPS",
+                          "Healing Style Breakdowns:RT+CH+LHW HPS",
                           "Healing Style Breakdowns:HW Spam HPS",
                           "Healing Style Breakdowns:LHW Spam HPS",
                           "Healing Style Breakdowns:CH Spam HPS"};
@@ -316,7 +316,7 @@ namespace Rawr.RestoSham
             #region Intellect and MP5 Based Calcs
             float onUse = 0.0f;
             if (options.ManaPotAmount > 0)
-                onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion));
+                onUse += options.ManaPotAmount * (1 + stats.BonusManaPotion);
             stats.Mp5 += 0;
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0) + (stats.TotemThunderhead * 2);
             float OrbRegen = (character.ShamanTalents.GlyphofWaterMastery ? 130 : 100);
@@ -337,7 +337,8 @@ namespace Rawr.RestoSham
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes +
                 (character.ShamanTalents.BlessingOfTheEternals * 2)));
             // Code Flag: Dodger = Will be resolved when Special Effects added correctly
-            float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
+            float CriticalChance = calcStats.SpellCrit + stats.BonusCritHealMultiplier;
+            float Critical = 1f + (CriticalChance / 2f);
             #endregion
             #region Water Shield and Mana Calculations
             // Code Flag: Dodger = Re-cast not needed in 3.2
@@ -399,7 +400,7 @@ namespace Rawr.RestoSham
             #endregion
             #region RT + LHW Rotation (RTLHWMPS / RTLHWHPS / RTLHWTime) Needs Heals and Crits per Second
             float RTLHWCPER = (float)Math.Round(((6.25f - RTCast) - ((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) / LHWCast);
-            float RTLHWTime = RTCast + (((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (RTLHWCPER * LHWCast) + (WSC * (Critical - 1f) * (RTLHWCPER + 2) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float RTLHWTime = RTCast + (((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (RTLHWCPER * LHWCast) + (WSC * CriticalChance * (RTLHWCPER + 2) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3));
             float RTLHWAA = ((((RTHeal + (((LHWHeal * (2 + RTLHWCPER))))) / RTLHWTime * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
             calcStats.RTLHWHPS = (((RTHeal + (((LHWHeal * (2 + RTLHWCPER))))) / RTLHWTime * Critical) + ELWHPS) + RTLHWAA;
             calcStats.RTLHWMPS = ((RTCost) + (LHWCost * (RTLHWCPER + 2))) / RTLHWTime;
@@ -408,15 +409,15 @@ namespace Rawr.RestoSham
             if (options.SustStyle.Equals("RT+LHW"))
                 LHWPerSec = (RTLHWCPER + 2) / RTLHWTime;
             if (options.SustStyle.Equals("RT+LHW"))
-                RTCPerSec = (1f / RTLHWTime) * (Critical - 1);
+                RTCPerSec = (1f / RTLHWTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+LHW"))
-                LHWCPerSec = ((RTLHWCPER + 2) / RTLHWTime) * (Critical - 1);
+                LHWCPerSec = ((RTLHWCPER + 2) / RTLHWTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+LHW"))
                 stats.Mp5 += ((RTCPerSec * Orb) + (LHWCPerSec * (Orb * .6f))) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
             #region RT + HW Rotation (RTHWMPS / RTHWHPS / RTHWTime) Needs Heals and Crits per Second
             float RTHWCPER = (float)Math.Round(((6.25f - RTCast) - ((HWCast / (Hasted) * (Hasted + (.3f)))) * 2) / HWCast);
-            float RTHWTime = RTCast + (((HWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (RTHWCPER * HWCast) + (WSC * (Critical - 1f) * (RTHWCPER + 2) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float RTHWTime = RTCast + (((HWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (RTHWCPER * HWCast) + (WSC * CriticalChance * (RTHWCPER + 2) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float RTHWAA = ((((RTHeal + (((HWHeal * (2 + RTHWCPER))))) / RTHWTime * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
             calcStats.RTHWHPS = (((RTHeal + (((HWHeal * (2 + RTHWCPER))))) / RTHWTime * Critical) + ELWHPS) + RTHWAA;
             calcStats.RTHWMPS = ((RTCost) + (HWCost * (RTHWCPER + 2))) / RTHWTime;
@@ -425,9 +426,9 @@ namespace Rawr.RestoSham
             if (options.SustStyle.Equals("RT+HW"))
                 HWPerSec = (RTHWCPER + 2) / RTHWTime;
             if (options.SustStyle.Equals("RT+HW"))
-                RTCPerSec = (1f / RTHWTime) * (Critical - 1);
+                RTCPerSec = (1f / RTHWTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+HW"))
-                HWCPerSec = ((RTHWCPER + 2) / RTHWTime) * (Critical - 1);
+                HWCPerSec = ((RTHWCPER + 2) / RTHWTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+HW"))
                 stats.Mp5 += ((RTCPerSec * Orb) + (LHWCPerSec * Orb)) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
@@ -442,31 +443,31 @@ namespace Rawr.RestoSham
             if (options.SustStyle.Equals("RT+CH"))
                 CHPerSec = RTCHCPER / RTCHTime;
             if (options.SustStyle.Equals("RT+CH"))
-                RTCPerSec = (1f / RTCHTime) * (Critical - 1);
+                RTCPerSec = (1f / RTCHTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+CH"))
-                CHCPerSec = (RTCHCPER / RTCHTime) * (Critical - 1);
+                CHCPerSec = (RTCHCPER / RTCHTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+CH"))
                 stats.Mp5 += ((RTCPerSec * Orb)) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
             #region RT + CH + LHW2 Rotation (RTCHLHW2MPS / RTCHLHW2HPS / RTCHLHW2Time) Needs Heals and Crits per Second
             float RTCHLHW2CPER = (float)Math.Max(((float)Math.Round(((6.25f - (RTCast + CHCast)) - ((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) / LHWCast)), 2);
-            float RTCHLHW2Time = RTCast + CHCast + (((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (float)Math.Max(((RTCHLHW2CPER - 2) * LHWCast), 0) + (WSC * (Critical - 1f) * (RTCHLHW2CPER) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float RTCHLHW2Time = RTCast + CHCast + (((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (float)Math.Max(((RTCHLHW2CPER - 2) * LHWCast), 0) + (WSC * CriticalChance * (RTCHLHW2CPER) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3));
             float RTCHLHW2AA = ((((RTHeal + (((LHWHeal * (RTCHLHW2CPER))))) / RTCHLHW2Time * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
             calcStats.RTCHLHW2HPS = (((RTHeal + CHHeal + (((LHWHeal * (RTCHLHW2CPER))))) / RTCHLHW2Time * Critical) + ELWHPS) + RTCHLHW2AA;
             calcStats.RTCHLHW2MPS = ((RTCost) + CHCost + (LHWCost * (RTCHLHW2CPER + 2))) / RTCHLHW2Time;
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
+            if (options.SustStyle.Equals("RT+CH+LHW"))
                 RTPerSec = 1f / RTCHLHW2Time;
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
+            if (options.SustStyle.Equals("RT+CH+LHW"))
                 CHPerSec = RTCHCPER / RTCHLHW2Time;
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
+            if (options.SustStyle.Equals("RT+CH+LHW"))
                 LHWPerSec = RTCHCPER / RTCHLHW2Time;
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
-                RTCPerSec = (1f / RTCHLHW2Time) * (Critical - 1);
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
-                CHCPerSec = (1f / RTCHLHW2Time) * (Critical - 1);
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
-                LHWPerSec = (RTCHLHW2CPER / RTCHLHW2Time) * (Critical - 1);
-            if (options.SustStyle.Equals("RT+LHW+CH+LHW"))
+            if (options.SustStyle.Equals("RT+CH+LHW"))
+                RTCPerSec = (1f / RTCHLHW2Time) * CriticalChance;
+            if (options.SustStyle.Equals("RT+CH+LHW"))
+                CHCPerSec = (1f / RTCHLHW2Time) * CriticalChance;
+            if (options.SustStyle.Equals("RT+CH+LHW"))
+                LHWCPerSec = (RTCHLHW2CPER / RTCHLHW2Time) * CriticalChance;
+            if (options.SustStyle.Equals("RT+CH+LHW"))
                 stats.Mp5 += ((RTCPerSec * Orb) + (LHWCPerSec * Orb * .6f)) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
             #region CH Spam (CHHPS / CHMPS) Needs Heals and Crits per Second
@@ -475,38 +476,38 @@ namespace Rawr.RestoSham
             if (options.SustStyle.Equals("CH Spam"))
                 CHPerSec = 1f / CHCast;
             if (options.SustStyle.Equals("CH Spam"))
-                CHCPerSec = (1f / CHCast) * (Critical - 1);
+                CHCPerSec = (1f / CHCast) * CriticalChance;
             if (options.SustStyle.Equals("CH Spam"))
                 stats.Mp5 += ((0 * Orb)) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
             #region LHW Spam (LHWHPS / LHWMPS) Needs Heals and Crits per Second
             float LHWAA = LHWHeal * (.1f * character.ShamanTalents.AncestralAwakening);
-            calcStats.LHWSpamHPS = (((LHWHeal * (Critical)) / (LHWCast + (WSC * (Critical - 1f) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3)))) + ELWHPS) + LHWAA;
-            calcStats.LHWSpamMPS = LHWCost / (LHWCast + (WSC * (Critical - 1f) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3)));
+            calcStats.LHWSpamHPS = (((LHWHeal * (Critical)) / (LHWCast + (WSC * CriticalChance * .6f * (character.ShamanTalents.ImprovedWaterShield / 3)))) + ELWHPS) + LHWAA;
+            calcStats.LHWSpamMPS = LHWCost / (LHWCast + (WSC * CriticalChance * .6f * (character.ShamanTalents.ImprovedWaterShield / 3)));
             if (options.SustStyle.Equals("LHW Spam"))
-                LHWPerSec = 1f / (LHWCast + (WSC * (Critical - 1f) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3)));
+                LHWPerSec = 1f / LHWCast;
             if (options.SustStyle.Equals("LHW Spam"))
-                LHWCPerSec = (1f / (LHWCast + (WSC * (Critical - 1f) * .6f * (character.ShamanTalents.ImprovedWaterShield / 3)))) * (Critical - 1);
+                LHWCPerSec = (1f / LHWCast) * CriticalChance;
             if (options.SustStyle.Equals("LHW Spam"))
                 stats.Mp5 += ((.6f * LHWCPerSec * Orb)) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
             #region HW Spam (HWHPS / HWMPS) Needs Heals and Crits per Second
             float HWAA = HWHeal * (.1f * character.ShamanTalents.AncestralAwakening);
-            calcStats.HWSpamHPS = (((HWHeal * (Critical)) / (HWCast + (WSC * (Critical - 1f) * (character.ShamanTalents.ImprovedWaterShield / 3)))) + ELWHPS) + HWAA;
-            calcStats.HWSpamMPS = HWCost / (HWCast + (WSC * (Critical - 1f) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+            calcStats.HWSpamHPS = (((HWHeal * (Critical)) / (HWCast + (WSC * CriticalChance * (character.ShamanTalents.ImprovedWaterShield / 3)))) + ELWHPS) + HWAA;
+            calcStats.HWSpamMPS = HWCost / (HWCast + (WSC * CriticalChance * (character.ShamanTalents.ImprovedWaterShield / 3)));
             if (options.SustStyle.Equals("HW Spam"))
-                HWPerSec = 1f / (HWCast + (WSC * (Critical - 1f) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+                HWPerSec = 1f / HWCast;
             if (options.SustStyle.Equals("HW Spam"))
-                HWCPerSec = (1f / (HWCast + (WSC * (Critical - 1f) * (character.ShamanTalents.ImprovedWaterShield / 3)))) * (Critical - 1);
+                HWCPerSec = (1f / HWCast) * CriticalChance;
             if (options.SustStyle.Equals("HW Spam"))
                 stats.Mp5 += ((HWCPerSec * Orb)) * 5 / 3 * (character.ShamanTalents.ImprovedWaterShield);
             #endregion
             #region Create Final calcs via spell cast
             HealsPerSec = RTPerSec + LHWPerSec + HWPerSec + CHPerSec;
             CritsPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
-            stats.Mp5 += (CritsPerSec * stats.ManaRestoreOnCrit_25_45 * .25f / 45) * 5; // Mana per Crit, to be removed when Special effects are implimented
-            stats.Mp5 += (HealsPerSec * stats.ManaRestoreOnCast_5_15 * .05f / 15) * 5; // Mana per Cast, to be removed when Special effects are implimented
-            stats.Mp5 += (HealsPerSec * stats.ManaRestoreOnCast_10_45 * .1f / 45) * 5; // Mana per Cast, to be removed when Special effects are implimented
+            stats.Mp5 += stats.ManaRestoreOnCrit_25_45 / (0.5f / (CritsPerSec * .25f) + 45) * 5; // Mana per Crit, to be removed when Special effects are implimented
+            stats.Mp5 += stats.ManaRestoreOnCast_5_15 / (0.5f / (HealsPerSec * .05f) + 15) * 5; // Mana per Cast, to be removed when Special effects are implimented
+            stats.Mp5 += stats.ManaRestoreOnCast_10_45 / (0.5f / (HealsPerSec * .1f) + 45) * 5; // Mana per Cast, to be removed when Special effects are implimented
             #endregion
             #region Calculate Sequence HPS/MPS
             calcStats.HSTHeals = (((stats.SpellPower * .044f) + 25) * (1f + (character.ShamanTalents.RestorativeTotems * .15f)) * (1f + (character.ShamanTalents.GlyphofHealingStreamTotem ? .2f : 0))) / 2;
@@ -742,7 +743,8 @@ namespace Rawr.RestoSham
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating +
-                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
+                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 + 
+                stats.ManaRestoreOnCrit_25_45 + stats.ManaRestoreOnCast_10_45 +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
                 stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost + 
