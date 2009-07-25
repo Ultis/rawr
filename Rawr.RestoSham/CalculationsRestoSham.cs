@@ -316,7 +316,7 @@ namespace Rawr.RestoSham
             #region Intellect and MP5 Based Calcs
             float onUse = 0.0f;
             if (options.ManaPotAmount > 0)
-                onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
+                onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion));
             stats.Mp5 += 0;
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0) + (stats.TotemThunderhead * 2);
             float OrbRegen = (character.ShamanTalents.GlyphofWaterMastery ? 130 : 100);

@@ -78,6 +78,7 @@
             this.tipRestoSham.SetToolTip(this.cboManaPotAmount, "The average amount of mana restored by a mana potion");
             this.cboManaPotAmount.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
             this.cboManaPotAmount.Validated += new System.EventHandler(this.numericTextBox_Validated);
+            this.cboManaPotAmount.TextChanged += new System.EventHandler(this.cboManaPotAmount_TextChanged);
             // 
             // chkManaTide
             // 

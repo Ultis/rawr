@@ -253,8 +253,12 @@ namespace Rawr.RestoSham
         {
             if (!_bLoading)
             {
-                this["ManaPotAmount"] = cboManaPotAmount.Text;
-                Character.OnCalculationsInvalidated();
+                 float manaPot;
+                 if (float.TryParse(cboManaPotAmount.Text, out manaPot))
+                 {
+                     this["ManaPotAmount"] = manaPot;
+                     Character.OnCalculationsInvalidated();
+                 }
             }
         }
         #endregion 
