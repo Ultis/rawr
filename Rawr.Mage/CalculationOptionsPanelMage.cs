@@ -390,5 +390,47 @@ z = actual count on Fingers of Frost
 
             MessageBox.Show(sb.ToString());
         }
+
+        private void buttonHotStreakUtilization_Click(object sender, EventArgs e)
+        {
+            string armor = "Molten Armor";
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
+            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
+            Stats rawStats;
+            Stats baseStats;
+            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
+            calculationResult.NeedsDisplayCalculations = true;
+            CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
+
+            FireCycleGenerator generator = new FireCycleGenerator(baseState);            
+
+            GenericCycle c1 = new GenericCycle("test", baseState, generator.StateList, true);
+            Cycle c2 = baseState.GetCycle(CycleId.FBLBPyro);
+
+            Dictionary<string, SpellContribution> dict1 = new Dictionary<string,SpellContribution>();
+            Dictionary<string, SpellContribution> dict2 = new Dictionary<string,SpellContribution>();
+            c1.AddDamageContribution(dict1, 1.0f);
+            c2.AddDamageContribution(dict2, 1.0f);
+
+            float predicted = dict2["Pyroblast"].Hits / dict2["Fireball"].Hits;
+            float actual =  dict1["Pyroblast"].Hits / dict1["Fireball"].Hits;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("This is only valid with LB Glyph and 3.2 Mode!");
+            sb.AppendLine();
+            sb.AppendLine("Pyro/Nuke Ratio:");
+            sb.AppendLine();
+            sb.AppendLine("Approximation Model: " + predicted);
+            sb.AppendLine("Exact Model: " + actual);
+            sb.AppendLine();
+            // predicted = raw * (1 - wastedold)
+            // actual = raw * (1 - wasted)
+            // wasted = 1 - actual / predicted * (1 - wastedold)
+            sb.AppendLine("Predicted Wasted Hot Streaks: " + (1 - actual / predicted * (1 - calculationOptions.HotStreakWasted)));
+
+            MessageBox.Show(sb.ToString());
+        }
 	}
 }

@@ -865,9 +865,9 @@ namespace Rawr.Mage
 #if SILVERLIGHT
         public GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription)
 #else
-        public unsafe GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription)
+        public unsafe GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription, bool needsDisplayCalculations)
 #endif
-            : base(false, castingState)
+            : base(needsDisplayCalculations, castingState)
         {
             Name = name;
 
@@ -974,12 +974,12 @@ namespace Rawr.Mage
             StringBuilder sb = new StringBuilder();
             foreach (KeyValuePair<Spell, double> kvp in SpellWeight)
             {
-                AddSpell(false, kvp.Key, (float)kvp.Value);
+                AddSpell(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
                 if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.SpellId, 100.0 * kvp.Value);
             }
             foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
             {
-                AddCycle(false, kvp.Key, (float)kvp.Value);
+                AddCycle(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
                 if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.CycleId, 100.0 * kvp.Value);
             }
 
@@ -1137,7 +1137,7 @@ namespace Rawr.Mage
 
         public GenericCycle GenerateCycle(string name, CastingState castingState)
         {
-            return new GenericCycle(name, castingState, StateList);
+            return new GenericCycle(name, castingState, StateList, false);
         }
 
         public List<Cycle> Analyze(CastingState castingState, Cycle wand)
@@ -1151,7 +1151,7 @@ namespace Rawr.Mage
                 {
                     name += ControlValue[i].ToString();
                 }
-                GenericCycle generic = new GenericCycle(name, castingState, StateList);
+                GenericCycle generic = new GenericCycle(name, castingState, StateList, false);
                 if (!cycleDict.ContainsKey(generic.SpellDistribution))
                 {
                     cycleDict.Add(generic.SpellDistribution, generic);

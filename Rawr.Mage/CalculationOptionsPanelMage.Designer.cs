@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -129,6 +128,8 @@
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.textBoxBonusCritDamage = new System.Windows.Forms.TextBox();
+            this.label86 = new System.Windows.Forms.Label();
             this.label84 = new System.Windows.Forms.Label();
             this.checkBoxEffectDisableManaSources = new System.Windows.Forms.CheckBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -218,6 +219,7 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
             this.label85 = new System.Windows.Forms.Label();
             this.checkBoxMode32 = new System.Windows.Forms.CheckBox();
             this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
@@ -260,11 +262,11 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxBonusCritDamage = new System.Windows.Forms.TextBox();
-            this.label86 = new System.Windows.Forms.Label();
+            this.textBoxHotStreakWasted = new System.Windows.Forms.TextBox();
+            this.label87 = new System.Windows.Forms.Label();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -273,6 +275,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -333,11 +336,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -411,6 +409,8 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.textBoxHotStreakWasted);
+            this.tabPage2.Controls.Add(this.label87);
             this.tabPage2.Controls.Add(this.textBoxWarlockSpellPower);
             this.tabPage2.Controls.Add(this.label109);
             this.tabPage2.Controls.Add(this.label103);
@@ -1416,6 +1416,24 @@
             this.tabPage6.Text = "Effects";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
+            // textBoxBonusCritDamage
+            // 
+            this.textBoxBonusCritDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectCritDamageBonus", true));
+            this.textBoxBonusCritDamage.Location = new System.Drawing.Point(112, 159);
+            this.textBoxBonusCritDamage.Name = "textBoxBonusCritDamage";
+            this.textBoxBonusCritDamage.Size = new System.Drawing.Size(75, 20);
+            this.textBoxBonusCritDamage.TabIndex = 246;
+            // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(0, 162);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(108, 13);
+            this.label86.TabIndex = 245;
+            this.label86.Text = "Bonus Crit Damage: *";
+            this.toolTipMage.SetToolTip(this.label86, "Increase in crit damage multiplier (same as Spell Power or Burnout).");
+            // 
             // label84
             // 
             this.label84.AutoSize = true;
@@ -2236,6 +2254,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.buttonHotStreakUtilization);
             this.tabPage4.Controls.Add(this.label85);
             this.tabPage4.Controls.Add(this.checkBoxMode32);
             this.tabPage4.Controls.Add(this.buttonComputeOptimalFrostCycles);
@@ -2285,6 +2304,16 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // buttonHotStreakUtilization
+            // 
+            this.buttonHotStreakUtilization.Location = new System.Drawing.Point(3, 425);
+            this.buttonHotStreakUtilization.Name = "buttonHotStreakUtilization";
+            this.buttonHotStreakUtilization.Size = new System.Drawing.Size(197, 23);
+            this.buttonHotStreakUtilization.TabIndex = 204;
+            this.buttonHotStreakUtilization.Text = "Hot Streak Utilization";
+            this.buttonHotStreakUtilization.UseVisualStyleBackColor = true;
+            this.buttonHotStreakUtilization.Click += new System.EventHandler(this.buttonHotStreakUtilization_Click);
+            // 
             // label85
             // 
             this.label85.AutoSize = true;
@@ -2307,11 +2336,11 @@
             // 
             // buttonComputeOptimalFrostCycles
             // 
-            this.buttonComputeOptimalFrostCycles.Location = new System.Drawing.Point(3, 425);
+            this.buttonComputeOptimalFrostCycles.Location = new System.Drawing.Point(104, 396);
             this.buttonComputeOptimalFrostCycles.Name = "buttonComputeOptimalFrostCycles";
-            this.buttonComputeOptimalFrostCycles.Size = new System.Drawing.Size(197, 23);
+            this.buttonComputeOptimalFrostCycles.Size = new System.Drawing.Size(96, 23);
             this.buttonComputeOptimalFrostCycles.TabIndex = 201;
-            this.buttonComputeOptimalFrostCycles.Text = "Compute Optimal Frost Cycles";
+            this.buttonComputeOptimalFrostCycles.Text = "Frost Cycles";
             this.buttonComputeOptimalFrostCycles.UseVisualStyleBackColor = true;
             this.buttonComputeOptimalFrostCycles.Click += new System.EventHandler(this.buttonComputeOptimalFrostCycles_Click);
             // 
@@ -2523,9 +2552,9 @@
             // 
             this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(3, 396);
             this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
-            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
+            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(95, 23);
             this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
-            this.buttonComputeOptimalArcaneCycles.Text = "Compute Optimal Arcane Cycles";
+            this.buttonComputeOptimalArcaneCycles.Text = "Arcane Cycles";
             this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
             this.buttonComputeOptimalArcaneCycles.Click += new System.EventHandler(this.buttonComputeOptimalArcaneCycles_Click);
             // 
@@ -2731,23 +2760,29 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxBonusCritDamage
+            // textBoxHotStreakWasted
             // 
-            this.textBoxBonusCritDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectCritDamageBonus", true));
-            this.textBoxBonusCritDamage.Location = new System.Drawing.Point(112, 159);
-            this.textBoxBonusCritDamage.Name = "textBoxBonusCritDamage";
-            this.textBoxBonusCritDamage.Size = new System.Drawing.Size(75, 20);
-            this.textBoxBonusCritDamage.TabIndex = 246;
+            this.textBoxHotStreakWasted.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HotStreakWasted", true));
+            this.textBoxHotStreakWasted.Location = new System.Drawing.Point(142, 486);
+            this.textBoxHotStreakWasted.Name = "textBoxHotStreakWasted";
+            this.textBoxHotStreakWasted.Size = new System.Drawing.Size(75, 20);
+            this.textBoxHotStreakWasted.TabIndex = 202;
             // 
-            // label86
+            // label87
             // 
-            this.label86.AutoSize = true;
-            this.label86.Location = new System.Drawing.Point(0, 162);
-            this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(108, 13);
-            this.label86.TabIndex = 245;
-            this.label86.Text = "Bonus Crit Damage: *";
-            this.toolTipMage.SetToolTip(this.label86, "Increase in crit damage multiplier (same as Spell Power or Burnout).");
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(0, 489);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(137, 13);
+            this.label87.TabIndex = 201;
+            this.label87.Text = "Wasted Hot Streaks (0-1): *";
+            this.toolTipMage.SetToolTip(this.label87, "This indicates how many generated hot streaks are wasted (only applies to 3.2 mod" +
+                    "e with LB glyph).");
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2760,7 +2795,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2774,6 +2808,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -3012,6 +3047,9 @@
         private System.Windows.Forms.CheckBox checkBoxMode32;
         private System.Windows.Forms.TextBox textBoxBonusCritDamage;
         private System.Windows.Forms.Label label86;
+        private System.Windows.Forms.Button buttonHotStreakUtilization;
+        private System.Windows.Forms.TextBox textBoxHotStreakWasted;
+        private System.Windows.Forms.Label label87;
 
     }
 }
