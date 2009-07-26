@@ -536,18 +536,10 @@ namespace Rawr.Hunter
 			
 			
 			double levelDifference = options.TargetLevel - HunterRatings.CHAR_LEVEL;
-			
-			calculatedStats.hitLevelAdjustment = 0;
-			if (levelDifference <= 2.0)
-			{
-				missPercent += (levelDifference * 5) * 0.1;
-				calculatedStats.hitLevelAdjustment = 0 - (( (levelDifference * 5) * 0.1)/100);
-			}
-			else
-			{
-				missPercent += 2.0 + (((levelDifference * 5) - 10) * 0.4);
-				calculatedStats.hitLevelAdjustment = 0 - ((2.0 + (((levelDifference * 5) - 10) * 0.4))/100);
-			}
+
+            missPercent += levelDifference;
+            calculatedStats.hitLevelAdjustment = 0 - (levelDifference / 100);
+
 			missPercent = missPercent / 100;			
 			
 			double bonusHit = (calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100;

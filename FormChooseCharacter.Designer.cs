@@ -199,6 +199,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.importFailureBox);
             this.Name = "FormChooseCharacter";
+            this.ShowIcon = false;
             this.Text = "Choose Realm and Character";
             this.importFailureBox.ResumeLayout(false);
             this.importFailureBox.PerformLayout();

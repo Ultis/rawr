@@ -391,7 +391,7 @@
             // CancellButton
             // 
             this.CancellButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancellButton.Location = new System.Drawing.Point(186, 247);
+            this.CancellButton.Location = new System.Drawing.Point(197, 247);
             this.CancellButton.Name = "CancellButton";
             this.CancellButton.Size = new System.Drawing.Size(75, 23);
             this.CancellButton.TabIndex = 16;
@@ -416,6 +416,7 @@
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FormRelevantItemRefinement";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Refining Item Selection...";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

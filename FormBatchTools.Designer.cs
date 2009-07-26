@@ -51,6 +51,13 @@
             this.saveCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCharactersAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.newScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
+            this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.batchCharacterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip1 = new Rawr.FormBatchTools.MyStatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -67,13 +74,6 @@
             this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
             this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
-            this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.newScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
-            this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
@@ -111,47 +111,47 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.importToolStripMenuItem.Text = "&Import";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(120, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -271,6 +271,69 @@
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
+            // characterColumn
+            // 
+            this.characterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.characterColumn.DataPropertyName = "Name";
+            this.characterColumn.HeaderText = "Character";
+            this.characterColumn.Name = "characterColumn";
+            this.characterColumn.ReadOnly = true;
+            this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Locked
+            // 
+            this.Locked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Locked.DataPropertyName = "Locked";
+            this.Locked.HeaderText = "Locked";
+            this.Locked.Name = "Locked";
+            this.Locked.Width = 49;
+            // 
+            // weightColumn
+            // 
+            this.weightColumn.DataPropertyName = "Weight";
+            this.weightColumn.HeaderText = "Weight";
+            this.weightColumn.Name = "weightColumn";
+            this.weightColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.weightColumn.Width = 50;
+            // 
+            // scoreColumn
+            // 
+            this.scoreColumn.DataPropertyName = "Score";
+            this.scoreColumn.HeaderText = "Score";
+            this.scoreColumn.Name = "scoreColumn";
+            this.scoreColumn.ReadOnly = true;
+            this.scoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.scoreColumn.Width = 66;
+            // 
+            // newScoreColumn
+            // 
+            this.newScoreColumn.DataPropertyName = "NewScore";
+            this.newScoreColumn.HeaderText = "New Score";
+            this.newScoreColumn.Name = "newScoreColumn";
+            this.newScoreColumn.ReadOnly = true;
+            this.newScoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.newScoreColumn.Width = 66;
+            // 
+            // loadBatchCharacterColumn
+            // 
+            this.loadBatchCharacterColumn.DataPropertyName = "RelativePath";
+            this.loadBatchCharacterColumn.HeaderText = "";
+            this.loadBatchCharacterColumn.Name = "loadBatchCharacterColumn";
+            this.loadBatchCharacterColumn.NewRowButtonVisible = true;
+            this.loadBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.loadBatchCharacterColumn.Text = "...";
+            this.loadBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.loadBatchCharacterColumn.Width = 20;
+            // 
+            // showBatchCharacterColumn
+            // 
+            this.showBatchCharacterColumn.HeaderText = "";
+            this.showBatchCharacterColumn.Name = "showBatchCharacterColumn";
+            this.showBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.showBatchCharacterColumn.Text = "Show";
+            this.showBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.showBatchCharacterColumn.Width = 50;
+            // 
             // batchCharacterListBindingSource
             // 
             this.batchCharacterListBindingSource.DataSource = typeof(Rawr.BatchCharacterList);
@@ -336,6 +399,7 @@
             // 
             // buttonDown
             // 
+            this.buttonDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonDown.Enabled = false;
             this.buttonDown.Location = new System.Drawing.Point(33, 310);
             this.buttonDown.Name = "buttonDown";
@@ -347,6 +411,7 @@
             // 
             // buttonUp
             // 
+            this.buttonUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUp.Enabled = false;
             this.buttonUp.Location = new System.Drawing.Point(6, 310);
             this.buttonUp.Name = "buttonUp";
@@ -428,69 +493,6 @@
             this.trackBarThoroughness.TickFrequency = 10;
             this.trackBarThoroughness.Value = 150;
             // 
-            // characterColumn
-            // 
-            this.characterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.characterColumn.DataPropertyName = "Name";
-            this.characterColumn.HeaderText = "Character";
-            this.characterColumn.Name = "characterColumn";
-            this.characterColumn.ReadOnly = true;
-            this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Locked
-            // 
-            this.Locked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Locked.DataPropertyName = "Locked";
-            this.Locked.HeaderText = "Locked";
-            this.Locked.Name = "Locked";
-            this.Locked.Width = 49;
-            // 
-            // weightColumn
-            // 
-            this.weightColumn.DataPropertyName = "Weight";
-            this.weightColumn.HeaderText = "Weight";
-            this.weightColumn.Name = "weightColumn";
-            this.weightColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.weightColumn.Width = 50;
-            // 
-            // scoreColumn
-            // 
-            this.scoreColumn.DataPropertyName = "Score";
-            this.scoreColumn.HeaderText = "Score";
-            this.scoreColumn.Name = "scoreColumn";
-            this.scoreColumn.ReadOnly = true;
-            this.scoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.scoreColumn.Width = 66;
-            // 
-            // newScoreColumn
-            // 
-            this.newScoreColumn.DataPropertyName = "NewScore";
-            this.newScoreColumn.HeaderText = "New Score";
-            this.newScoreColumn.Name = "newScoreColumn";
-            this.newScoreColumn.ReadOnly = true;
-            this.newScoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.newScoreColumn.Width = 66;
-            // 
-            // loadBatchCharacterColumn
-            // 
-            this.loadBatchCharacterColumn.DataPropertyName = "RelativePath";
-            this.loadBatchCharacterColumn.HeaderText = "";
-            this.loadBatchCharacterColumn.Name = "loadBatchCharacterColumn";
-            this.loadBatchCharacterColumn.NewRowButtonVisible = true;
-            this.loadBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.loadBatchCharacterColumn.Text = "...";
-            this.loadBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.loadBatchCharacterColumn.Width = 20;
-            // 
-            // showBatchCharacterColumn
-            // 
-            this.showBatchCharacterColumn.HeaderText = "";
-            this.showBatchCharacterColumn.Name = "showBatchCharacterColumn";
-            this.showBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.showBatchCharacterColumn.Text = "Show";
-            this.showBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.showBatchCharacterColumn.Width = 50;
-            // 
             // FormBatchTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -500,9 +502,10 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormBatchTools";
-            this.Text = "Rawr Batch Tools";
+            this.Text = "Batch Tools";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormBatchTools_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBatchTools_FormClosing);
             this.menuStrip1.ResumeLayout(false);

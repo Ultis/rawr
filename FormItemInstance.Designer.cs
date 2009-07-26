@@ -40,20 +40,20 @@ namespace Rawr
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(154, 119);
+            this.buttonOK.Location = new System.Drawing.Point(235, 119);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 7;
+            this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(235, 119);
+            this.buttonCancel.Location = new System.Drawing.Point(154, 119);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -61,14 +61,17 @@ namespace Rawr
             // 
             this.gem3Button.Character = null;
             this.gem3Button.CharacterSlot = Rawr.CharacterSlot.Gems;
+            this.gem3Button.FormItemSelection = null;
+            this.gem3Button.ItemHidden = false;
             this.gem3Button.ItemIcon = null;
             this.gem3Button.Location = new System.Drawing.Point(240, 43);
             this.gem3Button.Name = "gem3Button";
+            this.gem3Button.ReadOnly = false;
             this.gem3Button.SelectedItem = null;
             this.gem3Button.SelectedItemId = 0;
             this.gem3Button.SelectedItemInstance = null;
             this.gem3Button.Size = new System.Drawing.Size(70, 70);
-            this.gem3Button.TabIndex = 3;
+            this.gem3Button.TabIndex = 5;
             this.gem3Button.UseVisualStyleBackColor = true;
             this.gem3Button.Leave += new System.EventHandler(this.gem3Button_Leave);
             // 
@@ -76,14 +79,17 @@ namespace Rawr
             // 
             this.gem2Button.Character = null;
             this.gem2Button.CharacterSlot = Rawr.CharacterSlot.Gems;
+            this.gem2Button.FormItemSelection = null;
+            this.gem2Button.ItemHidden = false;
             this.gem2Button.ItemIcon = null;
             this.gem2Button.Location = new System.Drawing.Point(164, 43);
             this.gem2Button.Name = "gem2Button";
+            this.gem2Button.ReadOnly = false;
             this.gem2Button.SelectedItem = null;
             this.gem2Button.SelectedItemId = 0;
             this.gem2Button.SelectedItemInstance = null;
             this.gem2Button.Size = new System.Drawing.Size(70, 70);
-            this.gem2Button.TabIndex = 2;
+            this.gem2Button.TabIndex = 4;
             this.gem2Button.UseVisualStyleBackColor = true;
             this.gem2Button.Leave += new System.EventHandler(this.gem2Button_Leave);
             // 
@@ -91,14 +97,17 @@ namespace Rawr
             // 
             this.gem1Button.Character = null;
             this.gem1Button.CharacterSlot = Rawr.CharacterSlot.Gems;
+            this.gem1Button.FormItemSelection = null;
+            this.gem1Button.ItemHidden = false;
             this.gem1Button.ItemIcon = null;
             this.gem1Button.Location = new System.Drawing.Point(88, 43);
             this.gem1Button.Name = "gem1Button";
+            this.gem1Button.ReadOnly = false;
             this.gem1Button.SelectedItem = null;
             this.gem1Button.SelectedItemId = 0;
             this.gem1Button.SelectedItemInstance = null;
             this.gem1Button.Size = new System.Drawing.Size(70, 70);
-            this.gem1Button.TabIndex = 1;
+            this.gem1Button.TabIndex = 3;
             this.gem1Button.UseVisualStyleBackColor = true;
             this.gem1Button.Leave += new System.EventHandler(this.gem1Button_Leave);
             // 
@@ -107,20 +116,22 @@ namespace Rawr
             this.label5.Location = new System.Drawing.Point(12, 9);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(298, 31);
-            this.label5.TabIndex = 5;
+            this.label5.TabIndex = 1;
             this.label5.Text = "Select gems and enchant for the item.";
             // 
             // itemButtonWithEnchant
             // 
             this.itemButtonWithEnchant.Character = null;
             this.itemButtonWithEnchant.CharacterSlot = Rawr.CharacterSlot.Head;
+            this.itemButtonWithEnchant.FormItemSelection = null;
+            this.itemButtonWithEnchant.ItemHidden = false;
             this.itemButtonWithEnchant.ItemIcon = null;
             this.itemButtonWithEnchant.Location = new System.Drawing.Point(13, 43);
             this.itemButtonWithEnchant.Name = "itemButtonWithEnchant";
             this.itemButtonWithEnchant.SelectedItem = null;
             this.itemButtonWithEnchant.SelectedItemId = 0;
             this.itemButtonWithEnchant.Size = new System.Drawing.Size(70, 83);
-            this.itemButtonWithEnchant.TabIndex = 8;
+            this.itemButtonWithEnchant.TabIndex = 2;
             this.itemButtonWithEnchant.UseVisualStyleBackColor = true;
             this.itemButtonWithEnchant.Leave += new System.EventHandler(this.itemButtonWithEnchant_Leave);
             // 
@@ -138,7 +149,9 @@ namespace Rawr
             this.Controls.Add(this.gem3Button);
             this.Controls.Add(this.gem2Button);
             this.Controls.Add(this.gem1Button);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormItemInstance";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Customize item...";
             this.ResumeLayout(false);
 

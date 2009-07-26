@@ -51,10 +51,10 @@
             // butCancel
             // 
             this.butCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.butCancel.Location = new System.Drawing.Point(166, 336);
+            this.butCancel.Location = new System.Drawing.Point(85, 336);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(75, 23);
-            this.butCancel.TabIndex = 9;
+            this.butCancel.TabIndex = 13;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             // 
@@ -73,14 +73,14 @@
             this.nudChance.Location = new System.Drawing.Point(85, 284);
             this.nudChance.Name = "nudChance";
             this.nudChance.Size = new System.Drawing.Size(61, 20);
-            this.nudChance.TabIndex = 5;
+            this.nudChance.TabIndex = 9;
             // 
             // nudDuration
             // 
             this.nudDuration.Location = new System.Drawing.Point(85, 232);
             this.nudDuration.Name = "nudDuration";
             this.nudDuration.Size = new System.Drawing.Size(61, 20);
-            this.nudDuration.TabIndex = 3;
+            this.nudDuration.TabIndex = 5;
             // 
             // nudCooldown
             // 
@@ -92,14 +92,14 @@
             0});
             this.nudCooldown.Name = "nudCooldown";
             this.nudCooldown.Size = new System.Drawing.Size(61, 20);
-            this.nudCooldown.TabIndex = 4;
+            this.nudCooldown.TabIndex = 7;
             // 
             // nudStacks
             // 
             this.nudStacks.Location = new System.Drawing.Point(85, 310);
             this.nudStacks.Name = "nudStacks";
             this.nudStacks.Size = new System.Drawing.Size(61, 20);
-            this.nudStacks.TabIndex = 7;
+            this.nudStacks.TabIndex = 12;
             // 
             // label1
             // 
@@ -107,7 +107,7 @@
             this.label1.Location = new System.Drawing.Point(29, 234);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(50, 13);
-            this.label1.TabIndex = 22;
+            this.label1.TabIndex = 4;
             this.label1.Text = "Duration:";
             // 
             // label2
@@ -116,7 +116,7 @@
             this.label2.Location = new System.Drawing.Point(22, 260);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 23;
+            this.label2.TabIndex = 6;
             this.label2.Text = "Cooldown:";
             // 
             // label3
@@ -125,7 +125,7 @@
             this.label3.Location = new System.Drawing.Point(32, 286);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 13);
-            this.label3.TabIndex = 24;
+            this.label3.TabIndex = 8;
             this.label3.Text = "Chance:";
             // 
             // label4
@@ -134,7 +134,7 @@
             this.label4.Location = new System.Drawing.Point(36, 312);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 13);
-            this.label4.TabIndex = 25;
+            this.label4.TabIndex = 11;
             this.label4.Text = "Stacks:";
             // 
             // cmbTrigger
@@ -144,7 +144,7 @@
             this.cmbTrigger.Location = new System.Drawing.Point(85, 205);
             this.cmbTrigger.Name = "cmbTrigger";
             this.cmbTrigger.Size = new System.Drawing.Size(106, 21);
-            this.cmbTrigger.TabIndex = 2;
+            this.cmbTrigger.TabIndex = 3;
             // 
             // label5
             // 
@@ -152,16 +152,16 @@
             this.label5.Location = new System.Drawing.Point(36, 208);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(43, 13);
-            this.label5.TabIndex = 27;
+            this.label5.TabIndex = 2;
             this.label5.Text = "Trigger:";
             // 
             // butOkay
             // 
-            this.butOkay.Location = new System.Drawing.Point(85, 336);
+            this.butOkay.Location = new System.Drawing.Point(166, 336);
             this.butOkay.Name = "butOkay";
             this.butOkay.Size = new System.Drawing.Size(75, 23);
-            this.butOkay.TabIndex = 8;
-            this.butOkay.Text = "Okay";
+            this.butOkay.TabIndex = 0;
+            this.butOkay.Text = "OK";
             this.butOkay.UseVisualStyleBackColor = true;
             this.butOkay.Click += new System.EventHandler(this.butOkay_Click);
             // 
@@ -175,7 +175,7 @@
             this.cmbPPM.Location = new System.Drawing.Point(152, 283);
             this.cmbPPM.Name = "cmbPPM";
             this.cmbPPM.Size = new System.Drawing.Size(49, 21);
-            this.cmbPPM.TabIndex = 6;
+            this.cmbPPM.TabIndex = 10;
             // 
             // FormEditSpecialEffect
             // 
@@ -198,9 +198,7 @@
             this.Controls.Add(this.nudChance);
             this.Controls.Add(this.propertyGridStats);
             this.Controls.Add(this.butCancel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormEditSpecialEffect";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

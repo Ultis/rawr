@@ -31,8 +31,8 @@
             this.addSetButton = new System.Windows.Forms.Button();
             this.graphScrollBar = new System.Windows.Forms.VScrollBar();
             this.comparisonPanel = new System.Windows.Forms.Panel();
-            this.tabControl = new System.Windows.Forms.TabControl();
             this.comparisonGraph = new Rawr.ComparisonGraph();
+            this.tabControl = new System.Windows.Forms.TabControl();
             this.comparisonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,7 +42,7 @@
             this.addSetButton.Location = new System.Drawing.Point(143, 372);
             this.addSetButton.Name = "addSetButton";
             this.addSetButton.Size = new System.Drawing.Size(80, 23);
-            this.addSetButton.TabIndex = 2;
+            this.addSetButton.TabIndex = 1;
             this.addSetButton.Text = "Add New Set";
             this.addSetButton.UseVisualStyleBackColor = true;
             this.addSetButton.Click += new System.EventHandler(this.addSetButton_Click);
@@ -57,7 +57,7 @@
             this.graphScrollBar.Name = "graphScrollBar";
             this.graphScrollBar.Size = new System.Drawing.Size(17, 483);
             this.graphScrollBar.SmallChange = 32;
-            this.graphScrollBar.TabIndex = 4;
+            this.graphScrollBar.TabIndex = 1;
             this.graphScrollBar.Visible = false;
             // 
             // comparisonPanel
@@ -72,15 +72,7 @@
             this.comparisonPanel.Location = new System.Drawing.Point(229, 0);
             this.comparisonPanel.Name = "comparisonPanel";
             this.comparisonPanel.Size = new System.Drawing.Size(454, 487);
-            this.comparisonPanel.TabIndex = 6;
-            // 
-            // tabControl
-            // 
-            this.tabControl.Location = new System.Drawing.Point(3, 3);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(220, 363);
-            this.tabControl.TabIndex = 7;
+            this.comparisonPanel.TabIndex = 2;
             // 
             // comparisonGraph
             // 
@@ -102,7 +94,15 @@
             this.comparisonGraph.Size = new System.Drawing.Size(432, 480);
             this.comparisonGraph.SlotMap = null;
             this.comparisonGraph.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
-            this.comparisonGraph.TabIndex = 3;
+            this.comparisonGraph.TabIndex = 0;
+            // 
+            // tabControl
+            // 
+            this.tabControl.Location = new System.Drawing.Point(3, 3);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(220, 363);
+            this.tabControl.TabIndex = 0;
             // 
             // FormItemComparison
             // 
@@ -114,7 +114,8 @@
             this.Controls.Add(this.comparisonPanel);
             this.MinimumSize = new System.Drawing.Size(626, 441);
             this.Name = "FormItemComparison";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Item Set Comparison";
             this.comparisonPanel.ResumeLayout(false);
             this.ResumeLayout(false);

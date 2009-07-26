@@ -40,7 +40,7 @@ namespace Rawr
             this.textWowheadFilter.Location = new System.Drawing.Point(12, 38);
             this.textWowheadFilter.Name = "textWowheadFilter";
             this.textWowheadFilter.Size = new System.Drawing.Size(296, 20);
-            this.textWowheadFilter.TabIndex = 10;
+            this.textWowheadFilter.TabIndex = 3;
             // 
             // label1
             // 
@@ -48,7 +48,7 @@ namespace Rawr
             this.label1.Location = new System.Drawing.Point(12, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(157, 13);
-            this.label1.TabIndex = 12;
+            this.label1.TabIndex = 2;
             this.label1.Text = "qu=4:5;sl=16;cr=82;crs=1;crv=0";
             // 
             // lblTextAddItemID
@@ -57,7 +57,7 @@ namespace Rawr
             this.lblTextAddItemID.Location = new System.Drawing.Point(12, 9);
             this.lblTextAddItemID.Name = "lblTextAddItemID";
             this.lblTextAddItemID.Size = new System.Drawing.Size(181, 13);
-            this.lblTextAddItemID.TabIndex = 11;
+            this.lblTextAddItemID.TabIndex = 1;
             this.lblTextAddItemID.Text = "Enter the wowhead filter, for example";
             // 
             // buttonCancel
@@ -66,7 +66,7 @@ namespace Rawr
             this.buttonCancel.Location = new System.Drawing.Point(152, 64);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 9;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -76,7 +76,7 @@ namespace Rawr
             this.buttonOK.Location = new System.Drawing.Point(233, 64);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 8;
+            this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -87,13 +87,12 @@ namespace Rawr
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(320, 99);
-            this.ControlBox = false;
             this.Controls.Add(this.textWowheadFilter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTextAddItemID);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormEnterWowheadFilter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import From Wowhead Filter";

@@ -34,13 +34,12 @@ namespace Rawr
             this.lblTextAddItemID = new System.Windows.Forms.Label();
             this.cbArmory = new System.Windows.Forms.CheckBox();
             this.cbWowhead = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(165, 90);
+            this.buttonOK.Location = new System.Drawing.Point(172, 90);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 0;
@@ -50,10 +49,10 @@ namespace Rawr
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(84, 90);
+            this.buttonCancel.Location = new System.Drawing.Point(91, 90);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -62,26 +61,26 @@ namespace Rawr
             this.textItemId.Location = new System.Drawing.Point(12, 39);
             this.textItemId.Name = "textItemId";
             this.textItemId.Size = new System.Drawing.Size(235, 20);
-            this.textItemId.TabIndex = 3;
+            this.textItemId.TabIndex = 2;
             // 
             // lblTextAddItemID
             // 
-            this.lblTextAddItemID.AutoSize = true;
             this.lblTextAddItemID.Location = new System.Drawing.Point(12, 10);
             this.lblTextAddItemID.Name = "lblTextAddItemID";
-            this.lblTextAddItemID.Size = new System.Drawing.Size(147, 13);
-            this.lblTextAddItemID.TabIndex = 4;
-            this.lblTextAddItemID.Text = "Enter the Item ID, Item Name,";
+            this.lblTextAddItemID.Size = new System.Drawing.Size(235, 26);
+            this.lblTextAddItemID.TabIndex = 1;
+            this.lblTextAddItemID.Text = "Enter the Item ID, Item Name, or Database Link (Wowhead, Thottbot):";
+            this.lblTextAddItemID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cbArmory
             // 
             this.cbArmory.AutoSize = true;
             this.cbArmory.Checked = true;
             this.cbArmory.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbArmory.Location = new System.Drawing.Point(12, 66);
+            this.cbArmory.Location = new System.Drawing.Point(49, 66);
             this.cbArmory.Name = "cbArmory";
             this.cbArmory.Size = new System.Drawing.Size(58, 17);
-            this.cbArmory.TabIndex = 5;
+            this.cbArmory.TabIndex = 3;
             this.cbArmory.Text = "Armory";
             this.cbArmory.UseVisualStyleBackColor = true;
             // 
@@ -90,37 +89,27 @@ namespace Rawr
             this.cbWowhead.AutoSize = true;
             this.cbWowhead.Checked = true;
             this.cbWowhead.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbWowhead.Location = new System.Drawing.Point(98, 66);
+            this.cbWowhead.Location = new System.Drawing.Point(135, 66);
             this.cbWowhead.Name = "cbWowhead";
             this.cbWowhead.Size = new System.Drawing.Size(75, 17);
-            this.cbWowhead.TabIndex = 6;
+            this.cbWowhead.TabIndex = 4;
             this.cbWowhead.Text = "Wowhead";
             this.cbWowhead.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(195, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "or Database Link (Wowhead, Thottbot):";
             // 
             // FormEnterId
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(259, 132);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(259, 122);
             this.Controls.Add(this.textItemId);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.cbWowhead);
             this.Controls.Add(this.cbArmory);
             this.Controls.Add(this.lblTextAddItemID);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Name = "FormEnterId";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add item";
             this.Load += new System.EventHandler(this.FormEnterId_Load);
@@ -137,6 +126,5 @@ namespace Rawr
         private System.Windows.Forms.Label lblTextAddItemID;
         private System.Windows.Forms.CheckBox cbArmory;
         private System.Windows.Forms.CheckBox cbWowhead;
-        private System.Windows.Forms.Label label1;
     }
 }

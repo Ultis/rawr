@@ -1165,7 +1165,7 @@ namespace Rawr
             foreach (KeyValuePair<PropertyInfo, float> pair in relevantStats)
             {
                 ComparisonCalculationBase ccb = GetRelativeStatValue(character, pair.Key);
-                if (ccb != null && ccb.OverallPoints > 0f) { 
+                if (ccb != null && ccb.OverallPoints != 0f) { 
                     retComparisonCalcutions.Add(ccb); 
                     if(ccb.getBaseStatOption(character) && ccb.Name.Equals(ccb.BaseStat))
                         divisor = ccb.OverallPoints;
