@@ -1185,7 +1185,6 @@ namespace Rawr
                         case "4273": return "Ulduar";
                         default: return "Inconnue - " + zoneId;
                     }
-                    break;
 
                 default:
 			switch (zoneId)
@@ -1232,8 +1231,7 @@ namespace Rawr
                 case "3805": return "Zul'Aman";
                 case "4273": return "Ulduar";
 				default: return "Unknown - " + zoneId;
-			}
-                    break;
+    			}
             }
 		}
         /* Unused
