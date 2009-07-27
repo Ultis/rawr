@@ -1189,12 +1189,14 @@ namespace Rawr.Moonkin
 
             // Calculate effect of casting Starfall/Treants/ImpFF (regular FF is assumed to be provided by a feral)
             float globalCooldown = 1.5f / (1 + baseHaste) + calcs.Latency;
-            float treantLatency = (character.DruidTalents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
-            float starfallLatency = (character.DruidTalents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
-            float faerieFireLatency = (character.DruidTalents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
-            float totalAverageLatency = (treantLatency + starfallLatency + faerieFireLatency) / (calcOpts.FightLength * 60.0f);
+            float treantTime = (character.DruidTalents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
+            float starfallTime = (character.DruidTalents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
+            float faerieFireTime = (character.DruidTalents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
 
-            calcs.Latency += totalAverageLatency;
+            float totalTimeInRotation = calcs.FightLength * 60.0f - (treantTime + starfallTime + faerieFireTime);
+            float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
+
+            //calcs.Latency += totalAverageLatency;
             
             float manaGained = manaPool - calcs.BasicStats.Mana;
 
@@ -1295,7 +1297,7 @@ namespace Rawr.Moonkin
                     accumulatedDamage += kvp.Value * cachedDamages[kvp.Key];
                 }
                 accumulatedDamage += (1 - totalUpTime) * rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
-                float burstDPS = accumulatedDamage / rot.Duration;
+                float burstDPS = accumulatedDamage / rot.Duration * percentTimeInRotation;
                 float sustainedDPS = burstDPS;
                 float timeToOOM = (manaPool / rot.RotationData.ManaUsed) * rot.Duration;
                 if (timeToOOM < calcs.FightLength * 60.0f)
@@ -1328,7 +1330,7 @@ namespace Rawr.Moonkin
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
             calcs.Rotations = cachedResults;
 
-            calcs.Latency -= totalAverageLatency;
+            //calcs.Latency -= totalAverageLatency;
         }
 
         // Create proc effect calculations for proc-based trinkets.
