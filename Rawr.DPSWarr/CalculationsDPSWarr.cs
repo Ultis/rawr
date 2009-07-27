@@ -519,7 +519,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     //}
                 //}
                 //statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors._c_ohItemSpeed, fightDuration);
-                Stats.SpecialEffectEnumerator ohEffects = character.MainHandEnchant.Stats.SpecialEffects();
+                Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
 
                 if (ohEffects.MoveNext()) {
                     bersOffHand = ohEffects.Current;
