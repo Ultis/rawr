@@ -110,17 +110,18 @@ namespace Rawr.DPSWarr {
 
             // Base Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
-                                        Environment.NewLine + "{3:00,000} : Stam Bonus",
-                BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+                                Environment.NewLine + "{3:00,000} : Stam Bonus",
+                                BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             //dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}",BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
-            dictValues.Add("Agility",string.Format("{0}*Base Crit at lvl 80 3.192%"+
-                Environment.NewLine+"Increases Crit by {1:0.00%}"+
-                Environment.NewLine+"Total Crit increase of {2:0.00%}"+
-                Environment.NewLine+"Increases Armor by {3:0}",
-                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f, StatConversion.GetArmorFromAgility(BasicStats.Agility)));
+            dictValues.Add("Agility",string.Format("{0}*3.192% : Base Crit at lvl 80"+
+                                Environment.NewLine + "{1:0.000%} : Crit Increase"+
+                                Environment.NewLine + "{2:0.000%} : Total Crit Increase"+
+                                Environment.NewLine + "Increases Armor by {3:0}",
+                                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f,
+                                StatConversion.GetArmorFromAgility(BasicStats.Agility)));
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*" +
                                                       "{2:00.00%} : Rating " +
                                 Environment.NewLine + "{3:00.00%} : MH Crit" +

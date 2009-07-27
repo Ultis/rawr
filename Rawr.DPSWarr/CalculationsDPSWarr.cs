@@ -489,31 +489,46 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float dmgDoneInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
             Stats statsProcs = new Stats();
-            Stats bersStats = null;
-            
+            //Stats bersStats = null;
+            SpecialEffect bersMainHand = null;
+            SpecialEffect bersOffHand = null;
+
             // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
             if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789){ // berserker enchant id
-                bersStats = character.MainHandEnchant.Stats;
-                if (bersEffect == null){
-                    Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
-                    if (bersEffectEnum.MoveNext()){
-                        bersEffect = bersEffectEnum.Current;
-                    }
+                //bersStats = character.MainHandEnchant.Stats;
+                //if (bersEffect == null){
+                    //Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
+                    //if (bersEffectEnum.MoveNext()){
+                        //bersEffect = bersEffectEnum.Current;
+                    //}
+                //}
+                //statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
+
+                if (mhEffects.MoveNext()) {
+                    bersMainHand = mhEffects.Current;
+                    statsProcs += bersMainHand.GetAverageStats(mhHitInterval, 1f, combatFactors.MH.Speed, fightDuration);
                 }
-                statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
             }
             if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
-                bersStats = character.OffHandEnchant.Stats;
-                if (bersEffect == null){
-                    Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
-                    if (bersEffectEnum.MoveNext()){
-                        bersEffect = bersEffectEnum.Current;
-                    }
+                //bersStats = character.OffHandEnchant.Stats;
+                //if (bersEffect == null){
+                    //Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
+                    //if (bersEffectEnum.MoveNext()){
+                        //bersEffect = bersEffectEnum.Current;
+                    //}
+                //}
+                //statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors._c_ohItemSpeed, fightDuration);
+                Stats.SpecialEffectEnumerator ohEffects = character.MainHandEnchant.Stats.SpecialEffects();
+
+                if (ohEffects.MoveNext()) {
+                    bersOffHand = ohEffects.Current;
+                    statsProcs += bersOffHand.GetAverageStats(ohHitInterval, 1f, combatFactors.OH.Speed, fightDuration);
                 }
-                statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors._c_ohItemSpeed, fightDuration);
             }
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
-                if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
+                //if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
+                if (effect != bersMainHand && effect != bersOffHand) // bersStats is null if the char doesn't have berserking enchant
                 {
                     switch (effect.Trigger)
                     {

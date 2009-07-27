@@ -110,15 +110,6 @@ namespace Rawr.DPSWarr {
         #region Average Weapon Damage
         public float AvgMhWeaponDmg { get { return (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed; } }
         public float AvgOhWeaponDmg { get { return (OH == null ? 0f : (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * (0.5f + Talents.DualWieldSpecialization * 0.025f)); } }
-        /* optimizations ...
-        public float AvgWeaponDmg(Item i, bool isMH) { return CalcAverageWeaponDamage(i, isMH); }
-        private float CalcAverageWeaponDamage(Item weapon, bool isMH) {
-            if(weapon==null){return 0f;}
-            // removed the DamageBonus from here, as it was causing double dipping down the line.  Damage Bonus should be done
-            // only at the absolute end of calculations to prevent this
-            return ((StatS.AttackPower / 14f + weapon.DPS) * weapon.Speed)
-                * (!isMH ? 0.5f + Talents.DualWieldSpecialization * 0.025f : 1f);
-        }*/
         #endregion
         #region Weapon Crit Damage
         public float BonusWhiteCritDmg {
