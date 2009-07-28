@@ -577,12 +577,13 @@ namespace Rawr.Warlock
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("MP5", manaGain));
             }
-            if (CalculationOptions.FSRRatio < 100)
-            {
-                manaGain = Math.Floor(StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * time;
-                currentMana += manaGain;
-                ManaSources.Add(new ManaSource("OutFSR", manaGain));
-            }
+			//TODO: FIX THIS
+			//if (CalculationOptions.FSRRatio < 100)
+			//{
+			//    manaGain = Math.Floor(StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * time;
+			//    currentMana += manaGain;
+			//    ManaSources.Add(new ManaSource("OutFSR", manaGain));
+			//}
             if (CalculationOptions.Replenishment > 0)
             {
                 manaGain = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * time;
