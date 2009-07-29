@@ -447,7 +447,7 @@ namespace Rawr.Enhance
                 float enhTotems = IsBuffChecked(character.ActiveBuffs, "Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
-                float dogsMissrate = Math.Max(0f, 0.08f - hitBonus) + 0.065f;
+                float dogsMissrate = Math.Max(0f, 0.08f - hitBonus) + 0.065f; // 0.065 gets replaced by cs.AverageDodge for patch 3.2
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);

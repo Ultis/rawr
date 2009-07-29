@@ -1013,7 +1013,7 @@ namespace Rawr
             }
             else if (line.StartsWith("Each time you use your Lava Lash ability,"))
             {
-                Regex r = new Regex("Each time you use your Lava Lash ability, you have the chance to gain (?<attackpower>\\d*) attack power for 18 sec.");
+                Regex r = new Regex("Each time you use your Lava Lash ability, you have a chance to gain (?<attackpower>\\d*) attack power for 18 sec.");
                 Match m = r.Match(line);
                 if (m.Success) // Totem of Quaking Earth
                 {
