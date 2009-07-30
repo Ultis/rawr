@@ -45,16 +45,18 @@ namespace Rawr.Elemental.Estimation
             TS = new Thunderstorm[num];
             if (num == 1)
             {
-                LB[0] = new LightningBolt(baseStats + procStats, talents, calcOpts);
-                CL[0] = new ChainLightning(baseStats + procStats, talents, calcOpts, 0);
-                CL3[0] = new ChainLightning(baseStats + procStats, talents, calcOpts, 3);
-                CL4[0] = new ChainLightning(baseStats + procStats, talents, calcOpts, 4);
-                LvB[0] = new LavaBurst(baseStats + procStats, talents, calcOpts, 0);
-                LvBFS[0] = new LavaBurst(baseStats + procStats, talents, calcOpts, 1);
-                FS[0] = new FlameShock(baseStats + procStats, talents, calcOpts);
-                ES[0] = new EarthShock(baseStats + procStats, talents, calcOpts);
-                FrS[0] = new FrostShock(baseStats + procStats, talents, calcOpts);
-                TS[0] = new Thunderstorm(baseStats + procStats, talents, calcOpts);
+                Stats addedStats = baseStats.Clone();
+                addedStats.Accumulate(procStats);
+                LB[0] = new LightningBolt(addedStats, talents, calcOpts);
+                CL[0] = new ChainLightning(addedStats, talents, calcOpts, 0);
+                CL3[0] = new ChainLightning(addedStats, talents, calcOpts, 3);
+                CL4[0] = new ChainLightning(addedStats, talents, calcOpts, 4);
+                LvB[0] = new LavaBurst(addedStats, talents, calcOpts, 0);
+                LvBFS[0] = new LavaBurst(addedStats, talents, calcOpts, 1);
+                FS[0] = new FlameShock(addedStats, talents, calcOpts);
+                ES[0] = new EarthShock(addedStats, talents, calcOpts);
+                FrS[0] = new FrostShock(addedStats, talents, calcOpts);
+                TS[0] = new Thunderstorm(addedStats, talents, calcOpts);
             }
             else
             {
@@ -62,16 +64,18 @@ namespace Rawr.Elemental.Estimation
                 float delta = num > 1 ? 2f / (num - 1) : 0;
                 for (k = 0; k < num; k++)
                 {
-                    LB[k] = new LightningBolt(baseStats + procStats * (k * delta), talents, calcOpts);
-                    CL[k] = new ChainLightning(baseStats + procStats * (k * delta), talents, calcOpts, 0);
-                    CL3[k] = new ChainLightning(baseStats + procStats * (k * delta), talents, calcOpts, 3);
-                    CL4[k] = new ChainLightning(baseStats + procStats * (k * delta), talents, calcOpts, 4);
-                    LvB[k] = new LavaBurst(baseStats + procStats * (k * delta), talents, calcOpts, 0);
-                    LvBFS[k] = new LavaBurst(baseStats + procStats * (k * delta), talents, calcOpts, 1);
-                    FS[k] = new FlameShock(baseStats + procStats * (k * delta), talents, calcOpts);
-                    ES[k] = new EarthShock(baseStats + procStats * (k * delta), talents, calcOpts);
-                    FrS[k] = new FrostShock(baseStats + procStats * (k * delta), talents, calcOpts);
-                    TS[k] = new Thunderstorm(baseStats + procStats * (k * delta), talents, calcOpts);
+                    Stats addedStats = baseStats.Clone();
+                    addedStats.Accumulate(procStats, k * delta);
+                    LB[k] = new LightningBolt(addedStats, talents, calcOpts);
+                    CL[k] = new ChainLightning(addedStats, talents, calcOpts, 0);
+                    CL3[k] = new ChainLightning(addedStats, talents, calcOpts, 3);
+                    CL4[k] = new ChainLightning(addedStats, talents, calcOpts, 4);
+                    LvB[k] = new LavaBurst(addedStats, talents, calcOpts, 0);
+                    LvBFS[k] = new LavaBurst(addedStats, talents, calcOpts, 1);
+                    FS[k] = new FlameShock(addedStats, talents, calcOpts);
+                    ES[k] = new EarthShock(addedStats, talents, calcOpts);
+                    FrS[k] = new FrostShock(addedStats, talents, calcOpts);
+                    TS[k] = new Thunderstorm(addedStats, talents, calcOpts);
                 }
             }
             #endregion
@@ -107,7 +111,8 @@ namespace Rawr.Elemental.Estimation
             if (talents.ElementalMastery > 0)
             {
                 float procs;
-                float EMmod = SpecialEffect.EstimateUptime(15f, talents.GlyphofElementalMastery ? 150f : 180f, 0, calcOpts.FightDuration, out procs);
+                SpecialEffect em = new SpecialEffect(Trigger.Use, new Stats { SpellCrit = 0.2f }, 15f, talents.GlyphofElementalMastery ? 150f : 180f);
+                float EMmod = em.GetAverageUptime(talents.GlyphofElementalMastery ? 150f : 180f, 1f);
                 LB.ApplyEM(EMmod);
                 CL.ApplyEM(EMmod);
                 LvB.ApplyEM(EMmod);
@@ -216,6 +221,9 @@ namespace Rawr.Elemental.Estimation
                 timeWasted += (nLBsecond - (float)Math.Floor(nLBsecond)) * LB.CastTime;
                 nLBsecond = (float)Math.Floor(nLBsecond);
             }
+            float LvBcps = 1f / timeBetweenLvB;
+            float FScps = 1f / timeBetweenFS;
+            float LBcps = (nLBfirst + nLBsecond) / timeBetweenLvB * 2;
             float castFractionLvB = LvB.CastTime / timeBetweenLvB; // LvB casting time per second
             float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
             float castFractionLB = LB.CastTime * (nLBfirst + nLBsecond) / (2 * timeBetweenLvB); // LB casting time per second
@@ -314,9 +322,9 @@ namespace Rawr.Elemental.Estimation
                 LBFraction = castFractionLB,
                 LvBFraction = castFractionLvB,
                 FSFraction = castFractionFS,
-                LBPerSecond = castFractionLB / LB.CastTime,
-                LvBPerSecond = castFractionLvB / LvB.CastTime,
-                FSPerSecond = castFractionFS / FS.CastTime,
+                LBPerSecond = LBcps,
+                LvBPerSecond = LvBcps,
+                FSPerSecond = FScps,
                 nLBfirst = nLBfirst,
                 nLBsecond = nLBsecond,
                 WaitAfterLB = timeWasted
@@ -341,14 +349,6 @@ namespace Rawr.Elemental.Estimation
              * NYI Optional: use CL after every LB
              * Optional: finish LB cast, or wait until LvB available
              */
-
-            #region Lightning Bolt Haste Trinket
-            stats += new Stats
-            {
-                HasteRating = stats.LightningBoltHasteProc_15_45 * 10f / 35f, // ICD reduced from 45s to 30s
-            };
-            #endregion
-
             Estimation e;
             Rotation rot;
             float damage;
@@ -360,7 +360,7 @@ namespace Rawr.Elemental.Estimation
             int nPasses = 2, k;
             for (k = 0; k < nPasses; k++)
             {
-                procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
+                procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
                 e = new Estimation(stats, procStats, talents, calcOpts, 4+k); // 4+k
                 rot = e.getAvgRotation(calcOpts.rotationType);
             }
@@ -386,9 +386,10 @@ namespace Rawr.Elemental.Estimation
             #region Thunderstorm
             if (calcOpts.UseThunderstorm)
             {
-                float procs;
-                SpecialEffect.EstimateUptime(0, talents.GlyphofThunder ? 35f : 45f, 0, calcOpts.FightDuration, out procs);
-                rot.MPS -= (talents.GlyphofThunderstorm ? .1f : .08f) * stats.Mana * procs / calcOpts.FightDuration;
+                SpecialEffect ts = new SpecialEffect(Trigger.Use, new Stats { }, 0f, talents.GlyphofThunder ? 35f : 45f, 1f);
+                //SpecialEffect.EstimateUptime(0, talents.GlyphofThunder ? 35f : 45f, 0, calcOpts.FightDuration, out procs);
+                float procsPerSecond = ts.GetAverageProcsPerSecond(talents.GlyphofThunder ? 35f : 45f, 1f, 1f, calcOpts.FightDuration);
+                rot.MPS -= (talents.GlyphofThunderstorm ? .1f : .08f) * stats.Mana * procsPerSecond;
             }
             #endregion
 
@@ -401,10 +402,11 @@ namespace Rawr.Elemental.Estimation
             else TimeUntilOOM = (calculatedStats.BasicStats.Mana + extraMana) / effectiveMPS;
             if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
 
-            #region Effect from Darkmoon card: Death and Pendulum and Thunder/Lightning Capacitor
-            getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
-            damage *= (1 + stats.SpellCrit);
-            rot.DPS += damage / calcOpts.FightDuration;
+            #region SpecialEffects from procs etc.
+            procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
+            damage = procStats.ArcaneDamage + procStats.NatureDamage + procStats.FireDamage + procStats.ShadowDamage;
+            damage *= (1 + stats.SpellCrit); //is only spellcrit affecting damage procs (Thunder Capacitor etc.) ?
+            rot.DPS += damage;
             #endregion
 
             float TotalDamage = TimeUntilOOM * rot.DPS;
@@ -414,8 +416,10 @@ namespace Rawr.Elemental.Estimation
             if (ManaRegOutFSR > 0 && FightDuration > TimeUntilOOM)
             {
                 float timeLeft = FightDuration - TimeUntilOOM;
-                if (TimeToRegenFull + TimeToBurnAll == 0) CastFraction = 0;
-                else CastFraction = TimeToBurnAll / (TimeToRegenFull + TimeToBurnAll);
+                if (TimeToRegenFull + TimeToBurnAll == 0)
+                    CastFraction = 0;
+                else
+                    CastFraction = TimeToBurnAll / (TimeToRegenFull + TimeToBurnAll);
                 TotalDamage += timeLeft * rot.DPS * CastFraction;
             }
             #endregion
@@ -457,20 +461,63 @@ namespace Rawr.Elemental.Estimation
             calculatedStats.WaitAfterLB = rot.WaitAfterLB;
         }
 
-        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float HitsFraction, float CritsFraction, float MissFraction, float TickFraction, out float Damage)
+        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, Rotation rot)
         {
-            SpecialEffects effects = new SpecialEffects(stats);
-            Stats result = effects.estimateAll(FightDuration, HitsFraction + MissFraction, HitsFraction, CritsFraction, MissFraction, TickFraction, out Damage);
-
-            return new Stats()
+            Stats statsAverage = new Stats();
+            foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                Spirit = result.Spirit,
-                HasteRating = result.HasteRating,
-                //SpellHaste = character.StatConversion.GetSpellHasteFromRating(result.HasteRating) / 100f,
-                SpellPower = result.SpellPower,
-                Mp5 = result.Mp5,
-                SpellCombatManaRegeneration = result.SpellCombatManaRegeneration,
-            };
+                float trigger = 0f; // 1 / frequency in Hz
+                float procChance = 1f;
+                if (effect.Trigger == Trigger.DamageDone)
+                {
+                    trigger = 1f / ( rot.getCastsPerSecond() + 1f/rot.FS.PeriodicTickTime );
+                    procChance = rot.getWeightedHitchance(); //flameshock ticks are not taken into account. the chance would be slightly higher.
+                }
+                else if (effect.Trigger == Trigger.SpellMiss)
+                {
+                    trigger = 1f / rot.getCastsPerSecond();
+                    procChance = 1f - rot.getWeightedHitchance();
+                }
+                else if (effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageSpellHit)
+                {
+                    trigger = 1f / rot.getCastsPerSecond();
+                    procChance = rot.getWeightedHitchance();
+                }
+                else if (effect.Trigger == Trigger.DoTTick)
+                {
+                    trigger = 1f / rot.FS.PeriodicTickTime;
+                }
+                else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
+                {
+                    trigger = 1f / rot.getCastsPerSecond();
+                }
+                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit)
+                {
+                    trigger = 1f / rot.getCastsPerSecond();
+                    procChance = rot.getWeightedCritchance(character.ShamanTalents.LightningOverload);
+                }
+                else if (effect.Trigger == Trigger.ShamanLightningBolt)
+                {
+                    trigger = 1f / rot.LBPerSecond;
+                }
+                else if (effect.Trigger == Trigger.ShamanShock)
+                {
+                    trigger = 1f / rot.FSPerSecond;
+                }
+                else if (effect.Trigger == Trigger.Use)
+                {
+                    trigger = 1f;
+                }
+                else
+                    continue;
+                
+                if (effect.MaxStack > 1)
+                    statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance, 3f, FightDuration);
+                else
+                    statsAverage += effect.GetAverageStats(trigger, procChance, 3f, FightDuration);
+                //float chance = effect.GetAverageUptime(trigger, procChance, 3f, FightDuration);
+            }
+            return statsAverage;
         }
     }
 }

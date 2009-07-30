@@ -375,6 +375,7 @@ namespace Rawr {
         ArcaneDamage,
         FireDamage,
         ShadowDamage,
+        NatureDamage,
 
         NUM_AdditiveStat // This should always be the last entry.
     }
@@ -2113,6 +2114,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FireDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.FireDamage] = value; }
+        }
+
+        // Thunder Capacitor
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Nature Damage")]
+        [Category("Equipment Effects")]
+        public float NatureDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.NatureDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.NatureDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -341,7 +341,7 @@ namespace Rawr.Elemental
 
 		public override Stats GetRelevantStats(Stats stats)
 		{
-			return new Stats()
+            Stats s = new Stats()
             {
                 #region Basic stats
                 Intellect = stats.Intellect,
@@ -380,39 +380,37 @@ namespace Rawr.Elemental
                 FlameShockDoTCanCrit = stats.FlameShockDoTCanCrit,
                 LightningBoltCritDamageModifier = stats.LightningBoltCritDamageModifier,
                 #endregion
-                #region Trinkets
-                SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
-                SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
-                SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
-                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
-                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
-                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
-                SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
-                SpellPowerFor10SecOnCast_10_45 = stats.SpellPowerFor10SecOnCast_10_45,
-                SpellPowerFor10SecOnCrit_20_45 = stats.SpellPowerFor10SecOnCrit_20_45,
-                SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
-                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
-                SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
-                BonusManaPotion = stats.BonusManaPotion,
-                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
-                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
-                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
-                ManaRestore5min = stats.ManaRestore5min,
-                FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
-                ManaregenOver12SecOnUse3Min = stats.ManaregenOver12SecOnUse3Min,
-                ManaregenOver12SecOnUse5Min = stats.ManaregenOver12SecOnUse5Min,
-                PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
-                ThunderCapacitorProc = stats.ThunderCapacitorProc,
-                LightningCapacitorProc = stats.LightningCapacitorProc,
-                ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                ExtraSpiritWhileCasting = stats.ExtraSpiritWhileCasting,
-                SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
-                GreatnessProc = stats.GreatnessProc,
-                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+                #region Misc Damage
+                NatureDamage = stats.NatureDamage,
+                ArcaneDamage = stats.ArcaneDamage,
+                FireDamage = stats.FireDamage,
+                ShadowDamage = stats.ShadowDamage
                 #endregion
             };
+            #region Trinkets
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+			{
+				if (effect.Trigger == Trigger.Use || 
+                    effect.Trigger == Trigger.SpellCast || 
+                    effect.Trigger == Trigger.SpellHit || 
+                    effect.Trigger == Trigger.SpellCrit || 
+                    effect.Trigger == Trigger.SpellMiss || 
+                    effect.Trigger == Trigger.DamageSpellCast || 
+                    effect.Trigger == Trigger.DamageSpellCrit || 
+                    effect.Trigger == Trigger.DamageSpellHit || 
+                    effect.Trigger == Trigger.DoTTick || 
+                    effect.Trigger == Trigger.DamageDone || 
+                    effect.Trigger == Trigger.ShamanLightningBolt || 
+                    effect.Trigger == Trigger.ShamanShock)
+				{
+					if (HasRelevantStats(effect.Stats))
+					{
+						s.AddSpecialEffect(effect);
+					}
+				}
+			}
+            #endregion
+            return s;
 		}
 
 		public override bool HasRelevantStats(Stats stats)
@@ -459,40 +457,36 @@ namespace Rawr.Elemental
                 stats.LightningBoltCritDamageModifier + 
                 stats.FlameShockDoTCanCrit;
             #endregion
-            #region Trinkets
+            #region Misc Damage
             elementalStats +=
-                stats.SpellPowerFor10SecOnResist +
-                stats.SpellPowerFor15SecOnCrit_20_45 +
-                stats.SpellPowerFor15SecOnUse90Sec +
-                stats.SpellPowerFor15SecOnUse2Min +
-                stats.SpellPowerFor20SecOnUse2Min +
-                stats.SpellPowerFor20SecOnUse5Min +
-                stats.SpellPowerFor10SecOnCrit_20_45 +
-                stats.SpellPowerFor10SecOnCast_15_45 +
-                stats.SpellPowerFor10SecOnCast_10_45 +
-                stats.SpellHasteFor10SecOnCast_10_45 +
-                stats.SpellHasteFor6SecOnCast_15_45 +
-                stats.SpellHasteFor6SecOnHit_10_45 +
-                stats.SpellPowerFor10SecOnHit_10_45 +
-                stats.BonusManaPotion +
-                stats.HasteRatingFor20SecOnUse5Min +
-                stats.Mp5OnCastFor20SecOnUse2Min +
-                stats.ManaRestoreOnCast_10_45 +
-                stats.ManaRestoreOnCrit_25_45 +
-                stats.ManaRestore5min +
-                stats.FullManaRegenFor15SecOnSpellcast +
-                stats.ManaregenOver12SecOnUse3Min +
-                stats.ManaregenOver12SecOnUse5Min +
-                stats.PendulumOfTelluricCurrentsProc +
-                stats.ThunderCapacitorProc +
-                stats.LightningCapacitorProc +
-                stats.ExtraSpiritWhileCasting +
-                stats.SpiritFor20SecOnUse2Min +
-                stats.DarkmoonCardDeathProc +
-                stats.ExtractOfNecromanticPowerProc +
-                stats.GreatnessProc;
+                stats.NatureDamage +
+                stats.ArcaneDamage +
+                stats.FireDamage +
+                stats.ShadowDamage;
             #endregion
-            return (elementalStats > 0);
+            bool relevant = (elementalStats > 0);
+            #region Trinkets
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || 
+                    effect.Trigger == Trigger.SpellCast || 
+                    effect.Trigger == Trigger.SpellHit || 
+                    effect.Trigger == Trigger.SpellCrit || 
+                    effect.Trigger == Trigger.SpellMiss || 
+                    effect.Trigger == Trigger.DamageSpellCast || 
+                    effect.Trigger == Trigger.DamageSpellCrit || 
+                    effect.Trigger == Trigger.DamageSpellHit || 
+                    effect.Trigger == Trigger.DoTTick || 
+                    effect.Trigger == Trigger.DamageDone || 
+                    effect.Trigger == Trigger.ShamanLightningBolt || 
+                    effect.Trigger == Trigger.ShamanShock)
+                {
+                    relevant |= HasRelevantStats(effect.Stats);
+                    if (relevant) break;
+                }
+            }
+            #endregion
+            return relevant;
 		}
 	}
 
@@ -705,6 +699,26 @@ namespace Rawr.Elemental
         public FlameShock FS;
         public EarthShock ES;
         public FrostShock FrS;
+
+        public float getCastsPerSecond()
+        {
+            return LBPerSecond + LvBPerSecond + FSPerSecond;
+        }
+
+        public float getWeightedHitchance()
+        {
+            return ((LBPerSecond * LB.HitChance) + (LvBPerSecond * LvBFS.HitChance) + (FSPerSecond * FS.HitChance)) / getCastsPerSecond();
+        }
+
+        /// <summary>
+        /// Returns the average Critchance with Hitchance factored in.
+        /// </summary>
+        /// <returns></returns>
+        public float getWeightedCritchance(int lightningOverload)
+        {
+            float critLB = LB.CritChance * (1f + .11f * lightningOverload);
+            return ((LBPerSecond * critLB * LB.HitChance) + (LvBPerSecond * LvBFS.CritChance * LvBFS.HitChance) + (FSPerSecond * FS.CritChance * FS.HitChance)) / getCastsPerSecond();
+        }
 
         public static Rotation operator +(Rotation A, Rotation B)
         {

@@ -510,14 +510,16 @@ namespace Rawr
                 line = line.Substring(0, line.IndexOf(" mana"));
                 stats.Mp5 += int.Parse(line);
             }
-            else if (line.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike."))
+            else if (line.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
             {
                 stats.LightningCapacitorProc = 1;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { NatureDamage = (694f + 806f) / 2f / 3f }, 0, 2.5f));
             }
-            else if (line.StartsWith("You gain a Thunder Charge each time you cause a damaging spell critical strike."))
+            else if (line.StartsWith("You gain a Thunder Charge each time you cause a damaging spell critical strike. When you reach 4 Thunder Charges, they will release, firing a Lightning Bolt for 1181 to 1371 damage. Thunder Charge cannot be gained more often than once every 2.5 sec."))
             {
                 // Thunder Capacitor
                 stats.ThunderCapacitorProc = 1;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { NatureDamage = (1181f + 1371f) / 2f / 4f }, 0, 2.5f));
             }
             else if (line.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec."))
             {

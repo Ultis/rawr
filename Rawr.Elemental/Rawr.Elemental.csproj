@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Estimation.cs" />
-    <Compile Include="SpecialEffects.cs" />
     <Compile Include="OptionsPanelElemental.cs">
       <SubType>UserControl</SubType>
     </Compile>
