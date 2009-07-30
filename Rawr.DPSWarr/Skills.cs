@@ -482,6 +482,7 @@ namespace Rawr.DPSWarr {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Bloodthirst";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.Bloodthirst;
                 ReqMeleeWeap = true;
@@ -517,6 +518,7 @@ namespace Rawr.DPSWarr {
                 Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "WhirlWind";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = 8f; // In Yards
@@ -607,6 +609,7 @@ namespace Rawr.DPSWarr {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Bloodsurge";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.Bloodsurge;
                 ReqMeleeWeap = true;

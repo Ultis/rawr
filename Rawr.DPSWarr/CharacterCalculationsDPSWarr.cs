@@ -18,7 +18,6 @@ namespace Rawr.DPSWarr {
         public float TotalDPS2 { get; set; }
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
-        public float BaseHealth { get; set; }
         #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
@@ -84,6 +83,7 @@ namespace Rawr.DPSWarr {
         public Skills.WhirlWind WW { get; set; }
         #endregion
         #region Neutral
+        public float BaseHealth { get; set; }
         public float WhiteRage { get; set; }
         public float OtherRage { get; set; }
         public float NeedyRage { get; set; }
@@ -186,12 +186,12 @@ namespace Rawr.DPSWarr {
 
             // DPS Fury
             format = "{0:0000} : {1:0000} : {2:000.00}*{3:00.0%} of DPS";
-            dictValues.Add("Description",       string.Format("DPS  : PerHit : #ActsD"));
+            dictValues.Add("Description",       string.Format("DPS : PerHit : #ActsD"));
             dictValues.Add("Bloodsurge",        string.Format(format,Rot._BS_DPS ,BS.DamageOnUse ,Rot._BS_GCDs     ,Rot._BS_DPS /TotalDPS));
             dictValues.Add("Bloodthirst",       string.Format(format,Rot._BT_DPS ,BT.DamageOnUse ,Rot._BT_GCDs     ,Rot._BT_DPS /TotalDPS));
             dictValues.Add("Whirlwind",         string.Format(format,Rot._WW_DPS ,WW.DamageOnUse ,Rot._WW_GCDs     ,Rot._WW_DPS /TotalDPS));
             // DPS Arms
-            format = "{0:0000} : {1:0000} : {2:000.00}*{3:00.0%} of DPS";
+            format = "{0:0000} : {1:0000} : {2:000}*{3:00.0%} of DPS";
             dictValues.Add("Mortal Strike",     string.Format(format,Rot._MS_DPS ,MS.DamageOnUse ,Rot._MS_GCDs     ,Rot._MS_DPS /TotalDPS));
             dictValues.Add("Rend",              string.Format(format,Rot._RD_DPS ,RD.TickSize    ,Rot._RD_GCDs     ,Rot._RD_DPS /TotalDPS));
             dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.DamageOnUse ,Rot._OP_GCDs     ,Rot._OP_DPS /TotalDPS));

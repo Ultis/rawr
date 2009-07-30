@@ -550,10 +550,10 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Includes DPS.</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, ref float DPS_TTL,  ref float _Abil_DPS, Skills.Ability abil) {
-            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -565,10 +565,10 @@ namespace Rawr.DPSWarr {
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, ref float DPS_TTL,  ref float _Abil_DPS, Skills.Ability abil,
                               float GCDMulti) {
-            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
-            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "x" + GCDMulti.ToString() + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -579,10 +579,10 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Does not include DPS.</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, Skills.Ability abil) {
-            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
             availRage -= rageadd;
@@ -591,10 +591,10 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Not DPS but add rage instead of remove it</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, Skills.Ability abil,bool flag) {
-            float Abil_GCDs = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? abil.Name + ": " + Abil_GCDs.ToString() + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
             RageGenOther += rageadd;
@@ -605,8 +605,8 @@ namespace Rawr.DPSWarr {
             float DPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
             float LatentGCD = 1.5f + CalcOpts.GetLatency();
-            float NumGCDs = FightDuration / LatentGCD;
-            GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
+            float NumGCDs = (float)Math.Floor(FightDuration / LatentGCD);
+            GCDUsage += NumGCDs.ToString("000") + " : Total GCDs\n\n";
             float GCDsused = 0f;
             float availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float availRage = 0f;
@@ -651,7 +651,7 @@ namespace Rawr.DPSWarr {
             float SL_GCDs = SL.Validated ? availGCDs : 0f;
             _SL_GCDs = SL_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, SL_GCDs);
-            GCDUsage += SL.Name + ": " + SL_GCDs.ToString() + "\n";
+            GCDUsage += (SL_GCDs > 0 ? SL_GCDs.ToString("000") + " : " + SL.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _SL_DPS = SL.GetDPS(SL_GCDs);
             DPS_TTL += _SL_DPS;
@@ -697,7 +697,7 @@ namespace Rawr.DPSWarr {
             }
             calcDeepWounds();
 
-            GCDUsage += "\nAvail: " + availGCDs.ToString();
+            GCDUsage += "\n" + availGCDs.ToString("000") + " : Avail GCDs";
 
             // Return result
             return DPS_TTL;
