@@ -42,16 +42,17 @@ namespace Rawr.DPSWarr {
         protected override void LoadCalculationOptions() {
             if (Character != null && Character.CalculationOptions == null) { 
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
-                CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
-                CK_3pt2Mode.Checked = opts._3pt2Mode;
+                CalculationOptionsDPSWarr newcalcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                newcalcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+                CK_3pt2Mode.Checked = newcalcOpts._3pt2Mode;
                 // Rotational Changes
-                RB_StanceFury.Checked = opts.FuryStance;
+                RB_StanceFury.Checked = newcalcOpts.FuryStance;
                 RB_StanceArms.Checked = !RB_StanceFury.Checked;
                 // Abilities to Maintain
+                LoadAbilBools(newcalcOpts);
                 // Latency
-                CB_Lag.Value = (int)opts.Lag;
-                CB_React.Value = (int)opts.React;
+                CB_Lag.Value = (int)newcalcOpts.Lag;
+                CB_React.Value = (int)newcalcOpts.React;
                 //
                 Character.OnCalculationsInvalidated();
                 return; 
@@ -70,17 +71,14 @@ namespace Rawr.DPSWarr {
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
                 CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 // Abilities to Maintain
-                for (int i = 0; i < CTL_Maints.Nodes.Count; i++) {
-                    CTL_Maints.Nodes[i].Checked = calcOpts.Maintenance[i];
-                }
+                LoadAbilBools(calcOpts);
                 // Latency
                 CB_Lag.Value   = (int)calcOpts.Lag;
                 CB_React.Value = (int)calcOpts.React;
                 //
                 if (Character != null) {
-                    CalculationOptionsDPSWarr opts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                    opts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
-                    RB_StanceFury.Checked = opts.FuryStance;
+                    calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+                    RB_StanceFury.Checked = calcOpts.FuryStance;
                     RB_StanceArms.Checked = !RB_StanceFury.Checked;
                     Character.OnCalculationsInvalidated();
                 }
@@ -746,6 +744,43 @@ namespace Rawr.DPSWarr {
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageDumps__]      = CTL_Maints.Nodes[4].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_]           = CTL_Maints.Nodes[4].Nodes[0].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]     = CTL_Maints.Nodes[4].Nodes[1].Checked;
+        }
+        private void LoadAbilBools(CalculationOptionsDPSWarr calcOpts) {
+            CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
+            //
+            CTL_Maints.Nodes[0].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageGen__];
+            CTL_Maints.Nodes[0].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_];
+            CTL_Maints.Nodes[0].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bloodrage_];
+            CTL_Maints.Nodes[1].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._Maintenance__];
+            CTL_Maints.Nodes[1].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShoutChoice_];
+            CTL_Maints.Nodes[1].Nodes[0].Nodes[0].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_];
+            CTL_Maints.Nodes[1].Nodes[0].Nodes[1].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_];
+            CTL_Maints.Nodes[1].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_];
+            CTL_Maints.Nodes[1].Nodes[2].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_];
+            CTL_Maints.Nodes[1].Nodes[3].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_];
+            CTL_Maints.Nodes[1].Nodes[4].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Hamstring_];
+            CTL_Maints.Nodes[2].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._Periodics__];
+            CTL_Maints.Nodes[2].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_];
+            CTL_Maints.Nodes[2].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_];
+            CTL_Maints.Nodes[2].Nodes[2].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DeathWish_];
+            CTL_Maints.Nodes[2].Nodes[3].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Recklessness_];
+            CTL_Maints.Nodes[3].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._DamageDealers__];
+            CTL_Maints.Nodes[3].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Fury_];
+            CTL_Maints.Nodes[3].Nodes[0].Nodes[0].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_];
+            CTL_Maints.Nodes[3].Nodes[0].Nodes[1].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_];
+            CTL_Maints.Nodes[3].Nodes[0].Nodes[2].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_];
+            CTL_Maints.Nodes[3].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Arms_];
+            CTL_Maints.Nodes[3].Nodes[1].Nodes[0].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_];
+            CTL_Maints.Nodes[3].Nodes[1].Nodes[1].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_];
+            CTL_Maints.Nodes[3].Nodes[1].Nodes[2].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_];
+            CTL_Maints.Nodes[3].Nodes[1].Nodes[3].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_];
+            CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_];
+            CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_];
+            CTL_Maints.Nodes[4].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageDumps__];
+            CTL_Maints.Nodes[4].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_];
+            CTL_Maints.Nodes[4].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            //
+            this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
         }
         // Latency
         private void CB_Latency_ValueChanged(object sender, EventArgs e) {

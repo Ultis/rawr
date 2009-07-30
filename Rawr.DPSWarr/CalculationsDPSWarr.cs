@@ -457,18 +457,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Rot.Initialize();
 
             float fightDuration = calcOpts.Duration;
-            //float haste2PT8Bonus = 0f;
-            //if (statsTotal.BonusWarrior2PT8Haste > 0f) {
-                //approximate the number of Heroic Strike crits and slam crits that are done in the 10 sec proc of the 2-piece T8 haste buff
-                //Skills.Ability sl = new Skills.Slam(character, statsTotal, combatFactors, whiteAttacks);
-                //float hsSlamPerProc = Rot.CritHsSlamPerSec * 10f;
-                
-                //calculate the average uptime of the 2P T8 buff, and scale the haste bonus to match
-                //float procChance = 0.4f;
-                //haste2PT8Bonus = statsTotal.BonusWarrior2PT8Haste * (1f - (float)Math.Pow(1f - procChance, hsSlamPerProc));
-            //}
 
-            //statsTotal.HasteRating += haste2PT8Bonus;
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / fightDuration) - 1f;
             float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
@@ -488,20 +477,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float dmgDoneInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
             Stats statsProcs = new Stats();
-            //Stats bersStats = null;
             SpecialEffect bersMainHand = null;
             SpecialEffect bersOffHand = null;
 
             // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
             if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789){ // berserker enchant id
-                //bersStats = character.MainHandEnchant.Stats;
-                //if (bersEffect == null){
-                    //Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
-                    //if (bersEffectEnum.MoveNext()){
-                        //bersEffect = bersEffectEnum.Current;
-                    //}
-                //}
-                //statsProcs += bersEffect.GetAverageStats(mhHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                 Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
 
                 if (mhEffects.MoveNext()) {
@@ -510,14 +490,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
-                //bersStats = character.OffHandEnchant.Stats;
-                //if (bersEffect == null){
-                    //Stats.SpecialEffectEnumerator bersEffectEnum = statsTotal.SpecialEffects(e => e.ToString() == bersStats.ToString());
-                    //if (bersEffectEnum.MoveNext()){
-                        //bersEffect = bersEffectEnum.Current;
-                    //}
-                //}
-                //statsProcs += bersEffect.GetAverageStats(ohHitInterval, 1f, combatFactors._c_ohItemSpeed, fightDuration);
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
 
                 if (ohEffects.MoveNext()) {
@@ -526,7 +498,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
-                //if (bersStats == null || effect.ToString() != bersStats.ToString()) // bersStats is null if the char doesn't have berserking enchant
                 if (effect != bersMainHand && effect != bersOffHand) // bersStats is null if the char doesn't have berserking enchant
                 {
                     switch (effect.Trigger)
@@ -576,6 +547,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             //avgstats += Hammy.AverageStats;
             Skills.BattleShout     Battle = new Skills.BattleShout(   character,statsTotal,combatFactors,whiteAttacks);
             avgstats += Battle.AverageStats;
+            Skills.CommandingShout Comm = new Skills.CommandingShout( character,statsTotal,combatFactors,whiteAttacks);
+            avgstats += Comm.AverageStats;
             statsProcs += avgstats;
 
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + statsTotal.BonusStaminaMultiplier));
@@ -744,6 +717,24 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Buff b = Buff.GetBuffByName("Battle Shout");
                 Buff c = Buff.GetBuffByName("Improved Blessing of Might");
                 Buff d = Buff.GetBuffByName("Blessing of Might");
+                if(hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
+                }
+            }
+
+            // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blood Pact (+Improved Imp)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
+                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
+                                        character.WarriorTalents.CommandingPresence;
+                Buff a = Buff.GetBuffByName("Commanding Presence (Health)");
+                Buff b = Buff.GetBuffByName("Commanding Shout");
+                Buff c = Buff.GetBuffByName("Improved Imp");
+                Buff d = Buff.GetBuffByName("Blood Pact");
                 if(hasRelevantBuff > 0) {
                     if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
                     if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }

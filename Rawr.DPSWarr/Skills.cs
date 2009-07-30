@@ -1494,7 +1494,7 @@ namespace Rawr.DPSWarr {
             public override Stats AverageStats {
                 get {
                     if (!Validated) { return new Stats(); }
-                    Stats bonus = Effect.GetAverageStats(1f /*Duration/*, 1f, combatFactors.MainHand.Speed, FightDuration*/);
+                    Stats bonus = Effect.GetAverageStats(1f);
                     return bonus;
                 }
             }
@@ -1513,7 +1513,7 @@ namespace Rawr.DPSWarr {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Battle Shout";
-                //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
                 MaxRange = (CalcOpts._3pt2Mode ? 30f : 20f) * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
                 Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
