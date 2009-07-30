@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+	xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:local="clr-namespace:Rawr.Silverlight"
 	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
 	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
@@ -32,15 +33,15 @@
         <ScrollViewer Margin="4,4,4,2" VerticalScrollBarVisibility="Auto">
         	<StackPanel>
         		<StackPanel x:Name="GroupStack"/>
-        		<basics:Expander IsExpanded="true">
-        			<basics:Expander.Header>
+        		<toolkit:Expander IsExpanded="true">
+        			<toolkit:Expander.Header>
         				<CheckBox x:Name="CustomCheck" Content="Custom" IsThreeState="True" Checked="groupCheckBox_Checked" Unchecked="groupCheckBox_Checked" Indeterminate="groupCheckBox_Checked"/>
-        			</basics:Expander.Header>
+        			</toolkit:Expander.Header>
                     <StackPanel>
                         <StackPanel x:Name="CustomStack"/>
                         <Button x:Name="AddButton" Margin="2,2,2,2" HorizontalAlignment="Left" Content="Add" Width="46" Click="AddTemplate"/>
                     </StackPanel>
-                </basics:Expander>
+                </toolkit:Expander>
         	</StackPanel>
         </ScrollViewer>
     </Grid>

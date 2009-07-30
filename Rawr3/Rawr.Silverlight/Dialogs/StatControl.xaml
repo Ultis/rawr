@@ -25,7 +25,7 @@
 				<ColumnDefinition Width="0.5*"/>
 				<ColumnDefinition Width="30"/>
 			</Grid.ColumnDefinitions>
-			<input:AutoCompleteBox x:Name="AddStatBox" Margin="2,2,2,2" SearchMode="Contains" MinimumPrefixLength="2"/>
+			<input:AutoCompleteBox x:Name="AddStatBox" Margin="2,2,2,2" FilterMode="Contains" MinimumPrefixLength="2"/>
 			<Button x:Name="AddStatButton" HorizontalAlignment="Left" Margin="2,2,2,2" Content="Add" Grid.Column="1" Width="50" Click="AddStatButton_Click"/>
 		</Grid>
 	</StackPanel>

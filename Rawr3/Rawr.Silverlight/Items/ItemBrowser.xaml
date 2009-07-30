@@ -5,7 +5,9 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data" xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
+	xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+    xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
 	x:Class="Rawr.Silverlight.ItemBrowser"
 	Title="Item Browser" Width="600">
 	<Grid x:Name="LayoutRoot" Background="White">
@@ -22,20 +24,20 @@
 		SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" Height="280" IsReadOnly="True">
             <data:DataGrid.RowDetailsTemplate>
 		        <DataTemplate>
-		            <basics:DockPanel Background="White" LastChildFill="True">
-		                <Image Width="32" Height="32" Margin="5,5,5,5" basics:DockPanel.Dock="Left"
+		            <toolkit:DockPanel Background="White" LastChildFill="True">
+		                <Image Width="32" Height="32" Margin="5,5,5,5" toolkit:DockPanel.Dock="Left"
 							Source="{Binding Converter={StaticResource IconPathConverter}, ConverterParameter=IconPath}"/>
-                        <Rectangle basics:DockPanel.Dock="Right" Width="20" Height="20" Margin="4"
+                        <Rectangle toolkit:DockPanel.Dock="Right" Width="20" Height="20" Margin="4"
                             Fill="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=1}"/>
-                        <Rectangle basics:DockPanel.Dock="Right" Width="20" Height="20" Margin="4"
+                        <Rectangle toolkit:DockPanel.Dock="Right" Width="20" Height="20" Margin="4"
                             Fill="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=2}"/>
-                        <Rectangle basics:DockPanel.Dock="Right" Width="20" Height="20" Margin="4"
+                        <Rectangle toolkit:DockPanel.Dock="Right" Width="20" Height="20" Margin="4"
                             Fill="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=3}"/>
 						<StackPanel Margin="5" VerticalAlignment="Center">
                        		<TextBlock Text="{Binding Stats}" TextWrapping="Wrap"/>
                        		<!--<TextBlock Text="{Binding LocationInfo}" TextWrapping="Wrap"/>-->
 						</StackPanel>
-                    </basics:DockPanel>
+                    </toolkit:DockPanel>
 		        </DataTemplate>
 		    </data:DataGrid.RowDetailsTemplate>
 		    <data:DataGrid.Columns>
@@ -52,11 +54,11 @@
                 <data:DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" />
             </data:DataGrid.Columns>
 		</data:DataGrid>
-		<basics:DockPanel LastChildFill="True" Margin="2,2,2,2">
-			<TextBlock basics:DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2,2,2,2" Text="Name:"/>
-			<TextBox x:Name="NameText" basics:DockPanel.Dock="Right" TextChanged="NameText_TextChanged" Margin="2,2,2,2"/>
-		</basics:DockPanel>
-		<basics:Expander Margin="4,2,4,2" Grid.Row="1" Header="Filters">
+		<toolkit:DockPanel LastChildFill="True" Margin="2,2,2,2">
+			<TextBlock toolkit:DockPanel.Dock="Left" VerticalAlignment="Center" Margin="2,2,2,2" Text="Name:"/>
+			<TextBox x:Name="NameText" toolkit:DockPanel.Dock="Right" TextChanged="NameText_TextChanged" Margin="2,2,2,2"/>
+		</toolkit:DockPanel>
+		<toolkit:Expander Margin="4,2,4,2" Grid.Row="1" Header="Filters">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"/>
@@ -164,7 +166,7 @@
 					<ListBoxItem Content="Heirloom"/>
 				</ListBox>
 			</Grid>
-		</basics:Expander>
+		</toolkit:Expander>
 		<StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="3" Orientation="Horizontal" Margin="2,0,0,2">
 			<Button x:Name="EditButton" Content="Edit" Width="75" IsEnabled="False" Click="EditButton_Click" Margin="2,2,2,2"/>
 			<Button x:Name="RefreshButton" Content="Refresh" Width="75" IsEnabled="False" Click="RefreshButton_Click" Margin="2,2,2,2"/>
