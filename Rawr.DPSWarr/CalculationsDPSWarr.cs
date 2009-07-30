@@ -12,7 +12,6 @@ using System.Drawing;
 namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase {
-        private static SpecialEffect bersEffect = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				////Relevant Gem IDs for DPSWarrs

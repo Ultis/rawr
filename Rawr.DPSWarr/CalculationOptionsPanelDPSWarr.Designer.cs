@@ -445,6 +445,7 @@
             this.RB_StanceArms.Name = "RB_StanceArms";
             this.RB_StanceArms.Size = new System.Drawing.Size(48, 17);
             this.RB_StanceArms.TabIndex = 1;
+            this.RB_StanceArms.TabStop = true;
             this.RB_StanceArms.Text = "Arms";
             this.RB_StanceArms.UseVisualStyleBackColor = true;
             this.RB_StanceArms.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
