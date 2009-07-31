@@ -406,8 +406,8 @@ namespace Rawr.DPSWarr {
                 get {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
                     float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
-                    float Every = LatentGCD / GCDPerc * (1f - Whiteattacks.AvoidanceStreak);
-                    return (float)Math.Max(0f, FightDuration / Every);
+                    float Every = LatentGCD / GCDPerc;
+                    return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));
                 }
             }
             public virtual float Healing { get { return !Validated ? 0f : (float)Math.Max(0f, HealingBase * HealingBonus); } }
