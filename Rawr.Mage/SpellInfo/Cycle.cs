@@ -863,7 +863,7 @@ namespace Rawr.Mage
         public string SpellDistribution;
 
 #if SILVERLIGHT
-        public GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription)
+        public GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription, bool needsDisplayCalculations)
 #else
         public unsafe GenericCycle(string name, CastingState castingState, List<CycleState> stateDescription, bool needsDisplayCalculations)
 #endif
