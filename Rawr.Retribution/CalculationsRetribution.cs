@@ -571,6 +571,7 @@ namespace Rawr.Retribution
                 int maxDamage = character.MainHand.MaxDamage;
 
                 Character deltaChar = character.Clone();
+                deltaChar.IsLoading = true;
 
                 ComparisonCalculationBase three;
                 newMH = character.MainHand.Item.Clone();
