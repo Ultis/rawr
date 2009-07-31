@@ -2002,6 +2002,11 @@ namespace Rawr
         {
             StringBuilder wt = new StringBuilder("wt=");
             StringBuilder wtv = new StringBuilder(";wtv=");
+            if (character.CurrentModel == "Enhance") // force weapon dps ep value 6 to fix caster weapon display issue
+            {
+                wt.Append("134:");
+                wtv.Append("6:");
+            }
             ComparisonCalculationBase[] statValues = CalculationsBase.GetRelativeStatValues(character);
             Array.Sort(statValues, StatValueSorter);
             foreach (ComparisonCalculationBase ccb in statValues)

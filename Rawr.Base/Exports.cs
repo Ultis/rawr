@@ -69,6 +69,8 @@ namespace Rawr
                 if (!stat.Equals(string.Empty))
                     wtf.Append(stat + "=" + ccb.OverallPoints.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + "&");
             }
+            if (character.CurrentModel == "Enhance")
+                wtf.Append("s1=2.4&s3=2.4&dps=6&odps=3&");
             if (wtf.Length == 0)
                 return string.Empty;
             else
