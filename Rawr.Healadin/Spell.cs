@@ -294,7 +294,7 @@ namespace Rawr.Healadin
 
         public float ProcAbsorb()
         {
-            return (500f + .75f * Stats.SpellPower) * (1f + Talents.DivineGuardian * .1f);
+            return (500f + Stats.SpellPower * (Stats.SacredShieldICDReduction > 0 ? 0.85f : 0.75f) ) * (1f + Talents.DivineGuardian * .1f);
         }
 
         public float TotalAborb()
