@@ -33,6 +33,7 @@ namespace Rawr.Healadin
             infusionOfLight = true;
             ioLHolyLight = .9f;
             jotP = true;
+            judgement = true;
             loHSelf = false;
             sSUptime = 1f;
             mode32 = false;
@@ -127,6 +128,13 @@ namespace Rawr.Healadin
         {
             get { return jotP; }
             set { jotP = value; OnPropertyChanged("JotP"); }
+        }
+
+        private bool judgement;
+        public bool Judgement
+        {
+            get { return judgement; }
+            set { judgement = value; OnPropertyChanged("Judgement"); }
         }
 
         private bool loHSelf;

@@ -56,7 +56,7 @@ namespace Rawr.Healadin
             hl = new HolyLight(this);
             hs = new HolyShock(this);
             ss = new SacredShield(this);
-            jotp = new JudgementsOfThePure(this);
+            jotp = new JudgementsOfThePure(this, CalcOpts.Judgement);
             bol = new BeaconOfLight(this);
         }
 
@@ -72,6 +72,7 @@ namespace Rawr.Healadin
             calc.ManaPotion = (1 + Stats.BonusManaPotion) * CalcOpts.ManaAmt;
             calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment * (CalcOpts.Mode32 ? .8f : 1f);
             calc.ManaOther += Stats.ManaRestore;
+            if (CalcOpts.Mode32) calc.ManaOther += jotp.Casts() * jotp.ManaRestored(Character.MainHand == null ? 1.8f : Character.MainHand.Speed);
             if (Stats.HighestStat > 0)
             {
                 float greatnessMana = Stats.HighestStat * 15;

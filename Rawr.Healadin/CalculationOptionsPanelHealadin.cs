@@ -33,6 +33,7 @@ namespace Rawr.Healadin
             lblActivity.Text = trkActivity.Value + "%";
 
             chkJotP.Checked = calcOpts.JotP;
+            chkJudgement.Checked = calcOpts.Judgement;
             chkLoHSelf.Checked = calcOpts.LoHSelf;
             chkMode32.Checked = calcOpts.Mode32;
 
@@ -257,6 +258,16 @@ namespace Rawr.Healadin
             }
         }
 
+        private void chkJudgement_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Judgement = chkJudgement.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -287,6 +298,7 @@ namespace Rawr.Healadin
         public float IoLHolyLight = .9f;
 
         public bool JotP = true;
+        public bool Judgement = true;
         public bool LoHSelf = false;
         public bool Mode32 = false;
         public float SSUptime = 1f;

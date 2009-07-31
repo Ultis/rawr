@@ -14,7 +14,7 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 	
-    	<ScrollViewer Background="#FFFFFFFF" Grid.Row="1" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto">
+    	<ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="1" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto">
 			<local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
 		</ScrollViewer>
 		<Rectangle VerticalAlignment="Stretch" Margin="0,0,0,-1" Canvas.ZIndex="1">

@@ -348,12 +348,17 @@ namespace Rawr.Healadin
 
     public class JudgementsOfThePure : Spell
     {
-        public JudgementsOfThePure(Rotation rotation)
+        public JudgementsOfThePure(Rotation rotation, bool MaintainDebuff)
             : base(rotation)
         {
-            Duration = 60f;
+            Duration = MaintainDebuff ? 20f : 60f;
             Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
             BaseCost = 219f;
+        }
+
+        public float ManaRestored(float AttackSpeed)
+        {
+            return Talents.GlyphOfSealOfWisdom ? 0.04f * Stats.Mana * (15f * AttackSpeed / 60f) : 0f;
         }
 
         public override float CastTime()
