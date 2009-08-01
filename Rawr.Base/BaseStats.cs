@@ -51,7 +51,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 220;
                     S.PhysicalCrit = 0.0319f;
-                    S.Dodge = 0.034636f;
+                    S.Dodge = 0.0366400f;
                     S.Parry = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0f;
@@ -146,18 +146,18 @@ namespace Rawr
                         case DruidForm.Caster:
                             S.AttackPower = -10;
                             S.PhysicalCrit = 0.0743f;
-                            S.Dodge = 0.04951f; //??
+                            S.Dodge = 0.0556970f; //??
                             break;
                         case DruidForm.Bear:
                             S.AttackPower = 220;
                             S.PhysicalCrit = 0.05f;
-                            S.Dodge = 0.04951f;
+							S.Dodge = 0.0556970f;
                             S.BonusStaminaMultiplier = 0.25f;
                             break;
                         case DruidForm.Cat:
                             S.AttackPower = 140;
                             S.PhysicalCrit = 0.07476f;
-                            S.Dodge = 0.04951f;
+							S.Dodge = 0.0556970f;
                             break;
                         default:
                             break;
@@ -190,7 +190,7 @@ namespace Rawr
                     S.AttackPower = 140;
                     S.RangedAttackPower = 150;
                     S.PhysicalCrit = -0.0153f;
-                    S.Dodge = -0.0545f;
+                    S.Dodge = -0.0412730f;
                     S.Parry = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0360f;
@@ -258,7 +258,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = -10;
                     S.PhysicalCrit = 0.03f;
-                    S.Dodge = 0.034575f;
+                    S.Dodge = 0.0361870f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0091f;
                     switch (characterRace)
@@ -320,7 +320,7 @@ namespace Rawr
                     S.PhysicalCrit = 0.0327f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0345f;
-                    S.Dodge = 0.032685f;
+                    S.Dodge = 0.0345430f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     switch (characterRace)
@@ -366,7 +366,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = -10;
                     S.PhysicalCrit = 0.027f;
-                    S.Dodge = 0.03183f;
+                    S.Dodge = 0.0337780f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0124f;
                     switch (characterRace)
@@ -433,7 +433,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.047f;
-                    S.Dodge = -0.0059f;
+                    S.Dodge = 0.0205570f;
                     S.Parry = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0f;
@@ -508,7 +508,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.0292f;
-                    S.Dodge = 0.01675f;
+                    S.Dodge = 0.0206800f;
                     S.Block = 0.05f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.022f;
@@ -555,7 +555,7 @@ namespace Rawr
                     S.Armor = 0;
                     S.AttackPower = -10;
                     S.PhysicalCrit = 0.028f;
-                    S.Dodge = 0.02035f;
+                    S.Dodge = 0.0238110f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.017f;
                     switch (characterRace)
@@ -608,7 +608,7 @@ namespace Rawr
                     S.Armor = 0f;
                     S.AttackPower = 220f;
                     S.PhysicalCrit = 0.03192f;
-                    S.Dodge = 0.034636f;
+                    S.Dodge = 0.0366400f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     S.SpellPower = 0f;

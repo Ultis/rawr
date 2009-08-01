@@ -16,7 +16,8 @@ namespace Rawr.DPSWarr {
         public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
         public float Duration = 300f;
         public bool FuryStance = true;
-        public bool _3pt2Mode = false;
+		public bool _3pt2Mode = false;
+		public bool AllowFlooring = true;
         // Rotational Changes
         public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
         public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
@@ -52,10 +53,10 @@ namespace Rawr.DPSWarr {
         };
         public enum Maintenances : int {
             _RageGen__ = 0,   BerserkerRage_,   Bloodrage_,
-            _Maintenance__,   BattleShout_,     DemoralizingShout_, SunderArmor_, ThunderClap_,  Hamstring_,
+			_Maintenance__, BattleShout_, CommandingShout_, DemoralizingShout_, SunderArmor_, ThunderClap_, Hamstring_,
             _Periodics__,     ShatteringThrow_, SweepingStrikes_,   DeathWish_,   Recklessness_,
             _DamageDealers__, Bladestorm_,      MortalStrike_,      Rend_,        Overpower_,    SuddenDeath_, Slam_,
-            _RageDumps__,     Cleave_,          HeroicStrike_
+			_RageDumps__, Cleave_, Whirlwind_, Bloodthirst_, Bloodsurge_, HeroicStrike_
         };
         // Latency
         public float Lag = 179f;

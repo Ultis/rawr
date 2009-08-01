@@ -38,13 +38,13 @@ namespace Rawr
         public const float RATING_PER_ARMORPENETRATION = 1231.6239f ; // 4.69512177f / 1.25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_BLOCK = 1639.4994f; // 5f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_DEFENSE = 4.918498039f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
-        public const float RATING_PER_DODGE = 3934.7985f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_DODGE = 4525.018692f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_EXPERTISE = 8.1974969f; // 2.5f * LEVEL_80_COMBATRATING_MODIFIER;
-        public const float RATING_PER_PARRY = 4918.4987f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+		public const float RATING_PER_PARRY = 4525.018692f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_PHYSICALCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_PHYSICALHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_PHYSICALHIT = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_RESILIENCE = 8197.4969f; // 25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_RESILIENCE = 9427.122498f; // 25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_SPELLCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_SPELLHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_SPELLHIT = 2623.1990f; //8f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
@@ -102,17 +102,17 @@ namespace Rawr
         };
 
         public static float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
-            73.52941176f, // Warrior 1
-            52.08333333f, // Paladin 2
-            75.18796992f, // Hunter 3
-            41.49377593f, // Rogue 4
-            52.08333333f, // Priest 5
-            73.52941176f, // Death Knight 6
-            52.08333333f, // Shaman 7
-            51.28205128f, // Mage 8
-            52.08333333f, // Warlock 9
+            84.558823524f, // Warrior 1
+            59.8958333295f, // Paladin 2
+            86.466165408f, // Hunter 3
+            47.7178423195f, // Rogue 4
+            59.8958333295f, // Priest 5
+            84.558823524f, // Death Knight 6
+            59.8958333295f, // Shaman 7
+            58.974358972f, // Mage 8
+            59.8958333295f, // Warlock 9
             0.0f,         // Empty 10
-            41.66666667f, // Druid 11
+            47.9166666705f, // Druid 11
         };
 
         public static float[] DR_COEFFIENT = { 0.0f, // Starts at 0

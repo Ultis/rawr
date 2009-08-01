@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight", "Rawr.Silverlight\Rawr.Silverlight.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI", "Rawr.UI\Rawr.UI.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight.Web", "Rawr.Silverlight.Web\Rawr.Silverlight.Web.csproj", "{039EB027-018A-4422-B51E-9ED81879465F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI.Web", "Rawr.UI.Web\Rawr.UI.Web.csproj", "{039EB027-018A-4422-B51E-9ED81879465F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "Rawr.Base\Rawr.Base.csproj", "{48170BE2-2CF6-4068-B36C-189072D49093}"
 EndProject
@@ -46,42 +46,42 @@ Global
 		SccProjectUniqueName3 = Rawr.Retribution\\Rawr.Retribution.csproj
 		SccProjectName3 = Rawr.Retribution
 		SccLocalPath3 = Rawr.Retribution
-		SccProjectUniqueName4 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
-		SccProjectName4 = Rawr.Silverlight.Web
-		SccLocalPath4 = Rawr.Silverlight.Web
-		SccProjectUniqueName5 = Rawr.Silverlight\\Rawr.Silverlight.csproj
-		SccProjectName5 = Rawr.Silverlight
-		SccLocalPath5 = Rawr.Silverlight
-		SccProjectUniqueName6 = Rawr.Mage\\Rawr.Mage.csproj
-		SccProjectName6 = Rawr.Mage
-		SccLocalPath6 = Rawr.Mage
-		SccProjectUniqueName7 = Rawr.Cat\\Rawr.Cat.csproj
-		SccProjectName7 = Rawr.Cat
-		SccLocalPath7 = Rawr.Cat
-		SccProjectUniqueName8 = Rawr.Bear\\Rawr.Bear.csproj
-		SccProjectName8 = Rawr.Bear
-		SccLocalPath8 = Rawr.Bear
-		SccProjectUniqueName9 = Rawr.Rogue\\Rawr.Rogue.csproj
-		SccProjectName9 = Rawr.Rogue
-		SccLocalPath9 = Rawr.Rogue
-		SccProjectUniqueName10 = Rawr.DPSWarr\\Rawr.DPSWarr.csproj
-		SccProjectName10 = Rawr.DPSWarr
-		SccLocalPath10 = Rawr.DPSWarr
-		SccProjectUniqueName11 = Rawr.DPSDK\\Rawr.DPSDK.csproj
-		SccProjectName11 = Rawr.DPSDK
-		SccLocalPath11 = Rawr.DPSDK
-		SccProjectUniqueName12 = Rawr.Enhance\\Rawr.Enhance.csproj
-		SccProjectName12 = Rawr.Enhance
-		SccLocalPath12 = Rawr.Enhance
-		SccProjectUniqueName13 = Rawr.Moonkin\\Rawr.Moonkin.csproj
-		SccProjectName13 = Rawr.Moonkin
-		SccLocalPath13 = Rawr.Moonkin
-		SccProjectUniqueName14 = Rawr.Tree\\Rawr.Tree.csproj
-		SccProjectName14 = Rawr.Tree
-		SccLocalPath14 = Rawr.Tree
-		SccProjectUniqueName15 = Rawr.ProtWarr\\Rawr.ProtWarr.csproj
-		SccProjectName15 = Rawr.ProtWarr
-		SccLocalPath15 = Rawr.ProtWarr
+		SccProjectUniqueName4 = Rawr.Mage\\Rawr.Mage.csproj
+		SccProjectName4 = Rawr.Mage
+		SccLocalPath4 = Rawr.Mage
+		SccProjectUniqueName5 = Rawr.Cat\\Rawr.Cat.csproj
+		SccProjectName5 = Rawr.Cat
+		SccLocalPath5 = Rawr.Cat
+		SccProjectUniqueName6 = Rawr.Bear\\Rawr.Bear.csproj
+		SccProjectName6 = Rawr.Bear
+		SccLocalPath6 = Rawr.Bear
+		SccProjectUniqueName7 = Rawr.Rogue\\Rawr.Rogue.csproj
+		SccProjectName7 = Rawr.Rogue
+		SccLocalPath7 = Rawr.Rogue
+		SccProjectUniqueName8 = Rawr.DPSWarr\\Rawr.DPSWarr.csproj
+		SccProjectName8 = Rawr.DPSWarr
+		SccLocalPath8 = Rawr.DPSWarr
+		SccProjectUniqueName9 = Rawr.DPSDK\\Rawr.DPSDK.csproj
+		SccProjectName9 = Rawr.DPSDK
+		SccLocalPath9 = Rawr.DPSDK
+		SccProjectUniqueName10 = Rawr.Enhance\\Rawr.Enhance.csproj
+		SccProjectName10 = Rawr.Enhance
+		SccLocalPath10 = Rawr.Enhance
+		SccProjectUniqueName11 = Rawr.Moonkin\\Rawr.Moonkin.csproj
+		SccProjectName11 = Rawr.Moonkin
+		SccLocalPath11 = Rawr.Moonkin
+		SccProjectUniqueName12 = Rawr.Tree\\Rawr.Tree.csproj
+		SccProjectName12 = Rawr.Tree
+		SccLocalPath12 = Rawr.Tree
+		SccProjectUniqueName13 = Rawr.ProtWarr\\Rawr.ProtWarr.csproj
+		SccProjectName13 = Rawr.ProtWarr
+		SccLocalPath13 = Rawr.ProtWarr
+		SccProjectUniqueName14 = Rawr.UI\\Rawr.UI.csproj
+		SccProjectName14 = Rawr.UI
+		SccLocalPath14 = Rawr.UI
+		SccProjectUniqueName15 = Rawr.UI.Web\\Rawr.UI.Web.csproj
+		SccProjectName15 = Rawr.UI.Web
+		SccLocalPath15 = Rawr.UI.Web
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
