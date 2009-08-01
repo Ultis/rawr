@@ -51,12 +51,16 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Cat\CalculationsCat.cs">
+      <Link>CalculationsCat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Cat\CatRotationCalculator.cs">
+      <Link>CatRotationCalculator.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsCat.cs" />
     <Compile Include="CalculationOptionsPanelCat.xaml.cs">
       <DependentUpon>CalculationOptionsPanelCat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsCat.cs" />
-    <Compile Include="CatRotationCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

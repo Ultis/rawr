@@ -20,6 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if SILVERLIGHT
+using System.Windows.Media;
+#endif
 
 namespace Rawr.Bear
 {
@@ -29,8 +32,6 @@ namespace Rawr.Bear
 	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", CharacterClass.Druid)]
 	public class CalculationsBear : CalculationsBase
 	{
-		private bool PATCH32MODE = true;
-
 		#region Basic Model Properties and Methods
 		/// <summary>
 		/// GemmingTemplates to be used by default, when none are defined
@@ -114,6 +115,23 @@ namespace Rawr.Bear
 			}
 		}
 
+#if SILVERLIGHT
+		private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		/// <summary>
+		/// Panel to be placed on the Options tab of the main form
+		/// </summary>
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+		{
+			get
+			{
+				if (_calculationOptionsPanel == null)
+				{
+					_calculationOptionsPanel = new CalculationOptionsPanelBear();
+				}
+				return _calculationOptionsPanel;
+			}
+		}
+#else
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		/// <summary>
 		/// Panel to be placed on the Options tab of the main form
@@ -129,6 +147,7 @@ namespace Rawr.Bear
 				return _calculationOptionsPanel;
 			}
 		}
+#endif
 
 		private string[] _characterDisplayCalculationLabels = null;
 		/// <summary>
@@ -270,6 +289,26 @@ the Threat Scale defined on the Options tab.",
 			}
 		}
 
+#if SILVERLIGHT
+		private Dictionary<string, Color> _subPointNameColors = null;
+		/// <summary>
+		/// Names and colors for the SubPoints that Rawr.Bear uses
+		/// </summary>
+		public override Dictionary<string, Color> SubPointNameColors
+		{
+			get
+			{
+				if (_subPointNameColors == null)
+				{
+					_subPointNameColors = new Dictionary<string, Color>();
+					_subPointNameColors.Add("Mitigation", Colors.Red);
+					_subPointNameColors.Add("Survival", Colors.Blue);
+					_subPointNameColors.Add("Threat", Colors.Green);
+				}
+				return _subPointNameColors;
+			}
+		}
+#else
 		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		/// <summary>
 		/// Names and colors for the SubPoints that Rawr.Bear uses
@@ -288,6 +327,7 @@ the Threat Scale defined on the Options tab.",
 				return _subPointNameColors;
 			}
 		}
+#endif
 
 		private List<ItemType> _relevantItemTypes = null;
 		/// <summary>
@@ -716,44 +756,8 @@ the Threat Scale defined on the Options tab.",
 		/// <returns>The total stats for the Character</returns>
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			Stats statsRace = character.Race == CharacterRace.NightElf ?
-				new Stats() {
-					Health = 7417f, 
-                    Strength = 86f, 
-					Agility = 87f,
-					Stamina = 97f,
-					AttackPower = 220f,
-                    NatureResistance = 10f,
-                    Dodge = 0.04951f,
-					Miss = 0.07f,
-					PhysicalCrit = 0.05f,
-					//BonusCritMultiplier = 0.1f,
-					//CritRating = 264.0768f, 
-					//BonusAttackPowerMultiplier = 0.0f,
-					//BonusAgilityMultiplier = 0.03f,
-					//BonusStrengthMultiplier = 0.03f,
-					BonusStaminaMultiplier = 0.25f
-                } :
-				new Stats() {
-					Health = 7599f,
-					Strength = 95f,
-					Agility = 77f,
-					Stamina = 100f,
-					AttackPower = 220f,
-                    NatureResistance = 10f,
-					Dodge = 0.04951f,
-					Miss = 0.05f,
-					PhysicalCrit = 0.05f,
-					//BonusCritMultiplier = 0.1f,
-					//CritRating = 264.0768f, 
-					//BonusAttackPowerMultiplier = 0.0f,
-					//BonusAgilityMultiplier = 0.03f,
-					//BonusStrengthMultiplier = 0.03f,
-					BonusStaminaMultiplier = 0.25f
-                };
-
+			Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Bear);
 			
-
 			/* TODO:
 			 * Threat-only:
 			 * Ferocity (5: -5rage cost to Maul, Swipe, Mangle)

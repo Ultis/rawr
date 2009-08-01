@@ -57,12 +57,16 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BearRotationCalculator.cs" />
+    <Compile Include="..\..\Rawr.Bear\BearRotationCalculator.cs">
+      <Link>BearRotationCalculator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Bear\CalculationsBear.cs">
+      <Link>CalculationsBear.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsBear.cs" />
     <Compile Include="CalculationOptionsPanelBear.xaml.cs">
       <DependentUpon>CalculationOptionsPanelBear.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsBear.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

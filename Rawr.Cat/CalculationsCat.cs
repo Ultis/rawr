@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if SILVERLIGHT
+using System.Windows.Media;
+#endif
 
 namespace Rawr.Cat
 {
@@ -73,6 +76,20 @@ namespace Rawr.Cat
 			}
         }
 
+#if SILVERLIGHT
+		private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+		{
+			get
+			{
+				if (_calculationOptionsPanel == null)
+				{
+					_calculationOptionsPanel = new CalculationOptionsPanelCat();
+				}
+				return _calculationOptionsPanel;
+			}
+		}
+#else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
@@ -85,6 +102,7 @@ namespace Rawr.Cat
 				return _calculationOptionsPanel;
 			}
 		}
+#endif
 
 		private string[] _characterDisplayCalculationLabels = null;
 		public override string[] CharacterDisplayCalculationLabels
@@ -161,6 +179,22 @@ namespace Rawr.Cat
 			}
 		}
 
+#if SILVERLIGHT
+		private Dictionary<string, Color> _subPointNameColors = null;
+		public override Dictionary<string, Color> SubPointNameColors
+		{
+			get
+			{
+				if (_subPointNameColors == null)
+				{
+					_subPointNameColors = new Dictionary<string, Color>();
+					_subPointNameColors.Add("DPS", Color.FromArgb(255, 160, 0, 224));
+					_subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
+				}
+				return _subPointNameColors;
+			}
+		}
+#else
 		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
@@ -175,6 +209,7 @@ namespace Rawr.Cat
 				return _subPointNameColors;
 			}
 		}
+#endif
 
 		private List<ItemType> _relevantItemTypes = null;
 		public override List<ItemType> RelevantItemTypes
@@ -384,27 +419,9 @@ namespace Rawr.Cat
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 
-			Stats statsRace = character.Race == CharacterRace.NightElf ?
-				new Stats() {
-					Health = 7417f,
-					Strength = 86f,
-					Agility = 87f,
-					Stamina = 97f,
-					Dodge = 0.04951f,
-					AttackPower = 140f,
-					BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
-					PhysicalCrit = 0.07476f } : 
-				new Stats() {
-					Health = 7599f,
-					Strength = 95f,
-					Agility = 75f,
-					Stamina = 100f,
-					Dodge = 0.04951f,
-					AttackPower = 140f,
-					BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
-					PhysicalCrit = 0.07476f
-				};
-
+			Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Cat);
+			statsRace.BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f; //Savage Roar
+			
 			Stats statsItems = GetItemStats(character, additionalItem);
 			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
