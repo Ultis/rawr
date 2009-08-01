@@ -619,7 +619,7 @@ namespace Rawr.Mage
         {
             if (recalc5SR)
             {
-                fsr.AddSpell(spell.CastTime - castingState.Latency, castingState.Latency, spell.Channeled);
+                fsr.AddSpell(spell.CastTime - spell.Latency, spell.Latency, spell.Channeled);
             }
             Ticks += spell.Ticks;
             CastTime += spell.CastTime;
@@ -641,7 +641,7 @@ namespace Rawr.Mage
         {
             if (recalc5SR)
             {
-                fsr.AddSpell(spell.CastTime - castingState.Latency, castingState.Latency, spell.Channeled);
+                fsr.AddSpell(spell.CastTime - spell.Latency, spell.Latency, spell.Channeled);
             }
             Ticks += spell.Ticks;
             CastTime += spell.CastTime;

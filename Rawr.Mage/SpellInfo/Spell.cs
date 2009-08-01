@@ -203,6 +203,25 @@ namespace Rawr.Mage
 
         public float CastTime;
 
+        public float Latency
+        {
+            get
+            {
+                if (BaseCastTime <= 1.5f || Instant)
+                {
+                    return castingState.CalculationOptions.LatencyGCD;
+                }
+                else if (Channeled)
+                {
+                    return castingState.CalculationOptions.LatencyChannel;
+                }
+                else
+                {
+                    return castingState.CalculationOptions.LatencyCast;
+                }
+            }
+        }
+
         public bool Instant { get { return template.Instant; } }
         public int BaseCost { get { return template.BaseCost; } }
         public float BaseCastTime;

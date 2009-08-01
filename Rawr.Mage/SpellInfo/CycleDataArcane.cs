@@ -300,7 +300,7 @@ namespace Rawr.Mage
             {
                 // if we don't have barrage then this degenerates to AB-ABar
                 AddSpell(needsDisplayCalculations, AB, 1);
-                if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime, 1);
+                if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar.CastTime, 1);
                 AddSpell(needsDisplayCalculations, ABar1, 1);
 
                 Calculate();
@@ -325,12 +325,12 @@ namespace Rawr.Mage
                 //AB-ABar 0.8 * 0.8
                 AddSpell(needsDisplayCalculations, ABar1, S0);
                 AddSpell(needsDisplayCalculations, AB, S0);
-                if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime, S0);
+                if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar.CastTime, S0);
 
                 //ABar-MBAM
                 AddSpell(needsDisplayCalculations, ABar, 1 - S0);
                 AddSpell(needsDisplayCalculations, MBAM, 1 - S0);
-                if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime, 1 - S0);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime, 1 - S0);
 
                 Calculate();
             }
@@ -370,7 +370,7 @@ namespace Rawr.Mage
 
             //AB-ABar1
             AddSpell(needsDisplayCalculations, AB, S0);
-            if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime, S0);
+            if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar.CastTime, S0);
             AddSpell(needsDisplayCalculations, ABar1, S0);
 
             //AB-MBAM1-ABar
@@ -378,7 +378,7 @@ namespace Rawr.Mage
             AddSpell(needsDisplayCalculations, MBAM1, S1);
             if (AB.CastTime + MBAM1.CastTime + ABar.CastTime < 3.0)
             {
-                AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM1.CastTime - AB.CastTime - ABar.CastTime, S1);
+                AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM1.CastTime - AB.CastTime - ABar.CastTime, S1);
                 AddSpell(needsDisplayCalculations, ABar, S1);
             }
             else
@@ -421,7 +421,7 @@ namespace Rawr.Mage
             float S1 = 1 - S0;
 
             AddSpell(needsDisplayCalculations, AB, S0);
-            if (AB.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar1.CastTime, S0);
+            if (AB.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar1.CastTime, S0);
             AddSpell(needsDisplayCalculations, ABar1, S0);
 
             AddSpell(needsDisplayCalculations, MBAM, S1);
@@ -573,7 +573,7 @@ namespace Rawr.Mage
                 castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
             AddSpell(needsDisplayCalculations, MBAM, K6);
-            if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime, K6);
+            if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime, K6);
             AddSpell(needsDisplayCalculations, MBAM3, K1 + K2 + K4);
             AddSpell(needsDisplayCalculations, ABar, K1 + K2 + K4 + K6);
 
@@ -904,7 +904,7 @@ namespace Rawr.Mage
             K2 = S1;
 
             AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - ABar1.CastTime, K1);
             AddSpell(needsDisplayCalculations, ABar1, K1);
             AddSpell(needsDisplayCalculations, AB1, K2);
             AddSpell(needsDisplayCalculations, AB2, K2);
@@ -952,7 +952,7 @@ namespace Rawr.Mage
             K2 = S1;
 
             AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - ABar1.CastTime, K1);
             AddSpell(needsDisplayCalculations, ABar1, K1);
             AddSpell(needsDisplayCalculations, AB1, K2);
             AddSpell(needsDisplayCalculations, MBAM2, K2);
@@ -998,7 +998,7 @@ namespace Rawr.Mage
             K2 = S1;
 
             AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - ABar1.CastTime, K1);
             AddSpell(needsDisplayCalculations, ABar1, K1);
             AddSpell(needsDisplayCalculations, AB1, K2);
             AddSpell(needsDisplayCalculations, MBAM2, K2);
@@ -1042,7 +1042,7 @@ namespace Rawr.Mage
             K2 = S1;
 
             AddSpell(needsDisplayCalculations, AB0, K1 + K2);
-            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - ABar1.CastTime, K1);
+            if (AB0.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - ABar1.CastTime, K1);
             AddSpell(needsDisplayCalculations, ABar1, K1);
             AddSpell(needsDisplayCalculations, MBAM1, K2);
 

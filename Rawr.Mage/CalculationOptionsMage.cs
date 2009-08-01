@@ -71,11 +71,25 @@ namespace Rawr.Mage
             set { _AoeTargetLevel = value; OnPropertyChanged("AoeTargetLevel"); }
         }
 
-        private float _Latency;
-        public float Latency
+        private float _LatencyCast;
+        public float LatencyCast
         {
-            get { return _Latency; }
-            set { _Latency = value; OnPropertyChanged("Latency"); }
+            get { return _LatencyCast; }
+            set { _LatencyCast = value; OnPropertyChanged("LatencyCast"); }
+        }
+
+        private float _LatencyGCD;
+        public float LatencyGCD
+        {
+            get { return _LatencyGCD; }
+            set { _LatencyGCD = value; OnPropertyChanged("LatencyGCD"); }
+        }
+
+        private float _LatencyChannel;
+        public float LatencyChannel
+        {
+            get { return _LatencyChannel; }
+            set { _LatencyChannel = value; OnPropertyChanged("LatencyChannel"); }
         }
 
         private int _AoeTargets;
@@ -979,7 +993,9 @@ namespace Rawr.Mage
         {
             TargetLevel = 83;
             AoeTargetLevel = 80;
-            Latency = 0.1f;
+            LatencyCast = 0.01f;
+            LatencyGCD = 0.05f;
+            LatencyChannel = 0.2f;
             AoeTargets = 9;
             FightDuration = 300;
             HeroismAvailable = true;

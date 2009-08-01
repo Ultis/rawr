@@ -112,14 +112,6 @@ namespace Rawr.Mage
         //public float ResilienceCritDamageReduction { get; set; }
         //public float ResilienceCritRateReduction { get; set; }
 
-        public float Latency
-        {
-            get
-            {
-                return CalculationOptions.Latency;
-            }
-        }
-
         public float SnaredTime { get; set; }
 
         public bool GetCooldown(Cooldown cooldown)

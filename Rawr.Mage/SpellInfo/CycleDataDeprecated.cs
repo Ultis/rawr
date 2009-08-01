@@ -79,7 +79,7 @@ namespace Rawr.Mage
             Spell AB = castingState.GetSpell(SpellId.ArcaneBlast0);
 
             AddSpell(AB, castingState);
-            AddPause(3 - AB.CastTime + castingState.Latency);
+            AddPause(3 - AB.CastTime + castingState.CalculationOptions.LatencyGCD);
 
             Calculate(castingState);
         }
@@ -175,30 +175,30 @@ namespace Rawr.Mage
             S0 = (1 - MB) / (1 + (1 - MB) * MB);
             S1 = (2 - MB) * MB / (1 + (1 - MB) * MB);
             float Pause = 0.0f;
-            if (AB.CastTime + ABar.CastTime < 3.0) Pause = 3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime;
+            if (AB.CastTime + ABar.CastTime < 3.0) Pause = 3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar.CastTime;
             X = (S0 * (AB.CastTime + ABar.CastTime) + S1 * (MBAM.CastTime + ABar.CastTime) + Pause) / (15.0f - Slow.CastTime + Pause);
 
             //AB-ABar
             AddSpell(needsDisplayCalculations, ABar, (1 - X) * S0);
             AddSpell(needsDisplayCalculations, AB, (1 - X) * S0);
-            if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime, (1 - X) * S0);
+            if (AB.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar.CastTime, (1 - X) * S0);
 
             //ABar-MBAM
             AddSpell(needsDisplayCalculations, ABar, (1 - X) * S1);
             AddSpell(needsDisplayCalculations, MBAM, (1 - X) * S1);
-            if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime, (1 - X) * S1);
+            if (MBAM.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime, (1 - X) * S1);
 
             //AB-ABar-Slow
             AddSpell(needsDisplayCalculations, ABar, X * S0);
             AddSpell(needsDisplayCalculations, AB, X * S0);
             AddSpell(needsDisplayCalculations, Slow, X * S0);
-            if (AB.CastTime + ABar.CastTime + Slow.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime - Slow.CastTime, X * S0);
+            if (AB.CastTime + ABar.CastTime + Slow.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar.CastTime - Slow.CastTime, X * S0);
 
             //ABar-MBAM-Slow
             AddSpell(needsDisplayCalculations, ABar, X * S1);
             AddSpell(needsDisplayCalculations, MBAM, X * S1);
             AddSpell(needsDisplayCalculations, Slow, X * S1);
-            if (MBAM.CastTime + ABar.CastTime + Slow.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime - Slow.CastTime, X * S1);
+            if (MBAM.CastTime + ABar.CastTime + Slow.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime - Slow.CastTime, X * S1);
 
             Calculate();
         }
@@ -230,21 +230,21 @@ namespace Rawr.Mage
             S0 = (1 - MB) / (1 + (1 - MB) * MB);
             S1 = (2 - MB) * MB / (1 + (1 - MB) * MB);
             float Pause = 0.0f;
-            if (FB.CastTime + ABar.CastTime < 3.0) Pause = 3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime;
+            if (FB.CastTime + ABar.CastTime < 3.0) Pause = 3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - ABar.CastTime;
             X = (S0 * (FB.CastTime + ABar.CastTime) + S1 * (MBAM.CastTime + ABar.CastTime) + Pause) / (15.0f - Slow.CastTime + Pause);
 
             //AB-ABar
             chain1 = new StaticCycle(2);
             chain1.AddSpell(ABar, castingState);
             chain1.AddSpell(FB, castingState);
-            if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime);
+            if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - ABar.CastTime);
             chain1.Calculate(castingState);
 
             //ABar-MBAM
             chain2 = new StaticCycle(2);
             chain2.AddSpell(ABar, castingState);
             chain2.AddSpell(MBAM, castingState);
-            if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
+            if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime);
             chain2.Calculate(castingState);
 
             //AB-ABar-Slow
@@ -252,7 +252,7 @@ namespace Rawr.Mage
             chain3.AddSpell(ABar, castingState);
             chain3.AddSpell(FB, castingState);
             chain3.AddSpell(Slow, castingState);
-            if (FB.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime - Slow.CastTime);
+            if (FB.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - ABar.CastTime - Slow.CastTime);
             chain3.Calculate(castingState);
 
             //ABar-MBAM-Slow
@@ -260,7 +260,7 @@ namespace Rawr.Mage
             chain4.AddSpell(ABar, castingState);
             chain4.AddSpell(MBAM, castingState);
             chain4.AddSpell(Slow, castingState);
-            if (MBAM.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime - Slow.CastTime);
+            if (MBAM.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime - Slow.CastTime);
             chain4.Calculate(castingState);
 
             commonChain = chain1;
@@ -308,21 +308,21 @@ namespace Rawr.Mage
             S0 = (1 - MB) / (1 + (1 - MB) * MB);
             S1 = (2 - MB) * MB / (1 + (1 - MB) * MB);
             float Pause = 0.0f;
-            if (FrB.CastTime + ABar.CastTime < 3.0) Pause = 3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime;
+            if (FrB.CastTime + ABar.CastTime < 3.0) Pause = 3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - ABar.CastTime;
             X = (S0 * (FrB.CastTime + ABar.CastTime) + S1 * (MBAM.CastTime + ABar.CastTime) + Pause) / (15.0f - Slow.CastTime + Pause);
 
             //AB-ABar
             chain1 = new StaticCycle(2);
             chain1.AddSpell(ABar, castingState);
             chain1.AddSpell(FrB, castingState);
-            if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime);
+            if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - ABar.CastTime);
             chain1.Calculate(castingState);
 
             //ABar-MBAM
             chain2 = new StaticCycle(2);
             chain2.AddSpell(ABar, castingState);
             chain2.AddSpell(MBAM, castingState);
-            if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
+            if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime);
             chain2.Calculate(castingState);
 
             //AB-ABar-Slow
@@ -330,7 +330,7 @@ namespace Rawr.Mage
             chain3.AddSpell(ABar, castingState);
             chain3.AddSpell(FrB, castingState);
             chain3.AddSpell(Slow, castingState);
-            if (FrB.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime - Slow.CastTime);
+            if (FrB.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - ABar.CastTime - Slow.CastTime);
             chain3.Calculate(castingState);
 
             //ABar-MBAM-Slow
@@ -338,7 +338,7 @@ namespace Rawr.Mage
             chain4.AddSpell(ABar, castingState);
             chain4.AddSpell(MBAM, castingState);
             chain4.AddSpell(Slow, castingState);
-            if (MBAM.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime - Slow.CastTime);
+            if (MBAM.CastTime + ABar.CastTime + Slow.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime - Slow.CastTime);
             chain4.Calculate(castingState);
 
             commonChain = chain1;
@@ -401,7 +401,7 @@ namespace Rawr.Mage
             //AB-ABar1
             chain1 = new StaticCycle(2);
             chain1.AddSpell(AB, castingState);
-            if (AB.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar1.CastTime); // this might not actually be needed if we're transitioning from S1, but we're assuming this cycle is used under low haste conditions only
+            if (AB.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar1.CastTime); // this might not actually be needed if we're transitioning from S1, but we're assuming this cycle is used under low haste conditions only
             chain1.AddSpell(ABar1, castingState);
             chain1.Calculate(castingState);
 
@@ -449,13 +449,13 @@ namespace Rawr.Mage
             //AB0-AB1-ABar2
             AddSpell(needsDisplayCalculations, AB0, K1);
             AddSpell(needsDisplayCalculations, AB1, K1);
-            if (AB0.CastTime + AB1.CastTime + ABar2.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar2.CastTime, K1);
+            if (AB0.CastTime + AB1.CastTime + ABar2.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - ABar2.CastTime, K1);
             AddSpell(needsDisplayCalculations, ABar2, K1);
 
             //AB0-AB1-ABar2-MBAM
             AddSpell(needsDisplayCalculations, AB0, K2);
             AddSpell(needsDisplayCalculations, AB1, K2);
-            if (AB0.CastTime + AB1.CastTime + ABar2.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar2.CastTime, K2);
+            if (AB0.CastTime + AB1.CastTime + ABar2.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - ABar2.CastTime, K2);
             AddSpell(needsDisplayCalculations, ABar2, K2);
             AddSpell(needsDisplayCalculations, MBAM, K2);
 
@@ -463,14 +463,14 @@ namespace Rawr.Mage
             AddSpell(needsDisplayCalculations, AB0, K3);
             AddSpell(needsDisplayCalculations, AB1, K3);
             AddSpell(needsDisplayCalculations, MBAM2, K3);
-            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime - MBAM2.CastTime, K3);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - ABar.CastTime - MBAM2.CastTime, K3);
             AddSpell(needsDisplayCalculations, ABar, K3);
 
             //AB0-AB1-MBAM2-ABar
             AddSpell(needsDisplayCalculations, AB0, K4);
             AddSpell(needsDisplayCalculations, AB1, K4);
             AddSpell(needsDisplayCalculations, MBAM2, K4);
-            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime - MBAM2.CastTime, K4);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - ABar.CastTime - MBAM2.CastTime, K4);
             AddSpell(needsDisplayCalculations, ABar, K4);
             AddSpell(needsDisplayCalculations, MBAM, K4);
 
@@ -523,7 +523,7 @@ namespace Rawr.Mage
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
             chain1.AddSpell(AB2, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
             chain1.AddSpell(ABar3, castingState);
             chain1.Calculate(castingState);
 
@@ -532,7 +532,7 @@ namespace Rawr.Mage
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
             chain2.AddSpell(ABar3, castingState);
             chain2.AddSpell(MBAM, castingState);
             chain2.Calculate(castingState);
@@ -543,7 +543,7 @@ namespace Rawr.Mage
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AB2, castingState);
             chain3.AddSpell(MBAM3, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
             chain3.AddSpell(ABar, castingState);
             chain3.Calculate(castingState);
 
@@ -553,7 +553,7 @@ namespace Rawr.Mage
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AB2, castingState);
             chain4.AddSpell(MBAM3, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
             chain4.AddSpell(ABar, castingState);
             chain4.AddSpell(MBAM, castingState);
             chain4.Calculate(castingState);
@@ -563,7 +563,7 @@ namespace Rawr.Mage
             chain5.AddSpell(AB0, castingState);
             chain5.AddSpell(AB1, castingState);
             chain5.AddSpell(MBAM2, castingState);
-            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain5.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - MBAM2.CastTime - ABar.CastTime);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain5.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - MBAM2.CastTime - ABar.CastTime);
             chain5.AddSpell(ABar, castingState);
             chain5.Calculate(castingState);
 
@@ -572,7 +572,7 @@ namespace Rawr.Mage
             chain6.AddSpell(AB0, castingState);
             chain6.AddSpell(AB1, castingState);
             chain6.AddSpell(MBAM2, castingState);
-            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain6.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - MBAM2.CastTime - ABar.CastTime);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain6.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - MBAM2.CastTime - ABar.CastTime);
             chain6.AddSpell(ABar, castingState);
             chain6.AddSpell(MBAM, castingState);
             chain6.Calculate(castingState);
@@ -638,7 +638,7 @@ namespace Rawr.Mage
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
             chain1.AddSpell(AB2, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
             chain1.AddSpell(ABar3, castingState);
             chain1.Calculate(castingState);
 
@@ -647,7 +647,7 @@ namespace Rawr.Mage
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
             chain2.AddSpell(ABar3, castingState);
             chain2.AddSpell(MBAM, castingState);
             chain2.Calculate(castingState);
@@ -658,7 +658,7 @@ namespace Rawr.Mage
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AB2, castingState);
             chain3.AddSpell(MBAM3, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
             chain3.AddSpell(ABar, castingState);
             chain3.Calculate(castingState);
 
@@ -668,7 +668,7 @@ namespace Rawr.Mage
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AB2, castingState);
             chain4.AddSpell(MBAM3, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
             chain4.AddSpell(ABar, castingState);
             chain4.AddSpell(MBAM, castingState);
             chain4.Calculate(castingState);
@@ -732,7 +732,7 @@ namespace Rawr.Mage
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
             chain1.AddSpell(AB2, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
             chain1.AddSpell(ABar3, castingState);
             chain1.Calculate(castingState);
 
@@ -741,7 +741,7 @@ namespace Rawr.Mage
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
-            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
             chain2.AddSpell(ABar3, castingState);
             chain2.AddSpell(MBAM, castingState);
             chain2.Calculate(castingState);
@@ -808,7 +808,7 @@ namespace Rawr.Mage
                     chain1 = new StaticCycle(3);
                     chain1.AddSpell(AB0, castingState);
                     chain1.AddSpell(AB1, castingState);
-                    if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB3.CastTime - AB3.CastTime - ABar.CastTime);
+                    if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB3.CastTime - AB3.CastTime - ABar.CastTime);
                     chain1.AddSpell(ABar2, castingState);
                     chain1.Calculate(castingState);
 
@@ -847,7 +847,7 @@ namespace Rawr.Mage
                     chain1 = new StaticCycle(3);
                     chain1.AddSpell(AB0, castingState);
                     chain1.AddSpell(AB1, castingState);
-                    if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                    if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB0.CastTime - AB1.CastTime - ABar.CastTime);
                     chain1.AddSpell(ABar2, castingState);
                     chain1.Calculate(castingState);
 
@@ -855,7 +855,7 @@ namespace Rawr.Mage
                     chain2 = new StaticCycle(3);
                     chain2.AddSpell(MBAM, castingState);
                     chain2.AddSpell(AB0, castingState);
-                    if (MBAM.CastTime + AB0.CastTime + ABar1.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - AB0.CastTime - ABar1.CastTime);
+                    if (MBAM.CastTime + AB0.CastTime + ABar1.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - AB0.CastTime - ABar1.CastTime);
                     chain2.AddSpell(ABar1, castingState);
                     chain2.Calculate(castingState);
 
@@ -902,7 +902,7 @@ namespace Rawr.Mage
                 chain1 = new StaticCycle(3);
                 chain1.AddSpell(FB, castingState);
                 chain1.AddSpell(FB, castingState);
-                if (FB.CastTime + FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - FB.CastTime - ABar.CastTime);
+                if (FB.CastTime + FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - FB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -932,7 +932,7 @@ namespace Rawr.Mage
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FB, castingState);
                 chain1.AddSpell(FB, castingState);
-                if (FB.CastTime + FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - FB.CastTime - ABar.CastTime);
+                if (FB.CastTime + FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - FB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 //ABar-MBAM
@@ -940,7 +940,7 @@ namespace Rawr.Mage
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
                 chain2.AddSpell(FB, castingState);
-                if (FB.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - MBAM.CastTime - ABar.CastTime);
+                if (FB.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain1;
@@ -986,7 +986,7 @@ namespace Rawr.Mage
                 chain1 = new StaticCycle(3);
                 chain1.AddSpell(FrB, castingState);
                 chain1.AddSpell(FrB, castingState);
-                if (FrB.CastTime + FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - FrB.CastTime - ABar.CastTime);
+                if (FrB.CastTime + FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - FrB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -1016,7 +1016,7 @@ namespace Rawr.Mage
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FrB, castingState);
                 chain1.AddSpell(FrB, castingState);
-                if (FrB.CastTime + FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - FrB.CastTime - ABar.CastTime);
+                if (FrB.CastTime + FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - FrB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 //ABar-MBAM
@@ -1024,7 +1024,7 @@ namespace Rawr.Mage
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
                 chain2.AddSpell(FrB, castingState);
-                if (FrB.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - MBAM.CastTime - ABar.CastTime);
+                if (FrB.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain1;
@@ -1070,7 +1070,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to FB-ABar
                 chain1 = new StaticCycle(2);
                 chain1.AddSpell(FB, castingState);
-                if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime);
+                if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -1088,13 +1088,13 @@ namespace Rawr.Mage
                 chain1 = new StaticCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FB, castingState);
-                if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime);
+                if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 chain2 = new StaticCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
@@ -1137,7 +1137,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to FrB-ABar
                 chain1 = new StaticCycle(2);
                 chain1.AddSpell(FrB, castingState);
-                if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime);
+                if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -1155,13 +1155,13 @@ namespace Rawr.Mage
                 chain1 = new StaticCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FrB, castingState);
-                if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime);
+                if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FrB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 chain2 = new StaticCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
@@ -1205,7 +1205,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to FB-ABar
                 chain1 = new StaticCycle(2);
                 chain1.AddSpell(FFB, castingState);
-                if (FFB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FFB.CastTime - ABar.CastTime);
+                if (FFB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FFB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -1223,13 +1223,13 @@ namespace Rawr.Mage
                 chain1 = new StaticCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FFB, castingState);
-                if (FFB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FFB.CastTime - ABar.CastTime);
+                if (FFB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - FFB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 chain2 = new StaticCycle(4);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
@@ -1653,7 +1653,7 @@ namespace Rawr.Mage
             Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
 
             AddSpell(AB, castingState);
-            if (AB.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar1.CastTime);
+            if (AB.CastTime + ABar1.CastTime < 3.0) AddPause(3.0f + castingState.CalculationOptions.LatencyGCD - AB.CastTime - ABar1.CastTime);
             AddSpell(ABar1, castingState);
 
             Calculate(castingState);

@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -41,6 +42,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxHotStreakWasted = new System.Windows.Forms.TextBox();
+            this.label87 = new System.Windows.Forms.Label();
             this.textBoxWarlockSpellPower = new System.Windows.Forms.TextBox();
             this.label109 = new System.Windows.Forms.Label();
             this.label103 = new System.Windows.Forms.Label();
@@ -84,8 +87,6 @@
             this.checkBoxPotionOfWildMagic = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
             this.checkBoxHeroism = new System.Windows.Forms.CheckBox();
-            this.textBoxLatency = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBoxHolyResist = new System.Windows.Forms.TextBox();
             this.label97 = new System.Windows.Forms.Label();
@@ -262,11 +263,15 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxHotStreakWasted = new System.Windows.Forms.TextBox();
-            this.label87 = new System.Windows.Forms.Label();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBoxCastLatency = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
+            this.label88 = new System.Windows.Forms.Label();
+            this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
+            this.label89 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -275,7 +280,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -299,6 +303,12 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.textBoxChannelLatency);
+            this.tabPage1.Controls.Add(this.label89);
+            this.tabPage1.Controls.Add(this.textBoxGCDLatency);
+            this.tabPage1.Controls.Add(this.label88);
+            this.tabPage1.Controls.Add(this.textBoxCastLatency);
+            this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.comboBoxPlayerLevel);
             this.tabPage1.Controls.Add(this.label80);
             this.tabPage1.Controls.Add(this.comboBoxFaction);
@@ -336,6 +346,11 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -454,8 +469,6 @@
             this.tabPage2.Controls.Add(this.checkBoxPotionOfWildMagic);
             this.tabPage2.Controls.Add(this.label13);
             this.tabPage2.Controls.Add(this.checkBoxHeroism);
-            this.tabPage2.Controls.Add(this.textBoxLatency);
-            this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Location = new System.Drawing.Point(4, 40);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
@@ -463,6 +476,25 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxHotStreakWasted
+            // 
+            this.textBoxHotStreakWasted.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HotStreakWasted", true));
+            this.textBoxHotStreakWasted.Location = new System.Drawing.Point(142, 486);
+            this.textBoxHotStreakWasted.Name = "textBoxHotStreakWasted";
+            this.textBoxHotStreakWasted.Size = new System.Drawing.Size(75, 20);
+            this.textBoxHotStreakWasted.TabIndex = 202;
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(0, 489);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(137, 13);
+            this.label87.TabIndex = 201;
+            this.label87.Text = "Wasted Hot Streaks (0-1): *";
+            this.toolTipMage.SetToolTip(this.label87, "This indicates how many generated hot streaks are wasted (only applies to 3.2 mod" +
+                    "e with LB glyph).");
             // 
             // textBoxWarlockSpellPower
             // 
@@ -891,25 +923,6 @@
             this.checkBoxHeroism.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHeroism.TabIndex = 156;
             this.checkBoxHeroism.UseVisualStyleBackColor = true;
-            // 
-            // textBoxLatency
-            // 
-            this.textBoxLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "Latency", true));
-            this.textBoxLatency.Location = new System.Drawing.Point(142, 3);
-            this.textBoxLatency.Name = "textBoxLatency";
-            this.textBoxLatency.Size = new System.Drawing.Size(75, 20);
-            this.textBoxLatency.TabIndex = 89;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 3);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 13);
-            this.label3.TabIndex = 88;
-            this.label3.Text = "Latency: *";
-            this.toolTipMage.SetToolTip(this.label3, "Effective latency in seconds. The value should include the benefit of built-in /s" +
-                    "topcasting.");
             // 
             // tabPage3
             // 
@@ -2760,29 +2773,62 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxHotStreakWasted
+            // textBoxCastLatency
             // 
-            this.textBoxHotStreakWasted.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HotStreakWasted", true));
-            this.textBoxHotStreakWasted.Location = new System.Drawing.Point(142, 486);
-            this.textBoxHotStreakWasted.Name = "textBoxHotStreakWasted";
-            this.textBoxHotStreakWasted.Size = new System.Drawing.Size(75, 20);
-            this.textBoxHotStreakWasted.TabIndex = 202;
+            this.textBoxCastLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyCast", true));
+            this.textBoxCastLatency.Location = new System.Drawing.Point(111, 132);
+            this.textBoxCastLatency.Name = "textBoxCastLatency";
+            this.textBoxCastLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxCastLatency.TabIndex = 155;
             // 
-            // label87
+            // label3
             // 
-            this.label87.AutoSize = true;
-            this.label87.Location = new System.Drawing.Point(0, 489);
-            this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(137, 13);
-            this.label87.TabIndex = 201;
-            this.label87.Text = "Wasted Hot Streaks (0-1): *";
-            this.toolTipMage.SetToolTip(this.label87, "This indicates how many generated hot streaks are wasted (only applies to 3.2 mod" +
-                    "e with LB glyph).");
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(0, 135);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(79, 13);
+            this.label3.TabIndex = 154;
+            this.label3.Text = "Cast Latency: *";
+            this.toolTipMage.SetToolTip(this.label3, "Effective latency in seconds. The value should include the benefit of built-in /s" +
+                    "topcasting.");
             // 
-            // calculationOptionsMageBindingSource
+            // textBoxGCDLatency
             // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            this.textBoxGCDLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyGCD", true));
+            this.textBoxGCDLatency.Location = new System.Drawing.Point(111, 158);
+            this.textBoxGCDLatency.Name = "textBoxGCDLatency";
+            this.textBoxGCDLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxGCDLatency.TabIndex = 157;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(0, 161);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(81, 13);
+            this.label88.TabIndex = 156;
+            this.label88.Text = "GCD Latency: *";
+            this.toolTipMage.SetToolTip(this.label88, "Effective latency in seconds. The value should include the benefit of built-in /s" +
+                    "topcasting.");
+            // 
+            // textBoxChannelLatency
+            // 
+            this.textBoxChannelLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyChannel", true));
+            this.textBoxChannelLatency.Location = new System.Drawing.Point(111, 184);
+            this.textBoxChannelLatency.Name = "textBoxChannelLatency";
+            this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxChannelLatency.TabIndex = 159;
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(0, 187);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(97, 13);
+            this.label89.TabIndex = 158;
+            this.label89.Text = "Channel Latency: *";
+            this.toolTipMage.SetToolTip(this.label89, "Effective latency in seconds. The value should include the benefit of built-in /s" +
+                    "topcasting.");
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2795,6 +2841,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2808,7 +2855,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2840,8 +2886,6 @@
         private System.Windows.Forms.CheckBox checkBoxPotionOfWildMagic;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox checkBoxHeroism;
-        private System.Windows.Forms.TextBox textBoxLatency;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxFragmentation;
         private System.Windows.Forms.TextBox textBoxTpsLimit;
         private System.Windows.Forms.TextBox textBoxInterruptFrequency;
@@ -3050,6 +3094,12 @@
         private System.Windows.Forms.Button buttonHotStreakUtilization;
         private System.Windows.Forms.TextBox textBoxHotStreakWasted;
         private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.TextBox textBoxChannelLatency;
+        private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.TextBox textBoxGCDLatency;
+        private System.Windows.Forms.Label label88;
+        private System.Windows.Forms.TextBox textBoxCastLatency;
+        private System.Windows.Forms.Label label3;
 
     }
 }
