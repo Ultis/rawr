@@ -21,35 +21,40 @@ namespace Rawr.DPSWarr {
         private Skills.WhiteAttacks WHITEATTACKS;
         private CalculationOptionsDPSWarr CALCOPTS;
 
-        public Skills.BattleShout Battle;
+        // Rage Generators
         public Skills.BerserkerRage BZ;
-        public Skills.Bladestorm BLS;
         public Skills.Bloodrage BR;
-        public Skills.BloodSurge BS;
-        public Skills.BloodThirst BT;
-        public Skills.Cleave CL;
-        public Skills.DeathWish Death;
-        public Skills.DeepWounds DW;
-        public Skills.DemoralizingShout DS;
-        public Skills.HeroicStrike HS;
-        public Skills.MortalStrike MS;
-        public Skills.OverPower OP;
-        public Skills.TasteForBlood TB;
-        public Skills.Recklessness RK;
-        public Skills.Rend RD;
-        public Skills.ShatteringThrow ST;
-        public Skills.Slam SL;
-        public Skills.Suddendeath SD;
-        public Skills.SunderArmor SN;
-        public Skills.SweepingStrikes SW;
-        public Skills.Swordspec SS;
-        public Skills.ThunderClap TH;
-        public Skills.WhirlWind WW;
+        // Maintenance
         public Skills.BattleShout BTS;
+        public Skills.CommandingShout CS;
+        public Skills.DemoralizingShout DS;
+        public Skills.SunderArmor SN;
+        public Skills.ThunderClap TH;
         public Skills.Hamstring HMS;
-
+        // Periodics
+        public Skills.ShatteringThrow ST;
+        public Skills.SweepingStrikes SW;
+        public Skills.DeathWish Death;
+        public Skills.Recklessness RK;
         public Skills.Trinket1 Trinket1;
         public Skills.Trinket2 Trinket2;
+        // Fury
+        public Skills.WhirlWind WW;
+        public Skills.BloodThirst BT;
+        public Skills.BloodSurge BS;
+        // Arms
+        public Skills.Bladestorm BLS;
+        public Skills.MortalStrike MS;
+        public Skills.Rend RD;
+        public Skills.OverPower OP;
+        public Skills.TasteForBlood TB;
+        public Skills.Suddendeath SD;
+        public Skills.Slam SL;
+        public Skills.Swordspec SS;
+        // Generic
+        public Skills.DeepWounds DW;
+        public Skills.Cleave CL;
+        public Skills.HeroicStrike HS;
         
         public const float ROTATION_LENGTH_FURY = 8.0f;
         #endregion
@@ -68,94 +73,89 @@ namespace Rawr.DPSWarr {
 
             Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; }
 
-            if (CalcOpts.FuryStance) {
-                WHITEATTACKS.Ovd_Freq = Which.Activates * COMBATFACTORS.MHSpeed / CalcOpts.Duration;
-            }else{
-                WHITEATTACKS.Ovd_Freq = Which.Activates * COMBATFACTORS.MHSpeed / CalcOpts.Duration;
-            }
+            WHITEATTACKS.Ovd_Freq = Which.Activates * WHITEATTACKS.MhEffectiveSpeed / CalcOpts.Duration;
+
             calcs.WhiteDPSMH = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDPS); // MhWhiteDPS
-            calcs.WhiteDPSOH = (CHARACTER.OffHand == null ? 0f : WHITEATTACKS.OhDPS);
+            calcs.WhiteDPSOH = (CHARACTER.OffHand  == null ? 0f : WHITEATTACKS.OhDPS);
             calcs.WhiteDPS = calcs.WhiteDPSMH + calcs.WhiteDPSOH;
             calcs.WhiteDmg = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDamageOnUse); //MhAvgSwingDmg
+
             WHITEATTACKS.Ovd_Freq = 0;
 
-            //calcDeepWounds();
-
-            calcs.Battle = Battle;
+            // Rage Generators
             calcs.BZ = BZ;
-            calcs.BLS = BLS;
             calcs.BR = BR;
-            calcs.BS = BS;
-            calcs.BT = BT;
-            calcs.CL = CL;
-            calcs.Death = Death;
-            calcs.DW = DW;
+            // Maintenance
+            calcs.BTS = BTS;
+            calcs.CS = CS;
             calcs.DS = DS;
-            calcs.HS = HS;
+            calcs.SN = SN;
+            calcs.TH = TH;
+            calcs.HMS = HMS;
+            // Periodics
+            calcs.ST = ST;
+            calcs.SW = SW;
+            calcs.Death = Death;
+            calcs.RK = RK;
+            calcs.Trinket1 = Trinket1;
+            calcs.Trinket2 = Trinket2;
+            // Fury
+            calcs.WW = WW;
+            calcs.BT = BT;
+            calcs.BS = BS;
+            // Arms
+            calcs.BLS = BLS;
             calcs.MS = MS;
+            calcs.RD = RD;
             calcs.OP = OP;
             calcs.TB = TB;
-            calcs.RK = RK;
-            calcs.RD = RD;
-            calcs.ST = ST;
-            calcs.SL = SL;
             calcs.SD = SD;
-            calcs.SN = SN;
-            calcs.SW = SW;
+            calcs.SL = SL;
             calcs.SS = SS;
-            calcs.TH = TH;
-            calcs.WW = WW;
+            // Generic
+            calcs.CL = CL;
+            calcs.DW = DW;
+            calcs.HS = HS;
         }
-        public void Initialize() { initAbilities(); doIterations(); /*calcDeepWounds();*/ }
+        public void Initialize() { initAbilities(); doIterations(); }
 
         private void initAbilities() {
-            Battle = new Skills.BattleShout(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            // Rage Generators
+            BZ  = new Skills.BerserkerRage(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            BR  = new Skills.Bloodrage(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            // Maintenance
+            BTS = new Skills.BattleShout(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CS  = new Skills.CommandingShout(   CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            DS  = new Skills.DemoralizingShout( CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SN  = new Skills.SunderArmor(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            TH  = new Skills.ThunderClap(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HMS = new Skills.Hamstring(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            // Periodics
+            ST = new Skills.ShatteringThrow(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             Death = new Skills.DeathWish(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            ST = new Skills.ShatteringThrow(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            // Fury
-            BT = new Skills.BloodThirst(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BS = new Skills.BloodSurge(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            // Arms
-            RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            MS = new Skills.MortalStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BLS= new Skills.Bladestorm(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            // Generic DPS
-            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            // Rage Gen
-            BZ = new Skills.BerserkerRage(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BR = new Skills.Bloodrage(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            // Maintenance
-            TH = new Skills.ThunderClap(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SN = new Skills.SunderArmor(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            DS = new Skills.DemoralizingShout(  CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BTS = new Skills.BattleShout(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HMS = new Skills.Hamstring(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            // Trinkets
             Trinket1 = new Skills.Trinket1(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             Trinket2 = new Skills.Trinket2(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            // Fury
+            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            BT = new Skills.BloodThirst(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);// actually arms but BS needs it
+            BS = new Skills.BloodSurge(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SL,WW,BT);
+            // Arms
+            BLS= new Skills.Bladestorm(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,WW);
+            MS = new Skills.MortalStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            // Generic DPS
+            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
 
             SD.FreeRage = freeRage;
-            
-            BS.Slam = SL;
-            BS.Whirlwind = WW;
-            BS.Bloodthirst = BT;
-            
-            BLS.WW = WW;
-
-            SS.Slam = SL;
-            SS.Overpower = OP;
-            SS.MortalStrike = MS;
-            SS.SuddenDeath = SD;
         }
         private void doIterations() {
             Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
@@ -166,7 +166,7 @@ namespace Rawr.DPSWarr {
             BS.maintainActs = MaintainCDs;
             while (CalcOpts.FuryStance && Math.Abs(newHSActivates - oldActivates) > 0.01f) {
                 oldActivates = Which.Activates;
-                WhiteAtks.Ovd_Freq = (CombatFactors.MHSpeed * Which.OverridesPerSec);
+                WhiteAtks.Ovd_Freq = (WhiteAtks.MhEffectiveSpeed * Which.OverridesPerSec);
                 BS.hsActivates = oldActivates;
                 _bloodsurgeRPS = Which.bloodsurgeRPS = Which.RageUsePerSecond;
                 Which.OverridesPerSec = GetOvdActivates(Which);
@@ -188,24 +188,26 @@ namespace Rawr.DPSWarr {
             Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
             float numWhichActivates = Which.OverridesPerSec * CalcOpts.Duration;
             //if (CalcOpts.MultipleTargets) numWhichActivates *= 1f + (Which.Targets - 1f) * CalcOpts.MultipleTargetsPerc;
+
             // Main Hand
             float MHAbilityActivates =
+                // Fury
+                (_WW_GCDs * ContainCritValue(WW, true)) +
+                (_BT_GCDs * ContainCritValue(BT, true)) +
+                (_BS_GCDs * ContainCritValue(BS, true)) +
                 // Arms
+                (_BLS_GCDs* ContainCritValue(BLS,true)) * 6f +
                 (_MS_GCDs * ContainCritValue(MS, true)) +
                 (_OP_GCDs * ContainCritValue(OP, true)) +
                 (_TB_GCDs * ContainCritValue(TB, true)) +
                 (_SD_GCDs * ContainCritValue(SD, true)) +
                 (_SL_GCDs * ContainCritValue(SL, true)) +
-                (_BLS_GCDs* ContainCritValue(BLS,true)) * 6f +
-                // Fury
-                (_BS_GCDs * ContainCritValue(BS, true)) +
-                (_BT_GCDs * ContainCritValue(BT, true)) +
-                (_WW_GCDs * ContainCritValue(WW, true)) +
+                (_SS_Acts * ContainCritValue(SS, true)) +
                 // Both
                 (numWhichActivates * ContainCritValue(Which, true));
             float mhActivates =
                 /*Yellow*/MHAbilityActivates +
-                /*White */CalcOpts.Duration / CombatFactors.MHSpeed * CombatFactors._c_mhwcrit;
+                /*White */CalcOpts.Duration / WHITEATTACKS.MhEffectiveSpeed * CombatFactors._c_mhwcrit;
 
             // Off Hand
             float OHAbilityActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
@@ -214,7 +216,7 @@ namespace Rawr.DPSWarr {
                 : 0f;
             float ohActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
                 /*Yellow*/OHAbilityActivates +
-                /*White */CalcOpts.Duration / CombatFactors.OHSpeed * CombatFactors._c_ohwcrit
+                /*White */CalcOpts.Duration / WHITEATTACKS.OhEffectiveSpeed * CombatFactors._c_ohwcrit
                 : 0f;
 
             // Push to the Ability
@@ -227,10 +229,12 @@ namespace Rawr.DPSWarr {
             return (CalcOpts.FuryStance ? freeRage : RageGenWhite + RageGenOther - RageNeeded) / Which.FullRageCost;
         }
         private float GetLandedAtksPerSecNoSS() {
-            //float SN_Acts = _Sunder_GCDs  !=0?_Sunder_GCDs  :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_      ] ? SN.Activates  : 0f;
+            float LatentGCD = 1.5f + CalcOpts.GetLatency();
+
+            //float SN_Acts = _Sunder_GCDs!=0?_Sunder_GCDs  :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_      ] ? SN.Activates  : 0f;
             float TH_Acts = _Thunder_GCDs !=0?_Thunder_GCDs :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_      ] ? TH.Activates  : 0f;
             float ST_Acts = _Shatt_GCDs   !=0?_Shatt_GCDs   :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_  ] ? ST.Activates  : 0f;
-            //float SW_Acts = _SW_GCDs      !=0?_SW_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_  ] ? SW.Activates  : 0f;
+            //float SW_Acts = _SW_GCDs    !=0?_SW_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_  ] ? SW.Activates  : 0f;
             float BLS_Acts= _BLS_GCDs     !=0?_BLS_GCDs     :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_       ] ? BLS.Activates : 0f;
 
             float MS_Acts = _MS_GCDs      !=0?_MS_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_     ] ? MS.Activates  : 0f;
@@ -242,22 +246,28 @@ namespace Rawr.DPSWarr {
             float Dable = (BLS_Acts * 6f * 2f) + TH_Acts + (ST_Acts/2f) + MS_Acts + SD_Acts + SL_Acts;
             float nonDable = OP_Acts + TB_Acts;
 
-            Dable    /= 1.5f;
-            nonDable /= 1.5f;
+            Dable    /= LatentGCD;
+            nonDable /= LatentGCD;
 
-            float white = (COMBATFACTORS.ProbMhWhiteHit + COMBATFACTORS._c_mhwcrit)
-                * (COMBATFACTORS.MH.Speed / COMBATFACTORS.TotalHaste);
+            float white = (COMBATFACTORS.ProbMhWhiteLand * WhiteAtks.MhEffectiveSpeed)
+                        + (COMBATFACTORS.ProbOhWhiteLand * WhiteAtks.OhEffectiveSpeed);
 
-            float ProbYellowHit   = (1f - COMBATFACTORS._c_ymiss - COMBATFACTORS._c_mhdodge);
             float ProbYellowHitOP = (1f - COMBATFACTORS._c_ymiss);
 
             float result = white
-                + (Dable    * ProbYellowHit  )
+                + (Dable    * COMBATFACTORS.ProbMhYellowLand)
                 + (nonDable * ProbYellowHitOP);
 
             return result / 60f;
         }
-        public float GetLandedAtksPerSec() { return GetLandedAtksPerSecNoSS(); } // TODO: add swordspec to this
+        public float GetLandedAtksPerSec() {
+            float landednoss = GetLandedAtksPerSecNoSS();
+            float ssActs = (landednoss * Talents.SwordSpecialization / 100f);
+
+            ssActs *= CombatFactors.ProbMhWhiteLand;
+
+            return landednoss + (float)Math.Max(0f, Math.Min(ssActs, 1f / SS.Cd));
+        }
         public float CritHsSlamPerSec {
             get {
                 if (CalcOpts.FuryStance) {
@@ -411,7 +421,7 @@ namespace Rawr.DPSWarr {
             /*Trinket 2         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink2_GCDs, Trinket2);
 
             // ==== Maintenance Priorities ============
-            /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, Battle);
+            /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, BTS);
             /*Demoralizing Shout*/AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Demo_GCDs,   DS);
             /*Sunder Armor      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Sunder_GCDs, SN);
             /*Thunder Clap      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Thunder_GCDs,ref DPS_TTL,ref _TH_DPS,TH);
@@ -488,7 +498,7 @@ namespace Rawr.DPSWarr {
                 //availRage += FightDuration / (CombatFactors.MHSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MHSpeed;
+                WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
@@ -523,6 +533,7 @@ namespace Rawr.DPSWarr {
         public float _TB_DPS      = 0f; public float _TB_GCDs      = 0f;
         public float _SD_DPS      = 0f; public float _SD_GCDs      = 0f;
         public float _SL_DPS      = 0f; public float _SL_GCDs      = 0f;
+        public float _SS_DPS      = 0f; public float _SS_Acts      = 0f;
         public float _BLS_DPS     = 0f; public float _BLS_GCDs     = 0f;
         public float _SW_DPS      = 0f; public float _SW_GCDs      = 0f;
         public float _DW_PerHit   = 0f; public float _DW_DPS       = 0f; 
@@ -550,7 +561,8 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Includes DPS.</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, ref float DPS_TTL,  ref float _Abil_DPS, Skills.Ability abil) {
-            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
+            float acts = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
             GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
@@ -565,7 +577,8 @@ namespace Rawr.DPSWarr {
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, ref float DPS_TTL,  ref float _Abil_DPS, Skills.Ability abil,
                               float GCDMulti) {
-            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
+            float acts = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
             GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
@@ -579,7 +592,8 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Does not include DPS.</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, Skills.Ability abil) {
-            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
+            float acts = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
             GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
@@ -591,7 +605,8 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Not DPS but add rage instead of remove it</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, 
                               ref float _Abil_GCDs, Skills.Ability abil,bool flag) {
-            float Abil_GCDs = (float)Math.Floor(Math.Min(availGCDs, abil.Activates));
+            float acts = (float)Math.Min(availGCDs, abil.Activates);
+            float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
             GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
@@ -630,7 +645,7 @@ namespace Rawr.DPSWarr {
             /*Trinket 2         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Trink2_GCDs, Trinket2);
 
             // ==== Maintenance Priorities ============
-            /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, Battle);
+            /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, BTS);
             /*Demoralizing Shout*/AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Demo_GCDs,   DS);
             /*Sunder Armor      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Sunder_GCDs, SN);
             /*Thunder Clap      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Thunder_GCDs,ref DPS_TTL,ref _TH_DPS,TH);
@@ -645,7 +660,6 @@ namespace Rawr.DPSWarr {
             /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
             /*Overpower         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _OP_GCDs,     ref DPS_TTL,ref _OP_DPS ,OP,2f);
             /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _TB_GCDs,     ref DPS_TTL,ref _TB_DPS ,TB);
-            SD.Slam_Freq = _SL_GCDs;
             /*Sudden Death      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SD_GCDs,     ref DPS_TTL,ref _SD_DPS ,SD);
             /*Slam for remainder of GCDs*/
             float SL_GCDs = SL.Validated ? availGCDs : 0f;
@@ -658,6 +672,16 @@ namespace Rawr.DPSWarr {
             rageadd = SL.GetRageUsePerSecond(SL_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
+
+            /*Sword Spec, Doesn't eat GCDs*/
+            float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
+                                                   + _Shatt_GCDs
+                                                   + _BLS_GCDs * 6 + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs);
+            _SS_Acts = SS_Acts;
+            _SS_DPS = SS.GetDPS(SS_Acts);
+            DPS_TTL += _SL_DPS;
+            // TODO: Add Rage since it's a white hit
+
             // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
@@ -672,10 +696,10 @@ namespace Rawr.DPSWarr {
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
                 float slamspeedadd = WhiteAtks.Slam_Freq == 0 ? 0 : ((1.5f - 0.5f * Talents.ImprovedSlam) / (WhiteAtks.Slam_Freq));
-                availRage += FightDuration / (CombatFactors.MHSpeed + slamspeedadd) * WhiteAtks.MHSwingRage / FightDuration;
+                availRage += FightDuration / (WhiteAtks.MhEffectiveSpeed) * WhiteAtks.MHSwingRage / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / CombatFactors.MHSpeed;
+                WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg

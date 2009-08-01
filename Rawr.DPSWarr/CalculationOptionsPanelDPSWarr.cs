@@ -38,6 +38,7 @@ namespace Rawr.DPSWarr {
             CB_Duration.Maximum = 60*20; // 20 minutes
 
             RB_StanceFury.Checked = true;
+            CK_Flooring.Checked   = true;
         }
         protected override void LoadCalculationOptions() {
             if (Character != null && Character.CalculationOptions == null) { 
@@ -49,6 +50,7 @@ namespace Rawr.DPSWarr {
                 RB_StanceFury.Checked = newcalcOpts.FuryStance;
                 RB_StanceArms.Checked = !RB_StanceFury.Checked;
                 // Abilities to Maintain
+                CK_Flooring.Checked = newcalcOpts.AllowFlooring;
                 LoadAbilBools(newcalcOpts);
                 // Latency
                 CB_Lag.Value = (int)newcalcOpts.Lag;
@@ -71,6 +73,7 @@ namespace Rawr.DPSWarr {
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
                 CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 // Abilities to Maintain
+                CK_Flooring.Checked = calcOpts.AllowFlooring;
                 LoadAbilBools(calcOpts);
                 // Latency
                 CB_Lag.Value   = (int)calcOpts.Lag;
@@ -143,6 +146,11 @@ namespace Rawr.DPSWarr {
             Character.OnCalculationsInvalidated();
         }
         // Abilities to Maintain Changes
+        private void CK_Flooring_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.AllowFlooring = CK_Flooring.Checked;
+            Character.OnCalculationsInvalidated();
+        }
         private void CTL_Maints_AfterCheck(object sender, TreeViewEventArgs e) {
             CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -512,12 +520,12 @@ namespace Rawr.DPSWarr {
                         }
                     }
                     // Handle it's children
-                    CTL_Maints.Nodes[currentNode].Nodes[1].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[1].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[1].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Nodes[1].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[1].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Nodes[1].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[1].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Nodes[1].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[1].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Nodes[1].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[1].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Nodes[1].Checked;
+                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
                     break;
                 }
                 case "Bladestorm": {
@@ -797,6 +805,7 @@ namespace Rawr.DPSWarr {
         public float Duration = 300f;
         public bool FuryStance = true;
         public bool _3pt2Mode = false;
+        public bool AllowFlooring = true;
         // Rotational Changes
         public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
         public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;

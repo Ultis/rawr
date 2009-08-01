@@ -122,6 +122,7 @@
             this.Page_01_Situational = new System.Windows.Forms.TabPage();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
             this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
+            this.CK_Flooring = new System.Windows.Forms.CheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
             this.CK_3pt2Mode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
@@ -652,6 +653,7 @@
             // 
             // Page_02_Maintenance
             // 
+            this.Page_02_Maintenance.Controls.Add(this.CK_Flooring);
             this.Page_02_Maintenance.Controls.Add(this.CTL_Maints);
             this.Page_02_Maintenance.Location = new System.Drawing.Point(4, 22);
             this.Page_02_Maintenance.Name = "Page_02_Maintenance";
@@ -661,13 +663,28 @@
             this.Page_02_Maintenance.Text = "Ability Maintenance";
             this.Page_02_Maintenance.UseVisualStyleBackColor = true;
             // 
+            // CK_Flooring
+            // 
+            this.CK_Flooring.AutoSize = true;
+            this.CK_Flooring.Checked = true;
+            this.CK_Flooring.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CK_Flooring.Location = new System.Drawing.Point(6, 6);
+            this.CK_Flooring.Name = "CK_Flooring";
+            this.CK_Flooring.Size = new System.Drawing.Size(91, 17);
+            this.CK_Flooring.TabIndex = 2;
+            this.CK_Flooring.Text = "Allow Flooring";
+            this.CK_Flooring.UseVisualStyleBackColor = true;
+            this.CK_Flooring.CheckedChanged += new System.EventHandler(this.CK_Flooring_CheckedChanged);
+            // 
             // CTL_Maints
             // 
+            this.CTL_Maints.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.CTL_Maints.CheckBoxes = true;
-            this.CTL_Maints.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CTL_Maints.HideSelection = false;
             this.CTL_Maints.HotTracking = true;
-            this.CTL_Maints.Location = new System.Drawing.Point(3, 3);
+            this.CTL_Maints.Location = new System.Drawing.Point(3, 29);
             this.CTL_Maints.Name = "CTL_Maints";
             treeNode1.Name = "Node9";
             treeNode1.Text = "Berserker Rage";
@@ -737,7 +754,7 @@
             treeNode16,
             treeNode28,
             treeNode31});
-            this.CTL_Maints.Size = new System.Drawing.Size(285, 547);
+            this.CTL_Maints.Size = new System.Drawing.Size(285, 521);
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
             // 
@@ -783,6 +800,7 @@
             this.Page_03_FightInfo.ResumeLayout(false);
             this.Page_03_FightInfo.PerformLayout();
             this.Page_02_Maintenance.ResumeLayout(false);
+            this.Page_02_Maintenance.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -833,5 +851,6 @@
         private System.Windows.Forms.RichTextBox RTB_Version;
         private System.Windows.Forms.CheckBox CK_3pt2Mode;
         private System.Windows.Forms.TreeView CTL_Maints;
+        private System.Windows.Forms.CheckBox CK_Flooring;
     }
 }

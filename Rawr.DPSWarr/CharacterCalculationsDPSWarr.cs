@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr {
         public float TotalDPS2 { get; set; }
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
+        public string floorstring { get; set; }
         #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
@@ -56,31 +57,41 @@ namespace Rawr.DPSWarr {
         public float TotalDamagePerSecond { get; set; }
         #endregion
         #region Abilities
-        public Skills.BattleShout Battle { get; set; }
+        // Rage Generators
         public Skills.BerserkerRage BZ { get; set; }
-        public Skills.Bladestorm BLS { get; set; }
         public Skills.Bloodrage BR { get; set; }
-        public Skills.BloodSurge BS { get; set; }
-        public Skills.BloodThirst BT { get; set; }
-        public Skills.Cleave CL { get; set; }
-        public Skills.DeathWish Death { get; set; }
-        public Skills.DeepWounds DW { get; set; }
+        // Maintenance
+        public Skills.BattleShout BTS { get; set; }
+        public Skills.CommandingShout CS { get; set; }
         public Skills.DemoralizingShout DS { get; set; }
-        public Skills.HeroicStrike HS { get; set; }
+        public Skills.SunderArmor SN { get; set; }
+        public Skills.ThunderClap TH { get; set; }
+        public Skills.Hamstring HMS { get; set; }
+        // Periodics
+        public Skills.ShatteringThrow ST { get; set; }
+        public Skills.SweepingStrikes SW { get; set; }
+        public Skills.DeathWish Death { get; set; }
+        public Skills.Recklessness RK { get; set; }
+        public Skills.Trinket1 Trinket1 { get; set; }
+        public Skills.Trinket2 Trinket2 { get; set; }
+        // Fury
+        public Skills.WhirlWind WW { get; set; }
+        public Skills.BloodThirst BT { get; set; }
+        public Skills.BloodSurge BS { get; set; }
+        // Arms
+        public Skills.Bladestorm BLS { get; set; }
         public Skills.MortalStrike MS { get; set; }
-        public Skills.OnAttack Which { get; set; }
+        public Skills.Rend RD { get; set; }
         public Skills.OverPower OP { get; set; }
         public Skills.TasteForBlood TB { get; set; }
-        public Skills.Recklessness RK { get; set; }
-        public Skills.Rend RD { get; set; }
-        public Skills.ShatteringThrow ST { get; set; }
-        public Skills.Slam SL { get; set; }
         public Skills.Suddendeath SD { get; set; }
-        public Skills.SunderArmor SN { get; set; }
-        public Skills.SweepingStrikes SW { get; set; }
+        public Skills.Slam SL { get; set; }
         public Skills.Swordspec SS { get; set; }
-        public Skills.ThunderClap TH { get; set; }
-        public Skills.WhirlWind WW { get; set; }
+        // Generic
+        public Skills.Cleave CL { get; set; }
+        public Skills.DeepWounds DW { get; set; }
+        public Skills.HeroicStrike HS { get; set; }
+        public Skills.OnAttack Which { get; set; }
         #endregion
         #region Neutral
         public float BaseHealth { get; set; }
@@ -132,7 +143,9 @@ namespace Rawr.DPSWarr {
                                 CritPercent, BasicStats.CritRating,
                                 StatConversion.GetCritFromRating(BasicStats.CritRating),
                                 MhCrit, OhCrit));
-            dictValues.Add("Haste", string.Format("{0:00.00%} : {1}", HastePercent, BasicStats.HasteRating));
+            dictValues.Add("Haste", string.Format("{0:00.00%} : {1}*" +
+                                "The percentage is affected both by Haste Rating and Blood Frenzy talent",
+                                HastePercent, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*" +
                                                       "{2:0.00%} : Rating" +
                                 Environment.NewLine + "{3:0.00%} : Arms Stance" +
@@ -191,14 +204,15 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Bloodthirst",       string.Format(format,Rot._BT_DPS ,BT.DamageOnUse ,Rot._BT_GCDs     ,Rot._BT_DPS /TotalDPS));
             dictValues.Add("Whirlwind",         string.Format(format,Rot._WW_DPS ,WW.DamageOnUse ,Rot._WW_GCDs     ,Rot._WW_DPS /TotalDPS));
             // DPS Arms
-            format = "{0:0000} : {1:0000} : {2:000}*{3:00.0%} of DPS";
+            format = "{0:0000} : {1:0000} : {2:" + floorstring + "}*{3:00.0%} of DPS";
+            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse/6,Rot._BLS_GCDs  ,Rot._BLS_DPS/TotalDPS));
             dictValues.Add("Mortal Strike",     string.Format(format,Rot._MS_DPS ,MS.DamageOnUse ,Rot._MS_GCDs     ,Rot._MS_DPS /TotalDPS));
             dictValues.Add("Rend",              string.Format(format,Rot._RD_DPS ,RD.TickSize    ,Rot._RD_GCDs     ,Rot._RD_DPS /TotalDPS));
             dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.DamageOnUse ,Rot._OP_GCDs     ,Rot._OP_DPS /TotalDPS));
             dictValues.Add("Taste for Blood",   string.Format(format,Rot._TB_DPS ,TB.DamageOnUse ,Rot._TB_GCDs     ,Rot._TB_DPS /TotalDPS));
             dictValues.Add("Sudden Death",      string.Format(format,Rot._SD_DPS ,SD.DamageOnUse ,Rot._SD_GCDs     ,Rot._SD_DPS /TotalDPS));
             dictValues.Add("Slam",              string.Format(format,Rot._SL_DPS ,SL.DamageOnUse ,Rot._SL_GCDs     ,Rot._SL_DPS /TotalDPS));
-            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse/6,Rot._BLS_GCDs  ,Rot._BLS_DPS/TotalDPS));
+            dictValues.Add("Sword Spec",        string.Format(format,Rot._SS_DPS ,SS.DamageOnUse ,Rot._SS_Acts     ,Rot._SS_DPS /TotalDPS));
             // DPS Maintenance
             dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs,Rot._TH_DPS /TotalDPS));
             dictValues.Add("Shattering Throw",  string.Format(format,Rot._Shatt_DPS,ST.DamageOnUse,Rot._Shatt_GCDs ,Rot._Shatt_DPS/TotalDPS));
@@ -206,10 +220,10 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Deep Wounds",       string.Format("{0:0000}*{1:00.0%} of DPS",Rot._DW_DPS     ,Rot._DW_DPS/TotalDPS));
             dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS));
             dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS));
-            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}*Main Hand-{2:0.00}" + 
-                                Environment.NewLine + "Off Hand- {3:0.00}" + 
-                                Environment.NewLine + "{4:00.0%} of DPS",
-                                WhiteDPS,WhiteDmg,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
+            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}*{2:0000.00} : MH" +
+                                                            Environment.NewLine + "{3:0000.00} : OH" + 
+                                                            Environment.NewLine + "{4:00.0%} of DPS",
+                                                            WhiteDPS,WhiteDmg,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
             dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:00.000}";
@@ -245,9 +259,9 @@ namespace Rawr.DPSWarr {
 
                 case "Expertise Rating": return BasicStats.ExpertiseRating;
                 case "Expertise": return BasicStats.Expertise;
-                case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors.MhExpertise, CharacterClass.Warrior);
+                case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors._c_mhexpertise, CharacterClass.Warrior);
                 case "Dodge %": return combatFactors._c_mhdodge;
-                case "Parry %": return combatFactors.MhParryChance;
+                case "Parry %": return combatFactors._c_mhparry;
 
                 case "Chance to be Avoided %": return combatFactors._c_ymiss + combatFactors._c_mhdodge;
 
