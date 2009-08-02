@@ -245,10 +245,15 @@ namespace Rawr.UI
             ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
             if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
-                Status.Show();
-                Armory.GetCharacter(ald.CharacterName, ald.Realm, ald.Region, armory_ResultReady);
+				LoadFromArmory(ald.CharacterName, ald.Region, ald.Realm);
             }
         }
+
+		public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
+		{
+			Status.Show();	
+			Armory.GetCharacter(characterName, realm, region, armory_ResultReady);
+		}
 
         private void armory_ResultReady(Character newChar)
         {

@@ -10,13 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Rawr.UI;
+using System.Windows.Browser;
 
 namespace Rawr.Silverlight
 {
     public partial class App : Application
     {
-
         public static Application CurrentApplication { get; set; }
+		private MainPage _mainPage = null;
 
         public App()
         {
@@ -26,20 +27,8 @@ namespace Rawr.Silverlight
             this.UnhandledException += this.Application_UnhandledException;
 			this.CheckAndDownloadUpdateCompleted += new CheckAndDownloadUpdateCompletedEventHandler(App_CheckAndDownloadUpdateCompleted);
 
-			//_timerUpdates = new System.Threading.Timer(_timerUpdates_Tick, null, 0, 60 * 60 * 1000);
 			InitializeComponent();
         }
-
-		//private System.Threading.Timer _timerUpdates;
-		//private void _timerUpdates_Tick(object state)
-		//{
-		//	Application.Current.RootVisual.Dispatcher.BeginInvoke(SayCheckingForUpdates);
-		//}
-
-		//private void SayCheckingForUpdates()
-		//{
-		//	MessageBox.Show("Checking for updates...");
-		//}
 
 		private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -55,9 +44,25 @@ namespace Rawr.Silverlight
         {
             Grid g = RootVisual as Grid;
             g.Children.RemoveAt(0);
-            g.Children.Add(new MainPage());
+			_mainPage = new MainPage();
+            g.Children.Add(_mainPage);
+			ProcessBookmark();
 		
 			this.CheckAndDownloadUpdateAsync();
+		}
+
+		private void ProcessBookmark()
+		{
+			string bookmark = HtmlPage.Window.CurrentBookmark;
+			if (!string.IsNullOrEmpty(bookmark) && bookmark.Contains("@") && bookmark.Contains("-"))
+			{
+				string characterName = bookmark.Substring(0, bookmark.IndexOf("@"));
+				string realm = bookmark.Substring(bookmark.IndexOf("@") + 1);
+				CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), realm.Substring(0, 2), true);
+				realm = realm.Substring(3);
+
+				_mainPage.LoadFromArmory(characterName, region, realm);
+			}
 		}
 
 		private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
