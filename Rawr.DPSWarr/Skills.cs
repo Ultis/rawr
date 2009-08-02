@@ -29,7 +29,7 @@ namespace Rawr.DPSWarr {
                 Char = character;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 Ovd_Freq = 0.0f;
-                Slam_Freq = CalcOpts.FuryStance ? 0.0f : 5.0f;
+                Slam_Freq = 0.0f;
             }
             #region Variables
             private readonly WarriorTalents Talents;
@@ -38,19 +38,14 @@ namespace Rawr.DPSWarr {
             private readonly Character Char;
             private CalculationOptionsDPSWarr CalcOpts;
             private float OVD_FREQ;
-            private float SLAM_FREQ;
             // Get/Set
             public float Ovd_Freq { get { return OVD_FREQ; } set { OVD_FREQ = value; } }
-            public float Slam_Freq { get { return SLAM_FREQ; } set { SLAM_FREQ = value; } }
+            public float Slam_Freq;
             #endregion
+            // bah
+            private float SlamFreqSpdMod { get { return (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_Freq/CalcOpts.Duration))); } }
             // Main Hand
-            public float MhEffectiveSpeed {
-                get {
-                    float wepSpeed = combatFactors.MHSpeed;
-                    wepSpeed += (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) / Slam_Freq));
-                    return wepSpeed;
-                }
-            }
+            public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
             public float MhDamage {
                 get {
                     float DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
@@ -69,9 +64,9 @@ namespace Rawr.DPSWarr {
                         - combatFactors._c_wmiss     // no damage when being missed
                         - combatFactors._c_mhdodge   // no damage when being dodged
                         - combatFactors._c_mhparry   // no damage when being parried
-                        - combatFactors.GlanceChance // handled below
-                        - combatFactors._c_mhblock   // handled below
-                        - combatFactors._c_mhwcrit); // handled below
+                        - combatFactors.GlanceChance // glacing handled below
+                        - combatFactors._c_mhblock   // blocked handled below
+                        - combatFactors._c_mhwcrit); // crits   handled below
 
                     float dmgGlance = dmg * combatFactors.GlanceChance *     combatFactors.ReducWhGlancedDmg ;//Partial Damage when glancing
                     float dmgBlock  = dmg * combatFactors._c_mhblock   *     combatFactors.ReducWhBlockedDmg ;//Partial damage when blocked
@@ -88,16 +83,10 @@ namespace Rawr.DPSWarr {
             public float MhActivates { get { return (float)Math.Max(0f, CalcOpts.Duration / MhEffectiveSpeed); } }
             public float MhDPS { get { return AvgMhDamageOnUse / CalcOpts.Duration; } }
             // Off Hand
-            public float OhEffectiveSpeed {
-                get {
-                    float wepSpeed = combatFactors.OHSpeed;
-                    wepSpeed += (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) / Slam_Freq));
-                    return wepSpeed;
-                }
-            }
+            public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
             public float OhDamage {
                 get {
-                    float DamageBase = combatFactors.AvgOhWeaponDmg(OhEffectiveSpeed);
+                    float DamageBase = combatFactors.AvgOhWeaponDmgUnhasted;
                     float DamageBonus = 1f + 0f;
                     return (float)Math.Max(0f, DamageBase * DamageBonus);
                 }
@@ -266,7 +255,7 @@ namespace Rawr.DPSWarr {
                 ReqMultiTargs = false;
                 Targets = 1f;
                 MaxRange = 5f; // In Yards 
-                Cd       = -1f; // In Seconds
+                CD       = -1f; // In Seconds
                 Duration = -1f; // In Seconds
                 RageCost = -1f;
                 CastTime = -1f; // In Seconds
@@ -326,7 +315,20 @@ namespace Rawr.DPSWarr {
             public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
             public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
             public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards 
-            public float Cd { get { return CD; } set { CD = value; } } // In Seconds
+            public float Cd { // In Seconds
+                get { return CD; }
+                set {
+                    /*float AssignedCD = value;
+                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
+                    float CDs2Pass = 0f;
+                    for (int count = 0; count < FightDuration; count++) {
+                        CDs2Pass = count * LatentGCD;
+                        if (CDs2Pass >= AssignedCD) { break; }
+                    }
+                    CD = CDs2Pass;
+                    //*/CD = value;
+                }
+            }
             public float Duration { get { return DURATION; } set { DURATION = value; } } // In Seconds
             public float RageCost { get { return RAGECOST; } set { RAGECOST = value; } }
             public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } } // In Seconds
@@ -942,7 +944,7 @@ namespace Rawr.DPSWarr {
                 Talent2ChksValue = Talents.SwordSpecialization;
                 Cd = 6f; // In Seconds
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
-                DamageBase = combatFactors.AvgMhWeaponDmg(wa.MhEffectiveSpeed);
+                DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
             }
             // Functions
             public float GetActivates(float TotalGCDs, float GCDsUsedToHit) {
@@ -1016,7 +1018,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 15f - (Talents.FocusedRage * 1f);
                 CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
                 StanceOkArms = StanceOkDef = true;
-                DamageBase = combatFactors.AvgMhWeaponDmg(wa.MhEffectiveSpeed) + 250f;
+                DamageBase = combatFactors.AvgMhWeaponDmgUnhasted + 250f;
                 DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusSlamDamage);
             }
             public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
@@ -1167,7 +1169,7 @@ namespace Rawr.DPSWarr {
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
-                DamageBase = Whiteattacks.MhDamage /*combatFactors.AvgMhWeaponDmg*/ + 495f;
+                DamageBase = Whiteattacks.MhDamage + 495f;
                 BonusCritChance = Talents.Incite * 0.05f;
             }
             // Variables
@@ -1201,7 +1203,7 @@ namespace Rawr.DPSWarr {
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
-                DamageBase = combatFactors.AvgMhWeaponDmg(wa.MhEffectiveSpeed) + 222f;
+                DamageBase = Whiteattacks.MhDamage + 222f;
                 DamageBonus = 1f + Talents.ImprovedCleave * 0.40f;
                 BonusCritChance = Talents.Incite * 0.05f;
             }
@@ -1301,8 +1303,8 @@ namespace Rawr.DPSWarr {
                     // Doing it this way because Deep Wounds triggering off of a MH crit
                     // and Deep Wounds triggering off of an OH crit do diff damage.
                     // Damage stores the average damage of single deep wounds trigger
-                    float Damage = combatFactors.AvgMhWeaponDmg(Whiteattacks.MhEffectiveSpeed) * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates + ohActivates) +
-                                   combatFactors.AvgOhWeaponDmg(Whiteattacks.OhEffectiveSpeed) * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates + ohActivates);
+                    float Damage = combatFactors.AvgMhWeaponDmgUnhasted * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates + ohActivates) +
+                                   combatFactors.AvgOhWeaponDmgUnhasted * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates + ohActivates);
 
                     Damage *= (1f + StatS.BonusBleedDamageMultiplier);
                     Damage *= combatFactors.DamageBonus;

@@ -495,7 +495,6 @@ namespace Rawr.DPSWarr {
             
             if (ok) {
                 WhiteAtks.Slam_Freq = _SL_GCDs;
-                //availRage += FightDuration / (CombatFactors.MHSpeed + (1.5f - 0.5f * Talents.ImprovedSlam) / WhiteAtks.Slam_Freq) * WhiteAtks.GetSwingRage(Char.MainHand.Item, true) / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
@@ -679,7 +678,7 @@ namespace Rawr.DPSWarr {
                                                    + _BLS_GCDs * 6 + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs);
             _SS_Acts = SS_Acts;
             _SS_DPS = SS.GetDPS(SS_Acts);
-            DPS_TTL += _SL_DPS;
+            DPS_TTL += _SS_DPS;
             // TODO: Add Rage since it's a white hit
 
             // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
@@ -692,11 +691,10 @@ namespace Rawr.DPSWarr {
             }else{
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
             }
-            
+
+            WhiteAtks.Slam_Freq = _SL_GCDs;
             if (ok) {
-                WhiteAtks.Slam_Freq = _SL_GCDs;
-                float slamspeedadd = WhiteAtks.Slam_Freq == 0 ? 0 : ((1.5f - 0.5f * Talents.ImprovedSlam) / (WhiteAtks.Slam_Freq));
-                availRage += FightDuration / (WhiteAtks.MhEffectiveSpeed) * WhiteAtks.MHSwingRage / FightDuration;
+                availRage += FightDuration / WhiteAtks.MhEffectiveSpeed * WhiteAtks.MHSwingRage / FightDuration;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
