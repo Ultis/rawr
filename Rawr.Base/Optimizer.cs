@@ -1109,7 +1109,7 @@ namespace Rawr.Optimizer
                             Character bestCharacter;
                             if (lockedItems.Count > 1)
                             {
-                                OptimizerCharacter directUpgradeCharacter = LookForDirectItemUpgrades(lockedItems, (int)lockedSlot, best, __character, out bestCalculations, null).Value;
+                                OptimizerCharacter directUpgradeCharacter = LookForDirectItemUpgrades(lockedItems, (int)lockedSlot, best, __character, out bestCalculations).Value;
                                 if (directUpgradeCharacter != null)
                                 {
                                     __character = directUpgradeCharacter;
@@ -1629,7 +1629,7 @@ namespace Rawr.Optimizer
                 return calcs.GetOptimizableCalculationValue(calculation);
         }
 
-        protected override void LookForDirectItemUpgrades()
+        /*protected override void LookForDirectItemUpgrades()
         {
             KeyValuePair<float, OptimizerCharacter> results;
             CharacterCalculationsBase directValuation;
@@ -1733,9 +1733,9 @@ namespace Rawr.Optimizer
                     //population[0].Geneology = "DirectUpgrade";
                 }
             }
-        }
+        }*/
 
-        private struct JewelerValue
+        /*private struct JewelerValue
         {
             public int Slot;
             public ItemInstance ItemInstance;
@@ -1747,9 +1747,9 @@ namespace Rawr.Optimizer
         private int currentSlot;
         private float[] jewelerValue = new float[4];
         private ItemInstance[] jewelerItems = new ItemInstance[4];
-        private ItemInstance[] nonJewelerItems = new ItemInstance[characterSlots];
+        private ItemInstance[] nonJewelerItems = new ItemInstance[characterSlots];*/
 
-        protected override void ThreadPoolDirectUpgradeValuation(object state)
+        /*protected override void ThreadPoolDirectUpgradeValuation(object state)
         {
             OptimizerCharacter swappedIndividual = (OptimizerCharacter)state;
             CharacterCalculationsBase valuation;
@@ -1777,11 +1777,15 @@ namespace Rawr.Optimizer
                 }
                 if (directValuationsComplete >= directValuationsQueued) Monitor.Pulse(directValuationLock);
             }
-        }
+        }*/
 
-        private KeyValuePair<float, OptimizerCharacter> LookForDirectItemUpgrades(List<object> items, int slot, float best, OptimizerCharacter bestIndividual, out CharacterCalculationsBase bestValuation, List<JewelerValue> jewelerInfo)
+        protected override KeyValuePair<float, OptimizerCharacter> LookForDirectItemUpgrades(List<object> items, int slot, float best, OptimizerCharacter bestIndividual, out CharacterCalculationsBase bestValuation)
         {
-            Array.Clear(jewelerItems, 0, 4);
+            if (slot >= characterSlots)
+            {
+                return base.LookForDirectItemUpgrades(items, slot, best, bestIndividual, out bestValuation);
+            }
+            //Array.Clear(jewelerItems, 0, 4);
             OptimizerCharacter swappedIndividual;
             bestValuation = null;
             float value;
@@ -1795,7 +1799,7 @@ namespace Rawr.Optimizer
                     directValuationFoundUpgrade = false;
                     directValuationsQueued = 0;
                     directValuationsComplete = 0;
-                    currentSlot = slot;
+                    //currentSlot = slot;
                 }
                 foreach (object item in items)
                 {
@@ -1814,7 +1818,7 @@ namespace Rawr.Optimizer
                             float nonJewelerValue;
                             value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
                             ItemInstance itemInstance = (ItemInstance)item;
-                            if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
+                            /*if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                             {
                                 int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
                                 if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
@@ -1822,7 +1826,7 @@ namespace Rawr.Optimizer
                                     jewelerItems[jewelerCount] = itemInstance;
                                     jewelerValue[jewelerCount] = nonJewelerValue;
                                 }
-                            }
+                            }*/
                             if (value > best)
                             {
                                 best = value;
@@ -1868,7 +1872,7 @@ namespace Rawr.Optimizer
                             directValuationFoundUpgrade = false;
                             directValuationsQueued = 0;
                             directValuationsComplete = 0;
-                            currentSlot = slot;
+                            //currentSlot = slot;
                         }
                         float bestTemp = float.NegativeInfinity;
                         List<DirectUpgradeEntry> bestList = null;
@@ -1890,7 +1894,7 @@ namespace Rawr.Optimizer
                                     float nonJewelerValue;
                                     value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
                                     ItemInstance itemInstance = entry.ItemInstance;
-                                    if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
+                                    /*if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                                     {
                                         int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
                                         if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
@@ -1898,7 +1902,7 @@ namespace Rawr.Optimizer
                                             jewelerItems[jewelerCount] = itemInstance;
                                             jewelerValue[jewelerCount] = nonJewelerValue;
                                         }
-                                    }
+                                    }*/
                                     if (value > best)
                                     {
                                         best = value;
@@ -1952,6 +1956,12 @@ namespace Rawr.Optimizer
                     Item bestYellowGem = null;
                     float bestRedValue = float.NegativeInfinity;
                     Item bestRedGem = null;
+                    float bestBlueJewelerValue = float.NegativeInfinity;
+                    Item bestBlueJewelerGem = null;
+                    float bestYellowJewelerValue = float.NegativeInfinity;
+                    Item bestYellowJewelerGem = null;
+                    float bestRedJewelerValue = float.NegativeInfinity;
+                    Item bestRedJewelerGem = null;
                     float bestJewelerValue = float.NegativeInfinity;
                     Item bestJewelerGem = null;
                     float bestMetaValue = float.NegativeInfinity;
@@ -1997,6 +2007,21 @@ namespace Rawr.Optimizer
                         {
                             bestYellowValue = value;
                             bestYellowGem = gem;
+                        }
+                        if (gem.IsJewelersGem && Item.GemMatchesSlot(gem, ItemSlot.Blue) && value > bestBlueJewelerValue)
+                        {
+                            bestBlueJewelerValue = value;
+                            bestBlueJewelerGem = gem;
+                        }
+                        if (gem.IsJewelersGem && Item.GemMatchesSlot(gem, ItemSlot.Yellow) && value > bestYellowJewelerValue)
+                        {
+                            bestYellowJewelerValue = value;
+                            bestYellowJewelerGem = gem;
+                        }
+                        if (gem.IsJewelersGem && Item.GemMatchesSlot(gem, ItemSlot.Red) && value > bestRedJewelerValue)
+                        {
+                            bestRedJewelerValue = value;
+                            bestRedJewelerGem = gem;
                         }
                         if (gem.IsJewelersGem && value > bestJewelerValue)
                         {
@@ -2089,14 +2114,14 @@ namespace Rawr.Optimizer
                                 {
                                     if (item.GetSocketColor(g) != ItemSlot.Meta && !gems[g].IsJewelersGem && bestJewelerValue > bestNonLimitedValue)
                                     {
-                                        if (Item.GemMatchesSlot(gems[g], item.GetSocketColor(g)))
-                                        {
+                                        /*if (Item.GemMatchesSlot(gems[g], item.GetSocketColor(g)))
+                                        {*/
                                             if (score < 1)
                                             {
                                                 score = 1;
                                                 bestg = g;
                                             }
-                                        }
+                                        /*}
                                         else
                                         {
                                             if (score < 2)
@@ -2104,7 +2129,7 @@ namespace Rawr.Optimizer
                                                 score = 2;
                                                 bestg = g;
                                             }
-                                        }
+                                        }*/
                                     }
                                 }
                                 if (score > 0)
@@ -2157,9 +2182,30 @@ namespace Rawr.Optimizer
                                     int bestg = 0;
                                     for (int g = 1; g <= gemCount; g++)
                                     {
-                                        if (item.GetSocketColor(g) != ItemSlot.Meta && !gems[g].IsJewelersGem && bestJewelerValue > values[g])
+                                        Item jewelerGem;
+                                        float jewelerValue = 0.0f;
+                                        switch (item.GetSocketColor(g))
                                         {
-                                            float newScore = bestJewelerValue - values[g];
+                                            case ItemSlot.Blue:
+                                                jewelerGem = bestBlueJewelerGem;
+                                                jewelerValue = bestBlueJewelerValue;
+                                                break;
+                                            case ItemSlot.Yellow:
+                                                jewelerGem = bestYellowJewelerGem;
+                                                jewelerValue = bestYellowJewelerValue;
+                                                break;
+                                            case ItemSlot.Red:
+                                                jewelerGem = bestRedJewelerGem;
+                                                jewelerValue = bestRedJewelerValue;
+                                                break;
+                                            case ItemSlot.Prismatic:
+                                                jewelerGem = bestJewelerGem;
+                                                jewelerValue = bestJewelerValue;
+                                                break;
+                                        }
+                                        if (item.GetSocketColor(g) != ItemSlot.Meta && !gems[g].IsJewelersGem && jewelerValue > values[g])
+                                        {
+                                            float newScore = jewelerValue - values[g];
                                             if (newScore > score)
                                             {
                                                 score = newScore;
@@ -2196,7 +2242,7 @@ namespace Rawr.Optimizer
                         directValuationFoundUpgrade = false;
                         directValuationsQueued = 0;
                         directValuationsComplete = 0;
-                        currentSlot = slot;
+                        //currentSlot = slot;
                     }
                     foreach (ItemInstance item in list)
                     {
@@ -2215,7 +2261,7 @@ namespace Rawr.Optimizer
                                 float nonJewelerValue;
                                 value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual), out nonJewelerValue);
                                 ItemInstance itemInstance = (ItemInstance)item;
-                                if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
+                                /*if (itemInstance == null || itemInstance.Id != ignoreIdForJeweler)
                                 {
                                     int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
                                     if (jewelerItems[jewelerCount] == null || nonJewelerValue > jewelerValue[jewelerCount])
@@ -2223,7 +2269,7 @@ namespace Rawr.Optimizer
                                         jewelerItems[jewelerCount] = itemInstance;
                                         jewelerValue[jewelerCount] = nonJewelerValue;
                                     }
-                                }
+                                }*/
                                 if (value > best)
                                 {
                                     best = value;
@@ -2252,7 +2298,7 @@ namespace Rawr.Optimizer
                     }
                 }
             }
-            if (jewelerInfo != null)
+            /*if (jewelerInfo != null)
             {
                 int minJeweler;
                 float minValue = 0.0f;
@@ -2274,7 +2320,7 @@ namespace Rawr.Optimizer
                         jewelerInfo.Add(new JewelerValue() { ItemInstance = itemInstance, Slot = slot, JewelerCount = i, Value = (jewelerValue[i] - minValue) / (i - minJeweler) });
                     }
                 }
-            }
+            }*/
             if (foundUpgrade)
                 return new KeyValuePair<float, OptimizerCharacter>(best, bestIndividual);
             return new KeyValuePair<float, OptimizerCharacter>(float.NegativeInfinity, null);

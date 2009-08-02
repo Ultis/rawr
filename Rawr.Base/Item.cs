@@ -491,7 +491,7 @@ namespace Rawr
         {
             _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
             _isStormjewel = _isGem && _name.EndsWith("Stormjewel");
-            _isJewelersGem = Slot == ItemSlot.Prismatic && (Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157);
+            _isJewelersGem = (Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157);
             _isRedGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Red);
             _isYellowGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Yellow);
             _isBlueGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Blue);
