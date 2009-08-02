@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{542537D3-F86B-4022-A161-B2FC6F0218B7}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rawr.Base.WPF</RootNamespace>
+    <AssemblyName>Rawr.Base.WPF</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Rawr.Base\AvailableItemGenerator.cs">
+      <Link>AvailableItemGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\BaseStats.cs">
+      <Link>BaseStats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Buff.cs">
+      <Link>Buff.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Character.cs">
+      <Link>Character.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\ClassGlyphs.cs">
+      <Link>ClassGlyphs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Enchant.cs">
+      <Link>Enchant.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\EnumHelper.cs">
+      <Link>EnumHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Item.cs">
+      <Link>Item.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\ItemCache.cs">
+      <Link>ItemCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Optimizer.cs">
+      <Link>Optimizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\OptimizerBase.cs">
+      <Link>OptimizerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\OptimizerResults.cs">
+      <Link>OptimizerResults.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs">
+      <Link>SavedTalentSpec.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SavedVariablesParser.cs">
+      <Link>SavedVariablesParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SerializableDictionary.cs">
+      <Link>SerializableDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialEffect.cs">
+      <Link>SpecialEffect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialEffects.cs">
+      <Link>SpecialEffects.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialFunction.cs">
+      <Link>SpecialFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\StatConversion.cs">
+      <Link>StatConversion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Stats.cs">
+      <Link>Stats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\StatusMessaging.cs">
+      <Link>StatusMessaging.cs</Link>
+    </Compile>
+    <Compile Include="Armory.cs" />
+    <Compile Include="ArrayUtils.cs" />
+    <Compile Include="Calculations.cs" />
+    <Compile Include="ClassTalents.cs" />
+    <Compile Include="GemmingTemplate.cs" />
+    <Compile Include="ItemFilter.cs" />
+    <Compile Include="ItemLocation.cs" />
+    <Compile Include="ListUtils.cs" />
+    <Compile Include="NetworkUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Settings\CacheSettings.cs" />
+    <Compile Include="Settings\GeneralSettings.cs" />
+    <Compile Include="Settings\NetworkSettings.cs" />
+    <Compile Include="Settings\OptimizerSettings.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="XMLUtils.cs" />
+    <None Include="app.config" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Rawr.Base.csproj" />
+    <Content Include="Rawr.Base.csproj.user" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

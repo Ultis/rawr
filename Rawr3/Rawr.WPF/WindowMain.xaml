@@ -1,0 +1,9 @@
+﻿<Window x:Class="Rawr.WPF.WindowMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:UI="clr-namespace:Rawr.UI;assembly=Rawr.UI"
+    Title="Rawr" Width="1024" Height="768">
+    <Grid x:Name="RootVisual">
+      <UI:LoadScreen x:Name="LoadScreen"/>
+    </Grid>
+</Window>

@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C61A1D1A-21F8-4234-9085-5ECD33978DEF}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rawr.Mage.WPF</RootNamespace>
+    <AssemblyName>Rawr.Mage.WPF</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Rawr.Mage\ArrayPool.cs">
+      <Link>ArrayPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\CalculationOptionsMage.cs">
+      <Link>CalculationOptionsMage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\CalculationsMage.cs">
+      <Link>CalculationsMage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\CastingState.cs">
+      <Link>CastingState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\CharacterCalculationsMage.cs">
+      <Link>CharacterCalculationsMage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\ComparisonCalculationMage.cs">
+      <Link>ComparisonCalculationMage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\FSRCalc.cs">
+      <Link>FSRCalc.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\Heap.cs">
+      <Link>Heap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\ListUtils.cs">
+      <Link>ListUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\LP.cs">
+      <Link>LP.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\LU.cs">
+      <Link>LU.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\Sequence.cs">
+      <Link>Sequence.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SequenceGroup.cs">
+      <Link>SequenceGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SequenceItem.cs">
+      <Link>SequenceItem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\Solver.cs">
+      <Link>Solver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\Solver.MIP.cs">
+      <Link>Solver.MIP.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SolverLP.cs">
+      <Link>SolverLP.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SparseMatrix.cs">
+      <Link>SparseMatrix.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\Cycle.cs">
+      <Link>SpellInfo\Cycle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataArcane.cs">
+      <Link>SpellInfo\CycleDataArcane.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataDeprecated.cs">
+      <Link>SpellInfo\CycleDataDeprecated.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataFire.cs">
+      <Link>SpellInfo\CycleDataFire.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataFrost.cs">
+      <Link>SpellInfo\CycleDataFrost.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\Spell.cs">
+      <Link>SpellInfo\Spell.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\SpellData.cs">
+      <Link>SpellInfo\SpellData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\SpellInfo\SpellTemplate.cs">
+      <Link>SpellInfo\SpellTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\StateDescriptionParser.cs">
+      <Link>StateDescriptionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\StateDescriptionParseTree.cs">
+      <Link>StateDescriptionParseTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Mage\StateDescriptionScanner.cs">
+      <Link>StateDescriptionScanner.cs</Link>
+    </Compile>
+    <Compile Include="CalculationOptionsPanelMage.xaml.cs">
+      <DependentUpon>CalculationOptionsPanelMage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
+      <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
+      <Name>Rawr.Base.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CalculationOptionsPanelMage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -4,7 +4,6 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	xmlns:Groupbox="clr-namespace:Groupbox;assembly=Groupbox"
 	xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
 	x:Class="Rawr.UI.CalculationDisplay"
 	d:DesignWidth="640" d:DesignHeight="480">

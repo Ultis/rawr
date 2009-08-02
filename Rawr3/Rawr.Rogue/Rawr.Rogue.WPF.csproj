@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{542D6AC9-0436-4347-B737-714F20E73EB7}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rawr.Rogue.WPF</RootNamespace>
+    <AssemblyName>Rawr.Rogue.WPF</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Rawr.Rogue\BasicStats\BaseRogueStats.cs">
+      <Link>BasicStats\BaseRogueStats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\BasicStats\RelevantItems.cs">
+      <Link>BasicStats\RelevantItems.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\BasicStats\RogueGemmingTemplates.cs">
+      <Link>BasicStats\RogueGemmingTemplates.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\CalculationsRogue.cs">
+      <Link>CalculationsRogue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\CharacterCalculationsRogue.cs">
+      <Link>CharacterCalculationsRogue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ClassAbilities\Glyphs.cs">
+      <Link>ClassAbilities\Glyphs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ClassAbilities\Talents.cs">
+      <Link>ClassAbilities\Talents.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ClassAbilities\TalentsAndGlyphs.cs">
+      <Link>ClassAbilities\TalentsAndGlyphs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\CombatFactors.cs">
+      <Link>CombatFactors.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\Backstab.cs">
+      <Link>ComboPointGenerators\Backstab.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\ComboPointGenerator.cs">
+      <Link>ComboPointGenerators\ComboPointGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\ComboPointGeneratorList.cs">
+      <Link>ComboPointGenerators\ComboPointGeneratorList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\Hemo.cs">
+      <Link>ComboPointGenerators\Hemo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\HonorAmongThieves.cs">
+      <Link>ComboPointGenerators\HonorAmongThieves.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\Mutilate.cs">
+      <Link>ComboPointGenerators\Mutilate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\SinisterStrike.cs">
+      <Link>ComboPointGenerators\SinisterStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\ComparisonCalculationsRogue.cs">
+      <Link>ComparisonCalculationsRogue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Cycle.cs">
+      <Link>Cycle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\CycleTime.cs">
+      <Link>CycleTime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\DisplayValue.cs">
+      <Link>DisplayValue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Envenom.cs">
+      <Link>FinishingMoves\Envenom.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Evis.cs">
+      <Link>FinishingMoves\Evis.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\FinisherBase.cs">
+      <Link>FinishingMoves\FinisherBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Finishers.cs">
+      <Link>FinishingMoves\Finishers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\NoFinisher.cs">
+      <Link>FinishingMoves\NoFinisher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Rupture.cs">
+      <Link>FinishingMoves\Rupture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\SnD.cs">
+      <Link>FinishingMoves\SnD.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Poisons\DeadlyPoison.cs">
+      <Link>Poisons\DeadlyPoison.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Poisons\InstantPoison.cs">
+      <Link>Poisons\InstantPoison.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Poisons\NoPoison.cs">
+      <Link>Poisons\NoPoison.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Poisons\PoisonBase.cs">
+      <Link>Poisons\PoisonBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Poisons\PoisonList.cs">
+      <Link>Poisons\PoisonList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\Poisons\WoundPoison.cs">
+      <Link>Poisons\WoundPoison.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\RogueConversions.cs">
+      <Link>RogueConversions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\SpecialAbilities\Feint.cs">
+      <Link>SpecialAbilities\Feint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\SpecialAbilities\SwordSpec.cs">
+      <Link>SpecialAbilities\SwordSpec.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\WhiteAttacks.cs">
+      <Link>WhiteAttacks.cs</Link>
+    </Compile>
+    <Compile Include="CalculationOptionsPanelRogue.xaml.cs">
+      <DependentUpon>CalculationOptionsPanelRogue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalculationOptionsRogue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
+      <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
+      <Name>Rawr.Base.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CalculationOptionsPanelRogue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
