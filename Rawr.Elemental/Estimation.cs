@@ -386,9 +386,7 @@ namespace Rawr.Elemental.Estimation
             #region Thunderstorm
             if (calcOpts.UseThunderstorm)
             {
-                SpecialEffect ts = new SpecialEffect(Trigger.Use, new Stats { }, 0f, talents.GlyphofThunder ? 35f : 45f, 1f);
-                //SpecialEffect.EstimateUptime(0, talents.GlyphofThunder ? 35f : 45f, 0, calcOpts.FightDuration, out procs);
-                float procsPerSecond = ts.GetAverageProcsPerSecond(talents.GlyphofThunder ? 35f : 45f, 1f, 1f, calcOpts.FightDuration);
+                float procsPerSecond = Thunderstorm.getProcsPerSecond(talents.GlyphofThunder, calcOpts.FightDuration);
                 rot.MPS -= (talents.GlyphofThunderstorm ? .1f : .08f) * stats.Mana * procsPerSecond;
             }
             #endregion

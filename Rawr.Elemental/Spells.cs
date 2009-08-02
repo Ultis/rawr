@@ -218,11 +218,31 @@ namespace Rawr.Elemental
             crit += .01f * shamanTalents.TidalMastery;
             spellPower += stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
+            
             if (shamanTalents.GlyphofThunder)
                 cooldown -= 10f;
 
             base.Initialize(stats, shamanTalents);
         }
+
+        public static float getProcsPerSecond(bool glyphed, int fightDuration)
+        {
+            if (glyphed)
+            {
+                if (manaRestoreGlyphed == null)
+                    manaRestoreGlyphed = new SpecialEffect(Trigger.Use, new Stats { }, 0f, 35f, 1f);
+                return manaRestoreGlyphed.GetAverageProcsPerSecond(35f, 1f, 1f, fightDuration);
+            }
+            else
+            {
+                if (manaRestoreUnglyphed == null)
+                    manaRestoreUnglyphed = new SpecialEffect(Trigger.Use, new Stats { }, 0f, 45f, 1f);
+                return manaRestoreUnglyphed.GetAverageProcsPerSecond(45f, 1f, 1f, fightDuration);
+            }
+        }
+
+        private static SpecialEffect manaRestoreGlyphed = null;
+        private static SpecialEffect manaRestoreUnglyphed = null;
 
         public static Thunderstorm operator +(Thunderstorm A, Thunderstorm B)
         {
