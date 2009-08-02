@@ -439,12 +439,12 @@ namespace Rawr.DPSWarr {
 
                     // Work the Attack Table
                     dmg *= (1f
-                        - combatFactors._c_ymiss                        /* Missed so no damage at all */
-                        - (CanBeDodged  ? combatFactors._c_mhdodge : 0f) /* If it can be dodged,  then no damage when being dodged  */
-                        - (CanBeParried ? combatFactors._c_mhparry : 0f) /* If it can be parried, then no damage when being parried */
+                        - combatFactors._c_ymiss                         /*                            no damage when missed  */
+                        - (CanBeDodged  ? combatFactors._c_mhdodge : 0f) /* If it can be dodged,  then no damage when dodged  */
+                        - (CanBeParried ? combatFactors._c_mhparry : 0f) /* If it can be parried, then no damage when parried */
                         /* Yellows don't glance */
                         - (CanBeBlocked ? combatFactors._c_mhblock * combatFactors.ReducYwBlockedDmg : 0f) /* If it can be blocked, then partial damage when blocked */
-                        + Crit * combatFactors.BonusYellowCritDmg); /* Bonus Damage when critting */
+                        + Crit * combatFactors.BonusYellowCritDmg);      /* Bonus Damage when critting */
 
                     return (float)Math.Max(0f, dmg);
                 }
@@ -725,12 +725,13 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
             /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
-            public Suddendeath(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+            public Suddendeath(Character c, Stats s, CombatFactors cf,WhiteAttacks wa,Swordspec ss) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Sudden Death";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
                 Exec = new Execute(c, s, cf, wa);
+                SS = ss;
                 RageCost = Exec.RageCost;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.SuddenDeath;
@@ -741,22 +742,32 @@ namespace Rawr.DPSWarr {
             }
             // Variables
             public Execute Exec;
+            public Swordspec SS;
             public float FreeRage;
             // Functions
+            public float LandedAtksPerSec {
+                get {
+                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
+
+                    float GCDHitsPerSecond = 1f / LatentGCD * 0.9f; // 0.9 as a dummy method of saying some GCDs aren't melee attacks
+                    float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
+                        + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
+                        + 1f / (FightDuration / SS.ActivatesOverride);
+
+                    GCDHitsPerSecond *= combatFactors.ProbMhYellowLand;
+                    WhtHitsPerSecond *= combatFactors.ProbMhWhiteLand;
+
+                    float Landedatkspersec = GCDHitsPerSecond + WhtHitsPerSecond;
+
+                    return (float)Math.Max(0f, Landedatkspersec);
+                }
+            }
             public override float ActivatesOverride {
                 get {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
                     float talent = 3f * Talents.SuddenDeath / 100f;
 
-                    float GCDHitsPerSecond = 1f / LatentGCD * 0.9f; // 0.9 as a dummy method of saying some GCDs aren't melee attacks
-                    float WhtHitsPerSecond = 1f / (Whiteattacks.MhEffectiveSpeed);
-
-                    GCDHitsPerSecond *= (1f - combatFactors._c_ymiss - combatFactors._c_mhdodge);
-                    WhtHitsPerSecond *= (combatFactors.ProbMhWhiteHit + combatFactors._c_mhycrit) * (1f - Whiteattacks.AvoidanceStreak);
-
-                    float Landedatkspersec = GCDHitsPerSecond + WhtHitsPerSecond;
-
-                    float acts = talent * Landedatkspersec * LatentGCD;
+                    float acts = talent * LandedAtksPerSec * LatentGCD;
                     float Every = LatentGCD / acts * (1f - Whiteattacks.AvoidanceStreak);
 
                     return (float)Math.Max(0f, FightDuration / Every);

@@ -99,7 +99,7 @@ namespace Rawr.DPSWarr {
             }
         }
         #endregion
-        #region Normalized Weapon Damage
+        #region Weapon Damage
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MH); } }
         public float NormalizedOhWeaponDmg { get { return CalcNormalizedWeaponDamage(OH); } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
@@ -107,8 +107,6 @@ namespace Rawr.DPSWarr {
             baseDamage += StatS.AttackPower / 14f * 3.3f;
             return baseDamage;
         }
-        #endregion
-        #region Average Weapon Damage
         public float AvgMhWeaponDmg(        float speed) {       return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * speed   ); }
         public float AvgOhWeaponDmg(        float speed) {       return (OH == null ? 0f : (StatS.AttackPower / 14f + OH.DPS) * speed    * (0.5f + Talents.DualWieldSpecialization * 0.025f)); }
         public float AvgMhWeaponDmgUnhasted              { get { return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * MH.Speed); } }
@@ -144,7 +142,7 @@ namespace Rawr.DPSWarr {
         #region Speed
         public float TotalHaste {
             get {
-                float totalHaste = 1f + StatS.PhysicalHaste; // BloodFrenzy is handled in GetCharacterStats
+                float totalHaste = 1f + StatS.PhysicalHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
                 totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
                 return totalHaste;
             }

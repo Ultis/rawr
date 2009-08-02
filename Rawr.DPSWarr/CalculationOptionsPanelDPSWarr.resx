@@ -220,6 +220,28 @@ v2.2.11 (Unreleased)
 - Fixed Overpower so it's no longer Block-able (as it should be)
 - Implemented a 3.2 Mode
 - Added Health as a Relevant Stat so you can select Commanding Shout as a Buff
+- First round of optimizations
+- Made a couple corrections to Ebs's optimization code to prevent null exceptions and show proper info on tooltips
+- Applied Astrylian's Special Effect Dual-Zerking changes, drastically improves optimize performace. Ebs needs to review for Fury.
+- Cleaned up a couple more Tooltips
+- Fixed bug in Astry's patch that was overvaluing non-Berserking Off-Hand enchants, and causing fury to crash while changing weapons. DPSWarr perf issues are officially considered fixed, thanks everyone!
+- Changed the Activates for Arms Warriors to be Floored (100.85 becomes 100). This is more accurate to # of times activated over fight duration. It was previously not floored due to rotation constraints, which have been removed. Most characters will see a slight difference in DPS, not major difference. NOTE: Abilities like Shattering Throw need an extra second to activate (will create a fix for this later). Eg- 5 Min cd so 300 sec is fine, but 600 seconds isn't, need 601 for the 2nd activate
+- Changed the Order of Text on the GCDs tooltip over Total DPS. This lines up better now and is easier to read
+- Reworked the Ability Maintenance List to a CheckList TreeView, easier to use and more obvious functionality added (Can now select Commanding Shout vs Battle Shout, and it will only allow you to select one at a time. Selecting Fury Stance enables the Fury abilities automagically, and disables Arms. +Vice-versa)
+- Added Fury abilities to maintenance (to function like the arms ones do, unchecking it means you never do that ability)
+- Fixed the Ability activation of Commanding Shout and actually added it's stats to the character (oops). Also added it to the buff override system (if you are puttingup CS yourself, it will remove the "Buff" CS and Warlock Imp Buff)
+- Fixed the new Ability Maintenance Tree saving/loading issues (oops again)
+- Fixed a bug where AvoidanceStreak was increasing DPS rather than decreasing it.
+- Added a new option to the panel for Allowing the Flooring changed (happened in the last couple commits). You can now turn this on or off.
+- Moved some more code to the Optimized method that Ebs was setting up (for uniformity). made the calculators for these private to enforce no outside use. Also did some optimization in the Skills.cs file to make some abilities that have sub-abilities take less memory.
+- Reworked the Haste system, not sure if it made any calculational differences overall, but it does walk through all the additive vs multiplicative stacking before and after procs.
+- Fixed some of the melee hit triggering for SpecialEffects, they will have less value now because they are affected by the hit table (landing vs not landing). Also verified that all SpecialEffects are using non-hasted values
+- Broke apart AvgMhWeapDamage, there are now all 3 values (ItemSpeed, ItemSpeed Hasted, NormalizedItemSpeed)
+- Migrated all weapon speed function calls to the same 2 in White Attacks to ensure uniformity on Slam_Freq adding to the swing timer in all things that need to know this
+- Fixed Rend to work off of unhasted ItemSpeed (gives positive value to Haste where it hadn't been due to other changes)
+- Migrated more functions to Probxxofhit/land to make some function calls easier to read and less intensive to work out.
+- Cleaned up the Skills List in Rotation to list everythign correctly and prevent duplicates
+- Added Sword Specialization, this is a new dps line and it procs from all landed attacks over duration of fight, must have 1h or 2h sword equipped and talent (of course). May be inaccurate for dual-wielding swords (but you shouldn't be in a spec that could do that anyways). Sword spec hits are white and should add rage but I have not added that in yet (coming soon). Please note that initial testing has shown SS still has far less total dps with equivalent items than the other 2 specs (Mace/Poleaxe), this was expected.
 
 v2.2.10.0 (Jul 17, 2009 22:27)
 

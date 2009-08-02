@@ -195,6 +195,23 @@ namespace Rawr.DPSWarr {
              * - Breakdown of Main-hand vs Off-hand
              * - Number of Targets hit
              * - Notes regarding other hidden benefits (eg- MS anti-healing effect)
+             * 
+             * === Dummy tooltip ===
+             * Mortal Strike, Instant, CD: 5, RageCost: 30
+             * A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
+             * the effectiveness of any healing by 50% for 10 sec.
+             * 
+             * Attack Table:
+             * - 00.0: Missed (00.00%)
+             * - 00.0: Dodged (00.00%)
+             * - 00.0: Parried (00.00%)
+             * - 00.0: Blocked (00.00%)
+             * - 00.0: Crit (00.00%)
+             * - 00.0: Hit (00.00%)
+             * Damage per Blocked|Hit|Crit: x|x|x
+             * Targets Hit: 1
+             * DPS: x
+             * Percentage of Total DPS: x
             */
 
             // DPS Fury
@@ -205,7 +222,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Whirlwind",         string.Format(format,Rot._WW_DPS ,WW.DamageOnUse ,Rot._WW_GCDs     ,Rot._WW_DPS /TotalDPS));
             // DPS Arms
             format = "{0:0000} : {1:0000} : {2:" + floorstring + "}*{3:00.0%} of DPS";
-            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse/6,Rot._BLS_GCDs  ,Rot._BLS_DPS/TotalDPS));
+            dictValues.Add("Bladestorm",        string.Format(format,Rot._BLS_DPS,BLS.DamageOnUse/6f,Rot._BLS_GCDs ,Rot._BLS_DPS/TotalDPS));
             dictValues.Add("Mortal Strike",     string.Format(format,Rot._MS_DPS ,MS.DamageOnUse ,Rot._MS_GCDs     ,Rot._MS_DPS /TotalDPS));
             dictValues.Add("Rend",              string.Format(format,Rot._RD_DPS ,RD.TickSize    ,Rot._RD_GCDs     ,Rot._RD_DPS /TotalDPS));
             dictValues.Add("Overpower",         string.Format(format,Rot._OP_DPS ,OP.DamageOnUse ,Rot._OP_GCDs     ,Rot._OP_DPS /TotalDPS));

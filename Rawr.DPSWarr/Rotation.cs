@@ -148,8 +148,8 @@ namespace Rawr.DPSWarr {
             RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
             // Generic DPS
             DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -565,7 +565,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -581,7 +581,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -596,7 +596,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
             availRage -= rageadd;
@@ -609,7 +609,7 @@ namespace Rawr.DPSWarr {
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString("000") + " : " + abil.Name + "\n" : "");
+            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
             RageGenOther += rageadd;
