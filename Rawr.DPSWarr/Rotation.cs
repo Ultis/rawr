@@ -146,9 +146,9 @@ namespace Rawr.DPSWarr {
             BLS= new Skills.Bladestorm(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,WW);
             MS = new Skills.MortalStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
+            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
             // Generic DPS
             DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -234,7 +234,6 @@ namespace Rawr.DPSWarr {
             //float SN_Acts = _Sunder_GCDs!=0?_Sunder_GCDs  :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_      ] ? SN.Activates  : 0f;
             float TH_Acts = _Thunder_GCDs !=0?_Thunder_GCDs :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_      ] ? TH.Activates  : 0f;
             float ST_Acts = _Shatt_GCDs   !=0?_Shatt_GCDs   :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_  ] ? ST.Activates  : 0f;
-            //float SW_Acts = _SW_GCDs    !=0?_SW_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_  ] ? SW.Activates  : 0f;
             float BLS_Acts= _BLS_GCDs     !=0?_BLS_GCDs     :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_       ] ? BLS.Activates : 0f;
 
             float MS_Acts = _MS_GCDs      !=0?_MS_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_     ] ? MS.Activates  : 0f;
@@ -243,7 +242,7 @@ namespace Rawr.DPSWarr {
             float SD_Acts = _SD_GCDs      !=0?_SD_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_      ] ? SD.Activates  : 0f;
             float SL_Acts = _SL_GCDs      !=0?_SL_GCDs      :0f;//CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_             ] ?
 
-            float Dable = (BLS_Acts * 6f * 2f) + TH_Acts + (ST_Acts/2f) + MS_Acts + SD_Acts + SL_Acts;
+            float Dable = (BLS_Acts*6f) + TH_Acts + ST_Acts + MS_Acts + SD_Acts + SL_Acts;
             float nonDable = OP_Acts + TB_Acts;
 
             Dable    /= LatentGCD;
@@ -478,6 +477,15 @@ namespace Rawr.DPSWarr {
             availRage -= rageadd;
             RageNeeded += rageadd;
 
+            /*Sword Spec, Doesn't eat GCDs*/
+            float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
+                                                   + _Shatt_GCDs
+                                                   + _BT_GCDs + _WW_GCDs * 2 + _BS_GCDs);
+            _SS_Acts = SS_Acts;
+            _SS_DPS = SS.GetDPS(SS_Acts);
+            DPS_TTL += _SS_DPS;
+            // TODO: Add Rage since it's a white hit
+            
             doIterations();
             // Priority 4 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active
@@ -492,9 +500,9 @@ namespace Rawr.DPSWarr {
             }else{
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
             }
-            
+
+            WhiteAtks.Slam_Freq = _SL_GCDs;
             if (ok) {
-                WhiteAtks.Slam_Freq = _SL_GCDs;
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
@@ -654,12 +662,15 @@ namespace Rawr.DPSWarr {
             /*Death Wish        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Death_GCDs,  Death);
 
             // ==== Standard Priorities ===============
+
+            // These are solid and not dependant on other attacks
             /*Bladestorm        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _BLS_GCDs,    ref DPS_TTL,ref _BLS_DPS,BLS,4f);
             /*Mortal Strike     */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _MS_GCDs,     ref DPS_TTL,ref _MS_DPS ,MS);
             /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
-            /*Overpower         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _OP_GCDs,     ref DPS_TTL,ref _OP_DPS ,OP,2f);
             /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _TB_GCDs,     ref DPS_TTL,ref _TB_DPS ,TB);
-            /*Sudden Death      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SD_GCDs,     ref DPS_TTL,ref _SD_DPS ,SD);
+
+            /*Overpower         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _OP_GCDs, ref DPS_TTL, ref _OP_DPS, OP, 2f);
+            /*Sudden Death      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _SD_GCDs, ref DPS_TTL, ref _SD_DPS, SD);
             /*Slam for remainder of GCDs*/
             float SL_GCDs = SL.Validated ? availGCDs : 0f;
             _SL_GCDs = SL_GCDs;
@@ -680,6 +691,68 @@ namespace Rawr.DPSWarr {
             _SS_DPS = SS.GetDPS(SS_Acts);
             DPS_TTL += _SS_DPS;
             // TODO: Add Rage since it's a white hit
+
+            #region iterative calc test (causes equivalent of a stack flow)
+            /*// The following are dependant on other attacks as they are proccing abilities or are the fallback item
+            // We need to loop these until the activates are relatively unchanged
+            float origavailGCDs = availGCDs;
+            float origGCDsused = GCDsused;
+            float oldOPGCDs = 0f, oldSDGCDs = 0f, oldSLGCDs = 0f, oldSSActs = 0f;
+            _OP_GCDs = 0f;
+            _SD_GCDs = 0f;
+            _SL_GCDs = origavailGCDs;
+            _SS_Acts = 0f;
+            while(
+                    (float)Math.Abs((/*_OP_GCDs + _SD_GCDs + */
+            /*_SL_GCDs /*+ _SS_Acts*//*) - (/*oldOPGCDs + oldSDGCDs +*//* oldSLGCDs /*+ oldSSActs*//*)) > 0.1f
+                  )
+            {
+                // Reset a couple of items so we can keep iterating
+                availGCDs = origavailGCDs;
+                GCDsused = origGCDsused;
+                WhiteAtks.Slam_Freq = _SL_GCDs;
+                //Overpower
+                float acts = (float)Math.Min(availGCDs, OP.GetActivates(
+                    (_Thunder_GCDs + _Shatt_GCDs + _BLS_GCDs * 6f + _MS_GCDs + _SD_GCDs + _SL_GCDs) / NumGCDs, _SS_Acts
+                    ));
+                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                _OP_GCDs = Abil_GCDs;
+                GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * 2f);
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+
+                //Sudden Death
+                acts = (float)Math.Min(availGCDs, SD.GetActivates(
+                    (_Thunder_GCDs + _Shatt_GCDs + _BLS_GCDs * 6f + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs) / NumGCDs, _SS_Acts
+                    ));
+                Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                _SD_GCDs = Abil_GCDs;
+                GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+
+                //Slam for remainder of GCDs
+                _SL_GCDs = SL.Validated ? availGCDs : 0f;
+                GCDsused += (float)Math.Min(NumGCDs, _SL_GCDs);
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+
+                //Sword Spec, Doesn't eat GCDs
+                float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
+                                                       + _Shatt_GCDs
+                                                       + _BLS_GCDs * 6f + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs);
+                _SS_Acts = SS_Acts;
+                // TODO: Add Rage since it's a white hit
+            }
+            rageadd = SL.GetRageUsePerSecond(_SL_GCDs) + OP.GetRageUsePerSecond(_OP_GCDs) + SD.GetRageUsePerSecond(_SD_GCDs);
+            availRage -= rageadd;
+            RageNeeded += rageadd;
+            GCDUsage += (_OP_GCDs > 0 ? _OP_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") +"x2 : "+ OP.Name + "\n" : "");
+            GCDUsage += (_SD_GCDs > 0 ? _SD_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SD.Name + "\n" : "");
+            GCDUsage += (_SL_GCDs > 0 ? _SL_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SL.Name + "\n" : "");
+            _OP_DPS = OP.GetDPS(_OP_GCDs);
+            _SD_DPS = SD.GetDPS(_SD_GCDs);
+            _SL_DPS = SL.GetDPS(_SL_GCDs);
+            _SS_DPS = SS.GetDPS(_SS_Acts);
+            DPS_TTL += _OP_DPS + _SD_DPS + _SL_DPS + _SS_DPS;*/
+            #endregion
 
             // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active

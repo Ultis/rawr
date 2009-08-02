@@ -747,6 +747,25 @@ namespace Rawr.DPSWarr {
             public Swordspec SS;
             public float FreeRage;
             // Functions
+            public float GetActivates(float yellowattacksratio, float ssActs) {
+                float LatentGCD = 1.5f + CalcOpts.GetLatency();
+                float talent = 3f * Talents.SuddenDeath / 100f;
+
+                float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
+                                        + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
+                                        + 1f / (FightDuration / ssActs);
+                float GCDHitsPerSecond = 1f / LatentGCD * yellowattacksratio;
+
+                WhtHitsPerSecond *= combatFactors.ProbMhWhiteLand;
+                GCDHitsPerSecond *= combatFactors.ProbMhYellowLand;
+
+                float Landedatkspersec = WhtHitsPerSecond + GCDHitsPerSecond;
+
+                float acts = talent * Landedatkspersec * LatentGCD;
+                float Every = LatentGCD / acts * (1f - Whiteattacks.AvoidanceStreak);
+
+                return (float)Math.Max(0f, FightDuration / Every);
+            }
             public float LandedAtksPerSec {
                 get {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
@@ -754,7 +773,7 @@ namespace Rawr.DPSWarr {
                     float GCDHitsPerSecond = 1f / LatentGCD * 0.9f; // 0.9 as a dummy method of saying some GCDs aren't melee attacks
                     float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
                         + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
-                        + 1f / (FightDuration / SS.ActivatesOverride);
+                        + 1f / (FightDuration / SS.Activates);
 
                     GCDHitsPerSecond *= combatFactors.ProbMhYellowLand;
                     WhtHitsPerSecond *= combatFactors.ProbMhWhiteLand;
@@ -792,11 +811,12 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
             /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
-            public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+            public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Swordspec ss) {
                 Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 Name = "Overpower";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+                SS = ss;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 CanBeDodged = false;
@@ -808,6 +828,33 @@ namespace Rawr.DPSWarr {
                 DamageBase = combatFactors.NormalizedMhWeaponDmg;
                 DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
                 BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+            }
+            public Swordspec SS;
+            public float GetActivates(float yellowattacksratio, float ssActs) {
+                    float acts = 0f;
+                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                    //float cd = (float)Math.Max(Cd, LatentGCD);
+                    //float Every = 0f;
+                    //float GCDPerc = 0f;
+
+                    float dodge = combatFactors._c_mhdodge;
+                    float parry = (Talents.GlyphOfOverpower ? combatFactors._c_mhparry : 0f);
+
+                    // Chance to activate: Dodges + (if glyphed) Parries
+                    if (dodge + parry > 0f) {
+                        float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
+                   + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
+                                               + 1f / (FightDuration / ssActs);
+                        float GCDHitsPerSecond = 1f / LatentGCD * yellowattacksratio;
+
+                        float dodgespersec = (WhtHitsPerSecond + GCDHitsPerSecond) * (dodge + parry);
+
+                        //GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
+                        //Every = LatentGCD / GCDPerc;
+                        acts += (float)Math.Max(0f, dodgespersec);
+                    }
+
+                    return acts;
             }
             public override float ActivatesOverride {
                 get {
@@ -822,7 +869,10 @@ namespace Rawr.DPSWarr {
 
                     // Chance to activate: Dodges + (if glyphed) Parries
                     if (dodge + parry > 0f) {
-                        float whitepersec  = FightDuration / Whiteattacks.MhEffectiveSpeed; // hitspersec
+                        float whitepersec  = 1f / Whiteattacks.MhEffectiveSpeed
+               + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
+                                           + 1f / (FightDuration / SS.Activates)
+                            ; // hitspersec
                         float yellowpersec = FightDuration / LatentGCD * 0.9f; //0.9 is an arbitrary number, will make this work off actual results of GCDs used to hit vs not hit later
 
                         float dodgespersec = (whitepersec + yellowpersec) * (dodge + parry);
