@@ -699,6 +699,22 @@ namespace Rawr
                 S.Miss += 0.02f;
             else if (characterRace == CharacterRace.Tauren)
                 S.Health = S.Health * 1.05f;
+            else if (characterRace == CharacterRace.Troll)
+            {
+                if (characterClass == CharacterClass.DeathKnight || characterClass == CharacterClass.Warrior || characterClass == CharacterClass.Rogue)
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalHaste = 0.2f }, 10f, 180f));
+                else
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.2f, PhysicalHaste = 0.2f }, 10f, 180f));
+            }
+            else if (characterRace == CharacterRace.Orc)
+            {
+                if (characterClass == CharacterClass.Shaman)
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 2 + (level * 4), SpellPower = 3 + (level * 2) }, 15f, 120f));
+                else if (characterClass == CharacterClass.Warlock)
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 3 + (level * 2) }, 15f, 120f));
+                else
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 2 + (level * 4) }, 15f, 120f));
+            }
             #endregion
 
             _lastStats = S.Clone();
