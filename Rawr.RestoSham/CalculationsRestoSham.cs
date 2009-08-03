@@ -399,10 +399,10 @@ namespace Rawr.RestoSham
             float CHCost = ((((float)Math.Round(4396 * .19f, 0)) - Preserve - stats.TotemCHBaseCost) * (1f - (character.ShamanTalents.TidalFocus * .01f)));
             #endregion
             #region RT + LHW Rotation (RTLHWMPS / RTLHWHPS / RTLHWTime) Needs Heals and Crits per Second
-            float RTLHWCPER = (float)Math.Round(((6.25f - RTCast) - ((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) / LHWCast);
-            float RTLHWTime = RTCast + (((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (RTLHWCPER * LHWCast);
-            float RTLHWAA = (((((((LHWHeal * (2))))) / RTLHWTime * (Critical+.5f)) + ((RTHeal + (((LHWHeal * (RTLHWCPER))))) / RTLHWTime * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
-            calcStats.RTLHWHPS = (((((((LHWHeal * (2))))) / RTLHWTime * (Critical+.5f)) + ((RTHeal + (((LHWHeal * (RTLHWCPER))))) / RTLHWTime * Critical)) + ELWHPS) + RTLHWAA;
+            float RTLHWCPER = (float)Math.Round(((6.25f - RTCast) - (LHWCast * 2)));
+            float RTLHWTime = RTCast + (LHWCast * 2) + (RTLHWCPER * LHWCast);
+            float RTLHWAA = (((((((LHWHeal * (2))))) / RTLHWTime * (Critical + (.5f / 5 * character.ShamanTalents.TidalWaves))) + ((RTHeal + (((LHWHeal * (RTLHWCPER))))) / RTLHWTime * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
+            calcStats.RTLHWHPS = (((((((LHWHeal * (2))))) / RTLHWTime * (Critical+(.5f / 5 * character.ShamanTalents.TidalWaves))) + ((RTHeal + (((LHWHeal * (RTLHWCPER))))) / RTLHWTime * Critical)) + ELWHPS) + RTLHWAA;
             calcStats.RTLHWMPS = ((RTCost) + (LHWCost * (RTLHWCPER + 2))) / RTLHWTime;
             if (options.SustStyle.Equals("RT+LHW"))
                 RTPerSec = 1f / RTLHWTime;
@@ -411,11 +411,11 @@ namespace Rawr.RestoSham
             if (options.SustStyle.Equals("RT+LHW"))
                 RTCPerSec = (1f / RTLHWTime) * CriticalChance;
             if (options.SustStyle.Equals("RT+LHW"))
-                LHWCPerSec = ((RTLHWCPER + 2) / RTLHWTime) * CriticalChance;
+                LHWCPerSec = ((RTLHWCPER + 2) / RTLHWTime) * (CriticalChance + ((.5f / 5 * character.ShamanTalents.TidalWaves) * (2 / (2 + RTLHWCPER))));
             #endregion
             #region RT + HW Rotation (RTHWMPS / RTHWHPS / RTHWTime) Needs Heals and Crits per Second
-            float RTHWCPER = (float)Math.Round(((6.25f - RTCast) - ((HWCast / (Hasted) * (Hasted + (.3f)))) * 2) / HWCast);
-            float RTHWTime = RTCast + (((HWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (RTHWCPER * HWCast);
+            float RTHWCPER = (float)Math.Round(((6.25f - RTCast) - ((HWCast / (Hasted) * (Hasted + ((.3f / 5 * character.ShamanTalents.TidalWaves))))) * 2) / HWCast);
+            float RTHWTime = RTCast + (((HWCast / (Hasted) * (Hasted + ((.3f / 5 * character.ShamanTalents.TidalWaves))))) * 2) + (RTHWCPER * HWCast);
             float RTHWAA = ((((RTHeal + (((HWHeal * (2 + RTHWCPER))))) / RTHWTime * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
             calcStats.RTHWHPS = (((RTHeal + (((HWHeal * (2 + RTHWCPER))))) / RTHWTime * Critical) + ELWHPS) + RTHWAA;
             calcStats.RTHWMPS = ((RTCost) + (HWCost * (RTHWCPER + 2))) / RTHWTime;
@@ -444,23 +444,23 @@ namespace Rawr.RestoSham
                 CHCPerSec = (RTCHCPER / RTCHTime) * CriticalChance;
             #endregion
             #region RT + CH + LHW2 Rotation (RTCHLHW2MPS / RTCHLHW2HPS / RTCHLHW2Time) Needs Heals and Crits per Second
-            float RTCHLHW2CPER = (float)Math.Max(((float)Math.Round(((6.25f - (RTCast + CHCast)) - ((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) / LHWCast)), 2);
-            float RTCHLHW2Time = RTCast + CHCast + (((LHWCast / (Hasted) * (Hasted + (.3f)))) * 2) + (float)Math.Max(((RTCHLHW2CPER - 2) * LHWCast), 0);
-            float RTCHLHW2AA = (((((((LHWHeal * (RTCHLHW2CPER))))) / RTCHLHW2Time * (Critical+.5f))) + (((RTHeal) / RTCHLHW2Time * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
-            calcStats.RTCHLHW2HPS = ((((((((LHWHeal * (RTCHLHW2CPER))))) / RTCHLHW2Time * (Critical + .5f))) + (((RTHeal + CHHeal) / RTCHLHW2Time * Critical))) + ELWHPS) + RTCHLHW2AA;
-            calcStats.RTCHLHW2MPS = ((RTCost) + CHCost + (LHWCost * (RTCHLHW2CPER + 2))) / RTCHLHW2Time;
+            float RTCHLHW2CPER = (float)Math.Max(((float)Math.Round(((6.25f - (RTCast + CHCast)) - (LHWCast) * 2) / LHWCast)), 2);
+            float RTCHLHW2Time = RTCast + CHCast + (LHWCast * 2) + (float)Math.Max(((RTCHLHW2CPER - 2) * LHWCast), 0);
+            float RTCHLHW2AA = (((((((LHWHeal * (RTCHLHW2CPER))))) / RTCHLHW2Time * (Critical + (.5f / 5 * character.ShamanTalents.TidalWaves)))) + (((RTHeal) / RTCHLHW2Time * Critical))) * (character.ShamanTalents.AncestralAwakening * .1f);
+            calcStats.RTCHLHW2HPS = ((((((((LHWHeal * (RTCHLHW2CPER))))) / RTCHLHW2Time * (Critical + (.5f / 5 * character.ShamanTalents.TidalWaves)))) + (((RTHeal + CHHeal) / RTCHLHW2Time * Critical))) + ELWHPS) + RTCHLHW2AA;
+            calcStats.RTCHLHW2MPS = ((RTCost) + CHCost + (LHWCost * (RTCHLHW2CPER))) / RTCHLHW2Time;
             if (options.SustStyle.Equals("RT+CH+LHW"))
                 RTPerSec = 1f / RTCHLHW2Time;
             if (options.SustStyle.Equals("RT+CH+LHW"))
-                CHPerSec = RTCHCPER / RTCHLHW2Time;
+                CHPerSec = 1f / RTCHLHW2Time;
             if (options.SustStyle.Equals("RT+CH+LHW"))
-                LHWPerSec = RTCHCPER / RTCHLHW2Time;
+                LHWPerSec = RTCHLHW2CPER / RTCHLHW2Time;
             if (options.SustStyle.Equals("RT+CH+LHW"))
                 RTCPerSec = (1f / RTCHLHW2Time) * CriticalChance;
             if (options.SustStyle.Equals("RT+CH+LHW"))
                 CHCPerSec = (1f / RTCHLHW2Time) * CriticalChance;
             if (options.SustStyle.Equals("RT+CH+LHW"))
-                LHWCPerSec = (RTCHLHW2CPER / RTCHLHW2Time) * CriticalChance;
+                LHWCPerSec = (RTCHLHW2CPER / RTCHLHW2Time) * (CriticalChance + ((.5f / 5 * character.ShamanTalents.TidalWaves) * (2 / (RTCHLHW2CPER))));
             #endregion
             #region CH Spam (CHHPS / CHMPS) Needs Heals and Crits per Second
             calcStats.CHSpamHPS = (CHHeal / CHCast + ELWHPS);
