@@ -943,27 +943,29 @@ namespace Rawr.Enhance
 
             if (mainHand)
             {
-                newWeapon = character.MainHand.Item.Clone();
-                baseSpeed = character.MainHand.Speed;
-                minDamage = character.MainHand.MinDamage;
-                maxDamage = character.MainHand.MaxDamage;
+                newWeapon = deltaChar.MainHand.Item.Clone();
+                baseSpeed = deltaChar.MainHand.Speed;
+                minDamage = deltaChar.MainHand.MinDamage;
+                maxDamage = deltaChar.MainHand.MaxDamage;
             }
             else
             {
-                newWeapon = character.OffHand.Item.Clone();
-                baseSpeed = character.OffHand.Speed;
-                minDamage = character.OffHand.MinDamage;
-                maxDamage = character.OffHand.MaxDamage;
+                newWeapon = deltaChar.OffHand.Item.Clone();
+                baseSpeed = deltaChar.OffHand.Speed;
+                minDamage = deltaChar.OffHand.MinDamage;
+                maxDamage = deltaChar.OffHand.MaxDamage;
             }
             newWeapon.MinDamage = (int)Math.Round(minDamage / baseSpeed * newSpeed);
             newWeapon.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * newSpeed);
             newWeapon.Speed = newSpeed;
             String speed = newSpeed.ToString() + " Speed";
+            deltaChar.IsLoading = true; // forces item instance to avoid invalidating and reloading from cache
             if (mainHand)
                 deltaChar.MainHand = new ItemInstance(newWeapon, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
             else
-                deltaChar.OffHand = new ItemInstance(newWeapon, character.OffHand.Gem1, character.OffHand.Gem2, character.OffHand.Gem3, character.OffHand.Enchant);
+                deltaChar.OffHand = new ItemInstance(newWeapon, deltaChar.OffHand.Gem1, deltaChar.OffHand.Gem2, deltaChar.OffHand.Gem3, deltaChar.OffHand.Enchant);
             ComparisonCalculationBase result = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, speed, baseSpeed == newWeapon.Speed);
+            deltaChar.IsLoading = false;
             result.Item = null;
             return result;
         }
