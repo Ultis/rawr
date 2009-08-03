@@ -24,7 +24,7 @@ namespace Rawr.RestoSham
             txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
             cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 4300f, true);
             tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
-            tbSurvival.Tag = new NumericField("OverhealingPercentage", 0f, 100f, true);
+            tbSurvival.Tag = new NumericField("SurvivalPerc", 0f, 100f, true);
         }
 
         protected override void LoadCalculationOptions()
