@@ -473,6 +473,54 @@ namespace Rawr.DPSWarr {
                 float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
                 return (float)Math.Min(1f, Math.Max(0f, BaseCrit + BonusCritChance));
             }
+            public enum AttackTableSelector {Missed=0,Dodged,Parried,Blocked,Crit,Hit}
+            public virtual float GetXActs(AttackTableSelector i,float acts) {
+                float retVal = 0f;
+                switch (i) {
+                    case AttackTableSelector.Missed:  { retVal = acts * combatFactors._c_ymiss;       break; }
+                    case AttackTableSelector.Dodged:  { retVal = acts * combatFactors._c_mhdodge;     break; }
+                    case AttackTableSelector.Parried: { retVal = acts * combatFactors._c_mhparry;     break; }
+                    case AttackTableSelector.Blocked: { retVal = acts * combatFactors._c_mhblock;     break; }
+                    case AttackTableSelector.Crit:    { retVal = acts * combatFactors._c_mhycrit;     break; }
+                    case AttackTableSelector.Hit:     {
+                        float chance = 1f - combatFactors._c_ymiss
+                                          - (CanBeDodged  ? combatFactors._c_mhdodge : 0f)
+                                          - (CanBeParried ? combatFactors._c_mhparry : 0f)
+                                          - (CanBeBlocked ? combatFactors._c_mhblock : 0f)
+                                          - combatFactors._c_mhycrit;
+                        retVal = acts * chance;
+                        break;
+                    }
+                    default : {break;}
+                }
+                return retVal;
+            }
+            public virtual string GenTooltip(float acts, float ttldpsperc) {
+                float misses = GetXActs(AttackTableSelector.Missed , acts), missesPerc = misses/acts ;
+                float dodges = GetXActs(AttackTableSelector.Dodged , acts), dodgesPerc = dodges/acts ;
+                float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = parrys/acts ;
+                float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = blocks/acts ;
+                float crits  = GetXActs(AttackTableSelector.Crit   , acts), critsPerc  = crits /acts ;
+                float hits   = GetXActs(AttackTableSelector.Hit    , acts), hitsPerc   = hits  /acts ;
+                
+                string tooltip = "*" + Name +
+                    Environment.NewLine +   "Cast Time: "   + (CastTime != -1 ? CastTime.ToString() : "Instant")
+                                        + ", CD: "          + (Cd       != -1 ? Cd.ToString()       : "None"   )
+                                        + ", RageCost: "    + (RageCost != -1 ? RageCost.ToString() : "None"   ) +
+                    Environment.NewLine + Environment.NewLine + acts.ToString("000.0") + " Activates over Attack Table:" +
+                    Environment.NewLine + "- " + misses.ToString("000.0") + " : " + missesPerc.ToString("00.00%") + " : Missed " +
+    (CanBeDodged  ? Environment.NewLine + "- " + dodges.ToString("000.0") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
+    (CanBeParried ? Environment.NewLine + "- " + parrys.ToString("000.0") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
+    (CanBeBlocked ? Environment.NewLine + "- " + blocks.ToString("000.0") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
+                    Environment.NewLine + "- " + crits.ToString( "000.0") + " : " + critsPerc.ToString( "00.00%") + " : Crit " +
+                    Environment.NewLine + "- " + hits.ToString(  "000.0") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
+                    Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
+                    Environment.NewLine + "Targets Hit: " + (Targets != -1 ? Targets.ToString() : "None") +
+                    Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString() : "None") +
+                    Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString() : "None");
+
+                return tooltip;
+            }
             #endregion
         }
         #endregion

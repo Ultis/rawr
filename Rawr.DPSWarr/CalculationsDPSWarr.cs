@@ -306,7 +306,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
                 calculatedStats.CritRating = stats.CritRating;
                 calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
-                //- (0.006f * (calcOpts.TargetLevel - 80) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
                 calculatedStats.MhCrit = combatFactors._c_mhycrit;
                 calculatedStats.OhCrit = combatFactors._c_ohycrit;
             }
@@ -619,6 +618,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
@@ -664,6 +665,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.BonusBleedDamageMultiplier +
                 stats.BonusCritChance +
                 stats.Armor +
+                stats.BonusArmor +
+                stats.BonusArmorMultiplier + 
                 stats.PhysicalHaste +
                 stats.PhysicalCrit +
                 stats.ArcaneDamage +

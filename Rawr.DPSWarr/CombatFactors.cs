@@ -28,7 +28,7 @@ namespace Rawr.DPSWarr {
                 _c_ohexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_ohRacialExpertise;
                 _c_ohdodge = OhDodgeChance;
                 _c_ohparry = OhParryChance;
-                _c_mhblock = OhBlockChance;
+                _c_ohblock = OhBlockChance;
                 _c_ohwcrit = OhWhCritChance;
                 _c_ohycrit = OhYwCritChance;
             } else {
@@ -38,13 +38,12 @@ namespace Rawr.DPSWarr {
                 _c_ohexpertise = 0f;
                 _c_ohdodge = 0.065f;
                 _c_ohparry = 0.120f;
-                _c_mhblock = 0.0f;
+                _c_ohblock = 0.0f;
                 _c_ohwcrit = 0.0f;
                 _c_ohycrit = 0.0f;
             }
             _c_ymiss = YwMissChance;
             _c_wmiss = WhMissChance;
-            
         }
         #region Global Variables
         private Stats StatS;

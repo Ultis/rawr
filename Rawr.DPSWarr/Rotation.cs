@@ -669,9 +669,9 @@ namespace Rawr.DPSWarr {
             /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
             /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _TB_GCDs,     ref DPS_TTL,ref _TB_DPS ,TB);
 
-            /*Overpower         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _OP_GCDs, ref DPS_TTL, ref _OP_DPS, OP, 2f);
-            /*Sudden Death      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _SD_GCDs, ref DPS_TTL, ref _SD_DPS, SD);
-            /*Slam for remainder of GCDs*/
+            //*Overpower         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _OP_GCDs, ref DPS_TTL, ref _OP_DPS, OP, 2f);
+            //*Sudden Death      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _SD_GCDs, ref DPS_TTL, ref _SD_DPS, SD);
+            /*Slam for remainder of GCDs
             float SL_GCDs = SL.Validated ? availGCDs : 0f;
             _SL_GCDs = SL_GCDs;
             GCDsused += (float)Math.Min(NumGCDs, SL_GCDs);
@@ -683,17 +683,17 @@ namespace Rawr.DPSWarr {
             availRage -= rageadd;
             RageNeeded += rageadd;
 
-            /*Sword Spec, Doesn't eat GCDs*/
+            //Sword Spec, Doesn't eat GCDs
             float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
                                                    + _Shatt_GCDs
                                                    + _BLS_GCDs * 6 + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs);
             _SS_Acts = SS_Acts;
             _SS_DPS = SS.GetDPS(SS_Acts);
             DPS_TTL += _SS_DPS;
-            // TODO: Add Rage since it's a white hit
+            // TODO: Add Rage since it's a white hit*/
 
             #region iterative calc test (causes equivalent of a stack flow)
-            /*// The following are dependant on other attacks as they are proccing abilities or are the fallback item
+            // The following are dependant on other attacks as they are proccing abilities or are the fallback item
             // We need to loop these until the activates are relatively unchanged
             float origavailGCDs = availGCDs;
             float origGCDsused = GCDsused;
@@ -703,13 +703,16 @@ namespace Rawr.DPSWarr {
             _SL_GCDs = origavailGCDs;
             _SS_Acts = 0f;
             while(
-                    (float)Math.Abs((/*_OP_GCDs + _SD_GCDs + */
-            /*_SL_GCDs /*+ _SS_Acts*//*) - (/*oldOPGCDs + oldSDGCDs +*//* oldSLGCDs /*+ oldSSActs*//*)) > 0.1f
+                    (float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
+                    (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
+                    (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
+                    (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f
                   )
             {
                 // Reset a couple of items so we can keep iterating
                 availGCDs = origavailGCDs;
                 GCDsused = origGCDsused;
+                oldOPGCDs = _OP_GCDs; oldSDGCDs = _SD_GCDs; oldSLGCDs = _SL_GCDs; oldSSActs = _SS_Acts;
                 WhiteAtks.Slam_Freq = _SL_GCDs;
                 //Overpower
                 float acts = (float)Math.Min(availGCDs, OP.GetActivates(
@@ -717,7 +720,7 @@ namespace Rawr.DPSWarr {
                     ));
                 float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _OP_GCDs = Abil_GCDs;
-                GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * 2f);
+                GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
                 //Sudden Death
@@ -751,7 +754,7 @@ namespace Rawr.DPSWarr {
             _SD_DPS = SD.GetDPS(_SD_GCDs);
             _SL_DPS = SL.GetDPS(_SL_GCDs);
             _SS_DPS = SS.GetDPS(_SS_Acts);
-            DPS_TTL += _OP_DPS + _SD_DPS + _SL_DPS + _SS_DPS;*/
+            DPS_TTL += _OP_DPS + _SD_DPS + _SL_DPS + _SS_DPS;
             #endregion
 
             // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
