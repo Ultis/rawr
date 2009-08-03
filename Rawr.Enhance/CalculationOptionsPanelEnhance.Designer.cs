@@ -108,6 +108,7 @@
             this.trackBarAverageLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarAverageLag.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarAverageLag.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackBarAverageLag.LargeChange = 25;
             this.trackBarAverageLag.Location = new System.Drawing.Point(74, 91);
             this.trackBarAverageLag.Maximum = 750;
@@ -116,7 +117,6 @@
             this.trackBarAverageLag.SmallChange = 5;
             this.trackBarAverageLag.TabIndex = 38;
             this.trackBarAverageLag.TickFrequency = 50;
-            this.trackBarAverageLag.UseWaitCursor = true;
             this.trackBarAverageLag.Value = 250;
             this.trackBarAverageLag.ValueChanged += new System.EventHandler(this.trackBarAverageLag_ValueChanged);
             // 
