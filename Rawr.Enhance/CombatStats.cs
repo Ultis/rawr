@@ -248,9 +248,9 @@ namespace Rawr.Enhance
             // Need to modify expertiseBonusMH & OH if Orc and have racial bonus weapons
             if (_character.Race == CharacterRace.Orc)
             {
-                if (_character.MainHand.Type == ItemType.OneHandAxe) // || _character.MainHand.Type == ItemType.FistWeapon) // patch 3.2 includes fists
+                if (_character.MainHand.Type == ItemType.OneHandAxe || _character.MainHand.Type == ItemType.FistWeapon) // patch 3.2 includes fists
                     expertiseBonusMH += 0.0125f;
-                if (_character.OffHand.Type == ItemType.OneHandAxe) // || _character.OffHand.Type == ItemType.FistWeapon) // patch 3.2 includes fists
+                if (_character.OffHand.Type == ItemType.OneHandAxe || _character.OffHand.Type == ItemType.FistWeapon) // patch 3.2 includes fists
                     expertiseBonusOH += 0.0125f;
             }
 
