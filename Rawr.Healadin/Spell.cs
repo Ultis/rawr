@@ -38,7 +38,7 @@ namespace Rawr.Healadin
         {
             return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
                 * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)))
-                - BaseMana * (Rotation.CalcOpts.Mode32 ? .06f : .12f) * Talents.Illumination * ChanceToCrit();
+                - BaseMana * .06f * Talents.Illumination * ChanceToCrit();
         }
 
         public float AverageHealed()

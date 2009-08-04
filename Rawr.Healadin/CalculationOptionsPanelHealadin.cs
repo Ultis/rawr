@@ -35,7 +35,6 @@ namespace Rawr.Healadin
             chkJotP.Checked = calcOpts.JotP;
             chkJudgement.Checked = calcOpts.Judgement;
             chkLoHSelf.Checked = calcOpts.LoHSelf;
-            chkMode32.Checked = calcOpts.Mode32;
 
             trkReplenishment.Value = (int)Math.Round(calcOpts.Replenishment * 100);
             lblReplenishment.Text = trkReplenishment.Value + "%";
@@ -248,16 +247,6 @@ namespace Rawr.Healadin
             }
         }
 
-        private void chkMode32_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Mode32 = chkMode32.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void chkJudgement_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -300,7 +289,6 @@ namespace Rawr.Healadin
         public bool JotP = true;
         public bool Judgement = true;
         public bool LoHSelf = false;
-        public bool Mode32 = false;
         public float SSUptime = 1f;
 
 	}

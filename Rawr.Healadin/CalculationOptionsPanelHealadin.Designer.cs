@@ -69,7 +69,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblIoLFoL = new System.Windows.Forms.Label();
             this.lblIoLHL = new System.Windows.Forms.Label();
-            this.chkMode32 = new System.Windows.Forms.CheckBox();
             this.chkJudgement = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -550,17 +549,6 @@
             this.lblIoLHL.Text = "100% HL";
             this.lblIoLHL.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // chkMode32
-            // 
-            this.chkMode32.AutoSize = true;
-            this.chkMode32.Location = new System.Drawing.Point(3, 198);
-            this.chkMode32.Name = "chkMode32";
-            this.chkMode32.Size = new System.Drawing.Size(71, 17);
-            this.chkMode32.TabIndex = 54;
-            this.chkMode32.Text = "3.2 Mode";
-            this.chkMode32.UseVisualStyleBackColor = true;
-            this.chkMode32.CheckedChanged += new System.EventHandler(this.chkMode32_CheckedChanged);
-            // 
             // chkJudgement
             // 
             this.chkJudgement.AutoSize = true;
@@ -577,7 +565,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.chkJudgement);
-            this.Controls.Add(this.chkMode32);
             this.Controls.Add(this.lblIoLHL);
             this.Controls.Add(this.lblIoLFoL);
             this.Controls.Add(this.lblSacredShield);
@@ -665,7 +652,6 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.Label lblIoLFoL;
         private System.Windows.Forms.Label lblIoLHL;
-        private System.Windows.Forms.CheckBox chkMode32;
         private System.Windows.Forms.CheckBox chkJudgement;
     }
 }

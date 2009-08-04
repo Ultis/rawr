@@ -85,8 +85,6 @@
             this.chkBloodlust = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.chkMode32 = new System.Windows.Forms.CheckBox();
-            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
@@ -393,7 +391,7 @@
             0,
             0});
             this.nudCS20.Minimum = new decimal(new int[] {
-            6,
+            4,
             0,
             0,
             0});
@@ -422,7 +420,7 @@
             0,
             0});
             this.nudCS.Minimum = new decimal(new int[] {
-            6,
+            4,
             0,
             0,
             0});
@@ -726,7 +724,6 @@
             this.cmbSeal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSeal.FormattingEnabled = true;
             this.cmbSeal.Items.AddRange(new object[] {
-            "Blood",
             "Command",
             "Righteousness",
             "Vengeance",
@@ -921,8 +918,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.chkMode32);
-            this.tabPage1.Controls.Add(this.label15);
             this.tabPage1.Controls.Add(this.chkBloodlust);
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Controls.Add(this.label12);
@@ -1011,25 +1006,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Rotation";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // chkMode32
-            // 
-            this.chkMode32.AutoSize = true;
-            this.chkMode32.Location = new System.Drawing.Point(146, 263);
-            this.chkMode32.Name = "chkMode32";
-            this.chkMode32.Size = new System.Drawing.Size(15, 14);
-            this.chkMode32.TabIndex = 48;
-            this.chkMode32.UseVisualStyleBackColor = true;
-            this.chkMode32.CheckedChanged += new System.EventHandler(this.chkMode32_CheckedChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(85, 263);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(55, 13);
-            this.label15.TabIndex = 47;
-            this.label15.Text = "3.2 Mode:";
             // 
             // CalculationOptionsPanelRetribution
             // 
@@ -1126,8 +1102,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.CheckBox chkBloodlust;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.CheckBox chkMode32;
-        private System.Windows.Forms.Label label15;
 
     }
 }

@@ -960,11 +960,11 @@ namespace Rawr
         public int HealingLight { get { return _data[2]; } set { _data[2] = value; } }
 
         [TalentData(3, "Divine Intellect", 5, 0, 2, 2, -1, new string[] {
-@"Increases your total Intellect by 3%.",
+@"Increases your total Intellect by 2%.",
+@"Increases your total Intellect by 4%.",
 @"Increases your total Intellect by 6%.",
-@"Increases your total Intellect by 9%.",
-@"Increases your total Intellect by 12%.",
-@"Increases your total Intellect by 15%.",}, "spell_nature_sleep")]
+@"Increases your total Intellect by 8%.",
+@"Increases your total Intellect by 10%.",}, "spell_nature_sleep")]
         public int DivineIntellect { get { return _data[3]; } set { _data[3] = value; } }
 
         [TalentData(4, "Unyielding Faith", 2, 0, 3, 2, -1, new string[] {

@@ -28,7 +28,14 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 
             cmbMobType.SelectedIndex = (int)calcOpts.Mob;
-            cmbSeal.SelectedIndex = (int)calcOpts.Seal;
+
+            if (calcOpts.Seal == SealOf.Blood)
+            {
+                calcOpts.Seal = SealOf.Vengeance;
+                Character.OnCalculationsInvalidated();
+            }
+            cmbSeal.SelectedIndex = (int)calcOpts.Seal - 1;
+            
             cmbLength.Value = (decimal)calcOpts.FightLength;
 
             nudTimeUnder20.Value = (decimal)(calcOpts.TimeUnder20 * 100);
@@ -37,7 +44,6 @@ namespace Rawr.Retribution
             nudTargets.Value = (decimal)calcOpts.Targets;
 
             chkBloodlust.Checked = calcOpts.Bloodlust;
-            chkMode32.Checked = calcOpts.Mode32;
 
             nudDelay.Value = (decimal)calcOpts.Delay;
             nudWait.Value = (decimal)calcOpts.Wait;
@@ -452,16 +458,6 @@ namespace Rawr.Retribution
             }
         }
 
-        private void chkMode32_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.Mode32 = chkMode32.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
     }
 
 	[Serializable]
@@ -489,8 +485,6 @@ namespace Rawr.Retribution
         public float ConsEff = 1f;
         public bool Bloodlust = true;
         public int StackTrinketReset = 0;
-
-        public bool Mode32 = false;
 
         public bool SimulateRotation = true;
 
@@ -573,8 +567,6 @@ namespace Rawr.Retribution
             clone.ConsCD20 = ConsCD20;
             clone.ExoCD20 = ExoCD20;
             clone.HoWCD20 = HoWCD20;
-
-            clone.Mode32 = Mode32;
 
             clone._order = (Ability[])_order.Clone();
             clone._selected = (bool[])_selected.Clone();

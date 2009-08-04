@@ -39,11 +39,6 @@ namespace Rawr.Retribution
                 Seal = new SealOfCommand(combats);
                 Judge = new JudgementOfCommand(combats);
             }
-            else if (combats.CalcOpts.Seal == SealOf.Blood)
-            {
-                Seal = new SealOfBlood(combats);
-                Judge = new JudgementOfBlood(combats);
-            }
             else if (combats.CalcOpts.Seal == SealOf.Vengeance)
             {
                 Seal = new SealOfVengeance(combats);
@@ -87,19 +82,13 @@ namespace Rawr.Retribution
 
         public float SealProcsPerSec()
         {
-            if (Combats.CalcOpts.Mode32)
+            if (Seal.GetType() == typeof(SealOfVengeance))
             {
-                return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
-            }
-            else if (Seal.GetType() == typeof(SealOfCommand))
-            {
-                float procrate = (7f * (Combats.Talents.GlyphOfSealOfCommand ? 1.2f : 1f)) / 60f * Combats.AttackSpeed;
-                float timeBetweenProcs = 1f + GetMeleeAttacksPerSec() / procrate;
-                return 1f / timeBetweenProcs;
+                return GetMeleeAttacksPerSec();
             }
             else
             {
-                return GetMeleeAttacksPerSec();
+                return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
             }
         }
 
@@ -130,8 +119,7 @@ namespace Rawr.Retribution
                     combats.CalcOpts.Delay,
                     combats.Stats.JudgementCDReduction > 0 ? true : false,
                     combats.Talents.ImprovedJudgements,
-                    combats.Talents.GlyphOfConsecration,
-                    combats.CalcOpts.Mode32)
+                    combats.Talents.GlyphOfConsecration)
             );
         }
 

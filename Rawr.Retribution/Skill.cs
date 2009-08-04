@@ -140,25 +140,6 @@ namespace Rawr.Retribution
 
     }
 
-    public class JudgementOfBlood : Skill
-    {
-
-        public JudgementOfBlood(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
-
-        public override float AbilityDamage()
-        {
-            if (CalcOpts.Mode32) return 0;
-            else return (Combats.WeaponDamage * .26f + Stats.SpellPower * .18f + Stats.AttackPower * .11f)
-                * (1f + .05f * Talents.TheArtOfWar + (Talents.GlyphOfJudgement ? 0.1f : 0f));
-        }
-
-        public override float AbilityCritChance()
-        {
-            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
-        }
-
-    }
-
     public class JudgementOfCommand : Skill
     {
 
@@ -220,7 +201,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.NormalWeaponDamage * (CalcOpts.Mode32 ? .75f : 1.1f) + Stats.CrusaderStrikeDamage)
+            return (Combats.NormalWeaponDamage * .75f + Stats.CrusaderStrikeDamage)
                 * (1f + .05f * Talents.SanctityOfBattle + .05f * Talents.TheArtOfWar + Stats.CrusaderStrikeMultiplier);
         }
 
@@ -313,19 +294,6 @@ namespace Rawr.Retribution
 
     }
 
-    public class SealOfBlood : Skill
-    {
-
-        public SealOfBlood(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
-
-        public override float AbilityDamage()
-        {
-            if (CalcOpts.Mode32) return 0;
-            else return Combats.WeaponDamage * .48f;
-        }
-
-    }
-
     public class SealOfCommand : Skill
     {
 
@@ -333,9 +301,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return CalcOpts.Mode32
-                ? (Combats.WeaponDamage * .36f) 
-                : ((Combats.WeaponDamage + Stats.SpellPower * .23f) * .45f);
+            return Combats.WeaponDamage * .36f;
         }
 
     }
@@ -379,9 +345,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return CalcOpts.Mode32
-                ? (Combats.WeaponDamage * 0.33f) * (1f + Talents.SealsOfThePure * .03f)
-                : 0f;
+            return (Combats.WeaponDamage * 0.33f) * (1f + Talents.SealsOfThePure * .03f);
         }
 
         public override float ChanceToLand() { return 1f; }

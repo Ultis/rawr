@@ -464,7 +464,7 @@ namespace Rawr.Retribution
                     {
                         if (calcOpts.Seal == SealOf.Vengeance)
                         {
-                            trigger = (float)Math.Min(4, calcOpts.Targets) / 3f;
+                            trigger = 1f / 3f;
                             procChance = 1f;
                         }
                         else continue;
@@ -536,11 +536,6 @@ namespace Rawr.Retribution
                 CalculationOptionsRetribution deltaOpts = initOpts.Clone();
                 deltaChar.CalculationOptions = deltaOpts;
 
-                ComparisonCalculationBase Blood;
-                deltaOpts.Seal = SealOf.Blood;
-                Blood = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Blood", initOpts.Seal == SealOf.Blood);
-                Blood.Item = null;
-
                 ComparisonCalculationBase Command;
                 deltaOpts.Seal = SealOf.Command;
                 Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == SealOf.Command);
@@ -556,7 +551,7 @@ namespace Rawr.Retribution
                 Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == SealOf.Vengeance);
                 Vengeance.Item = null;
 
-                return new ComparisonCalculationBase[] { Blood, Command, Righteousness, Vengeance };
+                return new ComparisonCalculationBase[] { Command, Righteousness, Vengeance };
             }
             if (chartName == "Weapon Speed")
             {
