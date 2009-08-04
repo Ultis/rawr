@@ -358,6 +358,8 @@ namespace Rawr.Elemental
                 SpellNatureDamageRating = stats.SpellNatureDamageRating,
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 Mp5 = stats.Mp5,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 #endregion
                 #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
@@ -431,7 +433,9 @@ namespace Rawr.Elemental
                 stats.SpellFireDamageRating +
                 stats.SpellNatureDamageRating +
                 stats.SpellFrostDamageRating +
-                stats.Mp5;
+                stats.Mp5 +
+                stats.ManaRestoreFromMaxManaPerSecond +
+                stats.ManaRestoreFromBaseManaPerHit;
             #endregion
             #region Multipliers
             elementalStats +=
@@ -582,7 +586,7 @@ namespace Rawr.Elemental
             dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
             dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-            dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString());
+            dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString() + "*All values are Mana per 5 seconds.\nMP5 while casting / MP5 while not casting + Replenishment" );
 
             dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Mana cost: "+Math.Round(LightningBolt.ManaCost).ToString()+"\nCrit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(LightningBolt.CastTime, 2) + " sec.\nClearcast uptime: " + Math.Round(100f * ClearCast_LightningBolt, 2).ToString() + " %");
             dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Mana cost: " + Math.Round(ChainLightning.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(ChainLightning.CastTime, 2) + " sec.\n3 adds: " + Math.Round(ChainLightning3.MinHit).ToString() + "-" + Math.Round(ChainLightning3.MaxHit).ToString() + " / " + Math.Round(ChainLightning3.MinCrit).ToString() + "-" + Math.Round(ChainLightning3.MaxCrit).ToString() + "\n4 adds: " + Math.Round(ChainLightning4.MinHit).ToString() + "-" + Math.Round(ChainLightning4.MaxHit).ToString() + " / " + Math.Round(ChainLightning4.MinCrit).ToString() + "-" + Math.Round(ChainLightning4.MaxCrit).ToString());

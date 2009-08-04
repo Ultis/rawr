@@ -46,26 +46,23 @@
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.tkReplenishment = new System.Windows.Forms.TrackBar();
-            this.lblReplenishment = new System.Windows.Forms.Label();
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblBSRatio = new System.Windows.Forms.Label();
-            this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tbBSRatio = new System.Windows.Forms.TrackBar();
+            this.lblBSRatio = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tabPage4.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             this.tabPage1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // extendedToolTipLabel11
@@ -169,9 +166,9 @@
             this.groupBox1.Controls.Add(this.cbMup);
             this.groupBox1.Controls.Add(this.cbNup);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(6, 250);
+            this.groupBox1.Location = new System.Drawing.Point(6, 170);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 98);
+            this.groupBox1.Size = new System.Drawing.Size(277, 81);
             this.groupBox1.TabIndex = 55;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Rotation details";
@@ -212,7 +209,7 @@
             this.groupBox3.Controls.Add(this.cbThunderstorm);
             this.groupBox3.Controls.Add(this.cmbManaAmt);
             this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Location = new System.Drawing.Point(6, 171);
+            this.groupBox3.Location = new System.Drawing.Point(6, 91);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(277, 73);
             this.groupBox3.TabIndex = 54;
@@ -258,36 +255,14 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.tkReplenishment);
-            this.groupBox7.Controls.Add(this.lblReplenishment);
             this.groupBox7.Controls.Add(this.trkFightLength);
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 159);
+            this.groupBox7.Size = new System.Drawing.Size(277, 87);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General Fight Details";
-            // 
-            // tkReplenishment
-            // 
-            this.tkReplenishment.BackColor = System.Drawing.SystemColors.Control;
-            this.tkReplenishment.Location = new System.Drawing.Point(9, 101);
-            this.tkReplenishment.Maximum = 100;
-            this.tkReplenishment.Name = "tkReplenishment";
-            this.tkReplenishment.Size = new System.Drawing.Size(262, 45);
-            this.tkReplenishment.TabIndex = 38;
-            this.tkReplenishment.TickFrequency = 5;
-            this.tkReplenishment.Scroll += new System.EventHandler(this.tkReplenishment_Scroll);
-            // 
-            // lblReplenishment
-            // 
-            this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(6, 85);
-            this.lblReplenishment.Name = "lblReplenishment";
-            this.lblReplenishment.Size = new System.Drawing.Size(80, 13);
-            this.lblReplenishment.TabIndex = 50;
-            this.lblReplenishment.Text = "Replenishment:";
             // 
             // trkFightLength
             // 
@@ -321,25 +296,16 @@
             this.tabPage1.Text = "Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // tabControl1
             // 
-            this.groupBox2.Controls.Add(this.lblBSRatio);
-            this.groupBox2.Controls.Add(this.tbBSRatio);
-            this.groupBox2.Location = new System.Drawing.Point(6, 6);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(277, 87);
-            this.groupBox2.TabIndex = 41;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Burst : Sustained Ratio";
-            // 
-            // lblBSRatio
-            // 
-            this.lblBSRatio.AutoSize = true;
-            this.lblBSRatio.Location = new System.Drawing.Point(6, 20);
-            this.lblBSRatio.Name = "lblBSRatio";
-            this.lblBSRatio.Size = new System.Drawing.Size(32, 13);
-            this.lblBSRatio.TabIndex = 41;
-            this.lblBSRatio.Text = "Ratio";
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(297, 576);
+            this.tabControl1.TabIndex = 23;
             // 
             // tbBSRatio
             // 
@@ -352,16 +318,25 @@
             this.tbBSRatio.Value = 50;
             this.tbBSRatio.Scroll += new System.EventHandler(this.tbBSRatio_Scroll);
             // 
-            // tabControl1
+            // lblBSRatio
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(3, 3);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(297, 576);
-            this.tabControl1.TabIndex = 23;
+            this.lblBSRatio.AutoSize = true;
+            this.lblBSRatio.Location = new System.Drawing.Point(6, 20);
+            this.lblBSRatio.Name = "lblBSRatio";
+            this.lblBSRatio.Size = new System.Drawing.Size(32, 13);
+            this.lblBSRatio.TabIndex = 41;
+            this.lblBSRatio.Text = "Ratio";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.lblBSRatio);
+            this.groupBox2.Controls.Add(this.tbBSRatio);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(277, 87);
+            this.groupBox2.TabIndex = 41;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Burst : Sustained Ratio";
             // 
             // CalculationOptionsPanelElemental
             // 
@@ -380,13 +355,12 @@
             this.groupBox3.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             this.tabPage1.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
-            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -404,22 +378,20 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.CheckBox cbThunderstorm;
-        private System.Windows.Forms.TrackBar tkReplenishment;
-        private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox cmbManaAmt;
         private System.Windows.Forms.TrackBar trkFightLength;
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label lblBSRatio;
-        private System.Windows.Forms.TrackBar tbBSRatio;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox cbMup;
         private System.Windows.Forms.CheckBox cbNup;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lblBSRatio;
+        private System.Windows.Forms.TrackBar tbBSRatio;
 
     }
 }

@@ -370,8 +370,9 @@ namespace Rawr.Elemental.Estimation
              * During regen: ManaRegOutFSR */
             #region Calculate Regen
             float spiRegen = 5 * StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
-            float replenishRegen = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
-            float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen;
+            float replenishRegen = 5 * stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
+            float judgementRegen = 5 * rot.getCastsPerSecond() * rot.getWeightedHitchance() * stats.ManaRestoreFromBaseManaPerHit * BaseStats.GetBaseStats(character).Mana;
+            float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen + judgementRegen;
             float ManaRegOutFSR = spiRegen + stats.Mp5 + replenishRegen;
             float ManaRegen = ManaRegInFSR;
             #endregion
@@ -426,8 +427,8 @@ namespace Rawr.Elemental.Estimation
             calculatedStats.BurstPoints = (1f - bsRatio) * 2f * rot.DPS;
             calculatedStats.SustainedPoints = bsRatio * 2f * TotalDamage / FightDuration;
             calculatedStats.OverallPoints = calculatedStats.BurstPoints + calculatedStats.SustainedPoints;
-            calculatedStats.ManaRegenInFSR = spiRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
-            calculatedStats.ManaRegenOutFSR = spiRegen + calculatedStats.BasicStats.Mp5;
+            calculatedStats.ManaRegenInFSR = ManaRegInFSR;
+            calculatedStats.ManaRegenOutFSR = ManaRegOutFSR;
             calculatedStats.ReplenishMP5 = replenishRegen;
             calculatedStats.LightningBolt = rot.LB;
             calculatedStats.ChainLightning = rot.CL;

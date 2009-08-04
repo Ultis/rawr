@@ -50,8 +50,6 @@ namespace Rawr.Elemental
             int s = calcOpts.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: " + m + ":" + s;
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
-            tkReplenishment.Value = calcOpts.ReplenishmentUptime;
-            lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
 
@@ -89,15 +87,6 @@ namespace Rawr.Elemental
             if (loading) return;
             CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
             calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void tkReplenishment_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            calcOpts.ReplenishmentUptime = tkReplenishment.Value;
-            lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -149,7 +138,6 @@ namespace Rawr.Elemental
 
         public int FightDuration = 300; //5 Minutes
         public int ManaPot = 0; // none
-        public int ReplenishmentUptime = 30;
         public bool UseThunderstorm = true;
 
         public int rotationType = 0;
