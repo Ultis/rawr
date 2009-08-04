@@ -1029,7 +1029,7 @@ namespace Rawr.Mage
             EffectHasteMultiplier = 1.0f;
             EffectRegenMultiplier = 1.0f;
             EffectCostMultiplier = 1.0f;
-            HotStreakWasted = 0.25f;
+            HotStreakWasted = 0.24f;
         }
 
         public CalculationOptionsMage(Character character)

@@ -211,8 +211,8 @@ namespace Rawr.Mage
                 // Z: chance to cast Pyro
 
                 // time = X * FBtime + Y * LBtime + Z * Pyrotime
-                // hsEvents = X + Y * 5
-                // C = (X * FBcrit + Y * 5 * LBcrit) / hsEvents
+                // hsEvents = X + Y * (D + 1)
+                // C = (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / hsEvents
 
                 // chance that any particular hot streak event procs pom pyro is C*C/(1+C)
                 // each pyro cast corresponds to a hot streak proc
@@ -223,27 +223,27 @@ namespace Rawr.Mage
 
                 // Z = number of hot streak procs in time
                 // Z = expected number of procs for X + Y * 5 events
-                // Z = (X + Y * 5) * H*C*C/((1+C)*(1-T8))
+                // Z = (X + Y * (D + 1)) * H*C*C/((1+C)*(1-T8))
 
-                // value = X * value(FB) + Y * value(LB) + (X + Y * D)*H * C * C / (1 + C) / (1 - T8) * value(Pyro)
+                // value = X * value(FB) + Y * value(LB) + (X + Y * (D + 1))*H * C * C / (1 + C) / (1 - T8) * value(Pyro)
                 // Y*LBtime / time = LBtime / LBrecast
 
-                // time = X * FBtime + Y * LBtime + (X + Y * D)*H * C * C / (1 + C) / (1 - T8) * Pyrotime
+                // time = X * FBtime + Y * LBtime + (X + Y * (D + 1))*H * C * C / (1 + C) / (1 - T8) * Pyrotime
                 // time = Y * LBrecast
-                // C = (X * FBcrit + Y * D * LBcrit) / (X + Y * D)
+                // C = (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X + Y * (D + 1))
 
-                // Y * LBrecast = X * FBtime + Y * LBtime + (X + Y * D)*H * C * C / (1 + C) / (1 - T8) * Pyrotime
+                // Y * LBrecast = X * FBtime + Y * LBtime + (X + Y * (D + 1))*H * C * C / (1 + C) / (1 - T8) * Pyrotime
 
-                // 1 + C = (X * (1 + FBcrit) + Y * D *(1 + LBcrit)) / (X + Y * D)
+                // 1 + C = (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) / (X + Y * (D + 1))
 
-                // Y * LBrecast = X * FBtime + Y * LBtime + (X + Y * D)*H * (X * FBcrit + Y * D * LBcrit) / (X + Y * D) * (X * FBcrit + Y * D * LBcrit) / (X + Y * D) / (X * (1 + FBcrit) + Y * D *(1 + LBcrit)) * (X + Y * D) / (1 - T8) * Pyrotime
+                // Y * LBrecast = X * FBtime + Y * LBtime + (X + Y * (D + 1))*H * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X + Y * (D + 1)) * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X + Y * (D + 1)) / (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) * (X + Y * (D + 1)) / (1 - T8) * Pyrotime
 
-                // Y * LBrecast = X * FBtime + Y * LBtime + H * (X * FBcrit + Y * D * LBcrit) * (X * FBcrit + Y * D * LBcrit) / (X * (1 + FBcrit) + Y * D *(1 + LBcrit)) / (1 - T8) * Pyrotime
+                // Y * LBrecast = X * FBtime + Y * LBtime + H * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) / (1 - T8) * Pyrotime
 
-                // Y * LBrecast * (X * (1 + FBcrit) + Y * D *(1 + LBcrit)) = (X * FBtime + Y * LBtime) * (X * (1 + FBcrit) + Y * D *(1 + LBcrit)) + H * (X * FBcrit + Y * D * LBcrit) * (X * FBcrit + Y * D * LBcrit) / (1 - T8) * Pyrotime
+                // Y * LBrecast * (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) = (X * FBtime + Y * LBtime) * (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) + H * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (1 - T8) * Pyrotime
 
                 // K: H/(1-T8)*Pyrotime
-                // K0: D*(LBcrit^2*D*K+(LBcrit+1)*(LBtime-LBrecast))
+                // K0: (LBcrit + D * LBDotCrit)^2*K + (LBcrit + D * LBDotCrit + 1 + D)*(LBtime-LBrecast)
                 // K1: (D*(LBcrit*(2*FBcrit*K+FBtime)+FBtime)+(FBcrit+1)*(LBtime-LBrecast))
                 // K2: (FBcrit^2*K+(FBcrit+1)*FBtime);
 
@@ -253,6 +253,7 @@ namespace Rawr.Mage
 
                 float FBcrit = FB.CritRate;
                 float LBcrit = LB.CritRate;
+                float LBDotCrit = castingState.FireCritRate;
                 if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
                 if (castingState.MageTalents.GlyphOfLivingBomb)
                 {
@@ -260,11 +261,12 @@ namespace Rawr.Mage
                 }
 
                 K = H / (1 - T8) * Pyro.CastTime;
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 5 : 1;
+                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
+                float LBcritTotal = (LBcrit + D * LBDotCrit);
                 float LBrecast = 12.0f;
 
-                float K0 = D * (LBcrit * LBcrit * D * K + (LBcrit + 1) * (LB.CastTime - LBrecast));
-                float K1 = (D * (LBcrit * (2 * FBcrit * K + FB.CastTime) + FB.CastTime) + (FBcrit + 1) * (LB.CastTime - LBrecast));
+                float K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
+                float K1 = 2 * FBcrit * LBcritTotal * K + FB.CastTime * (D + LBcritTotal + 1) + (FBcrit + 1) * (LB.CastTime - LBrecast);
                 float K2 = (FBcrit * FBcrit * K + (FBcrit + 1) * FB.CastTime);
                 float Y;
 
@@ -278,16 +280,16 @@ namespace Rawr.Mage
                     Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
                 }
 
-                C = (X * FBcrit + Y * D * LBcrit) / (X + Y * D);
+                C = (X * FBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
 
-                float Z = (X + Y * D) * H * C * C / (1 + C) / (1 - T8);
+                float Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 // first order correction for lower LB uptime
                 
                 LBrecast = 12 + 0.5f * ((FB.CastTime * FB.CastTime * X + Pyro.CastTime * Pyro.CastTime * Z) / (FB.CastTime * X + Pyro.CastTime * Z));
 
-                K0 = D * (LBcrit * LBcrit * D * K + (LBcrit + 1) * (LB.CastTime - LBrecast));
-                K1 = (D * (LBcrit * (2 * FBcrit * K + FB.CastTime) + FB.CastTime) + (FBcrit + 1) * (LB.CastTime - LBrecast));
+                K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
+                K1 = 2 * FBcrit * LBcritTotal * K + FB.CastTime * (D + LBcritTotal + 1) + (FBcrit + 1) * (LB.CastTime - LBrecast);
                 K2 = (FBcrit * FBcrit * K + (FBcrit + 1) * FB.CastTime);
 
                 X = 1;
@@ -300,9 +302,9 @@ namespace Rawr.Mage
                     Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
                 }
 
-                C = (X * FBcrit + Y * D * LBcrit) / (X + Y * D);
+                C = (X * FBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
 
-                Z = (X + Y * D) * H * C * C / (1 + C) / (1 - T8);
+                Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 float sum = X + Y;
                 X /= sum;
@@ -449,6 +451,7 @@ namespace Rawr.Mage
 
             float FFBcrit = FFB.CritRate;
             float LBcrit = LB.CritRate;
+            float LBDotCrit = castingState.FireCritRate;
             float H = castingState.MageTalents.HotStreak / 3.0f;
             float C;
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
@@ -459,11 +462,12 @@ namespace Rawr.Mage
                 }
 
                 K = H / (1 - T8) * Pyro.CastTime;
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 5 : 1;
+                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
+                float LBcritTotal = (LBcrit + D * LBDotCrit);
                 float LBrecast = 12.0f;
 
-                float K0 = D * (LBcrit * LBcrit * D * K + (LBcrit + 1) * (LB.CastTime - LBrecast));
-                float K1 = (D * (LBcrit * (2 * FFBcrit * K + FFB.CastTime) + FFB.CastTime) + (FFBcrit + 1) * (LB.CastTime - LBrecast));
+                float K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
+                float K1 = 2 * FFBcrit * LBcritTotal * K + FFB.CastTime * (D + LBcritTotal + 1) + (FFBcrit + 1) * (LB.CastTime - LBrecast);
                 float K2 = (FFBcrit * FFBcrit * K + (FFBcrit + 1) * FFB.CastTime);
                 float Y;
 
@@ -477,16 +481,16 @@ namespace Rawr.Mage
                     Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
                 }
 
-                C = (X * FFBcrit + Y * D * LBcrit) / (X + Y * D);
+                C = (X * FFBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
 
-                float Z = (X + Y * D) * H * C * C / (1 + C) / (1 - T8);
+                float Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 // first order correction for lower LB uptime
 
                 LBrecast = 12 + 0.5f * ((FFB.CastTime * FFB.CastTime * X + Pyro.CastTime * Pyro.CastTime * Z) / (FFB.CastTime * X + Pyro.CastTime * Z));
 
-                K0 = D * (LBcrit * LBcrit * D * K + (LBcrit + 1) * (LB.CastTime - LBrecast));
-                K1 = (D * (LBcrit * (2 * FFBcrit * K + FFB.CastTime) + FFB.CastTime) + (FFBcrit + 1) * (LB.CastTime - LBrecast));
+                K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
+                K1 = 2 * FFBcrit * LBcritTotal * K + FFB.CastTime * (D + LBcritTotal + 1) + (FFBcrit + 1) * (LB.CastTime - LBrecast);
                 K2 = (FFBcrit * FFBcrit * K + (FFBcrit + 1) * FFB.CastTime);
 
                 X = 1;
@@ -499,9 +503,9 @@ namespace Rawr.Mage
                     Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
                 }
 
-                C = (X * FFBcrit + Y * D * LBcrit) / (X + Y * D);
+                C = (X * FFBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
 
-                Z = (X + Y * D) * H * C * C / (1 + C) / (1 - T8);
+                Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 float sum = X + Y;
                 X /= sum;
@@ -974,6 +978,7 @@ namespace Rawr.Mage
                 float FBcrit = FB.CritRate;
                 float Sccrit = Sc.CritRate;
                 float LBcrit = LB.CritRate;
+                float LBDotCrit = castingState.FireCritRate;            
                 H = castingState.MageTalents.HotStreak / 3.0f;
                 if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
                 if (castingState.MageTalents.GlyphOfLivingBomb)
@@ -983,7 +988,8 @@ namespace Rawr.Mage
 
                 float R = H / (1 - T8);
 
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 5 : 1;
+                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
+                float LBcritTotal = (LBcrit + D * LBDotCrit);
                 float LBrecast = 12.0f;
 
                 float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
@@ -996,8 +1002,8 @@ namespace Rawr.Mage
                 float J = LBrecast * (1 - gap) / Sc.CastTime;
                 float A = J * Sc.CastTime + LB.CastTime - LBrecast;
                 float B = 1 + FBcrit;
-                float CC = J * (1 + Sccrit) + D * (1 + LBcrit);
-                float E = J * Sccrit + D * LBcrit;
+                float CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
+                float E = J * Sccrit + LBcritTotal;
 
                 float K0 = Pyro.CastTime * E * E * R + A * CC;
                 float K1 = 2 * FBcrit * Pyro.CastTime * E * R + FB.CastTime * CC + A * B;
@@ -1015,9 +1021,9 @@ namespace Rawr.Mage
                 }
 
                 Y = W * J;
-                C = (X * FBcrit + Y * Sccrit + W * D * LBcrit) / (X + Y + W * D);
+                C = (X * FBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
 
-                K = (X + Y + W * D) * H * C * C / (1 + C) / (1 - T8);
+                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 // first order correction for lower LB uptime
 
@@ -1026,8 +1032,8 @@ namespace Rawr.Mage
                 J = LBrecast * (1 - gap) / Sc.CastTime;
                 A = J * Sc.CastTime + LB.CastTime - LBrecast;
                 B = 1 + FBcrit;
-                CC = J * (1 + Sccrit) + D * (1 + LBcrit);
-                E = J * Sccrit + D * LBcrit;
+                CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
+                E = J * Sccrit + LBcritTotal;
 
                 K0 = Pyro.CastTime * E * E * R + A * CC;
                 K1 = 2 * FBcrit * Pyro.CastTime * E * R + FB.CastTime * CC + A * B;
@@ -1044,9 +1050,9 @@ namespace Rawr.Mage
                 }
 
                 Y = W * J;
-                C = (X * FBcrit + Y * Sccrit + W * D * LBcrit) / (X + Y + W * D);
+                C = (X * FBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
 
-                K = (X + Y + W * D) * H * C * C / (1 + C) / (1 - T8);
+                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 float sum = X + Y + W;
                 X /= sum;
@@ -1294,6 +1300,7 @@ namespace Rawr.Mage
                 float FFBcrit = FFB.CritRate;
                 float Sccrit = Sc.CritRate;
                 float LBcrit = LB.CritRate;
+                float LBDotCrit = castingState.FireCritRate;
                 H = castingState.MageTalents.HotStreak / 3.0f;
                 if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
                 if (castingState.MageTalents.GlyphOfLivingBomb)
@@ -1303,14 +1310,15 @@ namespace Rawr.Mage
 
                 float R = H / (1 - T8);
 
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 5 : 1;
+                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
+                float LBcritTotal = LBcrit + D * LBDotCrit;
                 float LBrecast = 12.0f;
 
                 float J = LBrecast * (1 - gap) / Sc.CastTime;
                 float A = J * Sc.CastTime + LB.CastTime - LBrecast;
                 float B = 1 + FFBcrit;
-                float CC = J * (1 + Sccrit) + D * (1 + LBcrit);
-                float E = J * Sccrit + D * LBcrit;
+                float CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
+                float E = J * Sccrit + LBcritTotal;
 
                 float K0 = Pyro.CastTime * E * E * R + A * CC;
                 float K1 = 2 * FFBcrit * Pyro.CastTime * E * R + FFB.CastTime * CC + A * B;
@@ -1328,9 +1336,9 @@ namespace Rawr.Mage
                 }
 
                 Y = W * J;
-                C = (X * FFBcrit + Y * Sccrit + W * D * LBcrit) / (X + Y + W * D);
+                C = (X * FFBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
 
-                K = (X + Y + W * D) * H * C * C / (1 + C) / (1 - T8);
+                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 // first order correction for lower LB uptime
 
@@ -1339,8 +1347,8 @@ namespace Rawr.Mage
                 J = LBrecast * (1 - gap) / Sc.CastTime;
                 A = J * Sc.CastTime + LB.CastTime - LBrecast;
                 B = 1 + FFBcrit;
-                CC = J * (1 + Sccrit) + D * (1 + LBcrit);
-                E = J * Sccrit + D * LBcrit;
+                CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
+                E = J * Sccrit + LBcritTotal;
 
                 K0 = Pyro.CastTime * E * E * R + A * CC;
                 K1 = 2 * FFBcrit * Pyro.CastTime * E * R + FFB.CastTime * CC + A * B;
@@ -1357,9 +1365,9 @@ namespace Rawr.Mage
                 }
 
                 Y = W * J;
-                C = (X * FFBcrit + Y * Sccrit + W * D * LBcrit) / (X + Y + W * D);
+                C = (X * FFBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
 
-                K = (X + Y + W * D) * H * C * C / (1 + C) / (1 - T8);
+                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
 
                 float sum = X + Y + W;
                 X /= sum;
@@ -1731,7 +1739,7 @@ namespace Rawr.Mage
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             //maintainScorch = castingState.CalculationOptions.MaintainScorch;
             livingBombGlyph = castingState.MageTalents.GlyphOfLivingBomb;
-            LBDotCritRate = LB.CritRate;
+            LBDotCritRate = castingState.FireCritRate;
 
             GenerateStateDescription();
         }
@@ -1757,8 +1765,10 @@ namespace Rawr.Mage
                 {
                     hotStreakEvents = 0;
                 }
+                bool explosion = false;
                 if (ticksLeft > 0 && ticksLeftAfter == 0)
                 {
+                    explosion = true;
                     hotStreakEvents++;
                 }
                 for (int i = 0; i < (1 << (hotStreakEvents + 1)); i++)
@@ -1770,9 +1780,10 @@ namespace Rawr.Mage
                     float chance = 1.0f;
                     for (int j = 0; j < hotStreakEvents; j++)
                     {
+                        float crit = (j == hotStreakEvents - 1 && explosion) ? LB.CritRate : LBDotCritRate;
                         if (k % 2 == 1)
                         {
-                            chance *= LB.CritRate;
+                            chance *= crit;
                             if (hsc == 1)
                             {
                                 pd = 10.0f - (s.LivingBombDuration - ticksLeft * 3);
@@ -1782,7 +1793,7 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            chance *= (1 - LB.CritRate);
+                            chance *= (1 - crit);
                             hsc = 0;
                         }
                         k = k >> 1;
@@ -1840,8 +1851,10 @@ namespace Rawr.Mage
                 {
                     hotStreakEvents = 0;
                 }
+                bool explosion = false;
                 if (ticksLeft > 0 && ticksLeftAfter == 0)
                 {
+                    explosion = true;
                     hotStreakEvents++;
                 }
                 for (int i = 0; i < (1 << hotStreakEvents); i++)
@@ -1855,9 +1868,10 @@ namespace Rawr.Mage
                     float chance = 1.0f;
                     for (int j = 0; j < hotStreakEvents; j++)
                     {
+                        float crit = (j == hotStreakEvents - 1 && explosion) ? LB.CritRate : LBDotCritRate;
                         if (k % 2 == 1)
                         {
-                            chance *= LB.CritRate;
+                            chance *= crit;
                             if (hsc == 1)
                             {
                                 pd1 = 10.0f - (s.LivingBombDuration - ticksLeft * 3);
@@ -1869,7 +1883,7 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            chance *= (1 - LB.CritRate);
+                            chance *= (1 - crit);
                             hsc = 0;
                         }
                         k = k >> 1;
@@ -1913,8 +1927,10 @@ namespace Rawr.Mage
                 {
                     hotStreakEvents = 0;
                 }
+                bool explosion = false;
                 if (ticksLeft > 0 && ticksLeftAfter == 0)
                 {
+                    explosion = true;
                     hotStreakEvents++;
                 }
                 for (int i = 0; i < (1 << (hotStreakEvents + 1)); i++)
@@ -1926,9 +1942,10 @@ namespace Rawr.Mage
                     float chance = 1.0f;
                     for (int j = 0; j < hotStreakEvents; j++)
                     {
+                        float crit = (j == hotStreakEvents - 1 && explosion) ? LB.CritRate : LBDotCritRate;
                         if (k % 2 == 1)
                         {
-                            chance *= LB.CritRate;
+                            chance *= crit;
                             if (hsc == 1)
                             {
                                 pd = 10.0f - (s.LivingBombDuration - ticksLeft * 3);
@@ -1938,7 +1955,7 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            chance *= (1 - LB.CritRate);
+                            chance *= (1 - crit);
                             hsc = 0;
                         }
                         k = k >> 1;
