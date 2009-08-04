@@ -703,8 +703,6 @@ namespace Rawr.Hunter
 			
 
 			#endregion
-			
-			
 			#region May 2009 Armor Reduction
 			
 			
@@ -716,7 +714,6 @@ namespace Rawr.Hunter
 			
 			
 			#endregion
-			
 			#region May 2009 Damage Boosts
 			
 			//Beastial Wrath
@@ -819,8 +816,6 @@ namespace Rawr.Hunter
 				steadyShotDamageBoost *= 1 + 0.1;
 			}
 			#endregion
-			
-			
 			#region May 2009 Bonus Crit Chance
 			
 			double arcaneBonusCritChance = 1;
@@ -855,7 +850,6 @@ namespace Rawr.Hunter
 			
 			
 			#endregion
-			
 			#region May 2009 Bonus Crit Damage
 			double arcaneBonusCritDamage = 1;
 			double aimedBonusCritDamage = 1;
@@ -895,11 +889,12 @@ namespace Rawr.Hunter
 			
 			
 			#endregion			
-			
+            #region Partial Resists
             double partialResist = (options.TargetLevel - 80) * 0.02;
             double resist10 = 5 * partialResist;
             double resist20 = 2.5 * partialResist;
             double esResist = 1 - (resist10 * 0.1 + resist20 * 0.1);
+            #endregion
 
             double specialsPerSec = 0;
 
@@ -1137,7 +1132,6 @@ namespace Rawr.Hunter
             }
             
             #endregion
-            
             #region OnProc Haste effects
 
             // Model Quickshots
@@ -1200,7 +1194,6 @@ namespace Rawr.Hunter
             PetCalculations pet = new PetCalculations(character, calculatedStats, options, statsBuffs, PetFamily.Bat, statsBaseGear);
 
             #endregion
-
             #region Talent Modifiers
             double talentModifiers = 1.0f;
 
@@ -1214,7 +1207,6 @@ namespace Rawr.Hunter
             talentDmgModifiers *= calculatedStats.BasicStats.BonusDamageMultiplier;
 
             #endregion
-
             #region May 2009 Mana Regen
             double manaPerSecond = calculatedStats.BasicStats.Mp5 / 5;
             manaPerSecond += 0.6 * Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit * 0.005575;
@@ -1305,10 +1297,14 @@ namespace Rawr.Hunter
             statsTotal.BonusDamageMultiplier = 1.0f + statsGearEnchantsBuffs.BonusDamageMultiplier;
             statsTotal.BonusAttackPowerMultiplier = 1.0f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
 
-			statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * (statsTotal.Intellect-10) + statsGearEnchantsBuffs.Mana);
+            // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
+            // (20-(20/15)) = 18.66666
+            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * (statsTotal.Intellect - (20f - (20f / 15f))) + statsGearEnchantsBuffs.Mana);
 
             // TODO: Implement new racials
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - 10.0f) * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
+            // The first 20 Stam = 20 Health, while each subsequent Stam = 10 Health, so Health = (Stam-18)*10
+            // (20-(20/10)) = 18
+            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - 18.0f) * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
 
 			statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
 
