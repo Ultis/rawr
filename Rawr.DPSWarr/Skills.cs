@@ -1091,7 +1091,7 @@ namespace Rawr.DPSWarr {
                     return 0.0f; // No Free Rage = 0 damage
                 }
                 float executeRage = freerage * FightDuration;
-                executeRage = (float)Math.Max(30f, executeRage);
+                executeRage = (float)Math.Min(30f, executeRage);
                 executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
                 executeRage -= RageCost;
 

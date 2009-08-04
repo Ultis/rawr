@@ -242,6 +242,17 @@ v2.2.11 (Unreleased)
 - Migrated more functions to Probxxofhit/land to make some function calls easier to read and less intensive to work out.
 - Cleaned up the Skills List in Rotation to list everythign correctly and prevent duplicates
 - Added Sword Specialization, this is a new dps line and it procs from all landed attacks over duration of fight, must have 1h or 2h sword equipped and talent (of course). May be inaccurate for dual-wielding swords (but you shouldn't be in a spec that could do that anyways). Sword spec hits are white and should add rage but I have not added that in yet (coming soon). Please note that initial testing has shown SS still has far less total dps with equivalent items than the other 2 specs (Mace/Poleaxe), this was expected.
+- Changed Sudden Death to include offhand white hit procs and sword spec procs as hits that can proc SD.
+- Fixed a bug where Slam DPS was being added in place of SwordSpecDPS (counting Slam DPS twice)
+- Changed the Slam wing timer delay mechanic, should operate on it's proper per second theory
+- Fixed NormalizedWeaponDmg vs AvgWeaponDmg vs AvgWeaponDmgUnhasted for several abilities
+- Added Sword Spec attacks to OP procs
+- Added Armor as a relevant stat and buff (since it influences AttT)
+- Added new Tooltip format for Arms abilities, very verbose now (will add to Fury shortly)
+- Fixed a mistype with OH Blocks
+- Reworked the Arms proc'ing system: OP, SD, SS, Slam now settle their activates instead of using generics
+- Fixed BonusArmor to actually be added to calculations (Devo aura and other similar buffs now apply correctly).
+- Removed all References to 3.2 Mode and marked those items as actual (Patch Released Aug 4th, 2009)
 
 v2.2.10.0 (Jul 17, 2009 22:27)
 
