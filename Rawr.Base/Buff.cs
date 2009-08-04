@@ -525,6 +525,14 @@ namespace Rawr
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Enduring Winter",
+                Source = "Frost Mage",
+                Group = "Replenishment",
+                Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
+            });
+
             #endregion
 
             #region Mana Regeneration

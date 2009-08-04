@@ -402,7 +402,7 @@ namespace Rawr.HolyPriest
         }
 
         public PrayerOfHealing(Stats stats, Character character, int targets, float haste)
-            : base(string.Format("Prayer of Healing ({0} targets)", targets), stats, character, SpellRankTable, 48, 3f / 3.5f * 0.5f, targetColors[targets - 1])
+            : base(string.Format("Prayer of Healing ({0} targets)", targets), stats, character, SpellRankTable, 48, 2f / 3.5f * 0.5f, targetColors[targets - 1])
         {
             Calculate(stats, character, targets, haste);
         }
@@ -1006,7 +1006,7 @@ namespace Rawr.HolyPriest
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
-            Cooldown = (10.0f - (character.PriestTalents.GlyphofPenance ? 2 : 0)) * (1f - character.PriestTalents.Aspiration * 0.1f);
+            Cooldown = (12.0f - (character.PriestTalents.GlyphofPenance ? 2 : 0)) * (1f - character.PriestTalents.Aspiration * 0.1f);
         }
 
         public override string ToString()

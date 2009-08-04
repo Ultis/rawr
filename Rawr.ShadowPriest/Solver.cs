@@ -571,7 +571,7 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mana / (CalculationOptions.FightLength * 60f);
             ManaSources.Add(new ManaSource("Intellect", tmpregen));
             regen += tmpregen;
-            tmpregen = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
+            tmpregen = simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
             tmpregen = SWP.BaseMana * (simStats.ManaRestoreFromBaseManaPerHit > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
@@ -810,7 +810,7 @@ namespace Rawr.ShadowPriest
             float TimeInFSR = 1f;
             float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
             regen += simStats.Mana / (CalculationOptions.FightLength * 60f);
-            regen += simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
+            regen += simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f);
 
             if (MPS > regen && CalculationOptions.ManaAmt > 0)
             {   // Not enough mana, use Mana Potion
