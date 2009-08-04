@@ -1091,7 +1091,7 @@ namespace Rawr.DPSWarr {
                     return 0.0f; // No Free Rage = 0 damage
                 }
                 float executeRage = freerage * FightDuration;
-                if ((Override||CalcOpts._3pt2Mode) && executeRage > 30f) { executeRage = 30f; }
+                executeRage = (float)Math.Max(30f, executeRage);
                 executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
                 executeRage -= RageCost;
 
@@ -1536,7 +1536,7 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
                 Cd = 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
                 Duration = 10f; // In Seconds
-                RageCost = (CalcOpts._3pt2Mode ? 20f : 10f) * (1f + Talents.ImprovedBloodrage * 0.25f); // This is actually reversed in the rotation
+                RageCost = 20f * (1f + Talents.ImprovedBloodrage * 0.25f); // This is actually reversed in the rotation
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
@@ -1558,7 +1558,7 @@ namespace Rawr.DPSWarr {
                 //
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
-                MaxRange = (CalcOpts._3pt2Mode ? 30f : 20f) * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
+                MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
                 Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
                 RageCost = 10f;
@@ -1590,7 +1590,7 @@ namespace Rawr.DPSWarr {
                 //
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
-                MaxRange = (CalcOpts._3pt2Mode ? 30f : 20f) * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
+                MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
                 Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
                 RageCost = 10f;

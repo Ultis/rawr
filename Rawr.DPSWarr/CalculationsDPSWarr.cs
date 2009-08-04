@@ -14,49 +14,34 @@ namespace Rawr.DPSWarr {
     public class CalculationsDPSWarr : CalculationsBase {
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
-				////Relevant Gem IDs for DPSWarrs
+				///Relevant Gem IDs for DPSWarrs
 				//Red
-				int[] bold = { 39900, 39996, 40111, 42142 };
-                int[] fractured = { 39909, 40002, 40117, 42153 };
+				int[] bold      = { 39900, 39996, 40111, 42142 };
+                int[] frac      = { 39909, 40002, 40117, 42153 };
 				//Purple
-				int[] sovereign = { 39934, 40022, 40129 };
-
+				int[] svrn      = { 39934, 40022, 40129 };
+                int[] pusn      = { 39933, 40033, 40140 };
 				//Orange
-				int[] inscribed = { 39947, 40037, 40142 };
-                int[] puissant = { 39933, 40033, 40140 };
-
+				int[] insc      = { 39947, 40037, 40142 };
 				//Meta
-				int chaotic = 41285;
+				int chaotic     = 41285;
 
 				return new List<GemmingTemplate>() {
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon", //Max Strength
-						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon", //Strength
-						RedId = bold[0], YellowId = inscribed[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },// Max Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = insc[0], BlueId = svrn[0], PrismaticId = bold[0], MetaId = chaotic },// Strength
                     
-						
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, //Max Strength
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, //Strength
-						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, // ArPen
-                        RedId = fractured[1], YellowId = inscribed[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true, // Max ArPen
-                        RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },// Max Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = bold[1], YellowId = insc[1], BlueId = svrn[1], PrismaticId = bold[1], MetaId = chaotic },// Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = frac[1], YellowId = insc[1], BlueId = pusn[1], PrismaticId = frac[1], MetaId = chaotic },// ArPen
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = frac[1], YellowId = frac[1], BlueId = frac[1], PrismaticId = frac[1], MetaId = chaotic },// Max ArPen
 	
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", //Max Strength
-						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", //Strength
-						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic",                  RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },// Max Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic",                  RedId = bold[2], YellowId = insc[2], BlueId = svrn[2], PrismaticId = bold[2], MetaId = chaotic },// Strength
 						
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", //Max Strength
-						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", //Strength
-						RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", // ArPen
-                        RedId = fractured[1], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler", // Max ArPen
-                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },// Max Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },// Strength
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[1], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[1], MetaId = chaotic },// ArPen
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = chaotic },// Max ArPen
 				};
             }
         }
@@ -444,7 +429,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
             float apBase        = (float)Math.Floor((1f + totalBAPM) * (statsRace.AttackPower                                ));
             float apBonusSTR    = (float)Math.Floor((1f + totalBAPM) * (statsTotal.Strength * 2f                             ));
-            float apBonusAttT   = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / (calcOpts._3pt2Mode ? 108f : 180f)) * talents.ArmoredToTheTeeth));
+            float apBonusAttT   = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth));
             float apBonusOther  = (float)Math.Floor((1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower                   ));
             statsTotal.AttackPower = apBase + apBonusSTR + apBonusAttT + apBonusOther;
 

@@ -124,7 +124,6 @@
             this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
             this.CK_Flooring = new System.Windows.Forms.CheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
-            this.CK_3pt2Mode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).BeginInit();
@@ -758,23 +757,11 @@
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
             // 
-            // CK_3pt2Mode
-            // 
-            this.CK_3pt2Mode.AutoSize = true;
-            this.CK_3pt2Mode.Location = new System.Drawing.Point(192, 4);
-            this.CK_3pt2Mode.Name = "CK_3pt2Mode";
-            this.CK_3pt2Mode.Size = new System.Drawing.Size(71, 17);
-            this.CK_3pt2Mode.TabIndex = 2;
-            this.CK_3pt2Mode.Text = "3.2 Mode";
-            this.CK_3pt2Mode.UseVisualStyleBackColor = true;
-            this.CK_3pt2Mode.CheckedChanged += new System.EventHandler(this.CK_3pt2Mode_CheckedChanged);
-            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.Controls.Add(this.CK_3pt2Mode);
             this.Controls.Add(this.Tabs);
             this.Controls.Add(this.RB_StanceFury);
             this.Controls.Add(this.RB_StanceArms);
@@ -849,7 +836,6 @@
         private System.Windows.Forms.RichTextBox RTB_FAQ;
         private System.Windows.Forms.TabPage Tab_Version;
         private System.Windows.Forms.RichTextBox RTB_Version;
-        private System.Windows.Forms.CheckBox CK_3pt2Mode;
         private System.Windows.Forms.TreeView CTL_Maints;
         private System.Windows.Forms.CheckBox CK_Flooring;
     }

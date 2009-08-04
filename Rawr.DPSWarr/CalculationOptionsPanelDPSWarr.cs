@@ -45,7 +45,6 @@ namespace Rawr.DPSWarr {
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
                 CalculationOptionsDPSWarr newcalcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 newcalcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
-                CK_3pt2Mode.Checked = newcalcOpts._3pt2Mode;
                 // Rotational Changes
                 RB_StanceFury.Checked = newcalcOpts.FuryStance;
                 RB_StanceArms.Checked = !RB_StanceFury.Checked;
@@ -65,7 +64,6 @@ namespace Rawr.DPSWarr {
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
                 CB_Duration.Value = (decimal)calcOpts.Duration;
                 RB_StanceArms.Checked    = !calcOpts.FuryStance;
-                CK_3pt2Mode.Checked      = calcOpts._3pt2Mode;
                 // Rotational Changes
                 CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
                 CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
@@ -86,11 +84,6 @@ namespace Rawr.DPSWarr {
                     Character.OnCalculationsInvalidated();
                 }
             }
-        }
-        private void CK_3pt2Mode_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts._3pt2Mode = CK_3pt2Mode.Checked;
-            Character.OnCalculationsInvalidated();
         }
         // Basics
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
@@ -804,7 +797,6 @@ namespace Rawr.DPSWarr {
         public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
         public float Duration = 300f;
         public bool FuryStance = true;
-        public bool _3pt2Mode = false;
         public bool AllowFlooring = true;
         // Rotational Changes
         public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
