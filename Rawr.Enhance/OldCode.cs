@@ -170,3 +170,31 @@ CombatStats.cs
             // at this stage abilities now contains the number of procs per fight for each ability.
         }
 */
+
+/*
+        public List<GemmingTemplate> addJewelerTemplates(int metagem, bool enabled)
+        {
+            return new List<GemmingTemplate>() { 
+            	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Expertise
+					RedId = precise[3], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[3], MetaId = metagem },
+
+            	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Hit
+					RedId = rigid[3], YellowId = rigid[3], BlueId = rigid[3], PrismaticId = rigid[3], MetaId = metagem },
+
+            	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Attack Power
+					RedId = bright[3], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[3], MetaId = metagem },
+
+                new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Agility
+					RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = metagem },
+
+                new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Crit
+					RedId = smooth[3], YellowId = smooth[3], BlueId = smooth[3], PrismaticId = smooth[3], MetaId = metagem },
+
+              	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Haste
+					RedId = quick[3], YellowId = quick[3], BlueId = quick[3], PrismaticId = quick[3], MetaId = metagem },
+
+              	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", Enabled = enabled, //Max Armour Penetration
+					RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = metagem },
+             };
+        }
+*/

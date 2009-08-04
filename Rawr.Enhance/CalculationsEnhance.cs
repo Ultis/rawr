@@ -27,12 +27,12 @@ namespace Rawr.Enhance
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true)); // Enable Rare gems by default
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    // Enable Rare gems by default
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addJewelerTemplates(relentless, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addJewelerTemplates(chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true)); // Enable Rare & epic gems by default
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    // Enable Rare & epic gems by default
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false));
                 }
                 return _defaultGemmingTemplates;
             }
