@@ -63,7 +63,7 @@ namespace Rawr.Tree
             Innervates = 1;
 
             SwiftmendPerMinute = 0;
-            patch3_2 = false;
+            patch3_2 = true;
         }
 
         public string GetXml()

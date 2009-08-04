@@ -522,7 +522,6 @@ namespace Rawr.Tree
             #region Base Values
             castTimeBeforeHaste = 0f;
             periodicTickTime = 1f;
-            coefDH = 0.645f; 
             coefHoT = 0.6684f / 7f;
             manaCost = 0.28f * TreeConstants.BaseMana;      // manaCost without refund
             manaRefund = 0.14f * TreeConstants.BaseMana;    // 
@@ -533,11 +532,13 @@ namespace Rawr.Tree
             {
                 minHeal = 776f;                             // Patch 3.2 nerfs bloom value
                 maxHeal = 776f;
+                coefDH = 0.645f * 0.8f;                     // 20 % Nerf
             }
             else
             {
                 minHeal = 970f;
                 maxHeal = 970f;
+                coefDH = 0.645f;
             }
 
             periodicTick = 53f;
