@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using System.Diagnostics;
 
 namespace Rawr.Hunter
 {
@@ -687,6 +688,7 @@ namespace Rawr.Hunter
 			
 			
 			calculatedStats.RAPtotal = RAP;
+            calculatedStats.RAP = (float)RAP;
 			
 			calculatedStats.apFromBase = apFromBase;
 			calculatedStats.apFromAgil = apFromAgil;
@@ -946,34 +948,60 @@ namespace Rawr.Hunter
             if (options.SteadyInRot)
                 specialsPerSec += 1 / calculatedStats.SteadySpeed;
 			#endregion	
-			#region May 2009 AutoShot
-            //unmodified weapon damage, plus ammo, plus +damage from gear, plus [RAP / 14 * Weapon Speed]
-			double normalAutoShotDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-            //Leave out until character.Projectile no longer is null
-			//normalAutoShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
-			normalAutoShotDamage += statsBaseGear.WeaponDamage;
-			normalAutoShotDamage += RAP / 14 * character.Ranged.Item.Speed;
-      
-            double autoCrit = critHitPercent;
-            double autoHit = hitChance;
-            double autoDamageNormal = normalAutoShotDamage;
-       
-            double autoDamageCrit = normalAutoShotDamage * (1.0 + 1.0 * autoBonusCritDamage);
-            double autoDamageTotal = (autoDamageNormal * (1 - autoCrit) + (autoDamageCrit * autoCrit) ) ;
-    		double wildQuiverDamageTotal = autoDamageTotal * 0.8;
-    		double wildQuiverFrequency = 0 ;
-    		double wildQuiverDPS = 0;
+			#region July 2009 AutoShot
+            
+            double rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+            double rangedAmmoDPS = 0;
+            if (character.Projectile != null)
+            {
+                rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
+            }
+
+            // scope damage only applies to autoshot, so is not added to the normalized damage
+            double rangedAmmoDamage           = rangedAmmoDPS * character.Ranged.Item.Speed;
+            double rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8;
+            double damageFromRAP              = (float)RAP / 14 * character.Ranged.Item.Speed;
+            double damageFromRAPNormalized    = (float)RAP / 14 * 2.8;
+            double autoShotDamage             = rangedWeaponDamage + rangedAmmoDamage           + statsBaseGear.WeaponDamage + damageFromRAP           + calculatedStats.BasicStats.ScopeDamage;
+            double autoShotDamageNormalized   = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
+
+            double autoCritDamage = 1 + (2 * statsBaseGear.CritBonusDamage);
+            double autoShotHitMissAdjust = (critHitPercent * autoCritDamage + 1) * hitChance;
+            double autoShotModifiedDamage = autoShotDamage * autoShotHitMissAdjust * autoShotDamageBoost;
+            double autoShotBaseDPS = autoShotModifiedDamage / autoShotSpeed;
+
+            calculatedStats.BaseAutoshotDPS = (1.0 - damageReduction) * autoShotBaseDPS;
+
+            //Debug.WriteLine("rangedWeaponDamage = " + rangedWeaponDamage);
+            //Debug.WriteLine("rangedAmmoDamage = " + rangedAmmoDamage);
+            //Debug.WriteLine("statsBaseGear.WeaponDamage = " + statsBaseGear.WeaponDamage);
+            //Debug.WriteLine("damageFromRAP = " + damageFromRAP);
+            //Debug.WriteLine("autoShotDamage = " + autoShotDamage);
+            //Debug.WriteLine("autoShotDamageNormalized = " + autoShotDamageNormalized);
+            //Debug.WriteLine("autoShotHitMissAdjust : " + autoShotHitMissAdjust);
+            //Debug.WriteLine("autoShotModifiedDamage : " + autoShotModifiedDamage);
+            //Debug.WriteLine("autoShotSpeed : " + autoShotSpeed);
+            //Debug.WriteLine("damageReduction : " + damageReduction);
+            //Debug.WriteLine("autoShotBaseDPS : " + autoShotBaseDPS);
+            //Debug.WriteLine("autoShotDPS : " + calculatedStats.BaseAutoshotDPS);
+
+            calculatedStats.WildQuiverDPS = 0;
+            //character.HunterTalents.WildQuiver = 2; // for isolation testing
     		if (character.HunterTalents.WildQuiver > 0 )
     		{
-    			wildQuiverFrequency = ((autoShotSpeed * autoHit) /  (character.HunterTalents.WildQuiver * 0.04)) ;
-    			wildQuiverDPS = wildQuiverDamageTotal / wildQuiverFrequency;
-    		}
+    			double wildQuiverFrequency = (autoShotSpeed /  (character.HunterTalents.WildQuiver * 0.04));
+                double wildQuiverBaseDamage = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
+                double wildQuiverAdjustment = autoShotHitMissAdjust * esResist;
+                double wildQuiverTotalDamage = wildQuiverBaseDamage * wildQuiverAdjustment;
+
+                calculatedStats.WildQuiverDPS = wildQuiverTotalDamage / wildQuiverFrequency;
+
+                //Debug.WriteLine("wildQuiverFrequency : " + wildQuiverFrequency);
+                //Debug.WriteLine("wildQuiverBaseDamage : " + wildQuiverBaseDamage);
+                //Debug.WriteLine("wildQuiverDPS : " + calculatedStats.WildQuiverDPS);
+            }
             
-    		double autoDPS = ((autoDamageTotal * autoShotDamageBoost * (1.0 - damageReduction))   / autoShotSpeed) * autoHit;
-    		autoDPS += wildQuiverDPS;
-            
-            calculatedStats.AutoshotDPS = autoDPS;
-            
+            calculatedStats.AutoshotDPS = calculatedStats.BaseAutoshotDPS + calculatedStats.WildQuiverDPS;
 			
 			#endregion	
 			#region May 2009 Serpent Sting
@@ -995,7 +1023,7 @@ namespace Rawr.Hunter
 			#endregion //Has DPS	
 			#region May 2009 Aimed Shot
 			
-			double aimedShotNormalDamage = autoDamageNormal + 408;
+			double aimedShotNormalDamage = autoShotDamageNormalized + 408;
 			double aimedShotCD = 10;
 			if (character.HunterTalents.GlyphOfAimedShot)
 			{
@@ -1028,7 +1056,7 @@ namespace Rawr.Hunter
                 specialsPerSec += 1 / 6;
 			#endregion
             #region May 2009 Chimera Shot
-            double csDmg = normalAutoShotDamage * chimeraDamageBoost;
+            double csDmg = autoShotDamageNormalized * chimeraDamageBoost;
             double csEffect = serpentStingDamageNormal * 0.4;
             double csSerpDamage = chimeraDamageBoost * csEffect;
             double totalCSDmg = csDmg + csSerpDamage;
@@ -1055,7 +1083,7 @@ namespace Rawr.Hunter
 			#endregion		
 			#region May 2009 Multi Shot
 			
-			double multiShotNormalDamage = autoDamageNormal + 408;
+			double multiShotNormalDamage = autoShotDamageNormalized + 408;
 			double multiShotCastTime = GCD;
 			double multiShotCD = 10;
 			if (character.HunterTalents.GlyphOfMultiShot)
@@ -1096,13 +1124,11 @@ namespace Rawr.Hunter
                 specialsPerSec += 1 / ksCD;
 			#endregion
             #region May 2009 SilencingShot
-            calculatedStats.SilencingDPS = ((autoDamageTotal * 0.5) * autoShotDamageBoost) / 20;
-
+            calculatedStats.SilencingDPS = autoShotDamageNormalized * 0.5 * autoShotHitMissAdjust;
+            
             if (options.SilenceInRot)
                 specialsPerSec += 0.5;
             #endregion
-
-            double hawkRAPBonus = HunterRatings.HAWK_BONUS_AP * (1.0 + 0.3 * character.HunterTalents.AspectMastery);
 
             #region Base Attack Speed
             //Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
@@ -1153,42 +1179,12 @@ namespace Rawr.Hunter
                 quickShotsUpTime = avgQuickShotChain / (avgQuickShotChain + 10);
             }
             #endregion
-
-            #region RAP Against Target
-            double effectiveRAPAgainstMob = calculatedStats.BasicStats.RangedAttackPower + 1.0/3.0 * character.HunterTalents.CarefulAim * calculatedStats.BasicStats.Intellect;
-            effectiveRAPAgainstMob += character.HunterTalents.HunterVsWild * 0.10 * calculatedStats.BasicStats.Stamina;
-
-            double shotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed + 1.0 / 1.5;
-            double ewUptime = 1.0 - Math.Pow(1.0 - calculatedStats.BasicStats.PhysicalCrit * character.HunterTalents.ExposeWeakness / 3.0, 7.0 / shotsPerSecond);
-
-            effectiveRAPAgainstMob += calculatedStats.BasicStats.Agility * 0.25 * ewUptime;
-            effectiveRAPAgainstMob *= calculatedStats.BasicStats.BonusAttackPowerMultiplier;
-
-            calculatedStats.RAP = (float)effectiveRAPAgainstMob;
-            #endregion
-
             #region Critical Hit Damage
 
           //  double autoshotCritDmgModifier = 1.0;
             double abilitiesCritDmgModifier = 1.0 + character.HunterTalents.MortalShots * 0.06;
 
             #endregion
-
-            #region Weapon Damage
-            double weaponDamageAverage = 0;
-            double ammoDamage = 0;
-
-            if (character.Ranged != null && character.Projectile != null)
-            {
-                weaponDamageAverage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-                ammoDamage = character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
-                weaponDamageAverage += ammoDamage
-                    + calculatedStats.BasicStats.ScopeDamage
-                    + ((effectiveRAPAgainstMob + hawkRAPBonus) / 14 * character.Ranged.Item.Speed);
-
-            }
-            #endregion
-
             #region Pet
 
             PetCalculations pet = new PetCalculations(character, calculatedStats, options, statsBuffs, PetFamily.Bat, statsBaseGear);

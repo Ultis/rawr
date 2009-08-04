@@ -19,6 +19,8 @@ namespace Rawr.Hunter
 		private double _PetSpecialDPS;
 		private double _PetKillCommandDPS;
         private double _autoshotDPS;
+        private double _wildQuiverDPS;
+        private double _baseAutoshotDPS;
         private double _explosiveShotDPS;
         private double _chimeraShotDPS;
         private double _killshotDPS;
@@ -146,6 +148,18 @@ namespace Rawr.Hunter
         {
             get { return _autoshotDPS; }
             set { _autoshotDPS = value; }
+        }
+
+        public double BaseAutoshotDPS
+        {
+            get { return _baseAutoshotDPS; }
+            set { _baseAutoshotDPS = value; }
+        }
+
+        public double WildQuiverDPS
+        {
+            get { return _wildQuiverDPS; }
+            set { _wildQuiverDPS = value; }
         }
 
         public double ExplosiveShotDPS
@@ -308,7 +322,9 @@ namespace Rawr.Hunter
 			dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
 			dictValues.Add("Overall DPS", OverallPoints.ToString("F2"));
 
-            dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
+            dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2") + "*includes: \n"+
+                            BaseAutoshotDPS.ToString("F2")+" base Autoshot \n"+
+                            WildQuiverDPS.ToString("F2")+" from Wild Quiver");
             
             dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2"));
 			dictValues.Add("Steady Shot", steadyDPS.ToString("F2"));
