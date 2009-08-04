@@ -51,8 +51,8 @@ namespace Rawr.Elemental
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], rigid[0], veiled[0], lambent[0], chaotic);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect", false, runed[1], royal[1], reckless[1], quick[1], dazzling[1], rigid[1], veiled[1], lambent[1], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", true, runed[2], royal[2], reckless[2], quick[2], dazzling[2], rigid[2], veiled[2], lambent[2], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", false, runed[3], royal[3], reckless[3], quick[3], dazzling[3], rigid[3], veiled[3], lambent[3], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", false, runed[2], royal[2], reckless[2], quick[2], dazzling[2], rigid[2], veiled[2], lambent[2], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, runed[3], royal[3], reckless[3], quick[3], dazzling[3], rigid[3], veiled[3], lambent[3], chaotic);
                     AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, runed[4], quick[4], lustrous[4], rigid[4], chaotic);
                 }
                 return _defaultGemmingTemplates;
