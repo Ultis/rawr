@@ -12,7 +12,7 @@ namespace Rawr.Hunter
 	public class CalculationOptionsHunter : ICalculationOptionBase
 	{
 		private int _TargetLevel = 83;
-		private int _TargetArmor = 13100; //Wrath boss armor
+		private int _TargetArmor = 10643; //Wrath boss armor
 		private Aspect _Aspect = Aspect.Hawk;
         private PetFamily _petFamily = PetFamily.Cat;
 
