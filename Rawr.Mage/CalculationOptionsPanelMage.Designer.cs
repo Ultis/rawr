@@ -32,8 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelMage));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label89 = new System.Windows.Forms.Label();
+            this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
+            this.label88 = new System.Windows.Forms.Label();
+            this.textBoxCastLatency = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -221,8 +227,6 @@
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
-            this.label85 = new System.Windows.Forms.Label();
-            this.checkBoxMode32 = new System.Windows.Forms.CheckBox();
             this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
             this.buttonEditTalentScores = new System.Windows.Forms.Button();
             this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
@@ -263,12 +267,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxCastLatency = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
-            this.label88 = new System.Windows.Forms.Label();
-            this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
-            this.label89 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -325,6 +323,68 @@
             this.tabPage1.Text = "Character";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // textBoxChannelLatency
+            // 
+            this.textBoxChannelLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyChannel", true));
+            this.textBoxChannelLatency.Location = new System.Drawing.Point(111, 184);
+            this.textBoxChannelLatency.Name = "textBoxChannelLatency";
+            this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxChannelLatency.TabIndex = 159;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(0, 187);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(97, 13);
+            this.label89.TabIndex = 158;
+            this.label89.Text = "Channel Latency: *";
+            this.toolTipMage.SetToolTip(this.label89, "Effective latency in seconds. The value should include the benefit of built-in /s" +
+                    "topcasting.");
+            // 
+            // textBoxGCDLatency
+            // 
+            this.textBoxGCDLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyGCD", true));
+            this.textBoxGCDLatency.Location = new System.Drawing.Point(111, 158);
+            this.textBoxGCDLatency.Name = "textBoxGCDLatency";
+            this.textBoxGCDLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxGCDLatency.TabIndex = 157;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(0, 161);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(81, 13);
+            this.label88.TabIndex = 156;
+            this.label88.Text = "GCD Latency: *";
+            this.toolTipMage.SetToolTip(this.label88, "Effective latency in seconds. The value should include the benefit of built-in /s" +
+                    "topcasting.");
+            // 
+            // textBoxCastLatency
+            // 
+            this.textBoxCastLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyCast", true));
+            this.textBoxCastLatency.Location = new System.Drawing.Point(111, 132);
+            this.textBoxCastLatency.Name = "textBoxCastLatency";
+            this.textBoxCastLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxCastLatency.TabIndex = 155;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(0, 135);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(79, 13);
+            this.label3.TabIndex = 154;
+            this.label3.Text = "Cast Latency: *";
+            this.toolTipMage.SetToolTip(this.label3, "Effective latency in seconds. The value should include the benefit of built-in /s" +
+                    "topcasting.");
+            // 
             // comboBoxPlayerLevel
             // 
             this.comboBoxPlayerLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PlayerLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -346,11 +406,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -2268,8 +2323,6 @@
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.buttonHotStreakUtilization);
-            this.tabPage4.Controls.Add(this.label85);
-            this.tabPage4.Controls.Add(this.checkBoxMode32);
             this.tabPage4.Controls.Add(this.buttonComputeOptimalFrostCycles);
             this.tabPage4.Controls.Add(this.buttonEditTalentScores);
             this.tabPage4.Controls.Add(this.numericUpDownMaxThreads);
@@ -2326,26 +2379,6 @@
             this.buttonHotStreakUtilization.Text = "Hot Streak Utilization";
             this.buttonHotStreakUtilization.UseVisualStyleBackColor = true;
             this.buttonHotStreakUtilization.Click += new System.EventHandler(this.buttonHotStreakUtilization_Click);
-            // 
-            // label85
-            // 
-            this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(0, 87);
-            this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(63, 13);
-            this.label85.TabIndex = 203;
-            this.label85.Text = "Patch 3.2: *";
-            this.toolTipMage.SetToolTip(this.label85, "Enables 3.2 calculations.");
-            // 
-            // checkBoxMode32
-            // 
-            this.checkBoxMode32.AutoSize = true;
-            this.checkBoxMode32.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode32", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMode32.Location = new System.Drawing.Point(185, 87);
-            this.checkBoxMode32.Name = "checkBoxMode32";
-            this.checkBoxMode32.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMode32.TabIndex = 202;
-            this.checkBoxMode32.UseVisualStyleBackColor = true;
             // 
             // buttonComputeOptimalFrostCycles
             // 
@@ -2773,63 +2806,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxCastLatency
-            // 
-            this.textBoxCastLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyCast", true));
-            this.textBoxCastLatency.Location = new System.Drawing.Point(111, 132);
-            this.textBoxCastLatency.Name = "textBoxCastLatency";
-            this.textBoxCastLatency.Size = new System.Drawing.Size(75, 20);
-            this.textBoxCastLatency.TabIndex = 155;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 135);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 13);
-            this.label3.TabIndex = 154;
-            this.label3.Text = "Cast Latency: *";
-            this.toolTipMage.SetToolTip(this.label3, "Effective latency in seconds. The value should include the benefit of built-in /s" +
-                    "topcasting.");
-            // 
-            // textBoxGCDLatency
-            // 
-            this.textBoxGCDLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyGCD", true));
-            this.textBoxGCDLatency.Location = new System.Drawing.Point(111, 158);
-            this.textBoxGCDLatency.Name = "textBoxGCDLatency";
-            this.textBoxGCDLatency.Size = new System.Drawing.Size(75, 20);
-            this.textBoxGCDLatency.TabIndex = 157;
-            // 
-            // label88
-            // 
-            this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(0, 161);
-            this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(81, 13);
-            this.label88.TabIndex = 156;
-            this.label88.Text = "GCD Latency: *";
-            this.toolTipMage.SetToolTip(this.label88, "Effective latency in seconds. The value should include the benefit of built-in /s" +
-                    "topcasting.");
-            // 
-            // textBoxChannelLatency
-            // 
-            this.textBoxChannelLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyChannel", true));
-            this.textBoxChannelLatency.Location = new System.Drawing.Point(111, 184);
-            this.textBoxChannelLatency.Name = "textBoxChannelLatency";
-            this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
-            this.textBoxChannelLatency.TabIndex = 159;
-            // 
-            // label89
-            // 
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(0, 187);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(97, 13);
-            this.label89.TabIndex = 158;
-            this.label89.Text = "Channel Latency: *";
-            this.toolTipMage.SetToolTip(this.label89, "Effective latency in seconds. The value should include the benefit of built-in /s" +
-                    "topcasting.");
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3087,8 +3063,6 @@
         private System.Windows.Forms.Label label84;
         private System.Windows.Forms.CheckBox checkBoxEffectDisableManaSources;
         private System.Windows.Forms.Button buttonComputeOptimalFrostCycles;
-        private System.Windows.Forms.Label label85;
-        private System.Windows.Forms.CheckBox checkBoxMode32;
         private System.Windows.Forms.TextBox textBoxBonusCritDamage;
         private System.Windows.Forms.Label label86;
         private System.Windows.Forms.Button buttonHotStreakUtilization;

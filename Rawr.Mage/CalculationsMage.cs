@@ -24,15 +24,15 @@ namespace Rawr.Mage
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Purified)", false, 39911, 39957, 39956, 39959, 39946, 39941);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Royal)", false, 39911, 39957, 39956, 39959, 39946, 39943);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Glowing)", false, 39911, 39957, 39956, 39959, 39946, 39936);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Jewelcrafting)", false, 39911, 39957, 39956, 39959, 39946, 42144);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Purified)", true, 39998, 40049, 40048, 40051, 40047, 40026);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Jewelcrafting)", false, 42144, 39957, 39956, 39959, 39946, 39941);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Purified)", false, 39998, 40049, 40048, 40051, 40047, 40026);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Royal)", false, 39998, 40049, 40048, 40051, 40047, 40027);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Glowing)", false, 39998, 40049, 40048, 40051, 40047, 40025);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafting)", false, 39998, 40049, 40048, 40051, 40047, 42144);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Purified)", false, 40113, 40153, 40152, 40155, 40151, 40133);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafting)", false, 42144, 40049, 40048, 40051, 40047, 40026);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Purified)", true, 40113, 40153, 40152, 40155, 40151, 40133);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Royal)", false, 40113, 40153, 40152, 40155, 40151, 40134);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Glowing)", false, 40113, 40153, 40152, 40155, 40151, 40132);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 40113, 40153, 40152, 40155, 40151, 42144);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 42144, 40153, 40152, 40155, 40151, 40133);
                 }
                 return _defaultGemmingTemplates;
             }
@@ -795,18 +795,6 @@ namespace Rawr.Mage
                 case 3:
                     statsTotal.SpellCombatManaRegeneration += 0.5f;
                     break;
-            }
-
-            if (calculationOptions.Mode32)
-            {
-                if (character.ActiveBuffs.Find(b => b.Name == "Frostfire Garb 2 Piece") != null)
-                {
-                    statsTotal.BonusManaGem -= 0.15f;
-                }
-                if (statsTotal.ManaRestoreFromMaxManaPerSecond == 0.0025f)
-                {
-                    statsTotal.ManaRestoreFromMaxManaPerSecond = 0.002f;
-                }
             }
 
             if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;

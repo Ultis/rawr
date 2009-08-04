@@ -375,7 +375,7 @@ namespace Rawr.Mage
             }
             threatPerSecond += (baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
             // 3.2 mode Empowered Fire ignite return
-            if (CastingState.CalculationOptions.Mode32 && IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
+            if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
             {
                 // on average we have IgniteProcs per CastTime
                 double rate = IgniteProcs / CastTime;
@@ -471,7 +471,7 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            if (CastingState.CalculationOptions.Mode32 && IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
+            if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
             {
                 double rate = IgniteProcs / CastTime;
                 double k = Math.Exp(-2 * rate);

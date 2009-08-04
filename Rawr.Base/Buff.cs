@@ -1941,7 +1941,7 @@ namespace Rawr
                 Name = "Frostfire Garb 2 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusManaGem = 0.4f },
+                Stats = { BonusManaGem = 0.25f },
                 SetName = "Frostfire Garb",
                 SetThreshold = 2
             });

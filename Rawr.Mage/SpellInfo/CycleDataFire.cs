@@ -199,8 +199,6 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float H = castingState.MageTalents.HotStreak / 3.0f;
 
-            if (castingState.CalculationOptions.Mode32)
-            {
                 // 3.2 calcs
 
                 // we have two hot streak event streams going on, normal casts and living bomb
@@ -309,10 +307,8 @@ namespace Rawr.Mage
                 float sum = X + Y;
                 X /= sum;
                 K = Z / sum;
-            }
-            else
-            {
 
+            /*
                 // 3.0.8 calcs
 
                 // 0 HS charge:
@@ -396,7 +392,7 @@ namespace Rawr.Mage
                 }
                 C = LBcrit + X * (FBcrit - LBcrit);
                 K = H * C * C / (1 + C) / (1 - T8);
-            }
+            */
 
             // pyro dot uptime 
 
@@ -457,8 +453,6 @@ namespace Rawr.Mage
             float C;
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
 
-            if (castingState.CalculationOptions.Mode32)
-            {
                 if (castingState.MageTalents.GlyphOfLivingBomb)
                 {
                     H *= (1 - castingState.CalculationOptions.HotStreakWasted);
@@ -512,10 +506,8 @@ namespace Rawr.Mage
                 float sum = X + Y;
                 X /= sum;
                 K = Z / sum;
-            }
-            else
-            {
-                float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
+
+                /*float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
                 float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FFBcrit - LBcrit);
                 float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
                 if (Math.Abs(A2) < 0.00001)
@@ -543,8 +535,7 @@ namespace Rawr.Mage
                     X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
                 }
                 C = LBcrit + X * (FFBcrit - LBcrit);
-                K = H * C * C / (1 + C) / (1 - T8);
-            }
+                K = H * C * C / (1 + C) / (1 - T8);*/            
 
             // pyro dot uptime 
 
@@ -924,8 +915,6 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float C, H, averageCastTime;
 
-            if (castingState.CalculationOptions.Mode32)
-            {
                 // 3.2 calculations
 
                 // X: chance to cast FB
@@ -1065,10 +1054,8 @@ namespace Rawr.Mage
                 K /= sum;
 
                 averageCastTime = (FB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
-            }
-            else
-            {
 
+            /*
                 // 3.1 calculations
 
                 // 0 HS charge:
@@ -1229,7 +1216,7 @@ namespace Rawr.Mage
                     averageCastTime = (FB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
                     K = H * C * C / (1 + C) / (1 - T8);
                 }
-            }
+            */
 
             // pyro dot uptime 
 
@@ -1304,8 +1291,6 @@ namespace Rawr.Mage
                 gap = 1.0f;
             }
             float C, H, averageCastTime;
-            if (castingState.CalculationOptions.Mode32)
-            {
                 float FFBcrit = FFB.CritRate;
                 float Sccrit = Sc.CritRate;
                 float LBcrit = LB.CritRate;
@@ -1382,10 +1367,8 @@ namespace Rawr.Mage
                 K /= sum;
 
                 averageCastTime = (FFB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
-            }
-            else
-            {
-                if (gap == 1.0f)
+
+                /*if (gap == 1.0f)
                 {
                     Y = 0.0f;
                     float FFBcrit = FFB.CritRate;
@@ -1470,8 +1453,7 @@ namespace Rawr.Mage
                     C = (FFBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y));
                     averageCastTime = (FFB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
                     K = H * C * C / (1 + C) / (1 - T8);
-                }
-            }
+                }*/            
 
             // pyro dot uptime 
 
