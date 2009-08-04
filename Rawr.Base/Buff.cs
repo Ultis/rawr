@@ -502,28 +502,28 @@ namespace Rawr
                 Name = "Hunting Party",
                 Source = "Survival Hunter",
                 Group = "Replenishment",
-                Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
+                Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Judgements of the Wise",
                 Source = "Ret Paladin",
                 Group = "Replenishment",
-                Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
+                Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Vampiric Touch",
                 Source = "Shadow Priest",
                 Group = "Replenishment",
-                Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
+                Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Soul Leech",
                 Source = "Dest Warlock",
                 Group = "Replenishment",
-                Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
+                Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
             #endregion
 
