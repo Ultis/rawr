@@ -825,7 +825,6 @@ namespace Rawr.Hunter
             globalDamageBoost *= markedForDeathDamageAdjust;
             globalDamageBoost *= targetPhysicalDebuffsDamageAdjust;
 
-            double explosiveShotDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust * TNTDamageAdjust;
             double arcaneShotDamageBoost = globalDamageBoost * improvedArcaneShotDamageAdjust;
             double blackarrowDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust * trapMasteryDamageAdjust * TNTDamageAdjust;
             double multiShotDamageBoost = globalDamageBoost * barrageDamageAdjust;
@@ -858,7 +857,6 @@ namespace Rawr.Hunter
 
             // these are (probably) correct, but will be moved down into their shot regions
             double arcaneBonusCritChance = 1 + survivalInstinctsCritModifier;
-            double explosiveBonusCritChance = 1 + survivalInstinctsCritModifier + glyphOfExplosiveShotCritModifier;
             double multiShotBonusCritChance = 1 + improvedBarrageCritModifier;
 
 			
@@ -883,10 +881,10 @@ namespace Rawr.Hunter
 			
 			#endregion			
             #region Partial Resists
-            double partialResist = (options.TargetLevel - 80) * 0.02;
-            double resist10 = 5 * partialResist;
-            double resist20 = 2.5 * partialResist;
-            double esResist = 1 - (resist10 * 0.1 + resist20 * 0.1);
+            double averageResist = (options.TargetLevel - 80) * 0.02;
+            double resist10 = 5 * averageResist;
+            double resist20 = 2.5 * averageResist;
+            double partialResist = 1 - (resist10 * 0.1 + resist20 * 0.1);
             #endregion
 
             double specialsPerSec = 0;
@@ -953,7 +951,7 @@ namespace Rawr.Hunter
             {
                 double wildQuiverFrequency = (autoShotSpeed / (character.HunterTalents.WildQuiver * 0.04));
                 double wildQuiverBaseDamage = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
-                double wildQuiverAdjustment = autoShotHitMissAdjust * esResist;
+                double wildQuiverAdjustment = autoShotHitMissAdjust * partialResist;
                 double wildQuiverTotalDamage = wildQuiverBaseDamage * wildQuiverAdjustment;
 
                 calculatedStats.WildQuiverDPS = wildQuiverTotalDamage / wildQuiverFrequency;
@@ -1044,7 +1042,7 @@ namespace Rawr.Hunter
             double serpentStingDamageAdjust = talentDamageStingAdjust
                                                 * improvedStingsDamageAdjust
                                                 * improvedTrackingDamageAdjust
-                                                * esResist;
+                                                * partialResist;
 
             // damage_per_tick = round(base_damage / 5 * damage_boost)
             double serpentStingDamagePerTick = Math.Round(serpentStingBaseDamage / 5 * serpentStingDamageAdjust);
@@ -1106,22 +1104,39 @@ namespace Rawr.Hunter
             }
 
 			#endregion//Has DPS
-			#region May 2009 Explosive Shot
-			double explosiveShotNormalDamage = 425 + (RAP * 0.14);
-			//double es
-            double esCritRate = calculatedStats.hitBase;
-            if (character.HunterTalents.GlyphOfExplosiveShot)
-                esCritRate += 0.04;
-            esCritRate += character.HunterTalents.SurvivalInstincts * 0.02;
-            double esCritDamage = 1.0f + character.HunterTalents.MortalShots * 0.06;
-            double esCritAdjustment = (esCritRate * esCritDamage + 1) * calculatedStats.hitOverall;
-            
-            double esDamagePerTick = explosiveShotNormalDamage * explosiveShotDamageBoost;
-            double esTotalPerShot = esDamagePerTick * 3;
-            calculatedStats.ExplosiveShotDPS = esTotalPerShot / 6;
+			#region July 2009 Explosive Shot
+
+            // base_damage = 425 + 14% of RAP
+            double explosiveShotDamageNormal = 425 + (RAP * 0.14);
+
+            // crit = base_crit + glyph_of_es + survival_instincts
+            double explosiveShotCrit = critHitPercent + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier;
+
+            // crit_damage = 1 + mortal_shots + gem-crit
+            double explosiveShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage;
+
+            // damage_adjust = talent_adjust * tnt * fire_debuffs * sinper_training * partial_resist
+            // TODO: missing fire debuffs
+            double explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust * partialResist;
+
+            double explosiveShotDamageCrit = explosiveShotDamageNormal * (1 + explosiveShotCritAdjust);
+            double explosiveShotDamageTotal = (explosiveShotDamageNormal * (1 - explosiveShotCrit) + (explosiveShotDamageCrit * explosiveShotCrit));
+            double explosiveShotDamageReal = explosiveShotDamageTotal * explosiveShotDamageAdjust * hitChance;
+
+            double explosiveShotDamagePerShot = explosiveShotDamageReal * 3;
+
+            calculatedStats.ExplosiveShotDPS = explosiveShotDamagePerShot / 6;
+
+            //Debug.WriteLine("explosiveShotDamageNormal = " + explosiveShotDamageNormal);
+            //Debug.WriteLine("explosiveShotCrit = " + explosiveShotCrit);
+            //Debug.WriteLine("explosiveShotCritAdjust = " + explosiveShotCritAdjust);
+            //Debug.WriteLine("explosiveShotDamageAdjust = " + explosiveShotDamageAdjust);
+            //Debug.WriteLine("explosiveShotDamagePerShot = " + explosiveShotDamagePerShot);
+            //Debug.WriteLine("calculatedStats.ExplosiveShotDPS = " + calculatedStats.ExplosiveShotDPS);
 
             if (options.ExplosiveInRot)
                 specialsPerSec += 1 / 6;
+
 			#endregion
             #region May 2009 Chimera Shot
             double csDmg = autoShotDamageNormalized * chimeraDamageBoost;
