@@ -19,24 +19,24 @@ namespace Rawr.Enhance
         private int[] quick = { 39918, 40017, 40128, 42150 };  // Haste
 
         //Orange
-        private int[] deadly = { 39952, 40043, 40147 };   // Agi/Crit
-        private int[] glinting = { 39953, 40044, 40148 }; // Agi/Hit
-        private int[] deft = { 39955, 40046, 40150 };     // Agi/Haste
-        private int[] wicked = { 39960, 40052, 40156 };   // AP/Crit
-        private int[] pristine = { 39961, 40053, 40157 }; // AP/Hit
-        private int[] stark = { 39963, 40055, 40159 };    // AP/Haste
-        private int[] accurate = { 39966, 40058, 40162 }; // Exp/Hit
+        private int[] deadly = { 39952, 40043, 40147, 40147 };   // Agi/Crit
+        private int[] glinting = { 39953, 40044, 40148, 40148 }; // Agi/Hit
+        private int[] deft = { 39955, 40046, 40150, 40150 };     // Agi/Haste
+        private int[] wicked = { 39960, 40052, 40156, 40156 };   // AP/Crit
+        private int[] pristine = { 39961, 40053, 40157, 40157 }; // AP/Hit
+        private int[] stark = { 39963, 40055, 40159, 40159 };    // AP/Haste
+        private int[] accurate = { 39966, 40058, 40162, 40162 }; // Exp/Hit
 
         //Purple
-        private int[] guardian = { 39940, 40034, 40141 }; // Exp/Sta
-        private int[] balanced = { 39937, 40029, 40136 }; // Ap/Sta
-        private int[] shifting = { 39935, 40023, 40130 }; // Agi/Sta
-        private int[] puissant = { 39933, 40033, 40140 }; // ArP/Sta
+        private int[] guardian = { 39940, 40034, 40141, 40141 }; // Exp/Sta
+        private int[] balanced = { 39937, 40029, 40136, 40136 }; // Ap/Sta
+        private int[] shifting = { 39935, 40023, 40130, 40130 }; // Agi/Sta
+        private int[] puissant = { 39933, 40033, 40140, 40140 }; // ArP/Sta
 
         //Green
-        private int[] vivid = { 39975, 40088, 40166 };    // Hit/Sta
-        private int[] jagged = { 39974, 40086, 40165 };   // Crit/Sta
-        private int[] forceful = { 39978, 40091, 40169 }; // Haste/Sta
+        private int[] vivid = { 39975, 40088, 40166, 40166 };    // Hit/Sta
+        private int[] jagged = { 39974, 40086, 40165, 40165 };   // Crit/Sta
+        private int[] forceful = { 39978, 40091, 40169, 40169 }; // Haste/Sta
 
         public List<GemmingTemplate> addTemplates(String group, int rarity, int metagem, bool enabled)
         {

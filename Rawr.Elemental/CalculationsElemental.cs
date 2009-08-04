@@ -105,7 +105,7 @@ namespace Rawr.Elemental
         private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int quick, int lustrous, int rigid, int meta)
         {
             // Overrides, only "runed" and "seers"
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = lustrous, YellowId = lustrous, BlueId = lustrous, PrismaticId = lustrous, MetaId = meta, Enabled = enabled });
 
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
