@@ -252,12 +252,12 @@ namespace Rawr.Hunter
 			dictValues.Add("Stamina", BasicStats.Stamina.ToString("F0"));
 			dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
 			dictValues.Add("Haste", hasteEffectsTotal.ToString("F2")+ " %*includes: \n"+
-			               hasteFromBase.ToString("F0") + "% from quiver\n" +
-			               hasteFromTalentsStatic.ToString("F0") +" % from talents\n"+ 
-			               hasteFromProcs.ToString("F0") +" % from procs\n"+ 
-			               hasteFromTalentsProc.ToString("F0") +" % from talented procs\n"+ 
-			               hasteFromRating.ToString("F0") +" % from "+BasicStats.HasteRating.ToString("F0")+ " haste rating\n"+ 
-			               hasteFromRangedBuffs.ToString("F0") +" % from buffs");
+			               hasteFromBase.ToString("F2") + "% from quiver\n" +
+			               hasteFromTalentsStatic.ToString("F2") +" % from talents\n"+ 
+			               hasteFromProcs.ToString("F2") +" % from procs\n"+ 
+			               hasteFromTalentsProc.ToString("F2") +" % from talented procs\n"+ 
+			               hasteFromRating.ToString("F2") +" % from "+BasicStats.HasteRating.ToString("F0")+ " haste rating\n"+ 
+			               hasteFromRangedBuffs.ToString("F2") +" % from buffs");
 			dictValues.Add("Armor Penetration", BasicStats.ArmorPenetrationRating.ToString() + "* Enemy's Damage Reduction from armor: " + damageReductionFromArmor.ToString("P2"));
 			dictValues.Add("Mana Per Second", manaRegenTotal.ToString("F0")+"*includes:\n" +
 			              	manaRegenBase.ToString("F0")+" from base spirit regen\n" +

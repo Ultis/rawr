@@ -459,16 +459,10 @@ namespace Rawr.Hunter
 			calculatedStats.hasteFromTalentsStatic = 4.0 * character.HunterTalents.SerpentsSwiftness ;
 							
 			//rapid fire * (  duration/cooldown-depends on talent rapid killing)
-			
-			calculatedStats.hasteFromProcs = 50.0 ;
-			if (character.HunterTalents.GlyphOfRapidFire == true)
-			{
-				calculatedStats.hasteFromProcs += 8.0;
-			}
-			
-			double rapidFireCooldown = ( 5 -  (1.0 * character.HunterTalents.RapidKilling) ) * 60 ;
-			calculatedStats.hasteFromProcs *= CalcUptime(15, rapidFireCooldown , options.duration);
-		
+            double rapidFireHaste = character.HunterTalents.GlyphOfRapidFire ? 48.0 : 40.0;
+			double rapidFireCooldown = 300 -  (60 * character.HunterTalents.RapidKilling);
+
+            calculatedStats.hasteFromProcs = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options.duration);
 			
 			calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste  * 100;
 			
