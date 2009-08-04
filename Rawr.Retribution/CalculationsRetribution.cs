@@ -464,7 +464,7 @@ namespace Rawr.Retribution
                     {
                         if (calcOpts.Seal == SealOf.Vengeance)
                         {
-                            trigger = 1f / 3f;
+                            trigger = 3f;
                             procChance = 1f;
                         }
                         else continue;

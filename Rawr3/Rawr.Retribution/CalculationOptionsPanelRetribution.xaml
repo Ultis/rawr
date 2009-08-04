@@ -49,7 +49,6 @@
     					<RowDefinition Height="Auto"/>
     					<RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
     				</Grid.RowDefinitions>
     				<Grid.ColumnDefinitions>
     					<ColumnDefinition Width="*"/>
@@ -114,8 +113,6 @@
                     </StackPanel>
                     <CheckBox HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Center" Content="Bloodlust" Grid.Column="1" Grid.Row="9"
                         IsChecked="{Binding Path=Bloodlust, Mode=TwoWay}"/>
-                    <CheckBox HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Center" Content="3.2 Mode" Grid.Column="1" Grid.Row="10"
-                        IsChecked="{Binding Path=Mode32, Mode=TwoWay}"/>
                 </Grid>
     		</controls:TabItem>
     		<controls:TabItem Header="Rotation">

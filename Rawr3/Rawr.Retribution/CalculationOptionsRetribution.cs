@@ -280,13 +280,6 @@ namespace Rawr.Retribution
             set { hoWCD20 = value; OnPropertyChanged("HoWCD20"); }
         }
 
-        private bool mode32;
-        public bool Mode32
-        {
-            get { return mode32; }
-            set { mode32 = value; OnPropertyChanged("Mode32"); }
-        }
-
         public CalculationOptionsRetribution Clone()
         {
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
@@ -312,8 +305,6 @@ namespace Rawr.Retribution
             clone.ConsCD20 = ConsCD20;
             clone.ExoCD20 = ExoCD20;
             clone.HoWCD20 = HoWCD20;
-
-            clone.Mode32 = Mode32;
 
             clone.order = (Ability[])order.Clone();
             clone.selected = (bool[])selected.Clone();
