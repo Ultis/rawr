@@ -67,34 +67,6 @@ namespace Rawr.Moonkin
 						PrismaticId = 41438,
 						MetaId = 41285
 					},
-					// Uncommon gems
-					// All but blue = Runed Bloodstone
-					// Blue = Runed Dragon's Eye (Jewelcrafting)
-					// Meta = Chaotic
-					new GemmingTemplate()
-					{
-						Model = "Moonkin",
-						Group = "Uncommon",
-						RedId = 39911,
-						YellowId = 39911,
-						BlueId = 42144,
-						PrismaticId = 39911,
-						MetaId = 41285
-					},
-					// Perfect uncommon gems
-					// All but blue = Perfect Runed Bloodstone
-					// Blue = Runed Dragon's Eye (Jewelcrafting)
-					// Meta = Chaotic
-					new GemmingTemplate()
-					{
-						Model = "Moonkin",
-						Group = "Uncommon",
-						RedId = 41438,
-						YellowId = 41438,
-						BlueId = 42144,
-						PrismaticId = 41438,
-						MetaId = 41285
-					},
 					// Rare gems
 					// All but blue = Runed Scarlet Ruby
 					// Blue = Purified Twilight Opal (spirit/spell power)
@@ -107,8 +79,7 @@ namespace Rawr.Moonkin
 						YellowId = 39998,
 						BlueId = 40026,
 						PrismaticId = 39998,
-						MetaId = 41285,
-                        Enabled = true
+						MetaId = 41285
 					},
 					// Rare gems
 					// All sockets = Runed Scarlet Ruby
@@ -121,23 +92,122 @@ namespace Rawr.Moonkin
 						YellowId = 39998,
 						BlueId = 39998,
 						PrismaticId = 39998,
-						MetaId = 41285,
-                        Enabled = true
+						MetaId = 41285
 					},
-					// Rare gems
-					// All but blue = Runed Scarlet Ruby
-					// Blue = Runed Dragon's Eye (Jewelcrafting)
+					// Epic gems
+					// All but blue = Runed Cardinal Ruby
+					// Blue = Purified Dreadstone (spirit/spell power)
 					// Meta = Chaotic
 					new GemmingTemplate()
 					{
 						Model = "Moonkin",
-						Group = "Rare",
-						RedId = 39998,
-						YellowId = 39998,
-						BlueId = 42144,
-						PrismaticId = 39998,
-						MetaId = 41285
-					}
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40113,
+						BlueId = 40133,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// Epic gems
+					// All sockets = Runed Cardinal Ruby
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40113,
+						BlueId = 40113,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+                    // Jewelcrafting gems
+                    // Red sockets = Runed Dragon's Eye
+                    // All other sockets = Runed Cardinal Ruby
+                    // Meta = Chaotic
+                    new GemmingTemplate()
+                    {
+                        Model = "Moonkin",
+                        Group = "Jeweler",
+                        RedId = 42144,
+                        YellowId = 40113,
+                        BlueId = 40113,
+                        PrismaticId = 40113,
+                        MetaId = 41285
+                    },
+                    // Jewelcrafting gems
+                    // Red sockets = Runed Dragon's Eye
+                    // Blue sockets = Purified Dreadstone
+                    // All other sockets = Runed Cardinal Ruby
+                    // Meta = Chaotic
+                    new GemmingTemplate()
+                    {
+                        Model = "Moonkin",
+                        Group = "Jeweler",
+                        RedId = 42144,
+                        YellowId = 40113,
+                        BlueId = 40133,
+                        PrismaticId = 40113,
+                        MetaId = 41285
+                    },
+                    // Jewelcrafting gems
+                    // Red, Yellow sockets = Runed Cardinal Ruby
+                    // Blue sockets = Runed Dragon's Eye
+                    // Meta = Chaotic
+                    new GemmingTemplate()
+                    {
+                        Model = "Moonkin",
+                        Group = "Jeweler",
+                        RedId = 40113,
+                        YellowId = 40113,
+                        BlueId = 42144,
+                        PrismaticId = 40113,
+                        MetaId = 41285
+                    },
+                    // Jewelcrafting gems
+                    // Yellow sockets = Runed Dragon's Eye
+                    // All other sockets = Runed Cardinal Ruby
+                    // Meta = Chaotic
+                    new GemmingTemplate()
+                    {
+                        Model = "Moonkin",
+                        Group = "Jeweler",
+                        RedId = 40113,
+                        YellowId = 42144,
+                        BlueId = 40113,
+                        PrismaticId = 40113,
+                        MetaId = 41285
+                    },
+                    // Jewelcrafting gems
+                    // Yellow sockets = Runed Dragon's Eye
+                    // Blue sockets = Purified Dreadstone
+                    // All other sockets = Runed Cardinal Ruby
+                    // Meta = Chaotic
+                    new GemmingTemplate()
+                    {
+                        Model = "Moonkin",
+                        Group = "Jeweler",
+                        RedId = 40113,
+                        YellowId = 42144,
+                        BlueId = 40133,
+                        PrismaticId = 40113,
+                        MetaId = 41285
+                    },
+                    // Jewelcrafting gems
+                    // All sockets = Runed Dragon's Eye
+                    // Meta = Chaotic
+                    new GemmingTemplate()
+                    {
+                        Model = "Moonkin",
+                        Group = "Jeweler",
+                        RedId = 42144,
+                        YellowId = 42144,
+                        BlueId = 42144,
+                        PrismaticId = 42144,
+                        MetaId = 41285
+                    }
 				};
             }
         }

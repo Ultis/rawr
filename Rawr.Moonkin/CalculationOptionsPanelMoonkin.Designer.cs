@@ -294,6 +294,7 @@
             // chk32Mode
             // 
             this.chk32Mode.AutoSize = true;
+            this.chk32Mode.Enabled = false;
             this.chk32Mode.Location = new System.Drawing.Point(6, 357);
             this.chk32Mode.Name = "chk32Mode";
             this.chk32Mode.Size = new System.Drawing.Size(71, 17);

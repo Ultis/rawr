@@ -146,12 +146,6 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.Use32Mode = chk32Mode.Checked;
             chkMoonfireAlways.Enabled = cmbEclipseType.Enabled = !chk32Mode.Checked;
-            if (chk32Mode.Checked)
-            {
-            }
-            else
-            {
-            }
             Character.OnCalculationsInvalidated();
         }
     }
@@ -189,6 +183,6 @@ namespace Rawr.Moonkin
         public bool LunarEclipse = true;
         public bool MoonfireAlways = true;
         public string UserRotation = "None";
-        public bool Use32Mode = false;
+        public bool Use32Mode = true;
 	}
 }
