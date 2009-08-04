@@ -326,9 +326,9 @@ namespace Rawr.Hunter
                             BaseAutoshotDPS.ToString("F2")+" base Autoshot \n"+
                             WildQuiverDPS.ToString("F2")+" from Wild Quiver");
             
-            dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2"));
-			dictValues.Add("Steady Shot", steadyDPS.ToString("F2"));
-			dictValues.Add("Serpent Sting", SerpentDPS.ToString("F2"));
+            dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2") + "*This is DPS");
+            dictValues.Add("Steady Shot", steadyDPS.ToString("F2") + "*This is Damage per shot");
+            dictValues.Add("Serpent Sting", SerpentDPS.ToString("F2") + "*This is DPS at 100% uptime");
             dictValues.Add("Silencing Shot", SilencingDPS.ToString("F2"));
 			dictValues.Add("Arcane Shot", arcaneDPS.ToString("F2"));
 			dictValues.Add("Explosive Shot", ExplosiveShotDPS.ToString("F2"));

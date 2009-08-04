@@ -739,7 +739,6 @@ namespace Rawr.Hunter
 			double arcaneShotDamageBoost = 1;
 			double aimedShotDamageBoost = 1;
 			double blackarrowDamageBoost = 1;
-			double serpentStingDamageBoost = 1;
 			double multiShotDamageBoost = 1;
 			double volleyDamageBoost = 1;
             double chimeraDamageBoost = 1;
@@ -775,7 +774,6 @@ namespace Rawr.Hunter
 			arcaneShotDamageBoost *= globalDamageBoost;
 			aimedShotDamageBoost *= globalDamageBoost;
 			blackarrowDamageBoost *= globalDamageBoost;
-			serpentStingDamageBoost *= globalDamageBoost;
 			multiShotDamageBoost *= globalDamageBoost;
 			volleyDamageBoost *= globalDamageBoost;
             chimeraDamageBoost *= globalDamageBoost;
@@ -788,10 +786,6 @@ namespace Rawr.Hunter
 			blackarrowDamageBoost *= sniperTrainingModifier;
 			explosiveShotDamageBoost *= sniperTrainingModifier;
             killShotDamageBoost *= sniperTrainingModifier;
-
-			//Improved Stings
-			double improvedStingsModifier = 1 + 0.1 * character.HunterTalents.ImprovedStings;
-			serpentStingDamageBoost *= improvedStingsModifier;
 			
 			//Improved Arcane Shot 
 			double improvedArcaneShotModifier = 1 + 0.05 * character.HunterTalents.ImprovedArcaneShot;
@@ -1033,21 +1027,41 @@ namespace Rawr.Hunter
             }
 
 			#endregion	
-			#region May 2009 Serpent Sting
+			#region July 2009 Serpent Sting
 
-            double serpentDuration = 15;
+            // base_damage = 1210 + (0.2 * RAP)
+            double serpentStingBaseDamage = 1210 + (calculatedStats.RAPtotal * 0.2);
+
+            // damage_boost = improved_strings + improved_tracking + noxious_stings 
+            //              + partial_resists + tier-8_2-piece_bonus + target_nature_debuffs
+            //              + focused_fire + the_beast_within + sanc_ret_aura + black_arrow
+            //              + ferocious_inspiration
+            // TODO: this is missing alot of the above modifiers!
+            double serpentStingDamageBoost = globalDamageBoost;
+            serpentStingDamageBoost *= esResist;
+            serpentStingDamageBoost *= 1 + 0.1 * character.HunterTalents.ImprovedStings;
+
+            // damage_per_tick = round(base_damage / 5 * damage_boost)
+            double serpentStingDamagePerTick = Math.Round(serpentStingBaseDamage / 5 * serpentStingDamageBoost);
+
+            // duration and ticks
+            double serpentStingDuration = 15;
             if (character.HunterTalents.GlyphOfSerpentSting)
-                serpentDuration += 6;
-            double serpentTicks = serpentDuration / 3;
+                serpentStingDuration += 6;
+            double serpentStingTicks = Math.Floor(serpentStingDuration / 3);
 
-            double serpentStingDamageNormal = 1210 + (calculatedStats.RAPtotal * 0.2);
-            double damagePerTick = serpentStingDamageNormal / 5;
-            damagePerTick *= serpentStingDamageBoost;
+            // unlike some shots, this really is DPS, not damage per shot
+            calculatedStats.SerpentDPS = (serpentStingDamagePerTick * serpentStingTicks) / serpentStingDuration;
 
-            calculatedStats.SerpentDPS = (damagePerTick * serpentTicks) / serpentDuration;
+            //Debug.WriteLine("serpentStingBaseDamage = " + serpentStingBaseDamage);
+            //Debug.WriteLine("serpentStingDamageBoost = " + serpentStingDamageBoost);
+            //Debug.WriteLine("serpentStingDamagePerTick = " + serpentStingDamagePerTick);
+            //Debug.WriteLine("serpentStingDuration = " + serpentStingDuration);
+            //Debug.WriteLine("serpentStingTicks = " + serpentStingTicks);
+            //Debug.WriteLine("calculatedStats.SerpentDPS = " + calculatedStats.SerpentDPS);
 
             if (options.SerpentInRot)
-                specialsPerSec += 1 / serpentDuration;
+                specialsPerSec += 1 / serpentStingDuration;
 			
 			#endregion //Has DPS	
 			#region May 2009 Aimed Shot
@@ -1086,7 +1100,7 @@ namespace Rawr.Hunter
 			#endregion
             #region May 2009 Chimera Shot
             double csDmg = autoShotDamageNormalized * chimeraDamageBoost;
-            double csEffect = serpentStingDamageNormal * 0.4;
+            double csEffect = serpentStingBaseDamage * 0.4;
             double csSerpDamage = chimeraDamageBoost * csEffect;
             double totalCSDmg = csDmg + csSerpDamage;
             calculatedStats.ChimeraShotDPS = totalCSDmg / 10;
