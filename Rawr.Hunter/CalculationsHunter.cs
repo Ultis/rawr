@@ -830,11 +830,13 @@ namespace Rawr.Hunter
 			double improvedBarrageModifier = 1 + 0.04 * character.HunterTalents.ImprovedBarrage;
 			multiShotBonusCritChance *= improvedBarrageModifier;
 			aimedBonusCritChance *= improvedBarrageModifier;
+
 			// Survival instincts
 			double survivalInstinctsModifier =1 + 0.02 *character.HunterTalents.SurvivalInstincts ;
 			arcaneBonusCritChance *= survivalInstinctsModifier;
 			steadyBonusCritChance *= survivalInstinctsModifier;
 			explosiveBonusCritChance *= survivalInstinctsModifier;
+
 			// Explosive Shot Glyph
 			if (character.HunterTalents.GlyphOfExplosiveShot == true)
 			{
@@ -853,6 +855,7 @@ namespace Rawr.Hunter
 			
 			#endregion
 			#region May 2009 Bonus Crit Damage
+            // correct 2009-08-04
 			double arcaneBonusCritDamage = 1;
 			double aimedBonusCritDamage = 1;
 			double steadyBonusCritDamage = 1;
@@ -860,7 +863,6 @@ namespace Rawr.Hunter
 			double chimeraBonusCritDamage = 1;
 			double autoBonusCritDamage = 1;
 			double multiShotBonusCritDamage = 1;
-			
 			
 			double globalBonusCritDamage = 1;
 			
@@ -901,69 +903,39 @@ namespace Rawr.Hunter
             double specialsPerSec = 0;
 
 			// shot calcs
-			
-			#region May 2009 Steady Shot Calcs
-			
-			//double steadyShotDPS;
-			
-	
-			//unmodified weapon damage, plus ammo, plus [RAP * 0.1 + 252]
-			double normalSteadyShotDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
 
-            //Leave out until character.Projectile no longer is null
-			//normalSteadyShotDamage += character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
-			normalSteadyShotDamage += 252 + RAP *0.1;
-			
-			
-			double steadyCastTime;
-			if ((2.0 / (1+ calculatedStats.hasteEffectsTotal/100 ) <= 1.5 ))
-            {
-            	steadyCastTime = (float) 1.5;
-            }
-            else
-            {
-            	steadyCastTime = (float)(2.0 / (1+ calculatedStats.hasteEffectsTotal/100));
-            }
-            
-            //TODO: Crit add Gronn Stalker set bonus
-            double steadyCrit = critHitPercent * steadyBonusCritChance;
-            double steadyHit = hitChance;
-            double steadyDamageNormal = normalSteadyShotDamage;
-            double steadyDamageCrit = normalSteadyShotDamage * (1.0 + ( steadyBonusCritDamage));
-            double steadyDamageTotal = (steadyDamageNormal * (1 - steadyCrit) + (steadyDamageCrit * steadyCrit) ) ;
-            //steadyDamageTotal = steadyDamageTotal * (1.0  -  damageReduction) ;
-            
-            //TODO: find mana cost
-            double steadyManaCost = calculatedStats.BasicStats.Mana * 0.05;
-            double steadyDamagePerMana = steadyDamageTotal / steadyManaCost;
+            // for each shot we calculate:
+            //  * hit chance
+            //  * crit chance
+            //  * average non-crit shot damage (before damage adjustments)
+            //  * average crit shot damage (before damage adjustments)
+            //  * average shot damage (before damage adjustments)
+            //  * average shot damage (after adjustments, called 'DPS', even though it's not)
 
-    		calculatedStats.steadyCrit = steadyCrit;
-    		calculatedStats.steadyHit = steadyHit;
-    		calculatedStats.steadyDamageNormal = steadyDamageNormal;
-    		calculatedStats.steadyDamageCrit = steadyDamageCrit;
-    		calculatedStats.steadyDamageTotal = steadyDamageTotal;
-    		calculatedStats.steadyDamagePerMana = steadyDamagePerMana;
-            calculatedStats.steadyDPS = (steadyDamageTotal * steadyShotDamageBoost * (1.0 - damageReduction)) * steadyHit;
 
-            if (options.SteadyInRot)
-                specialsPerSec += 1 / calculatedStats.SteadySpeed;
-			#endregion	
-			#region July 2009 AutoShot
-            
-            double rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+            #region July 2009 AutoShot
+
+            double rangedWeaponDamage = 0;
+            double rangedWeaponSpeed = 0;
             double rangedAmmoDPS = 0;
+
+            if (character.Ranged != null)
+            {
+                rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+                rangedWeaponSpeed = character.Ranged.Item.Speed;
+            }
             if (character.Projectile != null)
             {
                 rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
             }
 
             // scope damage only applies to autoshot, so is not added to the normalized damage
-            double rangedAmmoDamage           = rangedAmmoDPS * character.Ranged.Item.Speed;
+            double rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
             double rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8;
-            double damageFromRAP              = (float)RAP / 14 * character.Ranged.Item.Speed;
-            double damageFromRAPNormalized    = (float)RAP / 14 * 2.8;
-            double autoShotDamage             = rangedWeaponDamage + rangedAmmoDamage           + statsBaseGear.WeaponDamage + damageFromRAP           + calculatedStats.BasicStats.ScopeDamage;
-            double autoShotDamageNormalized   = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
+            double damageFromRAP = (float)RAP / 14 * rangedWeaponSpeed;
+            double damageFromRAPNormalized = (float)RAP / 14 * 2.8;
+            double autoShotDamage = rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAP + calculatedStats.BasicStats.ScopeDamage;
+            double autoShotDamageNormalized = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
 
             double autoCritDamage = 1 + (2 * statsBaseGear.CritBonusDamage);
             double autoShotHitMissAdjust = (critHitPercent * autoCritDamage + 1) * hitChance;
@@ -987,9 +959,9 @@ namespace Rawr.Hunter
 
             calculatedStats.WildQuiverDPS = 0;
             //character.HunterTalents.WildQuiver = 2; // for isolation testing
-    		if (character.HunterTalents.WildQuiver > 0 )
-    		{
-    			double wildQuiverFrequency = (autoShotSpeed /  (character.HunterTalents.WildQuiver * 0.04));
+            if (character.HunterTalents.WildQuiver > 0)
+            {
+                double wildQuiverFrequency = (autoShotSpeed / (character.HunterTalents.WildQuiver * 0.04));
                 double wildQuiverBaseDamage = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
                 double wildQuiverAdjustment = autoShotHitMissAdjust * esResist;
                 double wildQuiverTotalDamage = wildQuiverBaseDamage * wildQuiverAdjustment;
@@ -1000,9 +972,66 @@ namespace Rawr.Hunter
                 //Debug.WriteLine("wildQuiverBaseDamage : " + wildQuiverBaseDamage);
                 //Debug.WriteLine("wildQuiverDPS : " + calculatedStats.WildQuiverDPS);
             }
-            
+
             calculatedStats.AutoshotDPS = calculatedStats.BaseAutoshotDPS + calculatedStats.WildQuiverDPS;
-			
+
+            #endregion
+            #region July 2009 Steady Shot
+
+			// base = shot_base + gear_weapon_damage + normalized_ammo_dps + (RAP * 0.1)
+            //        + (rangedWeaponDamage / ranged_weapon_speed * 2.8)
+            double steadyShotBaseDamage = 252
+                        + statsBaseGear.WeaponDamage
+                        + rangedAmmoDamageNormalized
+                        + (RAP * 0.1)
+                        + (rangedWeaponDamage / rangedWeaponSpeed * 2.8);
+
+            // crit chance = base_crit + 5%_rift_stalker_bonus + (2% * survivial_instincts)
+            //TODO: add rift stalker set bonus
+            double steadyShotCritChance = critHitPercent + (0.02 * character.HunterTalents.SurvivalInstincts);
+
+            // hit chance = base_hit
+            double steadyShotHitChance = hitChance;
+
+            // mana per shot
+            double steadyShotManaCost = calculatedStats.BasicStats.Mana * 0.05; // 5% of base mana
+
+            // the final stats
+            calculatedStats.steadyCrit = steadyShotCritChance;
+            calculatedStats.steadyHit = steadyShotHitChance;
+            calculatedStats.steadyDamageNormal = steadyShotBaseDamage;
+            calculatedStats.steadyDamageCrit = steadyShotBaseDamage  * (1.0 + (steadyBonusCritDamage));
+            calculatedStats.steadyDamageTotal = calculatedStats.steadyDamageNormal * (1 - calculatedStats.steadyCrit)
+                                              + calculatedStats.steadyDamageCrit * calculatedStats.steadyCrit;
+            calculatedStats.steadyDamagePerMana = calculatedStats.steadyDamageTotal / steadyShotManaCost;
+            calculatedStats.steadyDPS = (calculatedStats.steadyDamageTotal * steadyShotDamageBoost * (1.0 - damageReduction)) * steadyShotHitChance;
+
+            //Debug.WriteLine("calculatedStats.steadyCrit = " + calculatedStats.steadyCrit);
+            //Debug.WriteLine("calculatedStats.steadyHit. = " + calculatedStats.steadyHit);
+            //Debug.WriteLine("calculatedStats.steadyDamageNormal = " + calculatedStats.steadyDamageNormal);
+            //Debug.WriteLine("calculatedStats.steadyDamageCrit = " + calculatedStats.steadyDamageCrit);
+            //Debug.WriteLine("calculatedStats.steadyDamageTotal = " + calculatedStats.steadyDamageTotal);
+            //Debug.WriteLine("calculatedStats.steadyDamagePerMana = " + calculatedStats.steadyDamagePerMana);
+            //Debug.WriteLine("calculatedStats.steadyDPS = " + calculatedStats.steadyDPS);
+
+/*
+ *          This is never used...
+			double steadyCastTime;
+			if ((2.0 / (1+ calculatedStats.hasteEffectsTotal/100 ) <= 1.5 ))
+            {
+            	steadyCastTime = (float) 1.5;
+            }
+            else
+            {
+            	steadyCastTime = (float)(2.0 / (1+ calculatedStats.hasteEffectsTotal/100));
+            }
+*/
+
+            if (options.SteadyInRot)
+            {
+                specialsPerSec += 1 / calculatedStats.SteadySpeed;
+            }
+
 			#endregion	
 			#region May 2009 Serpent Sting
 
