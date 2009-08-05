@@ -334,7 +334,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Parry = dm.DefendTable.Parry; 
             calculatedStats.Block = dm.DefendTable.Block;
 
-            calculatedStats.Defense = (float)Math.Floor(400.0f + stats.Defense + (stats.DefenseRating * ProtWarr.DefenseRatingToDefense));
+            calculatedStats.Defense = (float)Math.Floor(400.0f + stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating));
             calculatedStats.BlockValue = stats.BlockValue;
             
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
@@ -1145,21 +1145,19 @@ threat and limited threat scaled by the threat scale.",
             calcOpts.talents = character.WarriorTalents;
         }
     }
-
-    public class ProtWarr
-    {
-        public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
-        public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
-        public static readonly float StrengthToAP = 2.0f;
+    public class ProtWarr {
+        //public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
+        //public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
+        //public static readonly float StrengthToAP = 2.0f;
         public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
-        public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 62.5f;
-        public static readonly float StaminaToHP = 10.0f;
-        public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
-        public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
-        public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
-        public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
-        public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
+        //public static readonly float AgilityToArmor = 2.0f;
+        //public static readonly float AgilityToCrit = 1.0f / 62.5f;
+        //public static readonly float StaminaToHP = 10.0f;
+        //public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
+        //public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
+        //public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
+        //public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
+        //public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
         public static readonly float DefenseRatingToDefense = 1.0f / 4.918498039f;
         public static readonly float DefenseToDodge = 0.04f;
         public static readonly float DefenseToBlock = 0.04f;
@@ -1167,9 +1165,9 @@ threat and limited threat scaled by the threat scale.",
         public static readonly float DefenseToMiss = 0.04f;
         public static readonly float DefenseToCritReduction = 0.04f;
         public static readonly float DefenseToDazeReduction = 0.04f;
-        public static readonly float ParryRatingToParry = 1.0f / 49.18498611f;
-        public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
+        //public static readonly float ParryRatingToParry = 1.0f / 49.18498611f;
+        //public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
         public static readonly float ResilienceRatingToCritReduction = 1.0f / 81.97497559f;
-        public static readonly float ArPToArmorPenetration = 1.0f / 15.395298f;
+        //public static readonly float ArPToArmorPenetration = 1.0f / 15.395298f;
     }
 }
