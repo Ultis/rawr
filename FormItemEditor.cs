@@ -776,12 +776,9 @@ namespace Rawr
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     Item selectedItem = SelectedItem.Tag as Item;
-                    eff.Stats = form.Stats;
-                    eff.Trigger = form.Trigger;
-                    eff.Duration = form.Duration;
-                    eff.Cooldown = form.Cooldown;
-                    eff.MaxStack = form.Stacks;
-                    eff.Chance = form.Chance;
+                    selectedItem.Stats.RemoveSpecialEffect(eff);
+                    selectedItem.Stats.AddSpecialEffect(new SpecialEffect(form.Trigger, form.Stats,
+                        form.Duration, form.Cooldown, form.Chance, form.Stacks));
                     UpdateSpecialEffects();
                 }
                 form.Dispose();
