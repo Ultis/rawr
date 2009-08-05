@@ -54,7 +54,7 @@ namespace Rawr
             int[] _data = Data;
             string[] tmp = code.Split('.');
             string talents = tmp[0];
-            if (talents.Length >= _data.Length)
+            if (talents.Length == _data.Length)
             {
                 List<int> data = new List<int>();
                 foreach (Char digit in talents)
@@ -960,11 +960,11 @@ namespace Rawr
         public int HealingLight { get { return _data[2]; } set { _data[2] = value; } }
 
         [TalentData(3, "Divine Intellect", 5, 0, 2, 2, -1, new string[] {
-@"Increases your total Intellect by 2%.",
-@"Increases your total Intellect by 4%.",
+@"Increases your total Intellect by 3%.",
 @"Increases your total Intellect by 6%.",
-@"Increases your total Intellect by 8%.",
-@"Increases your total Intellect by 10%.",}, "spell_nature_sleep")]
+@"Increases your total Intellect by 9%.",
+@"Increases your total Intellect by 12%.",
+@"Increases your total Intellect by 15%.",}, "spell_nature_sleep")]
         public int DivineIntellect { get { return _data[3]; } set { _data[3] = value; } }
 
         [TalentData(4, "Unyielding Faith", 2, 0, 3, 2, -1, new string[] {
@@ -2930,7 +2930,7 @@ namespace Rawr
 
     public partial class DeathKnightTalents : TalentsBase, ICloneable
     {
-        private int[] _data = new int[86];
+        private int[] _data = new int[88];
         public override int[] Data { get { return _data; } }
         public DeathKnightTalents() { }
         public DeathKnightTalents(string talents)
@@ -2941,7 +2941,7 @@ namespace Rawr
         {
             DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
-            //clone._glyphData = (bool[])_glyphData.Clone();
+            clone._glyphData = (bool[])_glyphData.Clone();
             return clone;
         }
 
@@ -2984,9 +2984,9 @@ namespace Rawr
         public int BladedArmor { get { return _data[3]; } set { _data[3] = value; } }
 
         [TalentData(4, "Scent of Blood", 3, 0, 2, 2, -1, new string[] {
-@"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next melee hit to generate 5 runic power.  This effect cannot occur more often than once every 10 sec.",
-@"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next 2 melee hits to generate 5 runic power.  This effect cannot occur more often than once every 10 sec.",
-@"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next 3 melee hits to generate 5 runic power.  This effect cannot occur more often than once every 10 sec.",}, "ability_rogue_bloodyeye")]
+@"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next melee hit to generate 10 runic power.",
+@"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next 2 melee hits to generate 10 runic power.",
+@"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next 3 melee hits to generate 10 runic power.",}, "ability_rogue_bloodyeye")]
         public int ScentOfBlood { get { return _data[4]; } set { _data[4] = value; } }
 
         [TalentData(5, "Two-Handed Weapon Specialization", 2, 0, 3, 2, -1, new string[] {
@@ -3031,15 +3031,15 @@ namespace Rawr
         public int Vendetta { get { return _data[11]; } set { _data[11] = value; } }
 
         [TalentData(12, "Bloody Strikes", 3, 0, 1, 5, -1, new string[] {
-@"Increases the damage of Blood Strike and Heart Strike by 15%, and increases the damage of Blood Boil by 10%.",
-@"Increases the damage of Blood Strike and Heart Strike by 30%, and increases the damage of Blood Boil by 20%.",
-@"Increases the damage of Blood Strike and Heart Strike by 45%, and increases the damage of Blood Boil by 30%.",}, "spell_deathknight_deathstrike")]
+@"Increases the damage of Blood Strike by 5% and Heart Strike by 15%, and increases the damage of Blood Boil by 10%.",
+@"Increases the damage of Blood Strike by 10% and Heart Strike by 30%, and increases the damage of Blood Boil by 20%.",
+@"Increases the damage of Blood Strike by 15% and Heart Strike by 45%, and increases the damage of Blood Boil by 30%.",}, "spell_deathknight_deathstrike")]
         public int BloodyStrikes { get { return _data[12]; } set { _data[12] = value; } }
 
         [TalentData(13, "Veteran of the Third War", 3, 0, 3, 5, -1, new string[] {
-@"Increases your total Strength and Stamina by 2%, and your expertise by 2.",
-@"Increases your total Strength and Stamina by 4%, and your expertise by 4.",
-@"Increases your total Strength and Stamina by 6%, and your expertise by 6.",}, "spell_misc_warsongfocus")]
+@"Increases your total Strength by 2%, your Stamina by 1%, and your expertise by 2.",
+@"Increases your total Strength by 4%, your Stamina by 2%, and your expertise by 4.",
+@"Increases your total Strength by 6%, your Stamina by 3%, and your expertise by 6.",}, "spell_misc_warsongfocus")]
         public int VeteranOfTheThirdWar { get { return _data[13]; } set { _data[13] = value; } }
 
         [TalentData(14, "Mark of Blood", 1, 0, 4, 5, -1, new string[] {
@@ -3073,8 +3073,8 @@ namespace Rawr
         public int ImprovedBloodPresence { get { return _data[19]; } set { _data[19] = value; } }
 
         [TalentData(20, "Improved Death Strike", 2, 0, 1, 8, -1, new string[] {
-@"Increases the damage of your Death Strike by 15% and increases its critical strike chance by 3%.",
-@"Increases the damage of your Death Strike by 30% and increases its critical strike chance by 6%.",}, "spell_deathknight_butcher2")]
+@"Increases the damage of your Death Strike by 15%, increases its critical strike chance by 3%, and increases the healing granted by 25%.",
+@"Increases the damage of your Death Strike by 30%, increases its critical strike chance by 6%, and increases the healing granted by 50%.",}, "spell_deathknight_butcher2")]
         public int ImprovedDeathStrike { get { return _data[20]; } set { _data[20] = value; } }
 
         [TalentData(21, "Sudden Doom", 3, 0, 2, 8, -1, new string[] {
@@ -3098,9 +3098,9 @@ namespace Rawr
         public int HeartStrike { get { return _data[24]; } set { _data[24] = value; } }
 
         [TalentData(25, "Might of Mograine", 3, 0, 3, 9, -1, new string[] {
-@"Increases the critical strike damage damage bonus of your Blood Boil, Blood Strike, Death Strike, and Heart Strike abilities by 15%.",
-@"Increases the critical strike damage damage bonus of your Blood Boil, Blood Strike, Death Strike, and Heart Strike abilities by 30%.",
-@"Increases the critical strike damage damage bonus of your Blood Boil, Blood Strike, Death Strike, and Heart Strike abilities by 45%.",}, "spell_deathknight_classicon")]
+@"Increases the critical strike damage bonus of your Blood Boil, Blood Strike, Death Strike, and Heart Strike abilities by 15%.",
+@"Increases the critical strike damage bonus of your Blood Boil, Blood Strike, Death Strike, and Heart Strike abilities by 30%.",
+@"Increases the critical strike damage bonus of your Blood Boil, Blood Strike, Death Strike, and Heart Strike abilities by 45%.",}, "spell_deathknight_classicon")]
         public int MightOfMograine { get { return _data[25]; } set { _data[25] = value; } }
 
         [TalentData(26, "Blood Gorged", 5, 0, 2, 10, -1, new string[] {
@@ -3112,7 +3112,7 @@ namespace Rawr
         public int BloodGorged { get { return _data[26]; } set { _data[26] = value; } }
 
         [TalentData(27, "Dancing Rune Weapon", 1, 0, 2, 11, -1, new string[] {
-@"Unleashes all available runic power to summon a second rune weapon that fights on its own for 5 sec plus 1 sec per 10 additional runic power, doing the same attacks as the Death Knight but for 50% reduced damage.",}, "inv_sword_07")]
+@"Summons a second rune weapon that fights on its own for 12 sec, doing the same attacks as the Death Knight but for 50% reduced damage.",}, "inv_sword_07")]
         public int DancingRuneWeapon { get { return _data[27]; } set { _data[27] = value; } }
 
         [TalentData(28, "Improved Icy Touch", 3, 1, 1, 1, -1, new string[] {
@@ -3127,11 +3127,11 @@ namespace Rawr
         public int RunicPowerMastery { get { return _data[29]; } set { _data[29] = value; } }
 
         [TalentData(30, "Toughness", 5, 1, 3, 1, -1, new string[] {
-@"Increases your armor value from items by 3% and reduces the duration of all movement slowing effects by 6%.",
-@"Increases your armor value from items by 6% and reduces the duration of all movement slowing effects by 12%.",
-@"Increases your armor value from items by 9% and reduces the duration of all movement slowing effects by 18%.",
-@"Increases your armor value from items by 12% and reduces the duration of all movement slowing effects by 24%.",
-@"Increases your armor value from items by 15% and reduces the duration of all movement slowing effects by 30%.",}, "spell_holy_devotion")]
+@"Increases your armor value from items by 2% and reduces the duration of all movement slowing effects by 6%.",
+@"Increases your armor value from items by 4% and reduces the duration of all movement slowing effects by 12%.",
+@"Increases your armor value from items by 6% and reduces the duration of all movement slowing effects by 18%.",
+@"Increases your armor value from items by 8% and reduces the duration of all movement slowing effects by 24%.",
+@"Increases your armor value from items by 10% and reduces the duration of all movement slowing effects by 30%.",}, "spell_holy_devotion")]
         public int Toughness { get { return _data[30]; } set { _data[30] = value; } }
 
         [TalentData(31, "Icy Reach", 2, 1, 2, 2, -1, new string[] {
@@ -3162,7 +3162,7 @@ namespace Rawr
         public int IcyTalons { get { return _data[34]; } set { _data[34] = value; } }
 
         [TalentData(35, "Lichborne", 1, 1, 2, 3, -1, new string[] {
-@"Draw upon unholy energy to become undead for 15 sec.  While undead, you are immune to Charm, Fear and Sleep effects.",}, "spell_shadow_raisedead")]
+@"Draw upon unholy energy to become undead for 10 sec.  While undead, you are immune to Charm, Fear and Sleep effects.",}, "spell_shadow_raisedead")]
         public int Lichborne { get { return _data[35]; } set { _data[35] = value; } }
 
         [TalentData(36, "Annihilation", 3, 1, 3, 3, -1, new string[] {
@@ -3231,216 +3231,225 @@ namespace Rawr
         public int HungeringCold { get { return _data[47]; } set { _data[47] = value; } }
 
         [TalentData(48, "Improved Frost Presence", 2, 1, 3, 7, -1, new string[] {
-@"While in Blood Presence or Unholy Presence, you retain 5% health from Frost Presence, and damage done to you is decreased by an additional 1% in Frost Presence.",
-@"While in Blood Presence or Unholy Presence, you retain 10% health from Frost Presence, and damage done to you is decreased by an additional 2% in Frost Presence.",}, "spell_deathknight_frostpresence")]
+@"While in Blood Presence or Unholy Presence, you retain 3% stamina from Frost Presence, and damage done to you is decreased by an additional 1% in Frost Presence.",
+@"While in Blood Presence or Unholy Presence, you retain 6% stamina from Frost Presence, and damage done to you is decreased by an additional 2% in Frost Presence.",}, "spell_deathknight_frostpresence")]
         public int ImprovedFrostPresence { get { return _data[48]; } set { _data[48] = value; } }
 
-        [TalentData(49, "Blood of the North", 5, 1, 2, 8, -1, new string[] {
-@"Increases Blood Strike and Frost Strike damage by 3%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 20% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
-@"Increases Blood Strike and Frost Strike damage by 6%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 40% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
-@"Increases Blood Strike and Frost Strike damage by 9%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 60% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
-@"Increases Blood Strike and Frost Strike damage by 12%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 80% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
-@"Increases Blood Strike and Frost Strike damage by 15%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 100% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",}, "inv_weapon_shortblade_79")]
-        public int BloodOfTheNorth { get { return _data[49]; } set { _data[49] = value; } }
+        [TalentData(49, "Threat of Thassarian", 3, 1, 1, 8, -1, new string[] {
+@"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Blood Strikes and Frost Strikes have a 30% chance to also deal damage with your off-hand weapon.",
+@"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Blood Strikes and Frost Strikes have a 60% chance to also deal damage with your off-hand weapon.",
+@"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Blood Strikes and Frost Strikes have a 100% chance to also deal damage with your off-hand weapon.",}, "ability_dualwieldspecialization")]
+        public int ThreatOfThassarian { get { return _data[49]; } set { _data[49] = value; } }
 
-        [TalentData(50, "Unbreakable Armor", 1, 1, 3, 8, -1, new string[] {
-@"Reinforces your armor with a thick coat of ice, reducing damage from all attacks by 22 and increasing your Strength by 25% for 20 sec.  The amount of damage reduced increases as your armor increases.",}, "inv_armor_helm_plate_naxxramas_raidwarrior_c_01")]
-        public int UnbreakableArmor { get { return _data[50]; } set { _data[50] = value; } }
+        [TalentData(50, "Blood of the North", 3, 1, 2, 8, -1, new string[] {
+@"Increases Blood Strike and Frost Strike damage by 3%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 30% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
+@"Increases Blood Strike and Frost Strike damage by 6%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 60% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
+@"Increases Blood Strike and Frost Strike damage by 10%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 100% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",}, "inv_weapon_shortblade_79")]
+        public int BloodOfTheNorth { get { return _data[50]; } set { _data[50] = value; } }
 
-        [TalentData(51, "Acclimation", 3, 1, 1, 9, -1, new string[] {
+        [TalentData(51, "Unbreakable Armor", 1, 1, 3, 8, -1, new string[] {
+@"Reinforces your armor with a thick coat of ice, reducing damage from all attacks by 2 and increasing your Strength by 25% for 20 sec.  The amount of damage reduced increases as your armor increases.",}, "inv_armor_helm_plate_naxxramas_raidwarrior_c_01")]
+        public int UnbreakableArmor { get { return _data[51]; } set { _data[51] = value; } }
+
+        [TalentData(52, "Acclimation", 3, 1, 1, 9, -1, new string[] {
 @"When you are hit by a spell, you have a 10% chance to boost your resistance to that type of magic for 18 sec.  Stacks up to 3 times.",
 @"When you are hit by a spell, you have a 20% chance to boost your resistance to that type of magic for 18 sec.  Stacks up to 3 times.",
 @"When you are hit by a spell, you have a 30% chance to boost your resistance to that type of magic for 18 sec.  Stacks up to 3 times.",}, "spell_fire_elementaldevastation")]
-        public int Acclimation { get { return _data[51]; } set { _data[51] = value; } }
+        public int Acclimation { get { return _data[52]; } set { _data[52] = value; } }
 
-        [TalentData(52, "Frost Strike", 1, 1, 2, 9, -1, new string[] {
-@"Instantly strike the enemy, causing 60% weapon damage plus 52 as Frost damage.  Can't be dodged, blocked, or parried.",}, "spell_deathknight_empowerruneblade2")]
-        public int FrostStrike { get { return _data[52]; } set { _data[52] = value; } }
+        [TalentData(53, "Frost Strike", 1, 1, 2, 9, -1, new string[] {
+@"Instantly strike the enemy, causing 55% weapon damage plus 48 as Frost damage.",}, "spell_deathknight_empowerruneblade2")]
+        public int FrostStrike { get { return _data[53]; } set { _data[53] = value; } }
 
-        [TalentData(53, "Guile of Gorefiend", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(54, "Guile of Gorefiend", 3, 1, 3, 9, -1, new string[] {
 @"Increases the critical strike damage bonus of your Blood Strike, Frost Strike, Howling Blast and Obliterate abilities by 15%, and increases the duration of your Icebound Fortitude by 2 secs.",
 @"Increases the critical strike damage bonus of your Blood Strike, Frost Strike, Howling Blast and Obliterate abilities by 30%, and increases the duration of your Icebound Fortitude by 4 secs.",
 @"Increases the critical strike damage bonus of your Blood Strike, Frost Strike, Howling Blast and Obliterate abilities by 45%, and increases the duration of your Icebound Fortitude by 6 secs.",}, "inv-sword_53")]
-        public int GuileOfGorefiend { get { return _data[53]; } set { _data[53] = value; } }
+        public int GuileOfGorefiend { get { return _data[54]; } set { _data[54] = value; } }
 
-        [TalentData(54, "Tundra Stalker", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(55, "Tundra Stalker", 5, 1, 2, 10, -1, new string[] {
 @"Your spells and abilities deal 3% more damage to targets infected with Frost Fever.  Also increases your expertise by 1.",
 @"Your spells and abilities deal 6% more damage to targets infected with Frost Fever.  Also increases your expertise by 2.",
 @"Your spells and abilities deal 9% more damage to targets infected with Frost Fever.  Also increases your expertise by 3.",
 @"Your spells and abilities deal 12% more damage to targets infected with Frost Fever.  Also increases your expertise by 4.",
 @"Your spells and abilities deal 15% more damage to targets infected with Frost Fever.  Also increases your expertise by 5.",}, "spell_nature_tranquility")]
-        public int TundraStalker { get { return _data[54]; } set { _data[54] = value; } }
+        public int TundraStalker { get { return _data[55]; } set { _data[55] = value; } }
 
-        [TalentData(55, "Howling Blast", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(56, "Howling Blast", 1, 1, 2, 11, -1, new string[] {
 @"Blast the target with a frigid wind dealing 198 to 214 Frost damage to all enemies within 10 yards.",}, "spell_frost_arcticwinds")]
-        public int HowlingBlast { get { return _data[55]; } set { _data[55] = value; } }
+        public int HowlingBlast { get { return _data[56]; } set { _data[56] = value; } }
 
-        [TalentData(56, "Vicious Strikes", 2, 2, 1, 1, -1, new string[] {
+        [TalentData(57, "Vicious Strikes", 2, 2, 1, 1, -1, new string[] {
 @"Increases the critical strike chance by 3% and critical strike damage bonus by 15% of your Plague Strike and Scourge Strike.",
 @"Increases the critical strike chance by 6% and critical strike damage bonus by 30% of your Plague Strike and Scourge Strike.",}, "spell_deathknight_plaguestrike")]
-        public int ViciousStrikes { get { return _data[56]; } set { _data[56] = value; } }
+        public int ViciousStrikes { get { return _data[57]; } set { _data[57] = value; } }
 
-        [TalentData(57, "Virulence", 3, 2, 2, 1, -1, new string[] {
+        [TalentData(58, "Virulence", 3, 2, 2, 1, -1, new string[] {
 @"Increases your chance to hit with your spells by 1% and reduces the chance that your damage over time diseases can be cured by 10%.",
 @"Increases your chance to hit with your spells by 2% and reduces the chance that your damage over time diseases can be cured by 20%.",
 @"Increases your chance to hit with your spells by 3% and reduces the chance that your damage over time diseases can be cured by 30%.",}, "spell_shadow_burningspirit")]
-        public int Virulence { get { return _data[57]; } set { _data[57] = value; } }
+        public int Virulence { get { return _data[58]; } set { _data[58] = value; } }
 
-        [TalentData(58, "Anticipation", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(59, "Anticipation", 5, 2, 3, 1, -1, new string[] {
 @"Increases your Dodge chance by 1%.",
 @"Increases your Dodge chance by 2%.",
 @"Increases your Dodge chance by 3%.",
 @"Increases your Dodge chance by 4%.",
 @"Increases your Dodge chance by 5%.",}, "spell_nature_mirrorimage")]
-        public int Anticipation { get { return _data[58]; } set { _data[58] = value; } }
+        public int Anticipation { get { return _data[59]; } set { _data[59] = value; } }
 
-        [TalentData(59, "Epidemic", 2, 2, 1, 2, -1, new string[] {
+        [TalentData(60, "Epidemic", 2, 2, 1, 2, -1, new string[] {
 @"Increases the duration of Blood Plague and Frost Fever by 3 sec.",
 @"Increases the duration of Blood Plague and Frost Fever by 6 sec.",}, "spell_shadow_shadowwordpain")]
-        public int Epidemic { get { return _data[59]; } set { _data[59] = value; } }
+        public int Epidemic { get { return _data[60]; } set { _data[60] = value; } }
 
-        [TalentData(60, "Morbidity", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(61, "Morbidity", 3, 2, 2, 2, -1, new string[] {
 @"Increases the damage and healing of Death Coil by 5% and reduces the cooldown on Death and Decay by 5 sec.",
 @"Increases the damage and healing of Death Coil by 10% and reduces the cooldown on Death and Decay by 10 sec.",
 @"Increases the damage and healing of Death Coil by 15% and reduces the cooldown on Death and Decay by 15 sec.",}, "spell_shadow_deathanddecay")]
-        public int Morbidity { get { return _data[60]; } set { _data[60] = value; } }
+        public int Morbidity { get { return _data[61]; } set { _data[61] = value; } }
 
-        [TalentData(61, "Unholy Command", 2, 2, 3, 2, -1, new string[] {
+        [TalentData(62, "Unholy Command", 2, 2, 3, 2, -1, new string[] {
 @"Reduces the cooldown of your Death Grip ability by 5 sec.",
 @"Reduces the cooldown of your Death Grip ability by 10 sec.",}, "spell_deathknight_strangulate")]
-        public int UnholyCommand { get { return _data[61]; } set { _data[61] = value; } }
+        public int UnholyCommand { get { return _data[62]; } set { _data[62] = value; } }
 
-        [TalentData(62, "Ravenous Dead", 3, 2, 4, 2, -1, new string[] {
+        [TalentData(63, "Ravenous Dead", 3, 2, 4, 2, -1, new string[] {
 @"Increases your total Strength by 1% and the contribution your Ghouls get from your Strength and Stamina by 20%.",
 @"Increases your total Strength by 2% and the contribution your Ghouls get from your Strength and Stamina by 40%.",
 @"Increases your total Strength by 3% and the contribution your Ghouls get from your Strength and Stamina by 60%",}, "spell_deathknight_gnaw_ghoul")]
-        public int RavenousDead { get { return _data[62]; } set { _data[62] = value; } }
+        public int RavenousDead { get { return _data[63]; } set { _data[63] = value; } }
 
-        [TalentData(63, "Outbreak", 3, 2, 1, 3, -1, new string[] {
+        [TalentData(64, "Outbreak", 3, 2, 1, 3, -1, new string[] {
 @"Increases the damage of Plague Strike by 10% and Scourge Strike by 7%.",
 @"Increases the damage of Plague Strike by 20% and Scourge Strike by 13%.",
 @"Increases the damage of Plague Strike by 30% and Scourge Strike by 20%.",}, "spell_shadow_plaguecloud")]
-        public int Outbreak { get { return _data[63]; } set { _data[63] = value; } }
+        public int Outbreak { get { return _data[64]; } set { _data[64] = value; } }
 
-        [TalentData(64, "Necrosis", 5, 2, 2, 3, -1, new string[] {
+        [TalentData(65, "Necrosis", 5, 2, 2, 3, -1, new string[] {
 @"Your auto attacks deal an additional 4% Shadow damage.",
 @"Your auto attacks deal an additional 8% Shadow damage.",
 @"Your auto attacks deal an additional 12% Shadow damage.",
 @"Your auto attacks deal an additional 16% Shadow damage.",
 @"Your auto attacks deal an additional 20% Shadow damage.",}, "inv_weapon_shortblade_60")]
-        public int Necrosis { get { return _data[64]; } set { _data[64] = value; } }
+        public int Necrosis { get { return _data[65]; } set { _data[65] = value; } }
 
-        [TalentData(65, "Corpse Explosion", 1, 2, 3, 3, -1, new string[] {
+        [TalentData(66, "Corpse Explosion", 1, 2, 3, 3, -1, new string[] {
 @"Cause a corpse to explode for 166 Shadow damage to all enemies within 10 yards.  Will use a nearby corpse if the target is not a corpse.  Does not affect mechanical or elemental corpses.",}, "ability_creature_disease_02")]
-        public int CorpseExplosion { get { return _data[65]; } set { _data[65] = value; } }
+        public int CorpseExplosion { get { return _data[66]; } set { _data[66] = value; } }
 
-        [TalentData(66, "On a Pale Horse", 2, 2, 2, 4, -1, new string[] {
+        [TalentData(67, "On a Pale Horse", 2, 2, 2, 4, -1, new string[] {
 @"You become as hard to stop as death itself.  The duration of all Stun and Fear effects used against you is reduced by 10%, and your mounted speed is increased by 10%.  This does not stack with other movement speed increasing effects.",
 @"You become as hard to stop as death itself.  The duration of all Stun and Fear effects used against you is reduced by 20%, and your mounted speed is increased by 20%.  This does not stack with other movement speed increasing effects.",}, "spell_deathknight_summondeathcharger")]
-        public int OnAPaleHorse { get { return _data[66]; } set { _data[66] = value; } }
+        public int OnAPaleHorse { get { return _data[67]; } set { _data[67] = value; } }
 
-        [TalentData(67, "Blood-Caked Blade", 3, 2, 3, 4, -1, new string[] {
+        [TalentData(68, "Blood-Caked Blade", 3, 2, 3, 4, -1, new string[] {
 @"Your auto attacks have a 10% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",
 @"Your auto attacks have a 20% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",
 @"Your auto attacks have a 30% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",}, "ability_criticalstrike")]
-        public int BloodCakedBlade { get { return _data[67]; } set { _data[67] = value; } }
+        public int BloodCakedBlade { get { return _data[68]; } set { _data[68] = value; } }
 
-        [TalentData(68, "Night of the Dead", 2, 2, 4, 4, -1, new string[] {
+        [TalentData(69, "Night of the Dead", 2, 2, 4, 4, -1, new string[] {
 @"Reduces the cooldown on Raise Dead by 45 sec. and the cooldown on Army of the Dead by 5 min.  Also reduces the damage your pet takes from area of effect attacks by 40%.",
 @"Reduces the cooldown on Raise Dead by 90 sec. and the cooldown on Army of the Dead by 10 min.  Also reduces the damage your pet takes from area of effect attacks by 70%.",}, "spell_deathknight_armyofthedead")]
-        public int NightOfTheDead { get { return _data[68]; } set { _data[68] = value; } }
+        public int NightOfTheDead { get { return _data[69]; } set { _data[69] = value; } }
 
-        [TalentData(69, "Unholy Blight", 1, 2, 1, 5, -1, new string[] {
-@"A vile swarm of unholy insects surrounds the Death Knight for a 10 yard radius.  Enemies caught in the area take 21 Shadow damage per sec.  Lasts 20 sec.",}, "spell_shadow_contagion")]
-        public int UnholyBlight { get { return _data[69]; } set { _data[69] = value; } }
+        [TalentData(70, "Unholy Blight", 1, 2, 1, 5, -1, new string[] {
+@"Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 20% of the damage done by the Death Coil over 10 sec.",}, "spell_shadow_contagion")]
+        public int UnholyBlight { get { return _data[70]; } set { _data[70] = value; } }
 
-        [TalentData(70, "Impurity", 5, 2, 2, 5, -1, new string[] {
+        [TalentData(71, "Impurity", 5, 2, 2, 5, -1, new string[] {
 @"The attack power bonus of your spells is increased by 4%.",
 @"The attack power bonus of your spells is increased by 8%.",
 @"The attack power bonus of your spells is increased by 12%.",
 @"The attack power bonus of your spells is increased by 16%.",
 @"Your spells receive an additional 20% benefit from your attack power.",}, "spell_shadow_shadowandflame")]
-        public int Impurity { get { return _data[70]; } set { _data[70] = value; } }
+        public int Impurity { get { return _data[71]; } set { _data[71] = value; } }
 
-        [TalentData(71, "Dirge", 2, 2, 3, 5, -1, new string[] {
+        [TalentData(72, "Dirge", 2, 2, 3, 5, -1, new string[] {
 @"Your Death Strike, Obliterate, Plague Strike and Scourge Strike generate 2.5 additional runic power.",
 @"Your Death Strike, Obliterate, Plague Strike and Scourge Strike generate 5 additional runic power.",}, "spell_shadow_shadesofdarkness")]
-        public int Dirge { get { return _data[71]; } set { _data[71] = value; } }
+        public int Dirge { get { return _data[72]; } set { _data[72] = value; } }
 
-        [TalentData(72, "Magic Suppression", 3, 2, 2, 6, -1, new string[] {
+        [TalentData(73, "Desecration", 2, 2, 1, 6, -1, new string[] {
+@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 25% by the grasping arms of the dead while standing on the unholy ground.  Lasts 12 sec.",
+@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 50% by the grasping arms of the dead while standing on the unholy ground.  Lasts 12 sec.",}, "spell_shadow_shadowfiend")]
+        public int Desecration { get { return _data[73]; } set { _data[73] = value; } }
+
+        [TalentData(74, "Magic Suppression", 3, 2, 2, 6, -1, new string[] {
 @"You take 2% less damage from all magic.  In addition, your Anti-Magic Shell absorbs an additional 8% of spell damage.",
 @"You take 4% less damage from all magic.  In addition, your Anti-Magic Shell absorbs an additional 16% of spell damage.",
 @"You take 6% less damage from all magic.  In addition, your Anti-Magic Shell absorbs an additional 25% of spell damage.",}, "spell_shadow_antimagicshell")]
-        public int MagicSuppression { get { return _data[72]; } set { _data[72] = value; } }
+        public int MagicSuppression { get { return _data[74]; } set { _data[74] = value; } }
 
-        [TalentData(73, "Reaping", 3, 2, 3, 6, -1, new string[] {
+        [TalentData(75, "Reaping", 3, 2, 3, 6, -1, new string[] {
 @"Whenever you hit with Blood Strike or Pestilence there is a 33% chance that the Blood Rune becomes a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
 @"Whenever you hit with Blood Strike or Pestilence there is a 66% chance that the Blood Rune becomes a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",
 @"Whenever you hit with Blood Strike or Pestilence there is a 100% chance that the Blood Rune becomes a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",}, "spell_shadow_shadetruesight")]
-        public int Reaping { get { return _data[73]; } set { _data[73] = value; } }
+        public int Reaping { get { return _data[75]; } set { _data[75] = value; } }
 
-        [TalentData(74, "Master of Ghouls", 1, 2, 4, 6, 68, new string[] {
+        [TalentData(76, "Master of Ghouls", 1, 2, 4, 6, 69, new string[] {
 @"Reduces the cooldown on Raise Dead by 60 sec., and the Ghoul summoned by your Raise Dead spell is considered a pet under your control.  Unlike normal Death Knight Ghouls, your pet does not have a limited duration.",}, "spell_shadow_animatedead")]
-        public int MasterOfGhouls { get { return _data[74]; } set { _data[74] = value; } }
+        public int MasterOfGhouls { get { return _data[76]; } set { _data[76] = value; } }
 
-        [TalentData(75, "Desecration", 5, 2, 1, 7, -1, new string[] {
-@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 10% by the grasping arms of the dead while you cause 1% additional damage while standing on the unholy ground.  Lasts 12 sec.",
-@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 20% by the grasping arms of the dead while you cause 2% additional damage while standing on the unholy ground.  Lasts 12 sec.",
-@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 30% by the grasping arms of the dead while you cause 3% additional damage while standing on the unholy ground.  Lasts 12 sec.",
-@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 40% by the grasping arms of the dead while you cause 4% additional damage while standing on the unholy ground.  Lasts 12 sec.",
-@"Your Plague Strikes and Scourge Strikes cause the Desecrated Ground effect.  Targets in the area are slowed by 50% by the grasping arms of the dead while you cause 5% additional damage while standing on the unholy ground.  Lasts 12 sec.",}, "spell_shadow_shadowfiend")]
-        public int Desecration { get { return _data[75]; } set { _data[75] = value; } }
+        [TalentData(77, "Desolation", 5, 2, 1, 7, -1, new string[] {
+@"Your Blood Strikes cause you to deal 1% additional damage with all attacks for the next 20 sec.",
+@"Your Blood Strikes cause you to deal 2% additional damage with all attacks for the next 20 sec.",
+@"Your Blood Strikes cause you to deal 3% additional damage with all attacks for the next 20 sec.",
+@"Your Blood Strikes cause you to deal 4% additional damage with all attacks for the next 20 sec.",
+@"Your Blood Strikes cause you to deal 5% additional damage with all attacks for the next 20 sec.",}, "spell_shadow_unholyfrenzy")]
+        public int Desolation { get { return _data[77]; } set { _data[77] = value; } }
 
-        [TalentData(76, "Anti-Magic Zone", 1, 2, 2, 7, 72, new string[] {
-@"Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs 10052 spell damage.",}, "spell_deathknight_antimagiczone")]
-        public int AntiMagicZone { get { return _data[76]; } set { _data[76] = value; } }
+        [TalentData(78, "Anti-Magic Zone", 1, 2, 2, 7, 74, new string[] {
+@"Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs 10054 spell damage.",}, "spell_deathknight_antimagiczone")]
+        public int AntiMagicZone { get { return _data[78]; } set { _data[78] = value; } }
 
-        [TalentData(77, "Improved Unholy Presence", 2, 2, 3, 7, -1, new string[] {
+        [TalentData(79, "Improved Unholy Presence", 2, 2, 3, 7, -1, new string[] {
 @"While in Blood Presence or Frost Presence, you retain 8% increased movement speed from Unholy Presence, and your runes finish their cooldowns 5% faster in Unholy Presence.",
 @"While in Blood Presence or Frost Presence, you retain 15% increased movement speed from Unholy Presence, and your runes finish their cooldowns 10% faster in Unholy Presence.",}, "spell_deathknight_unholypresence")]
-        public int ImprovedUnholyPresence { get { return _data[77]; } set { _data[77] = value; } }
+        public int ImprovedUnholyPresence { get { return _data[79]; } set { _data[79] = value; } }
 
-        [TalentData(78, "Ghoul Frenzy", 1, 2, 4, 7, 74, new string[] {
+        [TalentData(80, "Ghoul Frenzy", 1, 2, 4, 7, 76, new string[] {
 @"Grants your pet 25% haste for 30 sec and  heals it for 60% of its health over the duration.",}, "ability_ghoulfrenzy")]
-        public int GhoulFrenzy { get { return _data[78]; } set { _data[78] = value; } }
+        public int GhoulFrenzy { get { return _data[80]; } set { _data[80] = value; } }
 
-        [TalentData(79, "Crypt Fever", 3, 2, 2, 8, -1, new string[] {
+        [TalentData(81, "Crypt Fever", 3, 2, 2, 8, -1, new string[] {
 @"Your diseases also cause Crypt Fever, which increases disease damage taken by the target by 10%.",
 @"Your diseases also cause Crypt Fever, which increases disease damage taken by the target by 20%.",
 @"Your diseases also cause Crypt Fever, which increases disease damage taken by the target by 30%.",}, "spell_nature_nullifydisease")]
-        public int CryptFever { get { return _data[79]; } set { _data[79] = value; } }
+        public int CryptFever { get { return _data[81]; } set { _data[81] = value; } }
 
-        [TalentData(80, "Bone Shield", 1, 2, 3, 8, -1, new string[] {
+        [TalentData(82, "Bone Shield", 1, 2, 3, 8, -1, new string[] {
 @"The Death Knight is surrounded by 4 whirling bones.  While at least 1 bone remains, he takes 20% less damage from all sources and deals 2% more damage with all attacks, spells and abilities.  Each damaging attack that lands consumes 1 bone.  Lasts 5 min.",}, "inv_chest_leather_13")]
-        public int BoneShield { get { return _data[80]; } set { _data[80] = value; } }
+        public int BoneShield { get { return _data[82]; } set { _data[82] = value; } }
 
-        [TalentData(81, "Wandering Plague", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(83, "Wandering Plague", 3, 2, 1, 9, -1, new string[] {
 @"When your diseases damage an enemy, there is a chance equal to your melee critical strike chance that they will cause 33% additional damage to the target and all enemies within 8 yards.  Ignores any target under the effect of a spell that is cancelled by taking damage.",
 @"When your diseases damage an enemy, there is a chance equal to your melee critical strike chance that they will cause 66% additional damage to the target and all enemies within 8 yards.  Ignores any target under the effect of a spell that is cancelled by taking damage.",
 @"When your diseases damage an enemy, there is a chance equal to your melee critical strike chance that they will cause 100% additional damage to the target and all enemies within 8 yards.  Ignores any target under the effect of a spell that is cancelled by taking damage.",}, "spell_shadow_callofbone")]
-        public int WanderingPlague { get { return _data[81]; } set { _data[81] = value; } }
+        public int WanderingPlague { get { return _data[83]; } set { _data[83] = value; } }
 
-        [TalentData(82, "Ebon Plaguebringer", 3, 2, 2, 9, 79, new string[] {
+        [TalentData(84, "Ebon Plaguebringer", 3, 2, 2, 9, 81, new string[] {
 @"Your Crypt Fever morphs into Ebon Plague, which increases magic damage taken by 4% in addition to increasing disease damage taken.  Improves your critical strike chance with weapons and spells by 1% at all times.",
 @"Your Crypt Fever morphs into Ebon Plague, which increases magic damage taken by 9% in addition to increasing disease damage taken.  Improves your critical strike chance with weapons and spells by 2% at all times.",
 @"Your Crypt Fever morphs into Ebon Plague, which increases magic damage taken by 13% in addition to increasing disease damage taken.  Improves your critical strike chance with weapons and spells by 3% at all times.",}, "ability_creature_cursed_03")]
-        public int EbonPlaguebringer { get { return _data[82]; } set { _data[82] = value; } }
+        public int EbonPlaguebringer { get { return _data[84]; } set { _data[84] = value; } }
 
-        [TalentData(83, "Scourge Strike", 1, 2, 3, 9, -1, new string[] {
-@"An unholy strike that deals 45% of weapon damage as Shadow damage plus 152, total damage increased 11% per each of your diseases on the target.",}, "spell_deathknight_scourgestrike")]
-        public int ScourgeStrike { get { return _data[83]; } set { _data[83] = value; } }
+        [TalentData(85, "Scourge Strike", 1, 2, 3, 9, -1, new string[] {
+@"An unholy strike that deals 40% of weapon damage as Shadow damage plus 135, total damage increased 10% per each of your diseases on the target.",}, "spell_deathknight_scourgestrike")]
+        public int ScourgeStrike { get { return _data[85]; } set { _data[85] = value; } }
 
-        [TalentData(84, "Rage of Rivendare", 5, 2, 2, 10, -1, new string[] {
+        [TalentData(86, "Rage of Rivendare", 5, 2, 2, 10, -1, new string[] {
 @"Your spells and abilities deal 2% more damage to targets infected with Blood Plague.  Also increases your expertise by 1.",
 @"Your spells and abilities deal 4% more damage to targets infected with Blood Plague.  Also increases your expertise by 2.",
 @"Your spells and abilities deal 6% more damage to targets infected with Blood Plague.  Also increases your expertise by 3.",
 @"Your spells and abilities deal 8% more damage to targets infected with Blood Plague.  Also increases your expertise by 4.",
 @"Your spells and abilities deal 10% more damage to targets infected with Blood Plague.  Also increases your expertise by 5.",}, "inv_weapon_halberd14")]
-        public int RageOfRivendare { get { return _data[84]; } set { _data[84] = value; } }
+        public int RageOfRivendare { get { return _data[86]; } set { _data[86] = value; } }
 
-        [TalentData(85, "Summon Gargoyle", 1, 2, 2, 11, -1, new string[] {
-@"A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 10 sec plus 1 sec per 3 runic power up to 40 sec.",}, "ability_hunter_pet_bat")]
-        public int SummonGargoyle { get { return _data[85]; } set { _data[85] = value; } }
+        [TalentData(87, "Summon Gargoyle", 1, 2, 2, 11, -1, new string[] {
+@"A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 30 sec.",}, "ability_hunter_pet_bat")]
+        public int SummonGargoyle { get { return _data[87]; } set { _data[87] = value; } }
     }
 
     public partial class ShamanTalents : TalentsBase, ICloneable

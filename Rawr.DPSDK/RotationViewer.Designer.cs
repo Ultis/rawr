@@ -48,7 +48,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtPS = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.txtUB = new System.Windows.Forms.TextBox();
+            this.txtPest = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.txtFS = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -62,9 +62,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtHS = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.txtGargoyleDuration = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.rbUnholyPresence = new System.Windows.Forms.RadioButton();
             this.rbBloodPresence = new System.Windows.Forms.RadioButton();
@@ -77,8 +74,8 @@
             this.txtHoW = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.cbManagedRP = new System.Windows.Forms.CheckBox();
-            this.PTRCalcs = new System.Windows.Forms.CheckBox();
-            this.cbTAT = new System.Windows.Forms.CheckBox();
+            this.txtGF = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -222,7 +219,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 207);
+            this.label5.Location = new System.Drawing.Point(0, 176);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(141, 13);
             this.label5.TabIndex = 45;
@@ -231,7 +228,7 @@
             // 
             // txtDC
             // 
-            this.txtDC.Location = new System.Drawing.Point(123, 223);
+            this.txtDC.Location = new System.Drawing.Point(120, 192);
             this.txtDC.Name = "txtDC";
             this.txtDC.Size = new System.Drawing.Size(29, 20);
             this.txtDC.TabIndex = 47;
@@ -239,7 +236,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 226);
+            this.label6.Location = new System.Drawing.Point(9, 195);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 13);
             this.label6.TabIndex = 46;
@@ -248,7 +245,7 @@
             // 
             // txtIT
             // 
-            this.txtIT.Location = new System.Drawing.Point(123, 249);
+            this.txtIT.Location = new System.Drawing.Point(120, 218);
             this.txtIT.Name = "txtIT";
             this.txtIT.Size = new System.Drawing.Size(29, 20);
             this.txtIT.TabIndex = 49;
@@ -256,7 +253,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 252);
+            this.label7.Location = new System.Drawing.Point(9, 221);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(58, 13);
             this.label7.TabIndex = 48;
@@ -265,7 +262,7 @@
             // 
             // txtPS
             // 
-            this.txtPS.Location = new System.Drawing.Point(123, 275);
+            this.txtPS.Location = new System.Drawing.Point(120, 244);
             this.txtPS.Name = "txtPS";
             this.txtPS.Size = new System.Drawing.Size(29, 20);
             this.txtPS.TabIndex = 51;
@@ -273,33 +270,33 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 278);
+            this.label8.Location = new System.Drawing.Point(9, 247);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(73, 13);
             this.label8.TabIndex = 50;
             this.label8.Text = "Plague Strike:";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // txtUB
+            // txtPest
             // 
-            this.txtUB.Location = new System.Drawing.Point(123, 301);
-            this.txtUB.Name = "txtUB";
-            this.txtUB.Size = new System.Drawing.Size(29, 20);
-            this.txtUB.TabIndex = 53;
+            this.txtPest.Location = new System.Drawing.Point(120, 270);
+            this.txtPest.Name = "txtPest";
+            this.txtPest.Size = new System.Drawing.Size(29, 20);
+            this.txtPest.TabIndex = 53;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 304);
+            this.label9.Location = new System.Drawing.Point(9, 273);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(72, 13);
+            this.label9.Size = new System.Drawing.Size(59, 13);
             this.label9.TabIndex = 52;
-            this.label9.Text = "Unholy Blight:";
+            this.label9.Text = "Pestilence:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFS
             // 
-            this.txtFS.Location = new System.Drawing.Point(123, 327);
+            this.txtFS.Location = new System.Drawing.Point(120, 296);
             this.txtFS.Name = "txtFS";
             this.txtFS.Size = new System.Drawing.Size(29, 20);
             this.txtFS.TabIndex = 55;
@@ -307,7 +304,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 330);
+            this.label10.Location = new System.Drawing.Point(9, 299);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(63, 13);
             this.label10.TabIndex = 54;
@@ -316,7 +313,7 @@
             // 
             // txtSS
             // 
-            this.txtSS.Location = new System.Drawing.Point(288, 223);
+            this.txtSS.Location = new System.Drawing.Point(285, 192);
             this.txtSS.Name = "txtSS";
             this.txtSS.Size = new System.Drawing.Size(29, 20);
             this.txtSS.TabIndex = 57;
@@ -324,7 +321,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(177, 226);
+            this.label11.Location = new System.Drawing.Point(174, 195);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(80, 13);
             this.label11.TabIndex = 56;
@@ -333,7 +330,7 @@
             // 
             // txtHB
             // 
-            this.txtHB.Location = new System.Drawing.Point(288, 249);
+            this.txtHB.Location = new System.Drawing.Point(285, 218);
             this.txtHB.Name = "txtHB";
             this.txtHB.Size = new System.Drawing.Size(29, 20);
             this.txtHB.TabIndex = 59;
@@ -341,7 +338,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(177, 252);
+            this.label12.Location = new System.Drawing.Point(174, 221);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(74, 13);
             this.label12.TabIndex = 58;
@@ -350,7 +347,7 @@
             // 
             // txtOblit
             // 
-            this.txtOblit.Location = new System.Drawing.Point(288, 275);
+            this.txtOblit.Location = new System.Drawing.Point(285, 244);
             this.txtOblit.Name = "txtOblit";
             this.txtOblit.Size = new System.Drawing.Size(29, 20);
             this.txtOblit.TabIndex = 61;
@@ -358,7 +355,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(177, 278);
+            this.label13.Location = new System.Drawing.Point(174, 247);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(55, 13);
             this.label13.TabIndex = 60;
@@ -367,7 +364,7 @@
             // 
             // txtBS
             // 
-            this.txtBS.Location = new System.Drawing.Point(288, 301);
+            this.txtBS.Location = new System.Drawing.Point(285, 270);
             this.txtBS.Name = "txtBS";
             this.txtBS.Size = new System.Drawing.Size(29, 20);
             this.txtBS.TabIndex = 63;
@@ -375,7 +372,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(177, 304);
+            this.label14.Location = new System.Drawing.Point(174, 273);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(67, 13);
             this.label14.TabIndex = 62;
@@ -384,7 +381,7 @@
             // 
             // txtHS
             // 
-            this.txtHS.Location = new System.Drawing.Point(288, 327);
+            this.txtHS.Location = new System.Drawing.Point(285, 296);
             this.txtHS.Name = "txtHS";
             this.txtHS.Size = new System.Drawing.Size(29, 20);
             this.txtHS.TabIndex = 65;
@@ -392,44 +389,17 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(177, 330);
+            this.label15.Location = new System.Drawing.Point(174, 299);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(66, 13);
             this.label15.TabIndex = 64;
             this.label15.Text = "Heart Strike:";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(158, 153);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(24, 13);
-            this.label16.TabIndex = 68;
-            this.label16.Text = "sec";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtGargoyleDuration
-            // 
-            this.txtGargoyleDuration.Location = new System.Drawing.Point(123, 150);
-            this.txtGargoyleDuration.Name = "txtGargoyleDuration";
-            this.txtGargoyleDuration.Size = new System.Drawing.Size(29, 20);
-            this.txtGargoyleDuration.TabIndex = 67;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(22, 153);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(95, 13);
-            this.label17.TabIndex = 66;
-            this.label17.Text = "Gargoyle Duration:";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(3, 185);
+            this.label18.Location = new System.Drawing.Point(0, 154);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(55, 13);
             this.label18.TabIndex = 69;
@@ -440,7 +410,7 @@
             // 
             this.rbUnholyPresence.AutoSize = true;
             this.rbUnholyPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbUnholyPresence.Location = new System.Drawing.Point(123, 181);
+            this.rbUnholyPresence.Location = new System.Drawing.Point(120, 150);
             this.rbUnholyPresence.Name = "rbUnholyPresence";
             this.rbUnholyPresence.Size = new System.Drawing.Size(63, 19);
             this.rbUnholyPresence.TabIndex = 70;
@@ -453,7 +423,7 @@
             // 
             this.rbBloodPresence.AutoSize = true;
             this.rbBloodPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbBloodPresence.Location = new System.Drawing.Point(60, 181);
+            this.rbBloodPresence.Location = new System.Drawing.Point(57, 150);
             this.rbBloodPresence.Name = "rbBloodPresence";
             this.rbBloodPresence.Size = new System.Drawing.Size(57, 19);
             this.rbBloodPresence.TabIndex = 38;
@@ -464,7 +434,7 @@
             // 
             // txtDS
             // 
-            this.txtDS.Location = new System.Drawing.Point(288, 351);
+            this.txtDS.Location = new System.Drawing.Point(285, 320);
             this.txtDS.Name = "txtDS";
             this.txtDS.Size = new System.Drawing.Size(29, 20);
             this.txtDS.TabIndex = 72;
@@ -472,7 +442,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(177, 354);
+            this.label19.Location = new System.Drawing.Point(174, 323);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(69, 13);
             this.label19.TabIndex = 71;
@@ -521,7 +491,7 @@
             // 
             // txtHoW
             // 
-            this.txtHoW.Location = new System.Drawing.Point(123, 351);
+            this.txtHoW.Location = new System.Drawing.Point(120, 320);
             this.txtHoW.Name = "txtHoW";
             this.txtHoW.Size = new System.Drawing.Size(29, 20);
             this.txtHoW.TabIndex = 78;
@@ -529,7 +499,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(12, 354);
+            this.label22.Location = new System.Drawing.Point(9, 323);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(79, 13);
             this.label22.TabIndex = 77;
@@ -548,37 +518,30 @@
             this.cbManagedRP.UseVisualStyleBackColor = true;
             this.cbManagedRP.CheckedChanged += new System.EventHandler(this.cbManagedRP_CheckedChanged);
             // 
-            // PTRCalcs
+            // txtGF
             // 
-            this.PTRCalcs.AutoSize = true;
-            this.PTRCalcs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PTRCalcs.Location = new System.Drawing.Point(180, 91);
-            this.PTRCalcs.Name = "PTRCalcs";
-            this.PTRCalcs.Size = new System.Drawing.Size(136, 17);
-            this.PTRCalcs.TabIndex = 80;
-            this.PTRCalcs.Text = "Enable 3.2 calculations";
-            this.PTRCalcs.UseVisualStyleBackColor = true;
-            this.PTRCalcs.CheckedChanged += new System.EventHandler(this.PTRCalcs_CheckedChanged);
+            this.txtGF.Location = new System.Drawing.Point(285, 343);
+            this.txtGF.Name = "txtGF";
+            this.txtGF.Size = new System.Drawing.Size(29, 20);
+            this.txtGF.TabIndex = 81;
             // 
-            // cbTAT
+            // label23
             // 
-            this.cbTAT.AutoSize = true;
-            this.cbTAT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbTAT.Location = new System.Drawing.Point(199, 114);
-            this.cbTAT.Name = "cbTAT";
-            this.cbTAT.Size = new System.Drawing.Size(112, 17);
-            this.cbTAT.TabIndex = 81;
-            this.cbTAT.Text = "Specced into ToT";
-            this.cbTAT.UseVisualStyleBackColor = true;
-            this.cbTAT.CheckedChanged += new System.EventHandler(this.cbTAT_CheckedChanged);
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(174, 346);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(72, 13);
+            this.label23.TabIndex = 80;
+            this.label23.Text = "Ghoul Frenzy:";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(352, 424);
-            this.Controls.Add(this.cbTAT);
-            this.Controls.Add(this.PTRCalcs);
+            this.Controls.Add(this.txtGF);
+            this.Controls.Add(this.label23);
             this.Controls.Add(this.cbManagedRP);
             this.Controls.Add(this.txtHoW);
             this.Controls.Add(this.label22);
@@ -591,9 +554,6 @@
             this.Controls.Add(this.rbBloodPresence);
             this.Controls.Add(this.rbUnholyPresence);
             this.Controls.Add(this.label18);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.txtGargoyleDuration);
-            this.Controls.Add(this.label17);
             this.Controls.Add(this.txtHS);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.txtBS);
@@ -606,7 +566,7 @@
             this.Controls.Add(this.label11);
             this.Controls.Add(this.txtFS);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.txtUB);
+            this.Controls.Add(this.txtPest);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txtPS);
             this.Controls.Add(this.label8);
@@ -658,7 +618,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtPS;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txtUB;
+        private System.Windows.Forms.TextBox txtPest;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtFS;
         private System.Windows.Forms.Label label10;
@@ -672,9 +632,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox txtHS;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox txtGargoyleDuration;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.RadioButton rbUnholyPresence;
         private System.Windows.Forms.RadioButton rbBloodPresence;
@@ -687,7 +644,7 @@
         private System.Windows.Forms.TextBox txtHoW;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.CheckBox cbManagedRP;
-        private System.Windows.Forms.CheckBox PTRCalcs;
-        private System.Windows.Forms.CheckBox cbTAT;
+        private System.Windows.Forms.TextBox txtGF;
+        private System.Windows.Forms.Label label23;
     }
 }

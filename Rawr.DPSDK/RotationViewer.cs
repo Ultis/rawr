@@ -38,11 +38,11 @@ namespace Rawr.DPSDK
             txtOblit.KeyUp += new KeyEventHandler(txtOblit_KeyUp);
             txtPS.KeyUp += new KeyEventHandler(txtPS_KeyUp);
             txtSS.KeyUp += new KeyEventHandler(txtSS_KeyUp);
-            txtUB.KeyUp += new KeyEventHandler(txtUB_KeyUp);
+            txtPest.KeyUp += new KeyEventHandler(txtPest_KeyUp);
+            txtGF.KeyUp += new KeyEventHandler(txtGF_KeyUp);
             txtUptime.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
             txtDS.KeyUp += new KeyEventHandler(txtDS_KeyUp);
             txtHoW.KeyUp += new KeyEventHandler(txtHoW_KeyUp);
-            txtGargoyleDuration.KeyUp += new KeyEventHandler(txtGargoyleDuration_KeyUp);
         }
 
         void updateLabels()
@@ -76,13 +76,11 @@ namespace Rawr.DPSDK
             txtDS.Text = rotation.DeathStrike.ToString();
             txtPS.Text = rotation.PlagueStrike.ToString();
             txtSS.Text = rotation.ScourgeStrike.ToString();
-            txtUB.Text = rotation.UnholyBlight.ToString();
+            txtPest.Text = rotation.Pestilence.ToString();
             txtUptime.Text = rotation.diseaseUptime.ToString();
             txtHoW.Text = rotation.Horn.ToString();
             cbManagedRP.Checked = rotation.managedRP;
-            PTRCalcs.Checked = rotation.PTRCalcs;
-            cbTAT.Checked = rotation.TAT;
-            txtGargoyleDuration.Text = rotation.GargoyleDuration.ToString();
+            txtGF.Text = rotation.GhoulFrenzy.ToString();
             if (rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
             {
                 rbUnholyPresence.Checked = true;
@@ -107,9 +105,8 @@ namespace Rawr.DPSDK
             txtOblit.ReadOnly = true;
             txtPS.ReadOnly = true;
             txtSS.ReadOnly = true;
-            txtUB.ReadOnly = true;
+            txtPest.ReadOnly = true;
             txtUptime.ReadOnly = true;
-            txtGargoyleDuration.ReadOnly = true;
             updateLabels();
         }
 
@@ -126,9 +123,8 @@ namespace Rawr.DPSDK
             txtOblit.ReadOnly = false;
             txtPS.ReadOnly = false;
             txtSS.ReadOnly = false;
-            txtUB.ReadOnly = false;
+            txtPest.ReadOnly = false;
             txtUptime.ReadOnly = false;
-            txtGargoyleDuration.ReadOnly = false;
             updateLabels();
         }
 
@@ -435,18 +431,18 @@ namespace Rawr.DPSDK
             updateLabels();
         }
 
-        void txtUB_KeyUp(object sender, KeyEventArgs e)
+        void txtPest_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
             {
                 double d = double.Parse(t.Text);
                 float f = (float)d;
-                rotation.UnholyBlight = f;
+                rotation.Pestilence = f;
             }
             catch
             {
-                rotation.UnholyBlight = 0f;
+                rotation.Pestilence = 0f;
                 t.Text = "0";
             }
             updateLabels();
@@ -467,6 +463,22 @@ namespace Rawr.DPSDK
                 t.Text = "0";
             }
             updateLabels();
+        }
+
+        void txtGF_KeyUp(object sender, KeyEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            try
+            {
+                double d= double.Parse(t.Text);
+                float f= (float)d;
+                rotation.GhoulFrenzy = f;
+            }
+            catch
+            {
+                rotation.GhoulFrenzy = 0f;
+                t.Text = "0";
+            }
         }
 
         void txtGargoyleDuration_KeyUp(object sender, KeyEventArgs e)
@@ -500,25 +512,11 @@ namespace Rawr.DPSDK
         private void cbManagedRP_CheckedChanged(object sender, EventArgs e)
         {
                 txtFS.ReadOnly = cbManagedRP.Checked;
-                txtUB.ReadOnly = cbManagedRP.Checked;
                 txtDC.ReadOnly = cbManagedRP.Checked;
                 rotation.managedRP = cbManagedRP.Checked;
                 updateLabels();
                 txtFS.Text = rotation.FrostStrike.ToString();
                 txtDC.Text = rotation.DeathCoil.ToString();
-                txtUB.Text = rotation.UnholyBlight.ToString();
-        }
-
-        private void PTRCalcs_CheckedChanged(object sender, EventArgs e)
-        {
-            rotation.PTRCalcs = PTRCalcs.Checked;
-            updateLabels();
-        }
-
-        private void cbTAT_CheckedChanged(object sender, EventArgs e)
-        {
-            rotation.TAT = cbTAT.Checked;
-            updateLabels();
         }
     }
 }

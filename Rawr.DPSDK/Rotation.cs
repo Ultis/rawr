@@ -32,6 +32,8 @@ namespace Rawr.DPSDK
         public float HeartStrike = 0f;
         public float DancingRuneWeapon = 0f;
         public float Horn = 0f;
+		public float GhoulFrenzy = 0f;
+		public float Pestilence = 0f;
 
         public Boolean fourT7 = false;
         public Boolean GlyphofIT = false;
@@ -79,7 +81,7 @@ namespace Rawr.DPSDK
                 ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
                 ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
                 ((10 + 2.5f * talents.Dirge) * (PlagueStrike)) +
-                (10 * (BloodStrike + HeartStrike)) +
+                (10 * (BloodStrike + HeartStrike + Pestilence + GhoulFrenzy)) +
                 ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                 (10 * Horn) +
@@ -99,65 +101,28 @@ namespace Rawr.DPSDK
 
         public float manageRPDumping(DeathKnightTalents talents, float RP)
         {
-            #region non-ptr
-            if (!PTRCalcs)
-            {
-                if (talents.DancingRuneWeapon > 0f)
-                {
-                    RP = RP - curRotationDuration * ((100f + 15f * talents.RunicPowerMastery) / 90f);
-                }
-                if (talents.FrostStrike > 0f)
-                {
-                    FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
-                    DeathCoil = 0f;
-                    UnholyBlight = 0f;
-                    RP = 0f;
-                }
-                else if (talents.UnholyBlight > 0f)
-                {
-                    UnholyBlight = curRotationDuration / (talents.GlyphofUnholyBlight ? 30f : 20f);
-                    RP -= UnholyBlight * 40f;
-                    DeathCoil = RP / 40f;
-                    FrostStrike = 0f;
-                    RP = 0f;
-                }
-                else
-                {
-                    DeathCoil = RP / 40f;
-                    FrostStrike = 0f;
-                    UnholyBlight = 0f;
-                    RP = 0f;
-                }
-            }
-            #endregion
-            #region 3.2 PTR
-            else
-            {
-                if (talents.DancingRuneWeapon > 0f)
-                {
-                    RP -= curRotationDuration * (60f / 90f);
-                }
-                if (talents.SummonGargoyle > 0f)
-                {
-                    RP -= curRotationDuration * (60f / 180f);
-                    GargoyleDuration = 30f;
-                }
-                if (talents.FrostStrike > 0f)
-                {
-                    FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
-                    DeathCoil = 0f;
-                    UnholyBlight = 0f;
-                    RP = 0f;
-                }
-                else
-                {
-                    DeathCoil = RP / 40f;
-                    FrostStrike = 0f;
-                    UnholyBlight = 0f;
-                    RP = 0f;
-                }
-            }
-            #endregion
+			if (talents.DancingRuneWeapon > 0f)
+			{
+				RP -= curRotationDuration * (60f / 90f);
+			}
+			if (talents.SummonGargoyle > 0f)
+			{
+				RP -= curRotationDuration * (60f / 180f);
+			}
+			if (talents.FrostStrike > 0f)
+			{
+				FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
+				DeathCoil = 0f;
+				UnholyBlight = 0f;
+				RP = 0f;
+			}
+			else
+			{
+				DeathCoil = RP / 40f;
+				FrostStrike = 0f;
+				UnholyBlight = 0f;
+				RP = 0f;
+			}
             return RP;
         }
 
@@ -202,25 +167,29 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 190f;
                     GargoyleDuration = 0f;
                     DeathStrike = 2f;
+                    GhoulFrenzy = 0f;
+                    Pestilence = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Frost:
-                    numDisease = 1f;
+                    numDisease = 2f;
                     diseaseUptime = 100f;
                     DeathCoil = 0f;
-                    IcyTouch = 1f;
+                    IcyTouch = 0f;
                     PlagueStrike = 0f;
                     ScourgeStrike = 0f;
                     UnholyBlight = 0f;
                     FrostStrike = 3f;
                     HowlingBlast = 0f;
-                    Obliterate = 2f;
+                    Obliterate = 5f;
                     BloodStrike = 1f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
-                    curRotationDuration = 10f;
+                    curRotationDuration = 20f;
                     GargoyleDuration = 0f;
                     DeathStrike = 0f;
+					Pestilence = 1f;
+                    GhoulFrenzy = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Unholy:
@@ -230,7 +199,7 @@ namespace Rawr.DPSDK
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 4f;
-                    UnholyBlight = 1f;
+                    UnholyBlight = 0f;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
                     Obliterate = 0f;
@@ -240,6 +209,7 @@ namespace Rawr.DPSDK
                     curRotationDuration = 20f;
                     GargoyleDuration = 30f;
                     DeathStrike = 0f;
+                    GhoulFrenzy = 0.0166666666666666666666f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:
