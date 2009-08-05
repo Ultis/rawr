@@ -1875,62 +1875,62 @@ namespace Rawr //O O . .
 			}
 		}
 
-		public string ToCompressedString()
-		{
-			//TODO: Just messing around with potential ways to serialize a character down to a string short enough to fit in a URL (<2000 characters)
+		//public string ToCompressedString()
+		//{
+		//    //TODO: Just messing around with potential ways to serialize a character down to a string short enough to fit in a URL (<2000 characters)
 
-			//List<object> objectsToSerialize = new List<object>();
-			//objectsToSerialize.Add(Name);
-			//objectsToSerialize.Add(Race);
-			//objectsToSerialize.Add(Region);
-			//objectsToSerialize.Add(Realm);
-			//objectsToSerialize.Add(Class);
-			//objectsToSerialize.Add(string.Join("|", _item.ConvertAll(itemInstance => itemInstance == null ? string.Empty : itemInstance.GemmedId).ToArray()));
-			//objectsToSerialize.Add(string.Join("|", _activeBuffs.ConvertAll(buff=>buff.Name).ToArray()));
-			//objectsToSerialize.Add(CurrentModel);
-			//objectsToSerialize.Add(CurrentTalents.Data);
-			//objectsToSerialize.Add(CurrentTalents.GlyphData);
-			//objectsToSerialize.Add(EnforceGemRequirements);
-			//objectsToSerialize.Add(WristBlacksmithingSocketEnabled);
-			//objectsToSerialize.Add(WaistBlacksmithingSocketEnabled);
-			//objectsToSerialize.Add(HandsBlacksmithingSocketEnabled);
-			//objectsToSerialize.Add(CalculationOptions.GetXml());
-			//objectsToSerialize.Add(string.Join("|", AvailableItems.ToArray()));
+		//    //List<object> objectsToSerialize = new List<object>();
+		//    //objectsToSerialize.Add(Name);
+		//    //objectsToSerialize.Add(Race);
+		//    //objectsToSerialize.Add(Region);
+		//    //objectsToSerialize.Add(Realm);
+		//    //objectsToSerialize.Add(Class);
+		//    //objectsToSerialize.Add(string.Join("|", _item.ConvertAll(itemInstance => itemInstance == null ? string.Empty : itemInstance.GemmedId).ToArray()));
+		//    //objectsToSerialize.Add(string.Join("|", _activeBuffs.ConvertAll(buff=>buff.Name).ToArray()));
+		//    //objectsToSerialize.Add(CurrentModel);
+		//    //objectsToSerialize.Add(CurrentTalents.Data);
+		//    //objectsToSerialize.Add(CurrentTalents.GlyphData);
+		//    //objectsToSerialize.Add(EnforceGemRequirements);
+		//    //objectsToSerialize.Add(WristBlacksmithingSocketEnabled);
+		//    //objectsToSerialize.Add(WaistBlacksmithingSocketEnabled);
+		//    //objectsToSerialize.Add(HandsBlacksmithingSocketEnabled);
+		//    //objectsToSerialize.Add(CalculationOptions.GetXml());
+		//    //objectsToSerialize.Add(string.Join("|", AvailableItems.ToArray()));
 
-			//MemoryStream stream = new MemoryStream();
-			//StreamWriter writer = new StreamWriter(stream);
-			//writer.Write(objectsToSerialize[6].ToString());
-			//string base64 = System.Convert.ToBase64String(stream.ToArray());
+		//    //MemoryStream stream = new MemoryStream();
+		//    //StreamWriter writer = new StreamWriter(stream);
+		//    //writer.Write(objectsToSerialize[6].ToString());
+		//    //string base64 = System.Convert.ToBase64String(stream.ToArray());
 
 
-			//_serializedCalculationOptions.Clear();
-			//SerializeCalculationOptions();
-			//_activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
-			//if (this.Class != CharacterClass.DeathKnight) this.DeathKnightTalents = null;
-			//if (this.Class != CharacterClass.Druid) this.DruidTalents = null;
-			//if (this.Class != CharacterClass.Hunter) this.HunterTalents = null;
-			//if (this.Class != CharacterClass.Mage) this.MageTalents = null;
-			//if (this.Class != CharacterClass.Paladin) this.PaladinTalents = null;
-			//if (this.Class != CharacterClass.Priest) this.PriestTalents = null;
-			//if (this.Class != CharacterClass.Rogue) this.RogueTalents = null;
-			//if (this.Class != CharacterClass.Shaman) this.ShamanTalents = null;
-			//if (this.Class != CharacterClass.Warlock) this.WarlockTalents = null;
-			//if (this.Class != CharacterClass.Warrior) this.WarriorTalents = null;
-
-			
-			////MemoryStream stream = new MemoryStream();
-			////XmlSerializer serializer = new XmlSerializer(typeof(Character));
-			////serializer.Serialize(stream, this);
-			////StreamReader reader = new StreamReader(stream);
-			////string serializedCharacter = reader.ReadToEnd();
-			////reader.Close();
-			////stream.Close();
-			////stream.Dispose();
+		//    //_serializedCalculationOptions.Clear();
+		//    //SerializeCalculationOptions();
+		//    //_activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
+		//    //if (this.Class != CharacterClass.DeathKnight) this.DeathKnightTalents = null;
+		//    //if (this.Class != CharacterClass.Druid) this.DruidTalents = null;
+		//    //if (this.Class != CharacterClass.Hunter) this.HunterTalents = null;
+		//    //if (this.Class != CharacterClass.Mage) this.MageTalents = null;
+		//    //if (this.Class != CharacterClass.Paladin) this.PaladinTalents = null;
+		//    //if (this.Class != CharacterClass.Priest) this.PriestTalents = null;
+		//    //if (this.Class != CharacterClass.Rogue) this.RogueTalents = null;
+		//    //if (this.Class != CharacterClass.Shaman) this.ShamanTalents = null;
+		//    //if (this.Class != CharacterClass.Warlock) this.WarlockTalents = null;
+		//    //if (this.Class != CharacterClass.Warrior) this.WarriorTalents = null;
 
 			
+		//    ////MemoryStream stream = new MemoryStream();
+		//    ////XmlSerializer serializer = new XmlSerializer(typeof(Character));
+		//    ////serializer.Serialize(stream, this);
+		//    ////StreamReader reader = new StreamReader(stream);
+		//    ////string serializedCharacter = reader.ReadToEnd();
+		//    ////reader.Close();
+		//    ////stream.Close();
+		//    ////stream.Dispose();
 
-			//return "";
-		}
+			
+
+		//    //return "";
+		//}
 
 		public static Character FromCompressedString(string characterString)
 		{
