@@ -525,8 +525,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }));
             defaultEnchants.Add(new Enchant(2938, "Spell Penetration", ItemSlot.Back, new Stats() { SpellPenetration = 20 }));
             defaultEnchants.Add(new Enchant(3243, "Spell Piercing", ItemSlot.Back, new Stats() { SpellPenetration = 35 }));
-            defaultEnchants.Add(new Enchant(3244, "Greater Vitality", ItemSlot.Feet, new Stats() { Mp5 = 6, Hp5 = 6 }));
-            defaultEnchants.Add(new Enchant(2656, "Vitality", ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
+            defaultEnchants.Add(new Enchant(3244, "Greater Vitality", ItemSlot.Feet, new Stats() { Mp5 = 7f, Hp5 = 7f }));
+            defaultEnchants.Add(new Enchant(2656, "Vitality", ItemSlot.Feet, new Stats() { Mp5 = 5f, Hp5 = 5f }));
             defaultEnchants.Add(new Enchant(369, "Major Intellect", ItemSlot.Wrist, new Stats() { Intellect = 12 }));
             defaultEnchants.Add(new Enchant(1119, "Exceptional Intellect", ItemSlot.Wrist, new Stats() { Intellect = 16 }));
             defaultEnchants.Add(new Enchant(1144, "Major Spirit", ItemSlot.Chest, new Stats() { Spirit = 15 }));
@@ -537,8 +537,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { SpellPower = 30, Mp5 = 8 }));
 
-            defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", ItemSlot.Chest, new Stats() { Mp5 = 6 }));
-            defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", ItemSlot.Chest, new Stats() { Mp5 = 8 }));
+            defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", ItemSlot.Chest, new Stats() { Mp5 = 8f }));
+            defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", ItemSlot.Chest, new Stats() { Mp5 = 10f }));
             defaultEnchants.Add(new Enchant(3233, "Exceptional Mana", ItemSlot.Chest, new Stats() { Mana = 250 }));
 
             defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
@@ -636,7 +636,7 @@ namespace Rawr
 
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", ItemSlot.OffHand, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(2655, "Shield Block", ItemSlot.OffHand, new Stats() { BlockRating = 15 }));
-            defaultEnchants.Add(new Enchant(2653, "Tough Shield", ItemSlot.OffHand, new Stats() { BlockValue = 18 }));
+            defaultEnchants.Add(new Enchant(2653, "Tough Shield", ItemSlot.OffHand, new Stats() { BlockValue = 36 }));
             defaultEnchants.Add(new Enchant(1952, "Defense", ItemSlot.OffHand, new Stats() { DefenseRating = 20 }));
             defaultEnchants.Add(new Enchant(3229, "Resilience", ItemSlot.OffHand, new Stats() {Resilience = 12 }));
 
@@ -663,20 +663,20 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
 
             //Inscriber enchants
-            defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axe", ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
-            defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 61 }));
-            defaultEnchants.Add(new Enchant(3837, "Master's Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 52, DefenseRating = 15 }));
-            defaultEnchants.Add(new Enchant(3838, "Master's Inscription of the Storm", ItemSlot.Shoulders, new Stats() { CritRating = 15, SpellPower = 61 }));
+            defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axe", ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 120 }));
+            defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 70 }));
+            defaultEnchants.Add(new Enchant(3837, "Master's Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 60, DefenseRating = 15 }));
+            defaultEnchants.Add(new Enchant(3838, "Master's Inscription of the Storm", ItemSlot.Shoulders, new Stats() { CritRating = 15, SpellPower = 70 }));
 
             //Leatherworking enchants
-            defaultEnchants.Add(new Enchant(3756, "Fur Lining - Attack Power", ItemSlot.Wrist, new Stats() { AttackPower = 114 }));
-            defaultEnchants.Add(new Enchant(3757, "Fur Lining - Stamina", ItemSlot.Wrist, new Stats() { Stamina = 90 }));
-            defaultEnchants.Add(new Enchant(3758, "Fur Lining - Spell Power", ItemSlot.Wrist, new Stats() { SpellPower = 67 }));
-            defaultEnchants.Add(new Enchant(3759, "Fur Lining - Fire Resist", ItemSlot.Wrist, new Stats() { FireResistance = 60 }));
-            defaultEnchants.Add(new Enchant(3760, "Fur Lining - Frost Resist", ItemSlot.Wrist, new Stats() { FrostResistance = 60 }));
-            defaultEnchants.Add(new Enchant(3761, "Fur Lining - Shadow Resist", ItemSlot.Wrist, new Stats() { ShadowResistance = 60 }));
-            defaultEnchants.Add(new Enchant(3762, "Fur Lining - Nature Resist", ItemSlot.Wrist, new Stats() { NatureResistance = 60 }));
-            defaultEnchants.Add(new Enchant(3763, "Fur Lining - Arcane Resist", ItemSlot.Wrist, new Stats() { ArcaneResistance = 60 }));
+            defaultEnchants.Add(new Enchant(3756, "Fur Lining - Attack Power", ItemSlot.Wrist, new Stats() { AttackPower = 130 }));
+            defaultEnchants.Add(new Enchant(3757, "Fur Lining - Stamina", ItemSlot.Wrist, new Stats() { Stamina = 102 }));
+            defaultEnchants.Add(new Enchant(3758, "Fur Lining - Spell Power", ItemSlot.Wrist, new Stats() { SpellPower = 76 }));
+            defaultEnchants.Add(new Enchant(3759, "Fur Lining - Fire Resist", ItemSlot.Wrist, new Stats() { FireResistance = 70 }));
+            defaultEnchants.Add(new Enchant(3760, "Fur Lining - Frost Resist", ItemSlot.Wrist, new Stats() { FrostResistance = 70 }));
+            defaultEnchants.Add(new Enchant(3761, "Fur Lining - Shadow Resist", ItemSlot.Wrist, new Stats() { ShadowResistance = 70 }));
+            defaultEnchants.Add(new Enchant(3762, "Fur Lining - Nature Resist", ItemSlot.Wrist, new Stats() { NatureResistance = 70 }));
+            defaultEnchants.Add(new Enchant(3763, "Fur Lining - Arcane Resist", ItemSlot.Wrist, new Stats() { ArcaneResistance = 70 }));
             defaultEnchants.Add(new Enchant(3327, "Jormungar Leg Reinforcements", ItemSlot.Legs, new Stats() { Stamina = 55, Agility = 22 }));
             defaultEnchants.Add(new Enchant(3328, "Nerubian Leg Reinforcements", ItemSlot.Legs, new Stats() { AttackPower = 75, CritRating = 22 }));
 
@@ -697,25 +697,29 @@ namespace Rawr
 
             // Engineering enchant
             Stats hyper = new Stats();
-            hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 10f, 60f));
+            hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 12f, 60f));
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", ItemSlot.Hands, hyper));
-            defaultEnchants.Add(new Enchant(3860, "Reticulated Armor Webbing", ItemSlot.Hands, new Stats() { BonusArmor = 800 }));
-            defaultEnchants.Add(new Enchant(3606, "Nitro Boosts", ItemSlot.Feet, new Stats() { CritRating = 16f }));
+            defaultEnchants.Add(new Enchant(3860, "Reticulated Armor Webbing", ItemSlot.Hands, new Stats() { BonusArmor = 885f }));
+            defaultEnchants.Add(new Enchant(3606, "Nitro Boosts", ItemSlot.Feet, new Stats() { CritRating = 24f }));
 
+            // Engineering Head enchant
+            defaultEnchants.Add(new Enchant(3878, "Mind Amplification Dish", ItemSlot.Head, new Stats() { Stamina = 45f }));
+            
             // Engineering cloak enchant
-            defaultEnchants.Add(new Enchant(3859, "Springy Arachnoweave", ItemSlot.Back, new Stats() { SpellPower = 18f }));
+            defaultEnchants.Add(new Enchant(3859, "Springy Arachnoweave", ItemSlot.Back, new Stats() { SpellPower = 27f }));
+            defaultEnchants.Add(new Enchant(3605, "Flexweave Underlay", ItemSlot.Back, new Stats() { Agility = 23f }));
 
             // Tailoring enchant
             Stats stats = new Stats() { Spirit = 1 };
-            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 250 }, 15, 45, 0.5f));
+            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 295 }, 15, 45, 0.5f));
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", ItemSlot.Back, stats));
 
             stats = new Stats();
-            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 300 }, 15, 45, 0.25f));
+            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 400 }, 15, 45, 0.25f));
             defaultEnchants.Add(new Enchant(3730, "Swordguard Embroidery", ItemSlot.Back, stats));
 
             Stats darkglow = new Stats();
-            darkglow.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 300 }, 1f, 60f, 0.35f));
+            darkglow.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 400 }, 1f, 60f, 0.35f));
             defaultEnchants.Add(new Enchant(3728, "Darkglow Embroidery", ItemSlot.Back, darkglow));
 
             //3.0.8 enchants
@@ -728,7 +732,7 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(3855, "Spellpower (Staff)", ItemSlot.TwoHand, new Stats() { SpellPower = 69 }));
 
             Stats rockets = new Stats();
-            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1600f }, 0f, 45f));
+            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1837f }, 0f, 45f));
             defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", ItemSlot.Hands, rockets));
             return defaultEnchants;
         }

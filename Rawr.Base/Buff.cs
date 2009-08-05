@@ -2511,6 +2511,28 @@ namespace Rawr
                 Stats = { LightningBoltCritDamageModifier = 0.08f },
                 SetThreshold = 4
             });
+
+            //Tier 9
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thrall's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Thrall's Regalia",
+                Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
+                SetThreshold = 4
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nobundo's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Nobundo's Regalia",
+                Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
+                SetThreshold = 4
+            });
+
             #endregion
 
             #region Enhancement Shaman Set Bonuses
@@ -3166,14 +3188,14 @@ namespace Rawr
                 Name = "Toughness",
                 Group = "Profession Buffs",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Stamina = 50f }
+                Stats = { Stamina = 60f }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Master of Anatomy",
                 Group = "Profession Buffs",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { CritRating = 32f }
+                Stats = { CritRating = 40f }
             });
             #endregion
 
