@@ -683,7 +683,7 @@ namespace Rawr
 
             //Death Knight Rune Enchants
             Stats razorice = new Stats() { BonusFrostWeaponDamage = .02f };
-            razorice.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusFrostDamageMultiplier = 0.01f }, 20f, 0f, 1f, 5));
+            razorice.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusFrostDamageMultiplier = 0.01f }, 20f, 0f, 1f, 10));
             Stats RotFC = new Stats();
             RotFC.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f));
             Stats Cinderglacier = new Stats();
