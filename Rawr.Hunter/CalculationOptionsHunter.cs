@@ -24,17 +24,17 @@ namespace Rawr.Hunter
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
 
-        //rotation stuff
-        private bool _aimedInRot = false;
-        private bool _arcaneInRot = false;
-        private bool _multiInRot = false;
-        private bool _serpentInRot = true;
-        private bool _silenceInRot = false;
-        private bool _steadyInRot = true;
-        private bool _killInRot = true;
-        private bool _explosiveInRot = false;
-        private bool _chimeraInRot = false;
-        private bool _blackInRot = false;
+        // new priority rotation stuff
+        public int PriorityIndex1 = 0;
+        public int PriorityIndex2 = 0;
+        public int PriorityIndex3 = 0;
+        public int PriorityIndex4 = 0;
+        public int PriorityIndex5 = 0;
+        public int PriorityIndex6 = 0;
+        public int PriorityIndex7 = 0;
+        public int PriorityIndex8 = 0;
+        public int PriorityIndex9 = 0;
+        public int PriorityIndex10 = 0;
 		
 		// pet stuff
 		private int _cobraReflexes = 2;
@@ -169,57 +169,6 @@ namespace Rawr.Hunter
         {
             get { return _owlsFocus; }
             set { _owlsFocus = value; }
-        }
-
-        public bool AimedInRot
-        {
-            get { return _aimedInRot; }
-            set { _aimedInRot = value; }
-        }
-        public bool ArcaneInRot
-        {
-            get { return _arcaneInRot; }
-            set { _arcaneInRot = value; }
-        }
-        public bool MultiInRot
-        {
-            get { return _multiInRot; }
-            set { _multiInRot = value; }
-        }
-        public bool SerpentInRot
-        {
-            get { return _serpentInRot; }
-            set { _serpentInRot = value; }
-        }
-        public bool SilenceInRot
-        {
-            get { return _silenceInRot; }
-            set { _silenceInRot = value; }
-        }
-        public bool SteadyInRot
-        {
-            get { return _steadyInRot; }
-            set { _steadyInRot = value; }
-        }
-        public bool KillInRot
-        {
-            get { return _killInRot; }
-            set { _killInRot = value; }
-        }
-        public bool ExplosiveInRot
-        {
-            get { return _explosiveInRot; }
-            set { _explosiveInRot = value; }
-        }
-        public bool ChimeraInRot
-        {
-            get { return _chimeraInRot; }
-            set { _chimeraInRot = value; }
-        }
-        public bool BlackInRot
-        {
-            get { return _blackInRot; }
-            set { _blackInRot = value; }
         }
 
 		#region ICalculationOptionBase Members

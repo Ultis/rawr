@@ -21,6 +21,41 @@ namespace Rawr.Hunter
         public CalculationOptionsPanelHunter()
         {
             InitializeComponent();
+
+            InitializeShotList(cmbPriority1);
+            InitializeShotList(cmbPriority2);
+            InitializeShotList(cmbPriority3);
+            InitializeShotList(cmbPriority4);
+            InitializeShotList(cmbPriority5);
+            InitializeShotList(cmbPriority6);
+            InitializeShotList(cmbPriority7);
+            InitializeShotList(cmbPriority8);
+            InitializeShotList(cmbPriority9);
+            InitializeShotList(cmbPriority10);
+
+        }
+
+        private void InitializeShotList(ComboBox cb)
+        {
+            cb.Items.Add("None");
+            cb.Items.Add("Aimed Shot");
+            cb.Items.Add("Arcane Shot");
+            cb.Items.Add("Multi-Shot");
+            cb.Items.Add("Serpent Sting");
+            cb.Items.Add("Scorpid Sting");
+            cb.Items.Add("Viper Sting");
+            cb.Items.Add("Silencing Shot");
+            cb.Items.Add("Steady Shot");
+            cb.Items.Add("Kill Shot");
+            cb.Items.Add("Explosive Shot");
+            cb.Items.Add("Black Arrow");
+            cb.Items.Add("Immolation Trap");
+            cb.Items.Add("Chimera Shot");
+            cb.Items.Add("Rapid Fire");
+            cb.Items.Add("Readiness");
+            cb.Items.Add("Beastial Wrath");
+            cb.Items.Add("Orc - Blood Fury");
+            cb.Items.Add("Troll - Berserk");
         }
 
         #endregion
@@ -96,7 +131,17 @@ namespace Rawr.Hunter
 
             PopulateAbilities();
 
-            cmbDefaults.SelectedIndex = 0;
+            cmbPriority1.SelectedIndex = options.PriorityIndex1;
+            cmbPriority2.SelectedIndex = options.PriorityIndex2;
+            cmbPriority3.SelectedIndex = options.PriorityIndex3;
+            cmbPriority4.SelectedIndex = options.PriorityIndex4;
+            cmbPriority5.SelectedIndex = options.PriorityIndex5;
+            cmbPriority6.SelectedIndex = options.PriorityIndex6;
+            cmbPriority7.SelectedIndex = options.PriorityIndex7;
+            cmbPriority8.SelectedIndex = options.PriorityIndex8;
+            cmbPriority9.SelectedIndex = options.PriorityIndex9;
+            cmbPriority10.SelectedIndex = options.PriorityIndex10;
+            cmbPriorityDefaults.SelectedIndex = 0;
 
             loadingOptions = false;
         }
@@ -542,162 +587,94 @@ namespace Rawr.Hunter
             }
         }
 
-        private void chkAimed_CheckedChanged(object sender, EventArgs e)
+        private void PrioritySelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!loadingOptions)
-            {
-                options.AimedInRot = chkAimed.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkArcane_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.ArcaneInRot = chkArcane.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkBlack_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.BlackInRot = chkBlack.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkChimera_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.ChimeraInRot = chkChimera.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkExplosive_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.ExplosiveInRot = chkExplosive.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkKill_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.KillInRot = chkKill.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkMulti_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.MultiInRot = chkMulti.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkSerpent_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.SerpentInRot = chkSerpent.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkSilence_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.SilenceInRot = chkSilence.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void chkSteady_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loadingOptions)
-            {
-                options.SteadyInRot = chkSteady.Checked;
-                Character.OnCalculationsInvalidated();
-            }
+            // this is called whenever any of the priority dropdowns are modified
+            if (loadingOptions) return;
+
+            options.PriorityIndex1 = cmbPriority1.SelectedIndex;
+            options.PriorityIndex2 = cmbPriority2.SelectedIndex;
+            options.PriorityIndex3 = cmbPriority3.SelectedIndex;
+            options.PriorityIndex4 = cmbPriority4.SelectedIndex;
+            options.PriorityIndex5 = cmbPriority5.SelectedIndex;
+            options.PriorityIndex6 = cmbPriority6.SelectedIndex;
+            options.PriorityIndex7 = cmbPriority7.SelectedIndex;
+            options.PriorityIndex8 = cmbPriority8.SelectedIndex;
+            options.PriorityIndex9 = cmbPriority9.SelectedIndex;
+            options.PriorityIndex10 = cmbPriority10.SelectedIndex;
+
+            cmbPriorityDefaults.SelectedIndex = 0;
+
+            Character.OnCalculationsInvalidated();
         }
 
-        private void cmbDefaults_SelectedIndexChanged(object sender, EventArgs e)
+        private void label8_Click(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+
+        }
+
+        private void cmbPriorityDefaults_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // only do anything if we weren't set to 0
+            if (cmbPriorityDefaults.SelectedIndex == 0) return;
+            if (loadingOptions) return;
+
+            if (cmbPriorityDefaults.SelectedIndex == 1) // beast master
             {
-                bool en = true;
-                if (cmbDefaults.SelectedIndex > 0)
-                    en = false;
+                loadingOptions = true;
 
-                chkAimed.Enabled = en;
-                chkAimed.Checked = false;
-                chkArcane.Enabled = en;
-                chkArcane.Checked = false;
-                chkBlack.Enabled = en;
-                chkBlack.Checked = false;
-                chkChimera.Enabled = en;
-                chkChimera.Checked = false;
-                chkExplosive.Enabled = en;
-                chkExplosive.Checked = false;
-                chkKill.Enabled = en;
-                chkKill.Checked = false;
-                chkMulti.Enabled = en;
-                chkMulti.Checked = false;
-                chkSerpent.Enabled = en;
-                chkSerpent.Checked = false;
-                chkSilence.Enabled = en;
-                chkSilence.Checked = false;
-                chkSteady.Enabled = en;
-                chkSteady.Checked = false;
+                cmbPriority1.SelectedIndex = 14; // Rapid Fire
+                cmbPriority2.SelectedIndex = 16; // Bestial Wrath
+                cmbPriority3.SelectedIndex = 9; // Kill Shot
+                cmbPriority4.SelectedIndex = 1; // Aimed Shot
+                cmbPriority5.SelectedIndex = 2; // Arcane Shot
+                cmbPriority6.SelectedIndex = 4; // Serpent Sting
+                cmbPriority7.SelectedIndex = 8; // Steady Shot
+                cmbPriority8.SelectedIndex = 0;
+                cmbPriority9.SelectedIndex = 0;
+                cmbPriority10.SelectedIndex = 0;
 
-                switch (cmbDefaults.SelectedIndex)
-                {
-                    case 1:
-                        chkSteady.Checked = true;
-                        chkKill.Checked = true;
-                        chkArcane.Checked = true;
-                        chkAimed.Checked = true;
-                        chkSerpent.Checked = true;
-                        break;
-                    case 2:
-                        chkSerpent.Checked = true;
-                        chkKill.Checked = true;
-                        chkMulti.Checked = true;
-                        chkAimed.Checked = true;
-                        chkSteady.Checked = true;
-                        break;
-                    case 3:
-                        chkSerpent.Checked = true;
-                        chkBlack.Enabled = true;
-                        chkExplosive.Checked = true;
-                        chkSteady.Checked = true;
-                        break;
-                    case 4:
-                        chkKill.Checked = true;
-                        chkExplosive.Checked = true;
-                        chkBlack.Checked = true;
-                        chkAimed.Checked = true;
-                        chkSerpent.Checked = true;
-                        chkSteady.Checked = true;
-                        break;
-                    case 5:
-                        chkSerpent.Checked = true;
-                        chkChimera.Checked = true;
-                        chkAimed.Checked = true;
-                        chkArcane.Checked = true;
-                        chkSteady.Checked = true;
-                        break;
-                    case 6:
-                        chkSerpent.Checked = true;
-                        chkArcane.Checked = true;
-                        chkSteady.Checked = true;
-                        chkChimera.Checked = true;
-                        break;
-                }
+                loadingOptions = false;
                 Character.OnCalculationsInvalidated();
             }
+
+            if (cmbPriorityDefaults.SelectedIndex == 2) // marksman
+            {
+                loadingOptions = true;
+
+                cmbPriority1.SelectedIndex = 14; // Rapid Fire
+                cmbPriority2.SelectedIndex = 15; // Readiness
+                cmbPriority3.SelectedIndex = 4; // Serpent Sting
+                cmbPriority4.SelectedIndex = 13; // Chimera Shot
+                cmbPriority5.SelectedIndex = 9; // Kill Shot
+                cmbPriority6.SelectedIndex = 1; // Aimed Shot
+                cmbPriority7.SelectedIndex = 7; // Silencing Shot
+                cmbPriority8.SelectedIndex = 8; // Steady Shot
+                cmbPriority9.SelectedIndex = 0;
+                cmbPriority10.SelectedIndex = 0;
+
+                loadingOptions = false;
+                Character.OnCalculationsInvalidated();
+            }
+
+            if (cmbPriorityDefaults.SelectedIndex == 3) // survival
+            {
+                loadingOptions = true;
+
+                cmbPriority1.SelectedIndex = 14; // Rapid Fire
+                cmbPriority2.SelectedIndex = 9; // Kill Shot
+                cmbPriority3.SelectedIndex = 10; // Explosive Shot
+                cmbPriority4.SelectedIndex = 11; // Black Arrow
+                cmbPriority5.SelectedIndex = 4; // Serpent Sting
+                cmbPriority6.SelectedIndex = 1; // Aimed Shot
+                cmbPriority7.SelectedIndex = 8; // Steady Shot
+                cmbPriority8.SelectedIndex = 0;
+                cmbPriority9.SelectedIndex = 0;
+                cmbPriority10.SelectedIndex = 0;
+
+                loadingOptions = false;
+                Character.OnCalculationsInvalidated();
+            }            
         }
     }
 }

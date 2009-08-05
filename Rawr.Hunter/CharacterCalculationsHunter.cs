@@ -84,6 +84,20 @@ namespace Rawr.Hunter
             get { return _silencingshotDPS; }
             set { _silencingshotDPS = value; }
         }
+
+        // new shots data
+        public ShotData aimedShot = new ShotData(Shots.AimedShot);
+        public ShotData arcaneShot = new ShotData(Shots.ArcaneShot);
+        public ShotData steadyShot = new ShotData(Shots.SteadyShot);
+        public ShotData serpentSting = new ShotData(Shots.SerpentSting);
+        public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot);
+        public ShotData multiShot = new ShotData(Shots.MultiShot);
+        public ShotData blackArrow = new ShotData(Shots.BlackArrow);
+        public ShotData killShot = new ShotData(Shots.KillShot);
+        public ShotData silencingShot = new ShotData(Shots.SilencingShot);
+        public ShotData chimeraShot = new ShotData(Shots.ChimeraShot);
+        public ShotPriority priorityRotation = new ShotPriority();
+
         
         #region Steady Shot
         public double steadyCrit {get; set;}
@@ -318,18 +332,20 @@ namespace Rawr.Hunter
 							apFromHuntersMark.ToString("F0") + " from Hunter's Mark");
 			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
             dictValues.Add("Steady Speed", SteadySpeed.ToString("F2"));
-			dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
+
+            dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
 			dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
 			dictValues.Add("Overall DPS", OverallPoints.ToString("F2"));
 
             dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2") + "*includes: \n"+
                             BaseAutoshotDPS.ToString("F2")+" base Autoshot \n"+
                             WildQuiverDPS.ToString("F2")+" from Wild Quiver");
+            dictValues.Add("Custom Rotation", CustomDPS.ToString("F2"));
             
             dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2") + "*DPS");
             dictValues.Add("Steady Shot", steadyDPS.ToString("F2") + "*Damage per shot");
             dictValues.Add("Serpent Sting", SerpentDPS.ToString("F2") + "*DPS at 100% uptime");
-            dictValues.Add("Silencing Shot", SilencingDPS.ToString("F2"));
+            dictValues.Add("Silencing Shot", SilencingDPS.ToString("F2") + "*Damage per shot");
             dictValues.Add("Arcane Shot", arcaneDPS.ToString("F2") + "*Damage per shot");
             dictValues.Add("Explosive Shot", ExplosiveShotDPS.ToString("F2") + "*DPS when spammed");
             dictValues.Add("Chimera Shot", ChimeraShotDPS.ToString("F2") + "*DPS when spammed");

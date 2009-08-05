@@ -67,18 +67,26 @@
             this.cmbTargetLevel = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cmbDefaults = new System.Windows.Forms.ComboBox();
-            this.chkChimera = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.chkBlack = new System.Windows.Forms.CheckBox();
-            this.chkExplosive = new System.Windows.Forms.CheckBox();
-            this.chkKill = new System.Windows.Forms.CheckBox();
-            this.chkSteady = new System.Windows.Forms.CheckBox();
-            this.chkSilence = new System.Windows.Forms.CheckBox();
-            this.chkSerpent = new System.Windows.Forms.CheckBox();
-            this.chkMulti = new System.Windows.Forms.CheckBox();
-            this.chkArcane = new System.Windows.Forms.CheckBox();
-            this.chkAimed = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.cmbPriority10 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority9 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority8 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority7 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority6 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority5 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority4 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority3 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority2 = new System.Windows.Forms.ComboBox();
+            this.cmbPriority1 = new System.Windows.Forms.ComboBox();
             this.duration = new System.Windows.Forms.NumericUpDown();
             this.label25 = new System.Windows.Forms.Label();
             this.numericUpDownLatency = new System.Windows.Forms.NumericUpDown();
@@ -88,6 +96,7 @@
             this.lblTargetArmorValue = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.cmbPriorityDefaults = new System.Windows.Forms.ComboBox();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numOwlsFocus)).BeginInit();
@@ -581,161 +590,224 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cmbDefaults);
-            this.groupBox2.Controls.Add(this.chkChimera);
+            this.groupBox2.Controls.Add(this.cmbPriorityDefaults);
+            this.groupBox2.Controls.Add(this.label31);
+            this.groupBox2.Controls.Add(this.label30);
+            this.groupBox2.Controls.Add(this.label29);
+            this.groupBox2.Controls.Add(this.label28);
+            this.groupBox2.Controls.Add(this.label27);
+            this.groupBox2.Controls.Add(this.label26);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.chkBlack);
-            this.groupBox2.Controls.Add(this.chkExplosive);
-            this.groupBox2.Controls.Add(this.chkKill);
-            this.groupBox2.Controls.Add(this.chkSteady);
-            this.groupBox2.Controls.Add(this.chkSilence);
-            this.groupBox2.Controls.Add(this.chkSerpent);
-            this.groupBox2.Controls.Add(this.chkMulti);
-            this.groupBox2.Controls.Add(this.chkArcane);
-            this.groupBox2.Controls.Add(this.chkAimed);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.cmbPriority10);
+            this.groupBox2.Controls.Add(this.cmbPriority9);
+            this.groupBox2.Controls.Add(this.cmbPriority8);
+            this.groupBox2.Controls.Add(this.cmbPriority7);
+            this.groupBox2.Controls.Add(this.cmbPriority6);
+            this.groupBox2.Controls.Add(this.cmbPriority5);
+            this.groupBox2.Controls.Add(this.cmbPriority4);
+            this.groupBox2.Controls.Add(this.cmbPriority3);
+            this.groupBox2.Controls.Add(this.cmbPriority2);
+            this.groupBox2.Controls.Add(this.cmbPriority1);
             this.groupBox2.Location = new System.Drawing.Point(9, 136);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(237, 326);
             this.groupBox2.TabIndex = 19;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Shots to use";
+            this.groupBox2.Text = "Shot Priority";
             // 
-            // cmbDefaults
+            // label31
             // 
-            this.cmbDefaults.FormattingEnabled = true;
-            this.cmbDefaults.Items.AddRange(new object[] {
-            "Custom",
-            "Beast Master 1 (Kill,Arcance,Aimed,Serpent,Steady)",
-            "Beast Master 2 (Serpent,Kill,Multi,Aimed,Steady)",
-            "Survival 1 (Serpent,Black,Explosive,Steady)",
-            "Survival 2 (Kill,Explosive,Black,Aimed,Serpent,Steady)",
-            "Marksman 1 (Serpent,Chimera,Aimed,Arcane,Steady)",
-            "Marksman 2 (Serpent,Arcane,Steady,Chimera)"});
-            this.cmbDefaults.Location = new System.Drawing.Point(6, 19);
-            this.cmbDefaults.Name = "cmbDefaults";
-            this.cmbDefaults.Size = new System.Drawing.Size(225, 21);
-            this.cmbDefaults.TabIndex = 19;
-            this.cmbDefaults.SelectedIndexChanged += new System.EventHandler(this.cmbDefaults_SelectedIndexChanged);
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(6, 302);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(56, 13);
+            this.label31.TabIndex = 39;
+            this.label31.Text = "Priority 10:";
             // 
-            // chkChimera
+            // label30
             // 
-            this.chkChimera.AutoSize = true;
-            this.chkChimera.Location = new System.Drawing.Point(6, 116);
-            this.chkChimera.Name = "chkChimera";
-            this.chkChimera.Size = new System.Drawing.Size(89, 17);
-            this.chkChimera.TabIndex = 9;
-            this.chkChimera.Text = "Chimera Shot";
-            this.chkChimera.UseVisualStyleBackColor = true;
-            this.chkChimera.CheckedChanged += new System.EventHandler(this.chkChimera_CheckedChanged);
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(6, 275);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(50, 13);
+            this.label30.TabIndex = 38;
+            this.label30.Text = "Priority 9:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(6, 248);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(50, 13);
+            this.label29.TabIndex = 37;
+            this.label29.Text = "Priority 8:";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(6, 221);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(50, 13);
+            this.label28.TabIndex = 36;
+            this.label28.Text = "Priority 7:";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(6, 194);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(50, 13);
+            this.label27.TabIndex = 35;
+            this.label27.Text = "Priority 6:";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(6, 167);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(50, 13);
+            this.label26.TabIndex = 34;
+            this.label26.Text = "Priority 5:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 140);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(50, 13);
+            this.label10.TabIndex = 33;
+            this.label10.Text = "Priority 4:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 113);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(50, 13);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Priority 3:";
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(3, 274);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 86);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(225, 49);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "Rotation calculations assume you will use a shot as soon as its cooldown is finis" +
-                "hed.";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label3.Size = new System.Drawing.Size(50, 13);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "Priority 2:";
             // 
-            // chkBlack
+            // label8
             // 
-            this.chkBlack.AutoSize = true;
-            this.chkBlack.Location = new System.Drawing.Point(6, 92);
-            this.chkBlack.Name = "chkBlack";
-            this.chkBlack.Size = new System.Drawing.Size(83, 17);
-            this.chkBlack.TabIndex = 8;
-            this.chkBlack.Text = "Black Arrow";
-            this.chkBlack.UseVisualStyleBackColor = true;
-            this.chkBlack.CheckedChanged += new System.EventHandler(this.chkBlack_CheckedChanged);
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 59);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(50, 13);
+            this.label8.TabIndex = 30;
+            this.label8.Text = "Priority 1:";
+            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
-            // chkExplosive
+            // cmbPriority10
             // 
-            this.chkExplosive.AutoSize = true;
-            this.chkExplosive.Location = new System.Drawing.Point(6, 139);
-            this.chkExplosive.Name = "chkExplosive";
-            this.chkExplosive.Size = new System.Drawing.Size(99, 17);
-            this.chkExplosive.TabIndex = 7;
-            this.chkExplosive.Text = "Explosive Shot:";
-            this.chkExplosive.UseVisualStyleBackColor = true;
-            this.chkExplosive.CheckedChanged += new System.EventHandler(this.chkExplosive_CheckedChanged);
+            this.cmbPriority10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority10.FormattingEnabled = true;
+            this.cmbPriority10.Location = new System.Drawing.Point(106, 299);
+            this.cmbPriority10.Name = "cmbPriority10";
+            this.cmbPriority10.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority10.TabIndex = 29;
+            this.cmbPriority10.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkKill
+            // cmbPriority9
             // 
-            this.chkKill.AutoSize = true;
-            this.chkKill.Location = new System.Drawing.Point(6, 162);
-            this.chkKill.Name = "chkKill";
-            this.chkKill.Size = new System.Drawing.Size(64, 17);
-            this.chkKill.TabIndex = 6;
-            this.chkKill.Text = "Kill Shot";
-            this.chkKill.UseVisualStyleBackColor = true;
-            this.chkKill.CheckedChanged += new System.EventHandler(this.chkKill_CheckedChanged);
+            this.cmbPriority9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority9.FormattingEnabled = true;
+            this.cmbPriority9.Location = new System.Drawing.Point(106, 272);
+            this.cmbPriority9.Name = "cmbPriority9";
+            this.cmbPriority9.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority9.TabIndex = 28;
+            this.cmbPriority9.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkSteady
+            // cmbPriority8
             // 
-            this.chkSteady.AutoSize = true;
-            this.chkSteady.Location = new System.Drawing.Point(6, 254);
-            this.chkSteady.Name = "chkSteady";
-            this.chkSteady.Size = new System.Drawing.Size(84, 17);
-            this.chkSteady.TabIndex = 5;
-            this.chkSteady.Text = "Steady Shot";
-            this.chkSteady.UseVisualStyleBackColor = true;
-            this.chkSteady.CheckedChanged += new System.EventHandler(this.chkSteady_CheckedChanged);
+            this.cmbPriority8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority8.FormattingEnabled = true;
+            this.cmbPriority8.Location = new System.Drawing.Point(106, 245);
+            this.cmbPriority8.Name = "cmbPriority8";
+            this.cmbPriority8.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority8.TabIndex = 27;
+            this.cmbPriority8.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkSilence
+            // cmbPriority7
             // 
-            this.chkSilence.AutoSize = true;
-            this.chkSilence.Location = new System.Drawing.Point(6, 231);
-            this.chkSilence.Name = "chkSilence";
-            this.chkSilence.Size = new System.Drawing.Size(94, 17);
-            this.chkSilence.TabIndex = 4;
-            this.chkSilence.Text = "Silencing Shot";
-            this.chkSilence.UseVisualStyleBackColor = true;
-            this.chkSilence.CheckedChanged += new System.EventHandler(this.chkSilence_CheckedChanged);
+            this.cmbPriority7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority7.FormattingEnabled = true;
+            this.cmbPriority7.Location = new System.Drawing.Point(106, 218);
+            this.cmbPriority7.Name = "cmbPriority7";
+            this.cmbPriority7.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority7.TabIndex = 26;
+            this.cmbPriority7.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkSerpent
+            // cmbPriority6
             // 
-            this.chkSerpent.AutoSize = true;
-            this.chkSerpent.Location = new System.Drawing.Point(6, 208);
-            this.chkSerpent.Name = "chkSerpent";
-            this.chkSerpent.Size = new System.Drawing.Size(90, 17);
-            this.chkSerpent.TabIndex = 3;
-            this.chkSerpent.Text = "Serpent Sting";
-            this.chkSerpent.UseVisualStyleBackColor = true;
-            this.chkSerpent.CheckedChanged += new System.EventHandler(this.chkSerpent_CheckedChanged);
+            this.cmbPriority6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority6.FormattingEnabled = true;
+            this.cmbPriority6.Location = new System.Drawing.Point(106, 191);
+            this.cmbPriority6.Name = "cmbPriority6";
+            this.cmbPriority6.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority6.TabIndex = 25;
+            this.cmbPriority6.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkMulti
+            // cmbPriority5
             // 
-            this.chkMulti.AutoSize = true;
-            this.chkMulti.Location = new System.Drawing.Point(6, 185);
-            this.chkMulti.Name = "chkMulti";
-            this.chkMulti.Size = new System.Drawing.Size(71, 17);
-            this.chkMulti.TabIndex = 2;
-            this.chkMulti.Text = "Multi-shot";
-            this.chkMulti.UseVisualStyleBackColor = true;
-            this.chkMulti.CheckedChanged += new System.EventHandler(this.chkMulti_CheckedChanged);
+            this.cmbPriority5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority5.FormattingEnabled = true;
+            this.cmbPriority5.Location = new System.Drawing.Point(106, 164);
+            this.cmbPriority5.Name = "cmbPriority5";
+            this.cmbPriority5.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority5.TabIndex = 24;
+            this.cmbPriority5.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkArcane
+            // cmbPriority4
             // 
-            this.chkArcane.AutoSize = true;
-            this.chkArcane.Location = new System.Drawing.Point(6, 69);
-            this.chkArcane.Name = "chkArcane";
-            this.chkArcane.Size = new System.Drawing.Size(85, 17);
-            this.chkArcane.TabIndex = 1;
-            this.chkArcane.Text = "Arcane Shot";
-            this.chkArcane.UseVisualStyleBackColor = true;
-            this.chkArcane.CheckedChanged += new System.EventHandler(this.chkArcane_CheckedChanged);
+            this.cmbPriority4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority4.FormattingEnabled = true;
+            this.cmbPriority4.Location = new System.Drawing.Point(106, 137);
+            this.cmbPriority4.Name = "cmbPriority4";
+            this.cmbPriority4.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority4.TabIndex = 23;
+            this.cmbPriority4.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // chkAimed
+            // cmbPriority3
             // 
-            this.chkAimed.AutoSize = true;
-            this.chkAimed.Location = new System.Drawing.Point(6, 46);
-            this.chkAimed.Name = "chkAimed";
-            this.chkAimed.Size = new System.Drawing.Size(80, 17);
-            this.chkAimed.TabIndex = 0;
-            this.chkAimed.Text = "Aimed Shot";
-            this.chkAimed.UseVisualStyleBackColor = true;
-            this.chkAimed.CheckedChanged += new System.EventHandler(this.chkAimed_CheckedChanged);
+            this.cmbPriority3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority3.FormattingEnabled = true;
+            this.cmbPriority3.Location = new System.Drawing.Point(106, 110);
+            this.cmbPriority3.Name = "cmbPriority3";
+            this.cmbPriority3.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority3.TabIndex = 22;
+            this.cmbPriority3.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
+            // 
+            // cmbPriority2
+            // 
+            this.cmbPriority2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority2.FormattingEnabled = true;
+            this.cmbPriority2.Location = new System.Drawing.Point(106, 83);
+            this.cmbPriority2.Name = "cmbPriority2";
+            this.cmbPriority2.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority2.TabIndex = 21;
+            this.cmbPriority2.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
+            // 
+            // cmbPriority1
+            // 
+            this.cmbPriority1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriority1.FormattingEnabled = true;
+            this.cmbPriority1.Location = new System.Drawing.Point(106, 56);
+            this.cmbPriority1.Name = "cmbPriority1";
+            this.cmbPriority1.Size = new System.Drawing.Size(121, 21);
+            this.cmbPriority1.TabIndex = 20;
+            this.cmbPriority1.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // duration
             // 
@@ -812,13 +884,13 @@
             // 
             // trackBarTargetArmor
             // 
-            this.trackBarTargetArmor.BackColor = System.Drawing.Color.White;
+            this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.Control;
             this.trackBarTargetArmor.LargeChange = 1000;
             this.trackBarTargetArmor.Location = new System.Drawing.Point(115, 33);
             this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Minimum = 6000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 45);
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 42);
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 2;
             this.trackBarTargetArmor.TickFrequency = 2000;
@@ -853,6 +925,22 @@
             this.tabControl1.Size = new System.Drawing.Size(263, 508);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tabControl1.TabIndex = 48;
+            // 
+            // cmbPriorityDefaults
+            // 
+            this.cmbPriorityDefaults.BackColor = System.Drawing.SystemColors.Window;
+            this.cmbPriorityDefaults.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPriorityDefaults.FormattingEnabled = true;
+            this.cmbPriorityDefaults.Items.AddRange(new object[] {
+            "Custom",
+            "Beast Master",
+            "Marksman",
+            "Survival"});
+            this.cmbPriorityDefaults.Location = new System.Drawing.Point(9, 20);
+            this.cmbPriorityDefaults.Name = "cmbPriorityDefaults";
+            this.cmbPriorityDefaults.Size = new System.Drawing.Size(218, 21);
+            this.cmbPriorityDefaults.TabIndex = 40;
+            this.cmbPriorityDefaults.SelectedIndexChanged += new System.EventHandler(this.cmbPriorityDefaults_SelectedIndexChanged);
             // 
             // CalculationOptionsPanelHunter
             // 
@@ -944,18 +1032,27 @@
         private System.Windows.Forms.ComboBox comboBoxPet1;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.ComboBox comboBoxPet4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox chkAimed;
-        private System.Windows.Forms.CheckBox chkArcane;
-        private System.Windows.Forms.CheckBox chkMulti;
-        private System.Windows.Forms.CheckBox chkSerpent;
-        private System.Windows.Forms.CheckBox chkSilence;
-        private System.Windows.Forms.CheckBox chkSteady;
-        private System.Windows.Forms.CheckBox chkKill;
-        private System.Windows.Forms.CheckBox chkExplosive;
-        private System.Windows.Forms.CheckBox chkChimera;
-        private System.Windows.Forms.CheckBox chkBlack;
-        private System.Windows.Forms.ComboBox cmbDefaults;
+        private System.Windows.Forms.ComboBox cmbPriority1;
+        private System.Windows.Forms.ComboBox cmbPriority2;
+        private System.Windows.Forms.ComboBox cmbPriority10;
+        private System.Windows.Forms.ComboBox cmbPriority9;
+        private System.Windows.Forms.ComboBox cmbPriority8;
+        private System.Windows.Forms.ComboBox cmbPriority7;
+        private System.Windows.Forms.ComboBox cmbPriority6;
+        private System.Windows.Forms.ComboBox cmbPriority5;
+        private System.Windows.Forms.ComboBox cmbPriority4;
+        private System.Windows.Forms.ComboBox cmbPriority3;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmbPriorityDefaults;
     }
 }

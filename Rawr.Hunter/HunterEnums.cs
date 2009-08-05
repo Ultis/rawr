@@ -28,6 +28,14 @@ namespace Rawr.Hunter
         AimedShot,
         MultiShot,
         ArcaneShot,
+        BlackArrow,
+        KillShot,
+        SilencingShot,
+        ChimeraShot,
+        ScorpidSting, // TODO
+        ViperSting, // TODO
+        RapidFire, // used in rotations
+        ImmolationTrap, // used in rotations
     }
 
     public enum PetFamily
