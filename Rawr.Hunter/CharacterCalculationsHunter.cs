@@ -332,7 +332,7 @@ namespace Rawr.Hunter
             dictValues.Add("Silencing Shot", SilencingDPS.ToString("F2"));
 			dictValues.Add("Arcane Shot", arcaneDPS.ToString("F2"));
             dictValues.Add("Explosive Shot", ExplosiveShotDPS.ToString("F2") + "*DPS when spammed");
-			dictValues.Add("Chimera Shot", ChimeraShotDPS.ToString("F2"));
+            dictValues.Add("Chimera Shot", ChimeraShotDPS.ToString("F2") + "*DPS when spammed");
 			dictValues.Add("Aimed Shot", aimedDPCD.ToString("F2") + "*DPS when spammed");
 			dictValues.Add("Multi Shot", multiDPCD.ToString("F2"));
             dictValues.Add("Black Arrow", AutoshotDPS.ToString("F2"));

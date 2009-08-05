@@ -504,8 +504,7 @@ namespace Rawr.Hunter
 				
 				double hasteMultiplier = 1.0 +  (calculatedStats.hasteEffectsTotal /100);
 			
-			#endregion
-			
+			#endregion			
 			#region May 2009 Shot Speeds
 			double autoShotSpeed;
 			if ((character.Ranged.Speed / hasteMultiplier <= 0.5 ))
@@ -522,9 +521,7 @@ namespace Rawr.Hunter
             shotsPerSec += 1/1.5;
             
             double GCD = 1.5;
-			#endregion
-			
-						
+			#endregion					
 			#region May 2009 Hit Chance
 			double missPercent = HunterRatings.BASE_MISS_PERCENT ;
 			calculatedStats.hitBase = 1.0 - HunterRatings.BASE_MISS_PERCENT;
@@ -564,8 +561,6 @@ namespace Rawr.Hunter
 			double hitChance = calculatedStats.hitOverall;
 					
 			#endregion
-			
-			
 			#region May 2009 Crit Chance
 			
 			double critHitPercent = HunterRatings.BASE_CRIT_PERCENT;
@@ -611,7 +606,6 @@ namespace Rawr.Hunter
 			calculatedStats.critRateOverall = critHitPercent;
 			double normalHitPercent = 1.0 - critHitPercent;
 			#endregion
-
 			#region May 2009 Ranged Attackpower
 			
 			double apFromBase = 0 + HunterRatings.CHAR_LEVEL * 2;
@@ -775,6 +769,7 @@ namespace Rawr.Hunter
             //Improved Steady Shot
             // TODO: calculate this correctly
             double improvedSSAimedShotDamageAdjust = 1;
+            double improvedSSChimeraShotDamageAdjust = 1;
 
             //Improve Stings
             double improvedStingsDamageAdjust = 1 + 0.1 * character.HunterTalents.ImprovedStings;
@@ -829,7 +824,6 @@ namespace Rawr.Hunter
             double blackarrowDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust * trapMasteryDamageAdjust * TNTDamageAdjust;
             double multiShotDamageBoost = globalDamageBoost * barrageDamageAdjust;
             double volleyDamageBoost = globalDamageBoost * barrageDamageAdjust;
-            double chimeraDamageBoost = globalDamageBoost;
             double killShotDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust;
              
 			#endregion
@@ -876,7 +870,6 @@ namespace Rawr.Hunter
             // these are (probably) correct, but will be moved down into their shot regions
             double arcaneBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
             double killBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
-            double chimeraBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
             double multiShotBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage;            
 			
 			#endregion			
@@ -1034,7 +1027,7 @@ namespace Rawr.Hunter
 			#region July 2009 Serpent Sting
 
             // base_damage = 1210 + (0.2 * RAP)
-            double serpentStingBaseDamage = 1210 + (calculatedStats.RAPtotal * 0.2);
+            double serpentStingDamageBase = 1210 + (calculatedStats.RAPtotal * 0.2);
 
             // damage_boost = sting_talent_adjusts * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs
@@ -1044,8 +1037,9 @@ namespace Rawr.Hunter
                                                 * improvedTrackingDamageAdjust
                                                 * partialResist;
 
-            // damage_per_tick = round(base_damage / 5 * damage_boost)
-            double serpentStingDamagePerTick = Math.Round(serpentStingBaseDamage / 5 * serpentStingDamageAdjust);
+            double serpentStingDamageReal = serpentStingDamageBase * serpentStingDamageAdjust;
+
+            double serpentStingDamagePerTick = Math.Round(serpentStingDamageReal / 5);
 
             // duration and ticks
             double serpentStingDuration = 15;
@@ -1138,15 +1132,58 @@ namespace Rawr.Hunter
                 specialsPerSec += 1 / 6;
 
 			#endregion
-            #region May 2009 Chimera Shot
-            double csDmg = autoShotDamageNormalized * chimeraDamageBoost;
-            double csEffect = serpentStingBaseDamage * 0.4;
-            double csSerpDamage = chimeraDamageBoost * csEffect;
-            double totalCSDmg = csDmg + csSerpDamage;
-            calculatedStats.ChimeraShotDPS = totalCSDmg / 10;
+            #region July 2009 Chimera Shot
+
+            // base_damage = normalized_autoshot * 125%
+            double chimeraShotDamageNormal = autoShotDamageNormalized * 1.25;
+
+            // crit for 'specials'
+            double chimeraShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage; 
+
+            // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
+            // TODO: nature_debuffs
+            double chimeraShotDamageAdjust = talentDamageAdjust * improvedSSChimeraShotDamageAdjust * partialResist;
+
+            double chimeraShotDamageReal = CalcEffectiveDamage(
+                                                chimeraShotDamageNormal,
+                                                hitChance,
+                                                critHitPercent,
+                                                chimeraShotCritAdjust,
+                                                chimeraShotDamageAdjust
+                                           );
+
+
+            // calculate damage from serpent sting
+            double chimeraShotSerpentDamage = serpentStingDamageReal * 0.4;
+            double chimeraShotSerpentCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage;
+            double chimeraShotSerpentDamageAdjust = talentDamageAdjust * 1; // TODO: add nature_debuffs here!
+
+            double chimeraShotSerpentDamageReal = CalcEffectiveDamage(
+                                                    chimeraShotSerpentDamage,
+                                                    hitChance,
+                                                    critHitPercent,
+                                                    chimeraShotSerpentCritAdjust,
+                                                    chimeraShotSerpentDamageAdjust
+                                                 );
+
+            double chimeraShotDamageTotal = chimeraShotDamageReal + chimeraShotSerpentDamageReal;
+
+            double chimeraShotCooldown = character.HunterTalents.GlyphOfChimeraShot ? 9 : 10;
+
+            calculatedStats.ChimeraShotDPS = chimeraShotDamageTotal / chimeraShotCooldown;
+
+            //Debug.WriteLine("serpentStingDamageReal = " + serpentStingDamageReal);
+            //Debug.WriteLine("chimeraShotDamageNormal = " + chimeraShotDamageNormal);
+            //Debug.WriteLine("chimeraShotDamageReal = " + chimeraShotDamageReal);
+            //Debug.WriteLine("chimeraShotSerpentDamage = " + chimeraShotSerpentDamage);
+            //Debug.WriteLine("chimeraShotSerpentDamageReal = " + chimeraShotSerpentDamageReal);
+            //Debug.WriteLine("chimeraShotDamageTotal = " + chimeraShotDamageTotal);
+            //Debug.WriteLine("chimeraShotCooldown = " + chimeraShotCooldown);
+            //Debug.WriteLine("calculatedStats.ChimeraShotDPS = " + calculatedStats.ChimeraShotDPS);
 
             if (options.ChimeraInRot)
                 specialsPerSec += 0.1;
+
             #endregion
             #region May 2009 Arcane Shot
             double arcaneShotDamageNormal = RAP * 0.15 + 492;
@@ -1532,6 +1569,17 @@ namespace Rawr.Hunter
             }
             return ((numBuff * duration) / length);
 
+        }
+
+        private double CalcEffectiveDamage(double damageNormal, double hitChance, double critChance, double critAdjust, double damageAdjust)
+        {
+
+            double damageCrit = damageNormal * (1 + critAdjust);
+            double damageTotal = (damageNormal * (1 - critChance)
+                               + (damageCrit * critChance));
+            double damageReal = damageTotal * damageAdjust * hitChance;
+
+            return damageReal;
         }
 
 		private Stats GetPetStats(CalculationOptionsHunter options, CharacterCalculationsHunter hunterStats, Character character)
