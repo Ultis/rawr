@@ -710,7 +710,7 @@ namespace Rawr.Hunter
 			
 			
 			#endregion
-			#region May 2009 Damage Boosts (Adjustments)
+			#region July 2009 Damage Adjustments
 			
 			//Beastial Wrath
 			double beastialWrathCooldown = (2 * 60);
@@ -737,7 +737,8 @@ namespace Rawr.Hunter
             double sancRetributionAuraDamageAdjust = 1 + statsBuffs.BonusDamageMultiplier;
 
             //Black Arrow Damage Multiplier
-            double blackArrowDamageAdjust = 1 + (0.06 * character.HunterTalents.BlackArrow) * blackArrowUptime;
+            double blackArrowAuraDamageAdjust = 1 + (0.06 * character.HunterTalents.BlackArrow) * blackArrowUptime;
+            double blackArrowSelfDamageAdjust = 1 + (RAP / 225000);
 
             //Noxious Stings
             double noxiousStingsDamageAdjust = 1 + (0.01 * character.HunterTalents.NoxiousStings);
@@ -793,7 +794,7 @@ namespace Rawr.Hunter
             double talentDamageAdjust = focusedFireDamageAdjust
                                             * beastWithinDamageAdjust
                                             * sancRetributionAuraDamageAdjust
-                                            * blackArrowDamageAdjust
+                                            * blackArrowAuraDamageAdjust
                                             * noxiousStingsDamageAdjust
                                             * ferociousInspirationDamageAdjust
                                             * improvedTrackingDamageAdjust
@@ -803,32 +804,12 @@ namespace Rawr.Hunter
             double talentDamageStingAdjust = focusedFireDamageAdjust
                                             * beastWithinDamageAdjust
                                             * sancRetributionAuraDamageAdjust
-                                            * blackArrowDamageAdjust
+                                            * blackArrowAuraDamageAdjust
                                             * noxiousStingsDamageAdjust
                                             * ferociousInspirationDamageAdjust;
-
-
-            // everything below here (in this region) is being deprecated in favor of more transparency
-            // by calculating intermediate values and doing the summing inside the shot region.
-            double globalDamageBoost = 1;
-            globalDamageBoost *= focusedFireDamageAdjust;
-            globalDamageBoost *= beastWithinDamageAdjust;
-            globalDamageBoost *= sancRetributionAuraDamageAdjust;
-            globalDamageBoost *= blackArrowDamageAdjust;
-            globalDamageBoost *= noxiousStingsDamageAdjust;
-            globalDamageBoost *= ferociousInspirationDamageAdjust;
-            globalDamageBoost *= improvedTrackingDamageAdjust;
-            globalDamageBoost *= rangedWeaponSpecializationDamageAdjust;
-            globalDamageBoost *= markedForDeathDamageAdjust;
-            globalDamageBoost *= targetPhysicalDebuffsDamageAdjust;
-
-            double blackarrowDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust * trapMasteryDamageAdjust * TNTDamageAdjust;
-            double multiShotDamageBoost = globalDamageBoost * barrageDamageAdjust;
-            double volleyDamageBoost = globalDamageBoost * barrageDamageAdjust;
-            double killShotDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust;
              
 			#endregion
-			#region May 2009 Bonus Crit Chance
+			#region July 2009 Bonus Crit Chance
 					
 			//Improved Barrage
 			double improvedBarrageCritModifier = 0.04 * character.HunterTalents.ImprovedBarrage;
@@ -838,6 +819,9 @@ namespace Rawr.Hunter
 
 			// Explosive Shot Glyph
             double glyphOfExplosiveShotCritModifier = character.HunterTalents.GlyphOfExplosiveShot ? 0.04 : 0;
+
+            // Sniper Training
+            double sniperTrainingCritModifier = character.HunterTalents.SniperTraining * 0.05;
 		
 			//Trueshot Aura Glyph
             double trueshotAuraGlyphCritModifier = 0;
@@ -848,14 +832,9 @@ namespace Rawr.Hunter
                     trueshotAuraGlyphCritModifier = 0.1;
 				}
 			}
-
-
-            // these are (probably) correct, but will be moved down into their shot regions
-            double multiShotBonusCritChance = 1 + improvedBarrageCritModifier;
-
 			
 			#endregion
-			#region May 2009 Bonus Crit Damage
+			#region July 2009 Bonus Crit Damage
 						
 			//MortalShots
             double mortalShotsCritDamage = 0.06 * character.HunterTalents.MortalShots;
@@ -865,11 +844,6 @@ namespace Rawr.Hunter
 
             //Marked For Death
             double markedForDeathCritDamage = 0.02 * character.HunterTalents.MarkedForDeath;
-
-
-            // these are (probably) correct, but will be moved down into their shot regions
-            double killBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
-            double multiShotBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage;            
 			
 			#endregion			
             #region Partial Resists
@@ -1028,7 +1002,7 @@ namespace Rawr.Hunter
             // base_damage = 1210 + (0.2 * RAP)
             double serpentStingDamageBase = 1210 + (calculatedStats.RAPtotal * 0.2);
 
-            // damage_boost = sting_talent_adjusts * improved_stings * improved_tracking
+            // damage_adjust = sting_talent_adjusts * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs
             // TODO: nature debuffs & t8 bonus
             double serpentStingDamageAdjust = talentDamageStingAdjust
@@ -1214,47 +1188,91 @@ namespace Rawr.Hunter
                 specialsPerSec += 1 / 6;
 			
 			#endregion		
-			#region May 2009 Multi Shot
+			#region July 2009 Multi Shot
 			
-			double multiShotNormalDamage = autoShotDamageNormalized + 408;
-			double multiShotCastTime = GCD;
-			double multiShotCD = 10;
-			if (character.HunterTalents.GlyphOfMultiShot)
-			{
-				multiShotCD -= 1;
-			}
-			double multiShotHit = hitChance;
-			double multiShotCrit = critHitPercent * multiShotBonusCritChance;
-			double multiShotCritDamage = multiShotNormalDamage * ( 1.0 + 1.0 * multiShotBonusCritDamage);
-			double multiShotDamageTotal = (multiShotNormalDamage * (1 - multiShotCrit) + (multiShotCritDamage * multiShotCrit));
-			double multiShotDPS = ((multiShotDamageTotal * multiShotDamageBoost * (1 - damageReduction) ) /multiShotCastTime ) * multiShotHit;
-			double multishotDPCD = multiShotDPS / multiShotCD;
-			calculatedStats.multiDPCD = multishotDPCD;
+            double multiShotDamageNormal = rangedWeaponDamage + statsBaseGear.WeaponDamage + rangedAmmoDamage 
+                                        + calculatedStats.BasicStats.ScopeDamage + 408 + (RAP * 0.2);
+            double multiShotCrit = critHitPercent + improvedBarrageCritModifier;
+            double multiShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust; // missing: pvp gloves bonus
+
+            double multiShotDamageReal = CalcEffectiveDamage(
+                                            multiShotDamageNormal,
+                                            hitChance,
+                                            multiShotCrit,
+                                            1,
+                                            multiShotDamageAdjust
+                                         );
+
+            double multiShotCooldown = 10;
+            if (character.HunterTalents.GlyphOfMultiShot) multiShotCooldown -= 1;
+            // TODO: remove one more second for galdiator's pursuit set bonus
+
+            double multiShotDPS = multiShotDamageReal / multiShotCooldown;
+
+            calculatedStats.multiDPCD = multiShotDamageReal;
+
+            //Debug.WriteLine("multiShotDamageReal = " + multiShotDamageReal);
+            //Debug.WriteLine("multiShotDPS = " + multiShotDPS);
 
             if (options.MultiInRot)
-                specialsPerSec += 1 / multiShotCD;
+                specialsPerSec += 1 / multiShotCooldown;
 
 			#endregion
-			#region May 2009 Black Arrow
-            double baDmgFromRap = calculatedStats.RAPtotal * 0.1;
-            double baDmg = (2765 + baDmgFromRap) * blackarrowDamageBoost;
-            double baCD=30 - (character.HunterTalents.Resourcefulness * 2);
-            calculatedStats.BlackDPS = baDmg / baCD;
+			#region July 2009 Black Arrow
+
+            double blackArrowDamageNormal = 2765 + (RAP * 0.1);
+
+            // this is a long list...
+            // TODO: add shadow_debuffs
+            double blackArrowDamageAdjust = partialResist * focusedFireDamageAdjust * beastWithinDamageAdjust
+                                          * sancRetributionAuraDamageAdjust * noxiousStingsDamageAdjust
+                                          * ferociousInspirationDamageAdjust * improvedTrackingDamageAdjust
+                                          * rangedWeaponSpecializationDamageAdjust * markedForDeathDamageAdjust
+                                          * targetPhysicalDebuffsDamageAdjust * sniperTrainingDamageAdjust
+                                          * trapMasteryDamageAdjust * TNTDamageAdjust
+                                          * blackArrowSelfDamageAdjust;
+
+            double blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
+            double blackArrowCooldown = 30 - (character.HunterTalents.Resourcefulness * 2);
+            calculatedStats.BlackDPS = blackArrowDamage / blackArrowCooldown;
+
+            //Debug.WriteLine("blackArrowDamage = " + blackArrowDamage);
+            //Debug.WriteLine("calculatedStats.BlackDPS = " + calculatedStats.BlackDPS);
 
             if (options.BlackInRot)
-                specialsPerSec += baCD;
+            {
+                specialsPerSec += blackArrowCooldown;
+            }
+
 			#endregion
-			#region May 2009 Kill Shot
-            double ksDmgFromRAP = calculatedStats.RAPtotal * 0.4;
-            double ksWpnDmg = (character.Ranged.MaxDamage + character.Ranged.MinDamage) / 2 + (character.Ranged.Speed * 46.5);
-            double ksDmg = (650 + ksDmgFromRAP + ksWpnDmg) * killShotDamageBoost;
-            double ksCD = 15;
-            if (character.HunterTalents.GlyphOfKillShot)
-                ksCD -= 6;
-            calculatedStats.KillDPS = (ksDmg / ksCD) * 0.2;
+			#region July 2009 Kill Shot
+
+            double killShotDamageNormal = (autoShotDamage * 2) + statsBaseGear.WeaponDamage + 650 + (RAP * 0.4);
+            double killShotCrit = critHitPercent + sniperTrainingCritModifier;
+            double killShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust;
+
+            double killShotDamageReal = CalcEffectiveDamage(
+                                            killShotDamageNormal,
+                                            hitChance,
+                                            killShotCrit,
+                                            killShotCritAdjust,
+                                            killShotDamageAdjust
+                                        );
+
+            double killShotCooldown = character.HunterTalents.GlyphOfKillShot ? 9 : 15;
+
+            calculatedStats.KillDPS = (killShotDamageReal / killShotCooldown) * 0.2;
+
+            //Debug.WriteLine("killShotDamageNormal = " + killShotDamageNormal);
+            //Debug.WriteLine("killShotDamageReal = " + killShotDamageReal);
+            //Debug.WriteLine("calculatedStats.KillDPS = " + calculatedStats.KillDPS);
 
             if (options.KillInRot)
-                specialsPerSec += 1 / ksCD;
+            {
+                specialsPerSec += 1 / killShotCooldown;
+            }
+
 			#endregion
             #region May 2009 SilencingShot
             calculatedStats.SilencingDPS = autoShotDamageNormalized * 0.5 * autoShotHitMissAdjust;
