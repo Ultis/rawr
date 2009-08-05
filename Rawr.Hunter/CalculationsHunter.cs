@@ -744,6 +744,7 @@ namespace Rawr.Hunter
 
             //Ferocious Inspiration
             double ferociousInspirationDamageAdjust = 1 + (0.01 * character.HunterTalents.FerociousInspiration) * ferociousInspirationUptime;
+            double ferociousInspirationArcaneDamageAdjust = 1 + (0.03 * character.HunterTalents.FerociousInspiration);
 
 			//Improved Tracking
             double improvedTrackingDamageAdjust = 1 + 0.01 * character.HunterTalents.ImprovedTracking;
@@ -770,6 +771,7 @@ namespace Rawr.Hunter
             // TODO: calculate this correctly
             double improvedSSAimedShotDamageAdjust = 1;
             double improvedSSChimeraShotDamageAdjust = 1;
+            double improvedSSArcaneShotDamageAdjust = 1;
 
             //Improve Stings
             double improvedStingsDamageAdjust = 1 + 0.1 * character.HunterTalents.ImprovedStings;
@@ -820,7 +822,6 @@ namespace Rawr.Hunter
             globalDamageBoost *= markedForDeathDamageAdjust;
             globalDamageBoost *= targetPhysicalDebuffsDamageAdjust;
 
-            double arcaneShotDamageBoost = globalDamageBoost * improvedArcaneShotDamageAdjust;
             double blackarrowDamageBoost = globalDamageBoost * sniperTrainingDamageAdjust * trapMasteryDamageAdjust * TNTDamageAdjust;
             double multiShotDamageBoost = globalDamageBoost * barrageDamageAdjust;
             double volleyDamageBoost = globalDamageBoost * barrageDamageAdjust;
@@ -850,7 +851,6 @@ namespace Rawr.Hunter
 
 
             // these are (probably) correct, but will be moved down into their shot regions
-            double arcaneBonusCritChance = 1 + survivalInstinctsCritModifier;
             double multiShotBonusCritChance = 1 + improvedBarrageCritModifier;
 
 			
@@ -868,7 +868,6 @@ namespace Rawr.Hunter
 
 
             // these are (probably) correct, but will be moved down into their shot regions
-            double arcaneBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
             double killBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
             double multiShotBonusCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage;            
 			
@@ -1185,17 +1184,31 @@ namespace Rawr.Hunter
                 specialsPerSec += 0.1;
 
             #endregion
-            #region May 2009 Arcane Shot
-            double arcaneShotDamageNormal = RAP * 0.15 + 492;
-			double arcaneShotCastTime = GCD	;
-			double arcaneCD = 6;
-			double arcaneCrit = critHitPercent * arcaneBonusCritChance;
-            double arcaneHit = hitChance;
-			double arcaneShotCritDamage =  arcaneShotDamageNormal * (1.0 + 1.0 * arcaneBonusCritDamage);
-			double arcaneDamageTotal = (arcaneShotDamageNormal * (1 - arcaneCrit) + (arcaneShotCritDamage * arcaneCrit));
-			double arcaneDPS =  ((arcaneDamageTotal * arcaneShotDamageBoost ) / arcaneShotCastTime) * arcaneHit;
-			double arcaneDPCD = arcaneDPS/arcaneCD;
-            calculatedStats.arcaneDPS = arcaneDPCD;
+            #region July 2009 Arcane Shot
+
+            // base_damage = 492 + weapon_damage_gear + (RAP * 15%)
+            double arcaneShotDamageNormal = 492 + statsBaseGear.WeaponDamage + (RAP * 0.15);
+
+            double arcaneShotCrit = critHitPercent + survivalInstinctsCritModifier;
+            double arcaneShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double arcaneShotDamageAdjust = talentDamageAdjust * partialResist * improvedArcaneShotDamageAdjust
+                                            * ferociousInspirationArcaneDamageAdjust * improvedSSArcaneShotDamageAdjust; // missing arcane_debuffs!
+
+            double arcaneShotDamageReal = CalcEffectiveDamage(
+                                            arcaneShotDamageNormal,
+                                            hitChance,
+                                            arcaneShotCrit,
+                                            arcaneShotCritAdjust,
+                                            arcaneShotDamageAdjust
+                                          );
+
+            double arcaneShotCooldown = 6;
+            double arcaneShotDPS = arcaneShotDamageReal / arcaneShotCooldown;
+
+            calculatedStats.arcaneDPS = arcaneShotDamageReal;
+
+            //Debug.WriteLine("arcaneShotDamageReal = " + arcaneShotDamageReal);
+            //Debug.WriteLine("arcaneShotDPS = " + arcaneShotDPS);
 
             if (options.ArcaneInRot)
                 specialsPerSec += 1 / 6;
