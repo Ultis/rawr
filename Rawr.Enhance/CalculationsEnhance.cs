@@ -32,7 +32,7 @@ namespace Rawr.Enhance
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, true));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, true));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, relentless, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false)); 
                 }
                 return _defaultGemmingTemplates;
             }
