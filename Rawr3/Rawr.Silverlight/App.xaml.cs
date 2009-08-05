@@ -54,14 +54,24 @@ namespace Rawr.Silverlight
 		private void ProcessBookmark()
 		{
 			string bookmark = HtmlPage.Window.CurrentBookmark;
-			if (!string.IsNullOrEmpty(bookmark) && bookmark.Contains("@") && bookmark.Contains("-"))
+			if (!string.IsNullOrEmpty(bookmark))
 			{
-				string characterName = bookmark.Substring(0, bookmark.IndexOf("@"));
-				string realm = bookmark.Substring(bookmark.IndexOf("@") + 1);
-				CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), realm.Substring(0, 2), true);
-				realm = realm.Substring(3);
+				if (bookmark.StartsWith("~"))
+				{
+				}
+				else if (bookmark.Contains("@") && bookmark.Contains("-"))
+				{
+					string characterName = bookmark.Substring(0, bookmark.IndexOf("@"));
+					string realm = bookmark.Substring(bookmark.IndexOf("@") + 1);
+					CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), realm.Substring(0, 2), true);
+					realm = realm.Substring(3);
 
-				_mainPage.LoadFromArmory(characterName, region, realm);
+					_mainPage.LoadFromArmory(characterName, region, realm);
+				}
+				else if (Calculations.Models.ContainsKey(bookmark))
+				{
+					Calculations.LoadModel(Calculations.Models[bookmark]);
+				}
 			}
 		}
 

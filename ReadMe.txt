@@ -1,19 +1,26 @@
-Rawr v2.2.10.0
+Rawr v2.2.11.0
 ------------
-Welcome to Rawr 2.2.10.0.
+Welcome to Rawr 2.2.11.0.
    
 Recent Changes:
- - Rawr.Tree: Added Survival as a 3rd rating
- - Rawr.Retribution: Slight fix to partial resist calculations
- - Rawr.Elemental: Fixed haste, damage, and talent calculations, implemented glyphs
- - Rawr.DPSWarr: Fixed broken Arms, Overpower, Deep Wounds, and Latency calculations, and fixed a crash. Now uses a Priority Queue for all specs. Improved stat display. 
- - Rawr.RestoSham: Improvements to calculations
- - Rawr.Healadin: Minor fix for crit rate calculations
- - Rawr.Rogue: Fixed several talent calculations
- - Rawr.DPSDK: Fixed crash, and minor calculation improvements
- - Rawr.Mage: Fixed special effect bonus haste/crit multipliers, and for Innervate
+ - NOTE! Everyone, please do NOT reuse your GemmingTemplates.xml file from a previous version of Rawr, due to all the changes in gems in 3.2.
+ - Updated base stats, stat conversions, and gemming rules for 3.2
+ - Fixed a potential crash in Batch Tools
+ - Rawr.Cat: Updated for 3.2.
+ - Rawr.Mage: Updated for 3.2. Fix for FFB threat multiplier. Improved Hot Streak modeling.
+ - Rawr.Retribution: Updated for 3.2.
+ - Rawr.Enhance: Added support for Orc axe racial. Fix for weapon speed charts.
+ - Rawr.DPSWarr: Rearranged the options panel. Fixed several calculation bugs/improvements.
+ - Rawr.Warlock: Fixed several calculation bugs/improvements.
+ - Rawr.RestoSham: Fixed several calculation bugs/improvements.
+ - Rawr.Hunter: Fixed many calculation bugs/improvements.
+ - Rawr.Moonkin: Now properly counts lost GCDs due to FF/Starfall/Treants.
+ - Rawr.Elemental: Improved handling of special effects. Fixed several calculation bugs/improvements.
+ - Rawr.Healadin: Updated for 3.2.
+ - Rawr.RestoSham: Updated for 3.2.
+ - Rawr.Tree: Updated for 3.2.
  
-TEASER: We're working on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel.
+TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
 Instructions
 ------------
@@ -82,6 +89,17 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.10.0
+ - Rawr.Tree: Added Survival as a 3rd rating
+ - Rawr.Retribution: Slight fix to partial resist calculations
+ - Rawr.Elemental: Fixed haste, damage, and talent calculations, implemented glyphs
+ - Rawr.DPSWarr: Fixed broken Arms, Overpower, Deep Wounds, and Latency calculations, and fixed a crash. Now uses a Priority Queue for all specs. Improved stat display. 
+ - Rawr.RestoSham: Improvements to calculations
+ - Rawr.Healadin: Minor fix for crit rate calculations
+ - Rawr.Rogue: Fixed several talent calculations
+ - Rawr.DPSDK: Fixed crash, and minor calculation improvements
+ - Rawr.Mage: Fixed special effect bonus haste/crit multipliers, and for Innervate
+ 
 v2.2.9.0
  - Now supports the new armory data format Blizz just posted. Also fixed several Armory parsing errors
  - Rawr.Mage: Fix for procs affecting per-spell damage. Split ignite damage into its own line in the spell damage breakdown.
