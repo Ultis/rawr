@@ -250,6 +250,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Hammer of Wrath",
+                        "DPS Breakdown:Hand of Reckoning",
                         "DPS Breakdown:Other*From trinket procs",
                         "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
@@ -416,14 +417,13 @@ namespace Rawr.Retribution
             statsRace.Mana -= 280f;
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
+            
+            stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
+            ConvertRatings(stats, talents, calcOpts.TargetLevel);
 
             if (computeAverageStats)
             {
                 Rotation rot;
-
-                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
-
-                ConvertRatings(stats, talents, calcOpts.TargetLevel);
 
                 CombatStats combats = new CombatStats(character, stats);
                 if (calcOpts.SimulateRotation) rot = new Simulator(combats);
@@ -486,10 +486,6 @@ namespace Rawr.Retribution
                 stats.Strength += stats.HighestStat;
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
 
-                ConvertRatings(stats, talents, calcOpts.TargetLevel);
-            }
-            else
-            {
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
             }
             return stats;

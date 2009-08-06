@@ -378,6 +378,18 @@ namespace Rawr.Retribution
 
     }
 
+    public class HandOfReckoning : Skill
+    {
+
+        public HandOfReckoning(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+
+        public override float AbilityDamage()
+        {
+            return 1f + Stats.AttackPower * 0.5f;
+        }
+
+    }
+
     public class None : Skill
     {
 

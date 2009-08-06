@@ -19,6 +19,7 @@ namespace Rawr.Retribution {
         public float JudgementDPS { get; set; }
         public float ConsecrationDPS { get; set; }
         public float ExorcismDPS { get; set; }
+        public float HandOfReckoningDPS { get; set; }
         public float HammerOfWrathDPS { get; set; }
         public float OtherDPS { get; set; }
 
@@ -29,6 +30,7 @@ namespace Rawr.Retribution {
         public Skill JudgementSkill { get; set; }
         public Skill ConsecrationSkill { get; set; }
         public Skill ExorcismSkill { get; set; }
+        public Skill HandOfReckoningSkill { get; set; }
         public Skill HammerOfWrathSkill { get; set; }
 
         public float ToMiss { get; set; }
@@ -62,6 +64,7 @@ namespace Rawr.Retribution {
             dictValues["Exorcism"] = string.Format("{0}*{1}", ExorcismDPS.ToString("N0"), ExorcismSkill.ToString());
             dictValues["Divine Storm"] = string.Format("{0}*{1}", DivineStormDPS.ToString("N0"), DivineStormSkill.ToString());
             dictValues["Hammer of Wrath"] = string.Format("{0}*{1}", HammerOfWrathDPS.ToString("N0"), HammerOfWrathSkill.ToString());
+            dictValues["Hand of Reckoning"] = string.Format("{0}*{1}", HandOfReckoningDPS.ToString("N0"), HandOfReckoningSkill.ToString());
             dictValues["Other"] = OtherDPS.ToString("N0");
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
 

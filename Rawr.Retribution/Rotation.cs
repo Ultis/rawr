@@ -15,6 +15,7 @@ namespace Rawr.Retribution
         public Skill Cons;
         public Skill Seal;
         public Skill SealDot;
+        public Skill HoR;
         public White White;
 
         protected CombatStats Combats;
@@ -28,6 +29,7 @@ namespace Rawr.Retribution
             HoW = new HammerOfWrath(combats);
             Cons = new Consecration(combats);
             White = new White(combats);
+            HoR = new HandOfReckoning(combats);
 
             if (combats.CalcOpts.Seal == SealOf.Righteousness)
             {
@@ -67,7 +69,10 @@ namespace Rawr.Retribution
             calc.ConsecrationSkill = Cons;
             calc.ExorcismSkill = Exo;
             calc.HammerOfWrathSkill = HoW;
-            
+            calc.HandOfReckoningSkill = HoR;
+
+            calc.HandOfReckoningDPS = HoR.AverageDamage() / 8f * Combats.CalcOpts.HoREff;
+
             calc.DPSPoints =
                 calc.WhiteDPS +
                 calc.SealDPS +
@@ -75,6 +80,7 @@ namespace Rawr.Retribution
                 calc.CrusaderStrikeDPS +
                 calc.DivineStormDPS +
                 calc.ExorcismDPS +
+                calc.HandOfReckoningDPS +
                 calc.ConsecrationDPS +
                 calc.HammerOfWrathDPS +
                 calc.OtherDPS;

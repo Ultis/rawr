@@ -63,6 +63,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Retribution\CalculationOptionsRetribution.cs">
+      <Link>CalculationOptionsRetribution.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Retribution\CalculationsRetribution.cs">
       <Link>CalculationsRetribution.cs</Link>
     </Compile>
@@ -99,7 +102,6 @@
     <Compile Include="CalculationOptionsPanelRetribution.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRetribution.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsRetribution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

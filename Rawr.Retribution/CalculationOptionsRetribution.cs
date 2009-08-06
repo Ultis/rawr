@@ -21,7 +21,7 @@ namespace Rawr.Retribution
         {
             targetLevel = 83;
             mob = MobType.Humanoid;
-            seal = SealOf.Blood;
+            seal = SealOf.Vengeance;
             fightLength = 5f;
             timeUnder20 = .18f;
             delay = .05f;
@@ -29,6 +29,7 @@ namespace Rawr.Retribution
             targets = 1f;
             inFront = 0f;
             consEff = 1f;
+            hoREff = 0f;
             bloodlust = true;
             stackTrinketReset = 0;
 
@@ -133,6 +134,13 @@ namespace Rawr.Retribution
             set { consEff = value; OnPropertyChanged("ConsEff"); }
         }
 
+        private float hoREff;
+        public float HoREff
+        {
+            get { return hoREff; }
+            set { hoREff = value; OnPropertyChanged("HoREff"); }
+        }
+
         private bool bloodlust;
         public bool Bloodlust
         {
@@ -151,7 +159,7 @@ namespace Rawr.Retribution
         public bool SimulateRotation
         {
             get { return simulateRotation; }
-            set { simulateRotation = value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD");  }
+            set { simulateRotation = value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
         }
 
         [XmlIgnore]
@@ -286,12 +294,18 @@ namespace Rawr.Retribution
 
             clone.TargetLevel = TargetLevel;
             clone.Mob = Mob;
+            clone.Seal = Seal;
             clone.FightLength = FightLength;
             clone.TimeUnder20 = TimeUnder20;
             clone.Delay = Delay;
+            clone.Wait = Wait;
             clone.SimulateRotation = SimulateRotation;
             clone.Targets = Targets;
             clone.InFront = InFront;
+            clone.ConsEff = ConsEff;
+            clone.HoREff = HoREff;
+            clone.Bloodlust = Bloodlust;
+            clone.StackTrinketReset = StackTrinketReset;
 
             clone.JudgeCD = JudgeCD;
             clone.CSCD = CSCD;
