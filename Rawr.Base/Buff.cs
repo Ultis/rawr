@@ -2513,25 +2513,25 @@ namespace Rawr
             });
 
             //Tier 9
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thrall's Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Thrall's Regalia",
-                Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
-                SetThreshold = 4
-            });
+			//defaultBuffs.Add(new Buff()
+			//{
+			//    Name = "Thrall's Regalia 4 Piece Bonus",
+			//    Group = "Set Bonuses",
+			//    ConflictingBuffs = new List<string>(new string[] { }),
+			//    SetName = "Thrall's Regalia",
+			//    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
+			//    SetThreshold = 4
+			//});
 
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nobundo's Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Nobundo's Regalia",
-                Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
-                SetThreshold = 4
-            });
+			//defaultBuffs.Add(new Buff()
+			//{
+			//    Name = "Nobundo's Regalia 4 Piece Bonus",
+			//    Group = "Set Bonuses",
+			//    ConflictingBuffs = new List<string>(new string[] { }),
+			//    SetName = "Nobundo's Regalia",
+			//    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
+			//    SetThreshold = 4
+			//});
 
             #endregion
 

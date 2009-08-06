@@ -161,7 +161,7 @@ namespace Rawr.ProtWarr
             dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}", Hit, BasicStats.HitRating));
             dictValues.Add("Expertise", 
                 string.Format("{0}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.", 
-                                Math.Round(BasicStats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise + BasicStats.Expertise),
+                                Math.Round(StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating, CharacterClass.Warrior) + BasicStats.Expertise),
                                 BasicStats.ExpertiseRating, Expertise));
             dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", Haste, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration", 
