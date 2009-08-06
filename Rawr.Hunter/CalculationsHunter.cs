@@ -719,7 +719,7 @@ namespace Rawr.Hunter
                 apFromFuriousHowl = 320 * CalcUptime(20, 40, options.duration);
             }
             double apFromCallOfTheWild = 1;
-            apFromCallOfTheWild += options.CallOfTheWild * (CalcUptime(20, 300, options.duration) * 0.1);
+            apFromCallOfTheWild += options.petCallOfTheWild * (CalcUptime(20, 300, options.duration) * 0.1);
 
             //TODO:
             //double apFromOnProcEffects = 
@@ -1421,6 +1421,8 @@ namespace Rawr.Hunter
             //Debug.WriteLine("Rotation MPS = " + calculatedStats.priorityRotation.MPS);
 
             #endregion
+
+            //Debug.WriteLine("options.petCobraReflexes = " + options.petCobraReflexes);
 
             calculatedStats.PetDpsPoints = pet.getDPS();
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.CustomDPS);

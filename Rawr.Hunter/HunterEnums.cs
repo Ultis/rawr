@@ -78,6 +78,14 @@ namespace Rawr.Hunter
         Worm
     }
 
+    public enum PetFamilyTree
+    {
+        Cunning,
+        Ferocity,
+        Tenacity,
+        Unknown
+    }
+
     public enum Faction
 	{
 		None,

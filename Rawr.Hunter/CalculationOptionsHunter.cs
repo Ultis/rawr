@@ -36,19 +36,45 @@ namespace Rawr.Hunter
         public int PriorityIndex9 = 0;
         public int PriorityIndex10 = 0;
 		
-		// pet stuff
-		private int _cobraReflexes = 2;
-		private int	_spikedCollar  = 1;
-		private int _spidersBite = 3;
-		private int _rabid = 1;
-		private int _callOfTheWild = 1;
-		private int _sharkAttack = 0;
-		private int _wildHunt = 1;
-        private int _cornered = 0;
-        private int _feedingFrency = 0;
-        private int _thunderstomp = 0;
-        private int _wolverineBite = 0;
-        private int _owlsFocus = 0;
+		// pet talents
+        public int petCobraReflexes = 0;
+        public int petDiveDash = 0;
+        public int petCharge = 0;
+        public int petGreatStamina = 0;
+        public int petNaturalArmor = 0;
+        public int petBoarsSpeed = 0;
+        public int petMobility = 0;
+        public int petSpikedCollar = 0;
+        public int petImprovedCower = 0;
+        public int petBloodthirsty = 0;
+        public int petBloodOfTheRhino = 0;
+        public int petPetBarding = 0;
+        public int petAvoidance = 0;
+        public int petLionhearted = 0;
+        public int petCarrionFeeder = 0;
+        public int petGuardDog = 0;
+        public int petThunderstomp = 0;
+        public int petGreatResistance = 0;
+        public int petOwlsFocus = 0;
+        public int petCornered = 0;
+        public int petFeedingFrenzy = 0;
+        public int petHeartOfThePhoenix = 0;
+        public int petSpidersBite = 0;
+        public int petWolverineBite = 0;
+        public int petRoarOfRecovery = 0;
+        public int petBullheaded = 0;
+        public int petGraceOfTheMantis = 0;
+        public int petRabid = 0;
+        public int petLickYourWounds = 0;
+        public int petCallOfTheWild = 0;
+        public int petLastStand = 0;
+        public int petTaunt = 0;
+        public int petIntervene = 0;
+        public int petWildHunt = 0;
+        public int petRoarOfSacrifice = 0;
+        public int petSharkAttack = 0;
+        public int petSilverback = 0;
+        
 
         public int duration {get; set;}
         
@@ -108,69 +134,6 @@ namespace Rawr.Hunter
 			set { _latency = value;}
 		}
 		
-		//petTalents
-		
-		public int CobraReflexes
-		{
-			get { return _cobraReflexes; }
-			set { _cobraReflexes = value;}
-		}
-		public int SpikedCollar
-		{
-			get { return _spikedCollar; }
-			set { _spikedCollar = value;}
-		}
-		public int SpidersBite
-			{
-			get { return _spidersBite; }
-			set { _spidersBite = value;}
-		}
-		public int Rabid
-		{
-			get { return _rabid; }
-			set { _rabid = value;}
-		}
-		public int CallOfTheWild
-		{
-			get { return _callOfTheWild; }
-			set { _callOfTheWild = value;}
-		}
-		public int SharkAttack
-		{
-			get { return _sharkAttack; }
-			set { _sharkAttack = value;}
-		}
-		public int WildHunt
-		{
-			get { return _wildHunt; }
-			set { _wildHunt = value;}
-		}
-        public int Cornered
-        {
-            get { return _cornered; }
-            set { _cornered = value; }
-        }
-        public int FeedingFrenzy
-        {
-            get { return _feedingFrency; }
-            set { _feedingFrency = value; }
-        }
-        public int Thunderstomp
-        {
-            get { return _thunderstomp; }
-            set { _thunderstomp = value; }
-        }
-        public int WolverineBite
-        {
-            get { return _wolverineBite; }
-            set { _wolverineBite = value; }
-        }
-        public int OwlsFocus
-        {
-            get { return _owlsFocus; }
-            set { _owlsFocus = value; }
-        }
-
 		#region ICalculationOptionBase Members
 
 		public string GetXml()

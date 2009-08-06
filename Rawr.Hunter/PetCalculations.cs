@@ -83,7 +83,7 @@ namespace Rawr.Hunter
 
             petStats.PhysicalCrit = 0.032f;
             petStats.PhysicalCrit += (float)(petStats.Agility / (62.5 * 100));
-            petStats.PhysicalCrit += options.SpidersBite * 0.03f;
+            petStats.PhysicalCrit += options.petSpidersBite * 0.03f;
             petStats.PhysicalCrit += (.02f * character.HunterTalents.Ferocity);
             petStats.PhysicalCrit += calculatedStats.BasicStats.BonusPetCritChance;
 
@@ -124,7 +124,7 @@ namespace Rawr.Hunter
             petStats.AttackPower += (float)Math.Floor(basegear.Stamina * (0.1 * character.HunterTalents.HunterVsWild));
 
             float callofthewildboost = 0.0f;
-            if (options.CallOfTheWild > 0)
+            if (options.petCallOfTheWild > 0)
             {
                 callofthewildboost = (float)(20.0 / 300.0 * (1 - character.HunterTalents.Longevity * 0.1)) * 0.1f;
             }
@@ -136,7 +136,7 @@ namespace Rawr.Hunter
 
         private float getRabidProcEffect(double physhit)
         {
-            if (options.Rabid > 0)
+            if (options.petRabid > 0)
             {
                 float frequency = 45.0f * (1.0f - character.HunterTalents.Longevity * 0.1f);
                 float uptime = 20.0f / frequency;
@@ -317,9 +317,9 @@ namespace Rawr.Hunter
                 else
                     Q = 0;
 
-                if (options.OwlsFocus > 0)
+                if (options.petOwlsFocus > 0)
                 {
-                    double OwlReduction = 1/(1 / (options.OwlsFocus * 0.15)) + 1;
+                    double OwlReduction = 1/(1 / (options.petOwlsFocus * 0.15)) + 1;
                     Q *= (1-OwlReduction);
                 }
 
@@ -484,7 +484,7 @@ namespace Rawr.Hunter
         {
             double spdMod = 1.0f + character.HunterTalents.SerpentsSwiftness * 0.04;
             spdMod *= 1.3f; //Net effect of one heroism
-            spdMod *= 1.0f + options.CobraReflexes * 0.15f;
+            spdMod *= 1.0f + options.petCobraReflexes * 0.15f;
             spdMod *= 1.0f + (statsBuffs.HasteRating / HunterRatings.HASTE_RATING_PER_PERCENT);
 
             double spd = 2.0 / spdMod;
@@ -580,7 +580,7 @@ namespace Rawr.Hunter
 
         private double getFeedingFrenzyEffect()
         {
-            return (options.FeedingFrenzy * 0.08) * 0.35f;
+            return (options.petFeedingFrenzy * 0.08) * 0.35f;
         }
 
         private double getGlancingBlows()
@@ -611,10 +611,10 @@ namespace Rawr.Hunter
             double targetDodge = 0.05 + (options.TargetLevel - 80) * 0.005;
             double critMissAdjustment = (2 * petStats.PhysicalCrit) + (petStats.PhysicalHit - petStats.PhysicalCrit - targetDodge);
             double damageAdjustment = 1.0f + character.HunterTalents.UnleashedFury * 0.03;
-            damageAdjustment *= 1.0f + options.SharkAttack * 0.03;
+            damageAdjustment *= 1.0f + options.petSharkAttack * 0.03;
             damageAdjustment *= 1.0f + character.HunterTalents.KindredSpirits * 0.04;
             damageAdjustment *= 1.0f + getT7Bonus();
-            damageAdjustment *= 1.0f + options.SpikedCollar * 0.03;
+            damageAdjustment *= 1.0f + options.petSpikedCollar * 0.03;
             damageAdjustment *= 1.0f + getFerociousInspirationEffect();
             damageAdjustment *= 1.0f + getBestialWrathEffect();
             damageAdjustment *= 1.0f + getMonstrousBiteEffect();
@@ -626,7 +626,7 @@ namespace Rawr.Hunter
             ferociousInspirationUptime = 1.0 - Math.Pow(1.0 - calculatedStats.PetStats.PhysicalCrit, 10.0 / whiteAttackSpeed + 10.0 / specialAttackSpeed);
 
             double totalDamageAdjustment = critMissAdjustment * damageAdjustment;
-            double cobraAdjusment = 1 - (options.CobraReflexes * 0.075f);
+            double cobraAdjusment = 1 - (options.petCobraReflexes * 0.075f);
             double targeArmorReduction = options.TargetArmor / (options.TargetArmor - 22167.5 + (467.5 * options.TargetLevel));
             double glancingBlows = getGlancingBlows();
 
