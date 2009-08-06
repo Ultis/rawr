@@ -280,13 +280,6 @@ namespace Rawr.Mage
             set { _WarlockSpellPower = value; OnPropertyChanged("WarlockSpellPower"); }
         }
 
-        private float _HotStreakWasted;
-        public float HotStreakWasted
-        {
-            get { return _HotStreakWasted; }
-            set { _HotStreakWasted = value; OnPropertyChanged("HotStreakWasted"); }
-        }
-
         private float[] _TalentScore;
         public float[] TalentScore
         {
@@ -1029,7 +1022,6 @@ namespace Rawr.Mage
             EffectHasteMultiplier = 1.0f;
             EffectRegenMultiplier = 1.0f;
             EffectCostMultiplier = 1.0f;
-            HotStreakWasted = 0.24f;
         }
 
         public CalculationOptionsMage(Character character)

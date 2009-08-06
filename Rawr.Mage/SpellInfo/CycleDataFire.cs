@@ -199,118 +199,6 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float H = castingState.MageTalents.HotStreak / 3.0f;
 
-                // 3.2 calcs
-
-                // we have two hot streak event streams going on, normal casts and living bomb
-                // to make the calculation manageable we assume that both are independent of each other
-                // this means that we approximate it as one stream of hot streak events
-                // with average crit rate and average time between events
-
-                // X: chance to cast FB
-                // Y: chance to cast LB
-                // Z: chance to cast Pyro
-
-                // time = X * FBtime + Y * LBtime + Z * Pyrotime
-                // hsEvents = X + Y * (D + 1)
-                // C = (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / hsEvents
-
-                // chance that any particular hot streak event procs pom pyro is C*C/(1+C)
-                // each pyro cast corresponds to a hot streak proc
-
-                // this is a very stron assumption and is most likely not accurate
-                // compared to exact model (~400 state system) it appears the number of wasted procs is on the order of 30%
-                // we can model this by adjusting the H constant to include the utilization of procs
-
-                // Z = number of hot streak procs in time
-                // Z = expected number of procs for X + Y * 5 events
-                // Z = (X + Y * (D + 1)) * H*C*C/((1+C)*(1-T8))
-
-                // value = X * value(FB) + Y * value(LB) + (X + Y * (D + 1))*H * C * C / (1 + C) / (1 - T8) * value(Pyro)
-                // Y*LBtime / time = LBtime / LBrecast
-
-                // time = X * FBtime + Y * LBtime + (X + Y * (D + 1))*H * C * C / (1 + C) / (1 - T8) * Pyrotime
-                // time = Y * LBrecast
-                // C = (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X + Y * (D + 1))
-
-                // Y * LBrecast = X * FBtime + Y * LBtime + (X + Y * (D + 1))*H * C * C / (1 + C) / (1 - T8) * Pyrotime
-
-                // 1 + C = (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) / (X + Y * (D + 1))
-
-                // Y * LBrecast = X * FBtime + Y * LBtime + (X + Y * (D + 1))*H * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X + Y * (D + 1)) * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X + Y * (D + 1)) / (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) * (X + Y * (D + 1)) / (1 - T8) * Pyrotime
-
-                // Y * LBrecast = X * FBtime + Y * LBtime + H * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) / (1 - T8) * Pyrotime
-
-                // Y * LBrecast * (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) = (X * FBtime + Y * LBtime) * (X * (1 + FBcrit) + Y * ((1 + LBcrit) + D * (1 + LBDotCrit)) + H * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) * (X * FBcrit + Y * (LBcrit + D * LBDotCrit)) / (1 - T8) * Pyrotime
-
-                // K: H/(1-T8)*Pyrotime
-                // K0: (LBcrit + D * LBDotCrit)^2*K + (LBcrit + D * LBDotCrit + 1 + D)*(LBtime-LBrecast)
-                // K1: (D*(LBcrit*(2*FBcrit*K+FBtime)+FBtime)+(FBcrit+1)*(LBtime-LBrecast))
-                // K2: (FBcrit^2*K+(FBcrit+1)*FBtime);
-
-                // K0 * Y^2 + K1 * X*Y + K2 * X^2 = 0
-
-                // Y = X*(-K1 +/- sqrt(K1^2-4*K0*K2))/(2*K0)
-
-                float FBcrit = FB.CritRate;
-                float LBcrit = LB.CritRate;
-                float LBDotCrit = castingState.FireCritRate;
-                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
-                if (castingState.MageTalents.GlyphOfLivingBomb)
-                {
-                    H *= (1 - castingState.CalculationOptions.HotStreakWasted);
-                }
-
-                K = H / (1 - T8) * Pyro.CastTime;
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
-                float LBcritTotal = (LBcrit + D * LBDotCrit);
-                float LBrecast = 12.0f;
-
-                float K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
-                float K1 = 2 * FBcrit * LBcritTotal * K + FB.CastTime * (D + LBcritTotal + 1) + (FBcrit + 1) * (LB.CastTime - LBrecast);
-                float K2 = (FBcrit * FBcrit * K + (FBcrit + 1) * FB.CastTime);
-                float Y;
-
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    Y = -K2 / K1;
-                }
-                else
-                {
-                    Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                C = (X * FBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
-
-                float Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                // first order correction for lower LB uptime
-                
-                LBrecast = 12 + 0.5f * ((FB.CastTime * FB.CastTime * X + Pyro.CastTime * Pyro.CastTime * Z) / (FB.CastTime * X + Pyro.CastTime * Z));
-
-                K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
-                K1 = 2 * FBcrit * LBcritTotal * K + FB.CastTime * (D + LBcritTotal + 1) + (FBcrit + 1) * (LB.CastTime - LBrecast);
-                K2 = (FBcrit * FBcrit * K + (FBcrit + 1) * FB.CastTime);
-
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    Y = -K2 / K1;
-                }
-                else
-                {
-                    Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                C = (X * FBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
-
-                Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                float sum = X + Y;
-                X /= sum;
-                K = Z / sum;
-
-            /*
                 // 3.0.8 calcs
 
                 // 0 HS charge:
@@ -394,7 +282,6 @@ namespace Rawr.Mage
                 }
                 C = LBcrit + X * (FBcrit - LBcrit);
                 K = H * C * C / (1 + C) / (1 - T8);
-            */
 
             // pyro dot uptime 
 
@@ -456,62 +343,7 @@ namespace Rawr.Mage
             float C;
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
 
-                if (castingState.MageTalents.GlyphOfLivingBomb)
-                {
-                    H *= (1 - castingState.CalculationOptions.HotStreakWasted);
-                }
-
-                K = H / (1 - T8) * Pyro.CastTime;
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
-                float LBcritTotal = (LBcrit + D * LBDotCrit);
-                float LBrecast = 12.0f;
-
-                float K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
-                float K1 = 2 * FFBcrit * LBcritTotal * K + FFB.CastTime * (D + LBcritTotal + 1) + (FFBcrit + 1) * (LB.CastTime - LBrecast);
-                float K2 = (FFBcrit * FFBcrit * K + (FFBcrit + 1) * FFB.CastTime);
-                float Y;
-
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    Y = -K2 / K1;
-                }
-                else
-                {
-                    Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                C = (X * FFBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
-
-                float Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                // first order correction for lower LB uptime
-
-                LBrecast = 12 + 0.5f * ((FFB.CastTime * FFB.CastTime * X + Pyro.CastTime * Pyro.CastTime * Z) / (FFB.CastTime * X + Pyro.CastTime * Z));
-
-                K0 = LBcritTotal * LBcritTotal * K + (LBcritTotal + 1 + D) * (LB.CastTime - LBrecast);
-                K1 = 2 * FFBcrit * LBcritTotal * K + FFB.CastTime * (D + LBcritTotal + 1) + (FFBcrit + 1) * (LB.CastTime - LBrecast);
-                K2 = (FFBcrit * FFBcrit * K + (FFBcrit + 1) * FFB.CastTime);
-
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    Y = -K2 / K1;
-                }
-                else
-                {
-                    Y = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                C = (X * FFBcrit + Y * LBcritTotal) / (X + Y * (D + 1));
-
-                Z = (X + Y * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                float sum = X + Y;
-                X /= sum;
-                K = Z / sum;
-
-                /*float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
+                float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
                 float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FFBcrit - LBcrit);
                 float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
                 if (Math.Abs(A2) < 0.00001)
@@ -539,7 +371,7 @@ namespace Rawr.Mage
                     X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
                 }
                 C = LBcrit + X * (FFBcrit - LBcrit);
-                K = H * C * C / (1 + C) / (1 - T8);*/            
+                K = H * C * C / (1 + C) / (1 - T8);        
 
             // pyro dot uptime 
 
@@ -919,149 +751,6 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float C, H, averageCastTime;
 
-                // 3.2 calculations
-
-                // X: chance to cast FB
-                // Y: chance to cast Sc
-                // W: chance to cast LB = 1 - X - Y
-                // K: chance to cast Pyro
-
-                // time = X * FBtime + + Y * Sctime + W * LBtime + K * Pyrotime
-                // hsEvents = X + Y + W * D
-                // C = (X * FBcrit + Y * Sccrit + W * D * LBcrit) / hsEvents
-
-                // Z = (X + Y + W * D) * H*C*C/((1+C)*(1-T8))
-
-                // value = X * value(FB) + Y * value(Sc) + W * value(LB) + (X + Y + W * D)*H * C * C / (1 + C) / (1 - T8) * value(Pyro)
-
-                // C + 1 = (X * (1 + FBcrit) + Y * (1 + Sccrit) + W * D * (1 + LBcrit)) / hsEvents
-
-                // value = X * value(FB) + Y * value(Sc) + W * value(LB) + H * (X * FBcrit + Y * Sccrit + W * D * LBcrit) * (X * FBcrit + Y * Sccrit + W * D * LBcrit) / (X * (1 + FBcrit) + Y * (1 + Sccrit) + W * D * (1 + LBcrit)) / (1 - T8) * value(Pyro)
-
-                // 0 = (X * value(FB) + Y * value(Sc) + W * value(LB) - value) * (X * (1 + FBcrit) + Y * (1 + Sccrit) + W * D * (1 + LBcrit)) + H * (X * FBcrit + Y * Sccrit + W * D * LBcrit) * (X * FBcrit + Y * Sccrit + W * D * LBcrit) / (1 - T8) * value(Pyro)
-
-                // R = H / (1 - T8)
-
-                // 0 = (X * value(FB) + Y * value(Sc) + W * value(LB) - value) * (X * (1 + FBcrit) + Y * (1 + Sccrit) + W * D * (1 + LBcrit)) + R * (X * FBcrit + Y * Sccrit + W * D * LBcrit) * (X * FBcrit + Y * Sccrit + W * D * LBcrit) * value(Pyro)
-
-                // W*LBtime / time = LBtime / LBrecast
-                // time = W * LBrecast
-
-                // 0 = (X * FBtime + Y * Sctime + W * LBtime - time) * (X * (1 + FBcrit) + Y * (1 + Sccrit) + W * D * (1 + LBcrit)) + R * (X * FBcrit + Y * Sccrit + W * D * LBcrit) * (X * FBcrit + Y * Sccrit + W * D * LBcrit) * Pyrotime
-
-                // (time - Y * Sctime) / time = gap
-                // time * (1 - gap) = Y * Sctime
-
-                // W * LBrecast * (1 - gap) = Y * Sctime
-                // Y = W * LBrecast * (1 - gap) / Sctime
-
-                // J = LBrecast * (1 - gap) / Sctime
-
-                // 0 = (X * FBtime + W*J * Sctime + W * LBtime - W * LBrecast) * (X * (1 + FBcrit) + W*J * (1 + Sccrit) + W * D * (1 + LBcrit)) + R * (X * FBcrit + W*J * Sccrit + W * D * LBcrit) * (X * FBcrit + W*J * Sccrit + W * D * LBcrit) * Pyrotime
-                // 0 = (X * FBtime + W*(J * Sctime + LBtime - LBrecast)) * (X * (1 + FBcrit) + W*(J * (1 + Sccrit) + D * (1 + LBcrit))) + R * (X * FBcrit + W*(J * Sccrit + D * LBcrit)) * (X * FBcrit + W*(J * Sccrit + D * LBcrit)) * Pyrotime
-
-                // A = J * Sctime + LBtime - LBrecast
-                // B = 1 + FBcrit
-                // CC = J * (1 + Sccrit) + D * (1 + LBcrit)
-                // E = J * Sccrit + D * LBcrit
-
-                // 0 = (X * FBtime + W*A) * (X * B + W*C) + R * (X * FBcrit + W*E) * (X * FBcrit + W*E) * Pyrotime
-
-                // K0: Pyrotime*E^2*R+A*C
-                // K1: 2*FBcrit*Pyrotime*E*R+FBtime*C+A*B
-                // K2: FBcrit^2*Pyrotime*R+FBtime*B
-
-                // K0 * W^2 + K1 * X*W + K2 * X^2 = 0
-
-                // W = X*(-K1 +/- sqrt(K1^2-4*K0*K2))/(2*K0)
-
-                float FBcrit = FB.CritRate;
-                float Sccrit = Sc.CritRate;
-                float LBcrit = LB.CritRate;
-                float LBDotCrit = castingState.FireCritRate;            
-                H = castingState.MageTalents.HotStreak / 3.0f;
-                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
-                if (castingState.MageTalents.GlyphOfLivingBomb)
-                {
-                    H *= (1 - castingState.CalculationOptions.HotStreakWasted);
-                }
-
-                float R = H / (1 - T8);
-
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
-                float LBcritTotal = (LBcrit + D * LBDotCrit);
-                float LBrecast = 12.0f;
-
-                float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
-                if (castingState.MageTalents.ImprovedScorch == 0)
-                {
-                    ProvidesScorch = false;
-                    gap = 1.0f;
-                }
-
-                float J = LBrecast * (1 - gap) / Sc.CastTime;
-                float A = J * Sc.CastTime + LB.CastTime - LBrecast;
-                float B = 1 + FBcrit;
-                float CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
-                float E = J * Sccrit + LBcritTotal;
-
-                float K0 = Pyro.CastTime * E * E * R + A * CC;
-                float K1 = 2 * FBcrit * Pyro.CastTime * E * R + FB.CastTime * CC + A * B;
-                float K2 = FBcrit * FBcrit * Pyro.CastTime * R + FB.CastTime * B;
-
-                float W;
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    W = -K2 / K1;
-                }
-                else
-                {
-                    W = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                Y = W * J;
-                C = (X * FBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
-
-                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                // first order correction for lower LB uptime
-
-                LBrecast = 12 + 0.5f * ((FB.CastTime * FB.CastTime * X + Sc.CastTime * Sc.CastTime * Y + Pyro.CastTime * Pyro.CastTime * K) / (FB.CastTime * X + Sc.CastTime * Y + Pyro.CastTime * K));
-
-                J = LBrecast * (1 - gap) / Sc.CastTime;
-                A = J * Sc.CastTime + LB.CastTime - LBrecast;
-                B = 1 + FBcrit;
-                CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
-                E = J * Sccrit + LBcritTotal;
-
-                K0 = Pyro.CastTime * E * E * R + A * CC;
-                K1 = 2 * FBcrit * Pyro.CastTime * E * R + FB.CastTime * CC + A * B;
-                K2 = FBcrit * FBcrit * Pyro.CastTime * R + FB.CastTime * B;
-
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    W = -K2 / K1;
-                }
-                else
-                {
-                    W = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                Y = W * J;
-                C = (X * FBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
-
-                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                float sum = X + Y + W;
-                X /= sum;
-                Y /= sum;
-                K /= sum;
-
-                averageCastTime = (FB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
-
-            /*
                 // 3.1 calculations
 
                 // 0 HS charge:
@@ -1222,7 +911,6 @@ namespace Rawr.Mage
                     averageCastTime = (FB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
                     K = H * C * C / (1 + C) / (1 - T8);
                 }
-            */
 
             // pyro dot uptime 
 
@@ -1297,86 +985,8 @@ namespace Rawr.Mage
                 gap = 1.0f;
             }
             float C, H, averageCastTime;
-                float FFBcrit = FFB.CritRate;
-                float Sccrit = Sc.CritRate;
-                float LBcrit = LB.CritRate;
-                float LBDotCrit = castingState.FireCritRate;
-                H = castingState.MageTalents.HotStreak / 3.0f;
-                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
-                if (castingState.MageTalents.GlyphOfLivingBomb)
-                {
-                    H *= (1 - castingState.CalculationOptions.HotStreakWasted);
-                }
 
-                float R = H / (1 - T8);
-
-                int D = castingState.MageTalents.GlyphOfLivingBomb ? 4 : 0;
-                float LBcritTotal = LBcrit + D * LBDotCrit;
-                float LBrecast = 12.0f;
-
-                float J = LBrecast * (1 - gap) / Sc.CastTime;
-                float A = J * Sc.CastTime + LB.CastTime - LBrecast;
-                float B = 1 + FFBcrit;
-                float CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
-                float E = J * Sccrit + LBcritTotal;
-
-                float K0 = Pyro.CastTime * E * E * R + A * CC;
-                float K1 = 2 * FFBcrit * Pyro.CastTime * E * R + FFB.CastTime * CC + A * B;
-                float K2 = FFBcrit * FFBcrit * Pyro.CastTime * R + FFB.CastTime * B;
-
-                float W;
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    W = -K2 / K1;
-                }
-                else
-                {
-                    W = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                Y = W * J;
-                C = (X * FFBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
-
-                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                // first order correction for lower LB uptime
-
-                LBrecast = 12 + 0.5f * ((FFB.CastTime * FFB.CastTime * X + Sc.CastTime * Sc.CastTime * Y + Pyro.CastTime * Pyro.CastTime * K) / (FFB.CastTime * X + Sc.CastTime * Y + Pyro.CastTime * K));
-
-                J = LBrecast * (1 - gap) / Sc.CastTime;
-                A = J * Sc.CastTime + LB.CastTime - LBrecast;
-                B = 1 + FFBcrit;
-                CC = J * (1 + Sccrit) + (D + 1 + LBcritTotal);
-                E = J * Sccrit + LBcritTotal;
-
-                K0 = Pyro.CastTime * E * E * R + A * CC;
-                K1 = 2 * FFBcrit * Pyro.CastTime * E * R + FFB.CastTime * CC + A * B;
-                K2 = FFBcrit * FFBcrit * Pyro.CastTime * R + FFB.CastTime * B;
-
-                X = 1;
-                if (Math.Abs(K0) < 0.00001)
-                {
-                    W = -K2 / K1;
-                }
-                else
-                {
-                    W = (float)((-K1 - Math.Sqrt(K1 * K1 - 4 * K2 * K0)) / (2 * K0));
-                }
-
-                Y = W * J;
-                C = (X * FFBcrit + Y * Sccrit + W * LBcritTotal) / (X + Y + W * (D + 1));
-
-                K = (X + Y + W * (D + 1)) * H * C * C / (1 + C) / (1 - T8);
-
-                float sum = X + Y + W;
-                X /= sum;
-                Y /= sum;
-                K /= sum;
-
-                averageCastTime = (FFB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
-
-                /*if (gap == 1.0f)
+                if (gap == 1.0f)
                 {
                     Y = 0.0f;
                     float FFBcrit = FFB.CritRate;
@@ -1461,7 +1071,7 @@ namespace Rawr.Mage
                     C = (FFBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y));
                     averageCastTime = (FFB.CastTime * X + Sc.CastTime * Y + LB.CastTime * (1 - X - Y));
                     K = H * C * C / (1 + C) / (1 - T8);
-                }*/            
+                }       
 
             // pyro dot uptime 
 
@@ -1761,7 +1371,7 @@ namespace Rawr.Mage
                 int ticksLeft = Math.Max(0, (int)(s.LivingBombDuration / 3.0f));
                 int ticksLeftAfter = Math.Max(0, (int)((s.LivingBombDuration - castTime) / 3.0f));
                 int hotStreakEvents = ticksLeft - ticksLeftAfter;
-                if (!livingBombGlyph)
+                //if (!livingBombGlyph)
                 {
                     hotStreakEvents = 0;
                 }
@@ -1847,7 +1457,7 @@ namespace Rawr.Mage
                 int ticksLeft = Math.Max(0, (int)(s.LivingBombDuration / 3.0f));
                 int ticksLeftAfter = Math.Max(0, (int)((s.LivingBombDuration - castTime) / 3.0f));
                 int hotStreakEvents = ticksLeft - ticksLeftAfter;
-                if (!livingBombGlyph)
+                //if (!livingBombGlyph)
                 {
                     hotStreakEvents = 0;
                 }
@@ -1923,7 +1533,7 @@ namespace Rawr.Mage
                 int ticksLeft = Math.Max(0, (int)(s.LivingBombDuration / 3.0f));
                 int ticksLeftAfter = Math.Max(0, (int)((s.LivingBombDuration - castTime) / 3.0f));
                 int hotStreakEvents = ticksLeft - ticksLeftAfter;
-                if (!livingBombGlyph)
+                //if (!livingBombGlyph)
                 {
                     hotStreakEvents = 0;
                 }

@@ -418,8 +418,6 @@ z = actual count on Fingers of Frost
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("This is only valid with LB Glyph and 3.2 Mode!");
-            sb.AppendLine();
             sb.AppendLine("Pyro/Nuke Ratio:");
             sb.AppendLine();
             sb.AppendLine("Approximation Model: " + predicted);
@@ -428,7 +426,7 @@ z = actual count on Fingers of Frost
             // predicted = raw * (1 - wastedold)
             // actual = raw * (1 - wasted)
             // wasted = 1 - actual / predicted * (1 - wastedold)
-            sb.AppendLine("Predicted Wasted Hot Streaks: " + (1 - actual / predicted * (1 - calculationOptions.HotStreakWasted)));
+            sb.AppendLine("Predicted Wasted Hot Streaks: " + (1 - actual / predicted));
 
             MessageBox.Show(sb.ToString());
         }
